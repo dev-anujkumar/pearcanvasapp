@@ -11,7 +11,10 @@ const paragraphDescription = "This is a section for button components to be used
 
 const paragrahTypes = () => ( 
   <>
-      <Paragraph type="add-comment" onClick={action('Add comment')} />
+      <Paragraph type="p" onClick={action('Add comment')} />
+      <Paragraph type="h1" onClick={action('Add comment')} />
+      <Paragraph type="h2" onClick={action('Add comment')} />
+      <Paragraph type="h3" onClick={action('Add comment')} />
     </>
  
 )
@@ -19,7 +22,10 @@ const paragrahTypes = () => (
 storiesOf('Paragraph', module)
   .add(
     'Introduction',
-    withInfo(paragraphDescription)(paragrahTypes)
+     withInfo(paragraphDescription)(paragrahTypes)
   )
-  .add('Add comment', () => <Paragraph type="Paragraph" onClick={action('Add comment')} />, { notes: "Paragraph Added" })
+  .add('Paragraph', () => <Paragraph type="p" onClick={action('Add comment')} />, { notes: "Paragraph Added" })
+  .add('H1', () => <Paragraph type="h1" onClick={action('Add comment')} />, { notes: "H1 Added" })
+  .add('H2', () => <Paragraph type="h2" onClick={action('Add comment')} />, { notes: "H2 Added" })
+  .add('H3', () => <Paragraph type="h3" onClick={action('Add comment')} />, { notes: "H3 Added" })
   

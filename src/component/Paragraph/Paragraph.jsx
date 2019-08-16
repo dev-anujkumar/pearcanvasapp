@@ -7,9 +7,14 @@ export class Paragraph extends Component {
     
     render() {
         const { type, onClick } = this.props
+        console.log("type====>",type)
         return(
             <>
-               <TinyMceEditor element = " "/>
+         <div className="header" id="mytoolbar">
+          <h1 >CANVAS</h1>
+          {/* <div className="mce-tinymce"></div> */}
+          </div>
+               <TinyMceEditor type = {type} />
             </>
         )
     }

@@ -20,7 +20,13 @@ export class TinyMceEditor extends React.Component {
       selector: '.Editor',
       formats: {
         // Changes the default format for h1 to have a class of heading
-        p: { block: 'p', classes: 'paragraphNumeroUno' }
+        p: { block: 'p', classes: 'paragraphNumeroUno' },
+        h1: { block: 'h1', classes: 'heading1NummerEins' },
+        h2:{ block: 'h2', classes: 'heading2NummerEins' },
+        h3:{ block: 'h3', classes: 'heading3NummerEins' },
+        h4:{ block: 'h4', classes: 'heading4NummerEins' },
+        h5:{ block: 'h5', classes: 'heading5NummerEins' },
+        h6:{ block: 'h6', classes: 'heading6NummerEins' },
       },
       menubar: false,
       statusbar: false,
@@ -30,16 +36,28 @@ export class TinyMceEditor extends React.Component {
       toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
       init_instance_callback: function (editor) {
         editor.fire('focus');
+        editor.on('blur', function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+         });
       },
     }
   }
-  componentDidMount(){
-   
+  componentDidUpdate(){
+    let type = this.props.type
+    console.log("props",this.props.type)
+    tinymce.activeEditor.formatter.apply(type);
+    console.log('DIDupdate was called:', e.target.getContent());
   }
   
+  componentDidUpdate() {
+    console.log("props",this.props.type)
+  }
   handleEditorChange = (e) => {
+    let type = this.props.type
+    console.log("props",this.props.type)
+    tinymce.activeEditor.formatter.apply(type);
     console.log('Content was updated:', e.target.getContent());
-    tinymce.activeEditor.formatter.apply('p');
   }
 
   render() {
@@ -47,12 +65,10 @@ export class TinyMceEditor extends React.Component {
     return (
         <div className="Editor" >
         <Editor
-         // initialValue ={initialVlaue}
-         
+          //initialValue ={initialVlaue}
           init={this.editorConfig}
           onChange={this.handleEditorChange}
         />
-
       </div>
     );
   }
