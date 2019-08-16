@@ -18,6 +18,7 @@ export class Button extends Component {
 
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
+        const { labelText } = this.props
 
         switch(type){
             case "add-comment":
@@ -26,8 +27,8 @@ export class Button extends Component {
             case "comment-flag":
                 buttonJSX = <div id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></div>
                 break;
-            case "block-label-P":
-                buttonJSX = <div className = "block-label" onClick={clickHandlerFn}>P</div>
+            case "element-label":
+                buttonJSX = <div className = "element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</div>
                 break;
             case "delete-element":
                 buttonJSX = <div id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></div>
@@ -65,12 +66,17 @@ export class Button extends Component {
 }
 
 Button.defaultProps = {
-    type: "expand"
+    type: "expand",
+    labelText: "P"
 }
 
 Button.propTypes = {
+    /** Type of button to be rendered */
     type : PropTypes.string.isRequired,
-    onClick : PropTypes.func
+    /** Handler to attach on button click */
+    onClick : PropTypes.func,
+    /** Required in case of 'element-label' type of button */
+    labelText : PropTypes.string
 }
 
 export default Button
