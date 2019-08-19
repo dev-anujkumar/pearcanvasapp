@@ -11,3 +11,5 @@
 
 # misc
 /*.pem
+/*.vscode
+/package-lock.json
