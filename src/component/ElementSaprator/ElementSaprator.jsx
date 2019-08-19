@@ -1,13 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class ElementSaprator extends Component {
-    render() {
-        return (
-            <React.Fragment>
-
-            </React.Fragment>
-        );
-    }
+export default function ElementSaprator() {
+    return (
+        <div>
+            
+        </div>
+    )
 }
-
-export default ElementSaprator;
