@@ -50,7 +50,6 @@ export class TinyMceEditor extends React.Component {
   }
 
   render() {
-    
     return (
         <div className="Editor" >
         <Editor
