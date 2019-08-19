@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/silver';
-
 import "tinymce/skins/ui/oxide/skin.min.css";
 import "tinymce/skins/ui/oxide/content.min.css";
 import "tinymce/skins/content/default/content.css";
@@ -20,7 +19,7 @@ export class TinyMceEditor extends React.Component {
       selector: '.Editor',
       formats: {
         // Changes the default format for h1 to have a class of heading
-        p: { block: 'p', classes: 'paragraphNumeroUno' },
+        "element-authoredtext": { block: 'p', classes: 'paragraphNumeroUno' },
         h1: { block: 'h1', classes: 'heading1NummerEins' },
         h2:{ block: 'h2', classes: 'heading2NummerEins' },
         h3:{ block: 'h3', classes: 'heading3NummerEins' },
@@ -43,19 +42,9 @@ export class TinyMceEditor extends React.Component {
       },
     }
   }
-  componentDidUpdate(){
-    let type = this.props.type
-    console.log("props",this.props.type)
-    tinymce.activeEditor.formatter.apply(type);
-    console.log('DIDupdate was called:', e.target.getContent());
-  }
-  
-  componentDidUpdate() {
-    console.log("props",this.props.type)
-  }
+
   handleEditorChange = (e) => {
     let type = this.props.type
-    console.log("props",this.props.type)
     tinymce.activeEditor.formatter.apply(type);
     console.log('Content was updated:', e.target.getContent());
   }
