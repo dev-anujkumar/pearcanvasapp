@@ -13,19 +13,24 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 
+class Button extends Component {
 
-export class Button extends Component {
-
+  /**
+  * Responsible for rendering Button component according to the props received
+  * @param type type of button
+  * @param clickHandlerFn Handler method to be called on click event
+  *  
+  */
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
         const { labelText } = this.props
 
         switch(type){
             case "add-comment":
-                buttonJSX = <div id="add-comment" onClick={clickHandlerFn}><img src= {addNote} /></div>
+                buttonJSX = <div id="add-comment" onClick={clickHandlerFn}><img src={addNote} /></div>
                 break;
             case "comment-flag":
-                buttonJSX = <div id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></div>
+                buttonJSX = <div id="flag-icon" onClick={clickHandlerFn}><img src={noteFlag} /></div>
                 break;
             case "element-label":
                 buttonJSX = <div className = "element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</div>
@@ -33,7 +38,7 @@ export class Button extends Component {
             case "delete-element":
                 buttonJSX = <div id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></div>
                 break;
-            case "tcm":
+            case "tcm": 
                 buttonJSX = <div id="tcm-icon" onClick={clickHandlerFn}><img src={tcmIcon} /></div>
                 break;
             case "forward-nav-active":
