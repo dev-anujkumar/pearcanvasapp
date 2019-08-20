@@ -1,0 +1,42 @@
+.canvas-header {
+    min-width: 805px;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    font-size: 13px;
+    display: inline-flex;
+}
+
+.header-label {
+    min-width: max-content;
+    font-size: 12px;
+}
+
+.canvas-header .input-text {
+    width: 83%;
+    border-bottom: solid 1px #e0e0e0;
+    margin-left: 11px;
+}
+
+.u-hidden {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 200;
+    text-transform: uppercase;
+    color: #424242;
+    line-height: 1;
+    vertical-align: top;
+    transition: opacity .3s;
+}
+
+.txt-input {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 200;
+    color: #424242;
+    width: 100%;
+    line-height: 1;
+    padding: 0 0 4px 0;
+    border: none;
+    background: 0;
+}
