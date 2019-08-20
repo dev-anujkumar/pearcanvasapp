@@ -55,9 +55,8 @@ export class TinyMceEditor extends React.Component {
   };
 
   handleEditorChange = (e) => {
-    let type = this.props.type
-    tinymce.activeEditor.formatter.apply(type);
     console.log('Content was updated:', e.target.getContent());
+    tinymce.activeEditor.formatter.apply(this.props.element);
   }
 
   render() {
@@ -66,6 +65,7 @@ export class TinyMceEditor extends React.Component {
         <div className="Editor" >
         <Editor
           //initialValue ={initialVlaue}
+          initialValue={this.props.value}
           init={this.editorConfig}
           onChange={this.handleEditorChange}
         />
