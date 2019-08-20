@@ -2,25 +2,25 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {TinyMceEditor} from "../tinyMceEditor"
 //import '../../styles/book.scss'
-export class Paragraph extends Component {
-
-    
+export class ElementAuthoring extends Component {
     render() {
         const { type, onClick } = this.props
         return(
             <>
-               <TinyMceEditor element = " "/>
+               <TinyMceEditor type = {type} onClick = {onClick} />
             </>
         )
     }
 }
-Paragraph.defaultProps = {
-    type: "paragraph"
+ElementAuthoring.defaultProps = {
+    type: "element-authoredtext"
 }
 
-Paragraph.propTypes = {
+ElementAuthoring.propTypes = {
+      /** Type of element to be rendered */
     type : PropTypes.string.isRequired,
+     /** Handler to attach on element click */
     onClick : PropTypes.func
 }
 
-export default Paragraph
+export default ElementAuthoring
