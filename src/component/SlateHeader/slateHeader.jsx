@@ -3,7 +3,7 @@
 */
 
 import React, { Component } from "react";
-import '../../styles/Header/header.css';
+import '../../styles/SlateHeader/slateHeader.css';
 import Button from '../ElementButtons/ElementButton';
 
 /**
