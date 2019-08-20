@@ -24,6 +24,9 @@ const mockElement = {
 
 storiesOf('Element Container').add('Element Container', () => {
     return (
-        <ElementContainer type="paragraph" element={mockElement} />
+        <>
+        <ElementContainer element={mockElement} />
+        <ElementContainer element={mockElement} />
+        </>
     );
 });

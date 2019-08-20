@@ -22,34 +22,34 @@ export class Button extends Component {
 
         switch(type){
             case "add-comment":
-                buttonJSX = <div id="add-comment" onClick={clickHandlerFn}><img src= {addNote} /></div>
+                buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}><img src= {addNote} /></span>
                 break;
             case "comment-flag":
-                buttonJSX = <div id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></div>
+                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></span>
                 break;
             case "element-label":
-                buttonJSX = <div className = "element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</div>
+                buttonJSX = <span className="btn-element" id="element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
                 break;
             case "delete-element":
-                buttonJSX = <div id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></div>
+                buttonJSX = <span className="btn-element" id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></span>
                 break;
             case "tcm":
-                buttonJSX = <div id="tcm-icon" onClick={clickHandlerFn}><img src={tcmIcon} /></div>
+                buttonJSX = <span className="btn-element small" id="tcm-icon" onClick={clickHandlerFn}><img src={tcmIcon} /></span>
                 break;
             case "forward-nav-active":
-                buttonJSX = <div id="forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></div>
+                buttonJSX = <span className="btn-element" id="forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
             case "backward-nav-active":
-                buttonJSX = <div id="backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></div>
+                buttonJSX = <span className="btn-element" id="backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
                 break;
             case "expand":
-                buttonJSX = <div id="expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></div>
+                buttonJSX = <span className="btn-element" id="expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
                 break;
             case "split":
-                buttonJSX = <div id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></div>
+                buttonJSX = <span className="btn-element" id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
             case "color-palette":
-                buttonJSX = <div id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></div>
+                buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
         }
         return buttonJSX

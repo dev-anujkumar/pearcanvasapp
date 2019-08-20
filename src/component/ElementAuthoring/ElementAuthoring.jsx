@@ -1,17 +1,19 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import {TinyMceEditor} from "../tinyMceEditor"
-//import '../../styles/book.scss'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { TinyMceEditor } from './../tinyMceEditor';
+
+import './../../styles/ElementAuthoring/ElementAuthoring.css';
+
 export class ElementAuthoring extends Component {
     render() {
         const { type, onClick } = this.props
-        return(
-            <>
-               <TinyMceEditor type = {type} onClick = {onClick} />
-            </>
+        return (
+            <TinyMceEditor className="mce-editor" type={type} onClick = {onClick} />
         )
     }
 }
+
 ElementAuthoring.defaultProps = {
     type: "element-authoredtext"
 }
@@ -23,4 +25,4 @@ ElementAuthoring.propTypes = {
     onClick : PropTypes.func
 }
 
-export default ElementAuthoring
+export default ElementAuthoring;

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+import ElementAuthoring from './ElementAuthoring/ElementAuthoring.jsx';
+import Button from './ElementButtons/ElementButton';
+import './../styles/elementContainer.css';
+
 const mockElement = {
     id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
     type: "element-authoredtext",
@@ -20,31 +24,47 @@ const mockElement = {
 
 class ElementContainer extends Component {
     renderElement = (type = "") => {
-        let element = "";
+        let element = '';
+        let labelText = '';
         switch(type) {
             case 'opener':
                 element = "Opener Element";
                 break;
 
-            case "paragraph":
-                element = "Paragraph Element";
+            case "element-authoredtext":
+                element = <ElementAuthoring type={this.props.element.type}/>;
+                labelText = 'P';
                 break;
 
             case "figure":
-                element = "Figure Element";
+                element = <ElementAuthoring type={this.props.element.type}/>;
                 break;
         }
 
-        return element;
+        return (
+            <div className="element-container" data-id={element.id}>
+                <div>
+                    <Button type="element-label" labelText={labelText} />
+                    <Button type="delete-element" />
+                </div>
+                {element}
+                <div>
+                    <Button type="add-comment" />
+                    <Button type="comment-flag" />
+                    <Button type="tcm" />
+                </div>
+            </div>
+        );
     }
 
     render = () => {
-        const { type, element } = this.props; console.log('props::', type, element);
-        return (
-            <div className="element-container" data-id={element.id} data-type={element.type}>
-                {this.renderElement(type)}
-            </div>
-        );
+        const { element } = this.props;
+        return this.renderElement(element.type);
+        // (
+            // 
+                // {}
+            // 
+        // );
     }
 }
 
