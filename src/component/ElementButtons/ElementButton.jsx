@@ -13,19 +13,24 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 
+class Button extends Component {
 
-export class Button extends Component {
-
+  /**
+  * Responsible for rendering Button component according to the props received
+  * @param type type of button
+  * @param clickHandlerFn Handler method to be called on click event
+  *  
+  */
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
         const { labelText } = this.props
 
         switch(type){
             case "add-comment":
-                buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}><img src= {addNote} /></span>
+                buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}><img src={addNote} /></span>
                 break;
             case "comment-flag":
-                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></span>
+                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}><img src={noteFlag} /></span>
                 break;
             case "element-label":
                 buttonJSX = <span className="btn-element" id="element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
