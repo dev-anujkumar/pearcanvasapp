@@ -7,10 +7,10 @@ import '../../styles/Header/header.css';
 import Button from '../ElementButtons/ElementButton';
 
 /**
-* @description - HeaderComponent is a class based component. It is defined simply
+* @description - SlateHeader is a class based component. It is defined simply
 * to make a skeleton of the Header of Slate.
 */
- class HeaderComponent extends Component {
+ class SlateHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -76,4 +76,4 @@ import Button from '../ElementButtons/ElementButton';
     }
 }
 
-export default  HeaderComponent ;
+export default  SlateHeader ;
