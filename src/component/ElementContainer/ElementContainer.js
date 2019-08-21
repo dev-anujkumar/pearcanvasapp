@@ -5,21 +5,23 @@ import Button from './../ElementButtons/ElementButton';
 import './../../styles/ElementContainer/ElementContainer.css';
 
 class ElementContainer extends Component {
-    renderElement = (element = '') => {
+    renderElement = (element = {}) => {
         let editor = '';
         let labelText = '';
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
+                labelText = 'OE';
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring type={element.type}/>;
+                editor = <ElementAuthoring type={element.type} />;
                 labelText = 'P';
                 break;
 
             case "figure":
-                editor = <ElementAuthoring type={element.type}/>;
+                editor = <ElementAuthoring type={element.type} />;
+                labelText = 'FG';
                 break;
         }
 
