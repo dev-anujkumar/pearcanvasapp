@@ -31,7 +31,7 @@ a {
 .horizontalLine {
     display: block;
     height: 1px;
-    width: 60%;
+    /* width: 60%; */
     /* border: 0;
     border-top: 1px solid #ccc;
     border-style: dotted; */
@@ -40,10 +40,24 @@ a {
     padding: 0;
 }
 
-.elementSapratorContainer div {
-    float: left;
-    clear: none;
+.elementSapratorContainer {
+    width:100%;
+    clear:both;
 }
+
+.elemDiv1 {
+    width:3%;
+    float:left;
+}
+.elemDiv2 {
+    width:60%;
+    float:left;
+}
+.elemDiv3 {
+    width:30px;
+    float:left;
+}
+
 
 .dropbtn {
     background-color: #3498DB;
@@ -58,15 +72,9 @@ a {
     background-color: #2980B9;
 }
 
-.dropdown {
-    /* position: relative; */
-    /* display: inline-block; */
-    
-}
-
 .dropdown-content {
     display: none;
-    position: absolute;
+    position: relative;
     background-color: #f1f1f1;
     /* min-width: 160px; */
     /* overflow: auto; */
@@ -87,14 +95,25 @@ a {
 
 .show {
     display: block;
+    transition: opacity 1s linear;
+     visibility: 1s linear;
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 2s; /* Firefox < 16 */
+     -ms-animation: fadein 2s; /* Internet Explorer */
+      -o-animation: fadein 2s; /* Opera < 12.1 */
+         animation: fadein 2s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 ul {
     list-style-type: none;
     padding: 0px;
-    margin-top: 30px;
 }
 
 li {
-    padding: 20px;
+    padding: 4px;
 }
