@@ -11,9 +11,9 @@ const stories = storiesOf('Components|Element Saprator', module)
 stories.addDecorator(withKnobs)
 
 stories.add('ElementSaprator', () => < ElementSaprator / > , {
-  notes: {
-    markdown: markdownNotes
-  }, //Notes for a story
+  // notes: {
+  //   markdown: markdownNotes
+  // }, //Notes for a story
   info: '☹️ no emojis', // Info for a story
   readme: {
     sidebar: markdownNotes,

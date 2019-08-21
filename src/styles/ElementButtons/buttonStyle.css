@@ -65,6 +65,12 @@
     cursor: pointer;
 }
 
+.text-elem .image-elem .audio-elem .interactive-elem .container-elem .worked-exp-elem .assessment-elem{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
 #color-palette{
     padding: 6px 0;
     background-size: contain;

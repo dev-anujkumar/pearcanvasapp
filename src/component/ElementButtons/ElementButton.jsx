@@ -3,6 +3,13 @@ import PropTypes from 'prop-types'
 
 import '../../styles/ElementButtons/buttonStyle.css'
 
+import textIcon from '../../images/ElementButtons/textElement.svg'
+import imageIcon from '../../images/ElementButtons/imageElement.svg'
+import audioIcon from '../../images/ElementButtons/audioElement.svg'
+import interativeIcon from '../../images/ElementButtons/interactiveElement.svg'
+import assessmentIcon from '../../images/ElementButtons/assessmentElement.svg'
+import containerIcon from '../../images/ElementButtons/containerElement.svg'
+import workedExampleIcon from '../../images/ElementButtons/workedExampleElement.svg'
 import addNote from '../../images/ElementButtons/addNote.svg'
 import noteFlag from '../../images/ElementButtons/noteFlag.svg'
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
@@ -48,8 +55,26 @@ export class Button extends Component {
             case "split":
                 buttonJSX = <div id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></div>
                 break;
-            case "color-palette":
-                buttonJSX = <div id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></div>
+            case "text-elem":
+                buttonJSX = <div id="text-elem" onClick={clickHandlerFn}><img src={textIcon} /></div>
+                break;
+            case "image-elem":
+                buttonJSX = <div id="image-elem" onClick={clickHandlerFn}><img src={imageIcon} /></div>
+                break;
+            case "audio-elem":
+                buttonJSX = <div id="audio-elem" onClick={clickHandlerFn}><img src={audioIcon} /></div>
+                break;
+            case "interactive-elem":
+                buttonJSX = <div id="interactive-elem" onClick={clickHandlerFn}><img src={interativeIcon} /></div>
+                break;
+            case "container-elem":
+                buttonJSX = <div id="container-elem" onClick={clickHandlerFn}><img src={containerIcon} /></div>
+                break;
+            case "worked-exp-elem":
+                buttonJSX = <div id="worked-exp-elem" onClick={clickHandlerFn}><img src={workedExampleIcon} /></div>
+                break;
+            case "assessment-elem":
+                buttonJSX = <div id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></div>
                 break;
         }
         return buttonJSX
