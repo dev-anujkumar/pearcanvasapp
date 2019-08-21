@@ -2,7 +2,7 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 
-import ElementContainer from './../../src/component/elementContainer';
+import ElementContainer from './../../src/component/ElementContainer/ElementContainer';
 
 const mockElement = {
     id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",

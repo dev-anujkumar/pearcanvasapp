@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import '../../styles/ElementButtons/buttonStyle.css'
+import '../../styles/ElementButtons/ElementButton.css'
 
 import addNote from '../../images/ElementButtons/addNote.svg'
 import noteFlag from '../../images/ElementButtons/noteFlag.svg'
