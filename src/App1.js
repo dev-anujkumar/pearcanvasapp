@@ -1,10 +1,21 @@
+/*
+* This is main App component which provides access
+* to Application level state and give it to all its predecesors.
+*/
+// IMPORT - Plugins //
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Provider } from 'react-redux';
+
+// IMPORT - Components //
+import store from './appstore/store';
 import Chunked from './component/MyComponent.jsx';
 import asyncComponent from "./component/AsyncComponent.jsx";
-import './styles/style.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import ElementAuthoring from './component/ElementAuthoring/ElementAuthoring.jsx';
+
+// IMPORT - Assets //
 import img from './images/logo.png';
-import ElementAuthoring from './component/ElementAuthoring/ElementAuthoring.jsx'
+import './styles/style.css';
 
 // Route Based 
 import RouteComponent from './component/RouteComponent.jsx';
@@ -31,21 +42,22 @@ class App extends Component {
 
     render() {
         return (
-            <Router>
-                <div>
-                <h1>Expack</h1>
-                    <p className="description">Express and Webpack Boilerplate App</p>
-                    <div className="awful-selfie"></div>
-                    <hr />
-                    <React.Fragment>
-                        <h2>Your React App Is Running</h2>
+            <Provider store={store}>
+                <Router>
+                    <div>
+                        <h1>Expack</h1>
+                        <p className="description">Express and Webpack Boilerplate App</p>
+                        <div className="awful-selfie"></div>
                         <hr />
-                        <Chunked />
-                        <br />
-                        <img src={img} />
-                    </React.Fragment>
-                    
-                    {/* <nav>
+                        <React.Fragment>
+                            <h2>Your React App Is Running</h2>
+                            <hr />
+                            <Chunked />
+                            <br />
+                            <img src={img} />
+                        </React.Fragment>
+
+                        {/* <nav>
                         <ul>
                             <li>
                                 <Link to="/">Home</Link>
@@ -62,8 +74,10 @@ class App extends Component {
                     <Route path="/" exact component={Index} />
                     <Route path="/about/" component={About} />
                     <Route path="/users/" component={Users} /> */}
-                </div>
-            </Router>
+                    </div>
+                </Router>
+            </Provider>
+
         );
     }
 }
