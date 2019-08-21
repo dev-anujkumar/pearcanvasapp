@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import ElementAuthoring from './../ElementAuthoring/ElementAuthoring';
-import Button from './../ElementButtons/ElementButton';
+import Button from './../ElementButtons/ElementButton.jsx';
 import './../../styles/ElementContainer/ElementContainer.css';
 
 class ElementContainer extends Component {
