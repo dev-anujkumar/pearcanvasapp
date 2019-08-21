@@ -6,7 +6,7 @@ import { withInfo } from '@storybook/addon-info';
 
 import { Button } from '../../src/component/ElementButtons/ElementButton';
 
-storiesOf('Button', module)
+storiesOf('Components|Button', module)
   .addDecorator(withInfo)
   .add('Add comment', () => <Button type="add-comment" onClick={action('Add comment')} />, { notes: "Add notes" })
   .add('Comment flag', () => <Button type="comment-flag" onClick={action('Open comments panel')} />, { notes: "open/view notes" })
