@@ -41,7 +41,7 @@ export default function ElementSaprator() {
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
                             <li>
-                            <Button type='text-elem' onClick={addMediaClickHandler} />              
+                            <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
                             <Button type='split' onClick={addMediaClickHandler} />              

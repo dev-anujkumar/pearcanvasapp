@@ -112,8 +112,7 @@ a {
 ul {
     list-style-type: none;
     padding: 0px;
+    margin: 0px;
+    padding-left: 5px;
 }
 
-li {
-    padding: 4px;
-}

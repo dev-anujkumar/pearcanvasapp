@@ -60,6 +60,9 @@ class Button extends Component {
             case "split":
                 buttonJSX = <span className="btn-element" id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
+            case "color-palette":
+                buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                break;
             case "text-elem":
                 buttonJSX = <span className="btn-element" id="text-elem" onClick={clickHandlerFn}><img src={textIcon} /></span>
                 break;
@@ -80,9 +83,6 @@ class Button extends Component {
                 break;
             case "assessment-elem":
                 buttonJSX = <span className="btn-element" id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></span>
-            case "color-palette":
-                buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
-                break;
         }
         return buttonJSX
     }

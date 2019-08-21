@@ -1,8 +1,8 @@
 .btn-element {
-    padding: 6px 10px;
+    /* padding: 6px 10px; */
     cursor: pointer;
     background-color: grey;
-    margin-bottom: 2px;
+    /* margin-bottom: 2px; */
     display: table;
 }
 
@@ -38,6 +38,21 @@
     
 }
 
+.btn-element#split-icon,
+.btn-element#expand-icon,
+.btn-element#forward-nav-active,
+.btn-element#backward-nav-active,
+.btn-element#color-palette {
+    background-color: transparent;
+}
+
+.btn-element#split-icon > img {
+    width: 30px;
+}
+
+.btn-element#expand-icon > img {
+    width: 40px;
+}
 /* #flag-icon{
     cursor: pointer;
     height: 18px;
@@ -77,11 +92,11 @@
     cursor: pointer;
 }
 
-#split-icon{
+/* #split-icon{
     width: 30px;
     height: 30px;
     cursor: pointer;
-}
+} */
 
 #expand-icon{
     width: 30px;
@@ -91,7 +106,7 @@
     cursor: pointer;
 }
 
-#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem{
+.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem{
     width: 30px;
     height: 30px;
     cursor: pointer;
