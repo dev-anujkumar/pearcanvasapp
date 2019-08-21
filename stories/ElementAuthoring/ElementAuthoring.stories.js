@@ -7,5 +7,5 @@ import { ElementAuthoring } from '../../src/component/ElementAuthoring/ElementAu
 
 storiesOf('ElementAuthoring', module)
   .addDecorator(withInfo)
-  .add('Paragraph', () => <ElementAuthoring type="element-authoredtext" onClick={action('Add Paragraph')} />, { notes: "Paragraph Element" })
+  .add('Paragraph', () => <ElementAuthoring type="element-authoredtext"  onKeyup = {action("Paragraph blured")} onFocus = {action("Paragraph blured")} onBlur = {action("Paragraph blured")} onClick={action('Add Paragraph')} />, { notes: "Paragraph Element" })
   

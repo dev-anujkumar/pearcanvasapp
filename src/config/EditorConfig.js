@@ -1,6 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss'
 export const EditorConfig = {
-    formats : {
+    formats: {
         // Changes the default format for h1 to have a class of heading
         "element-authoredtext": { block: 'p', classes: 'paragraphNumeroUno' },
         p: { block: 'p', classes: 'paragraphNumeroUno' },
@@ -15,7 +15,7 @@ export const EditorConfig = {
         'MA': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
-    toolbar : 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
-    contentStyle : CONTENT_STYLE,
-    plugins : "lists advlist"   
+    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
+    contentStyle: CONTENT_STYLE,
+    plugins: "lists advlist"
 }

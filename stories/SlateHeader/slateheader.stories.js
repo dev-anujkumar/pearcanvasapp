@@ -5,4 +5,4 @@ import { action } from '@storybook/addon-actions';
 import  SlateHeader  from '../../src/component/SlateHeader/slateHeader';
 
 storiesOf('SlateHeader', module)
-.add('to Storybook', () => <SlateHeader onClick={action('clicked')} />);
+.add('Slate Header', () => <SlateHeader onClick={action('clicked')} />);
