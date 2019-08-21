@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import '../../styles/ElementButtons/buttonStyle.css'
+import '../../styles/ElementButtons/ElementButton.css'
 
 import textIcon from '../../images/ElementButtons/textElement.svg'
 import imageIcon from '../../images/ElementButtons/imageElement.svg'
@@ -20,61 +20,68 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 
+class Button extends Component {
 
-export class Button extends Component {
-
+  /**
+  * Responsible for rendering Button component according to the props received
+  * @param type type of button
+  * @param clickHandlerFn Handler method to be called on click event
+  *  
+  */
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
         const { labelText } = this.props
 
         switch(type){
             case "add-comment":
-                buttonJSX = <div id="add-comment" onClick={clickHandlerFn}><img src= {addNote} /></div>
+                buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}><img src={addNote} /></span>
                 break;
             case "comment-flag":
-                buttonJSX = <div id="flag-icon" onClick={clickHandlerFn}><img src= {noteFlag} /></div>
+                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}><img src={noteFlag} /></span>
                 break;
             case "element-label":
-                buttonJSX = <div className = "element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</div>
+                buttonJSX = <span className="btn-element" id="element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
                 break;
             case "delete-element":
-                buttonJSX = <div id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></div>
+                buttonJSX = <span className="btn-element" id="delete-icon" onClick={clickHandlerFn}><img src={deleteIcon} /></span>
                 break;
             case "tcm":
-                buttonJSX = <div id="tcm-icon" onClick={clickHandlerFn}><img src={tcmIcon} /></div>
+                buttonJSX = <span className="btn-element small" id="tcm-icon" onClick={clickHandlerFn}><img src={tcmIcon} /></span>
                 break;
             case "forward-nav-active":
-                buttonJSX = <div id="forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></div>
+                buttonJSX = <span className="btn-element" id="forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
             case "backward-nav-active":
-                buttonJSX = <div id="backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></div>
+                buttonJSX = <span className="btn-element" id="backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
                 break;
             case "expand":
-                buttonJSX = <div id="expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></div>
+                buttonJSX = <span className="btn-element" id="expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
                 break;
             case "split":
-                buttonJSX = <div id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></div>
+                buttonJSX = <span className="btn-element" id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
             case "text-elem":
-                buttonJSX = <div id="text-elem" onClick={clickHandlerFn}><img src={textIcon} /></div>
+                buttonJSX = <span className="btn-element" id="text-elem" onClick={clickHandlerFn}><img src={textIcon} /></span>
                 break;
             case "image-elem":
-                buttonJSX = <div id="image-elem" onClick={clickHandlerFn}><img src={imageIcon} /></div>
+                buttonJSX = <span className="btn-element" id="image-elem" onClick={clickHandlerFn}><img src={imageIcon} /></span>
                 break;
             case "audio-elem":
-                buttonJSX = <div id="audio-elem" onClick={clickHandlerFn}><img src={audioIcon} /></div>
+                buttonJSX = <span className="btn-element" id="audio-elem" onClick={clickHandlerFn}><img src={audioIcon} /></span>
                 break;
             case "interactive-elem":
-                buttonJSX = <div id="interactive-elem" onClick={clickHandlerFn}><img src={interativeIcon} /></div>
+                buttonJSX = <span className="btn-element" id="interactive-elem" onClick={clickHandlerFn}><img src={interativeIcon} /></span>
                 break;
             case "container-elem":
-                buttonJSX = <div id="container-elem" onClick={clickHandlerFn}><img src={containerIcon} /></div>
+                buttonJSX = <span className="btn-element" id="container-elem" onClick={clickHandlerFn}><img src={containerIcon} /></span>
                 break;
             case "worked-exp-elem":
-                buttonJSX = <div id="worked-exp-elem" onClick={clickHandlerFn}><img src={workedExampleIcon} /></div>
+                buttonJSX = <span className="btn-element" id="worked-exp-elem" onClick={clickHandlerFn}><img src={workedExampleIcon} /></span>
                 break;
             case "assessment-elem":
-                buttonJSX = <div id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></div>
+                buttonJSX = <span className="btn-element" id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></span>
+            case "color-palette":
+                buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
         }
         return buttonJSX

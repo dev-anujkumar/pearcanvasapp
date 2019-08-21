@@ -1,49 +1,75 @@
-.element-label{
-    font-size: 14px;
-    font-weight: 200;
-    position: sticky;
-    color: white;
-    padding: 6px 0px;
-    align-items: center;
-    text-align: center;
-    height: 18px;
-    width: 30px;
-    cursor: move;
+.btn-element {
+    padding: 6px 10px;
+    cursor: pointer;
     background-color: grey;
+    margin-bottom: 2px;
+    display: table;
 }
 
-#flag-icon{
+.btn-element > img {
+    width: 20px;
+}
+
+.btn-element.small {
+    padding: 0 6px;
+}
+
+.btn-element.small > img {
+    width: 12px;
+}
+
+.btn-element#element-label {
+    cursor: move;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-element#flag-icon {
+    background-color: #fa5d54;
+}
+
+.btn-element#delete-icon {
+    padding: 4px 4px 0;
+    background-color: #fa5d54;
+}
+
+.btn-element#tcm-icon,
+.btn-element#add-comment {
+    
+}
+
+/* #flag-icon{
     cursor: pointer;
     height: 18px;
     width: 10px;
     padding: 0 5px;
     margin-bottom: 2px;
     background-color: #fa5d54
-}
+} */
 
-#delete-icon{
+/* #delete-icon{
     background-color: #fa5d54;
     padding: 4px 5px;
     height: 28px;
     width: 24px;
     cursor: pointer;
    
-}
+} */
 
-#delete-icon>img{
+/* #delete-icon>img{
     height: 24px;
     width: 24px;
     background-size: 82% 82%;
-}
+} */
 
-#tcm-icon, #add-comment{
+/* #tcm-icon, #add-comment{
     cursor: pointer;
     height: 18px;
     width: 10px;
     padding: 0 5px;
     margin-bottom: 2px;
     background-color: grey;
-}
+} */
 
 #forward-nav-active, #backward-nav-active{
     width: 30px;

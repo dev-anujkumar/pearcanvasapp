@@ -4,6 +4,7 @@ import asyncComponent from "./component/AsyncComponent.jsx";
 import './styles/style.css';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import img from './images/logo.png';
+import ElementAuthoring from './component/ElementAuthoring/ElementAuthoring.jsx'
 
 // Route Based 
 import RouteComponent from './component/RouteComponent.jsx';
@@ -32,7 +33,7 @@ class App extends Component {
         return (
             <Router>
                 <div>
-                    <h1>Expack</h1>
+                <h1>Expack</h1>
                     <p className="description">Express and Webpack Boilerplate App</p>
                     <div className="awful-selfie"></div>
                     <hr />
@@ -43,6 +44,7 @@ class App extends Component {
                         <br />
                         <img src={img} />
                     </React.Fragment>
+                    
                     {/* <nav>
                         <ul>
                             <li>

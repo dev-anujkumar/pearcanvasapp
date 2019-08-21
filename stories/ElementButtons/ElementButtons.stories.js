@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';
 
-import { Button } from '../../src/component/ElementButtons/ElementButton';
+import Button from '../../src/component/ElementButtons/ElementButton';
 
 storiesOf('Components|Button', module)
   .addDecorator(withInfo)
