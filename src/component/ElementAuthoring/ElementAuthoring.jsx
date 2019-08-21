@@ -19,9 +19,9 @@ ElementAuthoring.defaultProps = {
 }
 
 ElementAuthoring.propTypes = {
-      /** Type of element to be rendered */
+    /** Type of element to be rendered */
     type : PropTypes.string.isRequired,
-     /** Handler to attach on element click */
+    /** Handler to attach on element click */
     onClick : PropTypes.func
 }
 

@@ -33,7 +33,7 @@ class App extends Component {
         return (
             <Router>
                 <div>
-                    <h1>Expack</h1>
+                <h1>Expack</h1>
                     <p className="description">Express and Webpack Boilerplate App</p>
                     <div className="awful-selfie"></div>
                     <hr />
