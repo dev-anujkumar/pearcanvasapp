@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // IMPORT - Components //
-import ElementContainer from '../ElementContainer/ElementContainer';
+import ElementContainer from '../ElementContainer';
 
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
