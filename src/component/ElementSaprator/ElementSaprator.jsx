@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import Button from '../ElementButtons/ElementButton'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
@@ -7,6 +6,10 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 export default function ElementSaprator() {
     const [showClass, setShowClass] = useState(false);
 
+    /**
+     * @description: This hook is used for handling the outer click, 
+     * after mounting the component or update the component state this hook will called
+     */
     useEffect(() => {
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
@@ -22,6 +25,10 @@ export default function ElementSaprator() {
           }
     });
 
+    /**
+     * @description: This function is responsable for toggle 
+     * state to render the dropdown
+     */
     function toggleElementList() {       
         setShowClass(!showClass)
     }
@@ -31,51 +38,56 @@ export default function ElementSaprator() {
             <div className='elemDiv1'>
                 <Button type='split' onClick={splitSlateClickHandler} /> 
             </div>
+
             <div className='elemDiv2'>
-            <hr className='horizontalLine' />
+                <hr className='horizontalLine' />
             </div>
+
             <div className='elemDiv3'>
-            <div className="dropdown">
+                <div className="dropdown">
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
-                    {/* <button onClick={() => setShowClass(!showClass)} className="dropbtn">Dropdown</button> */}
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                             <li>
-                            <Button type='split' onClick={addMediaClickHandler} />              
+                                <Button type='split' onClick={addMediaClickHandler} />              
                             </li>
                         </ul>
                     </div>
                 </div>
-            </div>
-                            
-                
+            </div>                      
         </div>
     )
 }
 
+/**
+ * @description: OnClick handler for split slate button
+ */
 export function splitSlateClickHandler() {
     // alert('split slate button clicked')
      console.log('split slate button clicked')
 }
 
+/**
+ * @description: OnClick handler for add Element button
+ */
 export function addMediaClickHandler() {
     // alert('add media button clicked')
      console.log('add media button clicked')
