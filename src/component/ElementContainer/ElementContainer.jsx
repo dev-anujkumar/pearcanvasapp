@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-import ElementAuthoring from './../ElementAuthoring/ElementAuthoring.js';
-import Button from './../ElementButtons/ElementButton';
+import ElementAuthoring from './../ElementAuthoring';
+import Button from './../ElementButtons';
 import './../../styles/ElementContainer/ElementContainer.css';
 
 class ElementContainer extends Component {
