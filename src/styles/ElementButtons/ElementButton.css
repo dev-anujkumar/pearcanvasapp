@@ -38,6 +38,17 @@
     
 }
 
+.btn-element#forward-nav-active,
+.btn-element#backward-nav-active {
+    padding: 0;
+    background: transparent;
+}
+
+.btn-element#forward-nav-active > img,
+.btn-element#backward-nav-active > img {
+    width: 26px;
+}
+
 /* #flag-icon{
     cursor: pointer;
     height: 18px;
@@ -71,11 +82,11 @@
     background-color: grey;
 } */
 
-#forward-nav-active, #backward-nav-active{
+/* #forward-nav-active, #backward-nav-active{
     width: 30px;
     height: 27px;
     cursor: pointer;
-}
+} */
 
 #split-icon{
     width: 30px;
