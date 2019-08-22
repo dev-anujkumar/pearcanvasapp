@@ -9,8 +9,12 @@ import markdownNotes from './ElementSaprator.md'
 const stories = storiesOf('Components|Element Saprator', module)
 
 stories.addDecorator(withKnobs)
-
-stories.add('ElementSaprator', () => < ElementSaprator / > , {
+function splithandlerfunction () {
+  alert('Click handler function Called')
+}
+const typeHandler = ['split', 'split', 'split', 'split', 'split', 'split', 'split']
+const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
+stories.add('ElementSaprator', () => < ElementSaprator typeHandler={typeHandler} clickHandler={clickHandler}/ > , {
   // notes: {
   //   markdown: markdownNotes
   // }, //Notes for a story

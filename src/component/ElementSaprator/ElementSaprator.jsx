@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import Button from '../ElementButtons/ElementButton'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
-export default function ElementSaprator() {
-    const [showClass, setShowClass] = useState(false);
+export default function ElementSaprator(props) {
+    const [showClass, setShowClass] = useState(false)
+    const {typeHandler, clickHandler} = props
 
     /**
      * @description: This hook is used for handling the outer click, 
@@ -48,33 +50,18 @@ export default function ElementSaprator() {
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
-                            <li>
-                                <Button type='split' onClick={addMediaClickHandler} />              
-                            </li>
+                            {renderDropdownButtons(typeHandler, clickHandler)}
                         </ul>
                     </div>
                 </div>
             </div>                      
         </div>
     )
+}
+
+ElementSaprator.propTypes = {
+    typeHandler : PropTypes.array.isRequired,
+    clickHandler : PropTypes.array.isRequired
 }
 
 /**
@@ -91,4 +78,15 @@ export function splitSlateClickHandler() {
 export function addMediaClickHandler() {
     // alert('add media button clicked')
      console.log('add media button clicked')
+}
+
+/**
+ * @description: rendering the dropdown
+ */
+export function renderDropdownButtons(typesArr, btnClkArr) {
+    return typesArr.map((type, key) => {
+            return (<li key={key}>
+                <Button type={type} onClick={btnClkArr[key]} />              
+            </li>)
+        })
 }
