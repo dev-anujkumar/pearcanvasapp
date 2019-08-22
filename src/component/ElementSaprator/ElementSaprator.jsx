@@ -71,12 +71,12 @@ export default function ElementSaprator() {
     )
 }
 
-function splitSlateClickHandler() {
-    alert('split slate button clicked')
-    console.log('split slate button clicked')
+export function splitSlateClickHandler() {
+    // alert('split slate button clicked')
+     console.log('split slate button clicked')
 }
 
-function addMediaClickHandler() {
-    alert('add media button clicked')
-    console.log('add media button clicked')
+export function addMediaClickHandler() {
+    // alert('add media button clicked')
+     console.log('add media button clicked')
 }
