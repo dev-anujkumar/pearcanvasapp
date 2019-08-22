@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ElementAuthoring from './../ElementAuthoring/ElementAuthoring';
+import ElementAuthoring from './../ElementAuthoring';
 import Button from './../ElementButtons/ElementButton.jsx';
 import './../../styles/ElementContainer/ElementContainer.css';
 

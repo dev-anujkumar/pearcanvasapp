@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
+import SlateHeader from '../SlateHeader/slateHeader.jsx';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -26,10 +27,10 @@ export class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 <div className='title-head-wrapper'>
                                     <span className='--rm-place'>Slate title</span>
-                                    {/* put title header */}
+                                    <SlateHeader />
                                 </div>
                                 <div className='slate-wrapper'>
-                                    <SlateWrapper />
+                                    <SlateWrapper slateData={this.props.slateLevelData} />
                                 </div>
                             </div>
                         </div>

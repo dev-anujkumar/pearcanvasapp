@@ -4,7 +4,7 @@
 
 import React, { Component } from "react";
 import '../../styles/SlateHeader/SlateHeader.css';
-import Button from '../ElementButtons/ElementButton';
+import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
 
 /**
