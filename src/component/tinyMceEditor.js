@@ -20,7 +20,7 @@ export class TinyMceEditor extends React.Component {
             menubar: false,
             statusbar: false,
             inline: true,
-            fixed_toolbar_container: '#mytoolbar',
+            fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
             init_instance_callback: function (editor) {

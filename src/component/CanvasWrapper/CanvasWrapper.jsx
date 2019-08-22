@@ -18,20 +18,16 @@ export class CanvasWrapper extends Component {
         return (
             <div className='content-composer'>
                 <div id="editor-toolbar" className="editor-toolbar">
-                    <span className='--rm-place'>Tool Bar</span>
+                    {/* <span className='--rm-place'>Tool Bar</span> */}
                     {/* put editor tool */}
+                    <div className="header" id="tinymceToolbar"></div>
                 </div>
                 <div className='workspace'>
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
-                                <div className='title-head-wrapper'>
-                                    <span className='--rm-place'>Slate title</span>
-                                    <SlateHeader />
-                                </div>
-                                <div className='slate-wrapper'>
-                                    <SlateWrapper slateData={this.props.slateLevelData} />
-                                </div>
+                                {/* slate wrapper component combines slate content & slate title */}
+                                <SlateWrapper slateData={this.props.slateLevelData} />
                             </div>
                         </div>
                     </div>
