@@ -12,8 +12,10 @@ stories.addDecorator(withKnobs)
 function splithandlerfunction () {
   alert('Click handler function Called')
 }
+
 const typeHandler = ['split', 'split', 'split', 'split', 'split', 'split', 'split']
 const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
+
 stories.add('ElementSaprator', () => < ElementSaprator typeHandler={typeHandler} clickHandler={clickHandler}/ > , {
   // notes: {
   //   markdown: markdownNotes
