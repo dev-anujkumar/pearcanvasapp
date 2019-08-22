@@ -2,7 +2,7 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import  SlateHeader  from '../../src/component/SlateHeader';
+import  SlateHeader  from '../../src/component/CanvasSlateHeader';
 import { withInfo } from '@storybook/addon-info';
 
 storiesOf('SlateHeader', module)

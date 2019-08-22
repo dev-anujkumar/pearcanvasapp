@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
-import SlateHeader from '../SlateHeader/slateHeader.jsx';
+import SlateHeader from '../CanvasSlateHeader';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
