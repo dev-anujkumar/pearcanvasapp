@@ -1,0 +1,479 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test for element container component Render element container  1`] = `
+<ElementContainer
+  element={
+    Object {
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+      "elementdata": Object {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+      },
+      "html": Object {
+        "text": "<p class=\\"paragraphNumeroUno\\"><br></p>",
+      },
+      "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+      "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+      "subtype": "",
+      "tcm": true,
+      "type": "element-authoredtext",
+      "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+    }
+  }
+>
+  <div
+    className="element-container"
+    data-id="urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a"
+  >
+    <div>
+      <Button
+        labelText="P"
+        type="element-label"
+      >
+        <span
+          className="btn-element"
+          id="element-label"
+        >
+          P
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="delete-element"
+      >
+        <span
+          className="btn-element"
+          id="delete-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+    <ElementAuthoring
+      type="element-authoredtext"
+    >
+      <TinyMceEditor
+        error={null}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyup={[Function]}
+        type="element-authoredtext"
+      >
+        <div
+          className="Editor"
+        >
+          <Editor
+            cloudChannel="5"
+            init={
+              Object {
+                "content_style": "@import url(https://fonts.googleapis.com/css?family=Lato);*{border:0;padding:0;margin:0;background:0 0;color:inherit;box-sizing:border-box;background-repeat:no-repeat;background-position:50% 50%;font-weight:400}:focus{outline:0}a{text-decoration:none}b,b *,strong,strong *{font-weight:700}ol,ul{list-style:none}pre{font:inherit}button,input,input:not([type]),input[type=button],input[type=color],input[type=date],input[type=datetime-local],input[type=datetime],input[type=email],input[type=month],input[type=number],input[type=password],input[type=reset],input[type=search],input[type=submit],input[type=tel],input[type=text],input[type=time],input[type=url],input[type=week],select,textarea{font:inherit}@font-face{font-family:aileron;font-style:normal;font-weight:200;src:url(../fonts/aileron-ultra-light.eot?#iefix) format(\\"embedded-opentype\\"),url(../fonts/aileron-ultra-light.woff) format(\\"woff\\"),url(../fonts/aileron-ultra-light.ttf) format(\\"truetype\\")}body{padding:1em}.codepen body{margin:10px 0 0}.codepen body textarea{display:none}.mce-content-body .Wirisformula{margin-top:-5px;}.mce-container textarea{display:inline-block!important}.mce-content-body{font-family:Lato!important;font-size:14px;color:#626262;padding:0 25px 25px}.mce-content-body *{background-position:initial}.mce-content-body h1{font-size:34px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h2{font-size:30px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h3{font-size:26px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h4{font-size:22px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h5{font-size:18px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h6{font-size:14px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body p{margin:25px 0}.mce-content-body pre{font-family:monospace}.mce-content-body ol,.mce-content-body ul{margin-left:15px;list-style-position:outside;margin-bottom:20px}.mce-content-body ol li,.mce-content-body ul li{margin-left:10px;margin-bottom:10px;color:#626262}.mce-content-body ul{list-style-type:disc}.mce-content-body ol{list-style-type:decimal}.mce-content-body a[href]{text-decoration:underline}.mce-content-body table{width:100%;border-spacing:0;border-collapse:separate !important;border:1px solid #aaa}.mce-content-body table caption,.mce-content-body table td,.mce-content-body table th{padding:15px 7px;font:inherit}.mce-content-body table td,.mce-content-body table th{border:1px solid #aaa;border-collapse:separate}.mce-content-body table th{font-weight:400;color:#6e6e6e;background-position:100% 100%;background-size:2px 10px;background-repeat:no-repeat}.mce-content-body table th:last-child{background:0 0}.mce-content-body hr{border-top:2px solid #bbb}",
+                "fixed_toolbar_container": "#mytoolbar",
+                "formats": Object {
+                  "element-authoredtext": Object {
+                    "block": "p",
+                    "classes": "paragraphNumeroUno",
+                  },
+                  "h1": Object {
+                    "block": "h1",
+                    "classes": "heading1NummerEins",
+                  },
+                  "h2": Object {
+                    "block": "h2",
+                    "classes": "heading2NummerEins",
+                  },
+                  "h3": Object {
+                    "block": "h3",
+                    "classes": "heading3NummerEins",
+                  },
+                  "h4": Object {
+                    "block": "h4",
+                    "classes": "heading4NummerEins",
+                  },
+                  "h5": Object {
+                    "block": "h5",
+                    "classes": "heading5NummerEins",
+                  },
+                  "h6": Object {
+                    "block": "h6",
+                    "classes": "heading6NummerEins",
+                  },
+                },
+                "init_instance_callback": [Function],
+                "inline": true,
+                "menubar": false,
+                "plugins": "lists advlist",
+                "selector": ".Editor",
+                "setup": [Function],
+                "statusbar": false,
+                "toolbar": "undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ",
+              }
+            }
+            onChange={[Function]}
+          >
+            <div
+              id="tiny-react_70934074621566394675906"
+            />
+          </Editor>
+        </div>
+      </TinyMceEditor>
+    </ElementAuthoring>
+    <div>
+      <Button
+        labelText="P"
+        type="add-comment"
+      >
+        <span
+          className="btn-element small"
+          id="add-comment"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="comment-flag"
+      >
+        <span
+          className="btn-element small"
+          id="flag-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="tcm"
+      >
+        <span
+          className="btn-element small"
+          id="tcm-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+  </div>
+</ElementContainer>
+`;
+
+exports[`Test for element container component Render element container  2`] = `
+<ElementContainer
+  element={
+    Object {
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+      "elementdata": Object {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+      },
+      "html": Object {
+        "text": "<p class=\\"paragraphNumeroUno\\"><br></p>",
+      },
+      "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+      "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+      "subtype": "",
+      "tcm": true,
+      "type": "opener",
+      "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+    }
+  }
+>
+  <div
+    className="element-container"
+    data-id="urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a"
+  >
+    <div>
+      <Button
+        labelText="OE"
+        type="element-label"
+      >
+        <span
+          className="btn-element"
+          id="element-label"
+        >
+          OE
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="delete-element"
+      >
+        <span
+          className="btn-element"
+          id="delete-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+    Opener Element
+    <div>
+      <Button
+        labelText="P"
+        type="add-comment"
+      >
+        <span
+          className="btn-element small"
+          id="add-comment"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="comment-flag"
+      >
+        <span
+          className="btn-element small"
+          id="flag-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="tcm"
+      >
+        <span
+          className="btn-element small"
+          id="tcm-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+  </div>
+</ElementContainer>
+`;
+
+exports[`Test for element container component Render element container  3`] = `
+<ElementContainer
+  element={
+    Object {
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+      "elementdata": Object {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+      },
+      "html": Object {
+        "text": "<p class=\\"paragraphNumeroUno\\"><br></p>",
+      },
+      "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+      "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+      "subtype": "",
+      "tcm": true,
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+    }
+  }
+>
+  <div
+    className="element-container"
+    data-id="urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a"
+  >
+    <div>
+      <Button
+        labelText="FG"
+        type="element-label"
+      >
+        <span
+          className="btn-element"
+          id="element-label"
+        >
+          FG
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="delete-element"
+      >
+        <span
+          className="btn-element"
+          id="delete-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+    <ElementAuthoring
+      type="figure"
+    >
+      <TinyMceEditor
+        error={null}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyup={[Function]}
+        type="figure"
+      >
+        <div
+          className="Editor"
+        >
+          <Editor
+            cloudChannel="5"
+            init={
+              Object {
+                "content_style": "@import url(https://fonts.googleapis.com/css?family=Lato);*{border:0;padding:0;margin:0;background:0 0;color:inherit;box-sizing:border-box;background-repeat:no-repeat;background-position:50% 50%;font-weight:400}:focus{outline:0}a{text-decoration:none}b,b *,strong,strong *{font-weight:700}ol,ul{list-style:none}pre{font:inherit}button,input,input:not([type]),input[type=button],input[type=color],input[type=date],input[type=datetime-local],input[type=datetime],input[type=email],input[type=month],input[type=number],input[type=password],input[type=reset],input[type=search],input[type=submit],input[type=tel],input[type=text],input[type=time],input[type=url],input[type=week],select,textarea{font:inherit}@font-face{font-family:aileron;font-style:normal;font-weight:200;src:url(../fonts/aileron-ultra-light.eot?#iefix) format(\\"embedded-opentype\\"),url(../fonts/aileron-ultra-light.woff) format(\\"woff\\"),url(../fonts/aileron-ultra-light.ttf) format(\\"truetype\\")}body{padding:1em}.codepen body{margin:10px 0 0}.codepen body textarea{display:none}.mce-content-body .Wirisformula{margin-top:-5px;}.mce-container textarea{display:inline-block!important}.mce-content-body{font-family:Lato!important;font-size:14px;color:#626262;padding:0 25px 25px}.mce-content-body *{background-position:initial}.mce-content-body h1{font-size:34px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h2{font-size:30px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h3{font-size:26px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h4{font-size:22px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h5{font-size:18px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body h6{font-size:14px;font-family:aileron;font-weight:200;line-height:1.4em;margin:25px 0 15px}.mce-content-body p{margin:25px 0}.mce-content-body pre{font-family:monospace}.mce-content-body ol,.mce-content-body ul{margin-left:15px;list-style-position:outside;margin-bottom:20px}.mce-content-body ol li,.mce-content-body ul li{margin-left:10px;margin-bottom:10px;color:#626262}.mce-content-body ul{list-style-type:disc}.mce-content-body ol{list-style-type:decimal}.mce-content-body a[href]{text-decoration:underline}.mce-content-body table{width:100%;border-spacing:0;border-collapse:separate !important;border:1px solid #aaa}.mce-content-body table caption,.mce-content-body table td,.mce-content-body table th{padding:15px 7px;font:inherit}.mce-content-body table td,.mce-content-body table th{border:1px solid #aaa;border-collapse:separate}.mce-content-body table th{font-weight:400;color:#6e6e6e;background-position:100% 100%;background-size:2px 10px;background-repeat:no-repeat}.mce-content-body table th:last-child{background:0 0}.mce-content-body hr{border-top:2px solid #bbb}",
+                "fixed_toolbar_container": "#mytoolbar",
+                "formats": Object {
+                  "element-authoredtext": Object {
+                    "block": "p",
+                    "classes": "paragraphNumeroUno",
+                  },
+                  "h1": Object {
+                    "block": "h1",
+                    "classes": "heading1NummerEins",
+                  },
+                  "h2": Object {
+                    "block": "h2",
+                    "classes": "heading2NummerEins",
+                  },
+                  "h3": Object {
+                    "block": "h3",
+                    "classes": "heading3NummerEins",
+                  },
+                  "h4": Object {
+                    "block": "h4",
+                    "classes": "heading4NummerEins",
+                  },
+                  "h5": Object {
+                    "block": "h5",
+                    "classes": "heading5NummerEins",
+                  },
+                  "h6": Object {
+                    "block": "h6",
+                    "classes": "heading6NummerEins",
+                  },
+                },
+                "init_instance_callback": [Function],
+                "inline": true,
+                "menubar": false,
+                "plugins": "lists advlist",
+                "selector": ".Editor",
+                "setup": [Function],
+                "statusbar": false,
+                "toolbar": "undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ",
+              }
+            }
+            onChange={[Function]}
+          >
+            <div
+              id="tiny-react_72050311531566394675945"
+            />
+          </Editor>
+        </div>
+      </TinyMceEditor>
+    </ElementAuthoring>
+    <div>
+      <Button
+        labelText="P"
+        type="add-comment"
+      >
+        <span
+          className="btn-element small"
+          id="add-comment"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="comment-flag"
+      >
+        <span
+          className="btn-element small"
+          id="flag-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+      <Button
+        labelText="P"
+        type="tcm"
+      >
+        <span
+          className="btn-element small"
+          id="tcm-icon"
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </Button>
+    </div>
+  </div>
+</ElementContainer>
+`;
