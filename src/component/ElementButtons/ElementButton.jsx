@@ -3,6 +3,13 @@ import PropTypes from 'prop-types'
 
 import '../../styles/ElementButtons/ElementButton.css'
 
+import textIcon from '../../images/ElementButtons/textElement.svg'
+import imageIcon from '../../images/ElementButtons/imageElement.svg'
+import audioIcon from '../../images/ElementButtons/audioElement.svg'
+import interativeIcon from '../../images/ElementButtons/interactiveElement.svg'
+import assessmentIcon from '../../images/ElementButtons/assessmentElement.svg'
+import containerIcon from '../../images/ElementButtons/containerElement.svg'
+import workedExampleIcon from '../../images/ElementButtons/workedExampleElement.svg'
 import addNote from '../../images/ElementButtons/addNote.svg'
 import noteFlag from '../../images/ElementButtons/noteFlag.svg'
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
@@ -56,6 +63,26 @@ class Button extends Component {
             case "color-palette":
                 buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
+            case "text-elem":
+                buttonJSX = <span className="btn-element" id="text-elem" onClick={clickHandlerFn}><img src={textIcon} /></span>
+                break;
+            case "image-elem":
+                buttonJSX = <span className="btn-element" id="image-elem" onClick={clickHandlerFn}><img src={imageIcon} /></span>
+                break;
+            case "audio-elem":
+                buttonJSX = <span className="btn-element" id="audio-elem" onClick={clickHandlerFn}><img src={audioIcon} /></span>
+                break;
+            case "interactive-elem":
+                buttonJSX = <span className="btn-element" id="interactive-elem" onClick={clickHandlerFn}><img src={interativeIcon} /></span>
+                break;
+            case "container-elem":
+                buttonJSX = <span className="btn-element" id="container-elem" onClick={clickHandlerFn}><img src={containerIcon} /></span>
+                break;
+            case "worked-exp-elem":
+                buttonJSX = <span className="btn-element" id="worked-exp-elem" onClick={clickHandlerFn}><img src={workedExampleIcon} /></span>
+                break;
+            case "assessment-elem":
+                buttonJSX = <span className="btn-element" id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></span>
         }
         return buttonJSX
     }
