@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../src/component/ElementButtons/ElementButton.jsx';
+import Button from '../../../src/component/ElementButtons/ElementButton';
 
 describe('Testing Button component with props', () => {
 

@@ -3,8 +3,9 @@
 */
 
 import React, { Component } from "react";
-import '../../styles/SlateHeader/slateHeader.css';
-import Button from '../ElementButtons/ElementButton';
+import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
+import Button from '../ElementButtons/ElementButton.jsx';
+import PropTypes from 'prop-types'
 
 /**
 * @description - SlateHeader is a class based component. It is defined simply
@@ -13,10 +14,9 @@ import Button from '../ElementButtons/ElementButton';
  class SlateHeader extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            slateType: this.props.slateType || ''
-        };
+        this.state ={}
         this.handleNavClick = this.handleNavClick.bind(this);
+        this.getLabel = this.getLabel.bind(this);
     }
 
 
@@ -58,7 +58,8 @@ import Button from '../ElementButtons/ElementButton';
     }
 
     render() {
-        let slateLabel = this.getLabel(this.state.slateType);
+        const { slateType } = this.props
+        let slateLabel = this.getLabel(slateType);
 
         return (
             <div className="slate-Title">
@@ -74,6 +75,15 @@ import Button from '../ElementButtons/ElementButton';
             </div>
         )
     }
+}
+
+SlateHeader.defaultProps = {
+    slateType: ""
+}
+
+SlateHeader.propTypes = {
+      /** Type of slate to be rendered */
+      slateType : PropTypes.string.isRequired
 }
 
 export default  SlateHeader ;

@@ -1,0 +1,1 @@
+export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'

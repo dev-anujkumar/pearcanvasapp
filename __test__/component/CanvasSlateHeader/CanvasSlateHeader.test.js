@@ -1,5 +1,5 @@
 import React from 'react';
-import SlateHeader from '../src/component/SlateHeader/slateHeader.jsx';
+import SlateHeader from '../../../src/component/CanvasSlateHeader';
 
 
 describe('Testing SlateHeader component with props', () => {
@@ -26,7 +26,7 @@ describe('Testing SlateHeader component with props', () => {
 
     it('onClick Event', () => {
         const component = mount(<SlateHeader />);
-        component.find('div#backward-nav-active').simulate('click');
-        component.find('div#forward-nav-active').simulate('click');
+        component.find('span#backward-nav-active').simulate('click');
+        component.find('span#forward-nav-active').simulate('click');
     })
 })
