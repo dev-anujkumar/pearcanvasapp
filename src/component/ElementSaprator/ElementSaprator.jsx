@@ -6,8 +6,14 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const {typeHandler, clickHandler} = props
+    const {typeHandler, clickHandler, elementType} = props
 
+    if(elementType === 'WE') {
+
+    }
+    
+    console.log('rrrrrrrrrrrrrrrrrrr',elementType, clickHandler, typeHandler)
+    
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
@@ -61,7 +67,8 @@ export default function ElementSaprator(props) {
 
 ElementSaprator.propTypes = {
     typeHandler : PropTypes.array.isRequired,
-    clickHandler : PropTypes.array.isRequired
+    clickHandler : PropTypes.array.isRequired,
+    elementType : PropTypes.string
 }
 
 /**
@@ -86,7 +93,7 @@ export function addMediaClickHandler() {
 export function renderDropdownButtons(typesArr, btnClkArr) {
     return typesArr.map((type, key) => {
             return (<li key={key}>
-                <Button type={type} onClick={btnClkArr[key]} />              
+                    <Button type={type} onClick={btnClkArr[key]} />              
             </li>)
         })
 }

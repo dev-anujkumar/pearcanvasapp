@@ -13,7 +13,7 @@ function splithandlerfunction () {
   alert('Click handler function Called')
 }
 
-const typeHandler = ['split', 'split', 'split', 'split', 'split', 'split', 'split']
+const typeHandler = ['text-elem', 'split', 'split', 'split', 'split', 'split', 'split']
 const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
 
 stories.add('ElementSaprator', () => < ElementSaprator typeHandler={typeHandler} clickHandler={clickHandler}/ > , {
