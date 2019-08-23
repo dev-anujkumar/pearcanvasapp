@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 
 import ElementAuthoring from './../ElementAuthoring';
-import Button from './../ElementButtons/ElementButton.jsx';
+import Button from './../ElementButtons';
 import './../../styles/ElementContainer/ElementContainer.css';
 
 class ElementContainer extends Component {
@@ -45,6 +46,11 @@ class ElementContainer extends Component {
         const { element } = this.props;
         return this.renderElement(element);
     }
+}
+
+ElementContainer.propTypes = {
+    /** Detail of element in JSON object */
+    element : PropTypes.object,
 }
 
 export default ElementContainer
