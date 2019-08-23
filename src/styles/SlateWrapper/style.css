@@ -1,0 +1,40 @@
+.title-head-wrapper {
+    height: 35px;
+    margin: 0px 10px;
+}
+
+.slate-wrapper {
+    height: calc(100% - 35px);
+    padding: 10px;
+    overflow: auto;
+}
+
+.slate-content {
+    padding: 10px 20px;
+    min-height: 800px;
+    height: auto;
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+    box-shadow: 3px -3px 6px -4px rgba(158, 158, 158, 0.5);
+    margin-bottom: 10px;
+}
+
+.slate-content .element-list {
+    min-height: 800px;
+    position: relative;
+    display: block;
+}
+
+.slate-content .slate-footer {
+    width: 100%;
+    height: 20px;
+    background: url('../../images/SlateWrapper/complete_loading.png') no-repeat;
+    background-position: center;
+    position: relative;
+    margin: -10px auto 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 40px 0;
+}

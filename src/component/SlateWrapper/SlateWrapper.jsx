@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
+import { SlateFooter } from './SlateFooter.jsx';
 
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -55,9 +56,12 @@ class SlateWrapper extends Component {
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
-                            {
-                                this.renderElement(_slateBodyMatter)
-                            }
+                            <div className='element-list'>
+                                {
+                                    this.renderElement(_slateBodyMatter)
+                                }
+                            </div>
+                            <SlateFooter />
                         </div>
                     )
                 }
