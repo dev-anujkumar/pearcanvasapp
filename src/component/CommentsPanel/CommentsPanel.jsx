@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
+import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
+import Comments from './Comments'
 class CommentsPanel extends React.Component {
     constructor(props) {
         super(props)
@@ -77,6 +79,7 @@ class CommentsPanel extends React.Component {
                                        {/*  <svg className="dropdown__arrow">
                                             <use xlinkHref="#arrow-down"></use>
                                         </svg> */}
+                                         <img src = {arrowDown} />
                                     </div>
                                     {this.state.showSortByDropdown &&
                                         <ul className="dropdown__content">
@@ -97,6 +100,7 @@ class CommentsPanel extends React.Component {
                                         {/* <svg className="dropdown__arrow">
                                             <use xlinkHref="#arrow-down"></use>
                                         </svg> */}
+                                        <img src = {arrowDown} />
                                     </div>
                                     {this.state.showStatusDropdown &&
                                         <ul className="dropdown__content">
@@ -109,6 +113,19 @@ class CommentsPanel extends React.Component {
                             </div>
 
                         </div>
+                    </div>
+                    <div id="panel-canvas" className="comments-canvas">
+                    <Comments //comment = {comment}
+                                           // slateTitle = {this.currentSlate}
+                                           // key = {index} 
+                                           // elementId = {comment.commentOnEntity}
+                                           // updateElementComment = {this.updateElementComment}
+                                           // updateElementCommentReply = {this.updateElementCommentReply}
+                                           // deleteComment = {this.deleteComment}
+                                           // changeStatus = {this.changeStatus}
+                                            //updateAssignee = {this.updateAssignee}
+                                    />
+                      {/*   <div className="no-comment-div">No comments found</div>  */}  
                     </div>
                 </div>
             </div>
