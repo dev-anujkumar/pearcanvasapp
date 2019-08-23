@@ -11,7 +11,11 @@ export default function ElementSaprator(props) {
     if(elementType === 'WE') {
 
     }
-    
+
+    if(elementType){
+        
+    }
+
     console.log('rrrrrrrrrrrrrrrrrrr',elementType, clickHandler, typeHandler)
     
     /**

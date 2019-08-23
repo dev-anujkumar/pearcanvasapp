@@ -112,7 +112,7 @@
     cursor: pointer;
 }
 
-.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem{
+.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem, #opener-elem{
     width: 30px;
     height: 30px;
     display: flex;
@@ -126,7 +126,7 @@
     opacity: 0.5;
 }
 
-#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover{
+#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover, #opener-elem:hover{
     opacity: 1;
 }
 

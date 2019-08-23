@@ -13,8 +13,8 @@ function splithandlerfunction () {
   alert('Click handler function Called')
 }
 
-const typeHandler = ['text-elem', 'image-elem', 'audio-elem', 'interactive-elem', 'assessment-elem', 'container-elem', 'worked-exp-elem']
-const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
+const typeHandler = ['text-elem', 'image-elem', 'audio-elem', 'interactive-elem', 'assessment-elem', 'container-elem', 'worked-exp-elem', 'opener-elem']
+const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
 
 stories.add('ElementSaprator', () => < ElementSaprator typeHandler={typeHandler} clickHandler={clickHandler}/ > , {
   // notes: {

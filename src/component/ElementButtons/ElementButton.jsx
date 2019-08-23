@@ -10,6 +10,8 @@ import interativeIcon from '../../images/ElementButtons/interactiveElement.svg'
 import assessmentIcon from '../../images/ElementButtons/assessmentElement.svg'
 import containerIcon from '../../images/ElementButtons/containerElement.svg'
 import workedExampleIcon from '../../images/ElementButtons/workedExampleElement.svg'
+import openerElement from '../../images//ElementButtons/openerElement.svg'
+import sectionBreakElement from '../../images/ElementButtons/sectionBreakElement.svg'
 import addNote from '../../images/ElementButtons/addNote.svg'
 import noteFlag from '../../images/ElementButtons/noteFlag.svg'
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
@@ -83,6 +85,13 @@ class Button extends Component {
                 break;
             case "assessment-elem":
                 buttonJSX = <span className="btn-element" id="assessment-elem" onClick={clickHandlerFn}><img src={assessmentIcon} /></span>
+                break;
+            case "opener-elem":
+                buttonJSX = <span className="btn-element" id="opener-elem" onClick={clickHandlerFn}><img src={openerElement} /></span>
+                break;
+            case "section-break-elem":
+                buttonJSX = <span className="btn-element" id="section-break-elem" onClick={clickHandlerFn}><img src={sectionBreakElement} /></span>
+                break;
         }
         return buttonJSX
     }
