@@ -7,7 +7,7 @@
 }
 
 .btn-element > img {
-    width: 20px;
+    width: 18px;
 }
 
 .btn-element.small {
@@ -115,8 +115,21 @@
 .btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem{
     width: 30px;
     height: 30px;
+    display: flex;
+    padding: 5px;
+    margin: 1px;
     cursor: pointer;
+    background: white;
+    border: solid 1px #aaaaaa;
+    border-radius: 50%;
+    align-items: center;
+    opacity: 0.5;
 }
+
+#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover{
+    opacity: 1;
+}
+
 
 #color-palette{
     padding: 6px 0;
