@@ -18,6 +18,10 @@
     margin-left: 11px;
 }
 
+.canvas-header .input-text:hover {
+    border-bottom: solid 1px #0063CA;
+}
+
 .u-hidden {
     font-family: 'Open Sans', sans-serif;
     font-size: 10px;
