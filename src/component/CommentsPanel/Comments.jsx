@@ -5,15 +5,69 @@ import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.
 class Comment extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            //newAssignee: this.props.comment.assignto
+            showActionsMenu: false,
+            mode: 'view',
+        }
+        this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
+        this.editComment = this.editComment.bind(this);
+        this.setMode = this.setMode.bind(this)
+    }
+    componentDidMount() {
+        console.log("commentsssssssssssssssssss")
+    }
+    toggleActionsMenu(show) {
+        if (show === undefined) show = !this.state.showActionsMenu
+        this.setState({ showActionsMenu: show })
+    }
+    editComment(e) {
+        this.toggleActionsMenu(false)
+        this.setMode('edit')
+    }
+    setMode(mode) {
+        this.setState({ mode })
     }
     actionsMenu = () => {
-        <ul className="comment-action-menu action-menu">
-            <li onClick={() => this.toggleReplyForm(true)}>Reply</li>
-            <li onClick={this.resolveComment}>Resolve</li>
-            <li onClick={this.editComment}>Edit</li>
-            <li onClick={this.changeAssignee}>Change Assignee</li>
-            <li onClick={this.deleteComment}>Delete</li>
-        </ul>
+        return (
+            <ul className="comment-action-menu action-menu">
+                <li onClick={() => this.toggleReplyForm(true)}>Reply</li>
+                <li onClick={this.resolveComment}>Resolve</li>
+                <li onClick={this.editComment}>Edit</li>
+                <li onClick={this.changeAssignee}>Change Assignee</li>
+                <li onClick={this.deleteComment}>Delete</li>
+            </ul>
+        )
+
+    }
+    editForm = () => {
+        return (
+
+            <div>
+                <textarea rows="10"
+                    className="new-comment textarea-input"
+                    defaultValue={this.props.comment.commentString}
+                    onChange={this.updateCommentText}
+                />
+                <div className="buttons-wrapper">
+                    <button className="btn btn__initial"
+                        onClick={() => {
+                            this.setMode('view')
+                            this.clearEditionText()
+                        }}>
+                        Cancel
+                            </button>
+                    <button className="btn btn__initial"
+                        onClick={() => {
+                            this.setMode('view')
+                            this.updateComment('text')
+                        }}>
+                        Save
+                            </button>
+                </div>
+            </div>
+        )
+
     }
     onChange() {
 
@@ -22,6 +76,8 @@ class Comment extends React.Component {
 
     }
     render() {
+        console.log(this.props);
+        const { comment, elementId } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -33,68 +89,65 @@ class Comment extends React.Component {
                     </span>
                         </div>
                         <div className="comment-info">
-                            <div className="text-medium-semibold mt-4"> comment commentCreator  </div>
+                            <div className="text-medium-semibold mt-4"> {comment.commentCreator}  </div>
                             <div className="text-medium color-gray-71 mb-4">
                                 {/* {Utils.buildCommentDate(comment.commentDateTime)}     */}
                                 Jul. 23, 2019 @03:53 PM
                         </div>
                         </div>
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
-                        // onClick={() => this.toggleActionsMenu()}
+                            onClick={() => this.toggleActionsMenu()}
                         >
-                            {/* <svg>
-                      <use xlinkHref="#navigation-show-more-vertical"></use>
-                    </svg> */}
                             <img src={navigationShowMore} />
                         </span>
-                        {this.actionsMenu()}
+                        {this.state.showActionsMenu && this.actionsMenu()}
                     </div>
                     <div className="comment-body">
                         <div className="text-medium color-gray-71 mb-4">
-                            {//this.state.mode === 'view' &&
-                                <p className="hyphens">
-                                    {/*  {comment.commentString} */}
-                                </p>
+
+                            <p className="hyphens">
+                                {comment.commentString}
+                            </p>
                             }
-                            {/* {this.state.mode === 'edit' && editForm} */}
+                            {this.state.mode == "edit" && this.editForm()}
                             {/*   <CommnetsForm onChange = {this.onChange} onClick= {this.onClick} /> */}
                         </div>
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>
-                                <span className="property-value">Slate</span>
+                                <span className="property-value">{this.props.slateTitle}</span>
                             </div>
                             <div className="property">
                                 <div className="assignee-content">
-                                            <span className="property-title">Assignee</span>
-                                            <span className="property-value color-gray-71 changeAssignee">{getUserName}</span>
-                                            {
-                                                this.state.isSelectAssignee ? (
-                                                <span className="set-assignee-button" onClick={() => {
-                                                    this.setMode('view')
-                                                    this.updateAssignee('assignee')
-                                                }}></span>) : (<span className="set-assignee-button_disabled"></span>)
-                                            }
+                                    <span className="property-title">Assignee</span>
+                                    <span className="property-value color-gray-71 changeAssignee">getUserName</span>
+                                    {
+                                        this.state.isSelectAssignee ? (
+                                            <span className="set-assignee-button" onClick={() => {
+                                                this.setMode('view')
+                                                this.updateAssignee('assignee')
+                                            }}></span>) : (<span className="set-assignee-button_disabled"></span>)
+                                    }
 
-                                            <span className="reject-assignee-button" onClick={this.removeAssigneePopup}></span>
-                                        </div>
-                                        ) : (
+                                    <span className="reject-assignee-button" onClick={this.removeAssigneePopup}></span>
+                                </div>
+                                ) : (
                                             <div> <span className="property-title">Assignee</span>
-                                            <span className="property-value color-gray-71 defaultAssignee">
-                                            {comment.commentAssignee}
-                                            </span>
-                                            </div>
-                                        )          
+                                    <span className="property-value color-gray-71 defaultAssignee">
+                                        {comment.commentAssignee}
+                                    </span>
+                                </div>
+                                )
                             </div>
                             <div className="property">
                                 <span className="property-title">Status</span>
-                                <span className="property-value capitalize color-gray-71"> comment.commentStatus.toLowerCase()</span>
+                                <span className="property-value capitalize color-gray-71">{comment.commentStatus.toLowerCase()}</span>
                             </div>
                             <div className="property">
                                 <span className="property-title">Replies</span>
                                 <span className="property-value"> replies.length </span>
                             </div>
-                            {/*   {this.state.mode === 'assign' &&
+                            {/*  {this.state.mode === 'assign' &&
                                 <CurrentProjectUsers currentAssingnee={comment.commentAssignee} newAssigneeUser={this.newAssigneeUser} />} */}
                         </div>
                     </div>

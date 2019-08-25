@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
@@ -59,7 +60,72 @@ class CommentsPanel extends React.Component {
             showSortByDropdown: false,
         })
     }  
+
+    renderComment = (props) => {
+        console.log("commnets=====>",props)
+        
+       let finalFilteredComments  = this.filterComments(props)
+       console.log("final comment====>",finalFilteredComments)
+        if(finalFilteredComments && finalFilteredComments.length > 0){
+            let comments = finalFilteredComments.map((comment, index) => {
+                console.log("11111111",comment)
+                return (<Comments comment = {comment}
+                                //slateTitle = {this.currentSlate}
+                                key = {index} 
+                                elementId = {comment.commentOnEntity}
+                              //  updateElementComment = {this.updateElementComment}
+                               // updateElementCommentReply = {this.updateElementCommentReply}
+                                //deleteComment = {this.deleteComment}
+                                //changeStatus = {this.changeStatus}
+                                //updateAssignee = {this.updateAssignee}
+                        />)
+        })
+    return comments;
+    }else {
+        return (
+            <div className="no-comment-div">No comments found</div>
+        )
+    }
+    }
+    filterComments = (props) => {
+        console.log("filter======>",props)
+        let { id } = this.props
+        let { filters } = this.state
+        let  elementWiseComments  = props.comments
+        let statusFilteredComments = [],
+            chronoFilteredComments = [],
+            finalFilteredComments
+            console.log("filters.sortBy.value",filters.sortBy.value)
+            console.log("filters.status.value",filters.status.value)
+            console.log("elementWiseComments",elementWiseComments)
+        switch(filters.sortBy.value){
+            case "1":       //Oldest to Newest
+                chronoFilteredComments = elementWiseComments
+                break;
+            case "-1":      //Newest To Oldest
+                chronoFilteredComments = _.sortBy(elementWiseComments, [comment => moment(elementWiseComments.commentDateTime).unix()]).reverse()
+                break;
+        }
+        console.log("chronoFilteredComments",chronoFilteredComments)
+        switch(filters.status.value.toLowerCase()){
+            case "all":
+                statusFilteredComments = chronoFilteredComments
+                break;
+            case "open":
+                statusFilteredComments = chronoFilteredComments.filter(comment => comment.commentStatus.toLowerCase() == "open")
+                break;
+            case "resolved":
+                statusFilteredComments = chronoFilteredComments.filter(comment => comment.commentStatus.toLowerCase() == "resolved")
+                break;
+        }
+        console.log("statusFilteredComments",statusFilteredComments)
+        finalFilteredComments = statusFilteredComments.filter(comment => comment.commentString.toLowerCase().includes(filters.text.toLowerCase()))
+        console.log("finalFilteredComments",finalFilteredComments)
+    return finalFilteredComments;
+    }
+
     render() {
+        console.log(this.props)
         return (
             <div className="root-width root-height">
                 <div className="panel-navigation">
@@ -76,9 +142,6 @@ class CommentsPanel extends React.Component {
                                         <div id="nav-context-selector" className="dropdown__title">
                                             {this.state.filters.sortBy.label}
                                         </div>
-                                       {/*  <svg className="dropdown__arrow">
-                                            <use xlinkHref="#arrow-down"></use>
-                                        </svg> */}
                                          <img src = {arrowDown} />
                                     </div>
                                     {this.state.showSortByDropdown &&
@@ -115,17 +178,7 @@ class CommentsPanel extends React.Component {
                         </div>
                     </div>
                     <div id="panel-canvas" className="comments-canvas">
-                    <Comments //comment = {comment}
-                                           // slateTitle = {this.currentSlate}
-                                           // key = {index} 
-                                           // elementId = {comment.commentOnEntity}
-                                           // updateElementComment = {this.updateElementComment}
-                                           // updateElementCommentReply = {this.updateElementCommentReply}
-                                           // deleteComment = {this.deleteComment}
-                                           // changeStatus = {this.changeStatus}
-                                            //updateAssignee = {this.updateAssignee}
-                                    />
-                      {/*   <div className="no-comment-div">No comments found</div>  */}  
+                      {this.renderComment(this.props)} 
                     </div>
                 </div>
             </div>
@@ -150,5 +203,7 @@ const SearchComponent = (props) => {
     )
 
 }
-
+const mapStateToProps = (state) => {
+    return { comments: state.commentsPanelReducer };
+  };
 export default CommentsPanel;
