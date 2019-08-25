@@ -1,2 +1,2 @@
-import GlossaryFootnotePopup from './GlossaryFootnotePopup.jsx';
-export default GlossaryFootnotePopup;
+import GlossaryFootnoteMenu from './GlossaryFootnoteMenu';
+export default GlossaryFootnoteMenu;
