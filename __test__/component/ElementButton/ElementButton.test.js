@@ -53,4 +53,8 @@ describe('Testing Button component with props', () => {
         console.log(component.debug());
         expect(component).toMatchSnapshot();
     })
+    it('render close-container Button component  ', () => {
+        const component = mount(<Button type="close-container" labelText="UL" />);
+        expect(component).toMatchSnapshot();
+    })
 })

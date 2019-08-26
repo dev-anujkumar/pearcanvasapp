@@ -59,6 +59,15 @@
 .btn-element#expand-icon > img {
     width: 40px;
 }
+.btn-element#close-container {
+    width: 10%;
+    height:20px;
+    float: left;
+    background-color: transparent;
+    cursor:pointer;
+    color:#fff;
+}
+
 /* #flag-icon{
     cursor: pointer;
     height: 18px;
