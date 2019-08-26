@@ -1,4 +1,9 @@
+/**
+* GlossaryFootnotePopup UI Component.
+*/
+
 import React, { Component } from 'react';
+import Button from '../ElementButtons/ElementButton';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 
 class GlossaryFootnotePopup extends Component {
@@ -9,7 +14,7 @@ class GlossaryFootnotePopup extends Component {
             <div className="glossary-toolbar-wrapper">
                 <div className="glossary-header">
                     <div className="glossary-title">
-                        <div className="glossary-remove" onClick={saveContent}></div>
+                        <Button type="close-container" onClick={saveContent} />
                         <div className="glossary-label">{glossaryFootnote}</div>
                         <div className="clr"></div>
                     </div>

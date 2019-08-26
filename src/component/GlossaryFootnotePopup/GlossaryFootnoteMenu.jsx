@@ -1,6 +1,14 @@
+/**
+* Root Component of Glossary Footnote Component.
+*/
 import React from 'react';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
+
+/**
+* @description - GlossaryFootnoteMenu is a class based component. It is defined simply
+* to make a skeleton of Glossary and Footnote.
+*/
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -15,12 +23,22 @@ class GlossaryFootnoteMenu extends React.Component {
             <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={this.closePopup} saveContent={this.saveContent} />
         )
     }
+
+    /**
+    * @description - This function is to close the Glossary and Footnote Popup.
+    * @param {event} 
+    */
+
     closePopup() {
-         //alert("close")
+        //alert("close")
     }
 
+    /**
+    * @description - This function is to save the Content of Glossary and Footnote.
+    * @param {event} 
+    */
     saveContent() {
-         //alert("save")
+        //alert("save")
     }
 }
 
