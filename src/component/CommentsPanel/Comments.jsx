@@ -1,18 +1,26 @@
 import React from 'react'
 //import CommnetsForm from './CommentsForm.jsx'
+import UserAssignee from './UserAssignee';
+import ReplyComment from './ReplyComment';
 import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
+import CurrentProjectUsers from './CurrentProjectUsers'
 class Comment extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            //newAssignee: this.props.comment.assignto
+            newAssignee: this.props.comment.assignto,
             showActionsMenu: false,
-            mode: 'view',
+            mode: 'assign',
+            isSelectAssignee: false,
+            showReplyForm: false
         }
         this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
         this.editComment = this.editComment.bind(this);
-        this.setMode = this.setMode.bind(this)
+        this.setMode = this.setMode.bind(this);
+        this.newAssigneeUser = this.newAssigneeUser.bind(this);
+        this.changeAssignee = this.changeAssignee.bind(this);
+        this.removeAssigneePopup = this.removeAssigneePopup.bind(this);
     }
     componentDidMount() {
         console.log("commentsssssssssssssssssss")
@@ -28,6 +36,27 @@ class Comment extends React.Component {
     setMode(mode) {
         this.setState({ mode })
     }
+    newAssigneeUser(user) {
+        if (this.state.newAssignee != user) {
+            this.setState({
+                newAssignee: user,
+                isSelectAssignee: true
+            })
+        }
+    }
+    changeAssignee() {
+        this.toggleActionsMenu(false)
+        this.setMode('assign')
+        this.setState({
+            isSelectAssignee: false
+        })
+    }
+    toggleReplyForm (show) {
+        this.toggleActionsMenu(false)
+        if (show === undefined) show = !this.state.showReplyForm
+        this.setState({showReplyForm: show})
+    }
+
     actionsMenu = () => {
         return (
             <ul className="comment-action-menu action-menu">
@@ -38,7 +67,6 @@ class Comment extends React.Component {
                 <li onClick={this.deleteComment}>Delete</li>
             </ul>
         )
-
     }
     editForm = () => {
         return (
@@ -75,6 +103,22 @@ class Comment extends React.Component {
     onClick() {
 
     }
+    removeAssigneePopup(){
+        this.setMode('view')
+        this.setState({
+          newAssignee:this.props.comment.assignto
+        })
+      }
+    updateAssignee(){
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
+        const { newAssignee } = this.state
+        /* const updatedFields = {
+            'assignto': this.state.newAssignee
+        } */
+        this.props.updateAssignee(commentUrn, newAssignee, elementId)
+  
+      }
     render() {
         console.log(this.props);
         const { comment, elementId } = this.props
@@ -108,36 +152,47 @@ class Comment extends React.Component {
                             <p className="hyphens">
                                 {comment.commentString}
                             </p>
-                            }
+
                             {this.state.mode == "edit" && this.editForm()}
                             {/*   <CommnetsForm onChange = {this.onChange} onClick= {this.onClick} /> */}
                         </div>
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>
-                                <span className="property-value">{this.props.slateTitle}</span>
+                                <span className="property-value">Glossary Slate{this.props.slateTitle}</span>
                             </div>
                             <div className="property">
-                                <div className="assignee-content">
-                                    <span className="property-title">Assignee</span>
-                                    <span className="property-value color-gray-71 changeAssignee">getUserName</span>
-                                    {
-                                        this.state.isSelectAssignee ? (
-                                            <span className="set-assignee-button" onClick={() => {
-                                                this.setMode('view')
-                                                this.updateAssignee('assignee')
-                                            }}></span>) : (<span className="set-assignee-button_disabled"></span>)
-                                    }
+                                {/*  {
+                                  this.state.mode === 'assign'?
+                                  (<div className="assignee-content">
+                                      <span className="property-title">Assignee</span>
+                                      <span className="property-value color-gray-71 changeAssignee">{getUserName}</span>
+                                      {
+                                        this.state.isSelectAssignee?(<span className="set-assignee-button" onClick={() => {
+                                              this.setMode('view')
+                                              this.updateAssignee('assignee')
+                                          }}></span>):(<span className="set-assignee-button_disabled"></span>)
+                                      }
 
-                                    <span className="reject-assignee-button" onClick={this.removeAssigneePopup}></span>
-                                </div>
-                                ) : (
-                                            <div> <span className="property-title">Assignee</span>
-                                    <span className="property-value color-gray-71 defaultAssignee">
-                                        {comment.commentAssignee}
-                                    </span>
-                                </div>
-                                )
+                                      <span className="reject-assignee-button" onClick={this.removeAssigneePopup}></span>
+                                    </div>
+                                  ):(
+                                   <div> <span className="property-title">Assignee</span><span className="property-value color-gray-71 defaultAssignee">{comment.commentAssignee}</span></div>
+                                  )
+                                } */}
+                               {/*  {this.assigneeForm(this.props)} */}
+                               <UserAssignee 
+                               mode = {this.state.mode} 
+                               comment = {this.props.comment}  
+                               newAssigneeUser = {this.newAssigneeUser}
+                               isSelectAssignee = {this.state.isSelectAssignee}
+                               setMode = {this.setMode}
+                               updateAssignee = {this.updateAssignee}
+                               removeAssigneePopup = {this.removeAssigneePopup}
+                               
+
+                             />
+
                             </div>
                             <div className="property">
                                 <span className="property-title">Status</span>
@@ -147,8 +202,8 @@ class Comment extends React.Component {
                                 <span className="property-title">Replies</span>
                                 <span className="property-value"> replies.length </span>
                             </div>
-                            {/*  {this.state.mode === 'assign' &&
-                                <CurrentProjectUsers currentAssingnee={comment.commentAssignee} newAssigneeUser={this.newAssigneeUser} />} */}
+                        
+                           
                         </div>
                     </div>
                 </div>
@@ -162,6 +217,9 @@ class Comment extends React.Component {
                     {replies}
 
                 </div> */}
+                  <div className="replies-wrapper">
+                <ReplyComment  comment = {this.props.comment}  showReplyForm = {this.state.showReplyForm} />
+            </div>
             </div>
         );
     }

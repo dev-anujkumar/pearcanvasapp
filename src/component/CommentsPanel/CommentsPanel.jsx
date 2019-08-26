@@ -127,6 +127,7 @@ class CommentsPanel extends React.Component {
     render() {
         console.log(this.props)
         return (
+            <div id="comments-panel" class="panel panel-open">
             <div className="root-width root-height">
                 <div className="panel-navigation">
                     <div className="panel-navigation__header">
@@ -181,6 +182,7 @@ class CommentsPanel extends React.Component {
                       {this.renderComment(this.props)} 
                     </div>
                 </div>
+            </div>
             </div>
         );
     }
