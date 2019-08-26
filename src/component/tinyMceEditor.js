@@ -9,10 +9,16 @@ import "tinymce/skins/ui/oxide/content.min.css";
 import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
-import { EditorConfig } from '../config/EditorConfig'
+// import { EditorConfig } from '../config/EditorConfig';
+import { EditorConfig } from '../config/EditorConfigFigure';
+import './../styles/ElementFigure/ElementFigure.css';
 export class TinyMceEditor extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            getFocus:false,
+         
+        }
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '.Editor',
@@ -51,6 +57,11 @@ export class TinyMceEditor extends React.Component {
 
     onEditorClick = (editor) => {
         console.log("onEditorClick >> ")
+        var getFocus=true;
+        // this.setState({
+        //     getFocus:true
+        // })
+        this.props.onFocus(getFocus);
     };
 
     onEditorFocus = (editor) => {
@@ -60,7 +71,9 @@ export class TinyMceEditor extends React.Component {
     handleEditorChange = (e) => {
         let type = this.props.type
         if(e){
-         e.target.formatter.apply(type);
+         e.target.formatter.apply(this.props.format);
+         
+    // tinymce.activeEditor.formatter.apply(this.props.elementFormat);
         console.log('Content was updated:', e.target.getContent());
         }
         
@@ -68,13 +81,15 @@ export class TinyMceEditor extends React.Component {
     }
     render() {
         return (
-            <div className="Editor" >
-                <Editor
-                    //initialValue ={initialVlaue}
-                    init={this.editorConfig}
-                    onChange={this.handleEditorChange}
-                />
+            <div class={` Editor ${this.props.className}`} >
+            <Editor
+            initialValue={this.props.placeHolderText}
+            init={this.editorConfig}
+            onChange={this.handleEditorChange}
+            />
             </div>
+
+            
         );
     }
 }
@@ -87,3 +102,4 @@ TinyMceEditor.defaultProps = {
 };
 
 export default TinyMceEditor
+

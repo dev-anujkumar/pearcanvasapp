@@ -1,5 +1,5 @@
 /**
-* Root Compoent of Header Component.
+* Root Component of Header Component.
 */
 
 import React, { Component } from "react";
