@@ -21,6 +21,7 @@ import backwardNavActive from '../../images/ElementButtons/backwardNavActive.png
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
+import closeContainer from '../../images/ElementButtons/container_close.png'
 
 class Button extends Component {
 
@@ -35,6 +36,9 @@ class Button extends Component {
         const { labelText } = this.props
 
         switch(type){
+            case "close-container":
+                buttonJSX = <span className="btn-element" id="close-container" onClick={clickHandlerFn}><img src={closeContainer} /></span>
+                break;
             case "add-comment":
                 buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}><img src={addNote} /></span>
                 break;

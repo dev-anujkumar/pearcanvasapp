@@ -20,6 +20,7 @@
     justify-content: flex-start;
     height: 100%;
     width: 100vw;
+    background-color: #fafafa;
 }
 
 .content-composer .workspace .canvas {
@@ -31,6 +32,7 @@
     float: left;
     width: 100%;
     display: inline-block;
+    margin-bottom: 25px;
 }
 
 #artboard-containers {
@@ -49,32 +51,12 @@
 }
 
 .content-composer .workspace .artboard-container {
-    width: 800px;
+    width: 820px;
     height: 100%;
     display: block;
     margin: 0 auto;
     justify-content: space-around;
     position: relative;
-}
-
-.title-head-wrapper {
-    height: 35px;
-    margin: 0px 10px;
-}
-
-.slate-wrapper {
-    height: calc(100% - 35px);
-    padding: 10px;
-}
-
-.slate-content {
-    padding: 10px 20px;
-    min-height: 800px;
-    height: auto;
-    width: 100%;
-    background-color: #fff;
-    position: relative;
-    box-shadow: 3px -3px 6px -4px rgba(158, 158, 158, 0.5);
 }
 
 .--rm-place {
