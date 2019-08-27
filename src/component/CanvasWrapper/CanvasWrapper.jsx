@@ -18,7 +18,6 @@ export class CanvasWrapper extends Component {
         return (
             <div className='content-composer'>
                 <div id="editor-toolbar" className="editor-toolbar">
-                    {/* <span className='--rm-place'>Tool Bar</span> */}
                     {/* put editor tool */}
                     <div className="header" id="tinymceToolbar"></div>
                 </div>
