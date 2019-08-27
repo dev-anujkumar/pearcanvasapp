@@ -7,6 +7,7 @@ import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
+import ElementSaprator from '../ElementSaprator';
 
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -41,6 +42,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -81,6 +83,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -92,10 +95,24 @@ class SlateWrapper extends Component {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element) => {
                     return (
-                        <ElementContainer
-                            element={element}
-                            key={element.id}
-                        />
+                        <React.Fragment>
+                            <ElementContainer
+                                element={element}
+                                key={element.id}
+                            />
+                            <ElementSaprator
+                                key={`elem-separtor-${element.id}`}
+                                typeHandler={
+                                    [
+                                        'text-elem',
+                                        'image-elem',
+                                        'audio-elem'
+                                    ]
+                                }
+                                clickHandler={
+                                    [this.faltuAlert, this.faltuAlert, this.faltuAlert]
+                                } />
+                        </React.Fragment>
                     )
                 })
             }
@@ -104,6 +121,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -125,6 +143,10 @@ class SlateWrapper extends Component {
                 </div>
             </React.Fragment>
         );
+    }
+
+    faltuAlert = () => {
+        console.log('clicked')
     }
 }
 
