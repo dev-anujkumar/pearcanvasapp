@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ElementFigure from './../../../src/component/ElementFigure/ElementFigure';
+import ElementFigure from '../../../src/component/ElementFigure';
 
 
 describe('Testing Button component with props', () => {

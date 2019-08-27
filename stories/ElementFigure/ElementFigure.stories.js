@@ -3,130 +3,55 @@ import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 
 import { withInfo } from '@storybook/addon-info';
-import { ElementFigure } from '../../src/component/ElementFigure/ElementFigure';
+import  ElementFigure  from './../../src/component/ElementFigure';
 
 const mockFigure1 = {
-    id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+  //  id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     type: "figure",
-    figuretype: "figureImage",
+    figuretype: "image",
     subtype: "image50Text",
-    figureClass:"figureImage50Text",
-    divClass:"divImage50Text",
-    header:{
-        labelClass:"heading4Image50TextNumberLabel",
-        titleClass:"heading4Image50TextTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionImage50Text",
-        creditClass:"paragraphImage50TextCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figureAlignment:"half-text"
 }
 
 const mockFigure2 = {
-    id: "urn:pearson:work:591e0376-8bde-42cf-bea1-70dc846fca1c",
+  //  id: "urn:pearson:work:591e0376-8bde-42cf-bea1-70dc846fca1c",
     type: "figure",
-    figuretype: "tableImage",
-    subtype: "figureImageTextWidthTableImage  ",
-    figureClass:"figureImageTextWidthTableImage",
-    divClass:"divImageTextWidthTableImage",
-    header:{
-        labelClass:"heading4ImageTextWidthTableImageNumberLabel",
-        titleClass:"heading4ImageTextWidthTableImageTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionImageTextWidthTableImage",
-        creditClass:"paragraphImageTextWidthTableImageCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figuretype: "table",
+    subtype: "imageTextWidthTableImage  ",
+    figureAlignment:"text-width"
 }
 
 const mockFigure3 = {
-    id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+   // id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     type: "figure",
     figuretype: "mathImage",
     subtype: "imageWiderThanTextMathImage",
-    figureClass:"figureImageWiderThanTextMathImage",
-    divClass:"divImageWiderThanTextMathImage",
-    header:{
-        labelClass:"heading4ImageWiderThanTextMathImageNumberLabel",
-        titleClass:"heading4ImageWiderThanTextMathImageTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionImageWiderThanTextMathImage",
-        creditClass:"paragraphImageWiderThanTextMathImageCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figureAlignment:"wider"
 }
 
 const mockFigure4 = {
-    id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+   // id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     type: "figure",
-    figuretype: "figureImage",
+    figuretype: "image",
     subtype: "imageFullscreen",
-    figureClass:"figureImageFullscreen",
-    divClass:"divImageFullscreen",
-    header:{
-        labelClass:"heading4ImageFullscreenNumberLabel",
-        titleClass:"heading4ImageFullscreenTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionImageFullscreen",
-        creditClass:"paragraphImageFullscreenCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figureAlignment:"full"
 }
 const mockFigure5 = {
-    id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+ //   id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     type: "figure",
-    figuretype: "mathml",
-    // subtype: "imageFullscreen",
-    figureClass:"figureText",
-    divClass:"divTextFigure",
-    header:{
-        labelClass:"heading4TextNumberLabel",
-        titleClass:"heading4ImageFuheading4TextTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionText",
-        creditClass:"paragraphTextCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figuretype: "authoredtext",
+    subtype: "mathml",
+  
+ 
+    
 }
 const mockFigure6 = {
-    id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+ //   id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     type: "figure",
-    figuretype: "blockcode",
-    //subtype: "imageFullscreen",
-    figureClass:"figureCodeSnippet",
-    divClass:"divCodeSnippetFigure",
-    header:{
-        labelClass:"heading4CodeSnippetNumberLabel",
-        titleClass:"heading4CodeSnippetTitle",
-        labelPlaceHolderText:"Enter Label...",
-        titlePlaceHolderText:"Enter Title...",
-    },
-    footer:{
-        captionClass:"figcaptionCodeSnippet",
-        creditClass:"paragraphCodeSnippetCredit",
-        captionPlaceHolderText:"Enter Caption...",
-        creditPlaceHolderText:"Enter Credit...",
-    }
+    figuretype: "codelisting",
+    subtype: "codelisting",
+
+  
 }
 
 storiesOf('ElementFigure', module)
