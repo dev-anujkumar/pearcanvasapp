@@ -103,28 +103,113 @@ export const emptySlateData = {
     }
 }
 
+export const slateDataForIntro = {
+    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+        "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "type": "container-introduction",
+        "contents": {
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "test1"
+            },
+            "frontmatter": [],
+            "bodymatter": [
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                    },
+                    "comments": true,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                }
+            ]
+        }
+    }
+}
+export const slateDataForAssess = {
+    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+        "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "type": "assessment",
+        "contents": {
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "test1"
+            },
+            "frontmatter": [],
+            "bodymatter": [
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                    },
+                    "comments": true,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                }
+            ]
+        }
+    }
+}
+
 storiesOf('Composites|Slate Wrapper', module)
     .add('Default', () => {
         return (
             <SlateWrapper slateData={emptySlateData} />
         )
     },
-    {
-        info: 'This is slate wrapper which combines slate header, element container, element separator component, It is a default view with no data present',
-    })
+        {
+            info: 'This is slate wrapper which combines slate header, element container, element separator component, It is a default view with no data present',
+        })
     .add('With Elements', () => {
         return (
             <SlateWrapper slateData={slateData} />
         )
     },
-    {
-        info: 'It is a view with some element present',
-    })
+        {
+            info: 'It is a view with some element present',
+        })
+    .add('Introductory Slate', () => {
+        return (
+            <SlateWrapper slateData={slateDataForIntro} />
+        )
+    },
+        {
+            info: 'It is a view with some element present',
+        })
+    .add('Assessment Slate', () => {
+        return (
+            <SlateWrapper slateData={slateDataForAssess} />
+        )
+    },
+        {
+            info: 'It is a view with some element present',
+        })
     .add('Loading', () => {
         return (
             <SlateWrapper slateData={{}} />
         )
     },
-    {
-        info: 'It is a view with element being loaded',
-    })
+        {
+            info: 'It is a view with element being loaded',
+        })

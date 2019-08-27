@@ -101,7 +101,7 @@ class SlateWrapper extends Component {
                                 key={element.id}
                             />
                             <ElementSaprator
-                                key={element.id}
+                                key={`elem-separtor-${element.id}`}
                                 typeHandler={
                                     [
                                         'text-elem',
