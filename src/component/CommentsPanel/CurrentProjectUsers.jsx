@@ -2,7 +2,8 @@ import React from 'react'
 //import { getProjectUsers } from '../../actions/projectGetters'
 //import { getAllUsers } from '../../actions/userGetters';
 //const configModule = require('../../js/config_module.js');
-export default class CurrentProjectUsers extends React.Component {
+import PropTypes from 'prop-types';
+class CurrentProjectUsers extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -44,6 +45,12 @@ export default class CurrentProjectUsers extends React.Component {
         //let { ENTITY_URN } = manifest_object
         // this.refreshUsers(ENTITY_URN)
     }
+        /**
+  * 
+  *@discription - This function is to refresh the user
+    @param {String} ENTITY_URN - entity urn of stlate
+ 
+  */
     refreshUsers(ENTITY_URN) {
         Promise.all([
             getProjectUsers(ENTITY_URN)
@@ -55,6 +62,12 @@ export default class CurrentProjectUsers extends React.Component {
             })
         })
     }
+/**
+  * 
+  *@discription - This function is to get the user of project
+    @param {String} user - get user name
+ 
+  */
     getUser(user, e) {
         const previousSelectedItems = document.getElementsByClassName("assign-user-list-items")
         for (let i = 0; i < previousSelectedItems.length; i++) {
@@ -81,3 +94,11 @@ export default class CurrentProjectUsers extends React.Component {
         )
     }
 }
+
+CurrentProjectUsers.propTypes = {
+    /** current assignee of the comment */
+    currentAssingnee: PropTypes.string.isRequired,
+      /** new  assignee of the comment */
+    newAssigneeUser:PropTypes.string.isRequired
+}
+export default CurrentProjectUsers;

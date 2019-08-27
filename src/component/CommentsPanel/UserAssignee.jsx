@@ -1,6 +1,13 @@
 import React from 'react'
 import CurrentProjectUsers from './CurrentProjectUsers'
+import PropTypes from 'prop-types';
 class UserAssignee extends React.Component {
+    /**
+  * 
+  *@discription - This function is to return jsx of assigneeForm menu
+    @param {Array} props - Array of   comments
+  @return {String} - returns the jsx code of the assignee menu
+  */
     assigneeForm = (props) => {
         if (this.props.mode === 'assign') {
             return (
@@ -34,5 +41,9 @@ class UserAssignee extends React.Component {
             </>
         )
     }
+}
+UserAssignee.propTypes = {
+    /** commet data attached to store and contains complete comment object */
+    comment: PropTypes.object.isRequired
 }
 export default UserAssignee;

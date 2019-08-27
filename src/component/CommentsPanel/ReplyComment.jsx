@@ -1,22 +1,42 @@
 import React from 'react'
 //import { searchUsers } from '../../actions/userGetters'
 //import Utils from '../../js/utils'
-
- class ReplyComment extends React.Component {
-
+import PropTypes from 'prop-types';
+class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             userInfo: {},
-            text:""
+            text: ""
         }
         this.updateCommentText = this.updateCommentText.bind(this);
+        this.replyComment = this.replyComment.bind(this);
     }
-    updateCommentText (e) {
+    /**
+* 
+*@discription - This function is to update the text of comment
+
+*/
+    updateCommentText(e) {
         this.setState({
             text: e.target.value,
         })
     }
+    /**
+* 
+*@discription - This function is to reply comment
+
+*/
+    replyComment() {
+        console.log("reply")
+    }
+    /**
+    * 
+    *@discription - This function is to return jsx of reply menu
+      @param {String} index - index of comments
+      @param {Array} reply - Array of reply  comments
+    @return {String} - returns the jsx code of the reply menu
+    */
     reply = (index, reply) => {
         return (
             <div className="reply">
@@ -40,32 +60,39 @@ import React from 'react'
             </div>
         )
     }
-    replyComment = (props) => {
-        if( props.showReplyForm){
-            return(
+    /**
+* 
+*@discription - This function is to return jsx of reply form
+  @param {Array} props - Array of reply  comments
+@return {String} - returns the jsx code of the reply form
+*/
+
+    replyCommentForm = (props) => {
+        if (props.showReplyForm) {
+            return (
                 <div className="reply">
-                <div>
-                    <textarea className="new-comment textarea-input"
-                              value={this.state.text}
-                              onChange={this.updateCommentText}
-                              rows="7"/>
-                </div>
-                <div className="buttons-wrapper">
-                    <button className="btn btn__initial"
+                    <div>
+                        <textarea className="new-comment textarea-input"
+                            value={this.state.text}
+                            onChange={this.updateCommentText}
+                            rows="7" />
+                    </div>
+                    <div className="buttons-wrapper">
+                        <button className="btn btn__initial"
                             onClick={() => props.close()}>
-                        Cancel
+                            Cancel
                     </button>
-                    <button className="btn btn__initial"
+                        <button className="btn btn__initial"
                             onClick={this.replyComment}>
-                        Reply
+                            Reply
                     </button>
+                    </div>
                 </div>
-            </div>
             )
-  
+
         }
         else {
-           return  props.comment.replyComments.map((reply, index) => this.reply(index,reply))
+            return props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))
         }
     }
     render() {
@@ -73,10 +100,16 @@ import React from 'react'
         // const { userInfo }= this.state
         return (
             <>
-            {this.replyComment(this.props)}
-        </>
+                {this.replyCommentForm(this.props)}
+            </>
         )
     }
 
 }
+
+ReplyComment.propTypes = {
+    /** commet data attached to store and contains complete comment object */
+    comment: PropTypes.object.isRequired
+}
+
 export default ReplyComment;

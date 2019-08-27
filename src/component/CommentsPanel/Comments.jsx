@@ -4,6 +4,7 @@ import UserAssignee from './UserAssignee';
 import ReplyComment from './ReplyComment';
 import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
+import PropTypes from 'prop-types';
 import CurrentProjectUsers from './CurrentProjectUsers'
 class Comment extends React.Component {
     constructor(props) {
@@ -11,7 +12,11 @@ class Comment extends React.Component {
         this.state = {
             newAssignee: this.props.comment.assignto,
             showActionsMenu: false,
-            mode: 'assign',
+            mode: 'view',
+            updatedFields: {
+                text: this.props.comment.commentString,
+                status: this.props.comment.commentStatus
+            },
             isSelectAssignee: false,
             showReplyForm: false
         }
@@ -21,21 +26,64 @@ class Comment extends React.Component {
         this.newAssigneeUser = this.newAssigneeUser.bind(this);
         this.changeAssignee = this.changeAssignee.bind(this);
         this.removeAssigneePopup = this.removeAssigneePopup.bind(this);
+        this.resolveComment = this.resolveComment.bind(this);
+        this.updateComment = this.updateComment.bind(this);
+        this.toggleReplyForm = this.toggleReplyForm.bind(this);
     }
     componentDidMount() {
-        console.log("commentsssssssssssssssssss")
+
+        document.body.addEventListener('click', this.toggleActionsMenu(false));
     }
+    /**
+    * 
+    *@discription - This function is to toggle the Action menu
+    @param {String} show - true false value to tgoggle the action menu
+   
+    */
     toggleActionsMenu(show) {
+        console.log(show)
         if (show === undefined) show = !this.state.showActionsMenu
         this.setState({ showActionsMenu: show })
     }
+
+    /**
+   * 
+   *@discription - This function is to update the comment
+   @param {String} property - property to be updated in comment
+   
+   */
+    updateComment(property) {
+        console.log("property", property);
+        const commentId = this.props.comment.commentUrn
+        //const elementId = this.props.elementId
+        const updatedFields = {
+            [property]: this.state.updatedFields[property]
+        }
+        // this.props.updateElementComment(commentId, updatedFields, elementId, this.props.comment)
+    }
+    /**
+   * 
+   *@discription - This function is to edit the comment
+   */
     editComment(e) {
         this.toggleActionsMenu(false)
         this.setMode('edit')
     }
+    /**
+ * 
+ *@discription - This function is to set mode of the comment
+ @param {String} mode - mode to be set to show comment like resolve,edit
+ */
     setMode(mode) {
         this.setState({ mode })
     }
+
+    /**
+   * 
+   *@discription - This function is to assign new user
+   @param {String} user - assign new user in the comment
+   */
+
     newAssigneeUser(user) {
         if (this.state.newAssignee != user) {
             this.setState({
@@ -44,6 +92,12 @@ class Comment extends React.Component {
             })
         }
     }
+    /**
+* 
+*@discription - This function is to change the assignee
+ 
+*/
+
     changeAssignee() {
         this.toggleActionsMenu(false)
         this.setMode('assign')
@@ -51,11 +105,35 @@ class Comment extends React.Component {
             isSelectAssignee: false
         })
     }
-    toggleReplyForm (show) {
+    /**
+* 
+*@discription - This function is to toggle replay form
+@param {String} show - true or false value to toggle form
+*/
+
+    toggleReplyForm(show) {
         this.toggleActionsMenu(false)
         if (show === undefined) show = !this.state.showReplyForm
-        this.setState({showReplyForm: show})
+        this.setState({ showReplyForm: show })
     }
+    /**
+* 
+*@discription - This function is to resolve comment
+*/
+
+    resolveComment(e) {
+        //const { commentUrn } = this.props.comment  
+        //  const { elementId } = this.props      
+        this.toggleActionsMenu(false)
+        //this.props.changeStatus(commentUrn, "RESOLVED", elementId)
+        // this.setStatus('resolved')
+        // setTimeout(() =>  this.updateComment('status'), 0)
+    }
+    /**
+    * 
+    *@discription - This function is to return jsx of action menu
+    @return {String} - returns the jsx code of the action menu
+    */
 
     actionsMenu = () => {
         return (
@@ -68,6 +146,11 @@ class Comment extends React.Component {
             </ul>
         )
     }
+    /**
+* 
+*@discription - This function is to return jsx of edit menu
+@return {String} - returns the jsx code of the edit menu
+*/
     editForm = () => {
         return (
 
@@ -81,7 +164,7 @@ class Comment extends React.Component {
                     <button className="btn btn__initial"
                         onClick={() => {
                             this.setMode('view')
-                            this.clearEditionText()
+                            //this.clearEditionText()
                         }}>
                         Cancel
                             </button>
@@ -97,19 +180,25 @@ class Comment extends React.Component {
         )
 
     }
-    onChange() {
+    /**
+* 
+*@discription - This function is to remove the popup of assigne
+ 
+*/
 
-    }
-    onClick() {
-
-    }
-    removeAssigneePopup(){
+    removeAssigneePopup() {
         this.setMode('view')
         this.setState({
-          newAssignee:this.props.comment.assignto
+            newAssignee: this.props.comment.assignto
         })
-      }
-    updateAssignee(){
+    }
+    /**
+* 
+*@discription - This function is to update the assignee
+ 
+*/
+
+    updateAssignee() {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newAssignee } = this.state
@@ -117,8 +206,7 @@ class Comment extends React.Component {
             'assignto': this.state.newAssignee
         } */
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
-  
-      }
+    }
     render() {
         console.log(this.props);
         const { comment, elementId } = this.props
@@ -130,7 +218,7 @@ class Comment extends React.Component {
                         <div className="avatar avatar--large">
                             <span className="profile-picture-placeholder green">
                                 C
-                    </span>
+                          </span>
                         </div>
                         <div className="comment-info">
                             <div className="text-medium-semibold mt-4"> {comment.commentCreator}  </div>
@@ -152,9 +240,7 @@ class Comment extends React.Component {
                             <p className="hyphens">
                                 {comment.commentString}
                             </p>
-
                             {this.state.mode == "edit" && this.editForm()}
-                            {/*   <CommnetsForm onChange = {this.onChange} onClick= {this.onClick} /> */}
                         </div>
                         <div className="properties">
                             <div className="property">
@@ -162,36 +248,17 @@ class Comment extends React.Component {
                                 <span className="property-value">Glossary Slate{this.props.slateTitle}</span>
                             </div>
                             <div className="property">
-                                {/*  {
-                                  this.state.mode === 'assign'?
-                                  (<div className="assignee-content">
-                                      <span className="property-title">Assignee</span>
-                                      <span className="property-value color-gray-71 changeAssignee">{getUserName}</span>
-                                      {
-                                        this.state.isSelectAssignee?(<span className="set-assignee-button" onClick={() => {
-                                              this.setMode('view')
-                                              this.updateAssignee('assignee')
-                                          }}></span>):(<span className="set-assignee-button_disabled"></span>)
-                                      }
+                                <UserAssignee
+                                    mode={this.state.mode}
+                                    comment={this.props.comment}
+                                    newAssigneeUser={this.newAssigneeUser}
+                                    isSelectAssignee={this.state.isSelectAssignee}
+                                    setMode={this.setMode}
+                                    updateAssignee={this.updateAssignee}
+                                    removeAssigneePopup={this.removeAssigneePopup}
 
-                                      <span className="reject-assignee-button" onClick={this.removeAssigneePopup}></span>
-                                    </div>
-                                  ):(
-                                   <div> <span className="property-title">Assignee</span><span className="property-value color-gray-71 defaultAssignee">{comment.commentAssignee}</span></div>
-                                  )
-                                } */}
-                               {/*  {this.assigneeForm(this.props)} */}
-                               <UserAssignee 
-                               mode = {this.state.mode} 
-                               comment = {this.props.comment}  
-                               newAssigneeUser = {this.newAssigneeUser}
-                               isSelectAssignee = {this.state.isSelectAssignee}
-                               setMode = {this.setMode}
-                               updateAssignee = {this.updateAssignee}
-                               removeAssigneePopup = {this.removeAssigneePopup}
-                               
 
-                             />
+                                />
 
                             </div>
                             <div className="property">
@@ -200,29 +267,26 @@ class Comment extends React.Component {
                             </div>
                             <div className="property">
                                 <span className="property-title">Replies</span>
-                                <span className="property-value"> replies.length </span>
+                                <span className="property-value"> {comment.replyComments && comment.replyComments.length} </span>
                             </div>
-                        
-                           
+
+
                         </div>
                     </div>
                 </div>
-                {/*    <div className="replies-wrapper">
-                    {this.state.showReplyForm &&
-                        <CommnetsForm close={() => this.toggleReplyForm(false)}
-                            commentId={comment.commentUrn}
-                            updateElementCommentReply={this.props.updateElementCommentReply}
-                            elementId={this.props.elementId} />
-                    }
-                    {replies}
-
-                </div> */}
-                  <div className="replies-wrapper">
-                <ReplyComment  comment = {this.props.comment}  showReplyForm = {this.state.showReplyForm} />
-            </div>
+                <div className="replies-wrapper">
+                    <ReplyComment
+                        close={this.toggleReplyForm}
+                        comment={this.props.comment}
+                        showReplyForm={this.state.showReplyForm} />
+                </div>
             </div>
         );
     }
+}
+Comment.propTypes = {
+    /** commet data attached to store and contains complete comment object */
+    comment: PropTypes.object.isRequired
 }
 
 export default Comment;

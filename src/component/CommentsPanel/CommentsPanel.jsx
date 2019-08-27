@@ -5,6 +5,7 @@ import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments'
+import PropTypes from 'prop-types';
 class CommentsPanel extends React.Component {
     constructor(props) {
         super(props)
@@ -30,75 +31,134 @@ class CommentsPanel extends React.Component {
         this.handleSearchInput = this.handleSearchInput.bind(this);
         this.setSort = this.setSort.bind(this);
         this.setStatus = this.setStatus.bind(this);
+        this.changeStatus = this.changeStatus.bind(this);
     }
+     /**
+    * 
+    * @discription - This function is for search comments
+    */
     handleSearchInput(e) {
         console.log("value", e.target.value)
-    }
-    setSort(e) {
-        console.log("value", e.target.value)
         this.setState({
-            showSortByDropdown: false
+            filters: {
+                ...this.state.filters,
+                text: e.target.value
+            }
         })
     }
-    setStatus(e) {
-        console.log("value", e.target.value)
+       /**
+    * 
+    * @discription - This function is for sort the comments
+    
+    */
+    setSort({ target }) {
         this.setState({
+            filters: {
+                ...this.state.filters,
+                sortBy: {
+                    value: target.dataset.value,
+                    label: target.textContent
+                }
+            },
+            showSortByDropdown: false
+        })
+
+    }
+
+       /**
+    * 
+    * @discription - This function is for set the status comments
+    * @param {string} status - status of filter comment
+    */
+    setStatus(status = 'all') {
+
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                status: {
+                    value: status,
+                    label: status//Utils.toTitleCase(status)
+                }
+            },
             showStatusDropdown: false
         })
     }
-    toggleOrderByDropdown(show){
+    /**
+    * 
+    * @discription - This function is to toogle  the order dropdown
+    * @param {string} show - value true or false to toggle dropdown
+    */
+    toggleOrderByDropdown(show) {
         if (show === undefined) show = !this.state.showSortByDropdown
         this.setState({
             showSortByDropdown: show,
             showStatusDropdown: false,
         })
-    }  
+    }
+    /**
+    * 
+    * @discription - This function is to toogle  the status dropdown
+    * @param {string} show - value true or false to toggle dropdown
+    */
+
     toggleStatusDropdown(show) {
         if (show === undefined) show = !this.state.showStatusDropdown
         this.setState({
             showStatusDropdown: show,
             showSortByDropdown: false,
         })
-    }  
+    }
+        /**
+    * 
+    * @discription - This function is to change  the status of comment
+  
+    */
+    changeStatus() {
 
+    }
+
+    /**
+    * 
+    * @discription - This function is to render the jsx of comment 
+    @param {Object} props - objct of comments
+    @return {String} - returns the jsx code of the comment
+    */
     renderComment = (props) => {
-        console.log("commnets=====>",props)
-        
-       let finalFilteredComments  = this.filterComments(props)
-       console.log("final comment====>",finalFilteredComments)
-        if(finalFilteredComments && finalFilteredComments.length > 0){
+        let finalFilteredComments = this.filterComments(props)
+        if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
-                console.log("11111111",comment)
-                return (<Comments comment = {comment}
-                                //slateTitle = {this.currentSlate}
-                                key = {index} 
-                                elementId = {comment.commentOnEntity}
-                              //  updateElementComment = {this.updateElementComment}
-                               // updateElementCommentReply = {this.updateElementCommentReply}
-                                //deleteComment = {this.deleteComment}
-                                //changeStatus = {this.changeStatus}
-                                //updateAssignee = {this.updateAssignee}
-                        />)
-        })
-    return comments;
-    }else {
-        return (
-            <div className="no-comment-div">No comments found</div>
-        )
+                return (<Comments comment={comment}
+                    //slateTitle = {this.currentSlate}
+                    key={index}
+                    elementId={comment.commentOnEntity}
+                    //  updateElementComment = {this.updateElementComment}
+                    // updateElementCommentReply = {this.updateElementCommentReply}
+                    //deleteComment = {this.deleteComment}
+                    changeStatus={this.changeStatus}
+                //updateAssignee = {this.updateAssignee}
+                />)
+            })
+            return comments;
+        } else {
+            return (
+                <div className="no-comment-div">No comments found</div>
+            )
+        }
     }
-    }
+     /**
+    * 
+    * @discription - This function is to filter the comments
+    @param {Object} props - objct of comments
+    @return {String} - returns the final filterd comment
+    */
     filterComments = (props) => {
-        console.log("filter======>",props)
         let { id } = this.props
         let { filters } = this.state
-        let  elementWiseComments  = props.comments
+        let elementWiseComments = props.comments
         let statusFilteredComments = [],
             chronoFilteredComments = [],
             finalFilteredComments
-            console.log("filters.sortBy.value",filters.sortBy.value)
-            console.log("filters.status.value",filters.status.value)
-            console.log("elementWiseComments",elementWiseComments)
-        switch(filters.sortBy.value){
+        switch (filters.sortBy.value) {
             case "1":       //Oldest to Newest
                 chronoFilteredComments = elementWiseComments
                 break;
@@ -106,8 +166,7 @@ class CommentsPanel extends React.Component {
                 chronoFilteredComments = _.sortBy(elementWiseComments, [comment => moment(elementWiseComments.commentDateTime).unix()]).reverse()
                 break;
         }
-        console.log("chronoFilteredComments",chronoFilteredComments)
-        switch(filters.status.value.toLowerCase()){
+        switch (filters.status.value.toLowerCase()) {
             case "all":
                 statusFilteredComments = chronoFilteredComments
                 break;
@@ -118,71 +177,67 @@ class CommentsPanel extends React.Component {
                 statusFilteredComments = chronoFilteredComments.filter(comment => comment.commentStatus.toLowerCase() == "resolved")
                 break;
         }
-        console.log("statusFilteredComments",statusFilteredComments)
         finalFilteredComments = statusFilteredComments.filter(comment => comment.commentString.toLowerCase().includes(filters.text.toLowerCase()))
-        console.log("finalFilteredComments",finalFilteredComments)
-    return finalFilteredComments;
+        return finalFilteredComments;
     }
 
     render() {
-        console.log(this.props)
         return (
             <div id="comments-panel" class="panel panel-open">
-            <div className="root-width root-height">
-                <div className="panel-navigation">
-                    <div className="panel-navigation__header">
-                        <div className="panel-navigation__header-title">Comments</div>
-                        <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
-                        <div className="add-structure">
-
-                            <div className="filter">
-                                <span> Sort by</span>
-                                <div className="dropdown sort-dropdown">
-                                    <div className="dropdown__button"
-                                        onClick={() => this.toggleOrderByDropdown()}>
-                                        <div id="nav-context-selector" className="dropdown__title">
-                                            {this.state.filters.sortBy.label}
+                <div className="root-width root-height">
+                    <div className="panel-navigation">
+                        <div className="panel-navigation__header">
+                            <div className="panel-navigation__header-title">Comments</div>
+                            <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
+                            <div className="add-structure">
+                                <div className="filter">
+                                    <span> Sort by</span>
+                                    <div className="dropdown sort-dropdown">
+                                        <div className="dropdown__button"
+                                            onClick={() => this.toggleOrderByDropdown()}>
+                                            <div id="nav-context-selector" className="dropdown__title">
+                                                {this.state.filters.sortBy.label}
+                                            </div>
+                                            <img src={arrowDown} />
                                         </div>
-                                         <img src = {arrowDown} />
+                                        {this.state.showSortByDropdown &&
+                                            <ul className="dropdown__content">
+                                                <li data-value="1" onClick={this.setSort}>Oldest to Newest</li>
+                                                <li data-value="-1" onClick={this.setSort}>Newest to Oldest</li>
+                                            </ul>
+                                        }
                                     </div>
-                                    {this.state.showSortByDropdown &&
-                                        <ul className="dropdown__content">
-                                            <li data-value="1" onClick={this.setSort}>Oldest to Newest</li>
-                                            <li data-value="-1" onClick={this.setSort}>Newest to Oldest</li>
-                                        </ul>
-                                    }
                                 </div>
-                            </div>
-                            <div className="filter">
-                                <span>Status</span>
-                                <div className="dropdown status-dropdown">
-                                    <div className="dropdown__button"
-                                        onClick={() => this.toggleStatusDropdown()}>
-                                        <div id="nav-context-selector" className="dropdown__title">
-                                            {this.state.filters.status.label}
-                                        </div>
-                                        {/* <svg className="dropdown__arrow">
+                                <div className="filter">
+                                    <span>Status</span>
+                                    <div className="dropdown status-dropdown">
+                                        <div className="dropdown__button"
+                                            onClick={() => this.toggleStatusDropdown()}>
+                                            <div id="nav-context-selector" className="dropdown__title">
+                                                {this.state.filters.status.label}
+                                            </div>
+                                            {/* <svg className="dropdown__arrow">
                                             <use xlinkHref="#arrow-down"></use>
                                         </svg> */}
-                                        <img src = {arrowDown} />
+                                            <img src={arrowDown} />
+                                        </div>
+                                        {this.state.showStatusDropdown &&
+                                            <ul className="dropdown__content">
+                                                <li data-value="open" onClick={() => this.setStatus('all')}>All</li>
+                                                <li data-value="open" onClick={() => this.setStatus('open')}>Open</li>
+                                                <li data-value="resolved" onClick={() => this.setStatus('resolved')}>Resolved</li>
+                                            </ul>
+                                        }
                                     </div>
-                                    {this.state.showStatusDropdown &&
-                                        <ul className="dropdown__content">
-                                            <li data-value="open" onClick={() => this.setStatus('all')}>All</li>
-                                            <li data-value="open" onClick={() => this.setStatus('open')}>Open</li>
-                                            <li data-value="resolved" onClick={() => this.setStatus('resolved')}>Resolved</li>
-                                        </ul>
-                                    }
                                 </div>
-                            </div>
 
+                            </div>
+                        </div>
+                        <div id="panel-canvas" className="comments-canvas">
+                            {this.renderComment(this.props)}
                         </div>
                     </div>
-                    <div id="panel-canvas" className="comments-canvas">
-                      {this.renderComment(this.props)} 
-                    </div>
                 </div>
-            </div>
             </div>
         );
     }
@@ -205,7 +260,9 @@ const SearchComponent = (props) => {
     )
 
 }
-const mapStateToProps = (state) => {
-    return { comments: state.commentsPanelReducer };
-  };
+
+CommentsPanel.propTypes = {
+    /** commet data attached to store and contains complete comment object */
+    comment: PropTypes.object.isRequired
+}
 export default CommentsPanel;
