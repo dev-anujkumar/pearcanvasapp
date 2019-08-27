@@ -1,5 +1,5 @@
 .mce-content-body {
-    padding: 15px !important;
+    /* padding: 15px !important; */
     min-height: 100px;
     flex-grow: 1;
     border: 2px solid #ddd;

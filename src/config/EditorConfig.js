@@ -17,5 +17,5 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist"
+    plugins: "lists advlist placeholder"
 }

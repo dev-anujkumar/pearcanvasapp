@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { TinyMceEditor } from "./../tinyMceEditor"
 
 // IMPORT - Assets //
-import './../../styles/ElementFigure/Book.css';
+// import './../../styles/ElementFigure/Book.css';
 import './../../styles/ElementFigure/ElementFigure.css';
 
 /**
@@ -49,7 +49,7 @@ export class ElementFigure extends Component {
     renderFigureType = (element = {}) => {
         let figureType = '';
         switch (element.figuretype) {
-            case 'figureImage':
+            case 'image':
 
 
                 figureType = <div class="pearson-component image figureData" id="figureELE" data-type="figureImage">
@@ -62,7 +62,7 @@ export class ElementFigure extends Component {
                 </div>
 
                 break;
-            case 'tableImage':
+            case 'table':
 
                 figureType = <div class="pearson-component image figureData" data-type="tableImage">
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
@@ -90,10 +90,10 @@ export class ElementFigure extends Component {
             case 'mathml':
 
 
-                figureType = <p class={`paragraphNumeroUno ${this.props.element.figuretype} figureData`}><div data-type="mathml">
+                figureType = <p class={`paragraphNumeroUno ${this.props.element.figuretype} figureData `}><div data-type="mathml">
                     <TinyMceEditor
                         class={this.props.element.class}
-                        placeHolderText={this.props.element.placeHolderText}
+                        
                     />
                 </div>
                 </p>
@@ -105,7 +105,7 @@ export class ElementFigure extends Component {
                 figureType = <div class={`pearson-component ${this.props.element.figuretype} codeSnippet`} data-type="codeSnippet">
                     <TinyMceEditor
                         class={this.props.element.class}
-                        placeHolderText={this.props.element.placeHolderText}
+                        
                     />
                 </div>
                 break;
@@ -130,55 +130,56 @@ export class ElementFigure extends Component {
 
                         <div className={` ${this.props.element.divClass} editor-container`} id={this.currentFocus ? "on-focus" : "not-focus"}>
                             <figure class={`${this.props.element.figureClass}`}>
-                                {/* <h4 class={` ${this.props.element.header.labelClass} figureLabel`}> */}
+                                <h4 class={` ${this.props.element.header.labelClass} figureLabel`}>
                                 <div id="figure-label">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
                                         format="p"
                                         class={this.props.element.header.labelClass}
                                         className="figureLabel"
-                                        placeHolderText={this.props.element.header.labelPlaceHolderText}
+                                        // placeHolderText={this.props.element.header.labelPlaceHolderText}
                                     />
                                 </div>
-                                {/* </h4> */}
-                                {/* <h4 class={` ${this.props.element.header.titleClass} figureTitle`} > */}
+                                </h4>
+                                <h4 class={` ${this.props.element.header.titleClass} figureTitle`} >
                                 <div id="figure-title">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
                                         format="p"
                                         class={this.props.element.titleClass}
                                         className="figureTitle"
-                                        placeHolderText={this.props.element.header.titlePlaceHolderText}
+                                        // placeHolderText={this.props.element.header.titlePlaceHolderText}
                                     />
                                 </div>
-                                {/* </h4> */}
+                                </h4>
                                 <div className="figureElement">
                                     {this.renderFigureType(element)}
                                 </div>
 
-                                {/* <figcaption class={` ${this.props.element.footer.captionClass} figureCaption`}> */}
+                                <figcaption class={` ${this.props.element.footer.captionClass} figureCaption`}>
                                 <div id="figure-caption" >
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
                                         format="p"
                                         class={this.props.element.captionClass}
                                         className="figureCaption"
-                                        placeHolderText={this.props.element.footer.captionPlaceHolderText}
+                                        // placeHolderText={this.props.element.footer.captionPlaceHolderText}
                                     />
                                 </div>
-                                {/* </figcaption > */}
-                                {/* <p class={` ${this.props.element.footer.creditClass} figureCredit`}> */}
+                                </figcaption >
+                                </figure>
+                                <p class={` ${this.props.element.footer.creditClass} figureCredit`}>
                                 <div id="figure-credit">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
                                         format="p"
                                         class={this.props.element.creditClass}
                                         className="figureCredit"
-                                        placeHolderText={this.props.element.footer.creditPlaceHolderText}
+                                        // placeHolderText={this.props.element.footer.creditPlaceHolderText}
                                     />
                                 </div>
-                                {/* </p> */}
-                            </figure>
+                                </p>
+                           
                         </div>
 
 
