@@ -8,7 +8,8 @@
 
 .elementSapratorContainer {
     width:100%;
-    clear:both;
+    /* clear:both; */
+    display: flex;
 }
 
 .elemDiv1 {
@@ -16,7 +17,7 @@
     float:left;
 }
 .elemDiv2 {
-    width:60%;
+    width:96.5%;
     float:left;
 }
 .elemDiv3 {

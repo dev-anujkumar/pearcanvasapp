@@ -1,7 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { withInfo } from '@storybook/addon-info';
 import '../../src/styles/CanvasWrapper/style.css';
 import SlateWrapper from '../../src/component/SlateWrapper';
 
@@ -104,20 +103,28 @@ export const emptySlateData = {
     }
 }
 
-storiesOf('Slate Wrapper', module)
-    .addDecorator(withInfo)
+storiesOf('Composites|Slate Wrapper', module)
     .add('Default', () => {
         return (
             <SlateWrapper slateData={emptySlateData} />
         )
+    },
+    {
+        info: 'This is slate wrapper which combines slate header, element container, element separator component, It is a default view with no data present',
     })
     .add('With Elements', () => {
         return (
             <SlateWrapper slateData={slateData} />
         )
+    },
+    {
+        info: 'It is a view with some element present',
     })
     .add('Loading', () => {
         return (
             <SlateWrapper slateData={{}} />
         )
+    },
+    {
+        info: 'It is a view with element being loaded',
     })
