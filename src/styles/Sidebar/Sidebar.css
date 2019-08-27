@@ -1,0 +1,39 @@
+.canvas-sidebar {
+    padding: 25px 15px;
+    background-color: #fafafa;
+    overflow-y: auto;
+    position: relative;
+    border-left: 1px solid #e0e0e0;
+    width: 240px;
+    height: 100vh;
+    margin: 20px;
+}
+
+.canvas-sidebar > .canvas-sidebar-heading {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.canvas-sidebar .primary-option,
+.canvas-sidebar .secondary-option {
+    width: 100%;
+    border: 0 none;
+    background: transparent;
+    padding: 5px 0;
+    font-size: 14px;
+    margin: 5px 0;
+    outline: none;
+    position: relative;
+    border-bottom: 1.5px solid #e0e0e0;
+}
+
+.canvas-sidebar .secondary-option.hidden {
+    display: none;
+}
+
+.canvas-sidebar .primary-option > option,
+.canvas-sidebar .secondary-option > option {
+    font-size: 14px;
+    background: #fefefe;
+}
