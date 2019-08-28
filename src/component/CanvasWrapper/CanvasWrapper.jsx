@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
+import {
+    fetchSlateData
+  } from './CanvasWrapper_Actions';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -12,6 +15,11 @@ import '../../styles/CanvasWrapper/style.css';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+        // uncomment to run Canvas Stabilization app as stand alone app //
+        this.props.fetchSlateData();
     }
 
     render() {
@@ -51,4 +59,7 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    null)(CanvasWrapper);
+    {
+        fetchSlateData
+    }
+)(CanvasWrapper);
