@@ -52,7 +52,7 @@ class CurrentProjectUsers extends React.Component {
  
   */
     refreshUsers(ENTITY_URN) {
-        Promise.all([
+       /*  Promise.all([
             getProjectUsers(ENTITY_URN)
         ]).then(response => {
             const users = response[0].data
@@ -60,7 +60,7 @@ class CurrentProjectUsers extends React.Component {
             this.setState({
                 usersByProject: filteredUsers || [],
             })
-        })
+        }) */
     }
 /**
   * 
@@ -75,7 +75,7 @@ class CurrentProjectUsers extends React.Component {
             className.classList.remove("asignee-selected")
         }
         e.target.className = "assign-user-list-items asignee-selected"
-        this.props.newAssigneeUser(user)
+      //  this.props.newAssigneeUser(user)
     }
     render() {
         const { currentAssingnee } = this.props

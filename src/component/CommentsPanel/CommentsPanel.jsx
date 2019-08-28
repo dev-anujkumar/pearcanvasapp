@@ -124,8 +124,9 @@ class CommentsPanel extends React.Component {
     @param {Object} props - objct of comments
     @return {String} - returns the jsx code of the comment
     */
-    renderComment = (props) => {
-        let finalFilteredComments = this.filterComments(props)
+    renderComment = (comment) => {
+        let { filters } = this.state;
+        let finalFilteredComments = this.filterComments(comment,filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
@@ -148,14 +149,13 @@ class CommentsPanel extends React.Component {
     }
      /**
     * 
-    * @discription - This function is to filter the comments
+    *@discription - This function is to filter the comments
     @param {Object} props - objct of comments
     @return {String} - returns the final filterd comment
     */
-    filterComments = (props) => {
+    filterComments = (comment,filters) => {
         let { id } = this.props
-        let { filters } = this.state
-        let elementWiseComments = props.comments
+        let elementWiseComments = comment;
         let statusFilteredComments = [],
             chronoFilteredComments = [],
             finalFilteredComments
@@ -224,9 +224,9 @@ class CommentsPanel extends React.Component {
                                         </div>
                                         {this.state.showStatusDropdown &&
                                             <ul className="dropdown__content">
-                                                <li data-value="open" onClick={this.setStatus('all')}>All</li>
-                                                <li data-value="open" onClick={this.setStatus('open')}>Open</li>
-                                                <li data-value="resolved" onClick={this.setStatus('resolved')}>Resolved</li>
+                                                <li data-value="open" onClick={()=>this.setStatus('all')}>All</li>
+                                                <li data-value="open" onClick={()=>this.setStatus('open')}>Open</li>
+                                                <li data-value="resolved" onClick={()=>this.setStatus('resolved')}>Resolved</li>
                                             </ul>
                                         }
                                     </div>
@@ -235,7 +235,7 @@ class CommentsPanel extends React.Component {
                             </div>
                         </div>
                         <div id="panel-canvas" className="comments-canvas">
-                            {this.renderComment(this.props)}
+                            {this.renderComment(this.props.comments)}
                         </div>
                     </div>
                 </div>
@@ -264,6 +264,6 @@ const SearchComponent = (props) => {
 
 CommentsPanel.propTypes = {
     /** commet data attached to store and contains complete comment object */
-    comment: PropTypes.array.isRequired
+    comments: PropTypes.array.isRequired
 }
 export default CommentsPanel;

@@ -205,7 +205,7 @@ class Comment extends React.Component {
         /* const updatedFields = {
             'assignto': this.state.newAssignee
         } */
-        this.props.updateAssignee(commentUrn, newAssignee, elementId)
+      //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
         console.log(this.props);
@@ -256,8 +256,6 @@ class Comment extends React.Component {
                                     setMode={this.setMode}
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
-
-
                                 />
 
                             </div>

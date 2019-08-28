@@ -40,6 +40,26 @@ exports[`Testing Button component with props render backward-nav-active Button c
 </Button>
 `;
 
+exports[`Testing Button component with props render close-container Button component   1`] = `
+<Button
+  labelText="UL"
+  type="close-container"
+>
+  <span
+    className="btn-element"
+    id="close-container"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+  </span>
+</Button>
+`;
+
 exports[`Testing Button component with props render color-palette Button component   1`] = `
 <Button
   labelText="UL"

@@ -9,7 +9,7 @@ class UserAssignee extends React.Component {
   @return {String} - returns the jsx code of the assignee menu
   */
     assigneeForm = (props) => {
-        if (this.props.mode === 'assign') {
+        if (props.mode === 'assign') {
             return (
                 <div className="assignee-content">
                     <span className="property-title">Assignee</span>
@@ -44,6 +44,19 @@ class UserAssignee extends React.Component {
 }
 UserAssignee.propTypes = {
     /** commet data attached to store and contains complete comment object */
-    comment: PropTypes.object.isRequired
+    comment: PropTypes.object.isRequired,
+    /** Give the mode of comment */
+    mode:PropTypes.string.isRequired,
+    /** Handler to Assign new user */
+    newAssigneeUser:PropTypes.func,
+     /** value to check assignee is selected or note */
+    isSelectAssignee : PropTypes.bool,
+    /** Handler to set new mode */
+    setMode:PropTypes.func,
+     /** Handler to update assignee */
+    updateAssignee:PropTypes.func,
+     /** Handler to remove assigne */
+    removeAssigneePopup:PropTypes.func
+
 }
 export default UserAssignee;
