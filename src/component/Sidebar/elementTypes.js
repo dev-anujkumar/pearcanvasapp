@@ -170,7 +170,9 @@ export default {
         'primary-blockcode-equation': {
             text: 'Block Code Editor',
             subtype: {
-                
+                'secondary-blockcode-equation': {
+                    text: 'Block Code Editor'
+                }
             }
         },
         'primary-editor-table-equation': {

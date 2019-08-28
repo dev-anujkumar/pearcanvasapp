@@ -22,6 +22,8 @@
     cursor: move;
     font-size: 14px;
     color: white;
+    width: 36px;
+    text-align: center;
 }
 
 .btn-element#flag-icon {
@@ -29,7 +31,7 @@
 }
 
 .btn-element#delete-icon {
-    padding: 4px 4px 0;
+    padding: 6px 8px 4px;
     background-color: #fa5d54;
 }
 

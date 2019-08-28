@@ -1,4 +1,14 @@
-.element-container {
+.editor {
     margin-bottom: 20px;
     display: flex;
+}
+
+.element-container {
+    padding: 15px;
+    flex-grow: 1;
+    border: 1.5px solid #aaa;
+}
+
+.element-container.active {
+    border: 1.5px solid #149632;
 }
