@@ -58,7 +58,7 @@ import PropTypes from 'prop-types'
     }
 
     render() {
-        const { slateType } = this.props
+        const { slateType, slateTitle } = this.props
         let slateLabel = this.getLabel(slateType);
 
         return (
@@ -67,7 +67,7 @@ import PropTypes from 'prop-types'
                     <label className="header-label">{slateLabel}</label>
                     <div className="input-text">
                         <label className="u-hidden" htmlFor="txt-input" />
-                        <input type="text" className="txt-input" placeholder="title" disabled/>
+                        <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
                     </div>
                     <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/>
                     <Button type="forward-nav-active" onClick={() => this.handleNavClick("for")}/>
@@ -78,12 +78,15 @@ import PropTypes from 'prop-types'
 }
 
 SlateHeader.defaultProps = {
-    slateType: ""
+    slateType: "section",
+    slateTitle: {}
 }
 
 SlateHeader.propTypes = {
       /** Type of slate to be rendered */
-      slateType : PropTypes.string.isRequired
+      slateType : PropTypes.string.isRequired,
+      /** Title of slate to be rendered */
+      slateTitle : PropTypes.object
 }
 
 export default  SlateHeader ;
