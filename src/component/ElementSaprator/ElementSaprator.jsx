@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import Button from '../ElementButtons/ElementButton'
+import Button from '../ElementButtons'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
@@ -15,8 +15,6 @@ export default function ElementSaprator(props) {
     if(elementType){
         
     }
-
-    console.log('rrrrrrrrrrrrrrrrrrr',elementType, clickHandler, typeHandler)
     
     /**
      * @description: This hook is used for handling the outer click, 

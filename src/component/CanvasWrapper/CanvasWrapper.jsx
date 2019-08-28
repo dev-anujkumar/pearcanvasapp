@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
+import {
+    fetchSlateData
+  } from './CanvasWrapper_Actions';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -14,11 +17,15 @@ export class CanvasWrapper extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        // uncomment to run Canvas Stabilization app as stand alone app //
+        this.props.fetchSlateData();
+    }
+
     render() {
         return (
             <div className='content-composer'>
                 <div id="editor-toolbar" className="editor-toolbar">
-                    {/* <span className='--rm-place'>Tool Bar</span> */}
                     {/* put editor tool */}
                     <div className="header" id="tinymceToolbar"></div>
                 </div>
@@ -52,4 +59,7 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    null)(CanvasWrapper);
+    {
+        fetchSlateData
+    }
+)(CanvasWrapper);
