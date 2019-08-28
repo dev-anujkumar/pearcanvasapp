@@ -1,0 +1,152 @@
+.btn-element {
+    padding: 6px 10px;
+    cursor: pointer;
+    background-color: grey;
+    margin-bottom: 2px;
+    display: table;
+}
+
+.btn-element > img {
+    width: 20px;
+}
+
+.btn-element.small {
+    padding: 0 6px;
+}
+
+.btn-element.small > img {
+    width: 12px;
+}
+
+.btn-element#element-label {
+    cursor: move;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-element#flag-icon {
+    background-color: #fa5d54;
+}
+
+.btn-element#delete-icon {
+    padding: 4px 4px 0;
+    background-color: #fa5d54;
+}
+
+.btn-element#split-icon,
+.btn-element#expand-icon,
+.btn-element#forward-nav-active,
+.btn-element#backward-nav-active,
+.btn-element#color-palette {
+    background-color: transparent;
+}
+
+.btn-element#split-icon > img {
+    width: 30px;
+}
+
+.btn-element#forward-nav-active,
+.btn-element#backward-nav-active {
+    padding: 0;
+    background: transparent;
+}
+
+.btn-element#forward-nav-active > img,
+.btn-element#backward-nav-active > img {
+    width: 26px;
+}
+
+.btn-element#expand-icon > img {
+    width: 40px;
+}
+.btn-element#close-container {
+    width: 10%;
+    height:20px;
+    float: left;
+    background-color: transparent;
+    cursor:pointer;
+    color:#fff;
+}
+
+/* #flag-icon{
+    cursor: pointer;
+    height: 18px;
+    width: 10px;
+    padding: 0 5px;
+    margin-bottom: 2px;
+    background-color: #fa5d54
+} */
+
+/* #delete-icon{
+    background-color: #fa5d54;
+    padding: 4px 5px;
+    height: 28px;
+    width: 24px;
+    cursor: pointer;
+   
+} */
+
+/* #delete-icon>img{
+    height: 24px;
+    width: 24px;
+    background-size: 82% 82%;
+} */
+
+/* #tcm-icon, #add-comment{
+    cursor: pointer;
+    height: 18px;
+    width: 10px;
+    padding: 0 5px;
+    margin-bottom: 2px;
+    background-color: grey;
+} */
+
+/* #forward-nav-active, #backward-nav-active{
+    width: 30px;
+    height: 27px;
+    cursor: pointer;
+} */
+
+/* #split-icon{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+} */
+
+#expand-icon{
+    width: 30px;
+    height: 30px;
+    left: -2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem, #opener-elem{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    padding: 5px;
+    margin: 1px;
+    cursor: pointer;
+    background: white;
+    border: solid 1px #aaaaaa;
+    border-radius: 50%;
+    align-items: center;
+    opacity: 0.5;
+}
+
+#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover, #opener-elem:hover{
+    opacity: 1;
+}
+
+
+#color-palette{
+    padding: 6px 0;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    position: absolute;
+    color: white;
+    cursor: pointer;
+}

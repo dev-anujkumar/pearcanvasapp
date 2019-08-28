@@ -9,7 +9,7 @@ class LoadableComponent extends Component {
     render() {
         return (
             <React.Fragment>
-                <h2>Your Lazy Component Is Loaded</h2>
+                <h2>Your Lazy Component Is Loaded ....</h2>
             </React.Fragment>
         );
     }

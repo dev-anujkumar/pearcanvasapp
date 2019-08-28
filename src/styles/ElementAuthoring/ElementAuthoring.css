@@ -1,0 +1,21 @@
+.Editor {
+    padding: 15px !important;
+    min-height: 100px;
+    flex-grow: 1;
+    border: 2px solid #ddd;
+    word-break: break-word;
+}
+
+.Editor:focus {
+    border: 2px solid #149632;
+}
+
+.Editor p{
+    margin: 0 !important;
+}
+.element-list .mce-visual-caret{
+    display:none;
+    cursor:default;
+    outline:none;
+    border:none;
+}
