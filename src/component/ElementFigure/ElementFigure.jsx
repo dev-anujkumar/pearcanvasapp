@@ -8,39 +8,20 @@ import { TinyMceEditor } from "../tinyMceEditor"
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
 
-/**
-* @description - ElementFigure is a class based component. It is defined simply
-* to make a skeleton of the figure-type element .
-*/
+
+/*** @description - ElementFigure is a class based component. It is defined simply
+* to make a skeleton of the figure-type element .*/
+
 export class ElementFigure extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            currentFocus: false
-        }
-    }
-    onClick = () => {
-
-    }
-    onBlur = () => {
-
-    }
-    onKeyup = () => {
-
     }
     /**
  * @description - This function is for changing the container border colour on focus.
  * @param getFocus boolean type parameter indicating element in focus
  */
 
-    onFocus = (getFocus) => {
-        if (getFocus === true) {
-            this.setState({
-                currentFocus: true
-            })
-        }
-    }
-    /**
+ /**
      * @description - This function is for handling the different types of figure-element.
      * @param element object that defined the type of element
      */
@@ -82,8 +63,6 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50TextMathImage',
                             figCreditClass = 'paragraphImage50TextMathImageCredit';
                         break;
-
-
                     case (element.figuretype === "image" && element.figureAlignment === 'text-width'):
                         divClass = 'divImageTextWidth',
                             figureClass = 'figureImageTextWidth',
@@ -115,7 +94,7 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageTextWidthMathImageCredit';
                         break;
 
-                    case (element.figuretype === "image" && element.figureAlignment === 'wider'):
+                    case (element.figuretype === 'image' && element.figureAlignment === 'wider'):
                         divClass = 'divImageWiderThanText',
                             figureClass = 'figureImageWiderThanText',
                             figLabelClass = 'heading4ImageWiderThanTextNumberLabel',
@@ -145,7 +124,6 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanTextMathImage',
                             figCreditClass = 'paragraphImageWiderThanTextMathImageCredit';
                         break;
-
                     case (element.figuretype === "image" && element.figureAlignment === 'full'):
                         divClass = 'divImageFullscreenImage',
                             figureClass = 'figureImageFullscreen',
@@ -184,11 +162,8 @@ export class ElementFigure extends Component {
                                 <div id="figure-label">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
-                                        format="p"
-                                        // class={this.props.element.header.labelClass}
                                         className="figureLabel"
-                                        placeholder="Figure Label."
-                                    // placeHolderText={this.props.element.header.labelPlaceHolderText}
+                                        placeholder="Enter Label..."
                                     />
                                 </div>
                             </h4>
@@ -196,17 +171,14 @@ export class ElementFigure extends Component {
                                 <div id="figure-title">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
-                                        format="p"
-                                        // class={this.props.element.titleClass}
                                         className="figureTitle"
-                                        placeholder="Figure Label."
-                                    // placeHolderText={this.props.element.header.titlePlaceHolderText}
+                                        placeholder="Enter Title..."
                                     />
                                 </div>
                             </h4>
                         </header>
                         <div className="pearson-component image figureData" data-type={dataType} >
-                            <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+                              <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
                                 data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
                                 title=""
                                 alt=""
@@ -217,60 +189,51 @@ export class ElementFigure extends Component {
                             <div id="figure-caption" >
                                 <TinyMceEditor
                                     onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.captionClass}
                                     className="figureCaption"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.footer.captionPlaceHolderText}
+                                    placeholder="Enter Caption..."
                                 />
                             </div>
                         </figcaption>
                     </figure>
-                    <p className={figCreditClass + " figureCredit"}>
-                        <div id="figure-credit">
+                    <div id="figure-credit">
+                        <p className={figCreditClass + " figureCredit"}>
                             <TinyMceEditor
                                 onFocus={this.onFocus}
-                                format="p"
-                                // class={this.props.element.creditClass}
                                 className="figureCredit"
-                                placeholder="Figure Label."
-                            // placeHolderText={this.props.element.footer.creditPlaceHolderText}
+                                placeholder="Enter Credit..."
                             />
-                        </div>
-                    </p>
+                        </p>
+                    </div>
                 </div>
                 break;
             case 'authoredtext':
                 figureJsx = <div className="divTextFigure">
                     <figure className="figureText" resource="">
                         <header>
-                            <h4 className="heading4TextNumberLabel figureLabel" ><div id="figure-label">
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.header.labelClass}
-                                    className="figureLabel"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.header.labelPlaceHolderText}
-                                />
-                            </div></h4>
-                            <h4 className="heading4TextTitle figureTitle" >                                <div id="figure-title">
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.titleClass}
-                                    className="figureTitle"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.header.titlePlaceHolderText}
-                                />
-                            </div></h4>
+                            <h4 className="heading4TextNumberLabel figureLabel" >
+                                <div id="figure-label">
+                                    <TinyMceEditor
+                                        onFocus={this.onFocus}
+                                        className="figureLabel"
+                                        placeholder="Enter Label..."
+                                    />
+                                </div>
+                            </h4>
+                            <h4 className="heading4TextTitle figureTitle" >
+                                <div id="figure-title">
+                                    <TinyMceEditor
+                                        onFocus={this.onFocus}
+                                        className="figureTitle"
+                                        placeholder="Enter Title..."
+                                    />
+                                </div>
+                            </h4>
                         </header>
                         <p className="paragraphNumeroUno mathml figureData" data-type="mathml">
                             <p className={`paragraphNumeroUno ${this.props.element.figuretype} figureData `}>
                                 <div data-type="mathml">
                                     <TinyMceEditor
-                                        // class={this.props.element.class}
-                                        placeholder="Figure Label."
+                                        placeholder="Type something..."
                                     />
                                 </div>
                             </p>
@@ -279,26 +242,21 @@ export class ElementFigure extends Component {
                             <div id="figure-caption" >
                                 <TinyMceEditor
                                     onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.captionClass}
                                     className="figureCaption"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.footer.captionPlaceHolderText}
+                                    placeholder="Enter Caption..."
                                 />
                             </div>
                         </figcaption>
                     </figure>
-                    <p className="paragraphTextCredit figureCredit">
-                        <div id="figure-credit">
+                    <div id="figure-credit">
+                        <p className="paragraphTextCredit figureCredit">
                             <TinyMceEditor
                                 onFocus={this.onFocus}
-                                format="p"
-                                // class={this.props.element.creditClass}
                                 className="figureCredit"
-                                placeholder="Figure Label."
-                            // placeHolderText={this.props.element.footer.creditPlaceHolderText}
+                                placeholder="Enter Credit..."
                             />
-                        </div></p>
+                        </p>
+                    </div>
                 </div>
                 break;
             case 'codelisting':
@@ -309,58 +267,46 @@ export class ElementFigure extends Component {
                                 <div id="figure-label">
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
-                                        format="p"
-                                        // class={this.props.element.header.labelClass}
                                         className="figureLabel"
-                                        placeholder="Figure Label."
-                                    // placeHolderText={this.props.element.header.labelPlaceHolderText}
+                                        placeholder="Enter Label..."
                                     />
                                 </div>
                             </h4>
-                            <h4 className="heading4CodeSnippetTitle" >                                <div id="figure-title">
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.titleClass}
-                                    className="figureTitle"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.header.titlePlaceHolderText}
-                                />
-                            </div></h4>
+                            <h4 className="heading4CodeSnippetTitle" >
+                                <div id="figure-title">
+                                    <TinyMceEditor
+                                        onFocus={this.onFocus}
+                                        className="figureTitle"
+                                        placeholder="Enter Title..."
+                                    />
+                                </div>
+                            </h4>
                         </header>
                         <div className="pearson-component blockcode codeSnippet" data-type="codeSnippet" >
-                            <pre className="code-listing" ><code id="codeListing">
-                                <div className={`pearson-component ${this.props.element.figuretype} codeSnippet`} data-type="codeSnippet">
+                            <pre className="code-listing" >
+                                <code id="codeListing">
                                     <TinyMceEditor
-                                        // class={this.props.element.class}
-                                        placeholder="Figure Label."
-
+                                        placeholder="Enter Block Code..."
                                     />
-                                </div></code></pre>
+                                </code>
+                            </pre>
                         </div>
                         <figcaption className="figcaptionCodeSnippet" >
                             <div id="figure-caption" >
                                 <TinyMceEditor
                                     onFocus={this.onFocus}
-                                    format="p"
-                                    // class={this.props.element.captionClass}
                                     className="figureCaption"
-                                    placeholder="Figure Label."
-                                // placeHolderText={this.props.element.footer.captionPlaceHolderText}
+                                    placeholder="Enter Caption..."
                                 />
                             </div>
                         </figcaption>
                     </figure>
                     <div id="figure-credit">
                         <p className="paragraphCodeSnippetCredit">
-
                             <TinyMceEditor
                                 onFocus={this.onFocus}
-                                format="p"
-                                // class={this.props.element.creditClass}
                                 className="figureCredit"
-                                placeholder="Figure Label."
-                            // placeHolderText={this.props.element.footer.creditPlaceHolderText}
+                                placeholder="Enter Credit..."
                             />
                         </p>
                     </div>
@@ -372,7 +318,6 @@ export class ElementFigure extends Component {
     render() {
         const { element } = this.props;
         return (
-
             <div className="wrapper">
                 <div className="header" id="tinymceToolbar">
                     <h1 >Canvas</h1>
@@ -392,10 +337,6 @@ export class ElementFigure extends Component {
         );
     }
 }
-
-
-
-
 
 
 ElementFigure.defaultProps = {

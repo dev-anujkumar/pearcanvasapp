@@ -3,46 +3,16 @@
 }
 .mce-content-body{
     padding: 10px !important; 
+    font-size:inherit !important;
 }
 .mce-content-body  p{
     /* margin: 0 !important; */
-    font-size: 12px ;
+    /* font-size: 12px ; */
     font-family: Helvetica, sans-serif !important;
 
    
 }
-/* .figureLabel .mce-content-body:before {
-   content:"Enter Label..."!important;
-} */
-
-
-/* .figureTitle .mce-content-body:before {
-    content:"Enter Title..."!important;
- }
- .figureCaption .mce-content-body:before {
-    content:"Enter Caption..."!important;
- }
-.figureCredit .mce-content-body:before {
-    content:"Enter Credit..."!important;
- }
- .codeSnippet .mce-content-body:before {
-    content:"Enter the Block Code..."!important;
- }
- .mathml  .mce-content-body:before {
-    content:"Type something..."!important;
- }
- .content-editorr:before {
-    display: none;
-}
-.content-editor.empty:before {
-    display: block;
-    position: absolute;
-    content: attr(data-placeholder);
-} */
- /* .mathml .mce-edit-focus:before,.codeSnippet .mce-edit-focus:before,.figureCredit .mce-edit-focus:before,.figureCaption .mce-edit-focus:before,.figureTitle .mce-edit-focus:before,.figureLabel .mce-edit-focus:before{
-    content:" "!important;
- } */
-.figureImage50Text .mce-content-body .mce-edit-focus{
+ .mce-content-body .mce-edit-focus{
     margin: 0px;
     position: relative;
     /* top: 20px; */
@@ -58,7 +28,7 @@
     font-size: 12px !important;
     color: #000 !important;
 }
-.figureImage50Text .Editor {
+ .Editor {
     margin: 0!important;
     /* position: relative;
     top: 20px!important; */
@@ -89,9 +59,21 @@ figcaption,.figureCaption #figure-caption .mce-content-body  .mce-edit-focus{
     font-size: 10.8px!important;
     text-align: left !important;
 }
+p.figureCredit #figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+    font-size: 9px!important;
+  
+}
 figure,.element-container{
     display:contents !important;
 }
-/* figure{
-    display: contents;
+.figureTitle{
+    font-size: 12px!important;
+}
+/* .figureElement #labelHeader #figure-label .figureLabel .Editor .mce-content-body .mce-edit-focus{
+    font-size: 12px!important;
+    font-weight: 800!important;
 } */
+#labelHeader #figure-label{
+    font-size: 12px!important;
+    font-weight: 800!important;
+}

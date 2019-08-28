@@ -131,7 +131,7 @@ export class TinyMceEditor extends React.Component {
         // this.setState({
         //     getFocus:true
         // })
-        this.props.onFocus(getFocus);
+       // this.props.onFocus(getFocus);
     };
 
     onEditorFocus = (editor) => {
@@ -142,8 +142,6 @@ export class TinyMceEditor extends React.Component {
         let type = this.props.type
         if(e){
          e.target.formatter.apply(this.props.format);
-         
-    // tinymce.activeEditor.formatter.apply(this.props.elementFormat);
         console.log('Content was updated:', e.target.getContent());
         }
         
