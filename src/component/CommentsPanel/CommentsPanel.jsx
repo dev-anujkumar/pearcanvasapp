@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import _ from 'lodash'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
@@ -163,7 +164,7 @@ class CommentsPanel extends React.Component {
                 chronoFilteredComments = elementWiseComments
                 break;
             case "-1":      //Newest To Oldest
-                chronoFilteredComments = _.sortBy(elementWiseComments, [comment => moment(elementWiseComments.commentDateTime).unix()]).reverse()
+                chronoFilteredComments = _ && _.sortBy(elementWiseComments, [comment => moment(elementWiseComments.commentDateTime).unix()]).reverse()
                 break;
         }
         switch (filters.status.value.toLowerCase()) {
@@ -183,7 +184,7 @@ class CommentsPanel extends React.Component {
 
     render() {
         return (
-            <div id="comments-panel" class="panel panel-open">
+            <div id="comments-panel" className="panel panel-open">
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
@@ -223,9 +224,9 @@ class CommentsPanel extends React.Component {
                                         </div>
                                         {this.state.showStatusDropdown &&
                                             <ul className="dropdown__content">
-                                                <li data-value="open" onClick={() => this.setStatus('all')}>All</li>
-                                                <li data-value="open" onClick={() => this.setStatus('open')}>Open</li>
-                                                <li data-value="resolved" onClick={() => this.setStatus('resolved')}>Resolved</li>
+                                                <li data-value="open" onClick={this.setStatus('all')}>All</li>
+                                                <li data-value="open" onClick={this.setStatus('open')}>Open</li>
+                                                <li data-value="resolved" onClick={this.setStatus('resolved')}>Resolved</li>
                                             </ul>
                                         }
                                     </div>
@@ -263,6 +264,6 @@ const SearchComponent = (props) => {
 
 CommentsPanel.propTypes = {
     /** commet data attached to store and contains complete comment object */
-    comment: PropTypes.object.isRequired
+    comment: PropTypes.array.isRequired
 }
 export default CommentsPanel;
