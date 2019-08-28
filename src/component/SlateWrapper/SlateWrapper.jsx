@@ -33,7 +33,7 @@ class SlateWrapper extends Component {
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
-            
+            image_advtab: false,
             setup: (editor) => {
                 this.onEditorBlur(editor);
                 this.onEditorEnterKeyPress(editor);
@@ -58,15 +58,38 @@ class SlateWrapper extends Component {
                       return false;
                     }
                   })
+                 
                   editor.on("click", (e)=>{
                     if(e.target.tagName=='dfn'){
                         //launch footnote/glossary
                     }
+                   
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");                    
+                    if (!cell) {
+                        editor.dom.$('#editor-toolbar').find('.tox-toolbar').addClass('toolbar-disabled')
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();                    
+                      return false;
+                    }
+                    else{
+                        editor.dom.$('#editor-toolbar').find('.tox-toolbar').removeClass('toolbar-disabled')
+                    }
                   })
             },
             init_instance_callback: (editor) => {
-                 editor.fire('focus');
+                 editor.fire('focus');                 
                 editor.dom.$('.element-list').attr('contenteditable', 'false'); 
+                editor.on("focus", (e)=>{
+                    
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+                    if (!cell) {
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return false;
+                    }
+                  })
               }
         }
     }
