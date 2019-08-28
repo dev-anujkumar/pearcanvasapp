@@ -16,7 +16,14 @@ function splithandlerfunction () {
 const typeHandler = ['text-elem', 'image-elem', 'audio-elem', 'interactive-elem', 'assessment-elem', 'container-elem', 'worked-exp-elem', 'opener-elem']
 const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
 
-stories.add('ElementSaprator', () => < ElementSaprator typeHandler={typeHandler} clickHandler={clickHandler}/ > , {
+stories.add('ElementSaprator', () =>{
+  return (
+    <div>
+       < ElementSaprator key={'213123'} typeHandler={typeHandler} clickHandler={clickHandler}/ >
+       < ElementSaprator key='654656546' typeHandler={typeHandler} clickHandler={clickHandler}/ >
+    </div>
+  )
+} , {
   // notes: {
   //   markdown: markdownNotes
   // }, //Notes for a story

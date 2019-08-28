@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 
@@ -7,15 +7,8 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
     const {typeHandler, clickHandler, elementType} = props
+    let buttonRef =useRef(null)
 
-    if(elementType === 'WE') {
-
-    }
-
-    if(elementType){
-        
-    }
-    
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
@@ -23,16 +16,20 @@ export default function ElementSaprator(props) {
     useEffect(() => {
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
-              let dropdowns = document.getElementsByClassName("dropdown-content");
-              let i
-              for (i = 0; i < dropdowns.length; i++) {
-                let openDropdown = dropdowns[i]
-                if (openDropdown.classList.contains('show')) {
-                    setShowClass(!showClass)
-                }
-              }
+              //let dropdowns = document.getElementsByClassName("dropdown-content");
+            //  let i
+             // for (i = 0; i < dropdowns.length; i++) {
+              //  let openDropdown = dropdowns[i]
+              //  if (openDropdown.classList.contains('show')) {
+                    setShowClass(false)
+              //  }
+             // }
             }
           }
+        // document.addEventListener('click',(e)=>{
+        //     debugger
+        //     console.log(buttonRef)
+        // })
     });
 
     /**
@@ -54,7 +51,7 @@ export default function ElementSaprator(props) {
             </div>
 
             <div className='elemDiv3'>
-                <div className="dropdown">
+                <div className="dropdown" ref={buttonRef}>
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
