@@ -1,0 +1,97 @@
+.modal { 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+  }
+  
+  .modal-content {   
+    border-radius: 5px;
+    -moz-box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0 1px #a6a6a6, 0 0 0 1px rgba(0, 0, 0, 0.08);
+    font-family: "Helvetica Neue", sans-serif;
+    color: #847676;
+    padding: 1.2em;
+    position: relative;
+    margin: 0 auto;
+    max-width: 100%;
+    width: 500px;
+    font-size: 1.2em;
+    line-height: 2.0em;
+  }
+ 
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .dialog-window{
+    margin-bottom: .5em;
+    
+  }
+  .dialog-text{
+    font-size: 1.5em;
+    color: #007fa3;
+    font-weight: bold;
+  }
+
+  .dialog-input-textarea {
+    border-radius: 3px;
+    background: #fff;
+    width: 100%;
+    padding: .25em .67em;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    min-height: 2.5em;
+    margin: 0 0 .25em;
+  }
+
+   .cancel-button{
+    border-radius: 3px;
+    border: 0;
+    float: right;
+    margin: 0 0 0 .5em;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: .8em;
+    line-height: 1em;
+    padding: .75em 2em;
+    background: #e0e0e0;
+    color: #777;
+  }
+
+  .save-button{
+    border-radius: 3px;
+    border: 0;
+    float: right;
+    margin: 0 0 0 .5em;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: .8em;
+    line-height: 1em;
+    padding: .75em 2em;
+    background: #007fa3;
+    color: #fff;
+}
+
+.dialog-buttons{
+    padding: 30px 10px 50px;
+}
