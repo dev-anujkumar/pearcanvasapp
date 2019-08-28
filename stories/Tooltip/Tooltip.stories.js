@@ -9,7 +9,7 @@ import Button from '../../src/component/ElementButtons/ElementButton'
 const stories = storiesOf('Components|Tooltip', module)
 stories.addDecorator(withKnobs)
 
-const direction='right', tooltipText='This is tooltipThis is tooltipThis is tooltipThis is tooltipThis is tooltipThis is tooltipThis is tooltipThis is tooltip '
+const direction='right', tooltipText='You have no pull requests to review'
 
 function toggleElementList(){
     alert('From story of tooltip')

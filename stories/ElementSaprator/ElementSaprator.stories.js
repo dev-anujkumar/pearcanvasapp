@@ -21,6 +21,7 @@ stories.add('ElementSaprator', () =>{
     <div>
        < ElementSaprator key={'213123'} typeHandler={typeHandler} clickHandler={clickHandler}/ >
        < ElementSaprator key='654656546' typeHandler={typeHandler} clickHandler={clickHandler}/ >
+       < ElementSaprator key='4535' typeHandler={typeHandler} clickHandler={clickHandler}/ >
     </div>
   )
 } , {

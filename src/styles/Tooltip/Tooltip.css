@@ -5,18 +5,18 @@
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    min-width:  120px;
-    max-width: 200px;
-    word-break: break-word;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    /* border-radius: 6px; */
-    padding: 5px 0;
+    visibility: hidden;   
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
+
+    min-width: 120px;
+    height: auto;
+    font-size: 0.8rem;
+    background-color: black;
+    color: #fff;
+    padding: 6px;
+    text-align: center;
 }
 
 .tooltip:hover .tooltiptext {
