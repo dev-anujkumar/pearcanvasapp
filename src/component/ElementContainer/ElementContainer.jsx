@@ -35,12 +35,14 @@ class ElementContainer extends Component {
         }
 
         return (
-            <div className="element-container" data-id={element.id}>
+            <div className="editor">
                 <div>
                     <Button type="element-label" labelText={labelText} />
                     <Button type="delete-element" />
                 </div>
-                {editor}
+                <div className="element-container" data-id={element.id}>
+                    {editor}
+                </div>
                 <div>
                     <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
                     <Button type="comment-flag" />
@@ -68,9 +70,13 @@ class ElementContainer extends Component {
     }
 }
 
+ElementContainer.defaultProps = {
+    element: {}
+}
+
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element : PropTypes.object,
+    element : PropTypes.object
 }
 
 export default ElementContainer
