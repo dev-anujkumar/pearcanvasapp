@@ -16,10 +16,6 @@ export class ElementFigure extends Component {
     constructor(props) {
         super(props);
     }
-    /**
- * @description - This function is for changing the container border colour on focus.
- * @param getFocus boolean type parameter indicating element in focus
- */
 
  /**
      * @description - This function is for handling the different types of figure-element.
