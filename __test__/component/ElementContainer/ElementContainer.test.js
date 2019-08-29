@@ -34,4 +34,10 @@ describe('Test for element container component', () => {
         elementContainer = mount(<ElementContainer element={element} />);
         expect(elementContainer).toMatchSnapshot();
     })
+
+    it('onClick Event', () => {
+        const component = mount(<ElementContainer />);
+        component.find('span#add-comment').simulate('click');
+        component.find('span#close-container').simulate('click');
+   })
 });

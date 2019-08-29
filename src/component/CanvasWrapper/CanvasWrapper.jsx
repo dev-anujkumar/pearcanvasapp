@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
+import Sidebar from '../Sidebar';
 import {
     fetchSlateData
   } from './CanvasWrapper_Actions';
@@ -41,6 +42,7 @@ export class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             <span className='--rm-place'>Settings</span>
+                            <Sidebar />
                             {/* put side setting */}
                         </div>
                     </div>
