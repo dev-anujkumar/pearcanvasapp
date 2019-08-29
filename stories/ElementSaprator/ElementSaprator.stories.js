@@ -13,15 +13,63 @@ function splithandlerfunction () {
   alert('Click handler function Called')
 }
 
-const typeHandler = ['text-elem', 'image-elem', 'audio-elem', 'interactive-elem', 'assessment-elem', 'container-elem', 'worked-exp-elem', 'opener-elem']
-const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction, splithandlerfunction]
+const esProps = [
+  {
+    buttonType : 'text-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'text',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'image-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'image',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'audio-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'audio/video',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'interactive-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'interactive',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'assessment-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'assessment',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'container-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'container',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'worked-exp-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'worked example',
+    tooltipDirection : 'left'
+  },
+  {
+    buttonType : 'opener-elem',
+    buttonHandler : splithandlerfunction,
+    tooltipText : 'opener element',
+    tooltipDirection : 'left'
+  },
+]
 
 stories.add('ElementSaprator', () =>{
   return (
     <div>
-       < ElementSaprator key={'213123'} typeHandler={typeHandler} clickHandler={clickHandler} elementType='WE'/ >
-       < ElementSaprator key='654656546' typeHandler={typeHandler} clickHandler={clickHandler} elementType='WE'/ >
-       < ElementSaprator key='4535' typeHandler={typeHandler} clickHandler={clickHandler} / >
+       < ElementSaprator key={'213123'} esProps = {esProps} elementType='WE'/ >
+       < ElementSaprator key='654656546' esProps = {esProps} elementType='WE'/ >
+       < ElementSaprator key='4535' esProps = {esProps} / >
     </div>
   )
 } , {

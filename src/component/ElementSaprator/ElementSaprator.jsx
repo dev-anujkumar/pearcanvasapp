@@ -7,9 +7,8 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const {typeHandler, clickHandler, elementType} = props
+    const { esProps, elementType} = props
     let buttonRef =useRef(null)
-    const tooltipTextArr = ['text', 'image', 'audio/video', 'interactive', 'assessment', 'container', 'worked example', 'opener element']
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
@@ -76,7 +75,7 @@ export default function ElementSaprator(props) {
                 </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
-                            {renderDropdownButtons(typeHandler, clickHandler, tooltipTextArr)}
+                            {renderDropdownButtons(esProps)}
                         </ul>
                     </div>
                 </div>
@@ -86,8 +85,7 @@ export default function ElementSaprator(props) {
 }
 
 ElementSaprator.propTypes = {
-    typeHandler : PropTypes.array.isRequired,
-    clickHandler : PropTypes.array.isRequired,
+    esProps : PropTypes.array.isRequired,
     elementType : PropTypes.string
 }
 
@@ -110,12 +108,12 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(typesArr, btnClkArr, tooltipTextArr) {
-    return typesArr.map((type, key) => {
+export function renderDropdownButtons(esProps) {
+    return esProps.map((elem, key) => {
             return (
-            <Tooltip direction='left' tooltipText={tooltipTextArr[key]}>
+            <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                 <li key={key}>
-                        <Button type={type} onClick={btnClkArr[key]} />              
+                        <Button type={elem.buttonType} onClick={elem.buttonHandler} />              
                 </li>
             </Tooltip>)
         })
