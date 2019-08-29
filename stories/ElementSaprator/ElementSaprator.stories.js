@@ -19,9 +19,9 @@ const clickHandler = [splithandlerfunction, splithandlerfunction, splithandlerfu
 stories.add('ElementSaprator', () =>{
   return (
     <div>
-       < ElementSaprator key={'213123'} typeHandler={typeHandler} clickHandler={clickHandler}/ >
-       < ElementSaprator key='654656546' typeHandler={typeHandler} clickHandler={clickHandler}/ >
-       < ElementSaprator key='4535' typeHandler={typeHandler} clickHandler={clickHandler}/ >
+       < ElementSaprator key={'213123'} typeHandler={typeHandler} clickHandler={clickHandler} elementType='WE'/ >
+       < ElementSaprator key='654656546' typeHandler={typeHandler} clickHandler={clickHandler} elementType='WE'/ >
+       < ElementSaprator key='4535' typeHandler={typeHandler} clickHandler={clickHandler} / >
     </div>
   )
 } , {

@@ -17,34 +17,28 @@ export default function ElementSaprator(props) {
 
     
     useEffect(() => {
-        
-        // window.onclick = function(event) {
-        //     if (!event.target.matches('.dropbtn')) {
-        //       let dropdowns = document.getElementsByClassName("dropdown-content");
-        //       let i
-        //       for (i = 0; i < dropdowns.length; i++) {
-        //        let openDropdown = dropdowns[i]
-        //        if (openDropdown.classList.contains('show')) {
-        //             setShowClass(!showClass)
-        //        }
-        //       }
-        //     }
-        //   }
         document.addEventListener('mousedown',(event)=>{            
             let elems = getParents(event.target)
-            let dropdown = 'dropdown';
-            if(elems.indexOf(dropdown)===-1)
-            {
+            let dropdown = 'dropdown'
+            if(elems.indexOf(dropdown)===-1){
                 setShowClass(false)
-            }           
+            } 
         })
-    }, []);
+    });
 
     /**
      * @description: This function is responsable for toggle 
-     * state to render the dropdown
+     * state to render the dropdown. First close all open dropdowns
+     * then open new one
      */
-    function toggleElementList() {       
+    function toggleElementList() { 
+        let openDropdowns = document.getElementsByClassName("show")
+        for(let i=0;i<openDropdowns.length;i++){
+            let openDropdown = openDropdowns[i]
+            if(openDropdown.classList.contains('show')){
+                openDropdown.classList.remove('show')
+            }
+        }      
         setShowClass(!showClass)
     }
 
@@ -65,9 +59,11 @@ export default function ElementSaprator(props) {
 
     return (
         <div className="elementSapratorContainer">
-            <div className='elemDiv-split'>
-                <Button type='split' onClick={splitSlateClickHandler} /> 
-            </div>
+        
+        <div className='elemDiv-split'>
+                {elementType=='WE' ?<Button type='split' onClick={splitSlateClickHandler} /> :''}
+        </div> 
+
 
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
