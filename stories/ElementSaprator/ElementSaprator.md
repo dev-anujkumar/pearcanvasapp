@@ -37,14 +37,11 @@
     <td class="tg-0pky">String</td>
     <td class="tg-0pky">Optional</td>
   </tr>
-  <tr>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-  </tr>
 </table>
     
 <p>Sample of esProps</p>
+---
+```javascript
 const esProps = [
   {
     buttonType : 'text-elem',
@@ -59,7 +56,8 @@ const esProps = [
     tooltipDirection : 'left'
   }
 ]
-
+```
+---
 <p>Object Structure of esProps</p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
