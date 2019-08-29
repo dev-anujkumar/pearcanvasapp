@@ -10,10 +10,10 @@ export const fetchSlateData = () => dispatch => {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
 		}
-	}).then(slateData => {        
+	}).then(slateData => {   
         dispatch({
         	type: FETCH_SLATE_DATA,
-        	payload: slateData
+        	payload: slateData.data
         })
 	})
 };
