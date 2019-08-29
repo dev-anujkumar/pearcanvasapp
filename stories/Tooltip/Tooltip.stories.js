@@ -45,7 +45,7 @@ stories.add('Tooltip', () =>
     // notes: {
     //   markdown: markdownNotes
     // }, //Notes for a story
-    info: 'This is a Higher Order component for place Tooltip',
+    info: 'This is a component for place Tooltip',
     readme: {
       sidebar: markdownNotes,
     },
