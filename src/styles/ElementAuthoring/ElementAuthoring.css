@@ -1,12 +1,10 @@
 .mce-content-body {
-    /* padding: 15px !important; */
-    min-height: 100px;
-    flex-grow: 1;
-    border: 2px solid #ddd;
+    padding: 0 !important;
+    min-height: 50px;
 }
 
 .mce-content-body.mce-edit-focus {
-    border: 2px solid #149632;
+    /* border: 2px solid #149632; */
 }
 
 .mce-content-body p{

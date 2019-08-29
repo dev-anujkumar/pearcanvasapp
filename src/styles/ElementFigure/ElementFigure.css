@@ -6,8 +6,7 @@
     font-size:inherit !important;
 }
 .mce-content-body  p{
-    /* margin: 0 !important; */
-    /* font-size: 12px ; */
+    font-size: inherit ;
     font-family: Helvetica, sans-serif !important;
 
    
@@ -15,11 +14,6 @@
  .mce-content-body .mce-edit-focus{
     margin: 0px;
     position: relative;
-    /* top: 20px; */
-    /* margin-left: 25px; */
-    /* margin-bottom: 20px; */
-    /* padding-top: 10px !important;
-    padding-left: 10px!important; */
     width: 660px;
     min-height: 40px!important;
     border: 2px solid black;
@@ -30,12 +24,7 @@
 }
  .Editor {
     margin: 0!important;
-    /* position: relative;
-    top: 20px!important; */
-    /* margin-left: 2px!important;
-    margin-bottom: 2px!important; */
     padding: 10px!important;
-    /* padding-left: 4px!important; */
     width: 660px!important;
     min-height: 40px!important;
     border: 2px solid black;
@@ -69,11 +58,11 @@ figure,.element-container{
 .figureTitle{
     font-size: 12px!important;
 }
-/* .figureElement #labelHeader #figure-label .figureLabel .Editor .mce-content-body .mce-edit-focus{
-    font-size: 12px!important;
-    font-weight: 800!important;
-} */
-#labelHeader #figure-label{
+#figure-label .figureLabel .Editor .mce-content-body .mce-edit-focus{
     font-size: 12px!important;
     font-weight: 800!important;
 }
+/* #labelHeader #figure-label{
+    font-size: 12px!important;
+    font-weight: 800!important;
+} */

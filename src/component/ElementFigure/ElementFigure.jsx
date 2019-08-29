@@ -159,7 +159,7 @@ export class ElementFigure extends Component {
                     <figure className={figureClass} resource="">
                         <header>
                             <h4 className={figLabelClass + " figureLabel"} >
-                                <div id="figure-label">
+                                <div id="figure-label" >
                                     <TinyMceEditor
                                         onFocus={this.onFocus}
                                         className="figureLabel"
