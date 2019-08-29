@@ -16,6 +16,7 @@ import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
+import ElementSaprator from '../ElementSaprator';
 
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -30,6 +31,7 @@ class SlateWrapper extends Component {
             menubar: false,
             statusbar: false,
             inline: true,
+            object_resizing : false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -40,7 +42,7 @@ class SlateWrapper extends Component {
                 this.onEditorClick(editor);
                 this.onEditorFocus(editor);               
                 editor.on('keyup', (e) => {
-                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -50,7 +52,7 @@ class SlateWrapper extends Component {
                    // editor.dom.$(e.target).closest('body').children('p').css('display', 'none');
                   })
                   editor.on('keydown', (e) => {
-                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -64,7 +66,8 @@ class SlateWrapper extends Component {
                         //launch footnote/glossary
                     }
                    
-                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");                    
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('click',cell)                    
                     if (!cell) {
                         editor.dom.$('#editor-toolbar').find('.tox-toolbar').addClass('toolbar-disabled')
                       e.stopImmediatePropagation();
@@ -80,9 +83,9 @@ class SlateWrapper extends Component {
             init_instance_callback: (editor) => {
                  editor.fire('focus');                 
                 editor.dom.$('.element-list').attr('contenteditable', 'false'); 
-                editor.on("focus", (e)=>{
-                    
-                    let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+                editor.on("focus", (e)=>{                    
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('focus',cell)  
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -97,8 +100,8 @@ class SlateWrapper extends Component {
     onEditorBlur = (editor) => {
         if(editor){
          editor.on('blur', function (e) {
-             e.stopImmediatePropagation();
-             e.preventDefault();
+            // e.stopImmediatePropagation();
+            // e.preventDefault();
          });
         }
      
@@ -126,8 +129,7 @@ class SlateWrapper extends Component {
         
      }
 
-     componentDidMount(){
-        console.log('JJJJJJJJ')
+     componentDidMount(){       
         tinymce.init(this.editorConfig)
       }
      
@@ -156,6 +158,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -196,6 +199,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -207,10 +211,24 @@ class SlateWrapper extends Component {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element) => {
                     return (
-                        <ElementContainer
-                            element={element}
-                            key={element.id}
-                        />
+                        <React.Fragment>
+                            <ElementContainer
+                                element={element}
+                                key={element.id}
+                            />
+                            <ElementSaprator
+                                key={`elem-separtor-${element.id}`}
+                                typeHandler={
+                                    [
+                                        'text-elem',
+                                        'image-elem',
+                                        'audio-elem'
+                                    ]
+                                }
+                                clickHandler={
+                                    [this.testConsole, this.testConsole, this.testConsole]
+                                } />
+                        </React.Fragment>
                     )
                 })
             }
@@ -219,6 +237,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -240,6 +259,10 @@ class SlateWrapper extends Component {
                 </div>
             </React.Fragment>
         );
+    }
+
+    testConsole = () => {
+        console.log('clicked')
     }
 }
 

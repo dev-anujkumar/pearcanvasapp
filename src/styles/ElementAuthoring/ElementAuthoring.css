@@ -1,4 +1,4 @@
-.Editor {
+/* .cypress-editable {
     padding: 15px !important;
     min-height: 100px;
     flex-grow: 1;
@@ -8,9 +8,9 @@
 
 .Editor:focus {
     border: 2px solid #149632;
-}
+} */
 
-.Editor p{
+.cypress-editable p{
     margin: 0 !important;
 }
 .element-list .mce-visual-caret{
@@ -18,4 +18,10 @@
     cursor:default;
     outline:none;
     border:none;
+}
+.element-list img{
+    pointer-events:none;
+}
+.tox.tox-tinymce.tox-tinymce-inline{
+    display:block !important;
 }

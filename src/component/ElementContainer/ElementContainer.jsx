@@ -3,9 +3,17 @@ import PropTypes from 'prop-types'
 
 import ElementAuthoring from './../ElementAuthoring';
 import Button from './../ElementButtons';
+import PopUp from '../PopUp';
 import './../../styles/ElementContainer/ElementContainer.css';
 
 class ElementContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            popup: false
+        };
+    }
+
     renderElement = (element = {}) => {
         let editor = '';
         let labelText = '';
@@ -27,19 +35,33 @@ class ElementContainer extends Component {
         }
 
         return (
-            <div className="element-container" data-id={element.id}>
+            <div className="editor">
                 <div>
                     <Button type="element-label" labelText={labelText} />
                     <Button type="delete-element" />
                 </div>
-                {editor}
-                <div>
-                    <Button type="add-comment" />
-                    <Button type="comment-flag" />
-                    <Button type="tcm" />
+                <div className="element-container" data-id={element.id}>
+                    {editor}
                 </div>
+                <div>
+                    <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
+                    {element.comments && <Button type="comment-flag" /> }
+                    {element.tcm && <Button type="tcm" />}
+                </div>
+                {this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
             </div>
         );
+    }
+
+    /**
+     * @description - This function is for handling the closing and opening of popup.
+     * @param {event} popup
+     */
+
+    handleCommentPopup(popup){
+        this.setState({
+            popup
+        });
     }
 
     render = () => {
@@ -48,9 +70,13 @@ class ElementContainer extends Component {
     }
 }
 
+ElementContainer.defaultProps = {
+    element: {}
+}
+
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element : PropTypes.object,
+    element : PropTypes.object
 }
 
 export default ElementContainer

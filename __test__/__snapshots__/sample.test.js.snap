@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`testing tooltip component with case 1 props render tooltip component with class tooltipabove.. 1`] = `
-<LoadableComponent>
-  <h2>
-    Your Lazy Component Is Loaded ....
-  </h2>
-</LoadableComponent>
-`;

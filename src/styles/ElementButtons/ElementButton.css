@@ -22,6 +22,8 @@
     cursor: move;
     font-size: 14px;
     color: white;
+    width: 36px;
+    text-align: center;
 }
 
 .btn-element#flag-icon {
@@ -29,7 +31,7 @@
 }
 
 .btn-element#delete-icon {
-    padding: 4px 4px 0;
+    padding: 6px 8px 4px;
     background-color: #fa5d54;
 }
 
@@ -66,6 +68,7 @@
     background-color: transparent;
     cursor:pointer;
     color:#fff;
+    padding: 0;
 }
 
 /* #flag-icon{
@@ -121,7 +124,7 @@
     cursor: pointer;
 }
 
-.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem, #opener-elem{
+.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem, #opener-elem, #section-break-elem{
     width: 30px;
     height: 30px;
     display: flex;
@@ -135,7 +138,7 @@
     opacity: 0.5;
 }
 
-#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover, #opener-elem:hover{
+#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover, #opener-elem:hover, #section-break-elem:hover{
     opacity: 1;
 }
 
@@ -149,4 +152,11 @@
     position: absolute;
     color: white;
     cursor: pointer;
+}
+
+#section-break-elem svg {
+    fill: #9e9e9e;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
 }
