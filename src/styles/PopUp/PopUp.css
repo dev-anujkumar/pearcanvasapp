@@ -21,10 +21,12 @@
     max-width: 100%;
     width: 500px;
     font-size: 1.2em;
-    line-height: 2.0em;
+    line-height: 1.0em;
     background-color: white;
-    top: 50%;
+    top: 38%;
     transform: translateY(-50%);
+    animation-name: animatetop;
+    animation-duration: 0.8s;
   }
  
   .close {
@@ -46,7 +48,7 @@
     
   }
   .dialog-text{
-    font-size: 1.5em;
+    font-size: 1.1em;
     color: #007fa3;
     font-weight: bold;
   }
@@ -97,5 +99,10 @@
 }
 
 .dialog-buttons{
-    padding: 30px 10px 50px;
+    padding: 17px 8px 40px;
+}
+
+@keyframes animatetop {
+  from {top: 30%; opacity: 0}
+  to {top: 38%; opacity: 1}
 }
