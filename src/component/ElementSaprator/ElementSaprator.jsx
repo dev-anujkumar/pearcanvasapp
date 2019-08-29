@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
+import Tooltip from '../Tooltip'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
@@ -8,7 +9,7 @@ export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
     const {typeHandler, clickHandler, elementType} = props
     let buttonRef =useRef(null)
-
+    const tooltipTextArr = ['text', 'image', 'audio/video', 'interactive', 'assessment', 'container', 'worked example', 'opener element']
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
@@ -74,10 +75,12 @@ export default function ElementSaprator(props) {
 
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
+                <Tooltip direction='left' tooltipText='expend'>
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
+                </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
-                            {renderDropdownButtons(typeHandler, clickHandler)}
+                            {renderDropdownButtons(typeHandler, clickHandler, tooltipTextArr)}
                         </ul>
                     </div>
                 </div>
@@ -111,10 +114,13 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(typesArr, btnClkArr) {
+export function renderDropdownButtons(typesArr, btnClkArr, tooltipTextArr) {
     return typesArr.map((type, key) => {
-            return (<li key={key}>
-                    <Button type={type} onClick={btnClkArr[key]} />              
-            </li>)
+            return (
+            <Tooltip direction='left' tooltipText={tooltipTextArr[key]}>
+                <li key={key}>
+                        <Button type={type} onClick={btnClkArr[key]} />              
+                </li>
+            </Tooltip>)
         })
 }
