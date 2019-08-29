@@ -4,5 +4,5 @@ import commentsPanelReducer from './commentsPanelReducer.js'
 
 export default combineReducers({
     appStore: appReducer,
-    commentsPanelReducer:commentsPanelReducer
+    //commentsPanelReducer:commentsPanelReducer
 });
