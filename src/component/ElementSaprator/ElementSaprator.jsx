@@ -70,7 +70,7 @@ export default function ElementSaprator(props) {
 
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
-                <Tooltip direction='left' tooltipText='expend'>
+                <Tooltip direction='left' tooltipText='Element Picker'>
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
                 </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
