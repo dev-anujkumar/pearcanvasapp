@@ -205,10 +205,67 @@ class SlateWrapper extends Component {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element) => {
                     return (
-                        <ElementContainer
-                            element={element}
-                            key={element.id}
-                        />
+                        <React.Fragment>
+                            <ElementContainer
+                                element={element}
+                                key={element.id}
+                            />
+                            <ElementSaprator
+                                key={`elem-separtor-${element.id}`}
+                                esProps = {[
+                                    {
+                                      buttonType : 'text-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Text',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'image-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Image',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'audio-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Audio/Video',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'interactive-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Interactive',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'assessment-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Assessment',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'container-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Container',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'worked-exp-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Worked Example',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'opener-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Opener Element',
+                                      tooltipDirection : 'left'
+                                    },
+                                  ]
+                                }
+                                  
+                             />
+                        </React.Fragment>
                     )
                 })
             }
@@ -238,6 +295,12 @@ class SlateWrapper extends Component {
                 </div>
             </React.Fragment>
         );
+    }
+
+  
+
+    splithandlerfunction = () => {
+        alert('Click handler function Called')
     }
 }
 

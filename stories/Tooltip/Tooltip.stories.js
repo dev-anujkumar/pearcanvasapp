@@ -15,13 +15,37 @@ function toggleElementList(){
     alert('From story of tooltip')
 }
 
-stories.add('Tooltip', () => <Tooltip direction={direction} tooltipText={tooltipText} >
-     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
-</Tooltip> , {
+const itemArr = ['1', '2', '3', '4', '5', '6', '7', '8']
+
+function renderList(){
+  return itemArr.map((value, key)=>{
+    return <Tooltip direction='right' tooltipText={`You have no pull requests to review${key}`} >
+                  <li style={{padding:'4px'}}>Item {key}</li>
+    </Tooltip>
+  })
+}
+
+stories.add('Tooltip', () =>
+    <div>
+      <div style={{
+        height: '80px',
+        width: '60px',
+        left: '30%',
+        position: 'absolute'
+      }}>
+        <ul>
+          {renderList()}
+        </ul>
+      </div>
+      <Tooltip direction={direction} tooltipText={tooltipText} >
+          <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
+      </Tooltip>
+    </div>
+ , {
     // notes: {
     //   markdown: markdownNotes
     // }, //Notes for a story
-    info: 'This is a Higher Order component for place Tooltip',
+    info: 'This is a component for place Tooltip',
     readme: {
       sidebar: markdownNotes,
     },

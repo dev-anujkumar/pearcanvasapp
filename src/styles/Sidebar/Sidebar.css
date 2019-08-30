@@ -3,10 +3,10 @@
     background-color: #fafafa;
     overflow-y: auto;
     position: relative;
-    border-left: 1px solid #e0e0e0;
-    width: 240px;
+    /* border-left: 1px solid #e0e0e0; */
+    /* width: 240px; */
     height: 100vh;
-    margin: 20px;
+    /* margin: 20px; */
 }
 
 .canvas-sidebar > .canvas-sidebar-heading {

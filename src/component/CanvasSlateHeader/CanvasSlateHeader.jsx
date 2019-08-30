@@ -29,6 +29,22 @@ import PropTypes from 'prop-types'
         alert(nav);
     }
 
+    setDynamicStyle = (type,className) => {
+        if(className === 'header-label'){
+            if(type ===  'container-introduction'){
+                return {minWidth:'559px',fontSize:'12px',minWidth: "max-content"}
+            }
+            return {minWidth: type == 'section' ? '696px' : '675px',fontSize:'12px',minWidth: "max-content"}
+        }
+        if(className === 'input-text'){
+            if(type ===  'container-introduction'){
+                return {minWidth: '559px'}
+            }
+          return  {minWidth: type == 'section' ? '696px' : '675px'}
+        }
+
+    }
+
     /**
      * @description - This function is for handling the change in type of Slate.
      * @param {event} slateType
@@ -64,8 +80,8 @@ import PropTypes from 'prop-types'
         return (
             <div className="slate-Title">
                 <div className="canvas-header" id="canvas-header">
-                    <label className="header-label">{slateLabel}</label>
-                    <div className="input-text">
+                    <label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label>
+                    <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>
                         <label className="u-hidden" htmlFor="txt-input" />
                         <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
                     </div>
