@@ -37,7 +37,7 @@
 
 #artboard-containers {
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .panel-text-settings {
@@ -50,13 +50,22 @@
     border-left: solid 1px #e0e0e0;
 }
 
+.overlay-container{
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+}
+
 .content-composer .workspace .artboard-container {
-    width: 820px;
+    width: 890px;
     height: 100%;
     display: block;
     margin: 0 auto;
     justify-content: space-around;
     position: relative;
+    padding-left: 90px;
+    background-color: #fafafa;
+    height: calc(100% - 62px);
 }
 
 .--rm-place {

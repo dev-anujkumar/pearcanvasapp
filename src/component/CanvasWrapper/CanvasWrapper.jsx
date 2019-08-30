@@ -26,6 +26,10 @@ export class CanvasWrapper extends Component {
     render() {
         return (
             <div className='content-composer'>
+                <div className="overlay-container">
+                    {/* Header Section goes here */}
+                    <h1>Header Section</h1>
+                </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <div className="header" id="tinymceToolbar"></div>
@@ -41,12 +45,12 @@ export class CanvasWrapper extends Component {
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            <span className='--rm-place'>Settings</span>
+                            {/* <span className='--rm-place'>Settings</span> */}
                             <Sidebar />
                             {/* put side setting */}
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
 
         );
