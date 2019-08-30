@@ -19,8 +19,7 @@
     position: relative;
 }
 
-.canvas-sidebar .element-dropdown .element-dropdown-title,
-.canvas-sidebar .secondary-option {
+.canvas-sidebar .element-dropdown .element-dropdown-title {
     width: 100%;
     border: 0 none;
     background: transparent;
@@ -36,12 +35,18 @@
     appearance: none;
 }
 
+.canvas-sidebar .element-dropdown .element-dropdown-title .dropdown-arrow {
+    width: 8px;
+    height: 8px;
+    float: right;
+    margin: 10px;
+}
+
 .canvas-sidebar .secondary-option.hidden {
     display: none;
 }
 
-.canvas-sidebar .element-dropdown .element-dropdown-content,
-.canvas-sidebar .secondary-option > option {
+.canvas-sidebar .element-dropdown .element-dropdown-content {
     font-size: 14px;
     padding: 0;
     background: #fefefe;

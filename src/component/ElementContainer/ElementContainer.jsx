@@ -8,21 +8,18 @@ import './../../styles/ElementContainer/ElementContainer.css';
 class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
-        let labelText = '';
+        let { elementType, labelText } = this.props;
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
-                labelText = 'OE';
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring type={element.type} />;
-                labelText = 'P';
+                editor = <ElementAuthoring type={elementType} />;
                 break;
 
             case "figure":
-                editor = <ElementAuthoring type={element.type} />;
-                labelText = 'FG';
+                editor = "Figure Element";
                 break;
         }
 
@@ -51,12 +48,16 @@ class ElementContainer extends Component {
 }
 
 ElementContainer.defaultProps = {
-    element: {}
+    element: {},
+    elementType: 'heading-4',
+    labelText: 'P'
 }
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element : PropTypes.object
+    element : PropTypes.object,
+    elementType : PropTypes.string,
+    labelText : PropTypes.string
 }
 
 export default ElementContainer

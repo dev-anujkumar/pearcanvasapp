@@ -11,11 +11,13 @@ class Sidebar extends Component {
         let elementTypeList = elementList[this.props.elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
+        let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         this.state = {
             elementDropdown: '',
             activeElementType: this.props.elementType,
             activePrimaryOption: primaryFirstOption,
-            activeSecondaryOption: secondaryFirstOption
+            activeSecondaryOption: secondaryFirstOption,
+            activeLabelText: labelText
         };
     }
 
@@ -23,11 +25,13 @@ class Sidebar extends Component {
         let value = e.target.getAttribute('data-value');
         let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
         let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+        let labelText = secondaryelementList[secondaryFirstOption].labelText;
 
         this.setState({
             elementDropdown: '',
             activePrimaryOption: value,
-            activeSecondaryOption: secondaryFirstOption
+            activeSecondaryOption: secondaryFirstOption,
+            activeLabelText: labelText
         });
     }
 
@@ -61,6 +65,9 @@ class Sidebar extends Component {
                 className="element-dropdown">
                 <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                     {primaryOptionObject[this.state.activePrimaryOption].text}
+                    <svg className="dropdown-arrow" viewBox="0 0 9 4.5">
+                        <path d="M0,0,4.5,4.5,9,0Z"></path>
+                    </svg>
                 </div>
                 <ul className={`element-dropdown-content primary-options ${active}`}>
                     {primaryOptions}
@@ -72,9 +79,13 @@ class Sidebar extends Component {
     }
 
     handleSecondaryOptionChange = e => {
+        let value = e.target.getAttribute('data-value');
+        let elementTypeList = elementList[this.props.elementType];
+        let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         this.setState({
             elementDropdown: '',
-            activeSecondaryOption: e.target.getAttribute('data-value')
+            activeSecondaryOption: value,
+            activeLabelText: labelText
         });
     }
 
@@ -104,6 +115,9 @@ class Sidebar extends Component {
                 className={`element-dropdown ${display}`}>
                 <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                     {secondaryOptionObject[this.state.activeSecondaryOption].text}
+                    <svg className="dropdown-arrow" viewBox="0 0 9 4.5">
+                        <path d="M0,0,4.5,4.5,9,0Z"></path>
+                    </svg>
                 </div>
                 <ul className={`element-dropdown-content secondary-options ${active}`}>
                     {secondaryOptions}
@@ -116,21 +130,29 @@ class Sidebar extends Component {
 
     attributions = () => {
         let attributions = '';
+        let attributionsObject = {};
+        let attributionsList = [];
         let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
+        let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
         if(primaryOptionList.attributes) {
-            let attributionsList = Object.keys(primaryOptionList.attributes);
-            if(attributionsList.length > 0) {
-                attributions = attributionsList.map(item => {
-                    return <div data-attribution={primaryOptionList.attributes[item].text}>
-                        <div>{primaryOptionList.attributes[item].text}</div>
-                        <textarea className="attribution-editor" name={item}></textarea>
-                    </div>
-                });
+            attributionsObject = primaryOptionList.attributes;
+            attributionsList = Object.keys(attributionsObject);
+        } else if(secondaryOptionList.attributes) {
+            attributionsObject = secondaryOptionList.attributes;
+            attributionsList = Object.keys(attributionsObject);
+        }
 
-                attributions = <div className="attributions">
-                    {attributions}
-                </div>;
-            }
+        if(attributionsList.length > 0) {
+            attributions = attributionsList.map(item => {
+                return <div key={item} data-attribution={attributionsObject[item].text}>
+                    <div>{attributionsObject[item].text}</div>
+                    <textarea className="attribution-editor" name={item}></textarea>
+                </div>
+            });
+
+            attributions = <div className="attributions">
+                {attributions}
+            </div>;
         }
 
         return attributions;
@@ -154,7 +176,7 @@ Sidebar.defaultProps = {
 
 Sidebar.propTypes = {
     /** Active Element Type */
-    elementType : PropTypes.object,
+    elementType : PropTypes.string,
 }
 
 export default Sidebar;
