@@ -1,13 +1,13 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
 import {
     fetchSlateData
-  } from './CanvasWrapper_Actions';
+} from './CanvasWrapper_Actions';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -29,7 +29,12 @@ export class CanvasWrapper extends Component {
                     {/* put editor tool */}
                     <div className="header" id="tinymceToolbar"></div>
                 </div>
+
                 <div className='workspace'>
+                    <div className = "sidebar-panel">
+                        {/* pull all sidebar panel */}
+                        <CommentsPanel />
+                    </div>
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
