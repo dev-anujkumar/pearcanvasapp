@@ -1,7 +1,16 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+//IMPORT TINYMCE 
+import { Editor } from '@tinymce/tinymce-react';
+import tinymce from 'tinymce/tinymce';
+import 'tinymce/themes/silver';
+import "tinymce/skins/ui/oxide/skin.min.css";
+import "tinymce/skins/ui/oxide/content.min.css";
+import "tinymce/skins/content/default/content.css";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/advlist";
+import { EditorConfig } from '../../config/EditorConfig'
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
@@ -15,8 +24,91 @@ import '../../styles/SlateWrapper/style.css';
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
+        this.editorConfig = {
+            plugins: EditorConfig.plugins,
+            selector: '.element-list',
+            formats: EditorConfig.formats,
+            menubar: false,
+            statusbar: false,
+            inline: true,
+            fixed_toolbar_container: '#tinymceToolbar',
+            content_style: EditorConfig.contentStyle,
+            toolbar: EditorConfig.toolbar,
+            
+            setup: (editor) => {
+                this.onEditorBlur(editor);
+                this.onEditorEnterKeyPress(editor);
+                this.onEditorClick(editor);
+                this.onEditorFocus(editor);               
+                editor.on('keyup', (e) => {
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    if (!cell) {
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return false;
+                    }
+                   // editor.dom.$(e.target).closest('body').children('p').css('display', 'none');
+                  })
+                  editor.on('keydown', (e) => {
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    if (!cell) {
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return false;
+                    }
+                  })
+                  editor.on("click", (e)=>{
+                    if(e.target.tagName=='dfn'){
+                        //launch footnote/glossary
+                    }
+                  })
+            },
+            init_instance_callback: (editor) => {
+                 editor.fire('focus');
+                editor.dom.$('.element-list').attr('contenteditable', 'false'); 
+              }
+        }
     }
 
+    onEditorBlur = (editor) => {
+        if(editor){
+         editor.on('blur', function (e) {
+             e.stopImmediatePropagation();
+             e.preventDefault();
+         });
+        }
+     
+     };
+ 
+     onEditorEnterKeyPress = (editor) => {
+         console.log("onEditorEnterKeyPress >> ")
+     };
+ 
+     onEditorClick = (editor) => {
+         console.log("onEditorClick >> ")
+     };
+ 
+     onEditorFocus = (editor) => {
+         console.log("onEditorFocus >> ")
+     };
+ 
+     handleEditorChange = (e) => {
+        //  let type = this.props.type
+        //  if(e){
+        //   e.target.formatter.apply(type);
+        //  console.log('Content was updated:', e.target.getContent());
+        //  }
+         
+        
+     }
+
+     componentDidMount(){
+        console.log('JJJJJJJJ')
+        tinymce.init(this.editorConfig)
+      }
+     
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -102,59 +194,16 @@ class SlateWrapper extends Component {
                             />
                             <ElementSaprator
                                 key={`elem-separtor-${element.id}`}
-                                esProps = {[
-                                    {
-                                      buttonType : 'text-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Text',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'image-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Image',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'audio-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Audio/Video',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'interactive-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Interactive',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'assessment-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Assessment',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'container-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Container',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'worked-exp-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Worked Example',
-                                      tooltipDirection : 'left'
-                                    },
-                                    {
-                                      buttonType : 'opener-elem',
-                                      buttonHandler : this.splithandlerfunction,
-                                      tooltipText : 'Opener Element',
-                                      tooltipDirection : 'left'
-                                    },
-                                  ]
+                                typeHandler={
+                                    [
+                                        'text-elem',
+                                        'image-elem',
+                                        'audio-elem'
+                                    ]
                                 }
-                                  
-                             />
+                                clickHandler={
+                                    [this.faltuAlert, this.faltuAlert, this.faltuAlert]
+                                } />
                         </React.Fragment>
                     )
                 })
@@ -188,10 +237,8 @@ class SlateWrapper extends Component {
         );
     }
 
-  
-
-    splithandlerfunction = () => {
-        alert('Click handler function Called')
+    faltuAlert = () => {
+        console.log('clicked')
     }
 }
 
