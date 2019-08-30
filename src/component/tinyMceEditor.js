@@ -8,8 +8,9 @@ export class TinyMceEditor extends React.Component {
      
     render() {        
         return (
-            <div className="cypress-editable" contentEditable="true" dangerouslySetInnerHTML={{__html: 
-                this.props.model.text}}>
+            <div className="cypress-editable" contentEditable="true" 
+            // dangerouslySetInnerHTML={{__html: this.props.model.text}}
+                >
                     {/* <Editor
                     //initialValue ={initialVlaue}
                     init={this.editorConfig}

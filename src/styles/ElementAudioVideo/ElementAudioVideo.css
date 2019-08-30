@@ -1,0 +1,58 @@
+.mce-content-body {
+    font-size:inherit!important;
+    font-weight: inherit !important;
+    padding:10px!important;
+}
+
+#video-header > .cypress-editable.mce-content-body.mce-edit-focus > p, #video-header > .cypress-editable.mce-content-body > p{
+    font-weight: 800 !important;
+}
+#video-header{
+    margin-bottom:2px;
+}
+#audio-header{
+    margin-bottom:6px;
+}
+.assetDiv{
+    font-family: 'Open Sans', sans-serif;
+
+}
+.cypress-editable{
+    /* border:1px black solid; */
+    border:none;
+    outline:none;
+    padding:10px !important;
+}
+
+.cypress-editable .mce-content-body {
+    width:100%;
+ 
+}
+
+.figureElement .pearson-component {
+    cursor:copy!important ;
+    outline:none;
+}
+.figureAudio{
+    width:100%;
+    padding:10px;
+    
+}
+.figcaptionAudio, .figcaptionVideo{
+text-align: left;
+}
+.figureVideo{
+    width:100%;
+}
+.element-container{
+    padding:0 8px;
+}
+figure.figureVideo{
+    margin: 0 !important;
+}
+.figureHeader{
+    min-height: 82.39px;
+}
+figure.figureAudio{
+    margin-bottom: 2px !important;
+}
