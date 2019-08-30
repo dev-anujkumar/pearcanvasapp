@@ -1,2 +1,2 @@
-import {ElementFigure} from './ElementFigure.jsx';
+import {ElementFigure} from './ElementFigure';
 export default ElementFigure;

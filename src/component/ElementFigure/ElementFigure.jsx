@@ -17,10 +17,10 @@ export class ElementFigure extends Component {
         super(props);
     }
 
- /**
-     * @description - This function is for handling the different types of figure-element.
-     * @param element object that defined the type of element
-     */
+    /*** @description - This function is for handling the different types of figure-element.
+ * @param element object that defined the type of element*/
+
+ 
     renderFigureType = (element = {}) => {
         var figureJsx;
         switch (element.figuretype) {

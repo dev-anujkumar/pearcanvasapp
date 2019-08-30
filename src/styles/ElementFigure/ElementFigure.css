@@ -25,7 +25,7 @@
     padding: 10px!important;
     width: 660px!important;
     min-height: 40px!important;
-    border: 2px solid black;
+    border: none;
     outline: none;
 }
 .figureLabel{
@@ -56,11 +56,8 @@ figure,.element-container{
 .figureTitle{
     font-size: 12px!important;
 }
-#figure-label .figureLabel .Editor .mce-content-body .mce-edit-focus{
+#figure-label>.Editor.mce-content-body.mce-edit-focus > p,#figure-label> .Editor.mce-content-body > p{
     font-size: 12px!important;
     font-weight: 800!important;
 }
-/* #labelHeader #figure-label{
-    font-size: 12px!important;
-    font-weight: 800!important;
-} */
+

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import ElementAuthoring from './../ElementAuthoring';
+import ElementAudioVideo from './../ElementAudioVideo';
 import Button from './../ElementButtons';
 import './../../styles/ElementContainer/ElementContainer.css';
 
@@ -21,7 +22,7 @@ class ElementContainer extends Component {
                 break;
 
             case "figure":
-                editor = <ElementAuthoring type={element.type} />;
+                editor = <ElementAudioVideo element={element} />;
                 labelText = 'FG';
                 break;
         }
