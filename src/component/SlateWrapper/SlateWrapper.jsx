@@ -31,10 +31,11 @@ class SlateWrapper extends Component {
             menubar: false,
             statusbar: false,
             inline: true,
+            object_resizing : false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
-            
+            image_advtab: false,
             setup: (editor) => {
                 this.onEditorBlur(editor);
                 this.onEditorEnterKeyPress(editor);
@@ -59,15 +60,39 @@ class SlateWrapper extends Component {
                       return false;
                     }
                   })
+                 
                   editor.on("click", (e)=>{
                     if(e.target.tagName=='dfn'){
                         //launch footnote/glossary
                     }
+                   
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('click',cell)                    
+                    if (!cell) {
+                        editor.dom.$('#editor-toolbar').find('.tox-toolbar').addClass('toolbar-disabled')
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();                    
+                      return false;
+                    }
+                    else{
+                        editor.dom.$('#editor-toolbar').find('.tox-toolbar').removeClass('toolbar-disabled')
+                    }
                   })
             },
             init_instance_callback: (editor) => {
-                 editor.fire('focus');
+                 editor.fire('focus');                 
                 editor.dom.$('.element-list').attr('contenteditable', 'false'); 
+                editor.on("focus", (e)=>{                    
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('focus',cell)  
+                    if (!cell) {
+                      e.stopImmediatePropagation();
+                      e.stopPropagation();
+                      e.preventDefault();
+                      return false;
+                    }
+                  })
               }
         }
     }
@@ -75,8 +100,8 @@ class SlateWrapper extends Component {
     onEditorBlur = (editor) => {
         if(editor){
          editor.on('blur', function (e) {
-             e.stopImmediatePropagation();
-             e.preventDefault();
+            // e.stopImmediatePropagation();
+            // e.preventDefault();
          });
         }
      
@@ -104,8 +129,7 @@ class SlateWrapper extends Component {
         
      }
 
-     componentDidMount(){
-        console.log('JJJJJJJJ')
+     componentDidMount(){       
         tinymce.init(this.editorConfig)
       }
      
@@ -202,7 +226,7 @@ class SlateWrapper extends Component {
                                     ]
                                 }
                                 clickHandler={
-                                    [this.faltuAlert, this.faltuAlert, this.faltuAlert]
+                                    [this.testConsole, this.testConsole, this.testConsole]
                                 } />
                         </React.Fragment>
                     )
@@ -237,7 +261,7 @@ class SlateWrapper extends Component {
         );
     }
 
-    faltuAlert = () => {
+    testConsole = () => {
         console.log('clicked')
     }
 }
