@@ -25,7 +25,7 @@ class ElementContainer extends Component {
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring type={element.type} />;
+                editor = <ElementAuthoring type={element.type} model={element.html} />;
                 labelText = 'P';
                 break;
 
@@ -46,8 +46,10 @@ class ElementContainer extends Component {
                 </div>
                 <div>
                     <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
-                    {element.comments && <Button type="comment-flag" /> }
-                    {element.tcm && <Button type="tcm" />}
+                    {/* {element.comments && <Button type="comment-flag" /> }
+                    {element.tcm && <Button type="tcm" />} */}
+                    <Button type="comment-flag" />
+                    <Button type="tcm" />
                 </div>
                 {this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
             </div>

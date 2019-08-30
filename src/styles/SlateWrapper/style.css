@@ -39,3 +39,8 @@
     background-color: #fff;
     padding: 40px 0;
 }
+
+.toolbar-disabled{
+    opacity: 0.4;
+    pointer-events: none;
+}

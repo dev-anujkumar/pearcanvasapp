@@ -60,7 +60,7 @@ export default function ElementSaprator(props) {
         <div className="elementSapratorContainer">
         
         <div className='elemDiv-split'>
-                {elementType=='WE' ?<Button type='split' onClick={splitSlateClickHandler} /> :''}
+                {elementType !=='WE' ?<Button type='split' onClick={splitSlateClickHandler} /> :''}
         </div> 
 
 

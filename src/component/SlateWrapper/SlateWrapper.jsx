@@ -30,6 +30,10 @@ class SlateWrapper extends Component {
             menubar: false,
             statusbar: false,
             inline: true,
+<<<<<<< HEAD
+=======
+            object_resizing : false,
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
@@ -40,7 +44,11 @@ class SlateWrapper extends Component {
                 this.onEditorClick(editor);
                 this.onEditorFocus(editor);               
                 editor.on('keyup', (e) => {
+<<<<<<< HEAD
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+=======
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -50,7 +58,11 @@ class SlateWrapper extends Component {
                    // editor.dom.$(e.target).closest('body').children('p').css('display', 'none');
                   })
                   editor.on('keydown', (e) => {
+<<<<<<< HEAD
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+=======
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -64,7 +76,12 @@ class SlateWrapper extends Component {
                         //launch footnote/glossary
                     }
                    
+<<<<<<< HEAD
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");                    
+=======
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('click',cell)                    
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
                     if (!cell) {
                         editor.dom.$('#editor-toolbar').find('.tox-toolbar').addClass('toolbar-disabled')
                       e.stopImmediatePropagation();
@@ -80,9 +97,15 @@ class SlateWrapper extends Component {
             init_instance_callback: (editor) => {
                  editor.fire('focus');                 
                 editor.dom.$('.element-list').attr('contenteditable', 'false'); 
+<<<<<<< HEAD
                 editor.on("focus", (e)=>{
                     
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
+=======
+                editor.on("focus", (e)=>{                    
+                    let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
+                    console.log('focus',cell)  
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
                     if (!cell) {
                       e.stopImmediatePropagation();
                       e.stopPropagation();
@@ -97,8 +120,13 @@ class SlateWrapper extends Component {
     onEditorBlur = (editor) => {
         if(editor){
          editor.on('blur', function (e) {
+<<<<<<< HEAD
              e.stopImmediatePropagation();
              e.preventDefault();
+=======
+            // e.stopImmediatePropagation();
+            // e.preventDefault();
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
          });
         }
      
@@ -126,8 +154,12 @@ class SlateWrapper extends Component {
         
      }
 
+<<<<<<< HEAD
      componentDidMount(){
         console.log('JJJJJJJJ')
+=======
+     componentDidMount(){       
+>>>>>>> 93718547c6198460fcb6169eb4caabc1ff2913c4
         tinymce.init(this.editorConfig)
       }
      
@@ -263,8 +295,7 @@ class SlateWrapper extends Component {
                                     },
                                   ]
                                 }
-                                  
-                             />
+                                />
                         </React.Fragment>
                     )
                 })
@@ -296,8 +327,6 @@ class SlateWrapper extends Component {
             </React.Fragment>
         );
     }
-
-  
 
     splithandlerfunction = () => {
         alert('Click handler function Called')
