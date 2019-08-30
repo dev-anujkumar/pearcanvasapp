@@ -44,6 +44,10 @@
     background-color: transparent;
 }
 
+#split-icon,#expand-icon{
+    padding: 0;
+}
+
 .btn-element#split-icon > img {
     width: 30px;
 }
@@ -52,11 +56,14 @@
 .btn-element#backward-nav-active {
     padding: 0;
     background: transparent;
+    margin:0px;
 }
 
 .btn-element#forward-nav-active > img,
 .btn-element#backward-nav-active > img {
-    width: 26px;
+    /* width: 26px; */
+    width: 33px;
+    height: 28px;
 }
 
 .btn-element#expand-icon > img {
