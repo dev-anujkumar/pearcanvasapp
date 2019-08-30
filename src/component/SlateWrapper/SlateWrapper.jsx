@@ -218,16 +218,58 @@ class SlateWrapper extends Component {
                             />
                             <ElementSaprator
                                 key={`elem-separtor-${element.id}`}
-                                typeHandler={
-                                    [
-                                        'text-elem',
-                                        'image-elem',
-                                        'audio-elem'
-                                    ]
+                                esProps = {[
+                                    {
+                                      buttonType : 'text-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Text',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'image-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Image',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'audio-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Audio/Video',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'interactive-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Interactive',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'assessment-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Assessment',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'container-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Container',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'worked-exp-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Worked Example',
+                                      tooltipDirection : 'left'
+                                    },
+                                    {
+                                      buttonType : 'opener-elem',
+                                      buttonHandler : this.splithandlerfunction,
+                                      tooltipText : 'Opener Element',
+                                      tooltipDirection : 'left'
+                                    },
+                                  ]
                                 }
-                                clickHandler={
-                                    [this.testConsole, this.testConsole, this.testConsole]
-                                } />
+                                />
                         </React.Fragment>
                     )
                 })
@@ -261,8 +303,8 @@ class SlateWrapper extends Component {
         );
     }
 
-    testConsole = () => {
-        console.log('clicked')
+    splithandlerfunction = () => {
+        alert('Click handler function Called')
     }
 }
 
