@@ -3,7 +3,7 @@ import React from 'react'
 //import { getAllUsers } from '../../actions/userGetters';
 //const configModule = require('../../js/config_module.js');
 import PropTypes from 'prop-types';
-export class CurrentProjectUsers extends React.Component {
+ class CurrentProjectUsers extends React.Component {
     constructor(props) {
         super(props)
         this.state = {

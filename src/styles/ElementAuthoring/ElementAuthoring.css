@@ -1,12 +1,27 @@
-.mce-content-body {
-    padding: 0 !important;
-    min-height: 50px;
+/* .cypress-editable {
+    padding: 15px !important;
+    min-height: 100px;
+    flex-grow: 1;
+    border: 2px solid #ddd;
+    word-break: break-word;
 }
 
-.mce-content-body.mce-edit-focus {
-    /* border: 2px solid #149632; */
-}
+.Editor:focus {
+    border: 2px solid #149632;
+} */
 
-.mce-content-body p{
+.cypress-editable p{
     margin: 0 !important;
+}
+.element-list .mce-visual-caret{
+    display:none;
+    cursor:default;
+    outline:none;
+    border:none;
+}
+.element-list img{
+    pointer-events:none;
+}
+.tox.tox-tinymce.tox-tinymce-inline{
+    display:block !important;
 }

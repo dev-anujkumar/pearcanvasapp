@@ -5,6 +5,7 @@ import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
+import Sidebar from '../Sidebar';
 import {
     fetchSlateData
 } from './CanvasWrapper_Actions';
@@ -19,12 +20,16 @@ export class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-        this.props.fetchSlateData();
+        // this.props.fetchSlateData();
     }
 
     render() {
         return (
             <div className='content-composer'>
+                <div className="overlay-container">
+                    {/* Header Section goes here */}
+                    <h1>Header Section</h1>
+                </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <div className="header" id="tinymceToolbar"></div>
@@ -45,11 +50,12 @@ export class CanvasWrapper extends Component {
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            <span className='--rm-place'>Settings</span>
+                            {/* <span className='--rm-place'>Settings</span> */}
+                            <Sidebar />
                             {/* put side setting */}
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
 
         );

@@ -66,6 +66,7 @@ export default function (state = initialState, action) {
                 comments: action.payload
             };
         case TOGGLE_COMMENTs_PANEL :
+            console.log(action.payload);
             return {
                 ...state,
                 toogleCommentsPanel:action.payload

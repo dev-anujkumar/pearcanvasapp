@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import '../../styles/ElementButtons/ElementButton.css'
 
-import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon} from '../../images/ElementButtons/ElementButtons.jsx'
+import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
 import backwardNavActive from '../../images/ElementButtons/backwardNavActive.png'
@@ -26,7 +26,7 @@ class Button extends Component {
 
         switch(type){
             case "close-container":
-                buttonJSX = <span className="btn-element" id="close-container" onClick={clickHandlerFn}><img src={closeContainer} /></span>
+                buttonJSX = <span className="btn-element" id="close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case "add-comment":
                 buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}>

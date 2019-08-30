@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
+import Tooltip from '../Tooltip'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const {typeHandler, clickHandler, elementType} = props
+    const { esProps, elementType} = props
     let buttonRef =useRef(null)
-
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
@@ -16,34 +16,28 @@ export default function ElementSaprator(props) {
 
     
     useEffect(() => {
-        
-        // window.onclick = function(event) {
-        //     if (!event.target.matches('.dropbtn')) {
-        //       let dropdowns = document.getElementsByClassName("dropdown-content");
-        //       let i
-        //       for (i = 0; i < dropdowns.length; i++) {
-        //        let openDropdown = dropdowns[i]
-        //        if (openDropdown.classList.contains('show')) {
-        //             setShowClass(!showClass)
-        //        }
-        //       }
-        //     }
-        //   }
         document.addEventListener('mousedown',(event)=>{            
             let elems = getParents(event.target)
-            let dropdown = 'dropdown';
-            if(elems.indexOf(dropdown)===-1)
-            {
+            let dropdown = 'dropdown'
+            if(elems.indexOf(dropdown)===-1){
                 setShowClass(false)
-            }           
+            } 
         })
-    }, []);
+    });
 
     /**
      * @description: This function is responsable for toggle 
-     * state to render the dropdown
+     * state to render the dropdown. First close all open dropdowns
+     * then open new one
      */
-    function toggleElementList() {       
+    function toggleElementList() { 
+        let openDropdowns = document.getElementsByClassName("show")
+        for(let i=0;i<openDropdowns.length;i++){
+            let openDropdown = openDropdowns[i]
+            if(openDropdown.classList.contains('show')){
+                openDropdown.classList.remove('show')
+            }
+        }      
         setShowClass(!showClass)
     }
 
@@ -64,9 +58,11 @@ export default function ElementSaprator(props) {
 
     return (
         <div className="elementSapratorContainer">
-            <div className='elemDiv-split'>
-                <Button type='split' onClick={splitSlateClickHandler} /> 
-            </div>
+        
+        <div className='elemDiv-split'>
+                {elementType !=='WE' ?<Button type='split' onClick={splitSlateClickHandler} /> :''}
+        </div> 
+
 
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
@@ -74,10 +70,12 @@ export default function ElementSaprator(props) {
 
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
+                <Tooltip direction='left' tooltipText='Element Picker'>
                     <Button onClick={ toggleElementList} className="dropbtn" type="expand" />
+                </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content' }>
                         <ul>
-                            {renderDropdownButtons(typeHandler, clickHandler)}
+                            {renderDropdownButtons(esProps)}
                         </ul>
                     </div>
                 </div>
@@ -87,8 +85,7 @@ export default function ElementSaprator(props) {
 }
 
 ElementSaprator.propTypes = {
-    typeHandler : PropTypes.array.isRequired,
-    clickHandler : PropTypes.array.isRequired,
+    esProps : PropTypes.array.isRequired,
     elementType : PropTypes.string
 }
 
@@ -111,10 +108,13 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(typesArr, btnClkArr) {
-    return typesArr.map((type, key) => {
-            return (<li key={key}>
-                    <Button type={type} onClick={btnClkArr[key]} />              
-            </li>)
+export function renderDropdownButtons(esProps) {
+    return esProps.map((elem, key) => {
+            return (
+            <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
+                <li key={key}>
+                        <Button type={elem.buttonType} onClick={elem.buttonHandler} />              
+                </li>
+            </Tooltip>)
         })
 }

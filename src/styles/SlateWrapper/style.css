@@ -1,6 +1,7 @@
 .title-head-wrapper {
     height: 35px;
-    margin: 0px 10px;
+    /* margin: 0px 10px; */
+    margin-left: 10px;
 }
 
 .slate-wrapper {
@@ -37,4 +38,9 @@
     right: 0;
     background-color: #fff;
     padding: 40px 0;
+}
+
+.toolbar-disabled{
+    opacity: 0.4;
+    pointer-events: none;
 }

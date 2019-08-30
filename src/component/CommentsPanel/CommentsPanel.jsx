@@ -5,7 +5,7 @@ import _ from 'lodash'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
-import {Comments} from './Comments.jsx'
+import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -184,7 +184,7 @@ class CommentsPanel extends React.Component {
 
     render() {
         return (
-            <div id="comments-panel" className="panel panel-open">
+            <div id="comments-panel" className="comments-panel comments-panel-open">
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
@@ -267,7 +267,8 @@ CommentsPanel.propTypes = {
     comments: PropTypes.array.isRequired
 }
 
-const mapStateToProps = state => ({
+ const mapStateToProps = state => ({
     comments: state.commentsPanelReducer.comments
-  });
+  }); 
 export default connect(mapStateToProps,null)(CommentsPanel);
+//export default CommentsPanel;

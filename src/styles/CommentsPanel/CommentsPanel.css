@@ -20,17 +20,17 @@ html {
     overflow-y: scroll;
     height: calc(100% - 317px);
 }
-.panel {
+.comments-panel {
      left: -300px !important;
    /* height: 100%; */
-    position: absolute;
+    position: relative;
     top: 0;
     height: 100%;
     width: 0;
     z-index: 1;
     transition: all .2s ease-in-out;
 }
-.panel-open {
+.comments-panel-open {
     left: 40px !important;
     z-index: 999;
     transition: all .4s ease;
@@ -257,7 +257,9 @@ html {
     background: white;
     box-shadow: 1px 1px 5px #444;
     z-index: 1000;
+    padding-left:9px;
 }
+
 menu li {
     cursor: pointer;
 }

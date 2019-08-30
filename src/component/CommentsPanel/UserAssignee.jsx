@@ -1,7 +1,7 @@
 import React from 'react'
-import {CurrentProjectUsers} from './CurrentProjectUsers.jsx'
+import CurrentProjectUsers from './CurrentProjectUsers.jsx'
 import PropTypes from 'prop-types';
-export class UserAssignee extends React.Component {
+ class UserAssignee extends React.Component {
     /**
   * 
   *@discription - This function is to return jsx of assigneeForm menu

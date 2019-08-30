@@ -1,12 +1,12 @@
 import React from 'react'
 //import CommnetsForm from './CommentsForm.jsx'
-import {UserAssignee} from './UserAssignee.jsx';
-import {ReplyComment} from './ReplyComment.jsx';
+import UserAssignee from './UserAssignee.jsx';
+import ReplyComment from './ReplyComment.jsx';
 import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 //import {CurrentProjectUsers} from './CurrentProjectUsers.jsx'
-export class Comments extends React.Component {
+class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -31,8 +31,12 @@ export class Comments extends React.Component {
         this.toggleReplyForm = this.toggleReplyForm.bind(this);
     }
     componentDidMount() {
-
-        document.body.addEventListener('click', this.toggleActionsMenu(false));
+        
+        window.addEventListener("click", (event) => {
+            if(event.target.className !== "action-menu-img"){
+            this.toggleActionsMenu(false)
+            }
+          });
     }
     /**
     * 
@@ -230,7 +234,7 @@ export class Comments extends React.Component {
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
                             onClick={() => this.toggleActionsMenu()}
                         >
-                            <img src={navigationShowMore} />
+                            <img className = "action-menu-img" src={navigationShowMore} />
                         </span>
                         {this.state.showActionsMenu && this.actionsMenu()}
                     </div>
