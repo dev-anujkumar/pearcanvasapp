@@ -3,7 +3,7 @@ import React from 'react'
 //import { getAllUsers } from '../../actions/userGetters';
 //const configModule = require('../../js/config_module.js');
 import PropTypes from 'prop-types';
-class CurrentProjectUsers extends React.Component {
+export class CurrentProjectUsers extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -99,6 +99,6 @@ CurrentProjectUsers.propTypes = {
     /** current assignee of the comment */
     currentAssingnee: PropTypes.string.isRequired,
       /** new  assignee of the comment */
-    newAssigneeUser:PropTypes.string.isRequired
+    newAssigneeUser:PropTypes.func
 }
 export default CurrentProjectUsers;

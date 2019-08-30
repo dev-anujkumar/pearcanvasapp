@@ -7,7 +7,8 @@
 
 // IMPORT - Action constants //
 import {
-    FETCH_SLATE_DATA
+    FETCH_COMMENTS,
+    TOGGLE_COMMENTs_PANEL
 } from '../constants/Action_Constants';
 
 /**
@@ -64,6 +65,11 @@ export default function (state = initialState, action) {
                 ...state,
                 comments: action.payload
             };
+        case TOGGLE_COMMENTs_PANEL :
+            return {
+                ...state,
+                toogleCommentsPanel:action.payload
+            }
         default:
             return state;
     }

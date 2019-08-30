@@ -5,7 +5,7 @@ import _ from 'lodash'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
-import Comments from './Comments'
+import {Comments} from './Comments.jsx'
 import PropTypes from 'prop-types';
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -263,7 +263,11 @@ const SearchComponent = (props) => {
 }
 
 CommentsPanel.propTypes = {
-    /** commet data attached to store and contains complete comment object */
+    /** commet data attached to store and contains complete comments object */
     comments: PropTypes.array.isRequired
 }
-export default CommentsPanel;
+
+const mapStateToProps = state => ({
+    comments: state.commentsPanelReducer.comments
+  });
+export default connect(mapStateToProps,null)(CommentsPanel);

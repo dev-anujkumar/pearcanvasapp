@@ -1,12 +1,12 @@
 import React from 'react'
 //import CommnetsForm from './CommentsForm.jsx'
-import UserAssignee from './UserAssignee';
-import ReplyComment from './ReplyComment';
+import {UserAssignee} from './UserAssignee.jsx';
+import {ReplyComment} from './ReplyComment.jsx';
 import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
-import CurrentProjectUsers from './CurrentProjectUsers'
-class Comment extends React.Component {
+//import {CurrentProjectUsers} from './CurrentProjectUsers.jsx'
+export class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -282,9 +282,9 @@ class Comment extends React.Component {
         );
     }
 }
-Comment.propTypes = {
+Comments.propTypes = {
     /** commet data attached to store and contains complete comment object */
     comment: PropTypes.object.isRequired
 }
 
-export default Comment;
+export default Comments;

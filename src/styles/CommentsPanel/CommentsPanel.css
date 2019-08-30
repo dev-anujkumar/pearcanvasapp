@@ -20,6 +20,21 @@ html {
     overflow-y: scroll;
     height: calc(100% - 317px);
 }
+.panel {
+     left: -300px !important;
+   /* height: 100%; */
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 0;
+    z-index: 1;
+    transition: all .2s ease-in-out;
+}
+.panel-open {
+    left: 40px !important;
+    z-index: 999;
+    transition: all .4s ease;
+}
 .panel-navigation{
     width: 300px;
     background-color: white;

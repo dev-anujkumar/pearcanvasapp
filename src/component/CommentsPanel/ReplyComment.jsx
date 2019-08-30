@@ -2,7 +2,7 @@ import React from 'react'
 //import { searchUsers } from '../../actions/userGetters'
 //import Utils from '../../js/utils'
 import PropTypes from 'prop-types';
-class ReplyComment extends React.Component {
+export class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
