@@ -1,5 +1,6 @@
-.Editor .mce-content-body {
+.cypress-editable .mce-content-body {
     width:100%;
+    outline:none !important;
 }
 .mce-content-body{
     padding: 10px !important; 
@@ -20,10 +21,10 @@
     font-size: 12px !important;
     color: #000 !important;
 }
- .Editor {
+ .cypress-editable {
     margin: 0!important;
     padding: 10px!important;
-    width: 660px!important;
+    width: 100%!important;
     min-height: 40px!important;
     border: none;
     outline: none;
@@ -31,13 +32,20 @@
 .figureLabel{
     font-weight: 800!important;
 }
-#figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+#figure-credit .cypress-editable .figureCredit .mce-content-body .mce-edit-focus{
     min-height: 40px!important;
 width:100% !important;
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
     min-height: 40px!important;
     cursor: auto !important;
+   width:100%!important;
+}
+.mathml .figureElement .figureData,.blockcode .codeSnippet{
+    width:100%!important;
+}
+pre.code-listing{
+    width:100%!important;
 }
 .figureElement .figureData {
     cursor:copy!important ;
@@ -46,7 +54,7 @@ figcaption,.figureCaption #figure-caption .mce-content-body  .mce-edit-focus{
     font-size: 10.8px!important;
     text-align: left !important;
 }
-p.figureCredit #figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+p.figureCredit #figure-credit .cypress-editable .figureCredit .mce-content-body .mce-edit-focus{
     font-size: 9px!important;
   
 }
@@ -56,8 +64,11 @@ figure,.element-container{
 .figureTitle{
     font-size: 12px!important;
 }
-#figure-label>.Editor.mce-content-body.mce-edit-focus > p,#figure-label> .Editor.mce-content-body > p{
+#figure-label>.cypress-editable.mce-content-body.mce-edit-focus > p,#figure-label> .cypress-editable.mce-content-body > p{
     font-size: 12px!important;
     font-weight: 800!important;
 }
 
+.container{
+    border:1px black solid;
+}
