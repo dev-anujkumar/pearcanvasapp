@@ -6,16 +6,20 @@ export class TinyMceEditor extends React.Component {
         super(props);        
     };
      
-    render() {        
+    render() {    
+        console.log("this.props >> ", this.props.placeholder)    
         return (
-            <div className="cypress-editable" contentEditable="true" dangerouslySetInnerHTML={{__html: 
-                this.props.model.text}}>
+            <div placeholder={this.props.placeholder} className="cypress-editable" contentEditable="true" 
+            // dangerouslySetInnerHTML={{__html: this.props.model.text}}
+                >
                     {/* <Editor
                     //initialValue ={initialVlaue}
                     init={this.editorConfig}
                     onChange={this.handleEditorChange}
                 /> */}
             </div>
+
+            
         );
     }
 }
@@ -28,3 +32,4 @@ TinyMceEditor.defaultProps = {
 };
 
 export default TinyMceEditor
+

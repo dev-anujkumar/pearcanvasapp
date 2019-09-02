@@ -14,9 +14,9 @@ import { EditorConfig } from '../../config/EditorConfig'
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
+import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import ElementSaprator from '../ElementSaprator';
 
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -158,13 +158,10 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
-            console.error(error);
         }
     }
 
-    /**
-     * renderSlate | renders slate editor area with all elements it contain
-     */
+    /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
@@ -199,7 +196,6 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
-            console.error(error);
         }
     }
 
@@ -216,7 +212,7 @@ class SlateWrapper extends Component {
                                 element={element}
                                 key={element.id}
                             />
-                            <ElementSaprator
+                             <ElementSaprator
                                 key={`elem-separtor-${element.id}`}
                                 esProps = {[
                                     {
@@ -266,10 +262,11 @@ class SlateWrapper extends Component {
                                       buttonHandler : this.splithandlerfunction,
                                       tooltipText : 'Opener Element',
                                       tooltipDirection : 'left'
-                                    },
+                                    }
                                   ]
                                 }
-                                />
+                                elementType = {element.type}
+                                /> 
                         </React.Fragment>
                     )
                 })
@@ -279,7 +276,6 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
-            console.error(error);
         }
     }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import ElementAuthoring from './../ElementAuthoring';
+// import ElementAudioVideo from './../ElementAudioVideo';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -16,6 +17,7 @@ class ElementContainer extends Component {
     }
 
     renderElement = (element = {}) => {
+        console.log("elementcontainer element >> ", element)
         let editor = '';
         let labelText = '';
         switch(element.type) {
@@ -29,10 +31,10 @@ class ElementContainer extends Component {
                 labelText = 'P';
                 break;
 
-            case "figure":
-                editor = <ElementAuthoring type={element.type} />;
-                labelText = 'FG';
-                break;
+            // case "figure":
+            //     editor = <ElementAudioVideo element={element} />;
+            //     labelText = 'FG';
+            //     break;
         }
 
         return (
