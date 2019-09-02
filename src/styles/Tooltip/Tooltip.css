@@ -48,8 +48,8 @@
 }
 
 .tooltip .tooltiptext.tooltip-left {
-    top: -3px;
-    right: 105%;
+    top: 0px;
+    right: 100%;
 }
 
 /* left arrow */

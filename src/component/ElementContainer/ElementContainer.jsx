@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
 import ElementAuthoring from './../ElementAuthoring';
+// import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
@@ -16,6 +17,7 @@ class ElementContainer extends Component {
     }
 
     renderElement = (element = {}) => {
+        console.log("elementcontainer element >> ", element)
         let editor = '';
         let labelText = '';
         switch(element.type) {
@@ -30,7 +32,7 @@ class ElementContainer extends Component {
                 break;
 
             case "figure":
-                editor = <ElementFigure type={element.type} model={element} />;
+                editor = <ElementFigure  type={element.type} model={element}/>;
                 labelText = 'FG';
                 break;
         }

@@ -1,69 +1,10 @@
-export const figureImage50TextElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "image50Text",
-    figuretype: "image",
-    figureAlignment: "half-text",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
-    },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
-    },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-};
-export const figureImageTextWidthElement = {
-    //id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageTextWidth",
-    figuretype: "image",
-    figureAlignment: "text-width",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
-    },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
-    },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-};
-export const figureImageWiderElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageWiderThanText",
-    figuretype: "image",
-    figureAlignment: "wider",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
-    },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
-    },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-};
-export const figureImageFullElement = {
-      
+export const figureImage50TextElementDefault = {
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "image",
-    "subtype": "imageFullscreen",
-    "alignment": "full",
+    "subtype": "image50Text",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-   
+    "alignment": "half-text",
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
         "text": "12345",
@@ -100,174 +41,1310 @@ export const figureImageFullElement = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
-    "comments" : true,
-    "tcm" : true,
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+}
+export const figureImage50TextElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "image50Text",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "half-text",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for Figure Image-50% Text</p>",
+        "subtitle": "<p>Title for Figure Image-50% Text</p>",
+        "caption": "<p>Caption for Figure Image-50% Text</p>",
+        "credit": "<p>Credit for Figure Image-50% Text </p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const figureImageTextWidthElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageTextWidth",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "text-width",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const figureImageTextWidthElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageTextWidth",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "text-width",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for Figure Image-TextWidth</p>",
+        "subtitle": "<p>Title for Figure Image-TextWidth</p>",
+        "caption": "<p>Caption for Figure Image-TextWidth</p>",
+        "credit": "<p>Credit for Figure Image-TextWidth</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const figureImageWiderElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageWiderThanText",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "wider",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+};
+export const figureImageWiderElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageWiderThanText",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "wider",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for Figure Image-WiderThanText</p>",
+        "subtitle": "<p>Title for Figure Image-WiderThanText</p>",
+        "caption": "<p>Caption for Figure Image-WiderThanText</p>",
+        "credit": "<p>Credit for Figure Image-WiderThanText</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+};
+export const figureImageFullElementDefault = {
+
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageFullscreen",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const figureImageFullElementWithData = {
+
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "image",
+    "subtype": "imageFullscreen",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for Figure Image-Fullscreen</p>",
+        "subtitle": "<p>Title for Figure Image-Fullscreen</p>",
+        "caption": "<p>Caption for Figure Image-Fullscreen</p>",
+        "credit": "<p>Credit for Figure Image-Fullscreen</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
 
-export const tableImage50TextElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "image50TextTableImage",
-    figuretype: "table",
-    figureAlignment: "half-text",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const tableImage50TextElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "image50TextTableImage",
+    "alignment": "half-text",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const tableImageTextWidthElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageTextWidthTableImage",
-    figuretype: "table",
-    figureAlignment: "text-width",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const tableImage50TextElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "image50TextTableImage",
+    "alignment": "half-text",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for table Image-50% Text</p>",
+        "subtitle": "<p>Title for table Image-50% Text</p>",
+        "caption": "<p>Caption for table Image-50% Text</p>",
+        "credit": "<p>Credit for table Image-50% Text </p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const tableImageWiderElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageWiderThanTextTableImage",
-    figuretype: "table",
-    figureAlignment: "wider",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const tableImageTextWidthElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageTextWidthTableImage",
+    "alignment": "text-width",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const tableImageFullElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageFullscreenTableImage",
-    figuretype: "table",
-    figureAlignment: "full",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const tableImageTextWidthElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageTextWidthTableImage",
+    "alignment": "text-width",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for table Image-TextWidth</p>",
+        "subtitle": "<p>Title for table Image-TextWidth</p>",
+        "caption": "<p>Caption for table Image-TextWidth</p>",
+        "credit": "<p>Credit for table Image-TextWidth</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const tableImageWiderElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageWiderThanTextTableImage",
+    "alignment": "wider",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const tableImageWiderElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageWiderThanTextTableImage",
+    "alignment": "wider",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for table Image-WiderThanText</p>",
+        "subtitle": "<p>Title for table Image-WiderThanText</p>",
+        "caption": "<p>Caption for table Image-WiderThanText</p>",
+        "credit": "<p>Credit for table Image-WiderThanText</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const tableImageFullElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageFullscreenTableImage",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const tableImageFullElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "table",
+    "subtype": "imageFullscreenTableImage",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for table Image-Fullscreen</p>",
+        "subtitle": "<p>Title for table Image-Fullscreen</p>",
+        "caption": "<p>Caption for table Image-Fullscreen</p>",
+        "credit": "<p>Credit for table Image-Fullscreen</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
 
-export const mathImage50TextElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "image50TextMathImage",
-    figuretype: "mathImage",
-    figureAlignment: "half-text",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const mathImage50TextElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "image50TextMathImage",
+    "alignment": "half-text",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const mathImageTextWidthElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageTextWidthMathImage",
-    figuretype: "mathImage",
-    figureAlignment: "text-width",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const mathImage50TextElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "image50TextMathImage",
+    "alignment": "half-text",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for math Image-50% Text</p>",
+        "subtitle": "<p>Title for math Image-50% Text</p>",
+        "caption": "<p>Caption for math Image-50% Text</p>",
+        "credit": "<p>Credit for math Image-50% Text </p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const mathImageWiderElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageWiderThanTextMathImage",
-    figuretype: "mathImage",
-    figureAlignment: "wider",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const mathImageTextWidthElementDefault = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "imageTextWidthMathImage",
+    "alignment": "text-width",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
-export const mathImageFullElement = {
-    id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    type: "figure",
-    subtype: "imageFullscreenMathImage",
-    figuretype: "mathImage",
-    figureAlignment: "full",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    elementdata: {
-        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        text: ""
+export const mathImageTextWidthElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "imageTextWidthMathImage",
+    "alignment": "text-width",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
     },
-    html: {
-        text: "<p class=\"paragraphNumeroUno\"><br></p>"
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
     },
-    comments: true,
-    tcm: true,
-    versionUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for math Image-TextWidth</p>",
+        "subtitle": "<p>Title for math Image-TextWidth</p>",
+        "caption": "<p>Caption for math Image-TextWidth</p>",
+        "credit": "<p>Credit for math Image-TextWidth</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const mathImageWiderElementDefault = {
+     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "imageWiderThanTextMathImage",
+    "alignment": "wider",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const mathImageWiderElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+   "type": "figure",
+   "figuretype": "mathImage",
+   "subtype": "imageWiderThanTextMathImage",
+   "alignment": "wider",
+   "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+   "title": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "12345",
+       "textsemantics": [],
+       "mathml": []
+   },
+   "subtitle": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "eresrwqe",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "captions": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "sdafsad",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "credits": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "asdfasdfasdf",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "figuredata": {
+       "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+       "height": "1225",
+       "width": "1440",
+       "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+       "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+   },
+   "html": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "title": "<p>Label for math Image-WiderThanText</p>",
+       "subtitle": "<p>Title for math Image-WiderThanText</p>",
+       "caption": "<p>Caption for math Image-WiderThanText</p>",
+       "credit": "<p>Credit for math Image-WiderThanText</p>",
+       "postertext": "",
+       "tableasHTML": ""
+   },
+   "comments": true,
+   "tcm": true,
+   "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+   "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const mathImageFullElementDefault = {
+     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "imageFullscreenMathImage",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+};
+export const mathImageFullElementWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "mathImage",
+    "subtype": "imageFullscreenMathImage",
+    "alignment": "full",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for math Image-Fullscreen</p>",
+        "subtitle": "<p>Title for math Image-Fullscreen</p>",
+        "caption": "<p>Caption for math Image-Fullscreen</p>",
+        "credit": "<p>Credit for math Image-Fullscreen</p>",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 };
 
-export const mathmlElement = {
+export const mathmlEditorDefault = {
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "authoredtext",
@@ -301,24 +1378,73 @@ export const mathmlElement = {
         "mathml": [],
         "footnotes": []
     },
-    
+
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
-        "postertext": "<p>hello mathml</p>",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "<p>Type something...</p>",
         "tableasHTML": ""
     },
-    "comments" : true,
-    "tcm" : true,
+    "comments": true,
+    "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 
 }
+export const mathmlEditorWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "authoredtext",
+    "subtype": "mathml",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
 
-export const blockCodeElement = {
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for block code editor</p>",
+        "subtitle": "<p>Title for block code editor</p>",
+        "caption": "<p>Caption for block code editor</p>",
+        "credit": "<p>Credit for block code editor</p>",
+        "postertext": "<p>sdfsdfsfsdffsdfsdfsdfsdfsæ</p>",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+}
+export const blockCodeEditorDefault = {
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "codelisting",
@@ -361,15 +1487,71 @@ export const blockCodeElement = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
-        "postertext": "<p>hello block code</p>",
+        "title": "<p>Enter Label...</p>",
+        "subtitle": "<p>Enter Title...</p>",
+        "caption": "<p>Enter Caption...</p>",
+        "credit": "<p>Enter Credit...</p>",
+        "postertext": "<p>Enter Block Code...</p>",
         "tableasHTML": ""
     },
-    "comments" : true,
-    "tcm" : true,
+    "comments": true,
+    "tcm": true,
+    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+}
+export const blockCodeEditorWithData = {
+    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+    "type": "figure",
+    "figuretype": "codelisting",
+    "subtype": "codelisting",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "alignment": "",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "height": "1225",
+        "width": "1440",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "<p>Label for block code editor</p>",
+        "subtitle": "<p>Title for block code editor</p>",
+        "caption": "<p>Caption for block code editor</p>",
+        "credit": "<p>Credit for block code editor</p>",
+        "postertext": "<p>c=a+b;</p>",
+        "tableasHTML": ""
+    },
+    "comments": true,
+    "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 
