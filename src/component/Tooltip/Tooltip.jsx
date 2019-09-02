@@ -18,7 +18,7 @@ export default function Tooltip(props) {
         <>
             <div className="tooltip">
                 {children}
-                <span className={`tooltiptext tooltip-${directionState}`}>{tooltipText}</span>
+                <span className={`tooltiptext tooltip-${direction}`}>{tooltipText}</span>
             </div>
         </>
     )

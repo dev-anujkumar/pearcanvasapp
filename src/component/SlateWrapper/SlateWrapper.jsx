@@ -14,6 +14,7 @@ import { EditorConfig } from '../../config/EditorConfig'
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
+import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
@@ -211,7 +212,7 @@ class SlateWrapper extends Component {
                                 element={element}
                                 key={element.id}
                             />
-                            <ElementSaprator
+                             <ElementSaprator
                                 key={`elem-separtor-${element.id}`}
                                 esProps = {[
                                     {
@@ -261,10 +262,11 @@ class SlateWrapper extends Component {
                                       buttonHandler : this.splithandlerfunction,
                                       tooltipText : 'Opener Element',
                                       tooltipDirection : 'left'
-                                    },
+                                    }
                                   ]
                                 }
-                                />
+                                elementType = {element.type}
+                                /> 
                         </React.Fragment>
                     )
                 })

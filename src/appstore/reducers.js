@@ -830,7 +830,7 @@ export default function (state = initialState, action) {
         case FETCH_SLATE_DATA:
             return {
                 ...state,
-                slateLevelData: action.payload
+                slateLevelData: slateLevelData
             };
         default:
             return state;
