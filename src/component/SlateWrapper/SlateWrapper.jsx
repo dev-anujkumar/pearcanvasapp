@@ -65,6 +65,9 @@ class SlateWrapper extends Component {
                     if(e.target.tagName=='dfn'){
                         //launch footnote/glossary
                     }
+                    if(e.target.id=='expand-icon'){
+                        //launch footnote/glossary
+                    }
                    
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
                     console.log('click',cell)                    

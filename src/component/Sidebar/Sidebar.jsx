@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
+import { dropdownArror } from './../../images/ElementButtons/ElementButtons.jsx';
 import './../../styles/Sidebar/Sidebar.css';
 
 class Sidebar extends Component {
@@ -65,9 +66,7 @@ class Sidebar extends Component {
                 className="element-dropdown">
                 <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                     {primaryOptionObject[this.state.activePrimaryOption].text}
-                    <svg className="dropdown-arrow" viewBox="0 0 9 4.5">
-                        <path d="M0,0,4.5,4.5,9,0Z"></path>
-                    </svg>
+                    {dropdownArror}
                 </div>
                 <ul className={`element-dropdown-content primary-options ${active}`}>
                     {primaryOptions}
@@ -115,9 +114,7 @@ class Sidebar extends Component {
                 className={`element-dropdown ${display}`}>
                 <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                     {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                    <svg className="dropdown-arrow" viewBox="0 0 9 4.5">
-                        <path d="M0,0,4.5,4.5,9,0Z"></path>
-                    </svg>
+                    {dropdownArror}
                 </div>
                 <ul className={`element-dropdown-content secondary-options ${active}`}>
                     {secondaryOptions}
