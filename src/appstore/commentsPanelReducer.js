@@ -8,7 +8,7 @@
 // IMPORT - Action constants //
 import {
     FETCH_COMMENTS,
-    TOGGLE_COMMENTs_PANEL
+    TOGGLE_COMMENTS_PANEL
 } from '../constants/Action_Constants';
 
 /**
@@ -63,13 +63,13 @@ export default function (state = initialState, action) {
         case FETCH_COMMENTS:
             return {
                 ...state,
-                comments: action.payload
+                comments: action.payload.commentList
             };
-        case TOGGLE_COMMENTs_PANEL :
+        case TOGGLE_COMMENTS_PANEL :
             console.log(action.payload);
             return {
                 ...state,
-                toogleCommentsPanel:action.payload
+                toggleCommentsPanel:action.payload
             }
         default:
             return state;

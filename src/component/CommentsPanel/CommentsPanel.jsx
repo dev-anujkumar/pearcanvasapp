@@ -34,6 +34,9 @@ class CommentsPanel extends React.Component {
         this.setStatus = this.setStatus.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
     }
+    componentDidUpdate(){
+        console.log("comments panel",this.props.toggleCommentsPanel)
+    }
      /**
     * 
     * @discription - This function is for search comments
@@ -184,11 +187,12 @@ class CommentsPanel extends React.Component {
 
     render() {
         return (
-            <div id="comments-panel" className="comments-panel comments-panel-open">
+            <div id="comments-panel" className={`comments-panel ${(this.props.toggleCommentsPanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
+                            <label class="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
                             <div className="add-structure">
                                 <div className="filter">
@@ -268,7 +272,8 @@ CommentsPanel.propTypes = {
 }
 
  const mapStateToProps = state => ({
-    comments: state.commentsPanelReducer.comments
+    comments: state.commentsPanelReducer.comments,
+    toggleCommentsPanel:state.commentsPanelReducer.toggleCommentsPanel
   }); 
 export default connect(mapStateToProps,null)(CommentsPanel);
 //export default CommentsPanel;
