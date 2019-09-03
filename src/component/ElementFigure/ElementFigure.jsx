@@ -166,7 +166,7 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
                 }
-                /**JSX for figure Image, Table Image, Math Image*/
+                /**JSX for Figure Image, Table Image, Math Image*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
                         <header>
@@ -196,7 +196,7 @@ export class ElementFigure extends Component {
                 break;
             case 'authoredtext':
                 figLabelClass = "heading4TextNumberLabel"; figTitleClass = "heading4TextTitle"; figCaptionClass = "figcaptionText"; figCreditClass = "paragraphTextCredit";
-                /**JSX for MathML/ChecmML Editor*/
+                /**JSX for MathML/ChemML Editor*/
                 figureJsx = <div className="divTextFigure">
                     <figure className="figureText" resource="">
                         <header>
