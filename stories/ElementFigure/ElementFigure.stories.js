@@ -48,9 +48,9 @@ const mockData1={
         },
         "html": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "title": "<p>12345</p>",
-            "subtitle": "<p>eresrwqe</p>",
-            "caption": "<p>sdafsad</p>",
+            "title": "12345",
+            "subtitle": "eresrwqe",
+            "caption": "sdafsad",
             "credit": "<p>asdfasdfasdf</p>",
             "postertext": "",
             "tableasHTML": ""
@@ -346,7 +346,7 @@ const mockData6={
 storiesOf('ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <ElementFigure model={mockData1} type="p"/>)
+    .add('default Figure-50', () => <ElementFigure model={mockData1} />)
     .add('Figure Image-FS', () => {
         return (
             <>

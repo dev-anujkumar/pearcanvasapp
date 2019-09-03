@@ -97,10 +97,10 @@ export const figureImage50TextElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for Figure Image-50% Text</p>",
-        "subtitle": "<p>Title for Figure Image-50% Text</p>",
-        "caption": "<p>Caption for Figure Image-50% Text</p>",
-        "credit": "<p>Credit for Figure Image-50% Text </p>",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -207,10 +207,10 @@ export const figureImageTextWidthElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for Figure Image-TextWidth</p>",
-        "subtitle": "<p>Title for Figure Image-TextWidth</p>",
-        "caption": "<p>Caption for Figure Image-TextWidth</p>",
-        "credit": "<p>Credit for Figure Image-TextWidth</p>",
+        "title": "Label for Figure Image-TextWidth",
+        "subtitle": "Title for Figure Image-TextWidth",
+        "caption": "Caption for Figure Image-TextWidth",
+        "credit": "Credit for Figure Image-TextWidth",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -318,10 +318,10 @@ export const figureImageWiderElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for Figure Image-WiderThanText</p>",
-        "subtitle": "<p>Title for Figure Image-WiderThanText</p>",
-        "caption": "<p>Caption for Figure Image-WiderThanText</p>",
-        "credit": "<p>Credit for Figure Image-WiderThanText</p>",
+        "title": "Label for Figure Image-WiderThanText",
+        "subtitle": "Title for Figure Image-WiderThanText",
+        "caption": "Caption for Figure Image-WiderThanText",
+        "credit": "Credit for Figure Image-WiderThanText",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -376,10 +376,10 @@ export const figureImageFullElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -433,10 +433,10 @@ export const figureImageFullElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for Figure Image-Fullscreen</p>",
-        "subtitle": "<p>Title for Figure Image-Fullscreen</p>",
-        "caption": "<p>Caption for Figure Image-Fullscreen</p>",
-        "credit": "<p>Credit for Figure Image-Fullscreen</p>",
+        "title": "Label for Figure Image-Fullscreen",
+        "subtitle": "Title for Figure Image-Fullscreen",
+        "caption": "Caption for Figure Image-Fullscreen",
+        "credit": "Credit for Figure Image-Fullscreen",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -490,10 +490,10 @@ export const tableImage50TextElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -546,10 +546,10 @@ export const tableImage50TextElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for table Image-50% Text</p>",
-        "subtitle": "<p>Title for table Image-50% Text</p>",
-        "caption": "<p>Caption for table Image-50% Text</p>",
-        "credit": "<p>Credit for table Image-50% Text </p>",
+        "title": "Label for table Image-50% Text",
+        "subtitle": "Title for table Image-50% Text",
+        "caption": "Caption for table Image-50% Text",
+        "credit": "Credit for table Image-50% Text ",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -602,10 +602,10 @@ export const tableImageTextWidthElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -658,10 +658,10 @@ export const tableImageTextWidthElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for table Image-TextWidth</p>",
-        "subtitle": "<p>Title for table Image-TextWidth</p>",
-        "caption": "<p>Caption for table Image-TextWidth</p>",
-        "credit": "<p>Credit for table Image-TextWidth</p>",
+        "title": "Label for table Image-TextWidth",
+        "subtitle": "Title for table Image-TextWidth",
+        "caption": "Caption for table Image-TextWidth",
+        "credit": "Credit for table Image-TextWidth",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -714,10 +714,10 @@ export const tableImageWiderElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -770,10 +770,10 @@ export const tableImageWiderElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for table Image-WiderThanText</p>",
-        "subtitle": "<p>Title for table Image-WiderThanText</p>",
-        "caption": "<p>Caption for table Image-WiderThanText</p>",
-        "credit": "<p>Credit for table Image-WiderThanText</p>",
+        "title": "Label for table Image-WiderThanText",
+        "subtitle": "Title for table Image-WiderThanText",
+        "caption": "Caption for table Image-WiderThanText",
+        "credit": "Credit for table Image-WiderThanText",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -826,10 +826,10 @@ export const tableImageFullElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -882,10 +882,10 @@ export const tableImageFullElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for table Image-Fullscreen</p>",
-        "subtitle": "<p>Title for table Image-Fullscreen</p>",
-        "caption": "<p>Caption for table Image-Fullscreen</p>",
-        "credit": "<p>Credit for table Image-Fullscreen</p>",
+        "title": "Label for table Image-Fullscreen",
+        "subtitle": "Title for table Image-Fullscreen",
+        "caption": "Caption for table Image-Fullscreen",
+        "credit": "Credit for table Image-Fullscreen",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -939,10 +939,10 @@ export const mathImage50TextElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -995,10 +995,10 @@ export const mathImage50TextElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for math Image-50% Text</p>",
-        "subtitle": "<p>Title for math Image-50% Text</p>",
-        "caption": "<p>Caption for math Image-50% Text</p>",
-        "credit": "<p>Credit for math Image-50% Text </p>",
+        "title": "Label for math Image-50% Text",
+        "subtitle": "Title for math Image-50% Text",
+        "caption": "Caption for math Image-50% Text",
+        "credit": "Credit for math Image-50% Text",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1051,10 +1051,10 @@ export const mathImageTextWidthElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1107,10 +1107,10 @@ export const mathImageTextWidthElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for math Image-TextWidth</p>",
-        "subtitle": "<p>Title for math Image-TextWidth</p>",
-        "caption": "<p>Caption for math Image-TextWidth</p>",
-        "credit": "<p>Credit for math Image-TextWidth</p>",
+        "title": "Label for math Image-TextWidth",
+        "subtitle": "Title for math Image-TextWidth",
+        "caption": "Caption for math Image-TextWidth",
+        "credit": "Credit for math Image-TextWidth",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1163,10 +1163,10 @@ export const mathImageWiderElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1219,10 +1219,10 @@ export const mathImageWiderElementWithData = {
    },
    "html": {
        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-       "title": "<p>Label for math Image-WiderThanText</p>",
-       "subtitle": "<p>Title for math Image-WiderThanText</p>",
-       "caption": "<p>Caption for math Image-WiderThanText</p>",
-       "credit": "<p>Credit for math Image-WiderThanText</p>",
+       "title": "Label for math Image-WiderThanText",
+       "subtitle": "Title for math Image-WiderThanText",
+       "caption": "Caption for math Image-WiderThanText",
+       "credit": "Credit for math Image-WiderThanText",
        "postertext": "",
        "tableasHTML": ""
    },
@@ -1275,10 +1275,10 @@ export const mathImageFullElementDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1331,10 +1331,10 @@ export const mathImageFullElementWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for math Image-Fullscreen</p>",
-        "subtitle": "<p>Title for math Image-Fullscreen</p>",
-        "caption": "<p>Caption for math Image-Fullscreen</p>",
-        "credit": "<p>Credit for math Image-Fullscreen</p>",
+        "title": "Label for math Image-Fullscreen",
+        "subtitle": "Title for math Image-Fullscreen",
+        "caption": "Caption for math Image-Fullscreen",
+        "credit": "Credit for math Image-Fullscreen",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -1381,11 +1381,11 @@ export const mathmlEditorDefault = {
 
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
-        "postertext": "<p>Type something...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "postertext": "",
         "tableasHTML": ""
     },
     "comments": true,
@@ -1431,11 +1431,11 @@ export const mathmlEditorWithData = {
 
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for block code editor</p>",
-        "subtitle": "<p>Title for block code editor</p>",
-        "caption": "<p>Caption for block code editor</p>",
-        "credit": "<p>Credit for block code editor</p>",
-        "postertext": "<p>sdfsdfsfsdffsdfsdfsdfsdfsæ</p>",
+        "title": "Label for block code editor",
+        "subtitle": "Title for block code editor",
+        "caption": "Caption for block code editor",
+        "credit": "Credit for block code editor",
+        "postertext": "sdfsdfsfsdffsdfsdfsdfsdfsæ",
         "tableasHTML": ""
     },
     "comments": true,
@@ -1487,11 +1487,11 @@ export const blockCodeEditorDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Enter Label...</p>",
-        "subtitle": "<p>Enter Title...</p>",
-        "caption": "<p>Enter Caption...</p>",
-        "credit": "<p>Enter Credit...</p>",
-        "postertext": "<p>Enter Block Code...</p>",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "postertext": "",
         "tableasHTML": ""
     },
     "comments": true,
@@ -1543,11 +1543,11 @@ export const blockCodeEditorWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>Label for block code editor</p>",
-        "subtitle": "<p>Title for block code editor</p>",
-        "caption": "<p>Caption for block code editor</p>",
-        "credit": "<p>Credit for block code editor</p>",
-        "postertext": "<p>c=a+b;</p>",
+        "title": "Label for block code editor",
+        "subtitle": "Title for block code editor",
+        "caption": "Caption for block code editor",
+        "credit": "Credit for block code editor",
+        "postertext": "c=a+b;",
         "tableasHTML": ""
     },
     "comments": true,

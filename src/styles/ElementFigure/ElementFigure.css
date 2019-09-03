@@ -16,6 +16,7 @@
     cursor: auto !important;
     width:100%!important;
     max-width: 100% !important;
+    color:black!important;
 }
 .figureLabel.cypress-editable,.figureTitle.cypress-editable{
     font-size: 12px!important;
