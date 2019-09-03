@@ -51,8 +51,8 @@ const mockData1={
             "title": "12345",
             "subtitle": "eresrwqe",
             "caption": "sdafsad",
-            "credit": "<p>asdfasdfasdf</p>",
-            "postertext": "",
+            "credit": "asdfasdfasdf",
+            "postertext": "ssfsfsdsfdsfdsfdsfdsfdfdfd",
             "tableasHTML": ""
         },
         "comments" : true,
@@ -106,10 +106,10 @@ const mockData2={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -163,10 +163,10 @@ const mockData3={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -221,10 +221,10 @@ const mockData4={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -272,11 +272,11 @@ const mockData5={
     
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
-        "postertext": "<p>hello mathml</p>",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
+        "postertext": "hello mathml",
         "tableasHTML": ""
     },
     "comments" : true,
@@ -329,11 +329,11 @@ const mockData6={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "<p>12345</p>",
-        "subtitle": "<p>eresrwqe</p>",
-        "caption": "<p>sdafsad</p>",
-        "credit": "<p>asdfasdfasdf</p>",
-        "postertext": "<p>hello block code</p>",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
+        "postertext": "fddffdd",
         "tableasHTML": ""
     },
     "comments" : true,

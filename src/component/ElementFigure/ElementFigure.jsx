@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 // IMPORT - Components //
 import { TinyMceEditor } from "../tinyMceEditor"
+import ElementAuthoring from "../ElementAuthoring"
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -30,13 +31,14 @@ export class ElementFigure extends Component {
         console.log("onClick")
     }
     /*** @description - This function is for handling the different types of figure-element.
- * @param element object that defined the type of element*/
+     * @param model object that defined the type of element*/
 
     renderFigureType = (model = {}) => {
         const { type } = this.props;
 
         var figureJsx;
         switch (model.figuretype) {
+
             case 'image':
             case 'table':
             case 'mathImage':
@@ -164,15 +166,15 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
                 }
+                /**JSX for figure Image, Table Image, Math Image*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
                         <header>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
+
+                            <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
                         <div className="pearson-component image figureData" data-type={dataType} >
                             <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
@@ -183,69 +185,65 @@ export class ElementFigure extends Component {
                                 draggable="false" />
                         </div>
                         <figcaption className={figCaptionClass + " figureCaption"} >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div className={figCreditClass + " figureCredit"}>
-                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                    <div >
+                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
 
                 </div>
                 break;
             case 'authoredtext':
                 figLabelClass = "heading4TextNumberLabel"; figTitleClass = "heading4TextTitle"; figCaptionClass = "figcaptionText"; figCreditClass = "paragraphTextCredit";
+                /**JSX for MathML/ChecmML Editor*/
                 figureJsx = <div className="divTextFigure">
                     <figure className="figureText" resource="">
                         <header>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
+
+                            <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
-                        <p className="paragraphNumeroUno mathml figureData" data-type="mathml">
-                            <p className={`paragraphNumeroUno ${model.figuretype} figureData `}>
-                                <div id="mathmlDiv" data-type="mathml">
-                                    <TinyMceEditor placeholder="Type Something..." model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                                </div>
-                            </p>
+                        <p className="paragraphNumeroUno mathml figureData mathmlDiv" data-type="mathml">
+
+                            <TinyMceEditor placeholder="Type Something..." className="" model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </p>
                         <figcaption className="figcaptionText figureCaption" >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div className={figCreditClass + " figureCredit"}>
-                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                    <div>
+                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
 
                 </div>
                 break;
             case 'codelisting':
                 figLabelClass = "heading4CodeSnippetNumberLabel"; figTitleClass = "heading4CodeSnippetTitle"; figCaptionClass = "figcaptionCodeSnippet"; figCreditClass = "paragraphCodeSnippetCredit";
-                figureJsx = <div className="divCodeSnippetFigure" id="blockCodeFigure" >
+                /**JSX for Block Code Editor*/
+                figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">
                     <figure className="figureCodeSnippet" >
                         <header>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
-                            <div>
-                                <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            </div>
+
+                            <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
-                        <div className="pearson-component blockcode codeSnippet" id="blockCodeDiv" data-type="codeSnippet" >
+                        <div className="pearson-component blockcode codeSnippet blockCodeDiv"  data-type="codeSnippet" >
                             <pre className="code-listing" >
-                                <code id="codeListing">
-                                    <TinyMceEditor placeholder="Enter Block Code..." model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                                </code>
+                                <TinyMceEditor placeholder="Enter block code..." tagName={'code'} className="" model={model.html.postertext} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />                     
                             </pre>
                         </div>
                         <figcaption className="figcaptionCodeSnippet" >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div className={figCreditClass + " figureCredit"}>
-                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                    <div>
+                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
 
                 </div>
@@ -256,17 +254,12 @@ export class ElementFigure extends Component {
     render() {
         const { model } = this.props;
         return (
-
-
             <div className="figureElement">
                 {this.renderFigureType(model)}
             </div>
-
-
         );
     }
 }
-
 
 ElementFigure.defaultProps = {
     /** Detail of element in JSON object */

@@ -150,7 +150,7 @@ const initialState = {
                             "subtitle": "eresrwqe",
                             "caption": "sdafsad",
                             "credit": "asdfasdfasdf",
-                            "postertext": "",
+                            "postertext": "abcdefgh",
                             "tableasHTML": ""
                         },
                         "comments" : true,

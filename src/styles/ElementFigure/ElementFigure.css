@@ -1,4 +1,4 @@
-.element-container .cypress-editable {
+.figureElement .cypress-editable {
     margin: 0!important;
     padding: 10px!important;
     width: 100%!important;
@@ -6,7 +6,7 @@
     border: none;
     outline: none;
 }
-.figureCredit > .cypress-editable {
+.figureCredit.cypress-editable {
     min-height: 40px!important;
     font-size: 9px!important;
     width:100% !important;
@@ -25,7 +25,11 @@
 .mathml .figureElement .figureData,.blockcode .codeSnippet{
     width:100%!important;
 }
-#blockCodeFigure #blockCodeDiv,#mathmlDiv{
+.paragraphNumeroUno.mathml.figureData.mathmlDiv{
+    font-size:1.080em!important;
+    padding: 10px!important;
+}
+.blockCodeFigure .blockCodeDiv{
     width:100%!important;
 }
 .figureElement .figureData {
@@ -51,8 +55,4 @@ figure,.element-container{
 
 [placeholder]:empty:focus::before {
     content: "";
-}
-
-.figureCredit p{
-    font-size: 9px!important;
 }
