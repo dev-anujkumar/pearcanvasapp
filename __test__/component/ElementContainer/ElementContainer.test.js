@@ -33,6 +33,11 @@ describe('Test for element container component', () => {
         element.type = "figure";
         elementContainer = mount(<ElementContainer element={element} />);
         expect(elementContainer).toMatchSnapshot();
+
+        element.type = "element-blockfeature";
+        element.html.text = `<blockquote class="blockquoteMarginalia"><p class="paragraphNummerEins">This is BQ with Marginalia.</p></blockquote>`
+        elementContainer = mount(<ElementContainer element={element} />);
+        expect(elementContainer).toMatchSnapshot();
     })
 
     it('onClick Event', () => {

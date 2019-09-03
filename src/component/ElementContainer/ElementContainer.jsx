@@ -34,6 +34,11 @@ class ElementContainer extends Component {
             //     editor = <ElementAudioVideo element={element} />;
             //     labelText = 'FG';
             //     break;
+
+            case "element-blockfeature":
+                editor = <ElementAuthoring type={element.type} model={element.html} />;
+                labelText = 'BQ';
+                break;
         }
 
         return (
