@@ -4,7 +4,8 @@ export default {
             text: 'Paragraph',
             subtype: {
                 'secondary-paragraph': {
-                    text: 'Paragraph'
+                    text: 'Paragraph',
+                    labelText: 'P'
                 }
             }
         },
@@ -12,22 +13,28 @@ export default {
             text: 'Headings',
             subtype: {
                 'secondary-heading-1': {
-                    text: 'Heading 1'
+                    text: 'Heading 1',
+                    labelText: 'H1'
                 },
                 'secondary-heading-2': {
-                    text: 'Heading 2'
+                    text: 'Heading 2',
+                    labelText: 'H2'
                 },
                 'secondary-heading-3': {
-                    text: 'Heading 3'
+                    text: 'Heading 3',
+                    labelText: 'H3'
                 },
                 'secondary-heading-4': {
-                    text: 'Heading 4'
+                    text: 'Heading 4',
+                    labelText: 'H4'
                 },
                 'secondary-heading-5': {
-                    text: 'Heading 5'
+                    text: 'Heading 5',
+                    labelText: 'H5'
                 },
                 'secondary-heading-6': {
-                    text: 'Heading 6'
+                    text: 'Heading 6',
+                    labelText: 'H6'
                 }
             }
         },
@@ -35,7 +42,8 @@ export default {
             text: 'Learning Objective Item',
             subtype: {
                 'secondary-learning-objective': {
-                    text: 'Learning Objective'
+                    text: 'Learning Objective',
+                    labelText: 'LO'
                 }
             }
         },
@@ -43,13 +51,21 @@ export default {
             text: 'Blockquotes',
             subtype: {
                 'secondary-pullquote': {
-                    text: 'Pullquote'
+                    text: 'Pullquote',
+                    labelText: 'BQ'
                 },
                 'secondary-marginalia': {
-                    text: 'Marginalia'
+                    text: 'Marginalia',
+                    labelText: 'BQ'
                 },
                 'secondary-marginalia-attribution': {
-                    text: 'Marginalia with Attribution'
+                    text: 'Marginalia with Attribution',
+                    labelText: 'BQ',
+                    attributes: {
+                        attribution: {
+                            text: 'Attribution'
+                        }
+                    }
                 }
             }
         },
@@ -57,25 +73,32 @@ export default {
             text: 'List',
             subtype: {
                 'secondary-list-1': {
-                    text: 'Bulleted List'
+                    text: 'Bulleted List',
+                    labelText: 'UL'
                 },
                 'secondary-list-2': {
-                    text: 'Numbered List'
+                    text: 'Numbered List',
+                    labelText: 'OL'
                 },
                 'secondary-list-3': {
-                    text: 'Upper Alpha List'
+                    text: 'Upper Alpha List',
+                    labelText: 'OL'
                 },
                 'secondary-list-4': {
-                    text: 'Lower Alpha List'
+                    text: 'Lower Alpha List',
+                    labelText: 'OL'
                 },
                 'secondary-list-5': {
-                    text: 'Upper Roman List'
+                    text: 'Upper Roman List',
+                    labelText: 'OL'
                 },
                 'secondary-list-6': {
-                    text: 'Lower Roman List'
+                    text: 'Lower Roman List',
+                    labelText: 'OL'
                 },
                 'secondary-list-7': {
-                    text: 'None List'
+                    text: 'None List',
+                    labelText: 'OL'
                 }
             }
         }
@@ -85,19 +108,24 @@ export default {
             text: 'Figure Image',
             subtype: {
                 'secondary-image-figure-quarter': {
-                    text: '25% Text Width'
+                    text: '25% Text Width',
+                    labelText: 'FG'
                 },
                 'secondary-image-figure-half': {
-                    text: '50% Text Width'
+                    text: '50% Text Width',
+                    labelText: 'FG'
                 },
                 'secondary-image-figure-width': {
-                    text: 'Text Width'
+                    text: 'Text Width',
+                    labelText: 'FG'
                 },
                 'secondary-image-figure-wider': {
-                    text: 'Wider Than Text'
+                    text: 'Wider Than Text',
+                    labelText: 'FG'
                 },
                 'secondary-image-figure-full': {
-                    text: 'Full Screen'
+                    text: 'Full Screen',
+                    labelText: 'FG'
                 }
             },
             attributes: {
@@ -113,16 +141,20 @@ export default {
             text: 'Table Image',
             subtype: {
                 'secondary-image-table-half': {
-                    text: '50% Text Width'
+                    text: '50% Text Width',
+                    labelText: 'TB'
                 },
                 'secondary-image-table-width': {
-                    text: 'Text Width'
+                    text: 'Text Width',
+                    labelText: 'TB'
                 },
                 'secondary-image-table-wider': {
-                    text: 'Wider Than Text'
+                    text: 'Wider Than Text',
+                    labelText: 'TB'
                 },
                 'secondary-image-table-full': {
-                    text: 'Full Screen'
+                    text: 'Full Screen',
+                    labelText: 'TB'
                 }
             },
             attributes: {
@@ -138,16 +170,20 @@ export default {
             text: 'Math Image',
             subtype: {
                 'secondary-image-equation-half': {
-                    text: '50% Text Width'
+                    text: '50% Text Width',
+                    labelText: 'EQ'
                 },
                 'secondary-image-equation-width': {
-                    text: 'Text Width'
+                    text: 'Text Width',
+                    labelText: 'EQ'
                 },
                 'secondary-image-equation-wider': {
-                    text: 'Wider Than Text'
+                    text: 'Wider Than Text',
+                    labelText: 'EQ'
                 },
                 'secondary-image-equation-full': {
-                    text: 'Full Screen'
+                    text: 'Full Screen',
+                    labelText: 'EQ'
                 }
             },
             attributes: {
@@ -163,7 +199,8 @@ export default {
             text: 'Math ML / Chem Editor',
             subtype: {
                 'secondary-mathml-equation': {
-                    text: 'Math ML / Chem Editor'
+                    text: 'Math ML / Chem Editor',
+                    labelText: 'MML'
                 }
             }
         },
@@ -171,7 +208,8 @@ export default {
             text: 'Block Code Editor',
             subtype: {
                 'secondary-blockcode-equation': {
-                    text: 'Block Code Editor'
+                    text: 'Block Code Editor',
+                    labelText: 'BCE'
                 }
             }
         },
@@ -179,16 +217,20 @@ export default {
             text: 'Table Editor',
             subtype: {
                 'secondary-editor-table-half': {
-                    text: '50% Text Width'
+                    text: '50% Text Width',
+                    labelText: 'TE'
                 },
                 'secondary-editor-table-width': {
-                    text: 'Text Width'
+                    text: 'Text Width',
+                    labelText: 'TE'
                 },
                 'secondary-editor-table-wider': {
-                    text: 'Wider Than Text'
+                    text: 'Wider Than Text',
+                    labelText: 'TE'
                 },
                 'secondary-editor-table-full': {
-                    text: 'Full Screen'
+                    text: 'Full Screen',
+                    labelText: 'TE'
                 }
             }
         }
