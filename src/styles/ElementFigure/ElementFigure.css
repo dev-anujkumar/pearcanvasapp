@@ -1,0 +1,72 @@
+.Editor .mce-content-body {
+    width:100%;
+}
+.mce-content-body{
+    padding: 10px !important; 
+    font-size:inherit !important;
+}
+.mce-content-body  p{
+    font-size: inherit ;
+    font-family: Helvetica, sans-serif !important;
+}
+ .mce-content-body .mce-edit-focus{
+    margin: 0px;
+    position: relative;
+    width: 660px;
+    min-height: 40px!important;
+    border: 2px solid black;
+    outline: none;
+    border:1px solid black;
+    font-size: 12px !important;
+    color: #000 !important;
+}
+ .Editor {
+    margin: 0!important;
+    padding: 10px!important;
+    width: 660px!important;
+    min-height: 40px!important;
+    border: none;
+    outline: none;
+}
+.figureLabel{
+    font-weight: 800!important;
+}
+#figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+    min-height: 40px!important;
+width:100% !important;
+}
+.figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
+    min-height: 40px!important;
+    cursor: auto !important;
+}
+.figureElement .figureData {
+    cursor:copy!important ;
+}
+figcaption,.figureCaption #figure-caption .mce-content-body  .mce-edit-focus{
+    font-size: 10.8px!important;
+    text-align: left !important;
+}
+p.figureCredit #figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+    font-size: 9px!important;
+  
+}
+figure,.element-container{
+    display:contents !important;
+}
+.figureTitle{
+    font-size: 12px!important;
+}
+#figure-label>.Editor.mce-content-body.mce-edit-focus > p,#figure-label> .Editor.mce-content-body > p{
+    font-size: 12px!important;
+    font-weight: 800!important;
+}
+
+[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #555; 
+}
+
+[placeholder]:empty:focus::before {
+    content: "";
+}
+

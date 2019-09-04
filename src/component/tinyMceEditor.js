@@ -57,5 +57,5 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-export default TinyMceEditor;
+export default TinyMceEditor
 
