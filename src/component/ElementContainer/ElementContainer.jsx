@@ -33,6 +33,7 @@ class ElementContainer extends Component {
                 editor = <ElementFigure  type={element.type} model={element}/>;
                 labelText = 'FG';
                 break;
+                
         }
 
         return (
