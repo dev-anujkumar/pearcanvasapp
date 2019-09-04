@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-
+import store from '../../appstore/store';
 import ElementAuthoring from './../ElementAuthoring';
 // import ElementAudioVideo from './../ElementAudioVideo';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import './../../styles/ElementContainer/ElementContainer.css';
-import {toggleCommentsPanel} from '../CommentsPanel/CommentsPanel_Action'
+import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -15,7 +15,10 @@ class ElementContainer extends Component {
             popup: false
         };
     }
-
+    componentDidMount(){
+        store.dispatch(toggleCommentsPanel(true));
+       // store.dispatch(fetchComments());
+    }
     renderElement = (element = {}) => {
         console.log("elementcontainer element >> ", element)
         let editor = '';
@@ -41,7 +44,7 @@ class ElementContainer extends Component {
             <div className="editor">
                 <div>
                     <Button type="element-label" labelText={labelText} />
-                    <Button type="delete-element" onClick={() => this.handleCommentPanel()} />
+                    <Button type="delete-element" elementId = {element.id} onClick={() => this.handleCommentPanel()} />
                 </div>
                 <div className="element-container" data-id={element.id}>
                     {editor}
@@ -50,7 +53,7 @@ class ElementContainer extends Component {
                     <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
                     {/* {element.comments && <Button type="comment-flag" /> }
                     {element.tcm && <Button type="tcm" />} */}
-                    <Button type="comment-flag" onClick={() => this.handleCommentPanel()} />
+                    <Button type="comment-flag" elementId = {element.id} onClick={() => this.handleCommentPanel()} />
                     <Button type="tcm" />
                 </div>
                 {this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}

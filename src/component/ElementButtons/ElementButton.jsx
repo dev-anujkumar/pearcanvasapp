@@ -115,7 +115,8 @@ class Button extends Component {
     }
     
     render() {
-        const { type, onClick } = this.props
+        const { type, onClick, elementId } = this.props
+        console.log("elementid",elementId)
         return(
             <>
                 {this.renderButton(type, onClick)}             

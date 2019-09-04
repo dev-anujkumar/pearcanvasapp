@@ -213,7 +213,7 @@ class Comments extends React.Component {
     }
     render() {
         console.log(this.props);
-        const { comment, elementId } = this.props
+        const { comment, elementId,updateReplyComment,toggleReplyForm } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -279,8 +279,12 @@ class Comments extends React.Component {
                 <div className="replies-wrapper">
                     <ReplyComment
                         close={this.toggleReplyForm}
-                        comment={this.props.comment}
-                        showReplyForm={this.state.showReplyForm} />
+                        comment={comment}
+                        showReplyForm={this.state.showReplyForm} 
+                        updateReplyComment = {updateReplyComment}
+                        elementId = {elementId}
+                        toggleReplyForm = {toggleReplyForm}
+                        />
                 </div>
             </div>
         );

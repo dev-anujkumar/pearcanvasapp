@@ -7,6 +7,8 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
+import {replyComment} from './CommentsPanel_Action';
+
 class CommentsPanel extends React.Component {
     constructor(props) {
         super(props)
@@ -33,10 +35,14 @@ class CommentsPanel extends React.Component {
         this.setSort = this.setSort.bind(this);
         this.setStatus = this.setStatus.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
+        this.updateReplyComment = this.updateReplyComment.bind(this);
     }
+    
     componentDidUpdate(){
-        console.log("comments panel",this.props.toggleCommentsPanel)
+        console.log("comments panel=====>",this.props.comments)
     }
+
+    
      /**
     * 
     * @discription - This function is for search comments
@@ -120,6 +126,16 @@ class CommentsPanel extends React.Component {
     changeStatus() {
 
     }
+    updateReplyComment(commentUrn,reply,elementId){
+     return new Promise((resolve, reject) => {
+                this.props.replyComment(commentUrn, reply, elementId)
+                resolve()
+          });
+        
+    }
+    resolveComment(){
+        
+    }
 
     /**
     * 
@@ -134,13 +150,16 @@ class CommentsPanel extends React.Component {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
                     //slateTitle = {this.currentSlate}
+                    
                     key={index}
                     elementId={comment.commentOnEntity}
                     //  updateElementComment = {this.updateElementComment}
-                    // updateElementCommentReply = {this.updateElementCommentReply}
+                    updateReplyComment = {this.updateReplyComment}
+                    resolveComment = {this.resolveComment}
                     //deleteComment = {this.deleteComment}
                     changeStatus={this.changeStatus}
                 //updateAssignee = {this.updateAssignee}
+                  toggleReplyForm = {this.props.toggleReplyForm}
                 />)
             })
             return comments;
@@ -258,7 +277,7 @@ const SearchComponent = (props) => {
                     name="text-input"
                     className="txt-input"
                     onChange={props.handleSearchInput}
-                //value={props.filters.text}
+                    value={props.filters.text}
                 />
             </div>
         </div>
@@ -271,9 +290,20 @@ CommentsPanel.propTypes = {
     comments: PropTypes.array.isRequired
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+      replyComment: (commentUrn, reply, elementId) => {
+        dispatch(replyComment(commentUrn, reply, elementId))
+      }
+    }
+  }
+  
  const mapStateToProps = state => ({
     comments: state.commentsPanelReducer.comments,
-    toggleCommentsPanel:state.commentsPanelReducer.toggleCommentsPanel
+    toggleCommentsPanel:state.commentsPanelReducer.toggleCommentsPanel,
+    //elementId :state.commentsPanelReducer.elementId  // will get on button click
+    toggleReplyForm:state.commentsPanelReducer.toggleReplyForm
   }); 
-export default connect(mapStateToProps,null)(CommentsPanel);
+  
+export default connect(mapStateToProps,mapDispatchToProps)(CommentsPanel);
 //export default CommentsPanel;

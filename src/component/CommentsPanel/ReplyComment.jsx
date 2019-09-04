@@ -12,6 +12,9 @@ import PropTypes from 'prop-types';
         this.updateCommentText = this.updateCommentText.bind(this);
         this.replyComment = this.replyComment.bind(this);
     }
+componentDidUpdate(){
+        
+}
     /**
 * 
 *@discription - This function is to update the text of comment
@@ -27,8 +30,20 @@ import PropTypes from 'prop-types';
 *@discription - This function is to reply comment
 
 */
-    replyComment() {
-        console.log("reply")
+    replyComment(e) {
+        const {comment, elementId,toggleReplyForm} = this.props;
+        const { text } = this.state;
+        const date = new Date()
+        const commentUrn = comment.commentUrn;
+        const reply = {
+            commentType: "commentReply",
+            commentDateTime: date.toISOString(),
+            commentCreator:  "c5test01",//auth.user.userId,
+            commentString: text,
+            commentOnEntity: elementId
+        }
+        this.props.updateReplyComment(commentUrn,reply,elementId);
+        this.props.close();
     }
     /**
     * 
@@ -68,6 +83,7 @@ import PropTypes from 'prop-types';
 */
 
     replyCommentForm = (props) => {
+        
         if (props.showReplyForm) {
             return (
                 <div className="reply">

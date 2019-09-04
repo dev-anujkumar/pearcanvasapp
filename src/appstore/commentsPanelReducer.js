@@ -8,7 +8,8 @@
 // IMPORT - Action constants //
 import {
     FETCH_COMMENTS,
-    TOGGLE_COMMENTS_PANEL
+    TOGGLE_COMMENTS_PANEL,
+    REPLY_COMMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -63,7 +64,8 @@ export default function (state = initialState, action) {
         case FETCH_COMMENTS:
             return {
                 ...state,
-                comments: action.payload.commentList
+               // comments: action.payload.commentList
+               comments: action.payload
             };
         case TOGGLE_COMMENTS_PANEL :
             console.log(action.payload);
@@ -71,6 +73,20 @@ export default function (state = initialState, action) {
                 ...state,
                 toggleCommentsPanel:action.payload
             }
+        case REPLY_COMMENT : 
+        const commentsList = state.comments;
+        console.log("comment",commentsList)
+        commentsList.forEach((comment,index) =>{
+            if(comment.commentUrn === action.payload.commentUrn){
+                comment.replyComments.push(action.payload.reply)
+            }
+        })
+         return {
+            ...state,
+             comments:commentsList,
+             toggleReplyForm:action.payload.toggleReplyForm
+          }
+         
         default:
             return state;
     }
