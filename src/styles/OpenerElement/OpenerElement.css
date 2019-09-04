@@ -1,0 +1,11 @@
+.element-dropdown-title{
+    width: 100%;
+    height: 50px;
+    border: solid 2px #e0e0e0;
+    font-size: 15px;
+    padding:0 5px;
+    border-radius:4px;
+}
+.input-box-container{
+    display: flex;
+}
