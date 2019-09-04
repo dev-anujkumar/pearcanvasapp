@@ -89,6 +89,22 @@ export const slateData = {
                     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 
+                },
+
+                {
+                    "id": "urn:pearson:work:591e0376-8bde-42cf-bea1-70dc846fca1c",
+                    "type": "figure",
+                    "figuretype": "video",
+                    "subtype": "figureVideo",
+                    "figureAlignment": "full",
+                    "assessmentData":{
+                        asset:"Asset data undefined"
+                    },
+                    "posterPath":"https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+                    "comments": true,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+                    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 }
             ]
         }
