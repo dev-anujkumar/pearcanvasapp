@@ -38,19 +38,11 @@ export class ElementAudioVideo extends Component {
                 /**JSX for Audio-type element*/
                 audioVideoJSX = <div className="divAudio">
                     <figure className="figureAudio"  >
-                        {/* <header className="figureHeader">
-                            <h4 className="heading4AudioNumberLabel" id="audio-header" >
-                                <TinyMceEditor />
-                            </h4>
-                            <h4 className="heading4AudioTitle" >
-                                <TinyMceEditor />
-                            </h4>
-                        </header> */}
                         <header className="figureHeader">
 
                             <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 
-                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 
                         </header>
                         <div><strong>Asset: </strong>{model.assessmentData.asset !== "" ? model.assessmentData.asset : "Asset not defined"}</div>
@@ -60,12 +52,12 @@ export class ElementAudioVideo extends Component {
                             </audio>
                         </div>
                         <figcaption className="figcaptionAudio" >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className="" model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
 
                     </figure>
                     <div >
-                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit" model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
                 </div>
                 break;
@@ -73,22 +65,13 @@ export class ElementAudioVideo extends Component {
                 /**JSX for Video-type element*/
                 audioVideoJSX = <div className="divVideo">
                     <figure className="figureVideo" >
-                        {/* <header className="figureHeader">
-                            <h4 className="heading4VideoNumberLabel" id="video-header" >
-                                <TinyMceEditor />
-                            </h4>
-                            <h4 className="heading4VideoTitle" >
-                                <TinyMceEditor />
-                            </h4>
-                        </header> */}
+
                         <header className="figureHeader">
                             <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{model.assessmentData.asset !== "" ? model.assessmentData.asset : "Asset not defined"}</div>
+                        <div><strong>Asset: </strong>{model.assessmentData.asset !== "" ? model.assessmentData.asset : "Asset not defined"}</div>
                         <div className="pearson-component video" data-type="video" >
-                            {/* "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"
-                        "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png", */}
                             <video className="video" width="640" height="360" controls="none" preload="none"
                                 poster={model.figuredata.path !== "" ? model.figuredata.path : "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"}
                             >
@@ -97,11 +80,11 @@ export class ElementAudioVideo extends Component {
                             </video>
                         </div>
                         <figcaption className="figcaptionVideo" >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className="" model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
                     <div >
-                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit" model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                        <TinyMceEditor placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
                 </div>
                 break;
