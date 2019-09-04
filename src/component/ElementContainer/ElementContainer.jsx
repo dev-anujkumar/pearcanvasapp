@@ -26,15 +26,15 @@ class ElementContainer extends Component {
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring type={elementType} model={element.html} />;
+                editor = <ElementAuthoring index={this.props.index} elementId={element.id} type={elementType} model={element.html} />;
                 break;
 
             case "element-blockfeature":
-                editor = <ElementAuthoring type={element.type} model={element.html} />;
+                editor = <ElementAuthoring index={this.props.index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
             case "figure":
-                editor = <ElementFigure  type={element.type} model={element}/>;
+                editor = <ElementFigure index={this.props.index} elementId={element.id} type={element.type} model={element}/>;
                 labelText = 'FG';
                 break;
                 

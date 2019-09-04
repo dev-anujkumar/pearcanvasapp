@@ -25,3 +25,6 @@
 .tox.tox-tinymce.tox-tinymce-inline{
     display:block !important;
 }
+.cypress-editable{
+    height:100%;
+}
