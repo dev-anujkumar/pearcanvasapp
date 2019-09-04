@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-
+import ElementAudioVideo from "./../ElementAudioVideo";
 import ElementAuthoring from './../ElementAuthoring';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
@@ -29,8 +29,8 @@ class ElementContainer extends Component {
                 break;
 
             case "figure":
-                editor = <ElementAuthoring type={element.type} />;
-                labelText = 'FG';
+                editor = <ElementAudioVideo  model={element} />;
+                labelText = 'Aud';
                 break;
         }
 

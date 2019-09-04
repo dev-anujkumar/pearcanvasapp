@@ -17,36 +17,59 @@ describe('Testing Element Audio-Video component', () => {
         };
         let component = mount(<ElementAudioVideo {...props} />);
         test('renders properly with default audio element', () => {
-            component.find('div.pearson-component').simulate('click');
+        
             expect(component).toMatchSnapshot();
         })
 
         test('renders  properly with given audio element', () => {
             props = {
-                element: audioElementWithData
+                model: audioElementWithData
             };
-            component.setProps({ element: audioElementWithData });
-            component.find('div.pearson-component').simulate('click');
+            component.setProps({ model: audioElementWithData });
+           
             expect(component).toMatchSnapshot();
         })
     });
     describe('With Video element', () => {
         let props = {
-            element: videoElementDefault
+            model: videoElementDefault
         };
         let component = mount(<ElementAudioVideo {...props} />);
         test('renders properly with default video element', () => {
-            component.find('div.pearson-component').simulate('click');
+           
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given video element', () => {
             props = {
-                element: videoElementWithData
+                model: videoElementWithData
             };
             component.setProps({ element: videoElementWithData });
-            component.find('div.pearson-component').simulate('click');
+            
             expect(component).toMatchSnapshot();
         })
 
     });
+    describe('Testing Element  component with props', () => {
+        let type = "figure";
+        const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
+        let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+        it('render Element component ', () => {  
+            console.log(elementAudioVideo.debug());
+            expect(elementAudioVideo).toMatchSnapshot();
+        })
+    
+        it('onClick', () => {
+            elementAudioVideoInstance.onClick();
+        })
+        it('onBlur', () => {
+            elementAudioVideoInstance.onBlur();
+        })
+        it('onKeyup', () => {
+            elementAudioVideoInstance.onKeyup();
+        })
+    
+        it('onFocus', () => {
+            elementAudioVideoInstance.onFocus();
+        })
+    })
 });
