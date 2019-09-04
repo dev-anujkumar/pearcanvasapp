@@ -101,7 +101,7 @@ export const sectionBreakElement = (function () {
     )
 })();
 
-export const dropdownArror = (function() {
+export const dropdownArrow = (function() {
     return (
         <svg className="dropdown-arrow" viewBox="0 0 9 4.5">
             <path d="M0,0,4.5,4.5,9,0Z"></path>

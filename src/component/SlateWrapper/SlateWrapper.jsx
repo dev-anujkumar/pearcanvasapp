@@ -70,16 +70,18 @@ class SlateWrapper extends Component {
                     }
                    
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
-                    console.log('click',cell)                    
+                    let focusedCell = editor.dom.getParent(editor.selection.getStart(), ".element-container");                  
                     if (!cell) {
                         editor.dom.$('#editor-toolbar').find('.tox-toolbar').addClass('toolbar-disabled')
-                      e.stopImmediatePropagation();
-                      e.stopPropagation();
-                      e.preventDefault();                    
-                      return false;
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        e.preventDefault();                    
+                        return false;
                     }
                     else{
+                        editor.dom.$('.element-container').removeClass('active');
                         editor.dom.$('#editor-toolbar').find('.tox-toolbar').removeClass('toolbar-disabled')
+                        editor.dom.$(focusedCell).addClass('active');
                     }
                   })
             },

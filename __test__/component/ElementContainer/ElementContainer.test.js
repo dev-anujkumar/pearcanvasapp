@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ElementContainer from './../../../src/component/ElementContainer/ElementContainer';
+import ElementContainer from './../../../src/component/ElementContainer';
 
 describe('Test for element container component', () => {
     let props = {
@@ -51,5 +51,5 @@ describe('Test for element container component', () => {
         const component = mount(<ElementContainer />);
         component.find('span#add-comment').simulate('click');
         component.find('span#close-container').simulate('click');
-   })
+    })
 });
