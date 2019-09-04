@@ -2,7 +2,8 @@
 
 exports[`Testing SlateHeader component with props render SlateHeader component  1`] = `
 <SlateHeader
-  slateType=""
+  slateTitle={Object {}}
+  slateType="section"
 >
   <div
     className="slate-Title"
@@ -13,11 +14,22 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
     >
       <label
         className="header-label"
+        style={
+          Object {
+            "fontSize": "12px",
+            "minWidth": "max-content",
+          }
+        }
       >
         SLATE:
       </label>
       <div
         className="input-text"
+        style={
+          Object {
+            "minWidth": "696px",
+          }
+        }
       >
         <label
           className="u-hidden"
@@ -75,6 +87,7 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
 
 exports[`Testing SlateHeader component with props render assessment Slate  1`] = `
 <SlateHeader
+  slateTitle={Object {}}
   slateType="assessment"
 >
   <div
@@ -86,11 +99,22 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
     >
       <label
         className="header-label"
+        style={
+          Object {
+            "fontSize": "12px",
+            "minWidth": "max-content",
+          }
+        }
       >
         ASSESSMENT SLATE:
       </label>
       <div
         className="input-text"
+        style={
+          Object {
+            "minWidth": "675px",
+          }
+        }
       >
         <label
           className="u-hidden"
@@ -148,6 +172,7 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
 
 exports[`Testing SlateHeader component with props render container-introduction Slate  1`] = `
 <SlateHeader
+  slateTitle={Object {}}
   slateType="container-introduction"
 >
   <div
@@ -159,11 +184,22 @@ exports[`Testing SlateHeader component with props render container-introduction 
     >
       <label
         className="header-label"
+        style={
+          Object {
+            "fontSize": "12px",
+            "minWidth": "max-content",
+          }
+        }
       >
         INTRODUCTORY SLATE:
       </label>
       <div
         className="input-text"
+        style={
+          Object {
+            "minWidth": "559px",
+          }
+        }
       >
         <label
           className="u-hidden"
@@ -221,6 +257,7 @@ exports[`Testing SlateHeader component with props render container-introduction 
 
 exports[`Testing SlateHeader component with props render section Slate  1`] = `
 <SlateHeader
+  slateTitle={Object {}}
   slateType="section"
 >
   <div
@@ -232,11 +269,22 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
     >
       <label
         className="header-label"
+        style={
+          Object {
+            "fontSize": "12px",
+            "minWidth": "max-content",
+          }
+        }
       >
         SLATE:
       </label>
       <div
         className="input-text"
+        style={
+          Object {
+            "minWidth": "696px",
+          }
+        }
       >
         <label
           className="u-hidden"

@@ -14,9 +14,9 @@ export class ElementAuthoring extends Component {
   }
 
   render() {
-    const { type } = this.props
-    return (
-        <TinyMceEditor model={this.props.model} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+    const { type ,className,placeholder,model} = this.props
+     return (
+        <TinyMceEditor placeholder={placeholder} className={className} model={model} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
     )
   }
   onClick() {
