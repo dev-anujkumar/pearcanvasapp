@@ -11,6 +11,9 @@
     font-size: 9px!important;
     width:100% !important;
 }
+.figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
+    cursor: auto !important;
+}
 .figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
     min-height: 40px!important;
     cursor: auto !important;
@@ -32,10 +35,10 @@
 .blockCodeFigure .blockCodeDiv{
     width:100%!important;
 }
-.figureElement .figureData {
+.figureElement .pearson-component.image.figureData {
     cursor:copy!important ;
 }
-figcaption,.figureCaption #figure-caption {
+figcaption,.figureCaption{
     font-size: 10.8px!important;
     text-align: left !important;
 }

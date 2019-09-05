@@ -82,19 +82,19 @@ export class TinyMceEditor extends React.Component {
         switch (this.props.tagName) {
             case 'p':
                 return (                    
-                        <p id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                        <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                    );
             case 'h4':
                 return (
-                    <h4 id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{htmlToReactParser.parse(this.props.html)}</h4>
+                    <h4 id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
                 )
                 case 'code':
                         return (
-                            <code id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                            <code id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
                         )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
+                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
                 )
         }
     }
