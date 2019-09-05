@@ -11,33 +11,10 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
-import EventUtils from '../../EventUtils';
+
 
 class Button extends Component {
-    constructor(props) {
-        super(props);        
-        this.actionRef = null;
-
-        this.setActionRef = element => {
-            this.actionRef = element;
-        };
-    }
-    componentDidMount() {
-        console.log('aaaaaaaaaaaaaa');
-        if(this.actionRef){
-            EventUtils.store(this.actionRef,'click',this.onDeleteClick)
-        }
-       // this.myRef.addEventListener('click',this.abc)
-      }
-      componentDidUpdate() {
-        console.log('bbbbbbbbbbbbbbbbbbbb');
-        if(this.actionRef){
-            EventUtils.store(this.actionRef,'click',this.onDeleteClick)
-        }
-      }
-      onDeleteClick=(e)=>{
-            console.log('JKJKJK',e)
-      }
+   
   /**
   * Responsible for rendering Button component according to the props received
   * @param type type of button

@@ -11,7 +11,9 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
-
+//import { ReactDOMServer }  from 'react-dom/server';
+const HtmlToReactParser = require('html-to-react').Parser;
+const htmlToReactParser = new HtmlToReactParser();
 export class TinyMceEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -70,28 +72,29 @@ export class TinyMceEditor extends React.Component {
     this.editorConfig.selector='#'+e.target.id
     tinymce.init(this.editorConfig)
    }
+  
     render() {
         console.log("this.props >> ", this.props)
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
-        classes = this.props.className + " cypress-editable";
+        classes = this.props.className + " cypress-editable";       
          /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
                 return (                    
-                        <p id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{this.props.model}</p>
+                        <p id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                    );
             case 'h4':
                 return (
-                    <h4 id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{this.props.html}</h4>
+                    <h4 id={id} className={classes} onFocus={this.handleFocus} contentEditable="true">{htmlToReactParser.parse(this.props.html)}</h4>
                 )
                 case 'code':
                         return (
-                            <code id={id} onFocus={this.handleFocus} className={classes} contentEditable="true"></code>
+                            <code id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
                         )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{this.props.model.text}</div>
+                    <div id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
                 )
         }
     }
