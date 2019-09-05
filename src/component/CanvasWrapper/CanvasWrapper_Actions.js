@@ -5,7 +5,7 @@ import {
 } from '../../constants/Action_Constants';
 
 export const fetchSlateData = () => dispatch => {
-	axios.get(`${config.REACT_APP_API_URL}v2/slate/getContent/${config.slateURN}`, {
+	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.slateURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
