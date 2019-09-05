@@ -49,6 +49,16 @@ export class OpenerElement extends Component {
         }
     }
     
+    handleOpenerNumberChange = e => {
+        this.setState({
+            number: e.target.value
+        })
+    }
+    handleOpenerTitleChange = e => {
+        this.setState({
+            title: e.target.value            
+        })
+    }
     
     render() {
         /* const openerLabelOptions = labelOptions.map((value, index) => {
@@ -57,22 +67,27 @@ export class OpenerElement extends Component {
         return (
             <div className = "opener-element-container">
                 <div className = "input-box-container">
-                    <div>
-                        <span>Label</span>
+                    <div className="opener-label-box">
+                        <div className="opener-label-text">Label</div>
                         <div className="element-dropdown-title" onClick={this.toggleLabelDropdown}>{this.state.label}</div>
                         {this.renderLabelDropdown()}
                     </div>
-                    <div>
-                        <span>Number</span>
-                        <input type="text"/>
+                    <div className="opener-label-box">
+                        <div className="opener-number-text">Number</div>
+                        <input className="element-dropdown-title" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} />
                     </div>
-                    <div>
-                        <span>Title</span>
-                        <input type="text"/>
+                    <div className="opener-label-box">
+                        <div className="opener-title-text">Title</div>
+                        <input className="element-dropdown-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
                     </div>
                 </div>
-                <figure>
-                    
+                <figure className="pearson-component image figureData">
+                    <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+                        // data-src={model.figuredata.path !== "" ? model.figuredata.path : "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"}
+                        title=""
+                        alt=""
+                        draggable="false" 
+                    />
                 </figure>
             </div>
         )
