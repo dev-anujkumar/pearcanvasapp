@@ -217,7 +217,7 @@ class CommentsPanel extends React.Component {
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
-                            <label onClick = {()=>toggleCommentsPanel(false)} class="modal__close_Panel"></label>
+                            <label onClick = {()=>toggleCommentsPanel(false)} className="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
                             <div className="add-structure">
                                 <div className="filter">
