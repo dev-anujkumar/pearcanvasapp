@@ -1,3 +1,6 @@
+.opener-label-box{
+    width: 34%;
+}
 .element-dropdown-title{
     width: 100%;
     height: 50px;
@@ -14,6 +17,48 @@
     font-size: 14px;
     color: #6a7070;
 }
-.pearson-component{
+.pearson-component.image.figureData{
     cursor: copy;
+}
+.pearson-component.image.figureData>img{
+    width: 100%;
+}
+.element-dropdown-title.label-content{
+    padding: 10px 5px;
+}
+ul.element-dropdown-content{
+    position: absolute;
+    z-index: 1;
+    top: 48px;
+    left: 0;
+    margin: 0;
+    padding: 8px 0;
+    border-radius: 2px;
+    width: 100%;
+    background: white;
+    text-align: left;
+    font-size: 15px;
+    box-shadow: 1px 1px 2px 1px rgba(148, 148, 148, 0.35);
+    transition: all .15s ease-in-out; 
+}
+.element-dropdown-content li {
+    cursor: pointer;
+    display: block;
+    list-style: none;
+    padding: 6px;
+    margin: 0;
+    margin-bottom: 2px;
+    width: 100%;
+}
+.element-dropdown-content li:hover {
+    background-color: #1565c0;
+    transition: all .2s ease-in-out;
+    color: white;
+}
+
+.element-dropdown-title.label-content>span{   
+    width: 8px;
+    height: 8px;
+    float: right;
+    margin: -2px 2px;
 }

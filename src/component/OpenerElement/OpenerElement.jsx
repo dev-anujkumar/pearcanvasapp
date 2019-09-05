@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { labelOptions } from './LabelOptions'
+import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
 
-export class OpenerElement extends Component {
+class OpenerElement extends Component {
 
     constructor(props){
         super(props)
 
         this.state = {
-            label: "zxzxzxz",
-            number: "",
-            title: "",
+            label: /* props.model.label ? props.model.label : */ "Chapter",
+            number: /* props.model.number ? props.model.number : */ "",
+            title: /* props.model.title ? props.model.title : */ "",
             showLabelDropdown: false
         }
     }
@@ -59,22 +60,31 @@ export class OpenerElement extends Component {
             title: e.target.value            
         })
     }
+    numberValidatorHandler = (e) => {
+        let charCode = (e.which) ? e.which : e.keyCode;
+        if((charCode>=48 && charCode<= 57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122)){
+            return true
+        } else{
+            e.preventDefault()
+            return false
+        }
+    }
+    
     
     render() {
-        /* const openerLabelOptions = labelOptions.map((value, index) => {
-            return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
-        }) */
         return (
             <div className = "opener-element-container">
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
-                        <div className="element-dropdown-title" onClick={this.toggleLabelDropdown}>{this.state.label}</div>
-                        {this.renderLabelDropdown()}
+                        <div className="element-dropdown-title label-content" onClick={this.toggleLabelDropdown}>{this.state.label}
+                            {this.renderLabelDropdown()}
+                            <span>{dropdownArrow}</span>
+                        </div>
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} />
+                        <input className="element-dropdown-title" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} />
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-title-text">Title</div>
