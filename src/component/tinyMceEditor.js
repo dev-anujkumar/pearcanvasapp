@@ -62,16 +62,16 @@ export class TinyMceEditor extends React.Component {
    if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
    return false;
    if(tinymce.activeEditor){
-     let xyz = tinymce.activeEditor.id;
+     let activeEditorId = tinymce.activeEditor.id;
    
      tinymce.remove('#'+tinymce.activeEditor.id)
-     document.getElementById(xyz).contentEditable = true;
+     document.getElementById(activeEditorId).contentEditable = true;
    }
     this.editorConfig.selector='#'+e.target.id
     tinymce.init(this.editorConfig)
    }
     render() {
-        console.log("this.props >> ", this.props.placeholder)
+        console.log("this.props >> ", this.props)
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
         classes = this.props.className + " cypress-editable";
@@ -91,7 +91,7 @@ export class TinyMceEditor extends React.Component {
                         )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} contentEditable="true"></div>
+                    <div id={id} onFocus={this.handleFocus} className={classes} contentEditable="true">{this.props.model.text}</div>
                 )
         }
     }

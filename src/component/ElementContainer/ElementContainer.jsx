@@ -17,24 +17,23 @@ class ElementContainer extends Component {
     }
 
     renderElement = (element = {}) => {
-        console.log("elementcontainer element >> ", element)
         let editor = '';
-        let { elementType, labelText } = this.props;
+        let { elementType, labelText, index } = this.props;
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring index={this.props.index} elementId={element.id} type={elementType} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
                 break;
 
             case "element-blockfeature":
-                editor = <ElementAuthoring index={this.props.index} elementId={element.id} type={element.type} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
             case "figure":
-                editor = <ElementFigure index={this.props.index} elementId={element.id} type={element.type} model={element}/>;
+                editor = <ElementFigure index={index} elementId={element.id} type={element.type} model={element}/>;
                 labelText = 'FG';
                 break;
                 
