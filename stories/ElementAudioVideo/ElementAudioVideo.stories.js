@@ -561,7 +561,7 @@ const videoElementTypeAlfrescoWithData = {
     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 }
 
-storiesOf('Element|ElementAudioVideo', module)
+storiesOf('Components|ElementAudioVideo', module)
     .addDecorator(withInfo)
     .add('Audio Type-SL default', () => <ElementAudioVideo model={audioElementTypeSLDefault} />)
     .add('Audio Type-Alfresco default', () => <ElementAudioVideo model={audioElementTypeAlfrescoDefault} />)

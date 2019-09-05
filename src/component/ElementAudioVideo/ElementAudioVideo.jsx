@@ -47,7 +47,7 @@ export class ElementAudioVideo extends Component {
                             <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 
                         </header>
-                        <div><strong>Asset: </strong>{assetPath !== "" ? assetPath : "Asset not defined"}</div>
+                        <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : "Asset data undefined"}</div>
                         <div className="pearson-component audio" data-type="audio">
                             <audio controls="none" preload="none" className="audio">
                                 <source src="" type="audio/mpeg" />
@@ -74,7 +74,7 @@ export class ElementAudioVideo extends Component {
                             <TinyMceEditor placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                             <TinyMceEditor placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </header>
-                        <div><strong>Asset: </strong>{assetPath !== "" ? assetPath : "Asset not defined"}</div>
+                        <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : "Asset data undefined"}</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none"
                               poster={posterImage !== "" ? posterImage : "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png"}

@@ -343,7 +343,7 @@ const mockData6={
 
 }
 
-storiesOf('ElementFigure', module)
+storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
     .add('default Figure-50', () => <ElementFigure model={mockData1} />)
