@@ -72,7 +72,8 @@ const initialState = {
         "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
     }
     ],
-    toggleReplyForm:true
+    toggleReplyForm:true,
+    togglePanel:false
 }
 
 /**
