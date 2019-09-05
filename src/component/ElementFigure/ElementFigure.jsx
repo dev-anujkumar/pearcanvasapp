@@ -4,10 +4,11 @@ import PropTypes from 'prop-types'
 
 // IMPORT - Components //
 import { TinyMceEditor } from "../tinyMceEditor"
+import ElementAuthoring from "../ElementAuthoring"
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
-
+//import './../../styles/ElementFigure/Book.css';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
@@ -17,19 +18,33 @@ export class ElementFigure extends Component {
         super(props);
     }
 
+    onFocus = () => {
+        console.log("onFocus")
+    }
+    onKeyup = () => {
+        console.log("onKeyup")
+    }
+    onBlur = () => {
+        console.log("onBlur")
+    }
+    onClick = () => {
+        console.log("onClick")
+    }
     /*** @description - This function is for handling the different types of figure-element.
- * @param element object that defined the type of element*/
+     * @param model object that defined the type of element*/
 
- 
-    renderFigureType = (element = {}) => {
+    renderFigureType = (model = {}) => {
+        const { type, index } = this.props;
+
         var figureJsx;
-        switch (element.figuretype) {
+        switch (model.figuretype) {
+
             case 'image':
             case 'table':
             case 'mathImage':
                 var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
                 switch (true) {
-                    case (element.figuretype === "image" && element.figureAlignment === 'half-text'):
+                    case (model.figuretype === "image" && model.alignment === 'half-text'):
                         divClass = 'divImage50Text',
                             figureClass = 'figureImage50Text',
                             figLabelClass = 'heading4Image50TextNumberLabel',
@@ -39,7 +54,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50Text',
                             figCreditClass = 'paragraphImage50TextCredit';
                         break;
-                    case (element.figuretype === "table" && element.figureAlignment === 'half-text'):
+                    case (model.figuretype === "table" && model.alignment === 'half-text'):
                         divClass = 'divImage50TextTableImage',
                             figureClass = 'figureImage50TextTableImage',
                             figLabelClass = 'heading4Image50TextTableImageNumberLabel',
@@ -49,7 +64,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50TextTableImage',
                             figCreditClass = 'paragraphImage50TextTableImageCredit';
                         break;
-                    case (element.figuretype === "mathImage" && element.figureAlignment === 'half-text'):
+                    case (model.figuretype === "mathImage" && model.alignment === 'half-text'):
                         divClass = 'divImage50TextMathImage',
                             figureClass = 'figureImage50TextMathImage',
                             figLabelClass = 'heading4Image50TextMathImageNumberLabel',
@@ -59,7 +74,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50TextMathImage',
                             figCreditClass = 'paragraphImage50TextMathImageCredit';
                         break;
-                    case (element.figuretype === "image" && element.figureAlignment === 'text-width'):
+                    case (model.figuretype === "image" && model.alignment === 'text-width'):
                         divClass = 'divImageTextWidth',
                             figureClass = 'figureImageTextWidth',
                             figLabelClass = 'heading4ImageTextWidthNumberLabel',
@@ -69,7 +84,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageTextWidth',
                             figCreditClass = 'paragraphImageTextWidthCredit';
                         break;
-                    case (element.figuretype === "table" && element.figureAlignment === 'text-width'):
+                    case (model.figuretype === "table" && model.alignment === 'text-width'):
                         divClass = 'divImageTextWidthTableImage',
                             figureClass = 'figureImageTextWidthTableImage',
                             figLabelClass = 'heading4ImageTextWidthTableImageNumberLabel',
@@ -79,7 +94,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageTextWidthTableImage',
                             figCreditClass = 'paragraphImageTextWidthTableImageCredit';
                         break;
-                    case (element.figuretype === "mathImage" && element.figureAlignment === 'text-width'):
+                    case (model.figuretype === "mathImage" && model.alignment === 'text-width'):
                         divClass = 'divImageTextWidthMathImage',
                             figureClass = 'figureImageTextWidthMathImage',
                             figLabelClass = 'heading4ImageTextWidthMathImageNumberLabel',
@@ -90,7 +105,7 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageTextWidthMathImageCredit';
                         break;
 
-                    case (element.figuretype === 'image' && element.figureAlignment === 'wider'):
+                    case (model.figuretype === 'image' && model.alignment === 'wider'):
                         divClass = 'divImageWiderThanText',
                             figureClass = 'figureImageWiderThanText',
                             figLabelClass = 'heading4ImageWiderThanTextNumberLabel',
@@ -100,7 +115,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanText',
                             figCreditClass = 'paragraphImageWiderThanTextCredit';
                         break;
-                    case (element.figuretype === "table" && element.figureAlignment === 'wider'):
+                    case (model.figuretype === "table" && model.alignment === 'wider'):
                         divClass = 'divImageWiderThanTextTableImage',
                             figureClass = 'figureImageWiderThanTextTableImage',
                             figLabelClass = 'heading4ImageWiderThanTextTableImageNumberLabel',
@@ -110,7 +125,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanTextTableImage',
                             figCreditClass = 'paragraphImageWiderThanTextTableImageCredit';
                         break;
-                    case (element.figuretype === "mathImage" && element.figureAlignment === 'wider'):
+                    case (model.figuretype === "mathImage" && model.alignment === 'wider'):
                         divClass = 'divImageWiderThanTextMathImage',
                             figureClass = 'figureImageWiderThanTextMathImage',
                             figLabelClass = 'heading4ImageWiderThanTextMathImageNumberLabel',
@@ -120,7 +135,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanTextMathImage',
                             figCreditClass = 'paragraphImageWiderThanTextMathImageCredit';
                         break;
-                    case (element.figuretype === "image" && element.figureAlignment === 'full'):
+                    case (model.figuretype === "image" && model.alignment === 'full'):
                         divClass = 'divImageFullscreenImage',
                             figureClass = 'figureImageFullscreen',
                             figLabelClass = 'heading4ImageFullscreenNumberLabel',
@@ -130,7 +145,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageFullscreen',
                             figCreditClass = 'paragraphImageFullscreen';
                         break;
-                    case (element.figuretype === "table" && element.figureAlignment === 'full'):
+                    case (model.figuretype === "table" && model.alignment === 'full'):
                         divClass = 'divImageFullscreenTableImage',
                             figureClass = 'figureImageFullscreenTableImage',
                             figLabelClass = 'heading4ImageFullscreenTableImageNumberLabel',
@@ -140,7 +155,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageFullscreenTableImage',
                             figCreditClass = 'paragraphImageFullscreenTableImageCredit';
                         break;
-                    case (element.figuretype === "mathImage" && element.figureAlignment === 'full'):
+                    case (model.figuretype === "mathImage" && model.alignment === 'full'):
                         divClass = 'divImageFullscreenMathImage',
                             figureClass = 'figureImageFullscreenMathImage',
                             figLabelClass = 'heading4ImageFullscreenMathImageNumberLabel',
@@ -151,198 +166,110 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
                 }
+                /**JSX for Figure Image, Table Image, Math Image*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
                         <header>
-                            <h4 className={figLabelClass + " figureLabel"} >
-                                <div id="figure-label" >
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureLabel"
-                                        placeholder="Enter Label..."
-                                    />
-                                </div>
-                            </h4>
-                            <h4 className={figTitleClass + " figureTitle"}>
-                                <div id="figure-title">
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureTitle"
-                                        placeholder="Enter Title..."
-                                    />
-                                </div>
-                            </h4>
+
+                            <TinyMceEditor index={index} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor index={index} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
                         <div className="pearson-component image figureData" data-type={dataType} >
-                              <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
-                                data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+                            <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+                                data-src={model.figuredata.path !== "" ? model.figuredata.path : "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"}
                                 title=""
                                 alt=""
                                 className={imageDimension + ' lazyload'}
                                 draggable="false" />
                         </div>
                         <figcaption className={figCaptionClass + " figureCaption"} >
-                            <div id="figure-caption" >
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    className="figureCaption"
-                                    placeholder="Enter Caption..."
-                                />
-                            </div>
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div id="figure-credit">
-                        <p className={figCreditClass + " figureCredit"}>
-                            <TinyMceEditor
-                                onFocus={this.onFocus}
-                                className="figureCredit"
-                                placeholder="Enter Credit..."
-                            />
-                        </p>
+                    <div >
+                        <TinyMceEditor index={index} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
+
                 </div>
                 break;
             case 'authoredtext':
+                figLabelClass = "heading4TextNumberLabel"; figTitleClass = "heading4TextTitle"; figCaptionClass = "figcaptionText"; figCreditClass = "paragraphTextCredit";
+                /**JSX for MathML/ChemML Editor*/
                 figureJsx = <div className="divTextFigure">
                     <figure className="figureText" resource="">
                         <header>
-                            <h4 className="heading4TextNumberLabel figureLabel" >
-                                <div id="figure-label">
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureLabel"
-                                        placeholder="Enter Label..."
-                                    />
-                                </div>
-                            </h4>
-                            <h4 className="heading4TextTitle figureTitle" >
-                                <div id="figure-title">
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureTitle"
-                                        placeholder="Enter Title..."
-                                    />
-                                </div>
-                            </h4>
+
+                            <TinyMceEditor index={index} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor index={index} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
-                        <p className="paragraphNumeroUno mathml figureData" data-type="mathml">
-                            <p className={`paragraphNumeroUno ${this.props.element.figuretype} figureData `}>
-                                <div data-type="mathml">
-                                    <TinyMceEditor
-                                        placeholder="Type something..."
-                                    />
-                                </div>
-                            </p>
+                        <p className="paragraphNumeroUno mathml figureData mathmlDiv" data-type="mathml">
+
+                            <TinyMceEditor index={index} placeholder="Type Something..." className="" model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </p>
                         <figcaption className="figcaptionText figureCaption" >
-                            <div id="figure-caption" >
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    className="figureCaption"
-                                    placeholder="Enter Caption..."
-                                />
-                            </div>
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div id="figure-credit">
-                        <p className="paragraphTextCredit figureCredit">
-                            <TinyMceEditor
-                                onFocus={this.onFocus}
-                                className="figureCredit"
-                                placeholder="Enter Credit..."
-                            />
-                        </p>
+                    <div>
+                        <TinyMceEditor index={index} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
+
                 </div>
                 break;
             case 'codelisting':
-                figureJsx = <div className="divCodeSnippetFigure" id="blockCodeFigure" >
+                figLabelClass = "heading4CodeSnippetNumberLabel"; figTitleClass = "heading4CodeSnippetTitle"; figCaptionClass = "figcaptionCodeSnippet"; figCreditClass = "paragraphCodeSnippetCredit";
+                /**JSX for Block Code Editor*/
+                figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">
                     <figure className="figureCodeSnippet" >
                         <header>
-                            <h4 className="heading4CodeSnippetNumberLabel" >
-                                <div id="figure-label">
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureLabel"
-                                        placeholder="Enter Label..."
-                                    />
-                                </div>
-                            </h4>
-                            <h4 className="heading4CodeSnippetTitle" >
-                                <div id="figure-title">
-                                    <TinyMceEditor
-                                        onFocus={this.onFocus}
-                                        className="figureTitle"
-                                        placeholder="Enter Title..."
-                                    />
-                                </div>
-                            </h4>
+
+                            <TinyMceEditor index={index} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
+                            <TinyMceEditor index={index} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+
                         </header>
-                        <div className="pearson-component blockcode codeSnippet" data-type="codeSnippet" >
+                        <div className="pearson-component blockcode codeSnippet blockCodeDiv"  data-type="codeSnippet" >
                             <pre className="code-listing" >
-                                <code id="codeListing">
-                                    <TinyMceEditor
-                                        placeholder="Enter Block Code..."
-                                    />
-                                </code>
+                                <TinyMceEditor index={index} placeholder="Enter block code..." tagName={'code'} className="" model={model.html.postertext} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />                     
                             </pre>
                         </div>
                         <figcaption className="figcaptionCodeSnippet" >
-                            <div id="figure-caption" >
-                                <TinyMceEditor
-                                    onFocus={this.onFocus}
-                                    className="figureCaption"
-                                    placeholder="Enter Caption..."
-                                />
-                            </div>
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
-                    <div id="figure-credit">
-                        <p className="paragraphCodeSnippetCredit">
-                            <TinyMceEditor
-                                onFocus={this.onFocus}
-                                className="figureCredit"
-                                placeholder="Enter Credit..."
-                            />
-                        </p>
+                    <div>
+                        <TinyMceEditor index={index} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                     </div>
+
                 </div>
                 break;
         }
         return figureJsx;
     }
     render() {
-        const { element } = this.props;
+        const { model } = this.props;
         return (
-            <div className="wrapper">
-                <div className="header" id="tinymceToolbar">
-                    <h1 >Canvas</h1>
-                </div>
-                <div className="container">
-                    <div className="element-container" >
-                        <div className="left-buttons">
-                        </div>
-                        <div className="figureElement">
-                            {this.renderFigureType(element)}
-                        </div>
-                        <div className="right-buttons">
-                        </div>
-                    </div>
-                </div>
+            <div className="figureElement">
+                {this.renderFigureType(model)}
             </div>
         );
     }
 }
 
-
 ElementFigure.defaultProps = {
     /** Detail of element in JSON object */
-    element: PropTypes.object,
+    model: PropTypes.object,
 
 }
 
 ElementFigure.propTypes = {
-
+    /** Handler to return the type of element based on the figuretype and alignment */
+    renderFigureType: PropTypes.func,
     /** Handler to attach on element click */
     onClick: PropTypes.func,
     /** Handler to attach on element blur */

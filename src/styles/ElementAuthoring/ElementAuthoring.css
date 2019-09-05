@@ -26,3 +26,6 @@
     display:block !important;
     border: none!important;
 }
+.cypress-editable{
+    height:100%;
+}
