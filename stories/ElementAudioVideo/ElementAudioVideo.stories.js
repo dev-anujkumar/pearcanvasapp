@@ -563,12 +563,12 @@ const videoElementTypeAlfrescoWithData = {
 
 storiesOf('Components|ElementAudioVideo', module)
     .addDecorator(withInfo)
-    .add('Audio Type-SL default', () => <ElementAudioVideo model={audioElementTypeSLDefault} />)
-    .add('Audio Type-Alfresco default', () => <ElementAudioVideo model={audioElementTypeAlfrescoDefault} />)
+    .add('Audio Type-SL default', () => <ElementAudioVideo model={audioElementTypeSLDefault} index="1"/>)
+    .add('Audio Type-Alfresco default', () => <ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2"/>)
     .add('Audio Type-SL with data', () => {
         return (
             <>
-                <ElementAudioVideo model={audioElementTypeSLWithData} />
+                <ElementAudioVideo model={audioElementTypeSLWithData} index="3"/>
             </>
         );
 
@@ -577,16 +577,16 @@ storiesOf('Components|ElementAudioVideo', module)
     .add('Audio Type-Alfresco with data', () => {
         return (
             <>
-                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} />
+                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} index="4"/>
             </>
         );
     })
-    .add('Video Type-SL default', () => <ElementAudioVideo model={videoElementTypeSLDefault} />)
-    .add('Video Type-Alfresco default', () => <ElementAudioVideo model={videoElementTypeAlfrescoDefault} />)
+    .add('Video Type-SL default', () => <ElementAudioVideo model={videoElementTypeSLDefault} index="5"/>)
+    .add('Video Type-Alfresco default', () => <ElementAudioVideo model={videoElementTypeAlfrescoDefault} index="6"/>)
     .add('Video Type-SL with data', () => {
         return (
             <>
-                <ElementAudioVideo model={videoElementTypeSLWithData} />
+                <ElementAudioVideo model={videoElementTypeSLWithData} index="7" />
             </>
         );
 
@@ -596,7 +596,7 @@ storiesOf('Components|ElementAudioVideo', module)
     .add('Video Type-Alfresco with data', () => {
         return (
             <>
-                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} />
+                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} index="8"/>
             </>
         );
     })

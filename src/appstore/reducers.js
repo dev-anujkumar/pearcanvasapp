@@ -9,12 +9,18 @@
 import {
     FETCH_SLATE_DATA
 } from '../constants/Action_Constants';
+import config from './../config/config';
+import mockdata from './mockdata'; 
 
 /**
  * This is the initial state and structure of app store
  * update it accordingly
  */
+
 const initialState = {
+    // slateLevelData: {
+    //     [config.slateList[0]]: mockdata[config.slateList[0]]
+    // }
     slateLevelData: {}
 };
 
