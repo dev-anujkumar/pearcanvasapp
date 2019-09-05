@@ -18,9 +18,10 @@ import mockdata from './mockdata';
  */
 
 const initialState = {
-    slateLevelData: {
-        [config.slateList[0]]: mockdata[config.slateList[0]]
-    }
+    // slateLevelData: {
+    //     [config.slateList[0]]: mockdata[config.slateList[0]]
+    // }
+    slateLevelData: {}
 };
 
 /**

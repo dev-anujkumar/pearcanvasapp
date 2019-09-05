@@ -5,8 +5,10 @@ import _ from 'lodash'
 import '../../styles/CommentsPanel/CommentsPanel.css';
 import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
-import Comments from './Comments'
+import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
+import {replyComment,resolveComment,toggleReply,toggleCommentsPanel} from './CommentsPanel_Action';
+
 class CommentsPanel extends React.Component {
     constructor(props) {
         super(props)
@@ -33,7 +35,15 @@ class CommentsPanel extends React.Component {
         this.setSort = this.setSort.bind(this);
         this.setStatus = this.setStatus.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
+        this.updateReplyComment = this.updateReplyComment.bind(this);
+        this.updateResolveComment = this.updateResolveComment.bind(this);
     }
+    
+    componentDidUpdate(){
+        console.log("comments panel=====>",this.props.comments)
+    }
+
+    
      /**
     * 
     * @discription - This function is for search comments
@@ -117,6 +127,18 @@ class CommentsPanel extends React.Component {
     changeStatus() {
 
     }
+    updateReplyComment(commentUrn,reply,elementId){
+        this.props.replyComment(commentUrn, reply, elementId) 
+    //  new Promise((resolve, reject) => {
+    //             this.props.replyComment(commentUrn, reply, elementId)
+    //             resolve()
+    //       });
+        
+    }
+    updateResolveComment(commentUrn, resolveString, elementId){
+        console.log(this.props)
+        this.props.resolveComment(commentUrn, resolveString, elementId)
+    }
 
     /**
     * 
@@ -131,13 +153,17 @@ class CommentsPanel extends React.Component {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
                     //slateTitle = {this.currentSlate}
+                    
                     key={index}
                     elementId={comment.commentOnEntity}
                     //  updateElementComment = {this.updateElementComment}
-                    // updateElementCommentReply = {this.updateElementCommentReply}
+                    updateReplyComment = {this.updateReplyComment}
+                    updateResolveComment = {this.updateResolveComment}
                     //deleteComment = {this.deleteComment}
                     changeStatus={this.changeStatus}
+                    toggleReply= {this.props.toggleReply}
                 //updateAssignee = {this.updateAssignee}
+                  toggleReplyForm = {this.props.toggleReplyForm}
                 />)
             })
             return comments;
@@ -183,12 +209,15 @@ class CommentsPanel extends React.Component {
     }
 
     render() {
+        console.log("state===>",this.props.comments)
+        const {toggleCommentsPanel} = this.props;
         return (
-            <div id="comments-panel" className="panel panel-open">
+            <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
+                            <label onClick = {()=>toggleCommentsPanel(false)} className="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
                             <div className="add-structure">
                                 <div className="filter">
@@ -254,7 +283,7 @@ const SearchComponent = (props) => {
                     name="text-input"
                     className="txt-input"
                     onChange={props.handleSearchInput}
-                //value={props.filters.text}
+                    value={props.filters.text}
                 />
             </div>
         </div>
@@ -263,7 +292,36 @@ const SearchComponent = (props) => {
 }
 
 CommentsPanel.propTypes = {
-    /** commet data attached to store and contains complete comment object */
+    /** commet data attached to store and contains complete comments object */
     comments: PropTypes.array.isRequired
 }
-export default CommentsPanel;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      replyComment: (commentUrn, reply, elementId) => {
+        dispatch(replyComment(commentUrn, reply, elementId))
+      },
+      resolveComment: (commentUrn, resolveString, elementId) => {
+        dispatch(resolveComment(commentUrn, resolveString, elementId))
+      },
+      toggleReply:(toggle)=>{
+        dispatch(toggleReply(toggle))
+      },
+      toggleCommentsPanel:(toggle)=> {
+        dispatch(toggleCommentsPanel(toggle))
+      }
+    }
+  }
+  
+ const mapStateToProps = state => {
+    console.log("state===========",state)
+     return{
+    
+    comments: state.commentsPanelReducer.comments,
+    togglePanel:state.commentsPanelReducer.togglePanel,
+    //elementId :state.commentsPanelReducer.elementId  // will get on button click
+    toggleReplyForm:state.commentsPanelReducer.toggleReplyForm
+  }}; 
+  
+export default connect(mapStateToProps,mapDispatchToProps)(CommentsPanel);
+//export default CommentsPanel;

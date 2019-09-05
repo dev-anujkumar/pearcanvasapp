@@ -2,7 +2,7 @@ import React from 'react'
 //import { searchUsers } from '../../actions/userGetters'
 //import Utils from '../../js/utils'
 import PropTypes from 'prop-types';
-class ReplyComment extends React.Component {
+ class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -12,6 +12,9 @@ class ReplyComment extends React.Component {
         this.updateCommentText = this.updateCommentText.bind(this);
         this.replyComment = this.replyComment.bind(this);
     }
+componentDidUpdate(){
+        
+}
     /**
 * 
 *@discription - This function is to update the text of comment
@@ -27,8 +30,20 @@ class ReplyComment extends React.Component {
 *@discription - This function is to reply comment
 
 */
-    replyComment() {
-        console.log("reply")
+    replyComment(e) {
+        const {comment, elementId,toggleReplyForm} = this.props;
+        const { text } = this.state;
+        const date = new Date()
+        const commentUrn = comment.commentUrn;
+        const reply = {
+            commentType: "commentReply",
+            commentDateTime: date.toISOString(),
+            commentCreator:  "c5test01",//auth.user.userId,
+            commentString: text,
+            commentOnEntity: elementId
+        }
+        this.props.updateReplyComment(commentUrn,reply,elementId);
+        //this.props.close();
     }
     /**
     * 
@@ -68,7 +83,9 @@ class ReplyComment extends React.Component {
 */
 
     replyCommentForm = (props) => {
-        if (props.showReplyForm) {
+        console.log("showReply",props.showReplyForm)
+        console.log("toggle",props.toggleReplyForm)
+        if (props.showReplyForm && props.toggleReplyForm) {
             return (
                 <div className="reply">
                     <div>

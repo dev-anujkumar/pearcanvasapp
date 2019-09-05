@@ -1,64 +1,54 @@
-.Editor .mce-content-body {
-    width:100%;
-}
-.mce-content-body{
-    padding: 10px !important; 
-    font-size:inherit !important;
-}
-.mce-content-body  p{
-    font-size: inherit ;
-    font-family: Helvetica, sans-serif !important;
-}
- .mce-content-body .mce-edit-focus{
-    margin: 0px;
-    position: relative;
-    width: 660px;
-    min-height: 40px!important;
-    border: 2px solid black;
-    outline: none;
-    border:1px solid black;
-    font-size: 12px !important;
-    color: #000 !important;
-}
- .Editor {
+.figureElement .cypress-editable {
     margin: 0!important;
     padding: 10px!important;
-    width: 660px!important;
+    width: 100%!important;
     min-height: 40px!important;
     border: none;
     outline: none;
 }
-.figureLabel{
-    font-weight: 800!important;
-}
-#figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
+.figureCredit.cypress-editable {
     min-height: 40px!important;
-width:100% !important;
+    font-size: 9px!important;
+    width:100% !important;
+}
+.figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
+    cursor: auto !important;
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
     min-height: 40px!important;
     cursor: auto !important;
+    width:100%!important;
+    max-width: 100% !important;
+    color:black!important;
 }
-.figureElement .figureData {
+.figureLabel.cypress-editable,.figureTitle.cypress-editable{
+    font-size: 12px!important;
+    font-family: Helvetica, sans-serif!important;
+}
+.mathml .figureElement .figureData,.blockcode .codeSnippet{
+    width:100%!important;
+}
+.paragraphNumeroUno.mathml.figureData.mathmlDiv{
+    font-size:1.080em!important;
+    padding: 10px!important;
+}
+.blockCodeFigure .blockCodeDiv{
+    width:100%!important;
+}
+.figureElement .pearson-component.image.figureData {
     cursor:copy!important ;
 }
-figcaption,.figureCaption #figure-caption .mce-content-body  .mce-edit-focus{
+figcaption,.figureCaption{
     font-size: 10.8px!important;
     text-align: left !important;
 }
-p.figureCredit #figure-credit .Editor .figureCredit .mce-content-body .mce-edit-focus{
-    font-size: 9px!important;
-  
-}
+
 figure,.element-container{
-    display:contents !important;
+    display:block !important;
 }
-.figureTitle{
-    font-size: 12px!important;
-}
-#figure-label>.Editor.mce-content-body.mce-edit-focus > p,#figure-label> .Editor.mce-content-body > p{
-    font-size: 12px!important;
-    font-weight: 800!important;
+
+.figureLabel.cypress-editable{
+   font-weight: 800!important;
 }
 
 [placeholder]:empty::before {
@@ -69,4 +59,3 @@ figure,.element-container{
 [placeholder]:empty:focus::before {
     content: "";
 }
-

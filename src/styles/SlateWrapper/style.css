@@ -45,6 +45,8 @@
     pointer-events: none;
 }
 
-.slate-content .mce-content-body{
+.slate-content .cypress-editable, .slate-content .cypress-editable *{
     padding: 0;
+    position:relative;
+    outline: none !important;
 }
