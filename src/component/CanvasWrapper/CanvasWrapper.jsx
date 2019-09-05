@@ -9,6 +9,7 @@ import Sidebar from '../Sidebar';
 import {
     fetchSlateData
   } from './CanvasWrapper_Actions';
+import Toolbar from '../Toolbar';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -20,7 +21,16 @@ export class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-       // this.props.fetchSlateData();
+       this.props.fetchSlateData();
+       if(document.getElementById("cypress-0")){
+           document.getElementById("cypress-0").focus();
+       }
+    }
+
+    componentDidUpdate(){
+        if(document.getElementById("cypress-0")){
+            document.getElementById("cypress-0").focus();
+        }
     }
 
     render() {
@@ -32,7 +42,7 @@ export class CanvasWrapper extends Component {
                 </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
-                    <div className="header" id="tinymceToolbar"></div>
+                    <Toolbar />
                 </div>
                 <div className='workspace'>
                     <div id='canvas' className='canvas'>

@@ -26,7 +26,6 @@
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel{
     min-height: 40px!important;
-    padding: 10px!important;
     cursor: auto !important;
     width:100%!important;
     max-width: 100% !important;
