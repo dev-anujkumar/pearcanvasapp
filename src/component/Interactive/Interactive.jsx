@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import ElementAuthoring from '../ElementAuthoring'
-//import './../../styles/Interactive/Interactive.css';
+import './../../styles/Interactive/Interactive.css';
 import { TinyMceEditor } from "../tinyMceEditor"
 
 class Interactive extends React.Component {
@@ -14,7 +14,6 @@ class Interactive extends React.Component {
     renderInteractiveType = (element, itemId) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass;
         var context = element && element.figuredata && element.figuredata.interactivetype;
-        console.log("context",context)
         switch (context) {
 
             case "fpo":
@@ -257,12 +256,8 @@ class Interactive extends React.Component {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
-                        {/* <h4 className={heading4Label + ' figureLabel'} resource=""> */}
-                            <TinyMceEditor className={heading4Label + ' figureLabel'} onFocus={this.onFocus} placeholder="Enter Label..." index={this.props.index} tagName={'h4'} />
-                        {/* </h4> */}
-                        {/* <h4 className={heading4Title + ' figureTitle'} resource=""> */}
-                            <TinyMceEditor className={heading4Title + ' figureTitle'} onFocus={this.onFocus} placeholder="Enter Title..." index={this.props.index} tagName={'h4'} />
-                        {/* </h4> */}
+                            <TinyMceEditor className={heading4Label + ' figureLabel'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Label..." index={this.props.index} tagName={'h4'} />
+                            <TinyMceEditor className={heading4Title + ' figureTitle'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Title..." index={this.props.index} tagName={'h4'} />
                     </header>
                     <div className={id}><strong>ITEM ID: </strong>{itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" >
@@ -278,17 +273,17 @@ class Interactive extends React.Component {
                                         className={imageDimension + " lazyload"} />
                                 )
                                 : 
-                                // <a className={hyperlinkClass} href="javascript:void(0)">
-                                    <TinyMceEditor className={hyperlinkClass} href="javascript:void(0)" tagName={'a'} onFocus={this.onFocus} placeholder="Enter call to action..." index={this.props.index} />
-                                // </a>
+                                 <a className={hyperlinkClass} href="javascript:void(0)">
+                                    <TinyMceEditor onFocus={this.onFocus} placeholder="Enter call to action..." index={this.props.index} className={"actionPU"}/>
+                                 </a>
                         }
                     </div>
                     <figcaption>
-                        <TinyMceEditor className={figcaptionClass + " figureCaption"} onFocus={this.onFocus} placeholder="Enter caption..." tagName={'p'} index={this.props.index} />
+                        <TinyMceEditor className={figcaptionClass + " figureCaption"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter caption..." tagName={'p'} index={this.props.index} />
                     </figcaption>
                 </figure>
                 <div>
-                    <TinyMceEditor className={paragraphCredit + " figureCredit"} onFocus={this.onFocus} placeholder="Enter credit..." tagName={'p'} index={this.props.index} />
+                    <TinyMceEditor className={paragraphCredit + " figureCredit"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter credit..." tagName={'p'} index={this.props.index} />
                 </div>
             </div>
         }

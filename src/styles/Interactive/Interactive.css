@@ -17,17 +17,26 @@
  .id-info {
     padding: 5px 0 10px;
 } 
-img.imageTextWidth, img.imageWidgetFlashcards, img.imageWidget3PI, img.imageWidget3PISE, img.imageWidgetMDI, img.imageWidgetImgSlideshow, img.imageWidgetVidSlideshow, img.imageWidgetUCA, img.imageWidgetSurvey, img.imageWidgetTimeline, img.imageWidgetMCQ, img.imageWidgetImageId, img.imageWidgetFIB, img.imageWidgetGraph, img.imageWidgetVideoMcq, img.imageWidgetFPO, img.imageWidgetFPOAV, img.imageWidgetFPOIN, img.imageWidgetFPOAS, img.imageWidgetFPOAC {
-    max-width: 100% !important;                                        /* this needs to be remove when book.css imported in canvas */                      
+/* img.imageTextWidth, img.imageWidgetFlashcards, img.imageWidget3PI, img.imageWidget3PISE, img.imageWidgetMDI, img.imageWidgetImgSlideshow, img.imageWidgetVidSlideshow, img.imageWidgetUCA, img.imageWidgetSurvey, img.imageWidgetTimeline, img.imageWidgetMCQ, img.imageWidgetImageId, img.imageWidgetFIB, img.imageWidgetGraph, img.imageWidgetVideoMcq, img.imageWidgetFPO, img.imageWidgetFPOAV, img.imageWidgetFPOIN, img.imageWidgetFPOAS, img.imageWidgetFPOAC {
+    max-width: 100% !important;                                                           
 }
 
 .divWidgetFlashcards, div.divWidgetShowHide, div.divWidgetPDF, div.divWidgetPU, div.divWidgetPUSL, div.divWidget3PI, div.divWidget3PISE, div.divWidgetMDI, div.divWidgetImgSlideshow, div.divWidgetVidSlideshow, div.divWidgetUCA, div.divWidgetSurvey, div.divWidgetTimeline, div.divWidgetMCQ, div.divWidgetImageId, div.divWidgetFIB, div.divWidgetGraph, div.divWidgetVideoMcq, div.divWidgetVideo, div.divWidgetFPO, div.divWidgetFPOAV, div.divWidgetFPOIN, div.divWidgetFPOAS, div.divWidgetFPOAC {
     max-width: 100% !important;
-}
+} */
 .pearson-component:not(.showHide) {
     cursor: copy;
 }
-a.buttonWidgetPDF {
+/* a.buttonWidgetPDF {
     width: 100% !important;
     color: black !important;
+} */
+
+a.buttonWidgetPU {
+    min-width: 100%;
+}
+.actionPU {
+    padding: 10px!important;
+    color: black;
+    font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
 }
