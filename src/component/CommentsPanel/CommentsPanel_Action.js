@@ -4,7 +4,7 @@ import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
     REPLY_COMMENT,
-    FETCH_FILTERED_COMMENT,
+    FETCH_COMMENT_BY_ELEMENT,
     RESOLVE_COMMENT,
     TOGGLE_REPLY
 } from '../../constants/Action_Constants';
@@ -33,14 +33,16 @@ export const fetchComments = () => dispatch => {
     })
 };
 
-export const fetchFilterdComment = (elemenetId) => dispatch => {
+export const fetchCommentByElement = (elemenetId) => dispatch => {
+    console.log("elementId====<",elemenetId)
     dispatch({
-        type: FETCH_FILTERED_COMMENT,
-        payload: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"//elemenetId
+        type: FETCH_COMMENT_BY_ELEMENT,
+        payload:elemenetId //"urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"//elemenetId
     })
 };
 
 export const toggleCommentsPanel = (toggle) => dispatch => {
+    console.log("toogle====>",toggle);
         dispatch({
         	type: TOGGLE_COMMENTS_PANEL,
         	payload: toggle

@@ -7,7 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
-import {replyComment,resolveComment,toggleReply} from './CommentsPanel_Action';
+import {replyComment,resolveComment,toggleReply,toggleCommentsPanel} from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -210,13 +210,14 @@ class CommentsPanel extends React.Component {
 
     render() {
         console.log("state===>",this.props.comments)
+        const {toggleCommentsPanel} = this.props;
         return (
-            <div id="comments-panel" className={`comments-panel ${(this.props.toggleCommentsPanel ? 'comments-panel-open' : "")}`}>
+            <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
-                            <label class="modal__close_Panel"></label>
+                            <label onClick = {()=>toggleCommentsPanel(false)} class="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
                             <div className="add-structure">
                                 <div className="filter">
@@ -305,6 +306,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       toggleReply:(toggle)=>{
         dispatch(toggleReply(toggle))
+      },
+      toggleCommentsPanel:(toggle)=> {
+        dispatch(toggleCommentsPanel(toggle))
       }
     }
   }
@@ -314,7 +318,7 @@ const mapDispatchToProps = (dispatch) => {
      return{
     
     comments: state.commentsPanelReducer.comments,
-    toggleCommentsPanel:state.commentsPanelReducer.toggleCommentsPanel,
+    togglePanel:state.commentsPanelReducer.togglePanel,
     //elementId :state.commentsPanelReducer.elementId  // will get on button click
     toggleReplyForm:state.commentsPanelReducer.toggleReplyForm
   }}; 

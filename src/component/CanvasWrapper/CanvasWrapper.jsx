@@ -6,24 +6,28 @@ import CommentsPanel from '../CommentsPanel'
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
-import EventUtils from '../../EventUtils';
 import {
     fetchSlateData
 } from './CanvasWrapper_Actions';
-
+import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
+        this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-        this.props.fetchSlateData();
-        EventUtils.bind();      
-
+       // this.props.fetchSlateData();
+      // this.props.fetchComments();
+    }
+    handleCommentspanel(elementId){
+        console.log("elementId",elementId);
+        this.props.toggleCommentsPanel(true);
+        this.props.fetchCommentByElement(elementId);
     }
 
     render() {
@@ -47,7 +51,7 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper slateData={this.props.slateLevelData} />
+                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} />
                             </div>
                         </div>
                     </div>
@@ -63,9 +67,7 @@ export class CanvasWrapper extends Component {
 
         );
     }
-    componentDidUpdate(){        
-        EventUtils.bind();        
-    }
+    
 }
 
 const mapStateToProps = state => {
@@ -74,9 +76,14 @@ const mapStateToProps = state => {
     };
 };
 
+
+
 export default connect(
     mapStateToProps,
     {
-        fetchSlateData
+        fetchSlateData,
+        toggleCommentsPanel,
+        fetchComments,
+        fetchCommentByElement
     }
 )(CanvasWrapper);

@@ -11,33 +11,10 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
-import EventUtils from '../../EventUtils';
+
 
 class Button extends Component {
-    constructor(props) {
-        super(props);        
-        this.actionRef = null;
-
-        this.setActionRef = element => {
-            this.actionRef = element;
-        };
-    }
-    componentDidMount() {
-        console.log('aaaaaaaaaaaaaa');
-        if(this.actionRef){
-            EventUtils.store(this.actionRef,'click',this.onDeleteClick)
-        }
-       // this.myRef.addEventListener('click',this.abc)
-      }
-      componentDidUpdate() {
-        console.log('bbbbbbbbbbbbbbbbbbbb');
-        if(this.actionRef){
-            EventUtils.store(this.actionRef,'click',this.onDeleteClick)
-        }
-      }
-      onDeleteClick=(e)=>{
-            console.log('JKJKJK',e)
-      }
+   
   /**
   * Responsible for rendering Button component according to the props received
   * @param type type of button
@@ -46,7 +23,7 @@ class Button extends Component {
   */
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
-        const { labelText } = this.props
+        const { labelText,elementId } = this.props
 
         switch(type){
             case "close-container":
@@ -58,7 +35,7 @@ class Button extends Component {
                     </span>
                 break;
             case "comment-flag":
-                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={()=>clickHandlerFn(elementId)}>
                     {noteFlag}
                     </span>
                 break;
