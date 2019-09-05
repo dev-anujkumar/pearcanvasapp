@@ -40,44 +40,36 @@ describe('Testing CommentsPanel component with props', () => {
         
       });
       it('renders edit from correctly', () => {
-        //instance.setState({ mode: "edit" })
         instance.editForm()
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
       });
       it('render action menu from correctly', () => {
-        //instance.setState({ mode: "edit" })
         instance.actionsMenu()
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
       });
       it('render remove comment from correctly', () => {
-        //instance.setState({ mode: "edit" })
+       
         instance.resolveComment()
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
+     
       });
-      it('render remove comment from correctly', () => {
-        //instance.setState({ mode: "edit" })
+      it('render edit comment from correctly', () => {
         instance.editComment()
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
       });
-      it('render editComment comment from correctly', () => {
-        //instance.setState({ mode: "edit" })
+      it('render UpdateComment comment from correctly', () => {
+    
         instance.updateComment('paragraph')
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
+      
       });
 
   })
 
   describe('test toogle reply function',() => {
     it('test toggle replay form with true ', () => {
-        //instance.setState({ mode: "edit" })
+      
         instance.toggleReplyForm(true)
         const showReplyForm = wrapper.state().showReplyForm;
         expect(showReplyForm).toEqual(true);
-       // expect(wrapper.find('.buttons-wrapper')).toHaveLength(2)
       });
 
       it('test toggle replay form with false', () => {
-        //instance.setState({ mode: "edit" })
         instance.toggleReplyForm(false)
         const showReplyForm = wrapper.state().showReplyForm;
         expect(showReplyForm).toEqual(false);
@@ -85,7 +77,6 @@ describe('Testing CommentsPanel component with props', () => {
       });
 
       it('test toggle replay form with false', () => {
-        //instance.setState({ mode: "edit" })
         instance.toggleReplyForm(undefined)
         const showReplyForm = wrapper.state().showReplyForm;
         expect(showReplyForm).toEqual(showReplyForm);
@@ -95,7 +86,6 @@ describe('Testing CommentsPanel component with props', () => {
 
   describe('test change assignee  function',() => {
     it('test toggle replay form with true ', () => {
-        //instance.setState({ mode: "edit" })
         instance.changeAssignee(true)
         const isSelectAssignee = wrapper.state().isSelectAssignee;
         expect(isSelectAssignee).toEqual(false);
@@ -105,7 +95,6 @@ describe('Testing CommentsPanel component with props', () => {
 
   describe('test new assignee  function',() => {
     it('test toggle replay form with true ', () => {
-        //instance.setState({ mode: "edit" })
         instance.newAssigneeUser("test")
         const newAssignee = wrapper.state().newAssignee;
         const isSelectAssignee = wrapper.state().isSelectAssignee

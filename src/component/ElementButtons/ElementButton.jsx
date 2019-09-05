@@ -23,7 +23,7 @@ class Button extends Component {
   */
     renderButton = (type, clickHandlerFn) => {
         let buttonJSX = null
-        const { labelText } = this.props
+        const { labelText,elementId } = this.props
 
         switch(type){
             case "close-container":
@@ -35,7 +35,7 @@ class Button extends Component {
                     </span>
                 break;
             case "comment-flag":
-                buttonJSX = <span className="btn-element small flag-icon" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element small flag-icon" onClick={()=>clickHandlerFn(elementId)}>
                     {noteFlag}
                     </span>
                 break;
@@ -116,7 +116,8 @@ class Button extends Component {
     }
     
     render() {
-        const { type, onClick } = this.props
+        const { type, onClick, elementId } = this.props
+        console.log("elementid",elementId)
         return(
             <>
                 {this.renderButton(type, onClick)}             

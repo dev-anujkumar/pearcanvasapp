@@ -8,6 +8,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import './../../styles/ElementContainer/ElementContainer.css';
+import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -16,11 +17,12 @@ class ElementContainer extends Component {
             popup: false
         };
     }
-
+    componentDidMount(){
+    }
     renderElement = (element = {}) => {
         let editor = '';
-        let { elementType, labelText, index } = this.props;
-        switch (element.type) {
+        let { elementType, labelText, index,handleCommentspanel} = this.props;
+        switch(element.type) {
             case 'opener':
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
                 labelText = 'OE'
@@ -84,7 +86,7 @@ class ElementContainer extends Component {
             </div>
             <div>
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
-                {element.comments && <Button type="comment-flag" />}
+                 <Button  elementId = {element.id} onClick = {handleCommentspanel} type="comment-flag" /> 
                 {element.tcm && <Button type="tcm" />}
                 {/* <Button type="comment-flag" />
                     <Button type="tcm" /> */}
@@ -104,7 +106,10 @@ handleCommentPopup(popup){
         popup
     });
 }
-
+handleCommentPanel(){
+    console.log("click button")
+    this.props.dispatch(toggleCommentsPanel(true));
+}
 render = () => {
     const { element } = this.props;
     return this.renderElement(element);

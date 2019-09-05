@@ -1,14 +1,15 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
 import {
     fetchSlateData
-  } from './CanvasWrapper_Actions';
+} from './CanvasWrapper_Actions';
+import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
 
 // IMPORT - Assets //
@@ -17,6 +18,7 @@ import '../../styles/CanvasWrapper/style.css';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
+        this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
 
     componentDidMount() {
@@ -32,6 +34,11 @@ export class CanvasWrapper extends Component {
             document.getElementById("cypress-0").focus();
         }
     }
+    handleCommentspanel(elementId){
+        console.log("elementId",elementId);
+        this.props.toggleCommentsPanel(true);
+        this.props.fetchCommentByElement(elementId);
+    }
 
     render() {
         return (
@@ -44,12 +51,17 @@ export class CanvasWrapper extends Component {
                     {/* put editor tool */}
                     <Toolbar />
                 </div>
+
                 <div className='workspace'>
+                    <div className = "sidebar-panel">
+                        {/* pull all sidebar panel */}
+                        <CommentsPanel />
+                    </div>
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper slateData={this.props.slateLevelData} />
+                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} />
                             </div>
                         </div>
                     </div>
@@ -74,9 +86,14 @@ const mapStateToProps = state => {
     };
 };
 
+
+
 export default connect(
     mapStateToProps,
     {
-        fetchSlateData
+        fetchSlateData,
+        toggleCommentsPanel,
+        fetchComments,
+        fetchCommentByElement
     }
 )(CanvasWrapper);
