@@ -43,7 +43,7 @@ class Button extends Component {
                 buttonJSX = <span className="btn-element element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
                 break;
             case "delete-element":
-                buttonJSX = <span className="btn-element delete-icon" ref={this.setActionRef} onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
             case "tcm":
