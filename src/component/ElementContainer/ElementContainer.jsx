@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-
+import ElementAudioVideo from "./../ElementAudioVideo";
 import ElementAuthoring from './../ElementAuthoring';
 // import ElementAudioVideo from './../ElementAudioVideo';
+import ElementFigure from './../ElementFigure';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -16,29 +17,26 @@ class ElementContainer extends Component {
     }
 
     renderElement = (element = {}) => {
-        console.log("elementcontainer element >> ", element)
         let editor = '';
-        let labelText = '';
+        let { elementType, labelText, index } = this.props;
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
-                labelText = 'OE';
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring type={element.type} model={element.html} />;
-                labelText = 'P';
+                editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
                 break;
-
-            // case "figure":
-            //     editor = <ElementAudioVideo element={element} />;
-            //     labelText = 'FG';
-            //     break;
 
             case "element-blockfeature":
-                editor = <ElementAuthoring type={element.type} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
+            case "figure":
+                editor = <ElementFigure index={index} elementId={element.id} type={element.type} model={element}/>;
+                labelText = 'FG';
+                break;
+                
         }
 
         return (
@@ -52,10 +50,10 @@ class ElementContainer extends Component {
                 </div>
                 <div>
                     <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
-                    {/* {element.comments && <Button type="comment-flag" /> }
-                    {element.tcm && <Button type="tcm" />} */}
-                    <Button type="comment-flag" />
-                    <Button type="tcm" />
+                    {element.comments && <Button type="comment-flag" /> }
+                    {element.tcm && <Button type="tcm" />}
+                    {/* <Button type="comment-flag" />
+                    <Button type="tcm" /> */}
                 </div>
                 {this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
             </div>
@@ -80,12 +78,16 @@ class ElementContainer extends Component {
 }
 
 ElementContainer.defaultProps = {
-    element: {}
+    element: {},
+    elementType: 'heading-4',
+    labelText: 'P'
 }
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element : PropTypes.object
+    element : PropTypes.object,
+    elementType : PropTypes.string,
+    labelText : PropTypes.string
 }
 
 export default ElementContainer
