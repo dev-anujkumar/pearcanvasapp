@@ -10,6 +10,8 @@ import {
     fetchSlateData
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
+import Toolbar from '../Toolbar';
+
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 
@@ -39,7 +41,7 @@ export class CanvasWrapper extends Component {
                 </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
-                    <div className="header" id="tinymceToolbar"></div>
+                    <Toolbar />
                 </div>
 
                 <div className='workspace'>
