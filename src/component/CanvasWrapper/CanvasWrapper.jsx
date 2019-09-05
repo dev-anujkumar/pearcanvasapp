@@ -11,19 +11,40 @@ import {
     fetchSlateData
   } from './CanvasWrapper_Actions';
 
+import config from './../../config/config';
+
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            activeSlateIndex: 0,
+            activeSlate: config.slateList[0]
+        }
     }
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-        this.props.fetchSlateData();
+        this.props.fetchSlateData(this.state.activeSlate);
         EventUtils.bind();      
 
+    }
+
+    navigate = (nav) => {
+        let activeSlateIndex = this.state.activeSlateIndex;
+        if(nav === 'next') {
+            activeSlateIndex++;
+        } else if(nex === 'back') {
+            activeSlateIndex--;
+        }
+
+        this.setState({
+            activeSlateIndex,
+            activeSlate:config.slateList[activeSlateIndex]
+        });
     }
 
     render() {
@@ -42,7 +63,7 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper slateData={this.props.slateLevelData} />
+                                <SlateWrapper slateData={this.props.slateLevelData} navigate={this.navigate} />
                             </div>
                         </div>
                     </div>

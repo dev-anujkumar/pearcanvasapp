@@ -86,7 +86,7 @@ class SlateWrapper extends Component {
                   })
             },
             init_instance_callback: (editor) => {
-                 editor.fire('focus');                 
+                editor.fire('focus');                 
                 editor.dom.$('.element-list').attr('contenteditable', 'false'); 
                 editor.on("focus", (e)=>{                    
                     let cell = editor.dom.getParent(editor.selection.getStart(), ".cypress-editable");
@@ -137,6 +137,10 @@ class SlateWrapper extends Component {
      componentDidMount(){       
         tinymce.init(this.editorConfig)
       }
+
+      componentDidUpdate(){       
+        tinymce.init(this.editorConfig)
+      }
      
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
@@ -149,7 +153,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
