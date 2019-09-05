@@ -43,7 +43,7 @@ componentDidUpdate(){
             commentOnEntity: elementId
         }
         this.props.updateReplyComment(commentUrn,reply,elementId);
-        this.props.close();
+        //this.props.close();
     }
     /**
     * 
@@ -83,8 +83,9 @@ componentDidUpdate(){
 */
 
     replyCommentForm = (props) => {
-        
-        if (props.showReplyForm) {
+        console.log("showReply",props.showReplyForm)
+        console.log("toggle",props.toggleReplyForm)
+        if (props.showReplyForm && props.toggleReplyForm) {
             return (
                 <div className="reply">
                     <div>

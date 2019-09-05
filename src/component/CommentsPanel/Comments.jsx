@@ -31,12 +31,12 @@ class Comments extends React.Component {
         this.toggleReplyForm = this.toggleReplyForm.bind(this);
     }
     componentDidMount() {
-        
+
         window.addEventListener("click", (event) => {
-            if(event.target.className !== "action-menu-img"){
-            this.toggleActionsMenu(false)
+            if (event.target.className !== "action-menu-img") {
+                this.toggleActionsMenu(false)
             }
-          });
+        });
     }
     /**
     * 
@@ -118,21 +118,21 @@ class Comments extends React.Component {
     toggleReplyForm(show) {
         this.toggleActionsMenu(false)
         if (show === undefined) show = !this.state.showReplyForm
+        this.props.toggleReply(true);
         this.setState({ showReplyForm: show })
     }
     /**
-* 
-*@discription - This function is to resolve comment
-*/
+    * 
+    *@discription - This function is to resolve comment
+    */
 
     resolveComment(e) {
-        //const { commentUrn } = this.props.comment  
-        //  const { elementId } = this.props      
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
         this.toggleActionsMenu(false)
-        //this.props.changeStatus(commentUrn, "RESOLVED", elementId)
-        // this.setStatus('resolved')
-        // setTimeout(() =>  this.updateComment('status'), 0)
+        this.props.updateResolveComment(commentUrn, "RESOLVED", elementId)
     }
+
     /**
     * 
     *@discription - This function is to return jsx of action menu
@@ -209,11 +209,11 @@ class Comments extends React.Component {
         /* const updatedFields = {
             'assignto': this.state.newAssignee
         } */
-      //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
+        //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
         console.log(this.props);
-        const { comment, elementId,updateReplyComment,toggleReplyForm } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -234,7 +234,7 @@ class Comments extends React.Component {
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
                             onClick={() => this.toggleActionsMenu()}
                         >
-                            <img className = "action-menu-img" src={navigationShowMore} />
+                            <img className="action-menu-img" src={navigationShowMore} />
                         </span>
                         {this.state.showActionsMenu && this.actionsMenu()}
                     </div>
@@ -280,11 +280,11 @@ class Comments extends React.Component {
                     <ReplyComment
                         close={this.toggleReplyForm}
                         comment={comment}
-                        showReplyForm={this.state.showReplyForm} 
-                        updateReplyComment = {updateReplyComment}
-                        elementId = {elementId}
-                        toggleReplyForm = {toggleReplyForm}
-                        />
+                        showReplyForm={this.state.showReplyForm}
+                        updateReplyComment={updateReplyComment}
+                        elementId={elementId}
+                        toggleReplyForm={toggleReplyForm}
+                    />
                 </div>
             </div>
         );

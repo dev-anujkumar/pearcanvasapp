@@ -7,7 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
-import {replyComment} from './CommentsPanel_Action';
+import {replyComment,resolveComment,toggleReply} from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -36,6 +36,7 @@ class CommentsPanel extends React.Component {
         this.setStatus = this.setStatus.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
         this.updateReplyComment = this.updateReplyComment.bind(this);
+        this.updateResolveComment = this.updateResolveComment.bind(this);
     }
     
     componentDidUpdate(){
@@ -127,14 +128,16 @@ class CommentsPanel extends React.Component {
 
     }
     updateReplyComment(commentUrn,reply,elementId){
-     return new Promise((resolve, reject) => {
-                this.props.replyComment(commentUrn, reply, elementId)
-                resolve()
-          });
+        this.props.replyComment(commentUrn, reply, elementId) 
+    //  new Promise((resolve, reject) => {
+    //             this.props.replyComment(commentUrn, reply, elementId)
+    //             resolve()
+    //       });
         
     }
-    resolveComment(){
-        
+    updateResolveComment(commentUrn, resolveString, elementId){
+        console.log(this.props)
+        this.props.resolveComment(commentUrn, resolveString, elementId)
     }
 
     /**
@@ -155,9 +158,10 @@ class CommentsPanel extends React.Component {
                     elementId={comment.commentOnEntity}
                     //  updateElementComment = {this.updateElementComment}
                     updateReplyComment = {this.updateReplyComment}
-                    resolveComment = {this.resolveComment}
+                    updateResolveComment = {this.updateResolveComment}
                     //deleteComment = {this.deleteComment}
                     changeStatus={this.changeStatus}
+                    toggleReply= {this.props.toggleReply}
                 //updateAssignee = {this.updateAssignee}
                   toggleReplyForm = {this.props.toggleReplyForm}
                 />)
@@ -205,6 +209,7 @@ class CommentsPanel extends React.Component {
     }
 
     render() {
+        console.log("state===>",this.props.comments)
         return (
             <div id="comments-panel" className={`comments-panel ${(this.props.toggleCommentsPanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
@@ -294,16 +299,25 @@ const mapDispatchToProps = (dispatch) => {
     return {
       replyComment: (commentUrn, reply, elementId) => {
         dispatch(replyComment(commentUrn, reply, elementId))
+      },
+      resolveComment: (commentUrn, resolveString, elementId) => {
+        dispatch(resolveComment(commentUrn, resolveString, elementId))
+      },
+      toggleReply:(toggle)=>{
+        dispatch(toggleReply(toggle))
       }
     }
   }
   
- const mapStateToProps = state => ({
+ const mapStateToProps = state => {
+    console.log("state===========",state)
+     return{
+    
     comments: state.commentsPanelReducer.comments,
     toggleCommentsPanel:state.commentsPanelReducer.toggleCommentsPanel,
     //elementId :state.commentsPanelReducer.elementId  // will get on button click
     toggleReplyForm:state.commentsPanelReducer.toggleReplyForm
-  }); 
+  }}; 
   
 export default connect(mapStateToProps,mapDispatchToProps)(CommentsPanel);
 //export default CommentsPanel;

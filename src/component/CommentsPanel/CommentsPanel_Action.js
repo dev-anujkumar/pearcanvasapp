@@ -3,7 +3,10 @@ import config from '../../config/config';
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
-    REPLY_COMMENT
+    REPLY_COMMENT,
+    FETCH_FILTERED_COMMENT,
+    RESOLVE_COMMENT,
+    TOGGLE_REPLY
 } from '../../constants/Action_Constants';
 
 export const fetchComments = () => dispatch => {
@@ -30,23 +33,35 @@ export const fetchComments = () => dispatch => {
     })
 };
 
+export const fetchFilterdComment = (elemenetId) => dispatch => {
+    dispatch({
+        type: FETCH_FILTERED_COMMENT,
+        payload: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"//elemenetId
+    })
+};
+
 export const toggleCommentsPanel = (toggle) => dispatch => {
         dispatch({
         	type: TOGGLE_COMMENTS_PANEL,
         	payload: toggle
         })
 };
-
+export const toggleReply = (toggle) => dispatch => {
+    dispatch({
+        type: TOGGLE_REPLY,
+        payload: toggle
+    })
+};
 export const replyComment = (commentUrn, reply, elementId) => dispatch => {
 
     let replyDataToSend = {
       comment: reply.commentString,
       commentCreator: reply.commentCreator
     };
-     dispatch({
-            type: REPLY_COMMENT,
-            payload: { commentUrn, reply }
-          });
+    // dispatch({
+    //         type: REPLY_COMMENT,
+    //         payload: { commentUrn, reply }
+    //       });
     axios.post(`${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`,
      replyDataToSend , 
      {
@@ -57,18 +72,44 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
 		}
 	}).then(response => {   
         console.log("response======>",response )
-      /*   dispatch({
+         dispatch({
             type: REPLY_COMMENT,
             payload: { 
                 commentUrn, 
                 reply,
-                toggleReplyForm:true
+                toggleReplyForm:false
             }
-          }); */
+          }); 
        
 	}).catch(error => {
         console.log("Failed to add reply", error);
     })
 };
+
+export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch => {
+
+    let request = {
+        status: resolveOrOpen
+    };
+    axios.put(`${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`,
+    request , 
+     {
+		headers: {
+            "Content-Type": "application/json",
+            "ApiKey":'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
+			"PearsonSSOSession":config.ssoToken
+		}
+	}).then(response => {   
+        console.log("response======>",response )
+        dispatch({
+            type: RESOLVE_COMMENT,
+            payload: { commentUrn, resolveOrOpen }
+          });
+       
+	}).catch(error => {
+        console.log("status update fail", error);
+    })
+};
+
 
 

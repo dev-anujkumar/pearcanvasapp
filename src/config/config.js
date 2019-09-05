@@ -1,6 +1,8 @@
 let config = {
     REACT_APP_API_URL : "https://10.11.3.7:8443/cypress-api/",
-    ssoToken: "jLLXrSPo_RIi6_bBV3_Bw7N849Q.*AAJTSQACMDIAAlNLABwxckFSWXVTekF5LzBLK29Ocnd6T0FJWVZ1cFU9AAJTMQACMDk.*",
+    STRUCTURE_API_URL :"https://staging.api.pearson.com/",
+    NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
+    ssoToken: "abOeNwK0u_9Q46Mab_EI2H-n5Fc.*AAJTSQACMDIAAlNLABxUR3VidlhaTkN2WERKT1U4VlV5UUVvRHpLRFk9AAJTMQACMTA.*",
     userId: 'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
     //parentUrl: window.location.origin
