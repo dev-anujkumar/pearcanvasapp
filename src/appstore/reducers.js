@@ -35,10 +35,10 @@ const initialState = {
                         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
                         "elementdata": {
                             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                            "text": ""
+                            "text": "asdfasdfasdf"
                         },
                         "html": {
-                            "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
+                            "text": " \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
                         },
                         "comments": true,
                         "tcm": true,
