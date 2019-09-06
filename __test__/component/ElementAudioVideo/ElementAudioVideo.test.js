@@ -13,7 +13,8 @@ describe('Testing Element Audio-Video component', () => {
 
     describe('With Audio element', () => {
         let props = {
-            element: audioElementTypeSLDefault
+            model: audioElementTypeSLDefault,
+            index: 1
         };
         let component = mount(<ElementAudioVideo {...props} />);
         test('renders properly with default audio SL-type element', () => {
@@ -21,21 +22,22 @@ describe('Testing Element Audio-Video component', () => {
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given audio SL-type  element', () => {
-            component.setProps({ model: audioElementTypeSLWithData });
+            component.setProps({ model: audioElementTypeSLWithData,index: 2 });
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with default audio Alfresco-type element', () => {
-            component.setProps({ model: audioElementTypeAlfrescoDefault });
+            component.setProps({ model: audioElementTypeAlfrescoDefault,index: 3 });
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given audio Alfresco-type element', () => {
-            component.setProps({ model: audioElementTypeAlfrescoWithData });
+            component.setProps({ model: audioElementTypeAlfrescoWithData ,index:4 });
             expect(component).toMatchSnapshot();
         })
     });
     describe('With Video element', () => {
         let props = {
             model: videoElementTypeSLDefault
+            ,index: 5
         };
         let component = mount(<ElementAudioVideo {...props} />);
         test('renders properly with default video SL-type element', () => {
@@ -43,15 +45,15 @@ describe('Testing Element Audio-Video component', () => {
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given video SL-type element', () => {
-            component.setProps({ element: videoElementTypeSLWithData });
+            component.setProps({ element: videoElementTypeSLWithData,index: 6 });
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with default video Alfresco-type element', () => {
-            component.setProps({ element: videoElementTypeAlfrescoDefault });
+            component.setProps({ element: videoElementTypeAlfrescoDefault ,index: 7});
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given video Alfresco-type element', () => {
-            component.setProps({ element: videoElementTypeAlfrescoWithData });
+            component.setProps({ element: videoElementTypeAlfrescoWithData,index: 8 });
             expect(component).toMatchSnapshot();
         })
 
