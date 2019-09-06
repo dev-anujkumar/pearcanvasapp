@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import ElementAuthoring from '../ElementAuthoring'
 import './../../styles/Interactive/Interactive.css';
 import { TinyMceEditor } from "../tinyMceEditor"
 
@@ -11,8 +10,8 @@ class Interactive extends React.Component {
 
     }
 
-    renderInteractiveType = (element, itemId) => {
-        let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass;
+    renderInteractiveType = (element, itemId, index) => {
+        let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
         switch (context) {
 
@@ -49,6 +48,7 @@ class Interactive extends React.Component {
                     id = 'id-info'
                 imageDimension = '',
                     hyperlinkClass = 'buttonWidgetPDF',
+                    path = 'PATH: '
                     figcaptionClass = 'figcaptionWidgetPDF',
                     paragraphCredit = 'paragraphWidgetPDFCredit';
                 break;
@@ -173,7 +173,7 @@ class Interactive extends React.Component {
                     paragraphCredit = 'paragraphWidgetVidSlideshowCredit';
                 break;
 
-            case ("video-mcq" || "mcq"):
+            case "video-mcq":
                 divImage = 'divWidgetVideoMcq',
                     figureImage = 'figureWidgetVideoMcq',
                     heading4Label = 'heading4WidgetVideoMcqNumberLabel',
@@ -185,7 +185,19 @@ class Interactive extends React.Component {
                     paragraphCredit = 'paragraphWidgetVideoMcqCredit';
                 break;
 
-            case ("pop-up-web-link" || "web-link"):
+            case "mcq":
+                divImage = 'divWidgetVideoMcq',
+                    figureImage = 'figureWidgetVideoMcq',
+                    heading4Label = 'heading4WidgetVideoMcqNumberLabel',
+                    heading4Title = 'heading4WidgetVideoMcqTitle',
+                    dataType = 'videoMcq',
+                    id = 'id-info'
+                imageDimension = 'imageWidgetVideoMcq',
+                    figcaptionClass = 'figcaptionWidgetVideoMcq',
+                    paragraphCredit = 'paragraphWidgetVideoMcqCredit';
+                break;
+
+            case "pop-up-web-link":
                 divImage = 'divWidgetPUSL',
                     figureImage = 'figureWidgetPUSL',
                     heading4Label = 'heading4WidgetPUSLNumberLabel',
@@ -198,7 +210,20 @@ class Interactive extends React.Component {
                     paragraphCredit = 'paragraphWidgetPUSLCredit';
                 break;
 
-            case "smartlink-tab":
+            case "web-link":
+                divImage = 'divWidgetPUSL',
+                    figureImage = 'figureWidgetPUSL',
+                    heading4Label = 'heading4WidgetPUSLNumberLabel',
+                    heading4Title = 'heading4WidgetPUSLTitle',
+                    dataType = 'pusl',
+                    id = 'id-info'
+                imageDimension = '',
+                    hyperlinkClass = 'buttonWidgetPUSL',
+                    figcaptionClass = 'figcaptionWidgetPUSL',
+                    paragraphCredit = 'paragraphWidgetPUSLCredit';
+                break;
+
+            case "table":
                 divImage = 'divWidgetTableSL',
                     figureImage = 'figureWidgetTableSL',
                     heading4Label = 'heading4WidgetTableSLNumberLabel',
@@ -235,13 +260,11 @@ class Interactive extends React.Component {
                         <div data-reactroot="">
                             <div className="sh-container">
                                 <div>
-                                    {/* <p className="paragraphShowHideWidgetQuestionText"> */}
-                                    <TinyMceEditor className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" onFocus={this.onFocus} />
-                                    {/* </p> */}
-                                    {/* <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer"> */}
+                                    <TinyMceEditor index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" onFocus={this.onFocus} tagName={'p'}/>
+                                    <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
                                     <a className="paragraphNumeroUno">
-                                        <TinyMceEditor placeholder="Enter hidden text" onFocus={this.onFocus} /></a>
-                                    {/* </p> */}
+                                        <TinyMceEditor index={`${index}-1`} placeholder="Enter hidden text" onFocus={this.onFocus} /></a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -256,14 +279,14 @@ class Interactive extends React.Component {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
-                            <TinyMceEditor className={heading4Label + ' figureLabel'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Label..." index={this.props.index} tagName={'h4'} />
-                            <TinyMceEditor className={heading4Title + ' figureTitle'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Title..." index={this.props.index} tagName={'h4'} />
+                            <TinyMceEditor index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Label..." tagName={'h4'} />
+                            <TinyMceEditor index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} onFocus={this.onFocus} placeholder="Enter Title..." tagName={'h4'} />
                     </header>
-                    <div className={id}><strong>ITEM ID: </strong>{itemId}</div>
+                    <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" >
                         {
                             imageDimension !== '' ?
-                                (context === 'smartlink-tab' ?
+                                (context === 'table' ?
                                     <a className="" href="javascript:void(0)">
                                         <img src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
                                             data-src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png" title="View Image" alt=""
@@ -274,16 +297,16 @@ class Interactive extends React.Component {
                                 )
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
-                                    <TinyMceEditor onFocus={this.onFocus} placeholder="Enter call to action..." index={this.props.index} className={"actionPU"}/>
+                                    <TinyMceEditor index={`${index}-2`} onFocus={this.onFocus} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'}/>
                                  </a>
                         }
                     </div>
                     <figcaption>
-                        <TinyMceEditor className={figcaptionClass + " figureCaption"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter caption..." tagName={'p'} index={this.props.index} />
+                        <TinyMceEditor index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter caption..." tagName={'p'} />
                     </figcaption>
                 </figure>
                 <div>
-                    <TinyMceEditor className={paragraphCredit + " figureCredit"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter credit..." tagName={'p'} index={this.props.index} />
+                    <TinyMceEditor index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} onFocus={this.onFocus} placeholder="Enter credit..." tagName={'p'} />
                 </div>
             </div>
         }
@@ -294,11 +317,10 @@ class Interactive extends React.Component {
 
 
     render() {
-        const { model, itemId } = this.props;
-        console.log("model",model)
+        const { model, itemId, index } = this.props;
         return (
             <div className="interactive-element">
-                {this.renderInteractiveType(model, itemId)}
+                {this.renderInteractiveType(model, itemId,index)}
             </div>
         )
     }
