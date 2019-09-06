@@ -41,31 +41,31 @@ class ElementContainer extends Component {
 
                 switch (element.figuretype) {
                     case "image":
-                        editor = <ElementFigure model={element} />;
+                        editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Fg';
                         break;
                     case "table":
-                        editor = <ElementFigure model={element} />;
+                        editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Tb';
                         break;
                     case "mathImage":
-                        editor = <ElementFigure model={element} />;
+                        editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Eq';
                         break;
                     case "authoredtext":
-                        editor = <ElementFigure model={element} />;
+                        editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'MML';
                         break;
                     case "codelisting":
-                        editor = <ElementFigure model={element} />;
+                        editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'BCE';
                         break;
                     case "audio":
-                        editor = <ElementAudioVideo model={element} />;
+                        editor = <ElementAudioVideo model={element} index={index}/>;
                         labelText = 'AUD';
                         break;
                     case "video":
-                        editor = <ElementAudioVideo model={element} />;
+                        editor = <ElementAudioVideo model={element} index={index}/>;
                         labelText = 'VID';
                         break;
                 }

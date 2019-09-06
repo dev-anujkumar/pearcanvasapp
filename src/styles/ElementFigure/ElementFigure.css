@@ -29,11 +29,13 @@
     width:100%!important;
 }
 .paragraphNumeroUno.mathml.figureData.mathmlDiv{
-    font-size:1.080em!important;
+    font-size:12px!important;
     padding: 10px!important;
 }
 .blockCodeFigure .blockCodeDiv{
+    padding: 10px 0;
     width:100%!important;
+    max-width: 100% !important;
 }
 .figureElement .pearson-component.image.figureData {
     cursor:copy!important ;
@@ -42,7 +44,9 @@ figcaption,.figureCaption{
     font-size: 10.8px!important;
     text-align: left !important;
 }
-
+code{
+    background-color:transparent;
+}
 figure,.element-container{
     display:block !important;
 }
@@ -58,4 +62,8 @@ figure,.element-container{
 
 [placeholder]:empty:focus::before {
     content: "";
+}
+
+.divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
+    line-height: 25px;
 }

@@ -32,7 +32,7 @@ export class ElementFigure extends Component {
     /*** @description - This function is for handling the different types of figure-element.
      * @param model object that defined the type of element*/
 
-    renderFigureType = (model = {}) => {
+    renderFigureType = (model={}) => {
         const { type, index } = this.props;
 
         var figureJsx;
@@ -184,7 +184,7 @@ export class ElementFigure extends Component {
                                 draggable="false" />
                         </div>
                         <figcaption >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
                     <div >
@@ -205,13 +205,13 @@ export class ElementFigure extends Component {
                             <TinyMceEditor index={index} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 
                         </header>
-                        <p className="paragraphNumeroUno mathml figureData mathmlDiv" data-type="mathml">
+                        <div data-type="mathml">
 
-                            <TinyMceEditor index={index} placeholder="Type Something..." className="" model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor index={index} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.html.postertext} type={type} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 
-                        </p>
+                        </div>
                         <figcaption className="figcaptionText" >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
                     <div>
@@ -238,7 +238,7 @@ export class ElementFigure extends Component {
                             </pre>
                         </div>
                         <figcaption >
-                            <TinyMceEditor placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                            <TinyMceEditor index={index} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
                         </figcaption>
                     </figure>
                     <div>
@@ -251,7 +251,7 @@ export class ElementFigure extends Component {
         return figureJsx;
     }
     render() {
-        const { model } = this.props;
+        const { model} = this.props;
         return (
             <div className="figureElement">
                 {this.renderFigureType(model)}
