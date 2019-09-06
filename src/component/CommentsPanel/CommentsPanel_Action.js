@@ -6,7 +6,8 @@ import {
     REPLY_COMMENT,
     FETCH_COMMENT_BY_ELEMENT,
     RESOLVE_COMMENT,
-    TOGGLE_REPLY
+    TOGGLE_REPLY,
+    UPDATE_COMMENT
 } from '../../constants/Action_Constants';
 
 export const fetchComments = () => dispatch => {
@@ -108,6 +109,29 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             payload: { commentUrn, resolveOrOpen }
           });
        
+	}).catch(error => {
+        console.log("status update fail", error);
+    })
+};
+
+
+export const updateComment = (commentUrn, updateComment, elementId) => dispatch => {
+
+    let request = updateComment
+    axios.put(`${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`,
+    request , 
+     {
+		headers: {
+            "Content-Type": "application/json",
+            "ApiKey":'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
+			"PearsonSSOSession":config.ssoToken
+		}
+	}).then(response => {   
+        console.log("response======>",response )
+        dispatch({
+            type: UPDATE_COMMENT,
+            payload: { commentUrn, updatedText }
+          });
 	}).catch(error => {
         console.log("status update fail", error);
     })

@@ -29,6 +29,7 @@ class Comments extends React.Component {
         this.resolveComment = this.resolveComment.bind(this);
         this.updateComment = this.updateComment.bind(this);
         this.toggleReplyForm = this.toggleReplyForm.bind(this);
+        this.updateCommentText = this.updateCommentText.bind(this);
     }
     componentDidMount() {
 
@@ -56,14 +57,17 @@ class Comments extends React.Component {
    @param {String} property - property to be updated in comment
    
    */
-    updateComment(property) {
-        console.log("property", property);
-        const commentId = this.props.comment.commentUrn
-        //const elementId = this.props.elementId
-        const updatedFields = {
-            [property]: this.state.updatedFields[property]
-        }
-        // this.props.updateElementComment(commentId, updatedFields, elementId, this.props.comment)
+    updateComment() {
+        const {elementId,comment} = this.props
+        let commentId = comment.commentUrn
+        let updatedComment = {
+            comment: this.state.updatedFields.text,
+            commentCreator: comment.commentCreator,
+            status: "Open"
+          };
+        
+        const updatedText = this.state.updatedFields.text
+        this.props.updateElementComment(commentId, updatedComment, elementId)
     }
     /**
    * 
@@ -133,6 +137,17 @@ class Comments extends React.Component {
         this.props.updateResolveComment(commentUrn, "RESOLVED", elementId)
     }
 
+
+    updateCommentText (e) {
+        this.setState({
+            updatedFields: {
+                ...this.state.updatedFields,
+                text: e.target.value
+            }
+        })
+    }
+
+
     /**
     * 
     *@discription - This function is to return jsx of action menu
@@ -175,7 +190,7 @@ class Comments extends React.Component {
                     <button className="btn btn__initial"
                         onClick={() => {
                             this.setMode('view')
-                            this.updateComment('text')
+                            this.updateComment()
                         }}>
                         Save
                             </button>

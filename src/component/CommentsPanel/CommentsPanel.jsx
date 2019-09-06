@@ -7,7 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
-import {replyComment,resolveComment,toggleReply,toggleCommentsPanel} from './CommentsPanel_Action';
+import {replyComment,resolveComment,toggleReply,toggleCommentsPanel,updateComment} from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -34,9 +34,9 @@ class CommentsPanel extends React.Component {
         this.handleSearchInput = this.handleSearchInput.bind(this);
         this.setSort = this.setSort.bind(this);
         this.setStatus = this.setStatus.bind(this);
-        this.changeStatus = this.changeStatus.bind(this);
         this.updateReplyComment = this.updateReplyComment.bind(this);
         this.updateResolveComment = this.updateResolveComment.bind(this);
+        this.updateElementComment = this.updateElementComment.bind(this);
     }
     componentDidMount(){
         window.addEventListener("click", (event) => {
@@ -130,22 +130,13 @@ class CommentsPanel extends React.Component {
             showSortByDropdown: false,
         })
     }
-        /**
-    * 
-    * @discription - This function is to change  the status of comment
-  
-    */
-    changeStatus() {
-
-    }
+    updateElementComment(commentUrn,updatedComment,elementId){
+        this.props.updateComment(commentUrn,updatedComment,elementId);
+     }   
     updateReplyComment(commentUrn,reply,elementId){
         this.props.replyComment(commentUrn, reply, elementId) 
-    //  new Promise((resolve, reject) => {
-    //             this.props.replyComment(commentUrn, reply, elementId)
-    //             resolve()
-    //       });
-        
     }
+
     updateResolveComment(commentUrn, resolveString, elementId){
         console.log(this.props)
         this.props.resolveComment(commentUrn, resolveString, elementId)
@@ -167,11 +158,10 @@ class CommentsPanel extends React.Component {
                     
                     key={index}
                     elementId={comment.commentOnEntity}
-                    //  updateElementComment = {this.updateElementComment}
+                    updateElementComment = {this.updateElementComment}
                     updateReplyComment = {this.updateReplyComment}
                     updateResolveComment = {this.updateResolveComment}
                     //deleteComment = {this.deleteComment}
-                    changeStatus={this.changeStatus}
                     toggleReply= {this.props.toggleReply}
                 //updateAssignee = {this.updateAssignee}
                   toggleReplyForm = {this.props.toggleReplyForm}
@@ -320,6 +310,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       toggleCommentsPanel:(toggle)=> {
         dispatch(toggleCommentsPanel(toggle))
+      },
+      updateComment:(commentUrn,updatedComment,elementId) => {
+          dispatch(updateComment(commentUrn,updatedComment,elementId))
       }
     }
   }

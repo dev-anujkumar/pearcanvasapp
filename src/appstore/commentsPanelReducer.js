@@ -12,7 +12,8 @@ import {
     REPLY_COMMENT,
     FETCH_COMMENT_BY_ELEMENT ,
     RESOLVE_COMMENT,
-    TOGGLE_REPLY 
+    TOGGLE_REPLY,
+    UPDATE_COMMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -136,7 +137,19 @@ export default function (state = initialState , action) {
             ...state,
             comments: resolveComment
         }
+        case UPDATE_COMMENT:
 
+                let editComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+                editComment.forEach(comment=>{
+                   if(comment.commentUrn === payload.commentUrn){
+                       comment.commentString = payload.updatedText
+                       comment.commentStatus = "OPEN"
+                   }
+               })
+               return {
+                   ...state,
+                   comments: editComment
+               }
         default:
             return state;
     }
