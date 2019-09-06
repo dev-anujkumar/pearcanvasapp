@@ -38,12 +38,23 @@ class CommentsPanel extends React.Component {
         this.updateReplyComment = this.updateReplyComment.bind(this);
         this.updateResolveComment = this.updateResolveComment.bind(this);
     }
-    
+    componentDidMount(){
+        window.addEventListener("click", (event) => {
+            console.log("event",event.target)
+            const isSortDropdown = event.target.closest('.sort-dropdown')
+            const isStatusDropdown = event.target.closest('.status-dropdown')
+            if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
+        });
+    }
     componentDidUpdate(){
         console.log("comments panel=====>",this.props.comments)
     }
 
-    
+    closeAllDropdown() {
+        this.toggleStatusDropdown(false)
+        this.toggleOrderByDropdown(false)
+    }
+
      /**
     * 
     * @discription - This function is for search comments
