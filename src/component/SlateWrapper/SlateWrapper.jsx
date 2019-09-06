@@ -52,7 +52,8 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
+                    let _finalSlateObject = Object.values(_slateObject)[0];
+                    let { id: _slateId, type: _slateType, contents: _slateContent } = _finalSlateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
