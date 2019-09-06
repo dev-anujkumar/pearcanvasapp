@@ -72,14 +72,25 @@ class ElementContainer extends Component {
                 break;
         }
 
-
-    
-
+        /**
+         * Renders color-palette button for opener element 
+         * @param {e} event
+         */
+        const renderColorPaletteButton = () => {
+            if(element.type === "opener"){
+                return <Button type="color-palette" />  
+            }
+            else{
+                return null
+            }
+        }
+        
     return(
             <div className = "editor" >
             <div>
                 <Button type="element-label" labelText={labelText} />
                 <Button type="delete-element" />
+                {renderColorPaletteButton()}
             </div>
             <div className="element-container" data-id={element.id}>
                 {editor}

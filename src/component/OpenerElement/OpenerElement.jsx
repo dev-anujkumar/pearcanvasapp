@@ -6,33 +6,43 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 
 import '../../styles/OpenerElement/OpenerElement.css'
 
+import noImage from '../../images/OpenerElement/no-image.png'
 class OpenerElement extends Component {
 
     constructor(props){
         super(props)
 
         this.state = {
-            label: /* props.model.label ? props.model.label : */ "Chapter",
-            number: /* props.model.number ? props.model.number : */ "",
-            title: /* props.model.title ? props.model.title : */ "",
+            label: props.model ? props.model.label : "Chapter",
+            number: props.model ? props.model.number : "",
+            title: props.model ? props.model.title : "",
             showLabelDropdown: false
         }
     }
 
+    /**
+     * Handles label model change event
+     * @param {e} event
+     */
     handleOpenerLabelChange = e => {
-        console.log("target>>>",e.target.innerHTML)
         this.setState({
             label: e.target.innerHTML
         })
         this.toggleLabelDropdown()
     }
     
+    /**
+     * Toggles label dropdown
+     */
     toggleLabelDropdown = () => {
         this.setState({
             showLabelDropdown: !this.state.showLabelDropdown
         })
     }
 
+    /**
+     * Renders label dropdown
+     */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
         const openerLabelOptions = labelOptions.map((value, index) => {
@@ -49,27 +59,40 @@ class OpenerElement extends Component {
             return null
         }
     }
-    
+
+    /**
+     * Handles number model change event
+     * @param {e} event
+     */
     handleOpenerNumberChange = e => {
         this.setState({
             number: e.target.value
         })
     }
+
+    /**
+     * Handles title model change event
+     * @param {e} event
+     */
     handleOpenerTitleChange = e => {
         this.setState({
             title: e.target.value            
         })
     }
+
+    /**
+     * Validates input in the number field
+     * @param {e} event
+     */
     numberValidatorHandler = (e) => {
         let charCode = (e.which) ? e.which : e.keyCode;
         if((charCode>=48 && charCode<= 57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122)){
             return true
-        } else{
+        } else {
             e.preventDefault()
             return false
         }
     }
-    
     
     render() {
         return (
@@ -84,24 +107,26 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} />
+                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} />
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-title-text">Title</div>
-                        <input className="element-dropdown-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
+                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
                     </div>
                 </div>
-                <figure className="pearson-component image figureData">
-                    <img src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
-                        // data-src={model.figuredata.path !== "" ? model.figuredata.path : "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"}
-                        title=""
-                        alt=""
+                <figure className="pearson-component opener-image figureData">
+                    <img src={noImage}
                         draggable="false" 
                     />
                 </figure>
             </div>
         )
     }
+}
+
+OpenerElement.propTypes = {
+    /** Model */
+    model : PropTypes.object.isRequired,
 }
 
 export default OpenerElement

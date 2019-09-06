@@ -1,11 +1,12 @@
 .opener-label-box{
     width: 34%;
+    margin-right: 2px;
 }
 .element-dropdown-title{
     width: 100%;
     height: 50px;
     border: solid 2px #e0e0e0;
-    font-size: 15px;
+    font-size: 15px !important;
     padding:0 5px;
     border-radius:4px;
     position: relative;
@@ -17,11 +18,16 @@
     font-size: 14px;
     color: #6a7070;
 }
-.pearson-component.image.figureData{
+.pearson-component.opener-image.figureData{
     cursor: copy;
-}
-.pearson-component.image.figureData>img{
     width: 100%;
+    height: 448px;
+    display: grid !important;
+    place-items: center;
+    background: #000000;
+}
+.pearson-component.opener-image.figureData>img{
+    width: 24%;
 }
 .element-dropdown-title.label-content{
     padding: 10px 5px;
@@ -55,7 +61,6 @@ ul.element-dropdown-content{
     transition: all .2s ease-in-out;
     color: white;
 }
-
 .element-dropdown-title.label-content>span{   
     width: 8px;
     height: 8px;
