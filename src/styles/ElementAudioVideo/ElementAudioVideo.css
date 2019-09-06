@@ -4,10 +4,10 @@
 #audio-header{
     margin-bottom:6px;
 }
-/* .assetDiv{
+.assetDiv{
     font-family: 'Open Sans', sans-serif;
-    padding: 10px!important;
-} */
+    font-size:12px;
+}
 
 .figureCredit.cypress-editable{
     outline: none!important;
@@ -26,7 +26,6 @@
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel{
     min-height: 40px!important;
-    padding: 10px!important;
     cursor: auto !important;
     width:100%!important;
     max-width: 100% !important;

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import ElementAudioVideo from "./../ElementAudioVideo";
+
 import ElementAuthoring from './../ElementAuthoring';
-// import ElementAudioVideo from './../ElementAudioVideo';
+import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import './../../styles/ElementContainer/ElementContainer.css';
+import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -15,10 +16,11 @@ class ElementContainer extends Component {
             popup: false
         };
     }
-
+    componentDidMount(){
+    }
     renderElement = (element = {}) => {
         let editor = '';
-        let { elementType, labelText, index } = this.props;
+        let { elementType, labelText, index,handleCommentspanel} = this.props;
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
@@ -33,48 +35,82 @@ class ElementContainer extends Component {
                 labelText = 'BQ';
                 break;
             case "figure":
-                editor = <ElementFigure index={index} elementId={element.id} type={element.type} model={element}/>;
-                labelText = 'FG';
+
+                switch (element.figuretype) {
+                    case "image":
+                        editor = <ElementFigure model={element} index={index}/>;
+                        labelText = 'Fg';
+                        break;
+                    case "table":
+                        editor = <ElementFigure model={element} index={index}/>;
+                        labelText = 'Tb';
+                        break;
+                    case "mathImage":
+                        editor = <ElementFigure model={element} index={index}/>;
+                        labelText = 'Eq';
+                        break;
+                    case "authoredtext":
+                        editor = <ElementFigure model={element} index={index}/>;
+                        labelText = 'MML';
+                        break;
+                    case "codelisting":
+                        editor = <ElementFigure model={element} index={index}/>;
+                        labelText = 'BCE';
+                        break;
+                    case "audio":
+                        editor = <ElementAudioVideo model={element} index={index}/>;
+                        labelText = 'AUD';
+                        break;
+                    case "video":
+                        editor = <ElementAudioVideo model={element} index={index}/>;
+                        labelText = 'VID';
+                        break;
+                }
                 break;
-                
         }
 
-        return (
-            <div className="editor">
-                <div>
-                    <Button type="element-label" labelText={labelText} />
-                    <Button type="delete-element" />
-                </div>
-                <div className="element-container" data-id={element.id}>
-                    {editor}
-                </div>
-                <div>
-                    <Button type="add-comment" onClick={() => this.handleCommentPopup(true)}/>
-                    {element.comments && <Button type="comment-flag" /> }
-                    {element.tcm && <Button type="tcm" />}
-                    {/* <Button type="comment-flag" />
-                    <Button type="tcm" /> */}
-                </div>
-                {this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
+
+    
+
+    return(
+            <div className = "editor" >
+            <div>
+                <Button type="element-label" labelText={labelText} />
+                <Button type="delete-element" />
             </div>
+            <div className="element-container" data-id={element.id}>
+                {editor}
+            </div>
+            <div>
+                <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
+                 <Button  elementId = {element.id} onClick = {handleCommentspanel} type="comment-flag" /> 
+                {element.tcm && <Button type="tcm" />}
+                {/* <Button type="comment-flag" />
+                    <Button type="tcm" /> */}
+            </div>
+                { this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
+            </div >
         );
     }
 
-    /**
-     * @description - This function is for handling the closing and opening of popup.
-     * @param {event} popup
-     */
+/**
+ * @description - This function is for handling the closing and opening of popup.
+ * @param {event} popup
+ */
 
-    handleCommentPopup(popup){
-        this.setState({
-            popup
-        });
-    }
-
-    render = () => {
-        const { element } = this.props;
-        return this.renderElement(element);
-    }
+handleCommentPopup(popup){
+    this.setState({
+        popup
+    });
+}
+handleCommentPanel(){
+    console.log("click button")
+    this.props.dispatch(toggleCommentsPanel(true));
+}
+render = () => {
+    const { element } = this.props;
+    return this.renderElement(element);
+}
 }
 
 ElementContainer.defaultProps = {
@@ -85,9 +121,9 @@ ElementContainer.defaultProps = {
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
-    element : PropTypes.object,
-    elementType : PropTypes.string,
-    labelText : PropTypes.string
+    element: PropTypes.object,
+    elementType: PropTypes.string,
+    labelText: PropTypes.string
 }
 
 export default ElementContainer

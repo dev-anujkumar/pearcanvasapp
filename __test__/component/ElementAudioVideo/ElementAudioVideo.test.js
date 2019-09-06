@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementAudioVideo } from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
-import { audioElementDefault, audioElementWithData, videoElementDefault, videoElementWithData } from '../../../fixtures/ElementAudioVideoTestingData.js'
+import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
 describe('Testing Element Audio-Video component', () => {
 
     test('renders without crashing', () => {
@@ -13,38 +13,47 @@ describe('Testing Element Audio-Video component', () => {
 
     describe('With Audio element', () => {
         let props = {
-            element: audioElementDefault
+            model: audioElementTypeSLDefault,
+            index: 1
         };
         let component = mount(<ElementAudioVideo {...props} />);
-        test('renders properly with default audio element', () => {
+        test('renders properly with default audio SL-type element', () => {
         
             expect(component).toMatchSnapshot();
         })
-
-        test('renders  properly with given audio element', () => {
-            props = {
-                model: audioElementWithData
-            };
-            component.setProps({ model: audioElementWithData });
-           
+        test('renders  properly with given audio SL-type  element', () => {
+            component.setProps({ model: audioElementTypeSLWithData,index: 2 });
+            expect(component).toMatchSnapshot();
+        })
+        test('renders  properly with default audio Alfresco-type element', () => {
+            component.setProps({ model: audioElementTypeAlfrescoDefault,index: 3 });
+            expect(component).toMatchSnapshot();
+        })
+        test('renders  properly with given audio Alfresco-type element', () => {
+            component.setProps({ model: audioElementTypeAlfrescoWithData ,index:4 });
             expect(component).toMatchSnapshot();
         })
     });
     describe('With Video element', () => {
         let props = {
-            model: videoElementDefault
+            model: videoElementTypeSLDefault
+            ,index: 5
         };
         let component = mount(<ElementAudioVideo {...props} />);
-        test('renders properly with default video element', () => {
+        test('renders properly with default video SL-type element', () => {
            
             expect(component).toMatchSnapshot();
         })
-        test('renders  properly with given video element', () => {
-            props = {
-                model: videoElementWithData
-            };
-            component.setProps({ element: videoElementWithData });
-            
+        test('renders  properly with given video SL-type element', () => {
+            component.setProps({ element: videoElementTypeSLWithData,index: 6 });
+            expect(component).toMatchSnapshot();
+        })
+        test('renders  properly with default video Alfresco-type element', () => {
+            component.setProps({ element: videoElementTypeAlfrescoDefault ,index: 7});
+            expect(component).toMatchSnapshot();
+        })
+        test('renders  properly with given video Alfresco-type element', () => {
+            component.setProps({ element: videoElementTypeAlfrescoWithData,index: 8 });
             expect(component).toMatchSnapshot();
         })
 

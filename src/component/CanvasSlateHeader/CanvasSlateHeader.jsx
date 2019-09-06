@@ -26,7 +26,7 @@ import PropTypes from 'prop-types'
      */
 
     handleNavClick(nav) {
-        alert(nav);
+        this.props.onNavigate(nav);
     }
 
     setDynamicStyle = (type,className) => {
@@ -86,7 +86,7 @@ import PropTypes from 'prop-types'
                         <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
                     </div>
                     <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/>
-                    <Button type="forward-nav-active" onClick={() => this.handleNavClick("for")}/>
+                    <Button type="forward-nav-active" onClick={() => this.handleNavClick("next")}/>
                 </div>
             </div>
         )

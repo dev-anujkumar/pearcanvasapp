@@ -29,7 +29,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
@@ -97,6 +97,7 @@ class SlateWrapper extends Component {
                                 element={element}
                                 key={element.id}
                                 index={index}
+                                handleCommentspanel ={this.props.handleCommentspanel}
                             />
                              <ElementSaprator
                                 key={`elem-separtor-${element.id}`}

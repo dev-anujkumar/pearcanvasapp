@@ -3,7 +3,8 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { withInfo } from '@storybook/addon-info';
 import CommentsPanel from '../../src/component/CommentsPanel/CommentsPanel';
-
+import { Provider } from 'react-redux';
+import store from  '../../src/appstore/store.js'
 
 export const comments = [{
   "commentType": "comment",
@@ -54,7 +55,8 @@ export const commentsWithoutReply = [
 ]
 
 storiesOf('CommentsPanel', module)
-  .addDecorator(withInfo)
+   .addDecorator(story => <Provider store={store}>{story()}</Provider>)
+  //.addDecorator(withInfo)
   .add('Commnets Panel', () => <CommentsPanel comments = {comments} onClick={action('Add Comments with reply')} />, { notes: "Add Comments" })
   .add('Without reply comment' , () => <CommentsPanel comments = {commentsWithoutReply} onClick={action('Add Comments without reply')} />, { notes: "Add Comments" })
   .add('Without no comment' , () => <CommentsPanel comments = {null} onClick={action('Add Comments without reply')} />, { notes: "Add Comments" })

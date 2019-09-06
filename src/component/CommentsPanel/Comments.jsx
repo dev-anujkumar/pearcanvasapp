@@ -1,12 +1,12 @@
 import React from 'react'
 //import CommnetsForm from './CommentsForm.jsx'
-import UserAssignee from './UserAssignee';
-import ReplyComment from './ReplyComment';
+import UserAssignee from './UserAssignee.jsx';
+import ReplyComment from './ReplyComment.jsx';
 import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
-import CurrentProjectUsers from './CurrentProjectUsers'
-class Comment extends React.Component {
+//import {CurrentProjectUsers} from './CurrentProjectUsers.jsx'
+class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -32,7 +32,11 @@ class Comment extends React.Component {
     }
     componentDidMount() {
 
-        document.body.addEventListener('click', this.toggleActionsMenu(false));
+        window.addEventListener("click", (event) => {
+            if (event.target.className !== "action-menu-img") {
+                this.toggleActionsMenu(false)
+            }
+        });
     }
     /**
     * 
@@ -114,21 +118,21 @@ class Comment extends React.Component {
     toggleReplyForm(show) {
         this.toggleActionsMenu(false)
         if (show === undefined) show = !this.state.showReplyForm
+        this.props.toggleReply(true);
         this.setState({ showReplyForm: show })
     }
     /**
-* 
-*@discription - This function is to resolve comment
-*/
+    * 
+    *@discription - This function is to resolve comment
+    */
 
     resolveComment(e) {
-        //const { commentUrn } = this.props.comment  
-        //  const { elementId } = this.props      
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
         this.toggleActionsMenu(false)
-        //this.props.changeStatus(commentUrn, "RESOLVED", elementId)
-        // this.setStatus('resolved')
-        // setTimeout(() =>  this.updateComment('status'), 0)
+        this.props.updateResolveComment(commentUrn, "RESOLVED", elementId)
     }
+
     /**
     * 
     *@discription - This function is to return jsx of action menu
@@ -205,11 +209,11 @@ class Comment extends React.Component {
         /* const updatedFields = {
             'assignto': this.state.newAssignee
         } */
-      //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
+        //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
         console.log(this.props);
-        const { comment, elementId } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -230,7 +234,7 @@ class Comment extends React.Component {
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
                             onClick={() => this.toggleActionsMenu()}
                         >
-                            <img src={navigationShowMore} />
+                            <img className="action-menu-img" src={navigationShowMore} />
                         </span>
                         {this.state.showActionsMenu && this.actionsMenu()}
                     </div>
@@ -275,16 +279,20 @@ class Comment extends React.Component {
                 <div className="replies-wrapper">
                     <ReplyComment
                         close={this.toggleReplyForm}
-                        comment={this.props.comment}
-                        showReplyForm={this.state.showReplyForm} />
+                        comment={comment}
+                        showReplyForm={this.state.showReplyForm}
+                        updateReplyComment={updateReplyComment}
+                        elementId={elementId}
+                        toggleReplyForm={toggleReplyForm}
+                    />
                 </div>
             </div>
         );
     }
 }
-Comment.propTypes = {
+Comments.propTypes = {
     /** commet data attached to store and contains complete comment object */
     comment: PropTypes.object.isRequired
 }
 
-export default Comment;
+export default Comments;
