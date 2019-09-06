@@ -343,42 +343,42 @@ const mockData6={
 
 }
 
-storiesOf('ElementFigure', module)
+storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <ElementFigure model={mockData1} />)
+    .add('default Figure-50', () => <ElementFigure model={mockData1} index="1" />)
     .add('Figure Image-FS', () => {
         return (
             <>
-                <ElementFigure model={mockData4} />
+                <ElementFigure model={mockData4} index="2"/>
             </>
         );
     })
     .add('Table Image-TW', () => {
         return (
             <>
-                <ElementFigure model={mockData2} />
+                <ElementFigure model={mockData2} index="3"/>
             </>
         );
     })
     .add('Math Image-WT', () => {
         return (
             <>
-                <ElementFigure model={mockData3} />
+                <ElementFigure model={mockData3} index="4" />
             </>
         );
     })
     .add('MathML/Chem Editor', () => {
         return (
             <>
-                <ElementFigure model={mockData5} />
+                <ElementFigure model={mockData5} index="5"/>
             </>
         );
     })
     .add('Block Code Editor', () => {
         return (
             <>
-                <ElementFigure model={mockData6} />
+                <ElementFigure model={mockData6} index="6" />
             </>
         );
     })

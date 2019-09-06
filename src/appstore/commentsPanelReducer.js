@@ -10,10 +10,12 @@ import {
     FETCH_COMMENTS,
     TOGGLE_COMMENTS_PANEL,
     REPLY_COMMENT,
-    FETCH_COMMENT_BY_ELEMENT ,
+    FETCH_COMMENT_BY_ELEMENT,
     RESOLVE_COMMENT,
     TOGGLE_REPLY,
-    UPDATE_COMMENT
+    UPDATE_COMMENT,
+    GET_PROJECT_USER,
+    UPDATE_ASSIGNEE
 } from '../constants/Action_Constants';
 
 /**
@@ -73,8 +75,9 @@ const initialState = {
         "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
     }
     ],
-    toggleReplyForm:true,
-    togglePanel:false
+    toggleReplyForm: true,
+    togglePanel: false,
+    users: []
 }
 
 /**
@@ -82,8 +85,8 @@ const initialState = {
  * @param {Object} state | current state
  * @param {String} action | incoming action with payload
  */
-export default function (state = initialState , action) {
-    const {type,payload} = action;
+export default function (state = initialState, action) {
+    const { type, payload } = action;
     switch (action.type) {
         case FETCH_COMMENTS:
             return {
@@ -106,11 +109,11 @@ export default function (state = initialState , action) {
                 togglePanel: action.payload
             }
         case TOGGLE_REPLY:
-                    console.log(action.payload);
-                    return {
-                        ...state,
-                        toggleReplyForm: payload
-                    }
+            console.log(action.payload);
+            return {
+                ...state,
+                toggleReplyForm: payload
+            }
         case REPLY_COMMENT:
             const commentsList = state.comments;
             console.log("comment", commentsList)
@@ -127,29 +130,49 @@ export default function (state = initialState , action) {
             }
         case RESOLVE_COMMENT:
 
-         let resolveComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
-         resolveComment.forEach(comment=>{
-            if(comment.commentUrn === payload.commentUrn){
-                comment.commentStatus = payload.resolveOrOpen
+            let resolveComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+            resolveComment.forEach(comment => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentStatus = payload.resolveOrOpen
+                }
+            })
+            return {
+                ...state,
+                comments: resolveComment
             }
-        })
-        return {
-            ...state,
-            comments: resolveComment
-        }
         case UPDATE_COMMENT:
 
-                let editComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
-                editComment.forEach(comment=>{
-                   if(comment.commentUrn === payload.commentUrn){
-                       comment.commentString = payload.updatedText
-                       comment.commentStatus = "OPEN"
-                   }
-               })
-               return {
-                   ...state,
-                   comments: editComment
-               }
+            let editComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+            editComment.forEach(comment => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentString = payload.updateComment
+                    comment.commentStatus = "OPEN"
+                }
+            })
+            return {
+                ...state,
+                comments: editComment
+            }
+        case GET_PROJECT_USER:
+            console.log("reducer==.")
+            let users = payload;
+            users = users.filter(user => user.isMember === true)
+            return {
+                ...state,
+                users: users
+            }
+
+        case UPDATE_ASSIGNEE:
+            let updateComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+            updateComment.forEach((comment,index) =>{
+                if(comment.commentUrn === payload.commentUrn){
+                    comment.commentAssignee = payload.newAssignee
+                }
+            })
+            return {
+                ...state,
+                comments: updateComment
+            }
         default:
             return state;
     }

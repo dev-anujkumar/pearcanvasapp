@@ -30,6 +30,7 @@ class Comments extends React.Component {
         this.updateComment = this.updateComment.bind(this);
         this.toggleReplyForm = this.toggleReplyForm.bind(this);
         this.updateCommentText = this.updateCommentText.bind(this);
+        this.updateAssignee = this.updateAssignee.bind(this);
     }
     componentDidMount() {
 
@@ -112,7 +113,9 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
+        this.props.getProjectUsers();
     }
+
     /**
 * 
 *@discription - This function is to toggle replay form
@@ -224,11 +227,11 @@ class Comments extends React.Component {
         /* const updatedFields = {
             'assignto': this.state.newAssignee
         } */
-        //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
+          this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
         console.log(this.props);
-        const { comment, elementId, updateReplyComment, toggleReplyForm } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm,users } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -275,6 +278,7 @@ class Comments extends React.Component {
                                     setMode={this.setMode}
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
+                                    users = {users}
                                 />
 
                             </div>
