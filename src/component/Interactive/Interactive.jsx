@@ -343,6 +343,6 @@ Interactive.propTypes = {
     /** Handler to attach on element focus */
     onFocus: PropTypes.func,
     itemId: PropTypes.string,
-    element: PropTypes.object.isRequired
+    model: PropTypes.object.isRequired
 }
 export default Interactive;
