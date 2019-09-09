@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
+import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
@@ -95,7 +96,6 @@ export class CanvasWrapper extends Component {
                     </div>
                 </div>  
             </div>
-
         );
     }
     
@@ -108,7 +108,6 @@ const mapStateToProps = state => {
 };
 
 
-
 export default connect(
     mapStateToProps,
     {
@@ -117,4 +116,4 @@ export default connect(
         fetchComments,
         fetchCommentByElement
     }
-)(CanvasWrapper);
+)(CommunicationChannelWrapper(CanvasWrapper));
