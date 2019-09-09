@@ -279,6 +279,9 @@ html {
 .comment .action-menu-btn, .action-menu li {
     cursor: pointer;
 }
+.action-menu li:hover{
+    background: #17C588;
+}
 .align-middle {
     display: flex;
     align-items: center;
@@ -299,6 +302,11 @@ html {
     background: white;
     box-shadow: 1px 1px 5px #444;
     z-index: 1000;
+    padding-left:0px;
+    
+}
+
+.comment-action-menu li {
     padding-left:9px;
 }
 

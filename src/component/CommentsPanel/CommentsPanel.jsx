@@ -7,7 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
-import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers,updateAssignee } from './CommentsPanel_Action';
+import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -39,6 +39,7 @@ class CommentsPanel extends React.Component {
         this.updateElementComment = this.updateElementComment.bind(this);
         this.getProjectUsers = this.getProjectUsers.bind(this);
         this.updateAssignee = this.updateAssignee.bind(this);
+        this.deleteComment = this.deleteComment.bind(this);
     }
     componentDidMount() {
         window.addEventListener("click", (event) => {
@@ -48,11 +49,11 @@ class CommentsPanel extends React.Component {
             if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
         });
     }
-    componentDidUpdate() {
-        console.log("comments panel=====>", this.props.comments)
-       
-    }
 
+      /**
+   * 
+   * @discription - This function is for close all dropdown
+   */
     closeAllDropdown() {
         this.toggleStatusDropdown(false)
         this.toggleOrderByDropdown(false)
@@ -133,22 +134,74 @@ class CommentsPanel extends React.Component {
             showSortByDropdown: false,
         })
     }
+      /**
+    * 
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {string} updatedComment - updated comment
+    * @param {string} elementId - Elemenet id to de updated
+    */
     updateElementComment(commentUrn, updatedComment, elementId) {
         this.props.updateComment(commentUrn, updatedComment, elementId);
     }
+
+
+      /**
+    * 
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} reply - value of reply and comment detail
+    * @param {string} elementId - Elemenet id to de updated
+    */
     updateReplyComment(commentUrn, reply, elementId) {
         this.props.replyComment(commentUrn, reply, elementId)
     }
+
+
+        /**
+    * 
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} resolveString - status of comment to be change:resolve,open
+    * @param {string} elementId - Elemenet id to de updated
+    */
+
 
     updateResolveComment(commentUrn, resolveString, elementId) {
         console.log(this.props)
         this.props.resolveComment(commentUrn, resolveString, elementId)
     }
-    getProjectUsers(){
+
+
+      /**
+    * 
+    * @discription - This function is to get user detail of project
+    */
+    getProjectUsers() {
         this.props.getProjectUsers();
     }
-    updateAssignee(commentUrn, newAssignee, elementId){
+
+        /**
+    * 
+    * @discription - This function is to update the assignee of the comment.
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} newAssignee - New Assignee to be updated in comment
+    * @param {string} elementId - Elemenet id to de updated
+    */
+
+    updateAssignee(commentUrn, newAssignee, elementId) {
         this.props.updateAssignee(commentUrn, newAssignee, elementId);
+    }
+
+    /**
+    * 
+    * @discription - This function is to delete the comment
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {string} elementId - Elemenet id to de updated
+    */
+
+    deleteComment(commentUrn, elementId) {
+        this.props.deleteComment(commentUrn, elementId);
     }
 
     /**
@@ -163,19 +216,18 @@ class CommentsPanel extends React.Component {
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
-                    //slateTitle = {this.currentSlate}
-
+                    slateTitle={this.props.slateTitle}
                     key={index}
                     elementId={comment.commentOnEntity}
                     updateElementComment={this.updateElementComment}
                     updateReplyComment={this.updateReplyComment}
                     updateResolveComment={this.updateResolveComment}
-                    //deleteComment = {this.deleteComment}
+                    deleteComment={this.deleteComment}
                     toggleReply={this.props.toggleReply}
-                    updateAssignee = {this.updateAssignee}
+                    updateAssignee={this.updateAssignee}
                     toggleReplyForm={this.props.toggleReplyForm}
-                    users = {this.props.users}
-                    getProjectUsers = {this.getProjectUsers}
+                    users={this.props.users}
+                    getProjectUsers={this.getProjectUsers}
                 />)
             })
             return comments;
@@ -258,9 +310,6 @@ class CommentsPanel extends React.Component {
                                             <div id="nav-context-selector" className="dropdown__title">
                                                 {this.state.filters.status.label}
                                             </div>
-                                            {/* <svg className="dropdown__arrow">
-                                            <use xlinkHref="#arrow-down"></use>
-                                        </svg> */}
                                             <img src={arrowDown} />
                                         </div>
                                         {this.state.showStatusDropdown &&
@@ -330,6 +379,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAssignee: (commentUrn, newAssignee, elementId) => {
             dispatch(updateAssignee(commentUrn, newAssignee, elementId))
+        },
+        deleteComment: (commentUrn, elementId) => {
+            dispatch(deleteComment(commentUrn, elementId))
         }
     }
 }
@@ -340,11 +392,10 @@ const mapStateToProps = state => {
 
         comments: state.commentsPanelReducer.comments,
         togglePanel: state.commentsPanelReducer.togglePanel,
-        //elementId :state.commentsPanelReducer.elementId  // will get on button click
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
-        users:state.commentsPanelReducer.users
+        users: state.commentsPanelReducer.users,
+        slateTitle: state.commentsPanelReducer.slateTitle
     }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentsPanel);
-//export default CommentsPanel;

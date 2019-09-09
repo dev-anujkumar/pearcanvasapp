@@ -12,9 +12,6 @@ import PropTypes from 'prop-types';
         this.updateCommentText = this.updateCommentText.bind(this);
         this.replyComment = this.replyComment.bind(this);
     }
-componentDidUpdate(){
-        
-}
     /**
 * 
 *@discription - This function is to update the text of comment

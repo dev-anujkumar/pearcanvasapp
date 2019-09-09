@@ -1,6 +1,4 @@
 import React from 'react'
-//import { getProjectUsers } from '../../actions/projectGetters'
-//import { getAllUsers } from '../../actions/userGetters';
 //const configModule = require('../../js/config_module.js');
 import PropTypes from 'prop-types';
  class CurrentProjectUsers extends React.Component {
@@ -11,12 +9,6 @@ import PropTypes from 'prop-types';
         }
         this.getUser = this.getUser.bind(this);
     }
-    componentDidMount() {
-        // let manifest_object = configModule.GET_MANIFEST_OBJECT();
-        //let { ENTITY_URN } = manifest_object
-        // this.refreshUsers(ENTITY_URN)
-    }
-        /**
 
 /**
   * 
@@ -33,6 +25,7 @@ import PropTypes from 'prop-types';
         e.target.className = "assign-user-list-items asignee-selected" 
        this.props.newAssigneeUser(user)
     }
+
     render() {
         const { currentAssingnee,users } = this.props
         return (
@@ -55,6 +48,8 @@ CurrentProjectUsers.propTypes = {
     /** current assignee of the comment */
     currentAssingnee: PropTypes.string.isRequired,
       /** new  assignee of the comment */
-    newAssigneeUser:PropTypes.func
+    newAssigneeUser:PropTypes.func,
+       /** users of project */
+    users:PropTypes.array
 }
 export default CurrentProjectUsers;

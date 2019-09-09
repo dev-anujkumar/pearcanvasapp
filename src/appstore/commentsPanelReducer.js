@@ -1,7 +1,7 @@
 /**
- * Module - Slate Level Reducer
- * Description - all slate related action payloads land here
- * Developer - Abhay Singh
+ * Module - CommentPanel Reducer
+ * Description - All comments manupulation of comments panel lands here
+ * Developer -yasmin agwan
  * Last modified - 21-08-2019
  */
 
@@ -15,11 +15,12 @@ import {
     TOGGLE_REPLY,
     UPDATE_COMMENT,
     GET_PROJECT_USER,
-    UPDATE_ASSIGNEE
+    UPDATE_ASSIGNEE,
+    DELETE_COMMENT
 } from '../constants/Action_Constants';
 
 /**
- * This is the initial state and structure of app store
+ * This is the initial state and structure of comments panel store
  * update it accordingly
  */
 const initialState = {
@@ -77,7 +78,8 @@ const initialState = {
     ],
     toggleReplyForm: true,
     togglePanel: false,
-    users: []
+    users: [],
+    slateTitle: ""
 }
 
 /**
@@ -87,12 +89,12 @@ const initialState = {
  */
 export default function (state = initialState, action) {
     const { type, payload } = action;
-    switch (action.type) {
+    switch (type) {
         case FETCH_COMMENTS:
             return {
                 ...state,
-                // comments: action.payload.commentList
-                allComments: action.payload
+                allComments: payload.comments,
+                slateTitle: payload.title
             };
         case FETCH_COMMENT_BY_ELEMENT:
             console.log("comments======>", state.allComments)
@@ -103,13 +105,13 @@ export default function (state = initialState, action) {
                 comments: comments
             }
         case TOGGLE_COMMENTS_PANEL:
-            console.log(action.payload);
+            console.log(payload);
             return {
                 ...state,
-                togglePanel: action.payload
+                togglePanel: payload
             }
         case TOGGLE_REPLY:
-            console.log(action.payload);
+            console.log(payload);
             return {
                 ...state,
                 toggleReplyForm: payload
@@ -118,19 +120,19 @@ export default function (state = initialState, action) {
             const commentsList = state.comments;
             console.log("comment", commentsList)
             commentsList.forEach((comment, index) => {
-                if (comment.commentUrn === action.payload.commentUrn) {
-                    comment.replyComments.push(action.payload.reply)
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.replyComments.push(payload.reply)
                 }
             })
 
             return {
                 ...state,
                 comments: commentsList,
-                toggleReplyForm: action.payload.toggleReplyForm
+                toggleReplyForm: payload.toggleReplyForm
             }
         case RESOLVE_COMMENT:
 
-            let resolveComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+            let resolveComment = JSON.parse(JSON.stringify(state.comments)) 
             resolveComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentStatus = payload.resolveOrOpen
@@ -142,7 +144,7 @@ export default function (state = initialState, action) {
             }
         case UPDATE_COMMENT:
 
-            let editComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
+            let editComment = JSON.parse(JSON.stringify(state.comments))
             editComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentString = payload.updateComment
@@ -163,15 +165,26 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_ASSIGNEE:
-            let updateComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
-            updateComment.forEach((comment,index) =>{
-                if(comment.commentUrn === payload.commentUrn){
+            let updateComment = JSON.parse(JSON.stringify(state.comments)) 
+            updateComment.forEach((comment, index) => {
+                if (comment.commentUrn === payload.commentUrn) {
                     comment.commentAssignee = payload.newAssignee
                 }
             })
             return {
                 ...state,
                 comments: updateComment
+            }
+        case DELETE_COMMENT:
+            let deleteComment = JSON.parse(JSON.stringify(state.comments))
+            deleteComment.forEach((comment, index) => {
+                if (comment.commentUrn === payload) {
+                    deleteComment.splice(index, 1)
+                }
+            })
+            return {
+                ...state,
+                comments: deleteComment
             }
         default:
             return state;
