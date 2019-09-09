@@ -6,6 +6,7 @@ import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
+import OpenerElement from "../OpenerElement";
 import './../../styles/ElementContainer/ElementContainer.css';
 import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 
@@ -23,8 +24,9 @@ class ElementContainer extends Component {
         let { elementType, labelText, index,handleCommentspanel} = this.props;
         switch(element.type) {
             case 'opener':
-                editor = "Opener Element";
-                break;
+                editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
+                labelText = 'OE'
+                break
 
             case "element-authoredtext":
                 editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
@@ -34,6 +36,7 @@ class ElementContainer extends Component {
                 editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
+
             case "figure":
 
                 switch (element.figuretype) {
@@ -69,14 +72,25 @@ class ElementContainer extends Component {
                 break;
         }
 
-
-    
-
+        /**
+         * Renders color-palette button for opener element 
+         * @param {e} event
+         */
+        const renderColorPaletteButton = () => {
+            if(element.type === "opener"){
+                return <Button type="color-palette" />  
+            }
+            else{
+                return null
+            }
+        }
+        
     return(
             <div className = "editor" >
             <div>
                 <Button type="element-label" labelText={labelText} />
                 <Button type="delete-element" />
+                {renderColorPaletteButton()}
             </div>
             <div className="element-container" data-id={element.id}>
                 {editor}

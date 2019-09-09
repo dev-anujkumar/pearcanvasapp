@@ -107,16 +107,15 @@
 
 
 .color-palette{
-    padding: 6px 0;
+    padding: 0px 0px;
     background-size: contain;
-    width: 30px;
-    height: 30px;
-    text-align: center;
+    width: 40px;
     position: absolute;
-    color: white;
     cursor: pointer;
 }
-
+.btn-element.color-palette>img {
+    width: 100%;
+}
 .section-break-elem svg {
     fill: #9e9e9e;
     width: 20px;
