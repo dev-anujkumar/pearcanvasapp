@@ -14,4 +14,4 @@ const openerModel = {
 
 storiesOf('Opener Element', module)
   .addDecorator(withInfo)
-  .add('Opener', () => <OpenerElement model={openerModel.html} />, { notes: "Opener Element" })
+  .add('Opener', () => <div style = {{width: '500px', position: 'relative', left: '100px'}}><OpenerElement model={openerModel.html} /></div>, { notes: "Opener Element" })

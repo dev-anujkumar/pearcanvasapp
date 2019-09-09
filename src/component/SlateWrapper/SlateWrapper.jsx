@@ -12,25 +12,6 @@ import { SlateFooter } from './SlateFooter.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
-const openerObj = {
-    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    "type": "opener",
-    "subtype": "",
-    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-    "elementdata": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf"
-    },
-    "html": {
-        "label": "Ch",
-        "number": "166",
-        "title": "Opener element title 1"
-    },
-    "comments": true,
-    "tcm": true,
-    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-}
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -74,7 +55,6 @@ class SlateWrapper extends Component {
                     let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _finalSlateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
-                    _slateBodyMatter = [openerObj, ..._slateBodyMatter]
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
