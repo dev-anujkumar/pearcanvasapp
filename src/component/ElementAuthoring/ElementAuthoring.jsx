@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TinyMceEditor } from "./../tinyMceEditor"
+import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 
 export class ElementAuthoring extends Component {
@@ -28,7 +28,6 @@ export class ElementAuthoring extends Component {
           onKeyup={this.onKeyup}
           onBlur={this.onBlur}
           onClick={this.onClick}
-          handleActiveElement={this.props.handleActiveElement}
         />
     )
   }

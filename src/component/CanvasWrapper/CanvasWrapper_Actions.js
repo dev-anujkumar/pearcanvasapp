@@ -2,7 +2,8 @@ import axios from 'axios';
 import config from '../../config/config';
 import mockdata from './../../appstore/mockdata';
 import {
-    FETCH_SLATE_DATA
+	FETCH_SLATE_DATA,
+	SET_ACTIVE_ELEMENT
 } from '../../constants/Action_Constants';
 
 export const fetchSlateData = (manifestURN) => dispatch => {
@@ -20,3 +21,10 @@ export const fetchSlateData = (manifestURN) => dispatch => {
         })
 	})
 };
+
+export const setActiveElement = (activeElement = {}) => dispatch => {
+	dispatch({
+		type: SET_ACTIVE_ELEMENT,
+		payload: activeElement
+	})
+}

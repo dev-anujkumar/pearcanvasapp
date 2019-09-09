@@ -7,7 +7,8 @@
 
 // IMPORT - Action constants //
 import {
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    SET_ACTIVE_ELEMENT
 } from '../constants/Action_Constants';
 import config from './../config/config';
 import mockdata from './mockdata'; 
@@ -33,6 +34,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload
             };
+        case SET_ACTIVE_ELEMENT:
+            return {
+                ...state,
+                activeElement: action.payload
+            }
         default:
             return state;
     }

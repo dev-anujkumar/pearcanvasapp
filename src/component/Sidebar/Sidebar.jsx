@@ -11,7 +11,7 @@ class Sidebar extends Component {
     constructor(props) {
         super(props);
         
-        let elementType = this.props.elementType || 'element-authoredtext';
+        let elementType = this.props.activeElement.type || 'element-authoredtext';
         let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
@@ -38,10 +38,10 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.elementId !== '') {
+        if(this.props.activeElement.id !== '') {
             this.props.updateElement({
                 slateId: this.props.slateId,
-                elementId: this.props.elementId,
+                elementId: this.props.activeElement.id,
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption
             });
@@ -99,10 +99,10 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.elementId !== '') {
+        if(this.props.activeElement.id !== '') {
             this.props.updateElement({
                 slateId: this.props.slateId,
-                elementId: this.props.elementId,
+                elementId: this.props.activeElement.id,
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value
             });
@@ -176,7 +176,7 @@ class Sidebar extends Component {
         return attributions;
     }
 
-    render = () => { console.log('state::', this.props, this.state);
+    render = () => {
         return (
             <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
@@ -199,7 +199,7 @@ Sidebar.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        
+        activeElement: state.appStore.activeElement || {}
     };
 };
 

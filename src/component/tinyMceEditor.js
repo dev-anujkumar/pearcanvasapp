@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
@@ -11,12 +11,14 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
+import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
-export class TinyMceEditor extends React.Component {
+
+export class TinyMceEditor extends Component {
     constructor(props) {
-        super(props);console.log('constructor:::');
+        super(props);
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -43,8 +45,7 @@ export class TinyMceEditor extends React.Component {
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
-        
-      }
+    }
     componentDidUpdate(){console.log('component did update:::', tinymce.editors);
     if(!tinymce.editors.length){
         tinymce.init(this.editorConfig)
@@ -61,23 +62,24 @@ export class TinyMceEditor extends React.Component {
  
 
   handleFocus=(e)=>{
-    this.props.handleActiveElement(this.props.element);
-   if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
-   return false;
-   if(tinymce.activeEditor){
-     let activeEditorId = tinymce.activeEditor.id;
-   
-     tinymce.remove('#'+tinymce.activeEditor.id)
-    //  tinymce.remove(this.editorConfig);
-     document.getElementById(activeEditorId).contentEditable = true;
-   }
+    if(Object.keys(this.props.element).length > 0)
+    this.props.setActiveElement(this.props.element);
+    if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
+    return false;
+    if(tinymce.activeEditor){
+        let activeEditorId = tinymce.activeEditor.id;
+        
+        tinymce.remove('#'+tinymce.activeEditor.id)
+        document.getElementById(activeEditorId).contentEditable = true;
+    }
     this.editorConfig.selector='#'+e.target.id
     tinymce.init(this.editorConfig)
-   
    }
   
     render() {
-       
+        if(tinymce.activeEditor) {
+            tinymce.remove('#'+tinymce.activeEditor.id)
+        }
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
        
@@ -85,7 +87,7 @@ export class TinyMceEditor extends React.Component {
          /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
-                return (                    
+                return (                 
                     <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                 );
             case 'h4':
@@ -103,6 +105,7 @@ export class TinyMceEditor extends React.Component {
         }
     }
 }
+
 TinyMceEditor.propTypes = {
     /** class name of the element type to be rendered */
     className:PropTypes.string,
@@ -115,5 +118,16 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-export default TinyMceEditor;
+const mapStateToProps = state => {
+    return {
+        
+    };
+};
+
+export default connect(
+    mapStateToProps, 
+    {
+        setActiveElement
+    }
+)(TinyMceEditor);
 

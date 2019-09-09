@@ -27,7 +27,7 @@ class ElementContainer extends Component {
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring index={index} elementId={element.id} element={element} type={'heading-1'} model={element.html} handleActiveElement={this.props.handleActiveElement} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} element={element} type={'heading-1'} model={element.html} />;
                 break;
 
             case "element-blockfeature":

@@ -98,7 +98,6 @@ class SlateWrapper extends Component {
                                 key={element.id}
                                 index={index}
                                 handleCommentspanel ={this.props.handleCommentspanel}
-                                handleActiveElement={this.props.handleActiveElement}
                             />
                              <ElementSaprator
                                 key={`elem-separtor-${element.id}`}

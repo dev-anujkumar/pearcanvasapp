@@ -1,4 +1,5 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
+export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
 
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'

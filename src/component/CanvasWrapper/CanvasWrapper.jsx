@@ -17,7 +17,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 
-export class CanvasWrapper extends Component {
+class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
 
@@ -38,9 +38,9 @@ export class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        // if(document.getElementById("cypress-0") && Object.keys(this.state.activeElement).length === 0){
-        //     document.getElementById("cypress-0").focus();
-        // }
+        if(document.getElementById("cypress-0")){
+            document.getElementById("cypress-0").focus();
+        }
     }
     handleCommentspanel(elementId){
         console.log("elementId",elementId);
@@ -61,12 +61,6 @@ export class CanvasWrapper extends Component {
             activeSlate:config.slateList[activeSlateIndex]
         });
         this.props.fetchSlateData(config.slateList[activeSlateIndex]);
-    }
-
-    handleActiveElement = (element) => {
-        this.setState({
-            activeElement: element
-        });
     }
 
     render() {
@@ -97,14 +91,14 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} handleActiveElement={this.handleActiveElement} slateData={this.props.slateLevelData} navigate={this.navigate} />
+                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar slateId={this.state.activeSlate} elementId={activeElementId} elementType={activeElementType} />
+                            <Sidebar slateId={this.state.activeSlate} />
                             {/* put side setting */}
                         </div>
                     </div>
@@ -116,7 +110,7 @@ export class CanvasWrapper extends Component {
     
 }
 
-const mapStateToProps = state => {console.log('state::', state);
+const mapStateToProps = state => {console.log('canvas state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData
     };

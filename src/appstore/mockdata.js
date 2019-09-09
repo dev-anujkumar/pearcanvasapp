@@ -178,6 +178,23 @@ export default {
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                },
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\">It definitely went through an evolution, but regardless of its phase, all parsers had a similar output — which is an AST. Once we have an AST representation of the JSX code, interpretation is extremely easy.<br></p>"
+                    },
+                    "comments": true,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                 }
             ]
         }
