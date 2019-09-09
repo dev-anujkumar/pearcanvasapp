@@ -22,8 +22,9 @@ export class CanvasWrapper extends Component {
         super(props);
 
         this.state = {
-            activeSlateIndex: 0,
-            activeSlate: config.slateList[0]
+            activeSlateIndex: 1,
+            activeSlate: config.slateList[1],
+            activeElement: {}
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -37,9 +38,9 @@ export class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        if(document.getElementById("cypress-0")){
-            document.getElementById("cypress-0").focus();
-        }
+        // if(document.getElementById("cypress-0") && Object.keys(this.state.activeElement).length === 0){
+        //     document.getElementById("cypress-0").focus();
+        // }
     }
     handleCommentspanel(elementId){
         console.log("elementId",elementId);
@@ -51,7 +52,7 @@ export class CanvasWrapper extends Component {
         let activeSlateIndex = this.state.activeSlateIndex;
         if(nav === 'next') {
             activeSlateIndex++;
-        } else if(nex === 'back') {
+        } else if(nav === 'back') {
             activeSlateIndex--;
         }
 
@@ -59,9 +60,23 @@ export class CanvasWrapper extends Component {
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });
+        this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+    }
+
+    handleActiveElement = (element) => {
+        this.setState({
+            activeElement: element
+        });
     }
 
     render() {
+        let activeElementId = '';
+        let activeElementType = '';
+        if(Object.keys(this.state.activeElement).length > 0) {
+            activeElementId = this.state.activeElement.id;
+            activeElementType = this.state.activeElement.type;
+        }
+
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
@@ -82,14 +97,14 @@ export class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} />
+                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} handleActiveElement={this.handleActiveElement} slateData={this.props.slateLevelData} navigate={this.navigate} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar />
+                            <Sidebar slateId={this.state.activeSlate} elementId={activeElementId} elementType={activeElementType} />
                             {/* put side setting */}
                         </div>
                     </div>
@@ -101,7 +116,7 @@ export class CanvasWrapper extends Component {
     
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = state => {console.log('state::', state);
     return {
         slateLevelData: state.appStore.slateLevelData
     };

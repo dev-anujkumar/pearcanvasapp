@@ -16,10 +16,10 @@ const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
 export class TinyMceEditor extends React.Component {
     constructor(props) {
-        super(props);
+        super(props);console.log('constructor:::');
         this.editorConfig = {
             plugins: EditorConfig.plugins,
-            selector: '#cypress-editable-0',
+            selector: '#cypress-0',
             inline:true,
             formats: EditorConfig.formats,
             menubar: false,
@@ -39,17 +39,17 @@ export class TinyMceEditor extends React.Component {
               }
         }
     };
-    componentDidMount(){        
+    componentDidMount(){console.log('componenet did mount:::');     
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
         
       }
-      componentDidUpdate(){
-        if(!tinymce.editors.length){
-             tinymce.init(this.editorConfig)
-         }
-      }
+    componentDidUpdate(){console.log('component did update:::', tinymce.editors);
+    if(!tinymce.editors.length){
+        tinymce.init(this.editorConfig)
+    }
+   }
     // handleBlur=(e)=>{
   //   // debugger;
   //   // window.tinyMCE.activeEditor.settings
@@ -61,37 +61,41 @@ export class TinyMceEditor extends React.Component {
  
 
   handleFocus=(e)=>{
+    this.props.handleActiveElement(this.props.element);
    if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
    return false;
    if(tinymce.activeEditor){
      let activeEditorId = tinymce.activeEditor.id;
    
      tinymce.remove('#'+tinymce.activeEditor.id)
+    //  tinymce.remove(this.editorConfig);
      document.getElementById(activeEditorId).contentEditable = true;
    }
     this.editorConfig.selector='#'+e.target.id
     tinymce.init(this.editorConfig)
+   
    }
   
     render() {
-        console.log("this.props >> ", this.props)
+       
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
+       
         classes = this.props.className + " cypress-editable";       
          /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
                 return (                    
-                        <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
-                   );
+                    <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                );
             case 'h4':
                 return (
                     <h4 id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
                 )
-                case 'code':
-                        return (
-                            <code id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
-                        )
+            case 'code':
+                return (
+                    <code id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                )
             default:
                 return (
                     <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>

@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
+import { updateElement } from './Sidebar_Action';
 import './../../styles/Sidebar/Sidebar.css';
 
 class Sidebar extends Component {
     constructor(props) {
         super(props);
-
-        let elementTypeList = elementList[this.props.elementType];
+        
+        let elementType = this.props.elementType || 'element-authoredtext';
+        let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         this.state = {
             elementDropdown: '',
-            activeElementType: this.props.elementType,
+            activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText
@@ -34,6 +37,15 @@ class Sidebar extends Component {
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText
         });
+
+        if(this.props.elementId !== '') {
+            this.props.updateElement({
+                slateId: this.props.slateId,
+                elementId: this.props.elementId,
+                primaryOption: value,
+                secondaryOption: secondaryFirstOption
+            });
+        }
     }
 
     toggleElementDropdown = e => {
@@ -79,13 +91,22 @@ class Sidebar extends Component {
 
     handleSecondaryOptionChange = e => {
         let value = e.target.getAttribute('data-value');
-        let elementTypeList = elementList[this.props.elementType];
+        let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
             activeLabelText: labelText
         });
+
+        if(this.props.elementId !== '') {
+            this.props.updateElement({
+                slateId: this.props.slateId,
+                elementId: this.props.elementId,
+                primaryOption: this.state.activePrimaryOption,
+                secondaryOption: value
+            });
+        }
     }
 
     secondaryOption = () => {
@@ -155,7 +176,7 @@ class Sidebar extends Component {
         return attributions;
     }
 
-    render = () => {
+    render = () => { console.log('state::', this.props, this.state);
         return (
             <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
@@ -176,4 +197,15 @@ Sidebar.propTypes = {
     elementType : PropTypes.string,
 }
 
-export default Sidebar;
+const mapStateToProps = state => {
+    return {
+        
+    };
+};
+
+export default connect(
+    mapStateToProps, 
+    {
+        updateElement
+    }
+)(Sidebar);

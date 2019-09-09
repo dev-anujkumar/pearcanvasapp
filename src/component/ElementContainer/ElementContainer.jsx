@@ -27,7 +27,7 @@ class ElementContainer extends Component {
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} element={element} type={'heading-1'} model={element.html} handleActiveElement={this.props.handleActiveElement} />;
                 break;
 
             case "element-blockfeature":
@@ -83,7 +83,7 @@ class ElementContainer extends Component {
             </div>
             <div>
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
-                 <Button  elementId = {element.id} onClick = {handleCommentspanel} type="comment-flag" /> 
+                {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
                 {/* <Button type="comment-flag" />
                     <Button type="tcm" /> */}
