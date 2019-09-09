@@ -36,6 +36,15 @@ export const Interactivefpo = {
         "interactivetype": "flashcards",
         "interactiveformat": "mmi"
     },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
+    },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
 };
@@ -77,6 +86,15 @@ export const InteractiveFlashcards ={
         "interactiveid": "",
         "interactivetype": "flashcards",
         "interactiveformat": "mmi"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
     },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
@@ -122,6 +140,15 @@ export const Interactive3party ={
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
     },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
+    },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
 };
@@ -165,6 +192,15 @@ export const Interactivepdf = {
         "posterimage": {
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
     },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
@@ -210,6 +246,15 @@ export const InteractiveWeblink = {
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
     },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
+    },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
 }
@@ -253,6 +298,15 @@ export const InteractivePopupWeblink ={
         "posterimage": {
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
     },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
@@ -298,6 +352,15 @@ export const InteractiveTable ={
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
     },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
+    },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
 };
@@ -338,6 +401,15 @@ export const InteractiveShowHide ={
         "interactiveid": "",
         "interactivetype": "showhide",
         "interactiveformat": "mmi"
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
     },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
@@ -383,13 +455,14 @@ export const InteractivePopWindow ={
             "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
         }
     },
-    "mgmtinfo": {
-        "lock": {
-            "owner": "",
-            "lockdate": "2019-09-08T16:16:40Z"
-        },
-        "trackingdocumentid": "urn:pearson:work:b41006eb-c41a-433a-bba5-01ffaeda08c1",
-        "comments": []
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label for Figure Image-50% Text",
+        "subtitle": "Title for Figure Image-50% Text",
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "tableasHTML": ""
     },
     "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
     "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"

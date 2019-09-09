@@ -77,4 +77,22 @@ describe('Testing Interactive element component', () => {
             expect(component).toMatchSnapshot();
         })
     });
+    describe('Testing Element interactive component with props', () => {
+        let type = "interactive";
+        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="30" />);
+        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+        it('onClick', () => {
+            elementInteractiveInstance.onClick();
+        })
+        it('onBlur', () => {
+            elementInteractiveInstance.onBlur();
+        })
+        it('onKeyup', () => {
+            elementInteractiveInstance.onKeyup();
+        })
+    
+        it('onFocus', () => {
+            elementInteractiveInstance.onFocus();
+        })
+    })
 });
