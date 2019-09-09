@@ -1,14 +1,30 @@
+/**
+* Root Component of Interactive Element Component.
+*/
+
 import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/Interactive/Interactive.css';
 import { TinyMceEditor } from "../tinyMceEditor"
 
+
+/**
+* @description - Interactive is a class based component. It is defined simply
+* to make a skeleton of the Interactive Element.
+*/
 class Interactive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
 
     }
+
+    /**
+     * @description - This function is for rendering the Jsx Part of different Interactive Elements.
+     * @param {event} element
+     * @param {event} itemId
+     * @param {event} index
+     */
 
     renderInteractiveType = (element, itemId, index) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
