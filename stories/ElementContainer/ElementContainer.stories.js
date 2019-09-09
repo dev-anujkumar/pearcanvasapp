@@ -89,6 +89,57 @@ const mockData1={
         "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
 
 }
+const mockData3={
+    
+    "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+    "type": "figure",
+    "figuretype": "assessment",
+    "subtype": "",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "title": {
+    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+    "text": ""
+    },
+    "subtitle": {
+    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+    "text": "",
+    "textsemantics": [ ],
+    "mathml": [ ],
+    "footnotes": [ ]
+    },
+    "captions": {
+    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+    "text": "",
+    "textsemantics": [ ],
+    "mathml": [ ],
+    "footnotes": [ ]
+    },
+    "credits": {
+    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+    "text": "",
+    "textsemantics": [ ],
+    "mathml": [ ],
+    "footnotes": [ ]
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "type": "element-assessment",
+        "subtype": "assessment",
+        "elementdata": {
+        "assessmentitemtype": "assessmentItem",
+        "assessmentformat": "cite",
+        "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+        "posterimage": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+        },
+        "usagetype": "Quiz"
+        }
+        },
+    
+    "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+    "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
+    
+}
 storiesOf('Element Container')
     .addDecorator(withInfo)
     .add('Element Container', () => {
@@ -100,4 +151,9 @@ storiesOf('Element Container')
         return (
             <ElementContainer element={mockData1} />
         );
-    });
+    })
+    .add('Element Container3', () => {
+        return (
+            <ElementContainer element={mockData3} />
+        );
+    })
