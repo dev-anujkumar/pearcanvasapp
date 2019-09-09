@@ -3,33 +3,6 @@ export const Interactivefpo = {
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -38,10 +11,10 @@ export const Interactivefpo = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -54,33 +27,6 @@ export const InteractiveFlashcards ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -89,10 +35,10 @@ export const InteractiveFlashcards ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -104,33 +50,6 @@ export const Interactive3party ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -142,10 +61,10 @@ export const Interactive3party ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -157,33 +76,6 @@ export const Interactivepdf = {
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -195,10 +87,10 @@ export const Interactivepdf = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -210,33 +102,6 @@ export const InteractiveWeblink = {
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -248,10 +113,10 @@ export const InteractiveWeblink = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -263,33 +128,6 @@ export const InteractivePopupWeblink ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -301,10 +139,10 @@ export const InteractivePopupWeblink ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -316,33 +154,6 @@ export const InteractiveTable ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -354,10 +165,10 @@ export const InteractiveTable ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -369,33 +180,6 @@ export const InteractiveShowHide ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -404,10 +188,10 @@ export const InteractiveShowHide ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -419,33 +203,6 @@ export const InteractivePopWindow ={
     "type": "figure",
     "figuretype": "interactive",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-    "title": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": []
-    },
-    "subtitle": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "captions": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
-    "credits": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
-        "textsemantics": [],
-        "mathml": [],
-        "footnotes": []
-    },
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
@@ -457,10 +214,303 @@ export const InteractivePopWindow ={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for Figure Image-50% Text",
-        "subtitle": "Title for Figure Image-50% Text",
-        "caption": "Caption for Figure Image-50% Text",
-        "credit": "Credit for Figure Image-50% Text",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+
+
+
+
+
+
+
+export const Interactivegraph ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "graph",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivesimulation ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "simulation",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivesurvey ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "survey",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivetimeline ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "timeline",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivehotspot ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "hotspot",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactiveaccountingtable ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "accountingtable",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivefillinblank ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "fill-in-blank",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivegalleryimage ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "gallery-image",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivegalleryvideo ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "gallery-video",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivevideomcq ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "video-mcq",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "tableasHTML": ""
+    },
+    "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94"
+}
+export const Interactivemcq ={
+    "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "mcq",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
