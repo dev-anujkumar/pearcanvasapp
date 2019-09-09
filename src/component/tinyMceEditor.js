@@ -94,7 +94,7 @@ export class TinyMceEditor extends React.Component {
                         )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true"></div>
+                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
                 )
         }
     }
