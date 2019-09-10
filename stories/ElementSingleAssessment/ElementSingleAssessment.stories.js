@@ -162,7 +162,7 @@ const mockData3={
     
 }
 
-storiesOf('Components|ElementSingleAssessment', module)
+storiesOf('Composites|ElementSingleAssessment', module)
 
     .addDecorator(withInfo)
     .add('default Asessment1', () => <ElementSingleAssessment model={mockData1} index="1" /> )
