@@ -13,7 +13,6 @@ import {
     REPLY_COMMENT,
     FETCH_COMMENT_BY_ELEMENT,
     RESOLVE_COMMENT,
-    TOGGLE_REPLY,
     UPDATE_COMMENT,
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
@@ -130,4 +129,135 @@ describe('Tests commentsPanel action', () => {
         expect(payload.commentUrn).toBe(commentUrn);
     });
  })
+
+ it('testing------- updateComment  action',()=>{
+    store = mockStore(() => initialState);
+    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
+     updateComment = {
+        comment: "test",
+        commentCreator: "c5test01",
+        status: "Open"
+    },
+      elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
+    const expectedActions = [{
+        type: UPDATE_COMMENT,
+        payload: { commentUrn, updateComment: updateComment.comment }
+    
+    }];
+    moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+            status: 200,
+            response: ""
+        });
+    });
+
+    return store.dispatch(actions.updateComment(commentUrn,updateComment,elementId)).then(() => {
+        const { type, payload } = store.getActions()[0];
+        expect(store.getActions()).toEqual(expectedActions);
+        expect(type).toBe(UPDATE_COMMENT);
+        expect(payload.commentUrn).toBe(commentUrn);
+    });
+ })
+
+ it('testing------- getProjectUsers  action',()=>{
+    store = mockStore(() => initialState);
+    let ENTITY_URN = "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c";
+    const expectedActions = [{
+        type: GET_PROJECT_USER,
+        payload: users
+    
+    }];
+    moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+            status: 200,
+            response: ""
+        });
+    });
+
+    return store.dispatch(actions.getProjectUsers(ENTITY_URN)).then(() => {
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(GET_PROJECT_USER);
+    });
+ })
+
+ it('testing------- updateAssignee  action',()=>{
+    store = mockStore(() => initialState);
+    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
+    newAssignee = "test",
+     elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
+    const expectedActions = [{
+        type: UPDATE_ASSIGNEE,
+        payload: { commentUrn, newAssignee: newAssignee }
+    
+    }];
+    moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+            status: 200,
+            response: ""
+        });
+    });
+
+    return store.dispatch(actions.updateAssignee(commentUrn, newAssignee, elementId)).then(() => {
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(UPDATE_ASSIGNEE);
+    });
+ })
+
+ it('testing------- deleteComment  action',()=>{
+    store = mockStore(() => initialState);
+    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
+     elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
+    const expectedActions = [{
+        type: DELETE_COMMENT,
+        payload: commentUrn
+    
+    }];
+    moxios.wait(() => {
+        const request = moxios.requests.mostRecent();
+        request.respondWith({
+            status: 200,
+            response: ""
+        });
+    });
+
+    return store.dispatch(actions.deleteComment(commentUrn,elementId)).then(() => {
+        const { type, payload } = store.getActions()[0];
+        expect(type).toBe(DELETE_COMMENT);
+    });
+ })
+
+ it('testing------- fetchCommentByElement  action',()=>{
+    store = mockStore(() => initialState);
+     let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
+    const expectedActions = [{
+        type: FETCH_COMMENT_BY_ELEMENT,
+        payload: elementId
+    
+    }];
+
+     store.dispatch(actions.fetchCommentByElement(elementId))
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(FETCH_COMMENT_BY_ELEMENT);
+    expect(store.getActions()).toEqual(expectedActions);
+   
+ })
+ 
+ it('testing------- toggleCommentsPanel  action',()=>{
+    store = mockStore(() => initialState);
+     let toggle = true;
+    const expectedActions = [{
+        type: TOGGLE_COMMENTS_PANEL,
+        payload: toggle
+    
+    }];
+
+     store.dispatch(actions.toggleCommentsPanel(toggle))
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(TOGGLE_COMMENTS_PANEL);
+    expect(store.getActions()).toEqual(expectedActions);
+ })
 }) 
+
