@@ -31,8 +31,8 @@ export class ElementAudioVideo extends Component {
     /*** @description - This function is for handling the Audio-Video-element.
      * @param model object that defined the type of element*/
 
-    renderAudioVideoType = (model = {}) => {
-        const { type, index } = this.props;
+    renderAudioVideoType = (model = {},index) => {
+        const { type} = this.props;
         var audioVideoJSX;
         var assetPath;
         switch (model.figuretype) {
@@ -97,10 +97,10 @@ export class ElementAudioVideo extends Component {
         return audioVideoJSX;
     }
     render() {
-        const { model } = this.props;
+        const { model, index} = this.props;
         return (
             <div className="figureElement">
-                {this.renderAudioVideoType(model)}
+                {this.renderAudioVideoType(model,index)}
             </div>
         );
     }

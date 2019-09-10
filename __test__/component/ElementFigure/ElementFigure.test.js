@@ -8,7 +8,7 @@ describe('Testing Figure element component', () => {
 
     test('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(<ElementFigure model={{}} />, div);
+        ReactDOM.render(<ElementFigure model={{}}  index="" />, div);
         ReactDOM.unmountComponentAtNode(div);
     })
     describe('With figure image element', () => {

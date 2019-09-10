@@ -7,7 +7,8 @@
 
 // IMPORT - Action constants //
 import {
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    AUTHORING_ELEMENT_CREATED
 } from '../constants/Action_Constants';
 import config from './../config/config';
 import mockdata from './mockdata'; 
@@ -18,9 +19,6 @@ import mockdata from './mockdata';
  */
 
 const initialState = {
-    // slateLevelData: {
-    //     [config.slateList[0]]: mockdata[config.slateList[0]]
-    // }
     slateLevelData: {}
 };
 
@@ -35,6 +33,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 slateLevelData: action.payload
+            };
+        case AUTHORING_ELEMENT_CREATED:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
             };
         default:
             return state;

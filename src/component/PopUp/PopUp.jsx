@@ -17,23 +17,22 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { dialogText , placeholder , rows , active , saveContent , togglePopup } = this.props;
-
+        const { dialogText , placeholder , rows , active , saveContent , togglePopup,cancelPopUp, saveButtonText, closePopUp, cols, maxLength, assessmentClass } = this.props;
+console.log("active",active)
         return (
             <div>
                 {
                     active ? 
-                    <div className="modal">
-                        <div className="modal-content">
-                            <span className="close" onClick={() => togglePopup(false)}>&times;</span>
-                            <div className="dialog-window">
-                                <p className="dialog-text">{dialogText}</p>
+                    <div className={`modal ${assessmentClass}`}>
+                        <div className={`modal-content ${assessmentClass}`}>
+                            <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
+                            <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div>
+                            <div className={`dialog-input ${assessmentClass}`}>
+                                <textarea className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={() => console.log("yes")}
+                                placeholder={placeholder} rows={rows} cols={cols} maxLength={maxLength}/>
                             </div>
-                            <div className="dialog-input">
-                                <textarea className="dialog-input-textarea" type="text" placeholder={placeholder} rows={rows} />
-                            </div>
-                            <div className="dialog-buttons">
-                                <span className="save-button" onClick={saveContent}>Save</span>
+                            <div className={`dialog-buttons ${assessmentClass}`}>
+                                <span className="save-button" onClick={(e)=>saveContent(e,this)}>{saveButtonText}</span>
                                 <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>Cancel</span>
                             </div>
                         </div>
@@ -49,16 +48,23 @@ PopUp.defaultProps = {
     dialogText: "Please enter a comment:",
     placeholder: "Type...",
     rows: "5",
-    active: true
+    active: true,
+    saveButtonText:"Save"
 }
 
 PopUp.propTypes = {
-      dialogText : PropTypes.string.isRequired,     // Text responsible for header Text for the Popup.
-      placeholder : PropTypes.string.isRequired,    // Text responsible for placeholder for the Popup.
-      rows : PropTypes.string.isRequired,           // Responsible for no of rows in the Popup.
+      dialogText : PropTypes.string.isRequired,      // Text responsible for header Text for the Popup.
+      placeholder : PropTypes.string.isRequired,     // Text responsible for placeholder for the Popup.
+      rows : PropTypes.string.isRequired,            // Responsible for no of rows in the Popup.
+      cols : PropTypes.string,                       // Responsible for no of columns in the Popup.
+      maxLength: PropTypes.string,                   // Responsible for max character length in the Popup.
       active : PropTypes.bool,                       // Responsible for show and hide of the Popup.
       togglePopup : PropTypes.func,                  // Function Responsible for closing of the Popup.
-      saveContent : PropTypes.func                  // Function Responsible for saving content of the Popup.
+      saveContent : PropTypes.func   ,               // Function Responsible for saving content of the Popup.
+      saveButtonText:PropTypes.string.isRequired,    // Responsible for Text in save-button in the Popup.
+      assessmentClass:PropTypes.string ,             //Responsible for making the PopUp customized for Single Assessment
+      cancelPopUp:PropTypes.func,                    //Function Responsible for Cancel operation of the Popup.
+      closePopUp:PropTypes.func,                     //Function Responsible for Close operation of the Popup.
 }
 
 export default PopUp;

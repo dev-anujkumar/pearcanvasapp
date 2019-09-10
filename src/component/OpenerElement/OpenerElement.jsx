@@ -129,4 +129,6 @@ OpenerElement.propTypes = {
     model : PropTypes.object.isRequired,
 }
 
+OpenerElement.displayName = 'OpenerElement'
+
 export default OpenerElement
