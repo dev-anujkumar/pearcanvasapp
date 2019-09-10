@@ -19,9 +19,7 @@ import mockdata from './mockdata';
  */
 
 const initialState = {
-    slateLevelData: {},
-    authoringData : {}
-    
+    slateLevelData: {}
 };
 
 /**
@@ -39,7 +37,7 @@ export default function (state = initialState, action) {
         case AUTHORING_ELEMENT_CREATED:
             return {
                 ...state,
-                authoringData: action.payload.authoringData
+                slateLevelData: action.payload.slateLevelData
             };
         default:
             return state;

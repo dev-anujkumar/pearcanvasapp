@@ -2,7 +2,7 @@ let config = {
     REACT_APP_API_URL : "https://10.11.3.7:8443/cypress-api/",
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
-    ssoToken: "p43m77VmeALZHBAqknxdmlPTxjs.*AAJTSQACMDIAAlNLABxWZlgzMXVCMnE1NEtoSXkzT3ZXc1h6cWtnN2M9AAJTMQACMDk.*",
+    ssoToken: "PUVGjTJb9Z-a7xGVvmew8HKbfXE.*AAJTSQACMDIAAlNLABxEZkRhb1psajZueVNreGJYekJBdmhQWUMxM1k9AAJTMQACMDk.*",
     userId: 'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     slateList: [

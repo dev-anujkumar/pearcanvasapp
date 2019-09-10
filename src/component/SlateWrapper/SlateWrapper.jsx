@@ -90,7 +90,7 @@ class SlateWrapper extends Component {
     splithandlerfunction = (type,index) => {
         switch(type){
             case 'text-elem':
-                this.props.createElement("element-authoredtext",index )
+                this.props.createElement("element-authoredtext",Number(index+1) )
                 break; 
             case 'image-elem':
                 break;
@@ -119,6 +119,7 @@ class SlateWrapper extends Component {
                 return _elements.map((element,index) => {
                     return (
                         <React.Fragment>
+
                             <ElementContainer
                                 element={element}
                                 key={element.id}
