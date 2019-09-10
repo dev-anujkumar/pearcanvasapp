@@ -33,11 +33,11 @@ export class ElementSingleAssessment extends Component {
 
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
-    toggleAssessmentPopup = (showAssessmentPopup) => {
-        this.setState({
-            showAssessmentPopup
-        });
-    }
+    // toggleAssessmentPopup = (showAssessmentPopup) => {
+    //     this.setState({
+    //         showAssessmentPopup
+    //     });
+    // }
     /*** @description - This function is to select the assesssment from another PopUp*/
     // selectAssessmentPopup = () => {
     //     console.log("select type of assessment!!!!!")
@@ -66,7 +66,6 @@ export class ElementSingleAssessment extends Component {
     * @param model object that defined the type of element*/
     renderAssessmentType = (model = {}, index) => {
         var assessmentJSX;
-        var posterPath = model.figuredata.elementdata.posterimage.path;
         var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
         if (assessmentUsageType.length > 0) {
             var assessmentType = assessmentUsageType.map((usageType, i) =>
@@ -101,20 +100,23 @@ export class ElementSingleAssessment extends Component {
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" class="imageTextWidth lazyloaded imageeee"></img>
-                    {this.state.showAssessmentPopup && <PopUp
+
+{/** Assessment PopUp*/}
+
+                    {/* {this.state.showAssessmentPopup && <PopUp
                         dialogText={ESA_DIALOG_TEXT}
                         placeholder={ESA_POPUP_PLACEHOLDER}
                         rows={ESA_POPUP_ROWS}
                         active={this.state.showAssessmentPopup}
                         // cancelPopUp={e => this.toggleAssessmentPopup(e, this)}
-                        // togglePopup={(e) => this.toggleAssessmentPopup(e, this)}
+                        togglePopup={(e) => this.toggleAssessmentPopup(e, this)}
                         // saveContent={this.openAssessment}
                         // cancelPopUp={() => this.selectAssessmentPopup}
                         saveButtonText={ESA_POPUP_BUTTON_TEXT}
                         cols={ESA_POPUP_COLUMNS}
                         maxLength={ESA_POPUP_MAXLENGTH}
                         assessmentClass={ESA_POPUP_CLASSNAME}
-                    />}
+                    />} */}
 
                 </div>
             </figure>
