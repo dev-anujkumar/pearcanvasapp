@@ -34,7 +34,7 @@ export class TinyMceEditor extends React.Component {
             forced_root_block: '',
             remove_linebreaks: false,
             setup: (editor) => {
-
+                
             },
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 

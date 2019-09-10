@@ -55,7 +55,7 @@ export default function ElementSaprator(props) {
         return parents;
     
     };
-
+    
     return (
         <div className="elementSapratorContainer">
         

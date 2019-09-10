@@ -62,6 +62,7 @@ export class CanvasWrapper extends Component {
     }
 
     render() {
+        console.log("in render >>", this.props.slateLevelData)
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
@@ -103,7 +104,7 @@ export class CanvasWrapper extends Component {
 
 const mapStateToProps = state => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
     };
 };
 
