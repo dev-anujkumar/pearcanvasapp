@@ -17,9 +17,9 @@ import '../../styles/SlateWrapper/style.css';
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
-        
+
     }
-    
+
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -88,11 +88,11 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type,index) => {
-        switch(type){
+    splithandlerfunction = (type, index) => {
+        switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext",Number(index+1) )
-                break; 
+                this.props.createElement("element-authoredtext", Number(index + 1))
+                break;
             case 'image-elem':
                 break;
             case 'audio-elem':
@@ -111,135 +111,89 @@ class SlateWrapper extends Component {
         }
     }
 
+    elementSepratorProps = (index) => {
+        return [
+            {
+                buttonType: 'text-elem',
+                buttonHandler: () => this.splithandlerfunction('text-elem', index),
+                tooltipText: 'Text',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'image-elem',
+                buttonHandler: () => this.splithandlerfunction('image-elem', index),
+                tooltipText: 'Image',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'audio-elem',
+                buttonHandler: () => this.splithandlerfunction('audio-elem', index),
+                tooltipText: 'Audio/Video',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'interactive-elem',
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index),
+                tooltipText: 'Interactive',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'assessment-elem',
+                buttonHandler: () => this.splithandlerfunction('assessment-elem', index),
+                tooltipText: 'Assessment',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'container-elem',
+                buttonHandler: () => this.splithandlerfunction('container-elem', index),
+                tooltipText: 'Container',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'worked-exp-elem',
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index),
+                tooltipText: 'Worked Example',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'opener-elem',
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index),
+                tooltipText: 'Opener Element',
+                tooltipDirection: 'left'
+            }
+        ]
+
+    }
+
     /**
      * renderElement | renders single element according to its type
      */
     renderElement(_elements) {
         try {
             if (_elements !== null && _elements !== undefined) {
-                return _elements.map((element,index) => {
+                return _elements.map((element, index) => {
                     return (
                         <React.Fragment>
-                            { index === 0 && <ElementSaprator
-                                                upperOne={true}
-                                                index={index}
-                                                key={`elem-separtor-${element.id}`}
-                                                esProps = {[
-                                                    {
-                                                    buttonType : 'text-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('text-elem',index),
-                                                    tooltipText : 'Text',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'image-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('image-elem',index),
-                                                    tooltipText : 'Image',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'audio-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('audio-elem',index),
-                                                    tooltipText : 'Audio/Video',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'interactive-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('interactive-elem',index),
-                                                    tooltipText : 'Interactive',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'assessment-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('assessment-elem',index),
-                                                    tooltipText : 'Assessment',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'container-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('container-elem',index),
-                                                    tooltipText : 'Container',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'worked-exp-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('worked-exp-elem',index),
-                                                    tooltipText : 'Worked Example',
-                                                    tooltipDirection : 'left'
-                                                    },
-                                                    {
-                                                    buttonType : 'opener-elem',
-                                                    buttonHandler : () => this.splithandlerfunction('opener-elem',index),
-                                                    tooltipText : 'Opener Element',
-                                                    tooltipDirection : 'left'
-                                                    }
-                                                ]
-                                                }
-                                                elementType = {element.type}
-                                            />
+                            {index === 0 && <ElementSaprator
+                                upperOne={true}
+                                index={index}
+                                key={`elem-separtor-${element.id}`}
+                                esProps={this.elementSepratorProps(index)}
+                                elementType={element.type}
+                            />
                             }
                             <ElementContainer
                                 element={element}
                                 key={element.id}
                                 index={index}
-                                handleCommentspanel ={this.props.handleCommentspanel}
+                                handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator
-                            index={index}
-                            key={`elem-separtor-${element.id}`}
-                            esProps = {[
-                                {
-                                    buttonType : 'text-elem',
-                                    buttonHandler : () => this.splithandlerfunction('text-elem',index),
-                                    tooltipText : 'Text',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'image-elem',
-                                    buttonHandler : () => this.splithandlerfunction('image-elem',index),
-                                    tooltipText : 'Image',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'audio-elem',
-                                    buttonHandler : () => this.splithandlerfunction('audio-elem',index),
-                                    tooltipText : 'Audio/Video',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'interactive-elem',
-                                    buttonHandler : () => this.splithandlerfunction('interactive-elem',index),
-                                    tooltipText : 'Interactive',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'assessment-elem',
-                                    buttonHandler : () => this.splithandlerfunction('assessment-elem',index),
-                                    tooltipText : 'Assessment',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'container-elem',
-                                    buttonHandler : () => this.splithandlerfunction('container-elem',index),
-                                    tooltipText : 'Container',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'worked-exp-elem',
-                                    buttonHandler : () => this.splithandlerfunction('worked-exp-elem',index),
-                                    tooltipText : 'Worked Example',
-                                    tooltipDirection : 'left'
-                                },
-                                {
-                                    buttonType : 'opener-elem',
-                                    buttonHandler : () => this.splithandlerfunction('opener-elem',index),
-                                    tooltipText : 'Opener Element',
-                                    tooltipDirection : 'left'
-                                }
-                                ]
-                            }
-                            elementType = {element.type}
-                            /> 
+                                index={index}
+                                key={`elem-separtor-${element.id}`}
+                                esProps={this.elementSepratorProps(index)}
+                                elementType={element.type}
+                            />
                         </React.Fragment>
                     )
                 })
@@ -256,7 +210,6 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        console.log("slate wrapper render ")
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -284,7 +237,7 @@ const mapStateToProps = state => {
     return {
 
     };
-  };
+};
 
 
 export default connect(

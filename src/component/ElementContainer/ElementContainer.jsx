@@ -125,7 +125,6 @@ handleCommentPanel(){
     this.props.dispatch(toggleCommentsPanel(true));
 }
 render = () => {
-    console.log("element container")
     const { element } = this.props;
     return this.renderElement(element);
 }
