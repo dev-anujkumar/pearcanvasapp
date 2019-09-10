@@ -122,10 +122,10 @@ handleCommentPopup(popup){
     });
 }
 handleCommentPanel(){
-    console.log("click button")
     this.props.dispatch(toggleCommentsPanel(true));
 }
 render = () => {
+    console.log("element container")
     const { element } = this.props;
     return this.renderElement(element);
 }
