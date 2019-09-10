@@ -114,4 +114,9 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 };
 
 
+/*** Add Comment  */
+export const addComment = (comment) => dispatch => {
 
+    
+    
+  };

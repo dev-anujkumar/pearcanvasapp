@@ -12,7 +12,8 @@ import {
     REPLY_COMMENT,
     FETCH_COMMENT_BY_ELEMENT ,
     RESOLVE_COMMENT,
-    TOGGLE_REPLY 
+    TOGGLE_REPLY,
+    ADD_COMMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -135,7 +136,11 @@ export default function (state = initialState , action) {
             ...state,
             comments: resolveComment
         }
-
+        case ADD_COMMENT:
+            return  {
+                ...state,
+                comments: newComment
+            }
         default:
             return state;
     }
