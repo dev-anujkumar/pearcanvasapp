@@ -4,7 +4,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types'
-import './../../styles/Interactive/Interactive.css';
+import './../../styles/ElementInteractive/ElementInteractive.css';
 import { TinyMceEditor } from "../tinyMceEditor"
 
 
@@ -277,11 +277,11 @@ class Interactive extends React.Component {
                             <div className="sh-container">
                                 <div>
                                     <TinyMceEditor index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
-                                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
+                                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} />
                                     <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
                                     <a className="paragraphNumeroUno">
                                         <TinyMceEditor index={`${index}-1`} placeholder="Enter hidden text" 
-                                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick}  /></a>
+                                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} tagName={'p'}/></a>
                                     </p>
                                 </div>
                             </div>
