@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-
+import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
@@ -67,6 +67,10 @@ class ElementContainer extends Component {
                     case "video":
                         editor = <ElementAudioVideo model={element} index={index}/>;
                         labelText = 'VID';
+                        break;
+                        case "assessment":
+                        editor = <ElementSingleAssessment model={element} index={index} elementId={element.id}/>;
+                        labelText = 'QU';
                         break;
                 }
                 break;
