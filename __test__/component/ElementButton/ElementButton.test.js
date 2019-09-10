@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../../../src/component/ElementButtons/ElementButton';
+import buttonTypes from '../../../src/component/ElementButtons/ButtonTypes';
 
 describe('Testing Button component with props', () => {
 
@@ -55,6 +56,43 @@ describe('Testing Button component with props', () => {
     })
     it('render close-container Button component  ', () => {
         const component = mount(<Button type="close-container" labelText="UL" />);
+        expect(component).toMatchSnapshot();
+    })
+
+    it('render Text element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.textElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Image element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.imageElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Audio/video element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.audioElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Interactive element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.interactiveElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Container element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.containerElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Work example Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.workedExampleElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Assessment element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.assessmentElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Opener element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.openerElement} />);
+        expect(component).toMatchSnapshot();
+    })
+    it('render Section break element Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.sectionBreakElement} />);
         expect(component).toMatchSnapshot();
     })
 })

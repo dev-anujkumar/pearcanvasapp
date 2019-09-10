@@ -1,0 +1,22 @@
+export default {
+    closeContainer : "close-container",
+    addComment : "add-comment",
+    commentFlag : "comment-flag",
+    elementBlockLabel : "element-label",
+    deleteElement : "delete-element",
+    tcm : "tcm",
+    forwardNavigation : "forward-nav-active",
+    backwardNavigation : "backward-nav-active",
+    expand : "expand",
+    splitSlate : "split",
+    colorPalette : "color-palette",
+    textElement : "text-elem",
+    imageElement : "image-elem",
+    audioElement : "audio-elem",
+    interactiveElement : "interactive-elem",
+    containerElement : "container-elem",
+    workedExampleElement : "worked-exp-elem",
+    assessmentElement : "assessment-elem",
+    openerElement : "opener-elem",
+    sectionBreakElement : "section-break-elem"
+}
