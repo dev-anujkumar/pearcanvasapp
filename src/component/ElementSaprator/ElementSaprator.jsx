@@ -55,14 +55,15 @@ export default function ElementSaprator(props) {
         return parents;
     
     };
-
     return (
         <div className="elementSapratorContainer">
         
-        <div className='elemDiv-split'>
+        {!props.upperOne &&
+            <div className='elemDiv-split'>
                 {elementType !=='WE' ? <Tooltip direction='right' tooltipText='Split Slate'>
-                    <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip>:''}
-        </div> 
+                <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip>:''}
+            </div>
+        }
 
 
             <div className='elemDiv-hr'>

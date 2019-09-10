@@ -1378,16 +1378,24 @@ export const mathmlEditorDefault = {
         "mathml": [],
         "footnotes": []
     },
-
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "",
-        "subtitle": "",
-        "caption": "",
-        "credit": "",
-        "postertext": "",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "fdgdf",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments": true,
     "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -1431,13 +1439,22 @@ export const mathmlEditorWithData = {
 
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for block code editor",
-        "subtitle": "Title for block code editor",
-        "caption": "Caption for block code editor",
-        "credit": "Credit for block code editor",
-        "postertext": "sdfsdfsfsdffsdfsdfsdfsdfsæ",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "fdgdf",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments": true,
     "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -1482,17 +1499,15 @@ export const blockCodeEditorDefault = {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
-    },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "",
-        "subtitle": "",
-        "caption": "",
-        "credit": "",
-        "postertext": "",
-        "tableasHTML": ""
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+            ""
+            ]
     },
     "comments": true,
     "tcm": true,
@@ -1538,17 +1553,17 @@ export const blockCodeEditorWithData = {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
-    },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for block code editor",
-        "subtitle": "Title for block code editor",
-        "caption": "Caption for block code editor",
-        "credit": "Credit for block code editor",
-        "postertext": "c=a+b;",
-        "tableasHTML": ""
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+            "vcbc",
+            "bvcbvcb",
+            "vcbcvbvcb"
+            ]
     },
     "comments": true,
     "tcm": true,

@@ -103,7 +103,7 @@ export class CanvasWrapper extends Component {
 
 const mapStateToProps = state => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
     };
 };
 
