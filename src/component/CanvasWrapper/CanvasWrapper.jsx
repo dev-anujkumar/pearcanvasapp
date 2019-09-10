@@ -61,7 +61,21 @@ export class CanvasWrapper extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log("nextProps.newElement >> ", nextProps.newElement);
+        if (nextProps.newElement) {
+            for(let key in this.props.slateLevelData){
+                for(let k in this.props.slateLevelData[key]){
+                    this.props.slateLevelData[key][k].contents.bodymatter.splice(1, 0, nextProps.newElement);
+                    console.log("this.props.slateLevelData[key][k].contents.bodymatter >> ", this.props.slateLevelData[key][k].contents.bodymatter)
+                    this.setState({text : true})
+                }
+            }
+        }
+    }
+
     render() {
+        console.log("in render >>", this.props.slateLevelData)
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
@@ -103,7 +117,8 @@ export class CanvasWrapper extends Component {
 
 const mapStateToProps = state => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        newElement: state.appStore.authoringData
     };
 };
 

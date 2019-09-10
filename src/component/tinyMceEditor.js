@@ -31,7 +31,7 @@ export class TinyMceEditor extends React.Component {
             toolbar: EditorConfig.toolbar,
             image_advtab: false,
             setup: (editor) => {
-
+                
             },
             init_instance_callback: (editor) => {
                //  editor.fire('focus');                 
@@ -64,6 +64,7 @@ export class TinyMceEditor extends React.Component {
    if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
    return false;
    if(tinymce.activeEditor){
+    console.log("tinymce.activeEditor.id >> ", e.target.id)
      let activeEditorId = tinymce.activeEditor.id;
    
      tinymce.remove('#'+tinymce.activeEditor.id)
