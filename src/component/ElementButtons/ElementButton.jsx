@@ -28,87 +28,87 @@ class Button extends Component {
         const { labelText,elementId } = this.props
 
         switch(type){
-            case buttonTypes.closeContainer:
+            case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
-            case buttonTypes.addComment:
+            case buttonTypes.ADD_COMMENT:
                 buttonJSX = <span className="btn-element small add-comment" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
-            case buttonTypes.commentFlag:
+            case buttonTypes.COMMENT_FLAG:
                 buttonJSX = <span className="btn-element small flag-icon" onClick={()=>clickHandlerFn(elementId)}>
                     {noteFlag}
                     </span>
                 break;
-            case buttonTypes.elementBlockLabel:
+            case buttonTypes.ELEMENT_BLOCK_LABEL:
                 buttonJSX = <span className="btn-element element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
                 break;
-            case buttonTypes.deleteElement:
+            case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
-            case buttonTypes.tcm:
+            case buttonTypes.TCM:
                 buttonJSX = <span className="btn-element small tcm-icon" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
-            case buttonTypes.forwardNavigation:
+            case buttonTypes.FORWARD_NAVIGATION:
                 buttonJSX = <span className="btn-element forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
-            case buttonTypes.backwardNavigation:
+            case buttonTypes.BACKWARD_NAVIGATION:
                 buttonJSX = <span className="btn-element backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
                 break;
-            case buttonTypes.expand:
+            case buttonTypes.EXPAND:
                 buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
                 break;
-            case buttonTypes.splitSlate:
+            case buttonTypes.SPLIT_SLATE:
                 buttonJSX = <span className="btn-element split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
                 break;
-            case buttonTypes.colorPalette:
+            case buttonTypes.COLOR_PALETTE:
                 buttonJSX = <span className="btn-element color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
                 break;
-            case buttonTypes.textElement:
+            case buttonTypes.TEXT_ELEMENT:
                 buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
                     {textIcon}
                     </span>
                 break;
-            case buttonTypes.imageElement:
+            case buttonTypes.IMAGE_ELEMENT:
                 buttonJSX = <span className="btn-element image-elem" onClick={clickHandlerFn}>
                     {imageIcon}
                     </span>
                 break;
-            case buttonTypes.audioElement:
+            case buttonTypes.AUDIO_ELEMENT:
                 buttonJSX = <span className="btn-element audio-elem" onClick={clickHandlerFn}>
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.interactiveElement:
+            case buttonTypes.INTERACTIVE_ELEMENT:
                 buttonJSX = <span className="btn-element interactive-elem" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
-            case buttonTypes.containerElement:
+            case buttonTypes.CONTAINER_ELEMENT:
                 buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
                     {containerIcon}
                     </span>
                 break;
-            case buttonTypes.workedExampleElement:
+            case buttonTypes.WORKED_EXAMPLE_ELEMENT:
                 buttonJSX = <span className="btn-element worked-exp-elem" onClick={clickHandlerFn}>
                     {workedExampleIcon}
                     </span>
                 break;
-            case buttonTypes.assessmentElement:
+            case buttonTypes.ASSESSMENT_ELEMENT:
                 buttonJSX = <span className="btn-element assessment-elem" onClick={clickHandlerFn}>
                     {assessmentIcon}
                     </span>
                 break;
-            case buttonTypes.openerElement:
+            case buttonTypes.OPENER_ELEMENT:
                 buttonJSX = <span className="btn-element opener-elem" onClick={clickHandlerFn}>
                     {openerElement}
                     </span>
                 break;
-            case buttonTypes.sectionBreakElement:
+            case buttonTypes.SECTION_BREAK_ELEMENT:
                 buttonJSX = <span className="btn-element section-break-elem" onClick={clickHandlerFn}>
                     {sectionBreakElement}
                     </span>

@@ -9,7 +9,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import './../../styles/ElementContainer/ElementContainer.css';
 import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
-
+import elementTypeConstant from './ElementConstants'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -23,52 +23,52 @@ class ElementContainer extends Component {
         let editor = '';
         let { elementType, labelText, index,handleCommentspanel} = this.props;
         switch(element.type) {
-            case 'opener':
+            case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
                 labelText = 'OE'
                 break
 
-            case "element-authoredtext":
+            case elementTypeConstant.AUTHORED_TEXT:
                 editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
                 break;
 
-            case "element-blockfeature":
+            case elementTypeConstant.BLOCKFEATURE:
                 editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
 
-            case "figure":
+            case elementTypeConstant.FIGURE:
 
                 switch (element.figuretype) {
-                    case "image":
+                    case elementTypeConstant.FIGURE_IMAGE:
                         editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Fg';
                         break;
-                    case "table":
+                    case elementTypeConstant.FIGURE_TABLE:
                         editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Tb';
                         break;
-                    case "mathImage":
+                    case elementTypeConstant.FIGURE_MATH_IMAGE:
                         editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'Eq';
                         break;
-                    case "authoredtext":
+                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'MML';
                         break;
-                    case "codelisting":
+                    case elementTypeConstant.FIGURE_CODELISTING:
                         editor = <ElementFigure model={element} index={index}/>;
                         labelText = 'BCE';
                         break;
-                    case "audio":
+                    case elementTypeConstant.FIGURE_AUDIO:
                         editor = <ElementAudioVideo model={element} index={index}/>;
                         labelText = 'AUD';
                         break;
-                    case "video":
+                    case elementTypeConstant.FIGURE_VIDEO:
                         editor = <ElementAudioVideo model={element} index={index}/>;
                         labelText = 'VID';
                         break;
-                        case "assessment":
+                    case elementTypeConstant.FIGURE_ASSESSMENT:
                         editor = <ElementSingleAssessment model={element} index={index} elementId={element.id}/>;
                         labelText = 'QU';
                         break;
