@@ -17,6 +17,7 @@ import config from './../../config/config';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
+const WRAPPER_URL = 'https://localhost:4000'; // TO BE IMPORTED
 
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -35,6 +36,18 @@ export class CanvasWrapper extends Component {
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }
+       window.parent.postMessage({ 'type': 'canvasIframeLoaded', 'message': {} }, WRAPPER_URL);
+        // *********************************************************
+        // *************** TO BE PLACED PROPERLY *****************//
+        window.parent.postMessage({
+            'type': 'hideWrapperLoader',
+            'message': { status: true }
+        }, WRAPPER_URL)
+        window.parent.postMessage({
+            'type': 'showHeader',
+            'message': true
+        }, WRAPPER_URL)
+        // *********************************************************
     }
 
     componentDidUpdate(){
@@ -65,10 +78,6 @@ export class CanvasWrapper extends Component {
     render() {
         return (
             <div className='content-composer'>
-                <div className="overlay-container">
-                    {/* Header Section goes here */}
-                    <h1>Header Section</h1>
-                </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <Toolbar />
@@ -100,6 +109,8 @@ export class CanvasWrapper extends Component {
     }
     
 }
+
+// CanvasWrapper.displayName = "CanvasWrapperSample"
 
 const mapStateToProps = state => {
     return {

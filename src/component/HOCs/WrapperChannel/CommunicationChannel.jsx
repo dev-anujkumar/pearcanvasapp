@@ -59,6 +59,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.sendingPermissions();
                     break;
                 case 'selectedSlate':
+                    debugger
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
@@ -164,6 +165,10 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
+            if (message && message.node) {
+                const { entityUrn, containerUrn } = message.node;
+                this.props.fetchSlateData(containerUrn);
+            }
             /**
              * TO BE IMPLEMENTED
              *  */
