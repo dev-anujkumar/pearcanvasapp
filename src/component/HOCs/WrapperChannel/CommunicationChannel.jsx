@@ -59,7 +59,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.sendingPermissions();
                     break;
                 case 'selectedSlate':
-                    debugger
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
