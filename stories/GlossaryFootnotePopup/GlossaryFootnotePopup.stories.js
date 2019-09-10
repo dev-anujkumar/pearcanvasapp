@@ -7,5 +7,7 @@ import { withInfo } from '@storybook/addon-info';
 
 storiesOf('GlossaryFootnotePopup', module)
 .addDecorator(withInfo)
-.add('Footnote', () => <GlossaryFootnoteMenu glossaryFootnote="Footnote" closePopup={action('close')} saveContent={action('save')}/>)
-.add('Glossary', () => <GlossaryFootnoteMenu glossaryFootnote="Glossary" closePopup={action('close')} saveContent={action('save')}/>)
+.add('Footnote', () => <div style={{width:"500px", position:"relative", left:"100px"}}>
+    <GlossaryFootnoteMenu glossaryFootnote="Footnote" closePopup={action('close')} saveContent={action('save')}/></div>)
+.add('Glossary', () => <div style={{width:"500px", position:"relative", left:"100px"}}> 
+<GlossaryFootnoteMenu glossaryFootnote="Glossary" closePopup={action('close')} saveContent={action('save')}/></div>)
