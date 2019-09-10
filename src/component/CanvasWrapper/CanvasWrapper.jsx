@@ -63,7 +63,6 @@ export class CanvasWrapper extends Component {
     }
 
     render() {
-        console.log("in render >>", this.props.slateLevelData)
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
