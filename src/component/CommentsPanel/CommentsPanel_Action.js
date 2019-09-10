@@ -13,13 +13,18 @@ import {
     DELETE_COMMENT
 } from '../../constants/Action_Constants';
 
-const axiosInstance = axios.create({
+let headers = {
+    "Content-Type": "application/json",
+    ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
+    PearsonSSOSession: config.ssoToken
+}
+/* const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json",
         ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
         PearsonSSOSession: config.ssoToken
     }
-});
+}); */
 
 
 export const fetchComments = (contentUrn, title) => dispatch => {
@@ -27,7 +32,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
     console.log("entity", contentUrn)
     let projectUrn = "urn:pearson:distributable:e80d2cea-a0d2-474f-8896-82caa92a66d3",
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-    axios.get(url, {
+   return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -46,7 +51,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
 
 export const fetchCommentByElement = (elemenetId) => dispatch => {
     console.log("elementId====<", elemenetId)
-    dispatch({
+   return  dispatch({
         type: FETCH_COMMENT_BY_ELEMENT,
         payload: elemenetId //"urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"//elemenetId
     })
@@ -71,7 +76,9 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
         commentCreator: reply.commentCreator
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`
-    return axiosInstance.post(url, replyDataToSend)
+    return axios.post(url, replyDataToSend,
+         { headers:headers}
+        )
         .then(response => {
             console.log("response======>", response)
             dispatch({
@@ -95,7 +102,9 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
         status: resolveOrOpen
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
-    return axiosInstance.put(url, request)
+    return axios.put(url, request,
+        { headers:headers}
+        )
         .then(response => {
             console.log("response======>", response)
             dispatch({
@@ -114,7 +123,9 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
 
     let request = updateComment
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
-    return axiosInstance.put(url, request).then(response => {
+    return axios.put(url, request,
+        { headers:headers}
+        ).then(response => {
         console.log("response======>", response)
         dispatch({
             type: UPDATE_COMMENT,
@@ -152,7 +163,9 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
     let req = {
         assignee: newAssignee
     };
-    return axiosInstance.put(url, req).then(response => {
+    return axios.put(url, req,{
+        headers:headers
+    }).then(response => {
         console.log("response======>", response)
         dispatch({
             type: UPDATE_ASSIGNEE,
@@ -167,8 +180,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-
-    return axiosInstance.delete(url)
+    return axios.delete(url,{headers,headers})
         .then(response => {
             console.log("response======>", response)
             dispatch({

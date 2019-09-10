@@ -2,6 +2,7 @@ import React from 'react'
 //import { searchUsers } from '../../actions/userGetters'
 //import Utils from '../../js/utils'
 import PropTypes from 'prop-types';
+import { keyframes } from '@emotion/core';
  class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
@@ -51,7 +52,7 @@ import PropTypes from 'prop-types';
     */
     reply = (index, reply) => {
         return (
-            <div className="reply">
+            <div  key = {index} className="reply">
                 <div className="selected-corner"></div>
                 <h4>Reply #{index + 1}</h4>
                 <div className="comment-header">
@@ -111,7 +112,6 @@ import PropTypes from 'prop-types';
     }
     render() {
         const { reply } = this.props
-        // const { userInfo }= this.state
         return (
             <>
                 {this.replyCommentForm(this.props)}
