@@ -7,7 +7,7 @@ describe('Testing Element Audio-Video component', () => {
 
     test('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(<ElementAudioVideo element={{}} />, div);
+        ReactDOM.render(<ElementAudioVideo model={{}}  index="" />, div);
         ReactDOM.unmountComponentAtNode(div);
     })
 
@@ -45,15 +45,15 @@ describe('Testing Element Audio-Video component', () => {
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given video SL-type element', () => {
-            component.setProps({ element: videoElementTypeSLWithData,index: 6 });
+            component.setProps({ model: videoElementTypeSLWithData,index: 6 });
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with default video Alfresco-type element', () => {
-            component.setProps({ element: videoElementTypeAlfrescoDefault ,index: 7});
+            component.setProps({ model: videoElementTypeAlfrescoDefault ,index: 7});
             expect(component).toMatchSnapshot();
         })
         test('renders  properly with given video Alfresco-type element', () => {
-            component.setProps({ element: videoElementTypeAlfrescoWithData,index: 8 });
+            component.setProps({ model: videoElementTypeAlfrescoWithData,index: 8 });
             expect(component).toMatchSnapshot();
         })
 
