@@ -53,7 +53,7 @@ export default function ElementSaprator(props) {
     };
     
     return (
-        <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer opacityClassOff'}>
+        <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
             {!props.upperOne &&
                 <div className='elemDiv-split'>
                     {elementType !== 'WE' ? <Tooltip direction='right' tooltipText='Split Slate'>
