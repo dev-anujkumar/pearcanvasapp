@@ -17,6 +17,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader } from '../../constants/IFrameMessageTypes.js';
 
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -36,17 +37,17 @@ export class CanvasWrapper extends Component {
            document.getElementById("cypress-0").focus();
        }
         sendDataToIframe({
-            'type': 'canvasIframeLoaded',
+            'type': CanvasIframeLoaded,
             'message': {}
         });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
         sendDataToIframe({
-            'type': 'hideWrapperLoader',
+            'type': HideWrapperLoader,
             'message': { status: true }
         })
         sendDataToIframe({
-            'type': 'showHeader',
+            'type': ShowHeader,
             'message': true
         })
         // *********************************************************
