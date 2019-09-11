@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
 const configModule = {}; // TO BE IMPORTED
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe } from '../../../constants/utility.js';
 
 
 function WithWrapperCommunication(WrappedComponent) {

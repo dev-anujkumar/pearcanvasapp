@@ -6,7 +6,7 @@
  */
 
 // IMPORT - Module dependencies
-import config from './../../config/config';
+import config from '../config/config';
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
