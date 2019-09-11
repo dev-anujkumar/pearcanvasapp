@@ -39,6 +39,13 @@ class Comments extends React.Component {
             }
         });
     }
+    componentWillUnmount(){
+        window.removeEventListener("click", (event) => {
+            if (event.target.className !== "action-menu-img") {
+                this.toggleActionsMenu(false)
+            }
+        });
+    }
     /**
     * 
     *@discription - This function is to toggle the Action menu

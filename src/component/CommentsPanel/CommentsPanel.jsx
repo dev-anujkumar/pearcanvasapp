@@ -43,7 +43,15 @@ class CommentsPanel extends React.Component {
     }
     componentDidMount() {
         window.addEventListener("click", (event) => {
-            console.log("event", event.target)
+            const isSortDropdown = event.target.closest('.sort-dropdown')
+            const isStatusDropdown = event.target.closest('.status-dropdown')
+            if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
+        });
+    }
+
+    componentWillUnmount() {
+        // you need to unbind the same listener that was binded.
+        window.removeEventListener("click", (event) => {
             const isSortDropdown = event.target.closest('.sort-dropdown')
             const isStatusDropdown = event.target.closest('.status-dropdown')
             if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
