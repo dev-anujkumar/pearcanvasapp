@@ -9,12 +9,13 @@ import PropTypes from 'prop-types';
   @return {String} - returns the jsx code of the assignee menu
   */
     assigneeForm = (props) => {
+        const {users} = props
         if (props.mode === 'assign') {
             return (
                 <div className="assignee-content">
                     <span className="property-title">Assignee</span>
                     <span className="property-value color-gray-71 changeAssignee">getUserName</span>
-                    <CurrentProjectUsers currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
+                    <CurrentProjectUsers users = {users} currentAssingnee={props.comment.commentAssignee} newAssigneeUser={props.newAssigneeUser} />
                     <span className={`set-assignee-button ${(!props.isSelectAssignee ? 'disabled' : "")}`}
                         onClick={() => {
                             props.setMode('view')

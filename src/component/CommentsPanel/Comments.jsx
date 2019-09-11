@@ -1,11 +1,9 @@
 import React from 'react'
-//import CommnetsForm from './CommentsForm.jsx'
 import UserAssignee from './UserAssignee.jsx';
 import ReplyComment from './ReplyComment.jsx';
-import { connect } from 'react-redux'
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
-//import {CurrentProjectUsers} from './CurrentProjectUsers.jsx'
+import {utils} from '../../js/utils'
 class Comments extends React.Component {
     constructor(props) {
         super(props)
@@ -29,6 +27,9 @@ class Comments extends React.Component {
         this.resolveComment = this.resolveComment.bind(this);
         this.updateComment = this.updateComment.bind(this);
         this.toggleReplyForm = this.toggleReplyForm.bind(this);
+        this.updateCommentText = this.updateCommentText.bind(this);
+        this.updateAssignee = this.updateAssignee.bind(this);
+        this.deleteComment = this.deleteComment.bind(this);
     }
     componentDidMount() {
 
@@ -56,14 +57,17 @@ class Comments extends React.Component {
    @param {String} property - property to be updated in comment
    
    */
-    updateComment(property) {
-        console.log("property", property);
-        const commentId = this.props.comment.commentUrn
-        //const elementId = this.props.elementId
-        const updatedFields = {
-            [property]: this.state.updatedFields[property]
-        }
-        // this.props.updateElementComment(commentId, updatedFields, elementId, this.props.comment)
+    updateComment() {
+        const { elementId, comment } = this.props
+        let commentId = comment.commentUrn
+        let updatedComment = {
+            comment: this.state.updatedFields.text,
+            commentCreator: comment.commentCreator,
+            status: "Open"
+        };
+
+        const updatedText = this.state.updatedFields.text
+        this.props.updateElementComment(commentId, updatedComment, elementId)
     }
     /**
    * 
@@ -108,7 +112,9 @@ class Comments extends React.Component {
         this.setState({
             isSelectAssignee: false
         })
+        this.props.getProjectUsers();
     }
+
     /**
 * 
 *@discription - This function is to toggle replay form
@@ -134,6 +140,31 @@ class Comments extends React.Component {
     }
 
     /**
+  * 
+  *@discription - This function is to update comment
+  */
+
+    updateCommentText(e) {
+        this.setState({
+            updatedFields: {
+                ...this.state.updatedFields,
+                text: e.target.value
+            }
+        })
+    }
+    /**
+  * 
+  *@discription - This function is to delete comment
+  */
+
+    deleteComment(e) {
+        const { commentUrn } = this.props.comment
+        const { elementId } = this.props
+        this.toggleActionsMenu(false)
+        this.props.deleteComment(commentUrn, elementId)
+    }
+
+    /**
     * 
     *@discription - This function is to return jsx of action menu
     @return {String} - returns the jsx code of the action menu
@@ -150,11 +181,11 @@ class Comments extends React.Component {
             </ul>
         )
     }
-    /**
-* 
-*@discription - This function is to return jsx of edit menu
-@return {String} - returns the jsx code of the edit menu
-*/
+        /**
+    * 
+    *@discription - This function is to return jsx of edit menu
+    @return {String} - returns the jsx code of the edit menu
+    */
     editForm = () => {
         return (
 
@@ -175,7 +206,7 @@ class Comments extends React.Component {
                     <button className="btn btn__initial"
                         onClick={() => {
                             this.setMode('view')
-                            this.updateComment('text')
+                            this.updateComment()
                         }}>
                         Save
                             </button>
@@ -206,14 +237,11 @@ class Comments extends React.Component {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newAssignee } = this.state
-        /* const updatedFields = {
-            'assignto': this.state.newAssignee
-        } */
-        //  this.props.updateAssignee(commentUrn, newAssignee, elementId)
+        this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
         console.log(this.props);
-        const { comment, elementId, updateReplyComment, toggleReplyForm } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
         return (
             <div className="comment-wrapper">
                 <div className="comment">
@@ -227,9 +255,8 @@ class Comments extends React.Component {
                         <div className="comment-info">
                             <div className="text-medium-semibold mt-4"> {comment.commentCreator}  </div>
                             <div className="text-medium color-gray-71 mb-4">
-                                {/* {Utils.buildCommentDate(comment.commentDateTime)}     */}
-                                Jul. 23, 2019 @03:53 PM
-                        </div>
+                                {utils.buildCommentDate(comment.commentDateTime)}
+                            </div>
                         </div>
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
                             onClick={() => this.toggleActionsMenu()}
@@ -249,7 +276,7 @@ class Comments extends React.Component {
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>
-                                <span className="property-value">Glossary Slate{this.props.slateTitle}</span>
+                                <span className="property-value">{this.props.slateTitle}</span>
                             </div>
                             <div className="property">
                                 <UserAssignee
@@ -260,6 +287,7 @@ class Comments extends React.Component {
                                     setMode={this.setMode}
                                     updateAssignee={this.updateAssignee}
                                     removeAssigneePopup={this.removeAssigneePopup}
+                                    users={users}
                                 />
 
                             </div>

@@ -1,7 +1,6 @@
 import React from 'react'
-//import { searchUsers } from '../../actions/userGetters'
-//import Utils from '../../js/utils'
 import PropTypes from 'prop-types';
+
  class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
@@ -12,9 +11,6 @@ import PropTypes from 'prop-types';
         this.updateCommentText = this.updateCommentText.bind(this);
         this.replyComment = this.replyComment.bind(this);
     }
-componentDidUpdate(){
-        
-}
     /**
 * 
 *@discription - This function is to update the text of comment
@@ -54,7 +50,7 @@ componentDidUpdate(){
     */
     reply = (index, reply) => {
         return (
-            <div className="reply">
+            <div  key = {index} className="reply">
                 <div className="selected-corner"></div>
                 <h4>Reply #{index + 1}</h4>
                 <div className="comment-header">
@@ -114,7 +110,6 @@ componentDidUpdate(){
     }
     render() {
         const { reply } = this.props
-        // const { userInfo }= this.state
         return (
             <>
                 {this.replyCommentForm(this.props)}

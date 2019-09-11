@@ -1,7 +1,7 @@
 /**
- * Module - Slate Level Reducer
- * Description - all slate related action payloads land here
- * Developer - Abhay Singh
+ * Module - CommentPanel Reducer
+ * Description - All comments manupulation of comments panel lands here
+ * Developer -yasmin agwan
  * Last modified - 21-08-2019
  */
 
@@ -10,14 +10,17 @@ import {
     FETCH_COMMENTS,
     TOGGLE_COMMENTS_PANEL,
     REPLY_COMMENT,
-    FETCH_COMMENT_BY_ELEMENT ,
+    FETCH_COMMENT_BY_ELEMENT,
     RESOLVE_COMMENT,
     TOGGLE_REPLY,
-    ADD_COMMENT
+    UPDATE_COMMENT,
+    GET_PROJECT_USER,
+    UPDATE_ASSIGNEE,
+    DELETE_COMMENT
 } from '../constants/Action_Constants';
 
 /**
- * This is the initial state and structure of app store
+ * This is the initial state and structure of comments panel store
  * update it accordingly
  */
 const initialState = {
@@ -73,7 +76,10 @@ const initialState = {
         "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
     }
     ],
-    toggleReplyForm:true
+    toggleReplyForm: true,
+    togglePanel: false,
+    users: [],
+    slateTitle: ""
 }
 
 /**
@@ -81,14 +87,14 @@ const initialState = {
  * @param {Object} state | current state
  * @param {String} action | incoming action with payload
  */
-export default function (state = initialState , action) {
-    const {type,payload} = action;
-    switch (action.type) {
+export default function (state = initialState, action) {
+    const { type, payload } = action;
+    switch (type) {
         case FETCH_COMMENTS:
             return {
                 ...state,
-                // comments: action.payload.commentList
-                allComments: action.payload
+                allComments: payload.comments,
+                slateTitle: payload.title
             };
         case FETCH_COMMENT_BY_ELEMENT:
             console.log("comments======>", state.allComments)
@@ -99,47 +105,86 @@ export default function (state = initialState , action) {
                 comments: comments
             }
         case TOGGLE_COMMENTS_PANEL:
-            console.log(action.payload);
+            console.log(payload);
             return {
                 ...state,
-                togglePanel: action.payload
+                togglePanel: payload
             }
         case TOGGLE_REPLY:
-                    console.log(action.payload);
-                    return {
-                        ...state,
-                        toggleReplyForm: payload
-                    }
+            console.log(payload);
+            return {
+                ...state,
+                toggleReplyForm: payload
+            }
         case REPLY_COMMENT:
             const commentsList = state.comments;
             console.log("comment", commentsList)
             commentsList.forEach((comment, index) => {
-                if (comment.commentUrn === action.payload.commentUrn) {
-                    comment.replyComments.push(action.payload.reply)
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.replyComments.push(payload.reply)
                 }
             })
 
             return {
                 ...state,
                 comments: commentsList,
-                toggleReplyForm: action.payload.toggleReplyForm
+                toggleReplyForm: payload.toggleReplyForm
             }
         case RESOLVE_COMMENT:
 
-         let resolveComment = JSON.parse(JSON.stringify(state.comments)) //deep cloning state.commet not mutating state
-         resolveComment.forEach(comment=>{
-            if(comment.commentUrn === payload.commentUrn){
-                comment.commentStatus = payload.resolveOrOpen
-            }
-        })
-        return {
-            ...state,
-            comments: resolveComment
-        }
-        case ADD_COMMENT:
-            return  {
+            let resolveComment = JSON.parse(JSON.stringify(state.comments)) 
+            resolveComment.forEach(comment => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentStatus = payload.resolveOrOpen
+                }
+            })
+            return {
                 ...state,
-                comments: newComment
+                comments: resolveComment
+            }
+        case UPDATE_COMMENT:
+
+            let editComment = JSON.parse(JSON.stringify(state.comments))
+            editComment.forEach(comment => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentString = payload.updateComment
+                    comment.commentStatus = "OPEN"
+                }
+            })
+            return {
+                ...state,
+                comments: editComment
+            }
+        case GET_PROJECT_USER:
+            console.log("reducer==.")
+            let users = payload;
+            users = users.filter(user => user.isMember === true)
+            return {
+                ...state,
+                users: users
+            }
+
+        case UPDATE_ASSIGNEE:
+            let updateComment = JSON.parse(JSON.stringify(state.comments)) 
+            updateComment.forEach((comment, index) => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentAssignee = payload.newAssignee
+                }
+            })
+            return {
+                ...state,
+                comments: updateComment
+            }
+        case DELETE_COMMENT:
+            let deleteComment = JSON.parse(JSON.stringify(state.comments))
+            deleteComment.forEach((comment, index) => {
+                if (comment.commentUrn === payload) {
+                    deleteComment.splice(index, 1)
+                }
+            })
+            return {
+                ...state,
+                comments: deleteComment
             }
         default:
             return state;

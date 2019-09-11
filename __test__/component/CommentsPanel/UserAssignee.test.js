@@ -1,10 +1,11 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import UserAssignee from '../../../src/component/CommentsPanel/UserAssignee';
-import { comment, filters } from '../../../fixtures/commentPanelData.js'
+import { comment, filters,users } from '../../../fixtures/commentPanelData.js'
 let props ={ 
     comment:comment,
-    mode:'assign'
+    mode:'assign',
+    users:users
 }
 describe('Testing CommentsPanel component with props', () => {
   let wrapper = mount(< UserAssignee {...props} />)

@@ -1,6 +1,7 @@
 let config = {
     REACT_APP_API_URL : "https://10.11.3.7:8443/cypress-api/",
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
+    JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     ssoToken: "PUVGjTJb9Z-a7xGVvmew8HKbfXE.*AAJTSQACMDIAAlNLABxEZkRhb1psajZueVNreGJYekJBdmhQWUMxM1k9AAJTMQACMDk.*",
     userId: 'c5test01',
