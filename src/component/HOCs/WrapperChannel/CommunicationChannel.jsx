@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
 const configModule = {}; // TO BE IMPORTED
-let WRAPPER_URL = {}; // TO BE IMPORTED
+import { sendDataToIframe } from '../../constants/utility.js';
 
 
 function WithWrapperCommunication(WrappedComponent) {
@@ -154,7 +154,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         sendDataToIframe = (messageObj) => {
-            window.parent.postMessage(messageObj, WRAPPER_URL);
+            sendDataToIframe(messageObj);
         }
 
         sendingPermissions = () => {

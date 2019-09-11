@@ -16,7 +16,7 @@ import config from './../../config/config';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
-const WRAPPER_URL = 'https://localhost:4000'; // TO BE IMPORTED
+import { sendDataToIframe } from '../../constants/utility.js';
 
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -35,17 +35,20 @@ export class CanvasWrapper extends Component {
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }
-       window.parent.postMessage({ 'type': 'canvasIframeLoaded', 'message': {} }, WRAPPER_URL);
+        sendDataToIframe({
+            'type': 'canvasIframeLoaded',
+            'message': {}
+        });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
-        window.parent.postMessage({
+        sendDataToIframe({
             'type': 'hideWrapperLoader',
             'message': { status: true }
-        }, WRAPPER_URL)
-        window.parent.postMessage({
+        })
+        sendDataToIframe({
             'type': 'showHeader',
             'message': true
-        }, WRAPPER_URL)
+        })
         // *********************************************************
     }
 
