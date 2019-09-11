@@ -94,3 +94,11 @@ ul {
     margin: 0px;
     padding-left: 14px;
 }
+
+.opacityClassOn{
+    opacity: 1;
+}
+
+.opacityClassOff{
+    opacity: 0;
+}
