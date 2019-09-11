@@ -65,7 +65,7 @@
     position: relative;
     padding-left: 90px;
     background-color: #fafafa;
-    height: calc(100% - 62px);
+    /* height: calc(100% - 62px); */
 }
 
 .--rm-place {

@@ -13,7 +13,8 @@ let config = {
         'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c'
     ],
     projectUrn: "urn:pearson:distributable:e80d2cea-a0d2-474f-8896-82caa92a66d3",
-    project_ENTITY_URN:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c"
+    project_ENTITY_URN:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
+    WRAPPER_URL : 'https://localhost:4000' // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
 };
 
