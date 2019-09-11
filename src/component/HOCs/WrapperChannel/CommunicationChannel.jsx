@@ -159,8 +159,22 @@ function WithWrapperCommunication(WrappedComponent) {
 
         sendingPermissions = () => {
             /**
-             * TO BE IMPLEMENTED
+             * TO BE VERIFIED
              *  */
+            let permissionObj = this.props.currentProject || null;
+            if (permissionObj === null) {
+                permissionObj = {};
+                permissionObj.permissions = [
+                    'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
+                ];
+                permissionObj.roleId = 'admin';
+            }
+
+
+            sendDataToIframe({
+                'type': 'Permissions',
+                'message': { 'permissions': permissionObj.permissions, 'roleName': permissionObj.roleId }
+            });
         }
 
         setCurrentSlate = (message) => {
