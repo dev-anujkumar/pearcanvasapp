@@ -112,8 +112,7 @@ export class CanvasWrapper extends Component {
     }
     
 }
-
-// CanvasWrapper.displayName = "CanvasWrapperSample"
+CanvasWrapper.displayName = "CanvasWrapper"
 
 const mapStateToProps = state => {
     return {
