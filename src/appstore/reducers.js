@@ -8,7 +8,8 @@
 // IMPORT - Action constants //
 import {
     FETCH_SLATE_DATA,
-    SET_ACTIVE_ELEMENT
+    SET_ACTIVE_ELEMENT,
+    SET_ELEMENT_TAG
 } from '../constants/Action_Constants';
 import config from './../config/config';
 import mockdata from './mockdata'; 
@@ -19,7 +20,9 @@ import mockdata from './mockdata';
  */
 
 const initialState = {
-    slateLevelData: {}
+    slateLevelData: {},
+    elementsTag: {},
+    activeElement: {}
 };
 
 /**
@@ -34,6 +37,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload
             };
+        case SET_ELEMENT_TAG:
+            return {
+                ...state,
+                elementsTag: action.payload
+            }
         case SET_ACTIVE_ELEMENT:
             return {
                 ...state,

@@ -1,5 +1,6 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
 export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
+export const SET_ELEMENT_TAG = 'SET_ELEMENT_TAG'
 
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'

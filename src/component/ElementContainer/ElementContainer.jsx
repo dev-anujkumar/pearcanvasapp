@@ -18,20 +18,21 @@ class ElementContainer extends Component {
     }
     componentDidMount(){
     }
+
     renderElement = (element = {}) => {
         let editor = '';
-        let { elementType, labelText, index,handleCommentspanel} = this.props;
+        let { labelText, index, handleCommentspanel} = this.props;
         switch(element.type) {
             case 'opener':
                 editor = "Opener Element";
                 break;
 
             case "element-authoredtext":
-                editor = <ElementAuthoring index={index} elementId={element.id} element={element} type={'heading-1'} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
 
             case "element-blockfeature":
-                editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
+                editor = <ElementAuthoring index={index} elementId={element.id} element={element} model={element.html} />;
                 labelText = 'BQ';
                 break;
             case "figure":
@@ -69,10 +70,7 @@ class ElementContainer extends Component {
                 break;
         }
 
-
-    
-
-    return(
+        return(
             <div className = "editor" >
             <div>
                 <Button type="element-label" labelText={labelText} />
@@ -93,24 +91,24 @@ class ElementContainer extends Component {
         );
     }
 
-/**
- * @description - This function is for handling the closing and opening of popup.
- * @param {event} popup
- */
+    /**
+     * @description - This function is for handling the closing and opening of popup.
+     * @param {event} popup
+     */
 
-handleCommentPopup(popup){
-    this.setState({
-        popup
-    });
-}
-handleCommentPanel(){
-    console.log("click button")
-    this.props.dispatch(toggleCommentsPanel(true));
-}
-render = () => {
-    const { element } = this.props;
-    return this.renderElement(element);
-}
+    handleCommentPopup(popup){
+        this.setState({
+            popup
+        });
+    }
+    handleCommentPanel(){
+        console.log("click button")
+        this.props.dispatch(toggleCommentsPanel(true));
+    }
+    render = () => {
+        const { element } = this.props;
+        return this.renderElement(element);
+    }
 }
 
 ElementContainer.defaultProps = {

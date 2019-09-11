@@ -25,6 +25,17 @@ class Sidebar extends Component {
         };
     }
 
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        if(Object.keys(nextProps.activeElement).length > 0) {
+            return {
+                activeElementType: nextProps.activeElement.elementType,
+                activePrimaryOption: nextProps.activeElement.primaryOption,
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,
+                activeLabelText: nextProps.activeElement.tag
+            };
+        }
+    }
+
     handlePrimaryOptionChange = e => {
         let value = e.target.getAttribute('data-value');
         let secondaryelementList = elementList[this.state.activeElementType][value].subtype;
@@ -38,12 +49,13 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.id !== '') {
+        if(this.props.activeElement.elementId !== '') {
             this.props.updateElement({
                 slateId: this.props.slateId,
-                elementId: this.props.activeElement.id,
+                elementId: this.props.activeElement.elementId,
                 primaryOption: value,
-                secondaryOption: secondaryFirstOption
+                secondaryOption: secondaryFirstOption,
+                labelText
             });
         }
     }
@@ -99,12 +111,13 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.id !== '') {
+        if(this.props.activeElement.elementId !== '') {
             this.props.updateElement({
                 slateId: this.props.slateId,
-                elementId: this.props.activeElement.id,
+                elementId: this.props.activeElement.elementId,
                 primaryOption: this.state.activePrimaryOption,
-                secondaryOption: value
+                secondaryOption: value,
+                labelText
             });
         }
     }
@@ -199,7 +212,8 @@ Sidebar.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        activeElement: state.appStore.activeElement || {}
+        activeElement: state.appStore.activeElement,
+        // activeElementType: state.appStore.activeElement.elementType
     };
 };
 

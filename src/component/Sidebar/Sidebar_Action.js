@@ -2,22 +2,25 @@ import axios from 'axios';
 
 import { EditorConfig } from './../../config/EditorConfig';
 import {
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    SET_ELEMENT_TAG
 } from './../../constants/Action_Constants';
 
 const handleElementConversion = (elementData, store) => {
-     store = JSON.parse(JSON.stringify(store));
+    store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && elementData.slateId === Object.keys(store)[0]) {
-        let element = store[elementData.slateId];
-        let bodymatter = element.contents.bodymatter;
+        let storeElement = store[elementData.slateId];
+        let bodymatter = storeElement.contents.bodymatter;
         let format = elementData.secondaryOption.replace('secondary-', '');
         bodymatter.map(element => {
-            let htmlText = element.html.text;
-            let openingTagIndex = htmlText.indexOf('>') + 1;
-            htmlText = htmlText.substring(openingTagIndex).replace(/(<\/\w+>)$/g, '');
-            
-            htmlText = "<" + EditorConfig.formats[format].block +" className='" + EditorConfig.formats[format].classes + "'>" + htmlText + "</" + EditorConfig.formats[format].block + ">"
-            element.html.text = htmlText;
+            if(elementData.elementId === element.id) {
+                let htmlText = element.html.text;
+                let openingTagIndex = htmlText.indexOf('>') + 1;
+                htmlText = htmlText.substring(openingTagIndex).replace(/(<\/\w+>)$/g, '');
+                
+                htmlText = "<" + EditorConfig.formats[format].block +" className='" + EditorConfig.formats[format].classes + "'>" + htmlText + "</" + EditorConfig.formats[format].block + ">"
+                element.html.text = htmlText;
+            }
         });
     }
 
@@ -27,8 +30,16 @@ const handleElementConversion = (elementData, store) => {
 export const updateElement = (elementData) => (dispatch, getState) => {
     let slateLevelData = handleElementConversion(elementData, getState().appStore.slateLevelData);
 
+    let tagList = getState().appStore.elementsTag;
+    tagList[elementData.elementId] = elementData.labelText;
+    
+    dispatch({
+        type: SET_ELEMENT_TAG,
+        payload: tagList
+    });
+
     dispatch({
         type: FETCH_SLATE_DATA,
         payload: slateLevelData
-    })
+    });
 }

@@ -38,9 +38,9 @@ class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        if(document.getElementById("cypress-0")){
-            document.getElementById("cypress-0").focus();
-        }
+        // if(document.getElementById("cypress-0")){
+        //     document.getElementById("cypress-0").focus();
+        // }
     }
     handleCommentspanel(elementId){
         console.log("elementId",elementId);
@@ -64,13 +64,6 @@ class CanvasWrapper extends Component {
     }
 
     render() {
-        let activeElementId = '';
-        let activeElementType = '';
-        if(Object.keys(this.state.activeElement).length > 0) {
-            activeElementId = this.state.activeElement.id;
-            activeElementType = this.state.activeElement.type;
-        }
-
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
@@ -91,7 +84,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} />
+                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} />
                             </div>
                         </div>
                     </div>
@@ -110,9 +103,10 @@ class CanvasWrapper extends Component {
     
 }
 
-const mapStateToProps = state => {console.log('canvas state:::', state);
+const mapStateToProps = state => {
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        elementsTag: state.appStore.elementsTag
     };
 };
 

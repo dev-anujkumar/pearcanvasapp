@@ -41,45 +41,42 @@ export class TinyMceEditor extends Component {
               }
         }
     };
-    componentDidMount(){console.log('componenet did mount:::');     
+    componentDidMount(){
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
     }
-    componentDidUpdate(){console.log('component did update:::', tinymce.editors);
-    if(!tinymce.editors.length){
+    componentDidUpdate(){
+        if(!tinymce.editors.length){
+            tinymce.init(this.editorConfig)
+        }
+    }
+
+    handleFocus=(e)=>{
+        if(Object.keys(this.props.element).length > 0)
+        this.props.setActiveElement(this.props.element);
+        if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
+        return false;
+        if(tinymce.activeEditor){
+            let activeEditorId = tinymce.activeEditor.id;
+            
+            tinymce.remove('#'+tinymce.activeEditor.id)
+            document.getElementById(activeEditorId).contentEditable = true;
+        }
+        this.editorConfig.selector='#'+e.target.id
         tinymce.init(this.editorConfig)
     }
-   }
-    // handleBlur=(e)=>{
-  //   // debugger;
-  //   // window.tinyMCE.activeEditor.settings
-  //  // tinymce.activeEditor.destory();
-  //  // tinymce.editors.forEach((editor,index)=>{
-  //  //   editor.destroy();
-  //  // })
-  // }
- 
-
-  handleFocus=(e)=>{
-    if(Object.keys(this.props.element).length > 0)
-    this.props.setActiveElement(this.props.element);
-    if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
-    return false;
-    if(tinymce.activeEditor){
-        let activeEditorId = tinymce.activeEditor.id;
-        
-        tinymce.remove('#'+tinymce.activeEditor.id)
-        document.getElementById(activeEditorId).contentEditable = true;
-    }
-    this.editorConfig.selector='#'+e.target.id
-    tinymce.init(this.editorConfig)
-   }
   
     render() {
-        if(tinymce.activeEditor) {
+        if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
+            let activeEditorId = tinymce.activeEditor.id;
+            let element = document.getElementById(activeEditorId);
             tinymce.remove('#'+tinymce.activeEditor.id)
+            element.contentEditable = true;
+            this.editorConfig.selector='#'+activeEditorId
+            tinymce.init(this.editorConfig)
         }
+
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
        
@@ -100,7 +97,7 @@ export class TinyMceEditor extends Component {
                 )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
+                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }
