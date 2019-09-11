@@ -12,7 +12,6 @@ import {
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
-
 import config from './../../config/config';
 
 // IMPORT - Assets //

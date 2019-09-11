@@ -7,7 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
-import {replyComment,resolveComment,toggleReply,toggleCommentsPanel} from './CommentsPanel_Action';
+import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -34,20 +34,35 @@ class CommentsPanel extends React.Component {
         this.handleSearchInput = this.handleSearchInput.bind(this);
         this.setSort = this.setSort.bind(this);
         this.setStatus = this.setStatus.bind(this);
-        this.changeStatus = this.changeStatus.bind(this);
         this.updateReplyComment = this.updateReplyComment.bind(this);
         this.updateResolveComment = this.updateResolveComment.bind(this);
+        this.updateElementComment = this.updateElementComment.bind(this);
+        this.getProjectUsers = this.getProjectUsers.bind(this);
+        this.updateAssignee = this.updateAssignee.bind(this);
+        this.deleteComment = this.deleteComment.bind(this);
     }
-    
-    componentDidUpdate(){
-        console.log("comments panel=====>",this.props.comments)
+    componentDidMount() {
+        window.addEventListener("click", (event) => {
+            console.log("event", event.target)
+            const isSortDropdown = event.target.closest('.sort-dropdown')
+            const isStatusDropdown = event.target.closest('.status-dropdown')
+            if (!(isSortDropdown || isStatusDropdown)) this.closeAllDropdown();
+        });
     }
 
-    
-     /**
-    * 
-    * @discription - This function is for search comments
-    */
+      /**
+   * 
+   * @discription - This function is for close all dropdown
+   */
+    closeAllDropdown() {
+        this.toggleStatusDropdown(false)
+        this.toggleOrderByDropdown(false)
+    }
+
+    /**
+   * 
+   * @discription - This function is for search comments
+   */
     handleSearchInput(e) {
         console.log("value", e.target.value)
         this.setState({
@@ -57,11 +72,11 @@ class CommentsPanel extends React.Component {
             }
         })
     }
-       /**
-    * 
-    * @discription - This function is for sort the comments
-    
-    */
+    /**
+ * 
+ * @discription - This function is for sort the comments
+ 
+ */
     setSort({ target }) {
         this.setState({
             filters: {
@@ -76,11 +91,11 @@ class CommentsPanel extends React.Component {
 
     }
 
-       /**
-    * 
-    * @discription - This function is for set the status comments
-    * @param {string} status - status of filter comment
-    */
+    /**
+ * 
+ * @discription - This function is for set the status comments
+ * @param {string} status - status of filter comment
+ */
     setStatus(status = 'all') {
 
         this.setState({
@@ -119,25 +134,74 @@ class CommentsPanel extends React.Component {
             showSortByDropdown: false,
         })
     }
+      /**
+    * 
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {string} updatedComment - updated comment
+    * @param {string} elementId - Elemenet id to de updated
+    */
+    updateElementComment(commentUrn, updatedComment, elementId) {
+        this.props.updateComment(commentUrn, updatedComment, elementId);
+    }
+
+
+      /**
+    * 
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} reply - value of reply and comment detail
+    * @param {string} elementId - Elemenet id to de updated
+    */
+    updateReplyComment(commentUrn, reply, elementId) {
+        this.props.replyComment(commentUrn, reply, elementId)
+    }
+
+
         /**
     * 
-    * @discription - This function is to change  the status of comment
-  
+    * @discription - This function is to update comment of element
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} resolveString - status of comment to be change:resolve,open
+    * @param {string} elementId - Elemenet id to de updated
     */
-    changeStatus() {
 
-    }
-    updateReplyComment(commentUrn,reply,elementId){
-        this.props.replyComment(commentUrn, reply, elementId) 
-    //  new Promise((resolve, reject) => {
-    //             this.props.replyComment(commentUrn, reply, elementId)
-    //             resolve()
-    //       });
-        
-    }
-    updateResolveComment(commentUrn, resolveString, elementId){
+
+    updateResolveComment(commentUrn, resolveString, elementId) {
         console.log(this.props)
         this.props.resolveComment(commentUrn, resolveString, elementId)
+    }
+
+
+      /**
+    * 
+    * @discription - This function is to get user detail of project
+    */
+    getProjectUsers() {
+        this.props.getProjectUsers();
+    }
+
+        /**
+    * 
+    * @discription - This function is to update the assignee of the comment.
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {object} newAssignee - New Assignee to be updated in comment
+    * @param {string} elementId - Elemenet id to de updated
+    */
+
+    updateAssignee(commentUrn, newAssignee, elementId) {
+        this.props.updateAssignee(commentUrn, newAssignee, elementId);
+    }
+
+    /**
+    * 
+    * @discription - This function is to delete the comment
+    * @param {string} commentUrn - commnet urn to be updated
+    * @param {string} elementId - Elemenet id to de updated
+    */
+
+    deleteComment(commentUrn, elementId) {
+        this.props.deleteComment(commentUrn, elementId);
     }
 
     /**
@@ -148,22 +212,22 @@ class CommentsPanel extends React.Component {
     */
     renderComment = (comment) => {
         let { filters } = this.state;
-        let finalFilteredComments = this.filterComments(comment,filters)
+        let finalFilteredComments = this.filterComments(comment, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
-                    //slateTitle = {this.currentSlate}
-                    
+                    slateTitle={this.props.slateTitle}
                     key={index}
                     elementId={comment.commentOnEntity}
-                    //  updateElementComment = {this.updateElementComment}
-                    updateReplyComment = {this.updateReplyComment}
-                    updateResolveComment = {this.updateResolveComment}
-                    //deleteComment = {this.deleteComment}
-                    changeStatus={this.changeStatus}
-                    toggleReply= {this.props.toggleReply}
-                //updateAssignee = {this.updateAssignee}
-                  toggleReplyForm = {this.props.toggleReplyForm}
+                    updateElementComment={this.updateElementComment}
+                    updateReplyComment={this.updateReplyComment}
+                    updateResolveComment={this.updateResolveComment}
+                    deleteComment={this.deleteComment}
+                    toggleReply={this.props.toggleReply}
+                    updateAssignee={this.updateAssignee}
+                    toggleReplyForm={this.props.toggleReplyForm}
+                    users={this.props.users}
+                    getProjectUsers={this.getProjectUsers}
                 />)
             })
             return comments;
@@ -173,13 +237,13 @@ class CommentsPanel extends React.Component {
             )
         }
     }
-     /**
-    * 
-    *@discription - This function is to filter the comments
-    @param {Object} props - objct of comments
-    @return {String} - returns the final filterd comment
-    */
-    filterComments = (comment,filters) => {
+    /**
+   * 
+   *@discription - This function is to filter the comments
+   @param {Object} props - objct of comments
+   @return {String} - returns the final filterd comment
+   */
+    filterComments = (comment, filters) => {
         let { id } = this.props
         let elementWiseComments = comment;
         let statusFilteredComments = [],
@@ -209,15 +273,15 @@ class CommentsPanel extends React.Component {
     }
 
     render() {
-        console.log("state===>",this.props.comments)
-        const {toggleCommentsPanel} = this.props;
+        console.log("state===>", this.props.comments)
+        const { toggleCommentsPanel } = this.props;
         return (
             <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
-                            <label onClick = {()=>toggleCommentsPanel(false)} className="modal__close_Panel"></label>
+                            <label onClick={() => toggleCommentsPanel(false)} className="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
                             <div className="add-structure">
                                 <div className="filter">
@@ -246,16 +310,13 @@ class CommentsPanel extends React.Component {
                                             <div id="nav-context-selector" className="dropdown__title">
                                                 {this.state.filters.status.label}
                                             </div>
-                                            {/* <svg className="dropdown__arrow">
-                                            <use xlinkHref="#arrow-down"></use>
-                                        </svg> */}
                                             <img src={arrowDown} />
                                         </div>
                                         {this.state.showStatusDropdown &&
                                             <ul className="dropdown__content">
-                                                <li data-value="open" onClick={()=>this.setStatus('all')}>All</li>
-                                                <li data-value="open" onClick={()=>this.setStatus('open')}>Open</li>
-                                                <li data-value="resolved" onClick={()=>this.setStatus('resolved')}>Resolved</li>
+                                                <li data-value="open" onClick={() => this.setStatus('all')}>All</li>
+                                                <li data-value="open" onClick={() => this.setStatus('open')}>Open</li>
+                                                <li data-value="resolved" onClick={() => this.setStatus('resolved')}>Resolved</li>
                                             </ul>
                                         }
                                     </div>
@@ -298,30 +359,43 @@ CommentsPanel.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      replyComment: (commentUrn, reply, elementId) => {
-        dispatch(replyComment(commentUrn, reply, elementId))
-      },
-      resolveComment: (commentUrn, resolveString, elementId) => {
-        dispatch(resolveComment(commentUrn, resolveString, elementId))
-      },
-      toggleReply:(toggle)=>{
-        dispatch(toggleReply(toggle))
-      },
-      toggleCommentsPanel:(toggle)=> {
-        dispatch(toggleCommentsPanel(toggle))
-      }
+        replyComment: (commentUrn, reply, elementId) => {
+            dispatch(replyComment(commentUrn, reply, elementId))
+        },
+        resolveComment: (commentUrn, resolveString, elementId) => {
+            dispatch(resolveComment(commentUrn, resolveString, elementId))
+        },
+        toggleReply: (toggle) => {
+            dispatch(toggleReply(toggle))
+        },
+        toggleCommentsPanel: (toggle) => {
+            dispatch(toggleCommentsPanel(toggle))
+        },
+        updateComment: (commentUrn, updatedComment, elementId) => {
+            dispatch(updateComment(commentUrn, updatedComment, elementId))
+        },
+        getProjectUsers: () => {
+            dispatch(getProjectUsers())
+        },
+        updateAssignee: (commentUrn, newAssignee, elementId) => {
+            dispatch(updateAssignee(commentUrn, newAssignee, elementId))
+        },
+        deleteComment: (commentUrn, elementId) => {
+            dispatch(deleteComment(commentUrn, elementId))
+        }
     }
-  }
-  
- const mapStateToProps = state => {
-    console.log("state===========",state)
-     return{
-    
-    comments: state.commentsPanelReducer.comments,
-    togglePanel:state.commentsPanelReducer.togglePanel,
-    //elementId :state.commentsPanelReducer.elementId  // will get on button click
-    toggleReplyForm:state.commentsPanelReducer.toggleReplyForm
-  }}; 
-  
-export default connect(mapStateToProps,mapDispatchToProps)(CommentsPanel);
-//export default CommentsPanel;
+}
+
+const mapStateToProps = state => {
+    console.log("state===========", state)
+    return {
+
+        comments: state.commentsPanelReducer.comments,
+        togglePanel: state.commentsPanelReducer.togglePanel,
+        toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
+        users: state.commentsPanelReducer.users,
+        slateTitle: state.commentsPanelReducer.slateTitle
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentsPanel);
