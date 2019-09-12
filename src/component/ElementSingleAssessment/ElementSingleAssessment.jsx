@@ -8,13 +8,13 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import PopUp from './../PopUp';
 
 // IMPORT - Constants //
-import { ESA_DIALOG_TEXT } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_PLACEHOLDER } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_ROWS } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_COLUMNS } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_BUTTON_TEXT } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_MAXLENGTH } from './../../constants/ElementSingleAssessment_Constants';
-import { ESA_POPUP_CLASSNAME } from './../../constants/ElementSingleAssessment_Constants';
+import { ESA_DIALOG_TEXT } from './../../constants/Element_Constants';
+import { ESA_POPUP_PLACEHOLDER } from './../../constants/Element_Constants';
+import { ESA_POPUP_ROWS } from './../../constants/Element_Constants';
+import { ESA_POPUP_COLUMNS } from './../../constants/Element_Constants';
+import { ESA_POPUP_BUTTON_TEXT } from './../../constants/Element_Constants';
+import { ESA_POPUP_MAXLENGTH } from './../../constants/Element_Constants';
+import { ESA_POPUP_CLASSNAME } from './../../constants/Element_Constants';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply
 * to make a skeleton of the assessment-type element .*/
