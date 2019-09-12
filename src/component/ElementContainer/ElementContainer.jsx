@@ -8,14 +8,17 @@ import ElementFigure from './../ElementFigure';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
+import {addComment} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             popup: false,
+            comment:"",
             borderToggle : 'element-container showBorder'
         };
     }
@@ -136,12 +139,17 @@ class ElementContainer extends Component {
             </div>
             {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?<div>
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
-                 <Button  elementId = {element.id} onClick = {handleCommentspanel} type="comment-flag" /> 
+                {this.props.element.comments?<Button  elementId = {element.id} onClick = {this.handleCommentpanel} type="comment-flag" />:null }
                 {element.tcm && <Button type="tcm" />}
                 {/* <Button type="comment-flag" />
                     <Button type="tcm" /> */}
             </div> :''}
-                { this.state.popup && <PopUp togglePopup={e => this.handleCommentPopup(e, this)} active={this.state.popup} />}
+            { this.state.popup && <PopUp 
+                togglePopup={e => this.handleCommentPopup(e, this)} 
+                active={this.state.popup} 
+                handleChange={this.handleCommentChange}
+                saveContent={this.saveNewComment}
+                />}
             </div >
         );
     }
@@ -156,11 +164,37 @@ handleCommentPopup(popup){
         popup
     });
 }
+/**
+ * @description - This function is for handling the closing and opening of comments panel.
+ */
 handleCommentPanel(){
     this.props.dispatch(toggleCommentsPanel(true));
 }
+
+/**
+ * @description - This function is for handleChange of popup.
+ * @param newComment
+ */
+handleCommentChange=(newComment)=>{
+    this.setState({
+        comment:newComment
+    })
+}
+
+/**
+ * @description - This function is for ADD COMMENT API.
+ */
+saveNewComment=()=>{
+   const {comment}=this.state;  
+   const {id}=this.props.element;
+   this.props.addComment(comment,id);
+   this.handleCommentPopup(false);
+
+}
+
 render = () => {
     const { element } = this.props;
+   
     return this.renderElement(element);
 }
 }
@@ -179,10 +213,22 @@ ElementContainer.propTypes = {
     elemBorderToggle : PropTypes.string
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addComment: (comments,elementId) => {
+            dispatch(addComment(comments,elementId))
+        },
+      
+      
+}
+}
+
+
 const mapStateToProps = (state) => {
+    
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle
     }
 }
     
-export default connect(mapStateToProps)(ElementContainer);
+export default connect(mapStateToProps,mapDispatchToProps)(ElementContainer);

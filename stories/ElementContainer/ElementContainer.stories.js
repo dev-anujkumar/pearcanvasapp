@@ -2,6 +2,10 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 import ElementContainer from './../../src/component/ElementContainer';
 
@@ -140,20 +144,35 @@ const mockData3={
     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
     
 }
+
+const mockStore = configureMockStore(middlewares);
+
+const elemContainerData = mockStore({
+    toolbarReducer: {
+        elemBorderToggle: true
+    }
+  });
+
 storiesOf('Element Container')
     .addDecorator(withInfo)
     .add('Element Container', () => {
         return (
-            <ElementContainer element={mockElement} />
+            <Provider store={elemContainerData}>
+                <ElementContainer element={mockElement} />
+            </Provider>
         );
     })
     .add('Element Container2', () => {
         return (
-            <ElementContainer element={mockData1} />
+            <Provider store={elemContainerData}>
+                <ElementContainer element={mockData1} />
+            </Provider>
         );
     })
     .add('Element Container3', () => {
         return (
-            <ElementContainer element={mockData3} />
+            <Provider store={elemContainerData}>
+                <ElementContainer element={mockData3} />
+            </Provider>
         );
     })

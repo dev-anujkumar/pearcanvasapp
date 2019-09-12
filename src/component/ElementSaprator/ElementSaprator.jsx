@@ -42,24 +42,21 @@ export default function ElementSaprator(props) {
     }
 
     function getParents(elem) {
-
         // Set up a parent array
         var parents = [];
-
         // Push each parent element to the array
         for (; elem && elem !== document; elem = elem.parentNode) {
             parents.push(elem.className);
         }
-
         // Return our parent array
         return parents;
-
     };
+    
     return (
-        <div className="elementSapratorContainer">
+        <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
             {!props.upperOne &&
                 <div className='elemDiv-split'>
-                    {!props.upperOne && elementType !== 'WE' ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {elementType !== 'WE' ? <Tooltip direction='right' tooltipText='Split Slate'>
                         <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
                 </div>
             }

@@ -89,7 +89,7 @@ export const figureImage50TextElementWithData = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -310,7 +310,7 @@ export const figureImageWiderElementWithData = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -1353,37 +1353,37 @@ export const mathmlEditorDefault = {
     "alignment": "",
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "tableasHTML": ""
     },
     "figuredata": {
