@@ -6,6 +6,7 @@ import {
 	SET_ACTIVE_ELEMENT,
 	SET_ELEMENT_TAG
 } from '../../constants/Action_Constants';
+import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 
 import elementTypes from './../Sidebar/elementTypes';
 
@@ -49,6 +50,8 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 			"PearsonSSOSession": config.ssoToken
 		}
 	}).then(slateData => {
+		// let contentUrn = slateData.data[manifestURN].contentUrn,
+		// title = slateData.data[manifestURN].contents.title.text
 		dispatch({
         	type: SET_ELEMENT_TAG,
 			payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)

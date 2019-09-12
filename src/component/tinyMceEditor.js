@@ -27,18 +27,21 @@ export class TinyMceEditor extends Component {
             menubar: false,
             statusbar: false,
             inline: true,
-            object_resizing : false,
+            object_resizing: false,
             fixed_toolbar_container: '#tinymceToolbar',
             content_style: EditorConfig.contentStyle,
             toolbar: EditorConfig.toolbar,
             image_advtab: false,
+            force_br_newlines: true,
+            forced_root_block: '',
+            remove_linebreaks: false,
             setup: (editor) => {
-
+                
             },
             init_instance_callback: (editor) => {
-               //  editor.fire('focus');                 
-                
-              }
+                //  editor.fire('focus');                 
+
+            }
         }
     };
     componentDidMount(){
@@ -66,6 +69,10 @@ export class TinyMceEditor extends Component {
         this.editorConfig.selector='#'+e.target.id
         tinymce.init(this.editorConfig)
     }
+
+    handleBlur=(e)=>{
+        this.props.handleBlur()
+    }
   
     render() {
         if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
@@ -81,23 +88,23 @@ export class TinyMceEditor extends Component {
         let id = 'cypress-'+this.props.index;
        
         classes = this.props.className + " cypress-editable";       
-         /**Render editable tag based on tagName*/
+        /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
                 return (                 
-                    <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                 );
             case 'h4':
                 return (
-                    <h4 id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
+                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
                 )
             case 'code':
                 return (
-                    <code id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
                 )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }
@@ -105,9 +112,9 @@ export class TinyMceEditor extends Component {
 
 TinyMceEditor.propTypes = {
     /** class name of the element type to be rendered */
-    className:PropTypes.string,
+    className: PropTypes.string,
     /** Detail of element in JSON object */
-    model:PropTypes.object,
+    model: PropTypes.object,
 
 };
 

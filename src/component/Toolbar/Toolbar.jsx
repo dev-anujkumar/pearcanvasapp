@@ -1,15 +1,31 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import '../../styles/Toolbar/Toolbar.css';
+import {toggleElemBordersAction} from './Toolbar_Actions.js';
 
-export default function Toolbar(props) {
+const _Toolbar = props => {
 
-    function _elemToggleBtnJsx () {
+    function _handleElemBorders () {
+        props.toggleElemBorders()
+    }
+
+    function _elemToggleBtnJsx (type) {
         return(
             <>
-                <label class="switch">
-                    <input type="checkbox" />
-                    <span class="slider round"></span>
+                <label className="switch">
+                {type === 'border' ?
+                <input 
+                    type="checkbox" 
+                    onChange={_handleElemBorders}
+                    defaultChecked = 'true'
+                    />: 
+                 <input 
+                    type="checkbox" 
+                    onChange={_handleElemBorders}
+                    />
+                    }
+                    <span className="slider round"></span>
                 </label>
             </>
         )
@@ -23,15 +39,30 @@ export default function Toolbar(props) {
                 <div className='elemPageText'>
                     Element <br />Page Number
                 </div>
-                {_elemToggleBtnJsx()}
+                {_elemToggleBtnJsx('pageNumber')}
             </div>
             <div className='element-borders'>
             
             <div className='elemBorderText'>
                 Element Borders
                 </div>
-            {_elemToggleBtnJsx()}
+            {_elemToggleBtnJsx('border')}
             </div>
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    const {elemBorderToggle} = state.toolbarReducer.elemBorderToggle
+    return {
+        elemBorderToggle
+    }
+}
+
+const mapActionToProps = {
+    toggleElemBorders : toggleElemBordersAction
+}
+
+const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)
+
+export default Toolbar;

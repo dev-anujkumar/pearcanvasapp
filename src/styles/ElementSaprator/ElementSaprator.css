@@ -2,7 +2,7 @@
     display: block;
     height: 2px;
     border-top: 1px dotted #aaaaaa;
-    margin: 1em 0;
+    margin: 1.3em 0;
     padding: 0;
 }
 
@@ -10,8 +10,12 @@
     width:100%;
     /* clear:both; */
     display: flex;
+    opacity: 0;
 }
 
+.elementSapratorContainer:hover{
+    opacity: 1;
+}
 .elemDiv-split {
     /* width:3%; */
     /* float:left; */
@@ -27,6 +31,7 @@
 .elemDiv-expand {
     width:30px;
     /* float:left; */
+    bottom: 5px;
     position: relative;
     right: -13px;
 }
@@ -69,13 +74,13 @@
 
 .show {
     display: block;
-    transition: opacity 1s linear;
-     visibility: 1s linear;
-    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 2s; /* Firefox < 16 */
-     -ms-animation: fadein 2s; /* Internet Explorer */
-      -o-animation: fadein 2s; /* Opera < 12.1 */
-         animation: fadein 2s;
+    /* transition: opacity 1s linear; */
+     /* visibility: 1s linear; */
+     -webkit-animation: fadein 2s; 
+     -moz-animation: fadein 2s; 
+      -ms-animation: fadein 2s; 
+       -o-animation: fadein 2s; 
+          animation: fadein 2s;
 }
 
 @keyframes fadein {

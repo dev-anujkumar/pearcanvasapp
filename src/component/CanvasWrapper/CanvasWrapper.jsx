@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
+import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
@@ -11,11 +12,12 @@ import {
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
-
 import config from './../../config/config';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader } from '../../constants/IFrameMessageTypes.js';
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -35,6 +37,21 @@ class CanvasWrapper extends Component {
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }
+        sendDataToIframe({
+            'type': CanvasIframeLoaded,
+            'message': {}
+        });
+        // *********************************************************
+        // *************** TO BE PLACED PROPERLY *****************//
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
+        sendDataToIframe({
+            'type': ShowHeader,
+            'message': true
+        })
+        // *********************************************************
     }
 
     componentDidUpdate(){
@@ -66,10 +83,6 @@ class CanvasWrapper extends Component {
     render() {
         return (
             <div className='content-composer'>
-                <div className="overlay-container">
-                    {/* Header Section goes here */}
-                    <h1>Header Section</h1>
-                </div>
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <Toolbar />
@@ -97,11 +110,11 @@ class CanvasWrapper extends Component {
                     </div>
                 </div>  
             </div>
-
         );
     }
     
 }
+CanvasWrapper.displayName = "CanvasWrapper"
 
 const mapStateToProps = state => {
     return {
@@ -109,7 +122,6 @@ const mapStateToProps = state => {
         elementsTag: state.appStore.elementsTag
     };
 };
-
 
 
 export default connect(
@@ -120,4 +132,4 @@ export default connect(
         fetchComments,
         fetchCommentByElement
     }
-)(CanvasWrapper);
+)(CommunicationChannelWrapper(CanvasWrapper));

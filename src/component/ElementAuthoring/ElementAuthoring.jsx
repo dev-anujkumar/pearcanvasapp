@@ -23,7 +23,9 @@ export class ElementAuthoring extends Component {
           placeholder={placeholder}
           className={className}
           model={model}
+          handleEditorFoucs={this.props.handleFocus}
           onFocus={this.onFocus}
+          handleBlur = {this.props.handleBlur}
           onKeyup={this.onKeyup}
           onBlur={this.onBlur}
           onClick={this.onClick}

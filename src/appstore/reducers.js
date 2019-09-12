@@ -9,7 +9,8 @@
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    SET_ELEMENT_TAG
+    SET_ELEMENT_TAG,
+    AUTHORING_ELEMENT_CREATED
 } from '../constants/Action_Constants';
 import config from './../config/config';
 import mockdata from './mockdata'; 
@@ -47,6 +48,11 @@ export default function (state = initialState, action) {
                 ...state,
                 activeElement: action.payload
             }
+        case AUTHORING_ELEMENT_CREATED:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
         default:
             return state;
     }

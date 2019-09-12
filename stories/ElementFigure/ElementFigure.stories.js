@@ -276,9 +276,19 @@ const mockData5={
         "subtitle": "eresrwqe",
         "caption": "sdafsad",
         "credit": "asdfasdfasdf",
-        "postertext": "hello mathml",
+        // "postertext": "<p>hello mathml</p>",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "fdgdf",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments" : true,
     "tcm" : true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -324,18 +334,19 @@ const mockData6={
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+            "vcbc",
+            "bvcbvcb",
+            "vcbcvbvcb"
+            ]
     },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
-        "postertext": "fddffdd",
-        "tableasHTML": ""
-    },
+      
     "comments" : true,
     "tcm" : true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -343,42 +354,42 @@ const mockData6={
 
 }
 
-storiesOf('ElementFigure', module)
+storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <ElementFigure model={mockData1} />)
+    .add('default Figure-50', () => <ElementFigure model={mockData1} index="1" />)
     .add('Figure Image-FS', () => {
         return (
             <>
-                <ElementFigure model={mockData4} />
+                <ElementFigure model={mockData4} index="2"/>
             </>
         );
     })
     .add('Table Image-TW', () => {
         return (
             <>
-                <ElementFigure model={mockData2} />
+                <ElementFigure model={mockData2} index="3"/>
             </>
         );
     })
     .add('Math Image-WT', () => {
         return (
             <>
-                <ElementFigure model={mockData3} />
+                <ElementFigure model={mockData3} index="4" />
             </>
         );
     })
     .add('MathML/Chem Editor', () => {
         return (
             <>
-                <ElementFigure model={mockData5} />
+                <ElementFigure model={mockData5} index="5"/>
             </>
         );
     })
     .add('Block Code Editor', () => {
         return (
             <>
-                <ElementFigure model={mockData6} />
+                <ElementFigure model={mockData6} index="6" />
             </>
         );
     })

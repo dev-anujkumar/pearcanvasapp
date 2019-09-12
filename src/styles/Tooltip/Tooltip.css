@@ -6,17 +6,31 @@
 
 .tooltip .tooltiptext {
     visibility: hidden;   
-    /* Position the tooltip */
-    position: absolute;
+    /* position: absolute;
     z-index: 1;
 
     min-width: 120px;
     height: auto;
     font-size: 0.8rem;
+    border-radius: 2px;
     background-color: black;
     color: #fff;
     padding: 6px;
+    text-align: center; */
+
+    transition: opacity 1s;
+    width: 100px;
+    background-color: black;
+    color: #fff;
     text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    border-radius: 2px;
+    padding: 5px 0;
+    top: 0px;
+    position: absolute;
+    transition: opacity 1s;
+    z-index: 2;
 }
 
 .tooltip:hover .tooltiptext {
@@ -27,8 +41,8 @@
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
-    top: -3px;
-    left: 105%;
+    top: 2px;
+    left: 120%;
 }
 
 .tooltip .tooltiptext.tooltip-bottom {
@@ -48,8 +62,8 @@
 }
 
 .tooltip .tooltiptext.tooltip-left {
-    top: 0px;
-    right: 100%;
+    top: 5px;
+    right: 120%;
 }
 
 /* left arrow */
