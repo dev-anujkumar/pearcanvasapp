@@ -24,6 +24,5 @@ export const GlossaryFootnoteEditorConfig = {
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
     },
     toolbar: 'bold | italic | underline | strikethrough | removeformat| superscript | subscript ',
-    //contentStyle: CONTENT_STYLE,
     plugins: "placeholder"
 }
