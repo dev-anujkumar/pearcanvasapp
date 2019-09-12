@@ -3,8 +3,9 @@ let config = {
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
-    ssoToken: "PUVGjTJb9Z-a7xGVvmew8HKbfXE.*AAJTSQACMDIAAlNLABxEZkRhb1psajZueVNreGJYekJBdmhQWUMxM1k9AAJTMQACMDk.*",
+    ssoToken: "57_KtfQLqUkUc9rL9zY3_OyPzpI.*AAJTSQACMDIAAlNLABx1Y1FJR0xVMmNHc2lpVEJEWVFjeUxHaU5Ba289AAJTMQACMTA.*",
     userId: 'c5test01',
+    assignee:'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',

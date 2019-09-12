@@ -23,7 +23,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -40,7 +40,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">It definitely went through an evolution, but regardless of its phase, all parsers had a similar output — which is an AST. Once we have an AST representation of the JSX code, interpretation is extremely easy.<br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -57,7 +57,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">Today we’re gonna understand how a JSX parser thinks by implementing one of our own. Unlike Babel, rather than compiling, we’re gonna evaluate the nodes in the AST according to their types, which means that we will be able to use JSX during runtime.<br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -74,7 +74,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">A basic Visual Studio Code plugin that converts html text to JSX string. You can select your html text and use the shortcut ctrl+alt+x.There are many things to do<br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -91,7 +91,7 @@ export default {
                     "html": {
                         "text": '<p class=\"paragraphNumeroUno\"><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">A basic Visual Studio Code plugin that converts html text to JSX string</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">You can select your html text and use the shortcut ctrl+alt+x</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);"><strong>There are many things to do</strong></p><br></p>'
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -108,7 +108,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\"><ul> <li>Add functionality to validate html code</li> <li>Add support to format the resulting string</li><li>Add support to convert javascript strings to html code</li></ul><br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -125,7 +125,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">There could be 1000s of good reasons to learn Javascript Programming. But one thing for sure, to learn any programming language, not only Javascript, you just need to code, and code and finally code until you become expert.<br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -142,7 +142,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\"><br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"

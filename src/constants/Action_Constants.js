@@ -13,4 +13,5 @@ export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
 
-/*---------------Comments Panel ----------------------*/ 
+/*---------------Element Container ----------------------*/ 
+export const ADD_COMMENT = "ADD_COMMENT"
