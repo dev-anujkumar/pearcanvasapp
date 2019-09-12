@@ -9,9 +9,9 @@ export const EditorConfig = {
         'heading-4': { block: 'h4', classes: 'heading4NummerEins' },
         'heading-5': { block: 'h5', classes: 'heading5NummerEins' },
         'heading-6': { block: 'h6', classes: 'heading6NummerEins' },
-        'BQ': { block: 'blockquote', classes: 'blockquoteMarginalia', wrapper: true},
-        'PQ': { block: 'h3', classes: 'pullQuoteNumeroUno' },
-        'MA': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
+        'marginalia': { block: 'blockquote', classes: 'blockquoteMarginalia', wrapper: true},
+        'pullquote': { block: 'h3', classes: 'pullQuoteNumeroUno' },
+        'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
     toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
