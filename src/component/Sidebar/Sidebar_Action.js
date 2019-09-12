@@ -3,7 +3,8 @@ import axios from 'axios';
 import { EditorConfig } from './../../config/EditorConfig';
 import {
     FETCH_SLATE_DATA,
-    SET_ELEMENT_TAG
+    SET_ELEMENT_TAG,
+    SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
 
 const handleElementConversion = (elementData, store) => {
@@ -33,10 +34,23 @@ export const updateElement = (elementData) => (dispatch, getState) => {
     let tagList = getState().appStore.elementsTag;
     tagList[elementData.elementId] = elementData.labelText;
     
+    let activeElementObject = {
+        elementId: elementData.elementId,
+        elementType: elementData.elementType,
+        primaryOption: elementData.primaryOption,
+        secondaryOption: elementData.secondaryOption,
+        tag: elementData.labelText
+    }
+    
     dispatch({
         type: SET_ELEMENT_TAG,
         payload: tagList
     });
+
+    dispatch({
+		type: SET_ACTIVE_ELEMENT,
+		payload: activeElementObject
+	});
 
     dispatch({
         type: FETCH_SLATE_DATA,

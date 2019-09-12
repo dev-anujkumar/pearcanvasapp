@@ -53,6 +53,7 @@ class Sidebar extends Component {
             this.props.updateElement({
                 slateId: this.props.slateId,
                 elementId: this.props.activeElement.elementId,
+                elementType: this.state.activeElementType,
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption,
                 labelText
@@ -115,6 +116,7 @@ class Sidebar extends Component {
             this.props.updateElement({
                 slateId: this.props.slateId,
                 elementId: this.props.activeElement.elementId,
+                elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value,
                 labelText
@@ -213,7 +215,6 @@ Sidebar.propTypes = {
 const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
-        // activeElementType: state.appStore.activeElement.elementType
     };
 };
 
