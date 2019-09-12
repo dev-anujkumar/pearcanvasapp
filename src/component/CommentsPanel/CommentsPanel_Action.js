@@ -15,24 +15,16 @@ import {
 
 let headers = {
     "Content-Type": "application/json",
-    ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
+    ApiKey: config.STRUCTURE_APIKEY,//STRUCTURE_APIKEY,
     PearsonSSOSession: config.ssoToken
 }
-/* const axiosInstance = axios.create({
-    headers: {
-        "Content-Type": "application/json",
-        ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
-        PearsonSSOSession: config.ssoToken
-    }
-}); */
-
 
 export const fetchComments = (contentUrn, title) => dispatch => {
     // containerEntityUrn = "urn:pearson:entity:88187e28-1992-4048-8b03-87c6115dd446",
     console.log("entity", contentUrn)
-    let projectUrn = "urn:pearson:distributable:e80d2cea-a0d2-474f-8896-82caa92a66d3",
+    let projectUrn = config.projectUrn,
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-   return axios.get(url, {
+    return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -51,7 +43,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
 
 export const fetchCommentByElement = (elemenetId) => dispatch => {
     console.log("elementId====<", elemenetId)
-   return  dispatch({
+    return dispatch({
         type: FETCH_COMMENT_BY_ELEMENT,
         payload: elemenetId //"urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"//elemenetId
     })
@@ -77,8 +69,8 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`
     return axios.post(url, replyDataToSend,
-         { headers:headers}
-        )
+        { headers: headers }
+    )
         .then(response => {
             console.log("response======>", response)
             dispatch({
@@ -103,8 +95,8 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers:headers}
-        )
+        { headers: headers }
+    )
         .then(response => {
             console.log("response======>", response)
             dispatch({
@@ -124,8 +116,8 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
     let request = updateComment
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers:headers}
-        ).then(response => {
+        { headers: headers }
+    ).then(response => {
         console.log("response======>", response)
         dispatch({
             type: UPDATE_COMMENT,
@@ -138,7 +130,7 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
 
 
 export const getProjectUsers = (ENTITY_URN) => dispatch => {
-    let ENTITY_URN = "urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c"
+    let ENTITY_URN = config.project_ENTITY_URN
     let url = `${config.JAVA_API_URL}v1/structure/dashboard/ProjectUserInfo/${ENTITY_URN}`
     return axios.get(url,
         {
@@ -163,8 +155,8 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
     let req = {
         assignee: newAssignee
     };
-    return axios.put(url, req,{
-        headers:headers
+    return axios.put(url, req, {
+        headers: headers
     }).then(response => {
         console.log("response======>", response)
         dispatch({
@@ -180,7 +172,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-    return axios.delete(url,{headers,headers})
+    return axios.delete(url, { headers, headers })
         .then(response => {
             console.log("response======>", response)
             dispatch({

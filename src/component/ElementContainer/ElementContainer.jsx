@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ElementSingleAssessment from './../ElementSingleAssessment';
@@ -18,10 +19,43 @@ class ElementContainer extends Component {
         super(props);
         this.state = {
             popup: false,
-            comment:""
+            comment:"",
+            borderToggle : 'element-container showBorder'
         };
     }
     componentDidMount(){
+    }
+    // static getDerivedStateFromProps(nextProps, prevState) {
+    componentWillReceiveProps(nextProps){
+        if(nextProps.elemBorderToggle !== this.props.elemBorderToggle){
+            if(nextProps.elemBorderToggle ==true){
+                this.setState({
+                    borderToggle: 'element-container showBorder'
+                })
+            }else{
+                this.setState({
+                    borderToggle: 'element-container hideBorder'
+                })
+            }
+        }
+    }
+
+    handleFocus = () => {
+        this.setState({
+            borderToggle : 'element-container active'
+        })
+    }
+
+    handleBlur = () => {
+        if(this.props.elemBorderToggle){
+            this.setState({
+                borderToggle : 'element-container showBorder'
+            })
+        }else{
+            this.setState({
+                borderToggle : 'element-container hideBorder'
+            })
+        } 
     }
     renderElement = (element = {}) => {
         let editor = '';
@@ -33,11 +67,11 @@ class ElementContainer extends Component {
                 break
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring index={index} elementId={element.id} type={elementType} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id} type={elementType} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring index={index} elementId={element.id} type={element.type} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id} type={element.type} model={element.html} />;
                 labelText = 'BQ';
                 break;
 
@@ -45,35 +79,35 @@ class ElementContainer extends Component {
 
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo model={element} index={index}/>;
+                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo model={element} index={index}/>;
+                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment model={element} index={index} elementId={element.id}/>;
+                        editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
                         labelText = 'QU';
                         break;
                 }
@@ -95,22 +129,23 @@ class ElementContainer extends Component {
         
     return(
             <div className = "editor" >
-            <div>
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?    <div>
                 <Button type="element-label" labelText={labelText} />
                 <Button type="delete-element" />
                 {renderColorPaletteButton()}
             </div>
-            <div className="element-container" data-id={element.id}>
+            : ''}
+            <div className={this.state.borderToggle} data-id={element.id}>
                 {editor}
             </div>
-            <div>
+            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?<div>
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
                 {this.props.element.comments?<Button  elementId = {element.id} onClick = {this.handleCommentpanel} type="comment-flag" />:null }
                 {element.tcm && <Button type="tcm" />}
                 {/* <Button type="comment-flag" />
                     <Button type="tcm" /> */}
-            </div>
-                { this.state.popup && <PopUp 
+            </div> :''}
+            { this.state.popup && <PopUp 
                 togglePopup={e => this.handleCommentPopup(e, this)} 
                 active={this.state.popup} 
                 handleChange={this.handleCommentChange}
@@ -175,7 +210,8 @@ ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
     elementType: PropTypes.string,
-    labelText: PropTypes.string
+    labelText: PropTypes.string,
+    elemBorderToggle : PropTypes.string
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -188,4 +224,11 @@ const mapDispatchToProps = (dispatch) => {
 }
 }
 
-export default connect(null, mapDispatchToProps)(ElementContainer)
+
+const mapStateToProps = (state) => {
+    return {
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle
+    }
+}
+    
+export default connect(mapStateToProps,mapDispatchToProps)(ElementContainer);

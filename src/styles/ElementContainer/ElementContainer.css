@@ -6,9 +6,17 @@
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
-    border: 1.5px solid #aaa;
+    /* border: 1.5px solid #aaa; */
 }
 
 .element-container.active {
     border: 1.5px solid #149632;
+}
+
+.showBorder {
+    border: 1.5px solid #aaa;
+}
+
+.hideBorder {
+    border: none;
 }
