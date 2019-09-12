@@ -72,7 +72,6 @@ class CommentsPanel extends React.Component {
    * @discription - This function is for search comments
    */
     handleSearchInput(e) {
-        console.log("value", e.target.value)
         this.setState({
             filters: {
                 ...this.state.filters,
@@ -176,7 +175,6 @@ class CommentsPanel extends React.Component {
 
 
     updateResolveComment(commentUrn, resolveString, elementId) {
-        console.log(this.props)
         this.props.resolveComment(commentUrn, resolveString, elementId)
     }
 
@@ -281,7 +279,6 @@ class CommentsPanel extends React.Component {
     }
 
     render() {
-        console.log("state===>", this.props.comments)
         const { toggleCommentsPanel } = this.props;
         return (
             <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
@@ -395,7 +392,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = state => {
-    console.log("state===========", state)
     return {
 
         comments: state.commentsPanelReducer.comments,

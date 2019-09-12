@@ -18,7 +18,7 @@ class PopUp extends React.Component {
 
     render() {
         const { dialogText , placeholder , rows , active , saveContent , togglePopup,cancelPopUp, saveButtonText, closePopUp, cols, maxLength, assessmentClass } = this.props;
-console.log("active",active)
+        
         return (
             <div>
                 {

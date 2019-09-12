@@ -60,7 +60,6 @@ class CanvasWrapper extends Component {
         // }
     }
     handleCommentspanel(elementId){
-        console.log("elementId",elementId);
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId);
     }

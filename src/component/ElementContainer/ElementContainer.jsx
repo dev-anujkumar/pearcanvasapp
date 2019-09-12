@@ -57,7 +57,7 @@ class ElementContainer extends Component {
      * Renders color-palette button for opener element 
      * @param {e} event
      */
-    renderColorPaletteButton = () => {
+    renderColorPaletteButton = (element) => {
         if(element.type === "opener"){
             return <Button type="color-palette" />  
         }
@@ -127,7 +127,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?    <div>
                 <Button type="element-label" labelText={labelText} />
                 <Button type="delete-element" />
-                {this.renderColorPaletteButton()}
+                {this.renderColorPaletteButton(element)}
             </div>
             : ''}
             <div className={this.state.borderToggle} data-id={element.id}>

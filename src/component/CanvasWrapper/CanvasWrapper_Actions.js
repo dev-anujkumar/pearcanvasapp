@@ -75,7 +75,9 @@ export const fetchSlateData = (manifestURN) => dispatch => {
         dispatch({
         	type: FETCH_SLATE_DATA,
 			payload: {
-				[manifestURN]: mockdata[manifestURN]
+				manifestURN: {
+					[manifestURN]: mockdata[manifestURN]
+				}
 			}//slateData.data
         });
 	})

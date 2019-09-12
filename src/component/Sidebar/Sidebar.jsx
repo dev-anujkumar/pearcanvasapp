@@ -34,6 +34,8 @@ class Sidebar extends Component {
                 activeLabelText: nextProps.activeElement.tag
             };
         }
+
+        return null;
     }
 
     handlePrimaryOptionChange = e => {
