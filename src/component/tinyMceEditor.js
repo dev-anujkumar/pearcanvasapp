@@ -64,6 +64,7 @@ export class TinyMceEditor extends React.Component {
 
 
     handleFocus = (e) => {
+        this.props.handleEditorFoucs()
         if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id)
             return false;
         if (tinymce.activeEditor) {
@@ -76,8 +77,11 @@ export class TinyMceEditor extends React.Component {
         tinymce.init(this.editorConfig)
     }
 
+    handleBlur=(e)=>{
+        this.props.handleBlur()
+    }
+
     render() {
-        console.log("this.props >> ", this.props)
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-' + this.props.index;
         classes = this.props.className + " cypress-editable";
@@ -85,19 +89,19 @@ export class TinyMceEditor extends React.Component {
         switch (this.props.tagName) {
             case 'p':
                 return (
-                    <p id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                    <p id={id} className={classes} onBlur = {this.handleBlur} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                 );
             case 'h4':
                 return (
-                    <h4 id={id} className={classes} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
+                    <h4 id={id} className={classes} onBlur = {this.handleBlur} onFocus={this.handleFocus} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
                 )
             case 'code':
                 return (
-                    <code id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                    <code id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
                 )
             default:
                 return (
-                    <div id={id} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
+                    <div id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model.text)}</div>
                 )
         }
     }
