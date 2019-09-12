@@ -23,11 +23,26 @@ const findElementType = (element) => {
 				elementType['secondaryOption'] = 'secondary-paragraph';
 			}
 			break;
+		
+		case 'element-blockfeature':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-blockquote';
+			switch(element.elementdata.type){
+				case 'pullquote':
+					elementType['secondaryOption'] = 'secondary-pullquote'
+					break;
+				case 'blockquote':
+					elementType['secondaryOption'] = 'secondary-marginalia'
+					break;
+				case 'marginalia':
+					elementType['secondaryOption'] = 'secondary-marginalia-attribution'
+					break;
+			}
+			break;
 	}
-
-	elementType['tag'] = elementTypes[element.type][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-	elementType['elementId'] = element.id;
 	
+	elementType['elementId'] = element.id;
+	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	return elementType;
 }
 
