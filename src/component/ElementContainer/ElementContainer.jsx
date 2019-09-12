@@ -225,6 +225,7 @@ const mapDispatchToProps = (dispatch) => {
 
 
 const mapStateToProps = (state) => {
+    
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle
     }
