@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sortable from 'react-sortablejs';
+
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
@@ -61,9 +63,20 @@ class SlateWrapper extends Component {
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
+                            <Sortable
+                                options={{
+                                    handle : '.btn-element element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
+                                    forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    scroll: true, // or HTMLElement
+                                }}
+                                tag="div"
+                            >
                                 {
                                     this.renderElement(_slateBodyMatter)
                                 }
+                            </Sortable>
                             </div>
                             <SlateFooter />
                         </div>
