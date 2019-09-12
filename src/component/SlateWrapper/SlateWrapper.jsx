@@ -104,6 +104,7 @@ class SlateWrapper extends Component {
             case 'container-elem':
                 break;
             case 'worked-exp-elem':
+                   this.props.createElement("element-aside", Number(index + 1))
                 break;
             case 'opener-elem':
                 break;

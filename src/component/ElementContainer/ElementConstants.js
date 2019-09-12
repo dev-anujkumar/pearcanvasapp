@@ -10,5 +10,6 @@ export default {
     FIGURE_CODELISTING : "codelisting",
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
-    FIGURE_ASSESSMENT : "assessment"
+    FIGURE_ASSESSMENT : "assessment",
+    ELEMENT_ASIDE: "element-aside"
 }
