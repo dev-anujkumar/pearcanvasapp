@@ -15,5 +15,7 @@ export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
 
+/*---------------Element Container ----------------------*/ 
+export const ADD_COMMENT = "ADD_COMMENT"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'

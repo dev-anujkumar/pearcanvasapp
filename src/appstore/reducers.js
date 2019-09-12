@@ -1,8 +1,7 @@
 /**
  * Module - Slate Level Reducer
  * Description - all slate related action payloads land here
- * Developer - Abhay Singh
- * Last modified - 21-08-2019
+ * Last modified - 11-09-2019
  */
 
 // IMPORT - Action constants //
@@ -10,10 +9,9 @@ import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
     SET_ELEMENT_TAG,
-    AUTHORING_ELEMENT_CREATED
+    AUTHORING_ELEMENT_CREATED,
+    ADD_COMMENT
 } from '../constants/Action_Constants';
-import config from './../config/config';
-import mockdata from './mockdata'; 
 
 /**
  * This is the initial state and structure of app store
@@ -52,6 +50,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
+            };
+        case ADD_COMMENT:
+            return {
+                ...state,
+                slateLevelData: action.payload
             };
         default:
             return state;
