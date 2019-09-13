@@ -108,27 +108,55 @@ class ElementAsideContainer extends Component {
             // handle error
         } */
     } 
+    section(element) {
+
+        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
+        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData ;
+        if(firstSection){
+            return (
+                <div>
+                <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
+                {this.renderElement(_containerBodyMatter)}
+               </div>
+            )
+        }
+        else{
+
+        }
+      
+    }
+
     sectionBreak(element) {
 
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData ;
-        return (
-            <div>
-            <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
-            {this.renderElement(_containerBodyMatter)}
-           </div>
-        )
+        if(firstSection){
+            return (
+                <div>
+                <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
+                {this.renderElement(_containerBodyMatter)}
+               </div>
+            )
+        }
+        else{
+
+        }
+      
     }
 
     /**
      * renderElement | renders single element according to its type
      */
      renderElement(_elements) {
+         let firstSection = true;
     //    try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
-                    if(element.type == "manifest"){
-                     return  this.sectionBreak(element);
+                    if(element.type == "manifest" && firstSection ){
+                        firstSection = false;
+                     return  this.section(element);
+                    }else if ( element.type == "manifest" && !firstSection){
+                        return  this.sectionBreak(element);
                     }
                     else{
                         return (
