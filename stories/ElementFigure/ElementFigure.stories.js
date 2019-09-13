@@ -340,9 +340,7 @@ const mockData6={
         "startNumber": "1",
         "programlanguage": "Java",
         "preformattedtext": [
-            "vcbc",
-            "bvcbvcb",
-            "vcbcvbvcb"
+           
             ]
     },
       
