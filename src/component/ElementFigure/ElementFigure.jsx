@@ -29,14 +29,8 @@ export class ElementFigure extends Component {
         super(props);
     }
 
-    onFocus = () => {
-        console.log("onFocus")
-    }
     onKeyup = () => {
         console.log("onKeyup")
-    }
-    onBlur = () => {
-        console.log("onBlur")
     }
     onClick = () => {
         console.log("onClick")
@@ -179,7 +173,7 @@ export class ElementFigure extends Component {
                 /**JSX for Figure Image, Table Image, Math Image*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
-                        <header>
+                        <header className="figure-header">
 
                             <TinyMceEditor handleEditorFoucs={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
 

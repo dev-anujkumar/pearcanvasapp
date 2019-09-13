@@ -23,7 +23,12 @@
 }
 .figureLabel.cypress-editable{
     font-weight: 800 !important;
-}
+}.divAudio .figureLabel.cypress-editable{
+    font-size: 10.8!important;
+ }
+ .divAudio .figureTitle.cypress-editable{
+     font-size: 10.2!important;
+  }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel{
     min-height: 40px!important;
     cursor: auto !important;
@@ -45,7 +50,7 @@ text-align: left;
 }
 
 .element-container{
-    padding:8px 8px;
+    padding:2px 8px;
 }
 figure.figureVideo{
     margin: 0 !important;

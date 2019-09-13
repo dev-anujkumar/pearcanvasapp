@@ -153,7 +153,7 @@ const elemContainerData = mockStore({
     }
   });
 
-storiesOf('Element Container')
+storiesOf('Composites|Element Container')
     .addDecorator(withInfo)
     .add('Element Container', () => {
         return (

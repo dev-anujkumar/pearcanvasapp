@@ -1,5 +1,5 @@
 .figureElement .cypress-editable {
-    margin: 0!important;
+    /* margin: 0!important; */
     padding: 10px!important;
     width: 100%!important;
     min-height: 40px!important;
@@ -31,9 +31,18 @@ pre{
     max-width: 100% !important;
     color:black!important;
 }
-.figureLabel.cypress-editable,.figureTitle.cypress-editable{
+h4.figureLabel, h4.figureTitle{
+    margin-bottom: 6px!important;
+}
+.figureCaption{
+    margin-top: 5px!important;
+}
+.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable{
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
+}
+.figure-header{
+    min-height: 86px;
 }
 .mathml .figureElement .figureData,.blockcode .codeSnippet{
     width:100%!important;
@@ -61,13 +70,11 @@ figure,.element-container{
     display:block !important;
 }
 
-.figureLabel.cypress-editable{
-   font-weight: 800!important;
-}
 
+ 
 [placeholder]:empty::before {
     content: attr(placeholder);
-    color: #555; 
+    color: #ADADAD; 
 }
 
 [placeholder]:empty:focus::before {
