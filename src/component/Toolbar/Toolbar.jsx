@@ -22,7 +22,6 @@ const _Toolbar = props => {
                     />: 
                  <input 
                     type="checkbox" 
-                    onChange={_handleElemBorders}
                     />
                     }
                     <span className="slider round"></span>
