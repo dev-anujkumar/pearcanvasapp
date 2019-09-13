@@ -13,7 +13,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "index": index
     };
 
-    axios.post(`${config.REACT_APP_API_URL}v1/create/authoredtext`,
+    axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
         {
             headers: {

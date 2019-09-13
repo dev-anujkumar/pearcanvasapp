@@ -49,10 +49,7 @@
     cursor: pointer;
   }
 
-  .dialog-window{
-    margin-bottom: .5em;
-    
-  }
+  .dialog-window,
   .dialog-window.single_assessment{
     margin-top: 0.3em;
     margin-bottom: .5em;
@@ -60,6 +57,7 @@
     color: #007fa3;
     font-weight: bold;
     font-family: Helvetica, sans-serif;
+    
   }
   /* .dialog-text{
     font-size: 1.1em;

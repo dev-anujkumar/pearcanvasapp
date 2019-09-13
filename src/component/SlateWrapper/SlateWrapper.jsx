@@ -76,6 +76,12 @@ class SlateWrapper extends Component {
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
                         </React.Fragment>
                     )
                 }
@@ -186,6 +192,7 @@ class SlateWrapper extends Component {
                                 element={element}
                                 key={element.id}
                                 index={index}
+                                labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator

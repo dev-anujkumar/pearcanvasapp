@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TinyMceEditor } from "./../tinyMceEditor"
+import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 
 export class ElementAuthoring extends Component {
@@ -14,10 +14,23 @@ export class ElementAuthoring extends Component {
   }
 
   render() {
-    const { type ,className,placeholder,model} = this.props
+    const { className, placeholder, model} = this.props
      return (
-        <TinyMceEditor index={this.props.index} elementId={this.props.elementId} placeholder={placeholder} className={className} model={model} type={type} handleEditorFoucs={this.props.handleFocus} onFocus={this.onFocus} handleBlur = {this.props.handleBlur}  onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} />
-      )
+        <TinyMceEditor
+          index={this.props.index}
+          elementId={this.props.elementId}
+          element={this.props.element}
+          placeholder={placeholder}
+          className={className}
+          model={model}
+          handleEditorFoucs={this.props.handleFocus}
+          onFocus={this.onFocus}
+          handleBlur = {this.props.handleBlur}
+          onKeyup={this.onKeyup}
+          onBlur={this.onBlur}
+          onClick={this.onClick}
+        />
+    )
   }
   onClick() {
 

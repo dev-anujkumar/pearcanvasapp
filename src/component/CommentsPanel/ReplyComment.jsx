@@ -79,8 +79,6 @@ import PropTypes from 'prop-types';
 */
 
     replyCommentForm = (props) => {
-        console.log("showReply",props.showReplyForm)
-        console.log("toggle",props.toggleReplyForm)
         if (props.showReplyForm && props.toggleReplyForm) {
             return (
                 <div className="reply">
