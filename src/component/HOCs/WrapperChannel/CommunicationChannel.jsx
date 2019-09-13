@@ -83,7 +83,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                     break;
                 case 'hideCommentsPanel':
-                    $('#comments-panel').removeClass('panel-open');
+                    this.props.toggleCommentsPanel(false);
                     break;
                 case 'enablePrev':
                     {

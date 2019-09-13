@@ -17,7 +17,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -62,6 +62,10 @@ class CanvasWrapper extends Component {
     handleCommentspanel(elementId){
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId);
+        sendDataToIframe({
+            'type': TocToggle,
+            'message': {"open":false}
+        });
     }
 
     navigate = (nav) => {

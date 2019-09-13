@@ -49,8 +49,11 @@
     cursor: pointer;
   }
 
-  .dialog-window,
-  .dialog-window.single_assessment{
+  /* .dialog-window{
+    margin-bottom: .5em;
+    
+  } */
+  .dialog-window,.dialog-window.single_assessment{
     margin-top: 0.3em;
     margin-bottom: .5em;
     font-size: 1.5em;
