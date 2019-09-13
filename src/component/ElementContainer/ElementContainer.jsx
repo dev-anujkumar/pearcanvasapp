@@ -21,6 +21,7 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'element-container showBorder'
         };
+        
     }
 
     // static getDerivedStateFromProps(nextProps, prevState) {
