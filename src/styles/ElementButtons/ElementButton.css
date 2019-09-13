@@ -125,7 +125,6 @@
     pointer-events: none;
 }
 .btn-element.backward-nav-disable {
-    width: 30px;
     height: 27px;
     cursor: not-allowed !important;
     color: gray !important;
