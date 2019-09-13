@@ -80,7 +80,7 @@ import PropTypes from 'prop-types'
         return (
             <div className="slate-Title">
                 <div className="canvas-header" id="canvas-header">
-                    <label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label>
+                    <div className="slate-header"><label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label></div>
                     <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>
                         <label className="u-hidden" htmlFor="txt-input" />
                         <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>

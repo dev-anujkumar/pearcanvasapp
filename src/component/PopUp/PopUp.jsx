@@ -16,7 +16,7 @@ class PopUp extends React.Component {
         this.state ={ }
     }
     render() {
-        const { dialogText, placeholder, rows, active, saveContent, togglePopup, cancelPopUp, saveButtonText, closePopUp, cols, maxLength, assessmentClass, handleChange } = this.props;
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange } = this.props;
         return (
             <div>
                 {
@@ -43,7 +43,7 @@ class PopUp extends React.Component {
 }
 
 PopUp.defaultProps = {
-    dialogText: "Please enter a comment:",
+    dialogText: "",
     placeholder: "Type...",
     rows: "5",
     active: true,
