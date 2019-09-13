@@ -108,6 +108,17 @@ class ElementAsideContainer extends Component {
             // handle error
         } */
     } 
+    sectionBreak(element) {
+
+        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
+        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData ;
+        return (
+            <div>
+            <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
+            {this.renderElement(_containerBodyMatter)}
+           </div>
+        )
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -116,30 +127,36 @@ class ElementAsideContainer extends Component {
     //    try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
-                    return (
-                        <React.Fragment>
-                         {index === 0 && <ElementSaprator
-                                upperOne={true}
-                                index={index}
-                                key={`elem-separtor-${element.id}`}
-                                esProps={this.elementSepratorProps(index)}
-                                elementType={element.type}
-                            />
-                            } 
-                            <ElementContainer
-                                element={element}
-                                key={element.id}
-                                index={index}
-                               // handleCommentspanel={this.props.handleCommentspanel}
-                            />
-                            <ElementSaprator
-                                index={index}
-                                key={`elem-separtor-${element.id}`}
-                                esProps={this.elementSepratorProps(index)}
-                                elementType={element.type}
-                            />
-                        </React.Fragment>
-                    )
+                    if(element.type == "manifest"){
+                     return  this.sectionBreak(element);
+                    }
+                    else{
+                        return (
+                            <React.Fragment>
+                             {index === 0 && <ElementSaprator
+                                    upperOne={true}
+                                    index={index}
+                                    key={`elem-separtor-${element.id}`}
+                                    esProps={this.elementSepratorProps(index)}
+                                    elementType={element.type}
+                                />
+                                } 
+                                <ElementContainer
+                                    element={element}
+                                    key={element.id}
+                                    index={index}
+                                   // handleCommentspanel={this.props.handleCommentspanel}
+                                />
+                                <ElementSaprator
+                                    index={index}
+                                    key={`elem-separtor-${element.id}`}
+                                    esProps={this.elementSepratorProps(index)}
+                                    elementType={element.type}
+                                />
+                            </React.Fragment>
+                        )
+                    }
+           
                 })
             }
             else {
