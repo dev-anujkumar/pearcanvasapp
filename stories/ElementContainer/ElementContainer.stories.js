@@ -157,22 +157,28 @@ storiesOf('Composites|Element Container')
     .addDecorator(withInfo)
     .add('Element Container', () => {
         return (
+            <div style={{width:"680px", position:"relative", left:"100px"}}>
             <Provider store={elemContainerData}>
                 <ElementContainer element={mockElement} />
             </Provider>
+            </div>
         );
     })
     .add('Element Container2', () => {
         return (
+            <div style={{width:"680px", position:"relative", left:"100px"}}>
             <Provider store={elemContainerData}>
                 <ElementContainer element={mockData1} />
             </Provider>
+            </div>
         );
     })
     .add('Element Container3', () => {
         return (
+            <div style={{width:"680px", position:"relative", left:"100px"}}>
             <Provider store={elemContainerData}>
                 <ElementContainer element={mockData3} />
             </Provider>
+            </div>
         );
     })
