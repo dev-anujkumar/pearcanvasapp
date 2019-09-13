@@ -85,7 +85,8 @@ import PropTypes from 'prop-types'
                         <label className="u-hidden" htmlFor="txt-input" />
                         <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
                     </div>
-                    <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/>
+                    {/* <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
+                    <Button type="backward-nav-disable" onClick={() => this.handleNavClick("back")}/>
                     <Button type="forward-nav-active" onClick={() => this.handleNavClick("next")}/>
                 </div>
             </div>
