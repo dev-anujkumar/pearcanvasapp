@@ -164,7 +164,7 @@ const mockData3={
 
 storiesOf('Composites|ElementSingleAssessment', module)
     .addDecorator(withInfo)
-    .add('default Asessment1', () => <div style={{width:"500px", position:"relative", left:"100px"}}><ElementSingleAssessment model={mockData1} index="1" /></div> )
-    .add('default Asessment2', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementSingleAssessment model={mockData2} index="2" /> </div>)
-    .add('default Asessment cite 3', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementSingleAssessment model={mockData3} index="3" /> </div>)
+    .add('default Asessment 1', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementSingleAssessment model={mockData3} index="3" /> </div>)
+    .add('Assessment with Data', () => <div style={{width:"500px", position:"relative", left:"100px"}}><ElementSingleAssessment model={mockData1} index="1" /></div> )
+        
   
