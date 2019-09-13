@@ -54,10 +54,10 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.FORWARD_NAVIGATION:
-                buttonJSX = <span className="btn-element forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
+                buttonJSX = <span className={`btn-element forward-nav-active ${this.props.class}`} onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
             case buttonTypes.BACKWARD_NAVIGATION:
-                buttonJSX = <span className="btn-element backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
+                buttonJSX = <span className={`btn-element backward-nav-active ${this.props.class}`} onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
                 break;
             case buttonTypes.EXPAND:
                 buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>

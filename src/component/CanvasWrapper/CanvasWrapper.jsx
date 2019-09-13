@@ -67,9 +67,13 @@ class CanvasWrapper extends Component {
     navigate = (nav) => {
         let activeSlateIndex = this.state.activeSlateIndex;
         if(nav === 'next') {
-            activeSlateIndex++;
+            if(activeSlateIndex < (config.slateList.length -1)) {
+                activeSlateIndex++;
+            }
         } else if(nav === 'back') {
-            activeSlateIndex--;
+            if(activeSlateIndex > 0 ) {
+                activeSlateIndex--;
+            }
         }
 
         this.setState({
@@ -80,6 +84,13 @@ class CanvasWrapper extends Component {
     }
 
     render() {
+        let navDisabled = '';
+        if(this.state.activeSlateIndex === 0) {
+            navDisabled = 'back';
+        } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
+            navDisabled = 'next';
+        }
+
         return (
             <div className='content-composer'>
                 <div id="editor-toolbar" className="editor-toolbar">
@@ -96,7 +107,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel= {this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} />
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} />
                             </div>
                         </div>
                     </div>

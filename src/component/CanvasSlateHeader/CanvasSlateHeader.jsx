@@ -77,6 +77,16 @@ import PropTypes from 'prop-types'
         const { slateType, slateTitle } = this.props
         let slateLabel = this.getLabel(slateType);
 
+        let nextDisabled = '';
+        if(this.props.disabled === 'next') {
+            nextDisabled = 'disabled';
+        }
+
+        let backDisabled = '';
+        if(this.props.disabled === 'back') {
+            backDisabled = 'disabled';
+        }
+
         return (
             <div className="slate-Title">
                 <div className="canvas-header" id="canvas-header">
@@ -85,8 +95,8 @@ import PropTypes from 'prop-types'
                         <label className="u-hidden" htmlFor="txt-input" />
                         <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
                     </div>
-                    <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/>
-                    <Button type="forward-nav-active" onClick={() => this.handleNavClick("next")}/>
+                    <Button type="backward-nav-active" class={backDisabled} onClick={() => this.handleNavClick("back")}/>
+                    <Button type="forward-nav-active" class={nextDisabled} onClick={() => this.handleNavClick("next")}/>
                 </div>
             </div>
         )
