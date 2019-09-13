@@ -11,7 +11,7 @@
 }
 
 .btn-element.small {
-    padding: 0 6px;
+    padding: 1.5px 5px;
 }
 
 .btn-element.small > img {
@@ -19,11 +19,17 @@
 }
 
 .btn-element.element-label {
-    cursor: move;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 200;
+    position: sticky;
     color: white;
-    width: 100%;
+    padding: 6px 0px;
+    align-items: center;
     text-align: center;
+    height: 30px;
+    width: 30px;
+    cursor: move;
+    background-color: grey;
 }
 
 .btn-element.flag-icon {
@@ -31,9 +37,10 @@
 }
 
 .btn-element.delete-icon {
-    padding: 6px 10px 4px;
+    padding: 5px;
     width: 100%;
     background-color: #fa5d54;
+    padding-bottom: 3px;
 }
 
 .btn-element.split-icon,
@@ -87,6 +94,7 @@
     left: -2px;
     z-index: 10;
     cursor: pointer;
+    margin-bottom: -8px;
 }
 
 .btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem{
