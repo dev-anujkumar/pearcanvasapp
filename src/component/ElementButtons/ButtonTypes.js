@@ -7,6 +7,7 @@ export default {
     TCM : "tcm",
     FORWARD_NAVIGATION : "forward-nav-active",
     BACKWARD_NAVIGATION : "backward-nav-active",
+    BACKWARD_NAVIGATION_DISABLE : "backward-nav-disable",
     EXPAND : "expand",
     SPLIT_SLATE : "split",
     COLOR_PALETTE : "color-palette",

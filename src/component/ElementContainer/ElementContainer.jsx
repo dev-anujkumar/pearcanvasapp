@@ -148,6 +148,8 @@ class ElementContainer extends Component {
                 active={this.state.popup} 
                 handleChange={this.handleCommentChange}
                 saveContent={this.saveNewComment}
+                rows='10'
+                dialogText="Please enter a comment:"
                 />}
             </div >
         );

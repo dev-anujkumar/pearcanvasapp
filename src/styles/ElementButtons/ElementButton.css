@@ -53,14 +53,16 @@
 }
 
 .btn-element.forward-nav-active,
-.btn-element.backward-nav-active {
+.btn-element.backward-nav-active,
+.btn-element.backward-nav-disable {
     padding: 0;
     background: transparent;
     margin:0px;
 }
 
 .btn-element.forward-nav-active > img,
-.btn-element.backward-nav-active > img {
+.btn-element.backward-nav-active > img ,
+.btn-element.backward-nav-disable > img{
     /* width: 26px; */
     width: 33px;
     height: 28px;
@@ -121,4 +123,10 @@
     width: 20px;
     height: 20px;
     pointer-events: none;
+}
+.btn-element.backward-nav-disable {
+    height: 27px;
+    cursor: not-allowed !important;
+    color: gray !important;
+    background: transparent;
 }
