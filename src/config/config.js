@@ -6,6 +6,7 @@ let config = {
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     ssoToken: "-4g8_OUhHTIpIzqlQRkLlUqXcAA.*AAJTSQACMDIAAlNLABxkblVvZFpBeEZ4TFZhY0Q3L1Fmc1V6VGV0cjA9AAJTMQACMDk.*",
     userId: 'c5test01',
+    assignee:'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',

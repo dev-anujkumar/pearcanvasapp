@@ -15,10 +15,8 @@ class PopUp extends React.Component {
         super(props);
         this.state ={ }
     }
-
     render() {
-        const { dialogText , placeholder , rows , active , saveContent , togglePopup,cancelPopUp, saveButtonText, closePopUp, cols, maxLength, assessmentClass } = this.props;
-console.log("active",active)
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, cancelPopUp, saveButtonText, closePopUp, cols, maxLength, assessmentClass, handleChange } = this.props;
         return (
             <div>
                 {
@@ -28,11 +26,11 @@ console.log("active",active)
                             <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
                             <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div>
                             <div className={`dialog-input ${assessmentClass}`}>
-                                <textarea className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={() => console.log("yes")}
+                                <textarea className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
                                 placeholder={placeholder} rows={rows} cols={cols} maxLength={maxLength}/>
                             </div>
                             <div className={`dialog-buttons ${assessmentClass}`}>
-                                <span className="save-button" onClick={(e)=>saveContent(e,this)}>{saveButtonText}</span>
+                                <span className="save-button" onClick={saveContent}>{saveButtonText}</span>
                                 <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>Cancel</span>
                             </div>
                         </div>

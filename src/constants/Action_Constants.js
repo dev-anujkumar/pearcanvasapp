@@ -1,4 +1,6 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
+export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
+export const SET_ELEMENT_TAG = 'SET_ELEMENT_TAG'
 
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
@@ -13,5 +15,7 @@ export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
 
+/*---------------Element Container ----------------------*/ 
+export const ADD_COMMENT = "ADD_COMMENT"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'

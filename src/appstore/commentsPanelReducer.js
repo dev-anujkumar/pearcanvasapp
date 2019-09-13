@@ -97,7 +97,6 @@ export default function (state = initialState, action) {
                 slateTitle: payload.title
             };
         case FETCH_COMMENT_BY_ELEMENT:
-            console.log("comments======>", state.allComments)
             let commentList = state.allComments
             let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload)
             return {
@@ -105,20 +104,17 @@ export default function (state = initialState, action) {
                 comments: comments
             }
         case TOGGLE_COMMENTS_PANEL:
-            console.log(payload);
             return {
                 ...state,
                 togglePanel: payload
             }
         case TOGGLE_REPLY:
-            console.log(payload);
             return {
                 ...state,
                 toggleReplyForm: payload
             }
         case REPLY_COMMENT:
             const commentsList = state.comments;
-            console.log("comment", commentsList)
             commentsList.forEach((comment, index) => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.replyComments.push(payload.reply)
@@ -156,7 +152,6 @@ export default function (state = initialState, action) {
                 comments: editComment
             }
         case GET_PROJECT_USER:
-            console.log("reducer==.")
             let users = payload;
             users = users.filter(user => user.isMember === true)
             return {
