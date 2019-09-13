@@ -141,9 +141,7 @@ class ElementContainer extends Component {
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
                 {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
-                {/* <Button type="comment-flag" />
-                    <Button type="tcm" /> */}
-            </div> :''}
+                </div> :''}
             { this.state.popup && <PopUp 
                 togglePopup={e => this.handleCommentPopup(e, this)} 
                 active={this.state.popup} 
@@ -166,11 +164,11 @@ class ElementContainer extends Component {
         });
     }
 
-    handleCommentPopup(popup){
-        this.setState({
-            popup
-        });
-    }
+    // handleCommentPopup(popup){
+    //     this.setState({
+    //         popup
+    //     });
+    // }
 
     /**
      * @description - This function is for handling the closing and opening of comments panel.
