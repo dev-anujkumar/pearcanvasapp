@@ -55,8 +55,16 @@ class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
+        if(window.tinymce.activeEditor) {
+            document.getElementById(window.tinymce.activeEditor.id).focus();
+        } 
+        // else {
+        //     document.getElementById("cypress-0").focus();
+        // }
         // if(document.getElementById("cypress-0")){
         //     document.getElementById("cypress-0").focus();
+        // }else{
+        //     //document.getElementById(window.tinymce.activeEditor.id).focus();
         // }
     }
     handleCommentspanel(elementId){
