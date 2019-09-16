@@ -8,7 +8,9 @@ import buttonTypes from './ButtonTypes.js'
 import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon} from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
+import forwardNavDisable from '../../images/ElementButtons/forwardNav_disabled.png';
 import backwardNavActive from '../../images/ElementButtons/backwardNavActive.png'
+import backwardNavDisable from '../../images/ElementButtons/backwardNav_disabled.png';
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
@@ -56,8 +58,14 @@ class Button extends Component {
             case buttonTypes.FORWARD_NAVIGATION:
                 buttonJSX = <span className="btn-element forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
+            case buttonTypes.FORWARD_NAVIGATION_DISABLE:
+                buttonJSX = <span className="btn-element forward-nav-disable" onClick={clickHandlerFn}><img src={forwardNavDisable} /></span>
+                break;
             case buttonTypes.BACKWARD_NAVIGATION:
                 buttonJSX = <span className="btn-element backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
+                break;
+            case buttonTypes.BACKWARD_NAVIGATION_DISABLE:
+                buttonJSX = <span className="btn-element backward-nav-disable" onClick={clickHandlerFn}><img src={backwardNavDisable} /></span>
                 break;
             case buttonTypes.EXPAND:
                 buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
@@ -119,7 +127,7 @@ class Button extends Component {
     
     render() {
         const { type, onClick, elementId } = this.props
-        console.log("elementid",elementId)
+        
         return(
             <>
                 {this.renderButton(type, onClick)}             

@@ -53,7 +53,6 @@ class Comments extends React.Component {
    
     */
     toggleActionsMenu(show) {
-        console.log(show)
         if (show === undefined) show = !this.state.showActionsMenu
         this.setState({ showActionsMenu: show })
     }
@@ -247,7 +246,6 @@ class Comments extends React.Component {
         this.props.updateAssignee(commentUrn, newAssignee, elementId)
     }
     render() {
-        console.log(this.props);
         const { comment, elementId, updateReplyComment, toggleReplyForm, users } = this.props
         return (
             <div className="comment-wrapper">

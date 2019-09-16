@@ -33,7 +33,7 @@ export const figureImage50TextElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -144,7 +144,7 @@ export const figureImageTextWidthElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -254,7 +254,7 @@ export const figureImageWiderElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -368,7 +368,7 @@ export const figureImageFullElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -482,7 +482,7 @@ export const tableImage50TextElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -594,7 +594,7 @@ export const tableImageTextWidthElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -706,7 +706,7 @@ export const tableImageWiderElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -818,7 +818,7 @@ export const tableImageFullElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",

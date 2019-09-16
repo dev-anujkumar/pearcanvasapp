@@ -1885,14 +1885,11 @@ export const utils= {
         return character;
     },
     removeElements(text, selector) {
-        //console.log("REMOVE ELEMENTS: " + '',text,selector);
         let wrapped = $("<div>" + text + "</div>");
         let $selectors = wrapped.find(selector)
         if (selector === 'math') {
             const maths = $selectors.map((index, elem) => elem);
-            //console.log("MATH ELEMENTS: " + '',maths, $selectors);
             $selectors.remove();
-            //console.log("MATH WRAPPED: " + '',wrapped.html());
             return wrapped.html();
             /* for ( let i=0; i < maths.length; i+=1 ) {
              } */
@@ -1912,13 +1909,10 @@ export const utils= {
             $selectors.remove();
             return wrapped.html();
         }
-        ////console.log("WRAPPER RETURN: " + '',wrapped, wrapped.html());
-
     },
     removeTrackFlag(text) {
         let wrapped = $("<div>" + text + "</div>");
         wrapped.find('.no-track').removeClass('no-track');
-        //console.log("REMOVE TRACK FLAG: " + '',wrapped);
         return wrapped.html();
     },
     prettyDate(date) {
@@ -1952,7 +1946,6 @@ utils.SuffixTree.prototype = {
         }
         for (var i = 0; i < l; ++i) {
             var d = this.dups[i];
-            ////console.log(i, d.s);
         }
         for (var i = 0; i < l; ++i) {
             var d = this.dups[i];

@@ -30,11 +30,11 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    let _finalSlateObject = Object.values(_slateObject)[0];
-                    let { type: _slateType, contents: _slateContent } = _finalSlateObject;
+                   // let _finalSlateObject = Object.values(_slateObject)[0];
+                    let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
@@ -57,8 +57,8 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    let _finalSlateObject = Object.values(_slateObject)[0];
-                    let { id: _slateId, type: _slateType, contents: _slateContent } = _finalSlateObject;
+                    // let _finalSlateObject = Object.values(_slateObject)[0];
+                    let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
@@ -85,6 +85,12 @@ class SlateWrapper extends Component {
                 else {
                     return (
                         <React.Fragment>
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
@@ -187,18 +193,19 @@ class SlateWrapper extends Component {
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment>
-                            {index === 0 && <ElementSaprator
+                            {/* {index === 0 && <ElementSaprator
                                 upperOne={true}
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
                                 esProps={this.elementSepratorProps(index)}
                                 elementType={element.type}
                             />
-                            }
+                            } */}
                             <ElementContainer
                                 element={element}
                                 key={element.id}
                                 index={index}
+                                labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator

@@ -82,12 +82,12 @@
     font-family: 'Open Sans', sans-serif;
 }
 
-#glossary-editor-textarea {
+.definition-editor {
     background-color: #eee;
     width: 90%;
     border: none;
     outline: none;
-    margin: 0 11px;
+    margin: 0 11px 1px;
     font-size: 14px;
     font-family: 'Open Sans', sans-serif;
     line-height: 1.80em;

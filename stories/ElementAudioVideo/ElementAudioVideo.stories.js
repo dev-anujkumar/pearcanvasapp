@@ -9,33 +9,33 @@ const audioElementTypeSLDefault = {
     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
     "type": "figure",
     "figuretype": "audio",
-     "subtype": "figureAudioSL",
+    "subtype": "figureAudioSL",
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
     "alignment": "full",
-   
+
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sfd",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "gfh",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdsd",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdsd",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
@@ -58,10 +58,10 @@ const audioElementTypeSLDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -121,10 +121,10 @@ const audioElementTypeAlfrescoDefault = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -185,10 +185,10 @@ const audioElementTypeSLWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -248,10 +248,10 @@ const audioElementTypeAlfrescoWithData = {
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -300,31 +300,31 @@ const videoElementTypeSLDefault = {
         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
         "posterimage": {
-        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+            "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
         },
         "videos": [
-        {
-        "format": "audio/mpeg",
-        "path": ""
-        }
+            {
+                "format": "audio/mpeg",
+                "path": ""
+            }
         ],
-        "tracks": [ ],
+        "tracks": [],
         "srctype": "externallink",
         "clipinfo": {
-        "clipid": "",
-        "starttime": "",
-        "endtime": "",
-        "description": "",
-        "duration": ""
+            "clipid": "",
+            "starttime": "",
+            "endtime": "",
+            "description": "",
+            "duration": ""
         }
-        },
+    },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -337,7 +337,7 @@ const videoElementTypeSLDefault = {
 };
 const videoElementTypeAlfrescoDefault = {
 
-   
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "video",
@@ -377,31 +377,31 @@ const videoElementTypeAlfrescoDefault = {
         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
         "posterimage": {
-        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+            "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
         },
         "videos": [
-        {
-        "format": "audio/mpeg",
-        "path": ""
-        }
+            {
+                "format": "audio/mpeg",
+                "path": ""
+            }
         ],
-        "tracks": [ ],
+        "tracks": [],
         "srctype": "externallink",
         "clipinfo": {
-        "clipid": "",
-        "starttime": "",
-        "endtime": "",
-        "description": "",
-        "duration": ""
+            "clipid": "",
+            "starttime": "",
+            "endtime": "",
+            "description": "",
+            "duration": ""
         }
-        },
+    },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -451,31 +451,31 @@ const videoElementTypeSLWithData = {
         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
         "posterimage": {
-        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+            "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
         },
         "videos": [
-        {
-        "format": "audio/mpeg",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
-        }
+            {
+                "format": "audio/mpeg",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
+            }
         ],
-        "tracks": [ ],
+        "tracks": [],
         "srctype": "externallink",
         "clipinfo": {
-        "clipid": "",
-        "starttime": "",
-        "endtime": "",
-        "description": "",
-        "duration": ""
+            "clipid": "",
+            "starttime": "",
+            "endtime": "",
+            "description": "",
+            "duration": ""
         }
-        },
+    },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -487,7 +487,7 @@ const videoElementTypeSLWithData = {
 };
 
 const videoElementTypeAlfrescoWithData = {
-       
+
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
     "figuretype": "video",
@@ -527,31 +527,31 @@ const videoElementTypeAlfrescoWithData = {
         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
         "posterimage": {
-        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+            "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
         },
         "videos": [
-        {
-        "format": "audio/mpeg",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
-        }
+            {
+                "format": "audio/mpeg",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
+            }
         ],
-        "tracks": [ ],
+        "tracks": [],
         "srctype": "externallink",
         "clipinfo": {
-        "clipid": "",
-        "starttime": "",
-        "endtime": "",
-        "description": "",
-        "duration": ""
+            "clipid": "",
+            "starttime": "",
+            "endtime": "",
+            "description": "",
+            "duration": ""
         }
-        },
+    },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "Label",
+        "subtitle": "Title",
+        "caption": "Caption",
+        "credit": "Credit",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -563,40 +563,35 @@ const videoElementTypeAlfrescoWithData = {
 
 storiesOf('Components|ElementAudioVideo', module)
     .addDecorator(withInfo)
-    .add('Audio Type-SL default', () => <ElementAudioVideo model={audioElementTypeSLDefault} index="1"/>)
-    .add('Audio Type-Alfresco default', () => <ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2"/>)
+    .add('Audio Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <ElementAudioVideo model={audioElementTypeSLDefault} index="1" /></div>)
+    .add('Audio Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}><ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2" /></div>)
     .add('Audio Type-SL with data', () => {
         return (
-            <>
-                <ElementAudioVideo model={audioElementTypeSLWithData} index="3"/>
-            </>
+            <div style={{ width: "500px", position: "relative", left: "100px" }}>
+                <ElementAudioVideo model={audioElementTypeSLWithData} index="3" />
+            </div>
         );
-
     })
-
     .add('Audio Type-Alfresco with data', () => {
         return (
-            <>
-                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} index="4"/>
-            </>
+            <div style={{ width: "500px", position: "relative", left: "100px" }}>
+                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} index="4" />
+            </div>
         );
     })
-    .add('Video Type-SL default', () => <ElementAudioVideo model={videoElementTypeSLDefault} index="5"/>)
-    .add('Video Type-Alfresco default', () => <ElementAudioVideo model={videoElementTypeAlfrescoDefault} index="6"/>)
+    .add('Video Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}><ElementAudioVideo model={videoElementTypeSLDefault} index="5" /></div>)
+    .add('Video Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <ElementAudioVideo model={videoElementTypeAlfrescoDefault} index="6" /></div>)
     .add('Video Type-SL with data', () => {
         return (
-            <>
+            <div style={{ width: "500px", position: "relative", left: "100px" }}>
                 <ElementAudioVideo model={videoElementTypeSLWithData} index="7" />
-            </>
+            </div>
         );
-
     })
-
- 
     .add('Video Type-Alfresco with data', () => {
         return (
-            <>
-                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} index="8"/>
-            </>
+            <div style={{ width: "500px", position: "relative", left: "100px" }}>
+                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} index="8" />
+            </div>
         );
     })
