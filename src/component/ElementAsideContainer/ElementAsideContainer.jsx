@@ -133,7 +133,7 @@ class ElementAsideContainer extends Component {
         if(firstSection){
             return (
                 <div>
-                <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
+                <hr className = "section-break"/>
                 {this.renderElement(_containerBodyMatter)}
                </div>
             )
