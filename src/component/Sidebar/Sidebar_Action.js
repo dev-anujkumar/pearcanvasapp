@@ -19,7 +19,7 @@ const handleElementConversion = (elementData, store) => {
                 let openingTagIndex = htmlText.indexOf('>') + 1;
                 htmlText = htmlText.substring(openingTagIndex).replace(/(<\/\w+>)$/g, '');
                 
-                htmlText = "<" + EditorConfig.formats[format].block +" className='" + EditorConfig.formats[format].classes + "'>" + htmlText + "</" + EditorConfig.formats[format].block + ">"
+                htmlText = "<" + EditorConfig.formats[format].block +" class='" + EditorConfig.formats[format].classes + "'>" + htmlText + "</" + EditorConfig.formats[format].block + ">"
                 element.html.text = htmlText;
             }
         });

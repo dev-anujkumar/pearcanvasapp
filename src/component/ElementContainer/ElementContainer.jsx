@@ -10,7 +10,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {addComment} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
-import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
+import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 class ElementContainer extends Component {
@@ -47,6 +47,7 @@ class ElementContainer extends Component {
             borderToggle : 'active',
             btnClassName : 'activeTagBgColor'
         })
+        this.props.fetchCommentByElement(this.props.element.id);
     }
 
     handleBlur = () => {
@@ -176,12 +177,6 @@ class ElementContainer extends Component {
     //     });
     // }
 
-    /**
-     * @description - This function is for handling the closing and opening of comments panel.
-     */
-    handleCommentPanel(){
-        this.props.dispatch(toggleCommentsPanel(true));
-    }
 
     /**
      * @description - This function is for handleChange of popup.
@@ -228,6 +223,9 @@ const mapDispatchToProps = (dispatch) => {
         addComment: (comments,elementId) => {
             dispatch(addComment(comments,elementId))
         },
+        fetchCommentByElement:(elementId)=>{
+          dispatch(fetchCommentByElement(elementId))
+        }
       
       
 }

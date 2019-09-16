@@ -137,7 +137,6 @@ class CanvasWrapper extends Component {
     
 }
 CanvasWrapper.displayName = "CanvasWrapper"
-
 const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
