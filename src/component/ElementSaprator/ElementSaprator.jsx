@@ -105,7 +105,7 @@ export function addMediaClickHandler() {
  */
 export function renderDropdownButtons(esProps, slateType) {
     let updatedEsProps;
-    if(slateType && slateType !== 'intro'){
+    if(slateType && slateType !== 'container-introduction'){
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'opener-elem';
         })    
