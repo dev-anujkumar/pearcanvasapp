@@ -1,0 +1,442 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing GlossaryFootnote component with props render Footnote  1`] = `
+<GlossaryFootnoteMenu
+  glossaryFootnote="Footnote"
+>
+  <GlossaryFootnotePopup
+    closePopup={[Function]}
+    glossaryFootnote="Footnote"
+    saveContent={[Function]}
+  >
+    <div
+      className="glossary-toolbar-wrapper"
+    >
+      <div
+        className="glossary-header"
+      >
+        <div
+          className="glossary-title"
+        >
+          <ElementButton
+            labelText="P"
+            onClick={[Function]}
+            type="close-container"
+          >
+            <span
+              className="btn-element close-container"
+              onClick={[Function]}
+            >
+              <img
+                src={
+                  Object {
+                    "process": [Function],
+                  }
+                }
+              />
+            </span>
+          </ElementButton>
+          <div
+            className="glossary-label"
+          >
+            Footnote
+          </div>
+          <div
+            className="clr"
+          />
+        </div>
+      </div>
+      <div
+        id="toolbarGlossaryFootnote"
+      />
+      <div
+        className="glossary-body"
+      >
+        <div
+          id="glossary-toolbar"
+        />
+        <div
+          className="glossary-definition-header"
+        >
+          <div
+            className="glossary-definition-label"
+          >
+            Note:
+          </div>
+          <div
+            className="glossary-editor glossary-definition-description"
+            id="glossary-editor-attacher"
+          >
+            <ReactEditor
+              className="definition-editor"
+              placeholder="Type Something"
+            >
+              <div
+                className="definition-editor"
+              >
+                <Editor
+                  cloudChannel="5"
+                  init={
+                    Object {
+                      "fixed_toolbar_container": "#toolbarGlossaryFootnote",
+                      "init_instance_callback": [Function],
+                      "inline": true,
+                      "menubar": false,
+                      "selector": ".definition-editor",
+                      "setup": [Function],
+                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                    }
+                  }
+                  onChange={[Function]}
+                >
+                  <div
+                    id="tiny-react_74024348581568634570635"
+                  />
+                </Editor>
+              </div>
+            </ReactEditor>
+          </div>
+        </div>
+        <div
+          className="glossary-definition-buttons"
+        >
+          <span
+            className="glossary-cancel-button"
+            onClick={[Function]}
+          >
+            Cancel
+          </span>
+          <span
+            className="glossary-save-button"
+            onClick={[Function]}
+          >
+            Save
+          </span>
+        </div>
+      </div>
+    </div>
+  </GlossaryFootnotePopup>
+</GlossaryFootnoteMenu>
+`;
+
+exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
+<GlossaryFootnoteMenu
+  glossaryFootnote="Glossary"
+>
+  <GlossaryFootnotePopup
+    closePopup={[Function]}
+    glossaryFootnote="Glossary"
+    saveContent={[Function]}
+  >
+    <div
+      className="glossary-toolbar-wrapper"
+    >
+      <div
+        className="glossary-header"
+      >
+        <div
+          className="glossary-title"
+        >
+          <ElementButton
+            labelText="P"
+            onClick={[Function]}
+            type="close-container"
+          >
+            <span
+              className="btn-element close-container"
+              onClick={[Function]}
+            >
+              <img
+                src={
+                  Object {
+                    "process": [Function],
+                  }
+                }
+              />
+            </span>
+          </ElementButton>
+          <div
+            className="glossary-label"
+          >
+            Glossary
+          </div>
+          <div
+            className="clr"
+          />
+        </div>
+      </div>
+      <div
+        id="toolbarGlossaryFootnote"
+      />
+      <div
+        className="glossary-body"
+      >
+        <div
+          id="glossary-toolbar"
+        />
+        <div
+          className="glossary-word-header"
+        >
+          <div
+            className="glossary-word-title"
+          >
+            Term:
+          </div>
+          <div
+            className="glossary-word-name glossary-word-description"
+            id="glossary-editor"
+          >
+            <ReactEditor
+              className="definition-editor"
+              placeholder="Type Something"
+            >
+              <div
+                className="definition-editor"
+              >
+                <Editor
+                  cloudChannel="5"
+                  init={
+                    Object {
+                      "fixed_toolbar_container": "#toolbarGlossaryFootnote",
+                      "init_instance_callback": [Function],
+                      "inline": true,
+                      "menubar": false,
+                      "selector": ".definition-editor",
+                      "setup": [Function],
+                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                    }
+                  }
+                  onChange={[Function]}
+                >
+                  <div
+                    id="tiny-react_36900517161568634570630"
+                  />
+                </Editor>
+              </div>
+            </ReactEditor>
+          </div>
+        </div>
+        <div
+          className="glossary-definition-header"
+        >
+          <div
+            className="glossary-definition-label"
+          >
+            Definition:
+          </div>
+          <div
+            className="glossary-editor glossary-definition-description"
+            id="glossary-editor-attacher"
+          >
+            <ReactEditor
+              className="definition-editor"
+              placeholder="Type Something"
+            >
+              <div
+                className="definition-editor"
+              >
+                <Editor
+                  cloudChannel="5"
+                  init={
+                    Object {
+                      "fixed_toolbar_container": "#toolbarGlossaryFootnote",
+                      "init_instance_callback": [Function],
+                      "inline": true,
+                      "menubar": false,
+                      "selector": ".definition-editor",
+                      "setup": [Function],
+                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                    }
+                  }
+                  onChange={[Function]}
+                >
+                  <div
+                    id="tiny-react_56074182371568634570631"
+                  />
+                </Editor>
+              </div>
+            </ReactEditor>
+          </div>
+        </div>
+        <div
+          className="glossary-definition-buttons"
+        >
+          <span
+            className="glossary-cancel-button"
+            onClick={[Function]}
+          >
+            Cancel
+          </span>
+          <span
+            className="glossary-save-button"
+            onClick={[Function]}
+          >
+            Save
+          </span>
+        </div>
+      </div>
+    </div>
+  </GlossaryFootnotePopup>
+</GlossaryFootnoteMenu>
+`;
+
+exports[`Testing GlossaryFootnote component with props render Glossary Footnote component  1`] = `
+<GlossaryFootnoteMenu
+  glossaryFootnote="Glossary"
+>
+  <GlossaryFootnotePopup
+    closePopup={[Function]}
+    glossaryFootnote="Glossary"
+    saveContent={[Function]}
+  >
+    <div
+      className="glossary-toolbar-wrapper"
+    >
+      <div
+        className="glossary-header"
+      >
+        <div
+          className="glossary-title"
+        >
+          <ElementButton
+            labelText="P"
+            onClick={[Function]}
+            type="close-container"
+          >
+            <span
+              className="btn-element close-container"
+              onClick={[Function]}
+            >
+              <img
+                src={
+                  Object {
+                    "process": [Function],
+                  }
+                }
+              />
+            </span>
+          </ElementButton>
+          <div
+            className="glossary-label"
+          >
+            Glossary
+          </div>
+          <div
+            className="clr"
+          />
+        </div>
+      </div>
+      <div
+        id="toolbarGlossaryFootnote"
+      />
+      <div
+        className="glossary-body"
+      >
+        <div
+          id="glossary-toolbar"
+        />
+        <div
+          className="glossary-word-header"
+        >
+          <div
+            className="glossary-word-title"
+          >
+            Term:
+          </div>
+          <div
+            className="glossary-word-name glossary-word-description"
+            id="glossary-editor"
+          >
+            <ReactEditor
+              className="definition-editor"
+              placeholder="Type Something"
+            >
+              <div
+                className="definition-editor"
+              >
+                <Editor
+                  cloudChannel="5"
+                  init={
+                    Object {
+                      "fixed_toolbar_container": "#toolbarGlossaryFootnote",
+                      "init_instance_callback": [Function],
+                      "inline": true,
+                      "menubar": false,
+                      "selector": ".definition-editor",
+                      "setup": [Function],
+                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                    }
+                  }
+                  onChange={[Function]}
+                >
+                  <div
+                    id="tiny-react_42543273441568634570618"
+                  />
+                </Editor>
+              </div>
+            </ReactEditor>
+          </div>
+        </div>
+        <div
+          className="glossary-definition-header"
+        >
+          <div
+            className="glossary-definition-label"
+          >
+            Definition:
+          </div>
+          <div
+            className="glossary-editor glossary-definition-description"
+            id="glossary-editor-attacher"
+          >
+            <ReactEditor
+              className="definition-editor"
+              placeholder="Type Something"
+            >
+              <div
+                className="definition-editor"
+              >
+                <Editor
+                  cloudChannel="5"
+                  init={
+                    Object {
+                      "fixed_toolbar_container": "#toolbarGlossaryFootnote",
+                      "init_instance_callback": [Function],
+                      "inline": true,
+                      "menubar": false,
+                      "selector": ".definition-editor",
+                      "setup": [Function],
+                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                    }
+                  }
+                  onChange={[Function]}
+                >
+                  <div
+                    id="tiny-react_53736135651568634570618"
+                  />
+                </Editor>
+              </div>
+            </ReactEditor>
+          </div>
+        </div>
+        <div
+          className="glossary-definition-buttons"
+        >
+          <span
+            className="glossary-cancel-button"
+            onClick={[Function]}
+          >
+            Cancel
+          </span>
+          <span
+            className="glossary-save-button"
+            onClick={[Function]}
+          >
+            Save
+          </span>
+        </div>
+      </div>
+    </div>
+  </GlossaryFootnotePopup>
+</GlossaryFootnoteMenu>
+`;
