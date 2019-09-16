@@ -144,8 +144,8 @@ class ElementContainer extends Component {
             <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
                 {editor}
             </div>
-            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?<div>
-                <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
+            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
+                <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
                 {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
                 </div> :''}
