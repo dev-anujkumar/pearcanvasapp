@@ -34,7 +34,7 @@ class Button extends Component {
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className="btn-element small add-comment" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
