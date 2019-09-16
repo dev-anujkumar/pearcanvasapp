@@ -21,7 +21,11 @@ export const createElement = (type, index) => (dispatch, getState) => {
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(createdElemData => {
+    ).then(createdElemData => {        
+        // sendDataToIframe({
+        //     'type': ShowWrapperLoader,
+        //     'message': {}
+        // })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
@@ -30,7 +34,10 @@ export const createElement = (type, index) => (dispatch, getState) => {
                 newParentData[key].contents.bodymatter.splice(index, 0, createdElemData.data);
             //}
         }
-        
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
