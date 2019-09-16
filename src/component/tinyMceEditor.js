@@ -36,11 +36,16 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             setup: (editor) => {
-                
+                editor.on('keydown',function(e) {
+                    if(e.keyCode == 13){
+                        e.preventDefault();
+                        return false;
+                    }
+                });
             },
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 
-
+                
             }
         }
     };
@@ -56,6 +61,7 @@ export class TinyMceEditor extends Component {
     }
 
     handleFocus=(e)=>{
+        this.props.handleEditorFoucs()
         if(Object.keys(this.props.element).length > 0)
         this.props.setActiveElement(this.props.element);
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {

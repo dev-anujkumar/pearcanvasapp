@@ -78,7 +78,7 @@
 }
 
 .btn-element.expand-icon > img {
-    width: 30px;
+    width: 36px;
 }
 .btn-element.close-container {
     width: 10%;
@@ -96,7 +96,8 @@
     left: -2px;
     z-index: 10;
     cursor: pointer;
-    margin-bottom: -8px;
+    margin-bottom: -6px;
+    padding-top: 2px;
 }
 
 .btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem{

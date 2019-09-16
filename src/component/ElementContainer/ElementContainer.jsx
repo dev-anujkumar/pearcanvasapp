@@ -12,7 +12,7 @@ import {addComment} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import {toggleCommentsPanel,fetchComments} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-
+import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -21,6 +21,7 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'element-container showBorder'
         };
+        
     }
 
     // static getDerivedStateFromProps(nextProps, prevState) {
@@ -140,16 +141,14 @@ class ElementContainer extends Component {
                 <Button type="add-comment" onClick={() => this.handleCommentPopup(true)} />
                 {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
-                {/* <Button type="comment-flag" />
-                    <Button type="tcm" /> */}
-            </div> :''}
+                </div> :''}
             { this.state.popup && <PopUp 
                 togglePopup={e => this.handleCommentPopup(e, this)} 
                 active={this.state.popup} 
                 handleChange={this.handleCommentChange}
                 saveContent={this.saveNewComment}
-                rows='10'
-                dialogText="Please enter a comment:"
+                rows={COMMENTS_POPUP_ROWS}
+                dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                 />}
             </div >
         );
@@ -165,11 +164,11 @@ class ElementContainer extends Component {
         });
     }
 
-    handleCommentPopup(popup){
-        this.setState({
-            popup
-        });
-    }
+    // handleCommentPopup(popup){
+    //     this.setState({
+    //         popup
+    //     });
+    // }
 
     /**
      * @description - This function is for handling the closing and opening of comments panel.

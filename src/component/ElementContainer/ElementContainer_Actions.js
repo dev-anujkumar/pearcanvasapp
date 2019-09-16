@@ -20,11 +20,13 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
         { headers: headers }
     )
         .then(response => {
+            
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
-            let _finalSlateObject = Object.values(_slateObject)[0];
-            let { contents: _slateContent } = _finalSlateObject;
+            // let _finalSlateObject = Object.values(_slateObject)[0];
+            let { contents: _slateContent } = _slateObject;
+            // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
             for (let key in _slateBodyMatter) {
                 if (_slateBodyMatter[key].id.toString() === elementId) {
