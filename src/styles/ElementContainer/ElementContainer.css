@@ -20,3 +20,6 @@
 .hideBorder {
     border: none;
 }
+.element-container .cypress-editable{
+    padding:10px !important;
+}
