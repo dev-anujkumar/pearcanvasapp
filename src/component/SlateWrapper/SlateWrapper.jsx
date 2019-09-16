@@ -20,6 +20,12 @@ class SlateWrapper extends Component {
 
     }
 
+    componentDidMount(){
+        if(document.getElementById("cypress-0")){
+            document.getElementById("cypress-0").focus();
+        }
+    }
+
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -62,7 +68,7 @@ class SlateWrapper extends Component {
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    this.renderElement(_slateBodyMatter)
+                                    this.renderElement(_slateBodyMatter, _slateType)
                                 }
                             </div>
                             <SlateFooter />
@@ -174,7 +180,7 @@ class SlateWrapper extends Component {
     /**
      * renderElement | renders single element according to its type
      */
-    renderElement(_elements) {
+    renderElement(_elements, _slateType) {
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
@@ -200,6 +206,7 @@ class SlateWrapper extends Component {
                                 key={`elem-separtor-${element.id}`}
                                 esProps={this.elementSepratorProps(index)}
                                 elementType={element.type}
+                                slateType = {_slateType}
                             />
                         </React.Fragment>
                     )

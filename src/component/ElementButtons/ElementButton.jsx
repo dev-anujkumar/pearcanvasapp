@@ -25,7 +25,7 @@ class Button extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn) => {
+    renderButton = (type, clickHandlerFn, btnClassName) => {
         let buttonJSX = null
         const { labelText,elementId } = this.props
 
@@ -44,7 +44,7 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className="btn-element element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
@@ -126,11 +126,11 @@ class Button extends Component {
     }
     
     render() {
-        const { type, onClick, elementId } = this.props
+        const { type, onClick, elementId, btnClassName } = this.props
         
         return(
             <>
-                {this.renderButton(type, onClick)}             
+                {this.renderButton(type, onClick, btnClassName)}             
             </>
         )
     }
@@ -147,7 +147,9 @@ Button.propTypes = {
     /** Handler to attach on button click */
     onClick : PropTypes.func,
     /** Required in case of 'element-label' type of button */
-    labelText : PropTypes.string
+    labelText : PropTypes.string,
+    /**custom classname for the button component */
+    btnClassName : PropTypes.string
 }
 
 Button.displayName = 'ElementButton'
