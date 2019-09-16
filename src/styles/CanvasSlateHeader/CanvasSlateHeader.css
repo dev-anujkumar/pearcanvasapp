@@ -44,3 +44,6 @@
     border: none;
     background: 0;
 }
+.slate-header {
+    align-self: center;
+}

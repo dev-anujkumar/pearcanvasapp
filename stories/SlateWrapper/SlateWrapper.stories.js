@@ -3,6 +3,10 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import '../../src/styles/CanvasWrapper/style.css';
 import SlateWrapper from '../../src/component/SlateWrapper';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 export const slateData = {
     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -187,11 +191,19 @@ export const slateDataForAssess = {
         }
     }
 }
+const mockStore = configureMockStore(middlewares);
+
+const slateRenderData = mockStore({
+    slateLevelData: {},
+     });
 
 storiesOf('Composites|Slate Wrapper', module)
     .add('Default', () => {
         return (
-            <SlateWrapper slateData={emptySlateData} />
+            <Provider store={slateRenderData}>
+                <SlateWrapper slateData={emptySlateData} />
+            </Provider>
+           
         )
     },
         {
@@ -199,7 +211,10 @@ storiesOf('Composites|Slate Wrapper', module)
         })
     .add('With Elements', () => {
         return (
-            <SlateWrapper slateData={slateData} />
+            <Provider store={slateRenderData}>
+            <SlateWrapper slateData={{slateData}} />
+        </Provider>
+      
         )
     },
         {
@@ -207,7 +222,10 @@ storiesOf('Composites|Slate Wrapper', module)
         })
     .add('Introductory Slate', () => {
         return (
-            <SlateWrapper slateData={slateDataForIntro} />
+            <Provider store={slateRenderData}>
+            <SlateWrapper  slateData={{slateDataForIntro}} />
+        </Provider>
+            
         )
     },
         {
@@ -215,7 +233,10 @@ storiesOf('Composites|Slate Wrapper', module)
         })
     .add('Assessment Slate', () => {
         return (
-            <SlateWrapper slateData={slateDataForAssess} />
+            <Provider store={slateRenderData}>
+            <SlateWrapper slateData={{slateDataForAssess}} />
+        </Provider>
+  
         )
     },
         {
@@ -223,7 +244,10 @@ storiesOf('Composites|Slate Wrapper', module)
         })
     .add('Loading', () => {
         return (
-            <SlateWrapper slateData={{}} />
+            <Provider store={slateRenderData}>
+            <SlateWrapper slateData={{}}  />
+        </Provider>
+      
         )
     },
         {

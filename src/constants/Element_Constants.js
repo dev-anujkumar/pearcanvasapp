@@ -28,3 +28,8 @@ export const ESA_POPUP_MAXLENGTH='200'
 export const ESA_POPUP_CLASSNAME="single_assessment"
 export const DEFAULT_ASSESSMENT_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+
+/*---------------Comments Panel PopUp----------------------*/ 
+export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
+export const COMMENTS_POPUP_ROWS='10'
+

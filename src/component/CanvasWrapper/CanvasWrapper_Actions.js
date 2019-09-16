@@ -40,6 +40,53 @@ const findElementType = (element) => {
 					break;
 			}
 			break;
+		case 'figure':
+			
+			if(element.figuretype && element.subtype !== undefined) {
+				if(element.figuretype == 'image') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-figure';
+					switch(element.subtype) {
+						case 'imageTextWidth':
+							elementType['secondaryOption'] = 'secondary-image-figure-width';
+							break;
+						case 'imageWiderThanText':
+							elementType['secondaryOption'] = 'secondary-image-figure-wider';
+							break;
+						case 'imageFullscreen':
+								elementType['secondaryOption'] = 'secondary-image-figure-full';
+								break;
+						case 'image50Text':
+						default:
+							elementType['secondaryOption'] = 'secondary-image-figure-half';
+							break;
+
+					}
+				} else if(element.figuretype == 'video') {
+					elementType['elementType'] = 'video-audio';
+					elementType['primaryOption'] = 'primary-video';
+					switch(element.subtype) {
+						case 'figureVideo':
+							elementType['secondaryOption'] = 'secondary-video-smartlink';
+							break;
+						default:
+							elementType['secondaryOption'] = 'secondary-video-alfresco';
+							break;
+					}
+				} else if(element.figuretype == 'audio') {
+					elementType['elementType'] = 'video-audio';
+					elementType['primaryOption'] = 'primary-audio';
+					switch(element.subtype) {
+						case 'figureAudioSL':
+							elementType['secondaryOption'] = 'secondary-audio-smartlink';
+							break;
+						case 'figureAudio':
+							elementType['secondaryOption'] = 'secondary-audio-alfresco';
+							break;
+					}
+				}
+			}
+			break;
 	}
 	
 	elementType['elementId'] = element.id;
@@ -75,15 +122,13 @@ export const fetchSlateData = (manifestURN) => dispatch => {
         dispatch({
         	type: FETCH_SLATE_DATA,
 			payload: {
-				manifestURN: {
-					[manifestURN]: mockdata[manifestURN]
-				}
+				[manifestURN]: mockdata[manifestURN]
 			}//slateData.data
         });
 	})
 };
 
-export const setActiveElement = (activeElement = {}) => dispatch => {
+export const setActiveElement = (activeElement = {}) => dispatch => {console.log('active Element::', activeElement);
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)
