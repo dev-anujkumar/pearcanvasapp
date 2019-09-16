@@ -24,6 +24,7 @@ class CanvasWrapper extends Component {
         super(props);
 
         this.state = {
+            navigation: false,
             activeSlateIndex: 1,
             activeSlate: config.slateList[1],
             activeElement: {}
@@ -55,10 +56,21 @@ class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        // if(document.getElementById("cypress-0")){
-        //     document.getElementById("cypress-0").focus();
-        // }
+        if(this.state.navigation) {
+            if(document.getElementById("cypress-0")){
+                document.getElementById("cypress-0").focus();
+            }
+
+            this.setState({
+                navigation: false
+            });
+        } else {
+            if(window.tinymce.activeEditor) {
+                document.getElementById(window.tinymce.activeEditor.id).focus();
+            }
+        }
     }
+    
     handleCommentspanel(elementId){
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId);
@@ -81,6 +93,7 @@ class CanvasWrapper extends Component {
         }
 
         this.setState({
+            navigation: true,
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });

@@ -65,24 +65,28 @@ const findElementType = (element) => {
 				} else if(element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
-					switch(element.subtype) {
-						case 'figureVideo':
-							elementType['secondaryOption'] = 'secondary-video-smartlink';
-							break;
-						default:
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-video-alfresco';
+							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-video-smartlink';
 							break;
 					}
 				} else if(element.figuretype == 'audio') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-audio';
-					switch(element.subtype) {
-						case 'figureAudioSL':
-							elementType['secondaryOption'] = 'secondary-audio-smartlink';
-							break;
-						case 'figureAudio':
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-audio-alfresco';
 							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-audio-smartlink';
+							break;
+						
+							
 					}
 				}
 			}
@@ -106,29 +110,44 @@ const defineElementTag = (bodymatter = {}) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
-		headers: {
-			"Content-Type": "application/json",
-			"PearsonSSOSession": config.ssoToken
-		}
-	}).then(slateData => {
-		// let contentUrn = slateData.data[manifestURN].contentUrn,
-		// title = slateData.data[manifestURN].contents.title.text
-		dispatch({
-        	type: SET_ELEMENT_TAG,
-			payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
-		});
+	// let contentUrn = slateData.data[manifestURN].contentUrn,
+	// title = slateData.data[manifestURN].contents.title.text
+	dispatch({
+		type: SET_ELEMENT_TAG,
+		payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
+	});
+	
+	dispatch({
+		type: FETCH_SLATE_DATA,
+		payload: {
+			[manifestURN]: mockdata[manifestURN]
+		}//slateData.data
+	});
+
+	
+	// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
+	// 	headers: {
+	// 		"Content-Type": "application/json",
+	// 		"PearsonSSOSession": config.ssoToken
+	// 	}
+	// }).then(slateData => {
+	// 	// let contentUrn = slateData.data[manifestURN].contentUrn,
+	// 	// title = slateData.data[manifestURN].contents.title.text
+	// 	dispatch({
+    //     	type: SET_ELEMENT_TAG,
+	// 		payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
+	// 	});
 		
-        dispatch({
-        	type: FETCH_SLATE_DATA,
-			payload: {
-				[manifestURN]: mockdata[manifestURN]
-			}//slateData.data
-        });
-	})
+    //     dispatch({
+    //     	type: FETCH_SLATE_DATA,
+	// 		payload: {
+	// 			[manifestURN]: mockdata[manifestURN]
+	// 		}//slateData.data
+    //     });
+	// })
 };
 
-export const setActiveElement = (activeElement = {}) => dispatch => {console.log('active Element::', activeElement);
+export const setActiveElement = (activeElement = {}) => dispatch => {
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)

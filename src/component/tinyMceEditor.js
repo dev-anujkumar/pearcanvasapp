@@ -58,16 +58,19 @@ export class TinyMceEditor extends Component {
     handleFocus=(e)=>{
         if(Object.keys(this.props.element).length > 0)
         this.props.setActiveElement(this.props.element);
-        if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id)
-        return false;
+        if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
+            // tinymce.init(this.editorConfig);
+            return false;
+        }
+        
         if(tinymce.activeEditor){
             let activeEditorId = tinymce.activeEditor.id;
             
             tinymce.remove('#'+tinymce.activeEditor.id)
             document.getElementById(activeEditorId).contentEditable = true;
         }
-        this.editorConfig.selector='#'+e.target.id
-        tinymce.init(this.editorConfig)
+        this.editorConfig.selector='#'+e.target.id;
+        tinymce.init(this.editorConfig);
     }
 
     handleBlur=(e)=>{
@@ -80,8 +83,8 @@ export class TinyMceEditor extends Component {
             let element = document.getElementById(activeEditorId);
             tinymce.remove('#'+tinymce.activeEditor.id)
             element.contentEditable = true;
-            this.editorConfig.selector='#'+activeEditorId
-            tinymce.init(this.editorConfig)
+            this.editorConfig.selector='#'+activeEditorId;
+            tinymce.init(this.editorConfig);
         }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";

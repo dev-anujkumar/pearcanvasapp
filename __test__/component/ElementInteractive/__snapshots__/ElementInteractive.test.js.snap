@@ -1,0 +1,3381 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactive3party  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "external-link",
+        "interactiveid": "",
+        "interactivetype": "3rd-party",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidget3PI"
+      resource=""
+    >
+      <figure
+        className="figureWidget3PI"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4Widget3PINumberLabel figureLabel"
+            error={null}
+            index="7-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Widget3PINumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Widget3PITitle figureTitle"
+            error={null}
+            index="7-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Widget3PITitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component 3pi"
+          data-height="399"
+          data-type="3pi"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidget3PI lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidget3PI figureCaption"
+            error={null}
+            index="7-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidget3PI figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidget3PICredit figureCredit"
+          error={null}
+          index="7-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidget3PICredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractiveFlashcards 1`] = `
+<Interactive
+  index={5}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "mmi",
+        "interactiveid": "",
+        "interactivetype": "flashcards",
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetFlashcards"
+      resource=""
+    >
+      <figure
+        className="figureWidgetFlashcards"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsNumberLabel figureLabel"
+            error={null}
+            index="5-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-5-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsTitle figureTitle"
+            error={null}
+            index="5-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-5-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component flashcards"
+          data-height="399"
+          data-type="flashcards"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetFlashcards lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetFlashcards figureCaption"
+            error={null}
+            index="5-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetFlashcards figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-5-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetFlashcardsCredit figureCredit"
+          error={null}
+          index="5-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetFlashcardsCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-5-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractivePopWindow 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "popup",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetPU"
+      resource=""
+    >
+      <figure
+        className="figureWidgetPU"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetPUNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetPUTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component pu"
+          data-height="399"
+          data-type="pu"
+          data-uri=""
+          data-width="600"
+        >
+          <a
+            className="buttonWidgetPU"
+            href="javascript:void(0)"
+          >
+            <TinyMceEditor
+              className="actionPU"
+              error={null}
+              index="8-2"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter call to action..."
+              tagName="p"
+            >
+              <p
+                className="actionPU cypress-editable"
+                contentEditable="true"
+                id="cypress-8-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter call to action..."
+              />
+            </TinyMceEditor>
+          </a>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetPU figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetPU figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetPUCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetPUCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractivePopupWeblink  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "external-link",
+        "interactiveid": "",
+        "interactivetype": "pop-up-web-link",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetPUSL"
+      resource=""
+    >
+      <figure
+        className="figureWidgetPUSL"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetPUSLNumberLabel figureLabel"
+            error={null}
+            index="7-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUSLNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetPUSLTitle figureTitle"
+            error={null}
+            index="7-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUSLTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component pusl"
+          data-height="399"
+          data-type="pusl"
+          data-uri=""
+          data-width="600"
+        >
+          <a
+            className="buttonWidgetPUSL"
+            href="javascript:void(0)"
+          >
+            <TinyMceEditor
+              className="actionPU"
+              error={null}
+              index="7-2"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter call to action..."
+              tagName="p"
+            >
+              <p
+                className="actionPU cypress-editable"
+                contentEditable="true"
+                id="cypress-7-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter call to action..."
+              />
+            </TinyMceEditor>
+          </a>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetPUSL figureCaption"
+            error={null}
+            index="7-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetPUSL figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetPUSLCredit figureCredit"
+          error={null}
+          index="7-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetPUSLCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractiveShowHide  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "mmi",
+        "interactiveid": "",
+        "interactivetype": "showhide",
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetShowHide"
+      resource=""
+    >
+      <figure
+        className="figureWidgetShowHide"
+        resource=""
+      >
+        <header>
+          <h4
+            className="heading4WidgetShowHideTitle"
+            resource=""
+          />
+        </header>
+        <div
+          className="pearson-component showHide"
+          data-height="399"
+          data-type="showHide"
+          data-uri=""
+          data-width="600"
+        >
+          <div
+            data-reactroot=""
+          >
+            <div
+              className="sh-container"
+            >
+              <div>
+                <TinyMceEditor
+                  className="paragraphShowHideWidgetQuestionText"
+                  error={null}
+                  index="7-0"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyup={[Function]}
+                  placeholder="Enter shown text"
+                  tagName="p"
+                >
+                  <p
+                    className="paragraphShowHideWidgetQuestionText cypress-editable"
+                    contentEditable="true"
+                    id="cypress-7-0"
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    placeholder="Enter shown text"
+                  />
+                </TinyMceEditor>
+                <p
+                  aria-label="Reveal Answer"
+                  className="paragraphNumeroUno revealAns"
+                  resource=""
+                >
+                  <a
+                    className="paragraphNumeroUno"
+                  >
+                    <TinyMceEditor
+                      error={null}
+                      index="7-1"
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyup={[Function]}
+                      placeholder="Enter hidden text"
+                      tagName="p"
+                    >
+                      <p
+                        className="undefined cypress-editable"
+                        contentEditable="true"
+                        id="cypress-7-1"
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        placeholder="Enter hidden text"
+                      />
+                    </TinyMceEditor>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption
+          className="figcaptionWidgetShowHide"
+          resource=""
+        />
+      </figure>
+      <p
+        className="paragraphWidgetShowHideCredit"
+      />
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractiveTable  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "external-link",
+        "interactiveid": "",
+        "interactivetype": "table",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetTableSL"
+      resource=""
+    >
+      <figure
+        className="figureWidgetTableSL"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetTableSLNumberLabel figureLabel"
+            error={null}
+            index="7-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetTableSLNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetTableSLTitle figureTitle"
+            error={null}
+            index="7-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetTableSLTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component tablesl"
+          data-height="399"
+          data-type="tablesl"
+          data-uri=""
+          data-width="600"
+        >
+          <a
+            className=""
+            href="javascript:void(0)"
+          >
+            <img
+              alt=""
+              className="imageWidgetTableSL lazyload"
+              data-src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+              src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+              title="View Image"
+            />
+          </a>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetTableSL figureCaption"
+            error={null}
+            index="7-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetTableSL figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetTableSLCredit figureCredit"
+          error={null}
+          index="7-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetTableSLCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default InteractiveWeblink  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "external-link",
+        "interactiveid": "",
+        "interactivetype": "web-link",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetPUSL"
+      resource=""
+    >
+      <figure
+        className="figureWidgetPUSL"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetPUSLNumberLabel figureLabel"
+            error={null}
+            index="7-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUSLNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetPUSLTitle figureTitle"
+            error={null}
+            index="7-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPUSLTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component pusl"
+          data-height="399"
+          data-type="pusl"
+          data-uri=""
+          data-width="600"
+        >
+          <a
+            className="buttonWidgetPUSL"
+            href="javascript:void(0)"
+          >
+            <TinyMceEditor
+              className="actionPU"
+              error={null}
+              index="7-2"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter call to action..."
+              tagName="p"
+            >
+              <p
+                className="actionPU cypress-editable"
+                contentEditable="true"
+                id="cypress-7-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter call to action..."
+              />
+            </TinyMceEditor>
+          </a>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetPUSL figureCaption"
+            error={null}
+            index="7-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetPUSL figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetPUSLCredit figureCredit"
+          error={null}
+          index="7-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetPUSLCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactiveaccountingtable 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "accountingtable",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetAccountingtable"
+      resource=""
+    >
+      <figure
+        className="figureWidgetAccountingtable"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetAccountingtableNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetAccountingtableNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetAccountingtableTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetAccountingtableTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component accountingtable"
+          data-height="399"
+          data-type="accountingtable"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetAccountingtable lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetAccountingtable figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetAccountingtable figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetAccountingtableCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetAccountingtableCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivefillinblank 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "fill-in-blank",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetFIB"
+      resource=""
+    >
+      <figure
+        className="figureWidgetFIB"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetFIBNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFIBNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetFIBTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFIBTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component fib"
+          data-height="399"
+          data-type="fib"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetFIB lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetFIB figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetFIB figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetFIBCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetFIBCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivegalleryimage 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "gallery-image",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetImgSlideshow"
+      resource=""
+    >
+      <figure
+        className="figureWidgetImgSlideshow"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetImgSlideshowNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetImgSlideshowNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetImgSlideshowTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetImgSlideshowTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component imgSlideshow"
+          data-height="399"
+          data-type="imgSlideshow"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetImgSlideshow lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetImgSlideshow figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetImgSlideshow figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetImgSlideshowCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetImgSlideshowCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivegalleryvideo 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "gallery-video",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetVidSlideshow"
+      resource=""
+    >
+      <figure
+        className="figureWidgetVidSlideshow"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetVidSlideshowNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVidSlideshowNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetVidSlideshowTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVidSlideshowTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component vidSlideshow"
+          data-height="399"
+          data-type="vidSlideshow"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetVidSlideshow lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetVidSlideshow figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetVidSlideshow figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetVidSlideshowCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetVidSlideshowCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivegraph 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "graph",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetGraph"
+      resource=""
+    >
+      <figure
+        className="figureWidgetVidSlideshow"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetGraphNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetGraphNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetGraphTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetGraphTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component graph"
+          data-height="399"
+          data-type="graph"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetGraph lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetGraph figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetGraph figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetGraphCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetGraphCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivehotspot 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "hotspot",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetHotspot"
+      resource=""
+    >
+      <figure
+        className="figureWidgetHotspot"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetHotspotNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetHotspotNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetHotspotTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetHotspotTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component hotspot"
+          data-height="399"
+          data-type="hotspot"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetHotspot lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetHotspot figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetHotspot figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetHotspotCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetHotspotCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivemcq 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "mcq",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetVideoMcq"
+      resource=""
+    >
+      <figure
+        className="figureWidgetVideoMcq"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetVideoMcqNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVideoMcqNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetVideoMcqTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVideoMcqTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component videoMcq"
+          data-height="399"
+          data-type="videoMcq"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetVideoMcq lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetVideoMcq figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetVideoMcq figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetVideoMcqCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetVideoMcqCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivepdf  1`] = `
+<Interactive
+  index={7}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "external-link",
+        "interactiveid": "",
+        "interactivetype": "pdf",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetPDF"
+      resource=""
+    >
+      <figure
+        className="figureWidgetPDF"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetPDFNumberLabel figureLabel"
+            error={null}
+            index="7-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPDFNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetPDFTitle figureTitle"
+            error={null}
+            index="7-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetPDFTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            PATH: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component pdf"
+          data-height="399"
+          data-type="pdf"
+          data-uri=""
+          data-width="600"
+        >
+          <a
+            className="buttonWidgetPDF"
+            href="javascript:void(0)"
+          >
+            <TinyMceEditor
+              className="actionPU"
+              error={null}
+              index="7-2"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter call to action..."
+              tagName="p"
+            >
+              <p
+                className="actionPU cypress-editable"
+                contentEditable="true"
+                id="cypress-7-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter call to action..."
+              />
+            </TinyMceEditor>
+          </a>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetPDF figureCaption"
+            error={null}
+            index="7-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetPDF figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetPDFCredit figureCredit"
+          error={null}
+          index="7-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetPDFCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivesimulation 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "simulation",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetUCA"
+      resource=""
+    >
+      <figure
+        className="figureWidgetUCA"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetUCANumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetUCANumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetUCATitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetUCATitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component uca"
+          data-height="399"
+          data-type="uca"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetUCA lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetUCA figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetUCA figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetUCACredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetUCACredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivesurvey 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "survey",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetSurvey"
+      resource=""
+    >
+      <figure
+        className="figureWidgetSurvey"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetSurveyNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetSurveyNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetSurveyTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetSurveyTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component uca"
+          data-height="399"
+          data-type="uca"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetSurvey lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetSurvey figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetSurvey figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetSurveyCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetSurveyCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivetimeline 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "timeline",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetTimeline"
+      resource=""
+    >
+      <figure
+        className="figureWidgetTimeline"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetTimelineNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetTimelineNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetTimelineTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetTimelineTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component timeline"
+          data-height="399"
+          data-type="timeline"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetTimeline lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetTimeline figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetTimeline figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetTimelineCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetTimelineCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default Interactivevideomcq 1`] = `
+<Interactive
+  index={8}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "narrative-link",
+        "interactiveid": "",
+        "interactivetype": "video-mcq",
+        "posterimage": Object {
+          "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetVideoMcq"
+      resource=""
+    >
+      <figure
+        className="figureWidgetVideoMcq"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetVideoMcqNumberLabel figureLabel"
+            error={null}
+            index="8-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVideoMcqNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetVideoMcqTitle figureTitle"
+            error={null}
+            index="8-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetVideoMcqTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component videoMcq"
+          data-height="399"
+          data-type="videoMcq"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetVideoMcq lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetVideoMcq figureCaption"
+            error={null}
+            index="8-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetVideoMcq figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetVideoMcqCredit figureCredit"
+          error={null}
+          index="8-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetVideoMcqCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders  properly with default fpo 1`] = `
+<Interactive
+  index={3}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "mmi",
+        "interactiveid": "",
+        "interactivetype": "flashcards",
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetFlashcards"
+      resource=""
+    >
+      <figure
+        className="figureWidgetFlashcards"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsNumberLabel figureLabel"
+            error={null}
+            index="3-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-3-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsTitle figureTitle"
+            error={null}
+            index="3-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-3-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component flashcards"
+          data-height="399"
+          data-type="flashcards"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetFlashcards lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetFlashcards figureCaption"
+            error={null}
+            index="3-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetFlashcards figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-3-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetFlashcardsCredit figureCredit"
+          error={null}
+          index="3-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetFlashcardsCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-3-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
+
+exports[`Testing Interactive element component With figure image element renders properly with default fpo  1`] = `
+<Interactive
+  index={1}
+  itemId="urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+  model={
+    Object {
+      "contentUrn": "urn:pearson:entity:3fc49109-1b4a-4292-9171-261a58fedc94",
+      "figuredata": Object {
+        "interactiveformat": "mmi",
+        "interactiveid": "",
+        "interactivetype": "flashcards",
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+      },
+      "figuretype": "interactive",
+      "html": Object {
+        "caption": "Caption",
+        "credit": "Credit",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title",
+        "tableasHTML": "",
+        "title": "Label",
+      },
+      "id": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:8755c99a-f16b-4f62-b58b-ad6083478b93",
+    }
+  }
+>
+  <div
+    className="interactive-element"
+  >
+    <div
+      className="divWidgetFlashcards"
+      resource=""
+    >
+      <figure
+        className="figureWidgetFlashcards"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsNumberLabel figureLabel"
+            error={null}
+            index="1-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsNumberLabel figureLabel cypress-editable"
+              contentEditable="true"
+              id="cypress-1-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4WidgetFlashcardsTitle figureTitle"
+            error={null}
+            index="1-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4WidgetFlashcardsTitle figureTitle cypress-editable"
+              contentEditable="true"
+              id="cypress-1-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="id-info"
+        >
+          <strong>
+            ITEM ID: 
+             
+          </strong>
+          urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93
+        </div>
+        <div
+          className="pearson-component flashcards"
+          data-height="399"
+          data-type="flashcards"
+          data-uri=""
+          data-width="600"
+        >
+          <img
+            alt=""
+            className="imageWidgetFlashcards lazyload"
+            src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            title="View Image"
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionWidgetFlashcards figureCaption"
+            error={null}
+            index="1-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionWidgetFlashcards figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-1-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphWidgetFlashcardsCredit figureCredit"
+          error={null}
+          index="1-4"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphWidgetFlashcardsCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-1-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</Interactive>
+`;
