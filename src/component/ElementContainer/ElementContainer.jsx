@@ -19,7 +19,8 @@ class ElementContainer extends Component {
         this.state = {
             popup: false,
             comment:"",
-            borderToggle : 'element-container showBorder'
+            borderToggle : 'showBorder',
+            btnClassName : ''
         };
         
     }
@@ -29,11 +30,13 @@ class ElementContainer extends Component {
         if(nextProps.elemBorderToggle !== this.props.elemBorderToggle){
             if(nextProps.elemBorderToggle ==true){
                 this.setState({
-                    borderToggle: 'element-container showBorder'
+                    borderToggle: 'showBorder',
+                    btnClassName : ''
                 })
             }else{
                 this.setState({
-                    borderToggle: 'element-container hideBorder'
+                    borderToggle: 'hideBorder',
+                    btnClassName : ''
                 })
             }
         }
@@ -41,18 +44,21 @@ class ElementContainer extends Component {
 
     handleFocus = () => {
         this.setState({
-            borderToggle : 'element-container active'
+            borderToggle : 'active',
+            btnClassName : 'activeTagBgColor'
         })
     }
 
     handleBlur = () => {
         if(this.props.elemBorderToggle){
             this.setState({
-                borderToggle : 'element-container showBorder'
+                borderToggle : 'showBorder',
+                btnClassName : ''
             })
         }else{
             this.setState({
-                borderToggle : 'element-container hideBorder'
+                borderToggle : 'hideBorder',
+                btnClassName : ''
             })
         } 
     }
@@ -128,13 +134,13 @@ class ElementContainer extends Component {
         
         return(
             <div className = "editor" >
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?    <div>
-                <Button type="element-label" labelText={labelText} />
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
+                <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
                 <Button type="delete-element" />
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
-            <div className={this.state.borderToggle} data-id={element.id}>
+            <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
                 {editor}
             </div>
             {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'element-container active'?<div>
