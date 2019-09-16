@@ -7,24 +7,24 @@ import {
     SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
 
+import wipElementObject from './ElementWipData';
+
 const handleElementConversion = (elementData, store) => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && elementData.slateId === Object.keys(store)[0]) {
         let storeElement = store[elementData.slateId];
         let bodymatter = storeElement.contents.bodymatter;
         let format = elementData.secondaryOption.replace('secondary-', '');
-        bodymatter.map(element => {
+        bodymatter.map((element, index) => {
             if(elementData.elementId === element.id) {
-                let htmlText = element.html.text;
-                let openingTagIndex = htmlText.indexOf('>') + 1;
-                htmlText = htmlText.substring(openingTagIndex).replace(/(<\/\w+>)$/g, '');
-                
-                htmlText = "<" + EditorConfig.formats[format].block +" class='" + EditorConfig.formats[format].classes + "'>" + htmlText + "</" + EditorConfig.formats[format].block + ">"
-                element.html.text = htmlText;
+                let wipData = wipElementObject[format];
+                wipData.id = elementData.elementId;
+                element = wipData;
+                bodymatter[index] = element;
             }
         });
     }
-
+    
     return store;
 }
 

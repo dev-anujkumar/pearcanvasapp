@@ -65,24 +65,28 @@ const findElementType = (element) => {
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
-					switch (element.subtype) {
-						case 'figureVideo':
-							elementType['secondaryOption'] = 'secondary-video-smartlink';
-							break;
-						default:
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-video-alfresco';
+							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-video-smartlink';
 							break;
 					}
 				} else if (element.figuretype == 'audio') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-audio';
-					switch (element.subtype) {
-						case 'figureAudioSL':
-							elementType['secondaryOption'] = 'secondary-audio-smartlink';
-							break;
-						case 'figureAudio':
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-audio-alfresco';
 							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-audio-smartlink';
+							break;
+						
+							
 					}
 				}
 			}
@@ -105,7 +109,7 @@ const defineElementTag = (bodymatter = {}) => {
 	return tagList;
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {
+export const fetchSlateData = (manifestURN) => dispatch => {	
 	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
 		headers: {
 			"Content-Type": "application/json",
