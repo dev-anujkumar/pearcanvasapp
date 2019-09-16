@@ -90,7 +90,11 @@ exports[`Testing GlossaryFootnote component with props render Footnote  1`] = `
                   onChange={[Function]}
                 >
                   <div
+<<<<<<< HEAD
                     id="tiny-react_74024348581568634570635"
+=======
+                    id="tiny-react_53811291681568384695061"
+>>>>>>> 6696e8e04871464dcc497124ad7ad4487a4f20db
                   />
                 </Editor>
               </div>
@@ -209,7 +213,11 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                   onChange={[Function]}
                 >
                   <div
+<<<<<<< HEAD
                     id="tiny-react_36900517161568634570630"
+=======
+                    id="tiny-react_88003596761568384695046"
+>>>>>>> 6696e8e04871464dcc497124ad7ad4487a4f20db
                   />
                 </Editor>
               </div>
@@ -251,7 +259,11 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                   onChange={[Function]}
                 >
                   <div
+<<<<<<< HEAD
                     id="tiny-react_56074182371568634570631"
+=======
+                    id="tiny-react_85718437571568384695047"
+>>>>>>> 6696e8e04871464dcc497124ad7ad4487a4f20db
                   />
                 </Editor>
               </div>
@@ -370,7 +382,11 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                   onChange={[Function]}
                 >
                   <div
+<<<<<<< HEAD
                     id="tiny-react_42543273441568634570618"
+=======
+                    id="tiny-react_79109996241568384695013"
+>>>>>>> 6696e8e04871464dcc497124ad7ad4487a4f20db
                   />
                 </Editor>
               </div>
@@ -412,7 +428,11 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                   onChange={[Function]}
                 >
                   <div
+<<<<<<< HEAD
                     id="tiny-react_53736135651568634570618"
+=======
+                    id="tiny-react_80872346151568384695014"
+>>>>>>> 6696e8e04871464dcc497124ad7ad4487a4f20db
                   />
                 </Editor>
               </div>

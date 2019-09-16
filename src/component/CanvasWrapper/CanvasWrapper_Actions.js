@@ -6,17 +6,17 @@ import {
 	SET_ACTIVE_ELEMENT,
 	SET_ELEMENT_TAG
 } from '../../constants/Action_Constants';
-import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
+import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 
 import elementTypes from './../Sidebar/elementTypes';
 
 const findElementType = (element) => {
 	let elementType = {};
 
-	switch(element.type) {
+	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
-			if(element.elementdata.headers) {
+			if (element.elementdata.headers) {
 				elementType['primaryOption'] = 'primary-heading';
 				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
 			} else {
@@ -24,11 +24,11 @@ const findElementType = (element) => {
 				elementType['secondaryOption'] = 'secondary-paragraph';
 			}
 			break;
-		
+
 		case 'element-blockfeature':
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-blockquote';
-			switch(element.elementdata.type){
+			switch (element.elementdata.type) {
 				case 'pullquote':
 					elementType['secondaryOption'] = 'secondary-pullquote'
 					break;
@@ -41,12 +41,12 @@ const findElementType = (element) => {
 			}
 			break;
 		case 'figure':
-			
-			if(element.figuretype && element.subtype !== undefined) {
-				if(element.figuretype == 'image') {
+
+			if (element.figuretype && element.subtype !== undefined) {
+				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-figure';
-					switch(element.subtype) {
+					switch (element.subtype) {
 						case 'imageTextWidth':
 							elementType['secondaryOption'] = 'secondary-image-figure-width';
 							break;
@@ -54,41 +54,45 @@ const findElementType = (element) => {
 							elementType['secondaryOption'] = 'secondary-image-figure-wider';
 							break;
 						case 'imageFullscreen':
-								elementType['secondaryOption'] = 'secondary-image-figure-full';
-								break;
+							elementType['secondaryOption'] = 'secondary-image-figure-full';
+							break;
 						case 'image50Text':
 						default:
 							elementType['secondaryOption'] = 'secondary-image-figure-half';
 							break;
 
 					}
-				} else if(element.figuretype == 'video') {
+				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
-					switch(element.subtype) {
-						case 'figureVideo':
-							elementType['secondaryOption'] = 'secondary-video-smartlink';
-							break;
-						default:
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-video-alfresco';
 							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-video-smartlink';
+							break;
 					}
-				} else if(element.figuretype == 'audio') {
+				} else if (element.figuretype == 'audio') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-audio';
-					switch(element.subtype) {
-						case 'figureAudioSL':
-							elementType['secondaryOption'] = 'secondary-audio-smartlink';
-							break;
-						case 'figureAudio':
+					switch(element.figuredata.srctype) {
+						case 'internal':
 							elementType['secondaryOption'] = 'secondary-audio-alfresco';
 							break;
+						case 'externallink':
+						default:
+							elementType['secondaryOption'] = 'secondary-audio-smartlink';
+							break;
+						
+							
 					}
 				}
 			}
 			break;
 	}
-	
+
 	elementType['elementId'] = element.id;
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	return elementType;
@@ -96,7 +100,7 @@ const findElementType = (element) => {
 
 const defineElementTag = (bodymatter = {}) => {
 	let tagList = {};
-	if(Object.keys(bodymatter).length > 0) {
+	if (Object.keys(bodymatter).length > 0) {
 		bodymatter.forEach(element => {
 			tagList[element.id] = findElementType(element).tag;
 		});
@@ -105,30 +109,34 @@ const defineElementTag = (bodymatter = {}) => {
 	return tagList;
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {
+export const fetchSlateData = (manifestURN) => dispatch => {	
 	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
 		}
 	}).then(slateData => {
-		// let contentUrn = slateData.data[manifestURN].contentUrn,
-		// title = slateData.data[manifestURN].contents.title.text
+		let contentUrn = slateData.data[manifestURN].contentUrn,
+			title = slateData.data[manifestURN].contents.title.text;
+
 		dispatch({
-        	type: SET_ELEMENT_TAG,
+			type: SET_ELEMENT_TAG,
 			payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
 		});
-		
-        dispatch({
-        	type: FETCH_SLATE_DATA,
+
+		dispatch(fetchComments(contentUrn, title));
+
+		dispatch({
+			type: FETCH_SLATE_DATA,
 			payload: {
 				[manifestURN]: mockdata[manifestURN]
 			}//slateData.data
-        });
+		});
 	})
 };
 
-export const setActiveElement = (activeElement = {}) => dispatch => {console.log('active Element::', activeElement);
+export const setActiveElement = (activeElement = {}) => dispatch => {
+	console.log('active Element::', activeElement);
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)

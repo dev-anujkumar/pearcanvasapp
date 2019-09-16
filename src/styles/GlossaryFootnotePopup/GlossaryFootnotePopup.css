@@ -101,3 +101,21 @@
     letter-spacing: 0.01em;
     margin: 0;
 }
+#toolbarGlossaryFootnote .tox-toolbar {
+    background: transparent !important;
+}
+#toolbarGlossaryFootnote .tox-tbtn {
+    border: 1px solid #ccc !important;
+    margin: 2px 0px !important;
+}
+#toolbarGlossaryFootnote .tox .tox-tbtn {
+    border-radius: 0 !important;
+}
+
+#toolbarGlossaryFootnote{
+    margin: 11px 11px 11px !important;
+}
+
+#toolbarGlossaryFootnote .tox .tox-toolbar__group{
+    padding: 1px 4px 2px 4px !important;
+}

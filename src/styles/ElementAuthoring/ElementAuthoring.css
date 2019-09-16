@@ -29,3 +29,9 @@
 .cypress-editable{
     height:100%;
 }
+.element-container p.paragraphNumeroUno{
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+    font-size: 100%;
+    padding:0px;
+}
