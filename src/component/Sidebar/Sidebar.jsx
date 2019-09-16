@@ -16,12 +16,14 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        
         this.state = {
             elementDropdown: '',
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            attrInput: ""
         };
     }
 
@@ -163,6 +165,15 @@ class Sidebar extends Component {
         return secondaryOptions;
     }
 
+    handleAttrChange = (event) => {
+        this.setState({
+            attrInput: event.target.value
+        })
+        let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+        let attrNode = activeElement.querySelector(".blockquoteTextCredit")
+        attrNode.innerHTML = event.target.value
+    }
+    
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
@@ -178,10 +189,14 @@ class Sidebar extends Component {
         }
 
         if(attributionsList.length > 0) {
+            let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+            let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
+            let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
+
             attributions = attributionsList.map(item => {
                 return <div key={item} data-attribution={attributionsObject[item].text}>
                     <div>{attributionsObject[item].text}</div>
-                    <textarea className="attribution-editor" name={item}></textarea>
+                    <textarea className="attribution-editor" name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                 </div>
             });
 
