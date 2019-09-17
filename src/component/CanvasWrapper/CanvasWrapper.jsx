@@ -48,10 +48,10 @@ class CanvasWrapper extends Component {
             'type': HideWrapperLoader,
             'message': { status: true }
         })
-        // sendDataToIframe({
-        //     'type': ShowWrapperLoader,
-        //     'message': {}
-        // })
+        sendDataToIframe({
+            'type': ShowWrapperLoader,
+            'message': {}
+        })
         sendDataToIframe({
             'type': ShowHeader,
             'message': true

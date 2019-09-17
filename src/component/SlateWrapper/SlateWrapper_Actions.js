@@ -3,7 +3,8 @@ import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
 } from '../../constants/Action_Constants';
-
+import { sendDataToIframe } from '../../constants/utility.js';
+import { HideWrapperLoader, ShowWrapperLoader } from '../../constants/IFrameMessageTypes.js';
 export const createElement = (type, index) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
@@ -22,10 +23,11 @@ export const createElement = (type, index) => (dispatch, getState) => {
             }
         }
     ).then(createdElemData => {        
-        // sendDataToIframe({
-        //     'type': ShowWrapperLoader,
-        //     'message': {}
-        // })
+
+        sendDataToIframe({
+            'type': ShowWrapperLoader,
+            'message': {}
+        })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
@@ -33,11 +35,12 @@ export const createElement = (type, index) => (dispatch, getState) => {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
                 newParentData[key].contents.bodymatter.splice(index, 0, createdElemData.data);
             //}
+
         }
-        // sendDataToIframe({
-        //     'type': HideWrapperLoader,
-        //     'message': { status: true }
-        // })
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
