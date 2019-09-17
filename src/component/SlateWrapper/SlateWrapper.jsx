@@ -20,6 +20,12 @@ class SlateWrapper extends Component {
 
     }
 
+    componentDidMount(){
+        if(document.getElementById("cypress-0")){
+            document.getElementById("cypress-0").focus();
+        }
+    }
+
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -28,11 +34,11 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    let _finalSlateObject = Object.values(_slateObject)[0];
-                    let { type: _slateType, contents: _slateContent } = _finalSlateObject;
+                   // let _finalSlateObject = Object.values(_slateObject)[0];
+                    let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
@@ -55,14 +61,14 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    let _finalSlateObject = Object.values(_slateObject)[0];
-                    let { id: _slateId, type: _slateType, contents: _slateContent } = _finalSlateObject;
+                    // let _finalSlateObject = Object.values(_slateObject)[0];
+                    let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    this.renderElement(_slateBodyMatter)
+                                    this.renderElement(_slateBodyMatter, _slateType)
                                 }
                             </div>
                             <SlateFooter />
@@ -72,6 +78,12 @@ class SlateWrapper extends Component {
                 else {
                     return (
                         <React.Fragment>
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
+                            <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
@@ -169,24 +181,25 @@ class SlateWrapper extends Component {
     /**
      * renderElement | renders single element according to its type
      */
-    renderElement(_elements) {
+    renderElement(_elements, _slateType) {
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment>
-                            {index === 0 && <ElementSaprator
+                            {/* {index === 0 && <ElementSaprator
                                 upperOne={true}
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
                                 esProps={this.elementSepratorProps(index)}
                                 elementType={element.type}
                             />
-                            }
+                            } */}
                             <ElementContainer
                                 element={element}
                                 key={element.id}
                                 index={index}
+                                labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator
@@ -194,6 +207,7 @@ class SlateWrapper extends Component {
                                 key={`elem-separtor-${element.id}`}
                                 esProps={this.elementSepratorProps(index)}
                                 elementType={element.type}
+                                slateType = {_slateType}
                             />
                         </React.Fragment>
                     )
@@ -204,6 +218,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -228,6 +243,7 @@ class SlateWrapper extends Component {
     }
 
 }
+SlateWrapper.displayName = "SlateWrapper"
 
 SlateWrapper.propTypes = {
     /** slate data attached to store and contains complete slate object */

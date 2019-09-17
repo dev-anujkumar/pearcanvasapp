@@ -44,6 +44,11 @@ describe('Testing Button component with props', () => {
         console.log(component.debug());
         expect(component).toMatchSnapshot();
     })
+    it('render backward-nav-disable Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.BACKWARD_NAVIGATION_DISABLE} labelText="UL" />);
+        console.log(component.debug());
+        expect(component).toMatchSnapshot();
+    })
     it('render expand Button component  ', () => {
         const component = mount(<Button type={buttonTypes.EXPAND} labelText="UL" />);
         console.log(component.debug());

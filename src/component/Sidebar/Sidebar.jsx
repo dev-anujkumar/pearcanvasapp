@@ -1,25 +1,43 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
+import { updateElement } from './Sidebar_Action';
 import './../../styles/Sidebar/Sidebar.css';
 
 class Sidebar extends Component {
     constructor(props) {
         super(props);
-
-        let elementTypeList = elementList[this.props.elementType];
+        
+        let elementType = this.props.activeElement.type || 'element-authoredtext';
+        let elementTypeList = elementList[elementType];
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        
         this.state = {
             elementDropdown: '',
-            activeElementType: this.props.elementType,
+            activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
-            activeLabelText: labelText
+            activeLabelText: labelText,
+            attrInput: ""
         };
+    }
+
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        if(Object.keys(nextProps.activeElement).length > 0) {
+            return {
+                activeElementType: nextProps.activeElement.elementType,
+                activePrimaryOption: nextProps.activeElement.primaryOption,
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,
+                activeLabelText: nextProps.activeElement.tag
+            };
+        }
+
+        return null;
     }
 
     handlePrimaryOptionChange = e => {
@@ -34,6 +52,17 @@ class Sidebar extends Component {
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText
         });
+
+        if(this.props.activeElement.elementId !== '') {
+            this.props.updateElement({
+                slateId: this.props.slateId,
+                elementId: this.props.activeElement.elementId,
+                elementType: this.state.activeElementType,
+                primaryOption: value,
+                secondaryOption: secondaryFirstOption,
+                labelText
+            });
+        }
     }
 
     toggleElementDropdown = e => {
@@ -79,13 +108,24 @@ class Sidebar extends Component {
 
     handleSecondaryOptionChange = e => {
         let value = e.target.getAttribute('data-value');
-        let elementTypeList = elementList[this.props.elementType];
+        let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         this.setState({
             elementDropdown: '',
             activeSecondaryOption: value,
             activeLabelText: labelText
         });
+
+        if(this.props.activeElement.elementId !== '') {
+            this.props.updateElement({
+                slateId: this.props.slateId,
+                elementId: this.props.activeElement.elementId,
+                elementType: this.state.activeElementType,
+                primaryOption: this.state.activePrimaryOption,
+                secondaryOption: value,
+                labelText
+            });
+        }
     }
 
     secondaryOption = () => {
@@ -125,6 +165,15 @@ class Sidebar extends Component {
         return secondaryOptions;
     }
 
+    handleAttrChange = (event) => {
+        this.setState({
+            attrInput: event.target.value
+        })
+        let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+        let attrNode = activeElement.querySelector(".blockquoteTextCredit")
+        attrNode.innerHTML = event.target.value
+    }
+    
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
@@ -140,10 +189,14 @@ class Sidebar extends Component {
         }
 
         if(attributionsList.length > 0) {
+            let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+            let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
+            let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
+
             attributions = attributionsList.map(item => {
                 return <div key={item} data-attribution={attributionsObject[item].text}>
                     <div>{attributionsObject[item].text}</div>
-                    <textarea className="attribution-editor" name={item}></textarea>
+                    <textarea className="attribution-editor" name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                 </div>
             });
 
@@ -176,4 +229,15 @@ Sidebar.propTypes = {
     elementType : PropTypes.string,
 }
 
-export default Sidebar;
+const mapStateToProps = state => {
+    return {
+        activeElement: state.appStore.activeElement,
+    };
+};
+
+export default connect(
+    mapStateToProps, 
+    {
+        updateElement
+    }
+)(Sidebar);

@@ -107,10 +107,10 @@ export default {
         'primary-image-figure': {
             text: 'Figure Image',
             subtype: {
-                'secondary-image-figure-quarter': {
-                    text: '25% Text Width',
-                    labelText: 'FG'
-                },
+                // 'secondary-image-figure-quarter': {
+                //     text: '25% Text Width',
+                //     labelText: 'FG'
+                // },
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'FG'
@@ -235,15 +235,17 @@ export default {
             }
         }
     },
-    'others': {
+    'video-audio': {
         'primary-video': {
             text: 'Video',
             subtype: {
                 'secondary-video-smartlink': {
-                    text: 'SPP Video Link (sl)'
+                    text: 'SPP Video Link (sl)',
+                    labelText: 'VID'
                 },
                 'secondary-video-alfresco': {
-                    text: 'Alfresco Video Link'
+                    text: 'Alfresco Video Link',
+                    labelText: 'VID'
                 }
             }
         },
@@ -251,13 +253,17 @@ export default {
             text: 'Audio',
             subtype: {
                 'secondary-audio-smartlink': {
-                    text: 'SPP Audio Link (sl)'
+                    text: 'SPP Audio Link (sl)',
+                    labelText: 'AUD'
                 },
                 'secondary-audio-alfresco': {
-                    text: 'Alfresco Audio Link'
+                    text: 'Alfresco Audio Link',
+                    labelText: 'AUD'
                 }
             }
-        },
+        }
+    },
+    'others': {
         'primary-mmi': {
             text: 'MMI',
             subtype: {

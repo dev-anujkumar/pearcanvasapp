@@ -7,7 +7,7 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType } = props
+    const { esProps, elementType, slateType } = props
     let buttonRef = useRef(null)
     /**
      * @description: This hook is used for handling the outer click, 
@@ -54,12 +54,10 @@ export default function ElementSaprator(props) {
     
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
-            {!props.upperOne &&
                 <div className='elemDiv-split'>
-                    {elementType !== 'WE' ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {elementType !== 'WE' && !props.upperOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                         <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
                 </div>
-            }
 
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
@@ -72,7 +70,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps)}
+                            {renderDropdownButtons(esProps, slateType)}
                         </ul>
                     </div>
                 </div>
@@ -105,8 +103,17 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps) {
-    return esProps.map((elem, key) => {
+export function renderDropdownButtons(esProps, slateType) {
+    let updatedEsProps;
+    if(slateType && slateType !== 'container-introduction'){
+        updatedEsProps = esProps.filter((btnObj) => {
+            return btnObj.buttonType !== 'opener-elem';
+        })    
+    }else{
+        updatedEsProps = esProps;
+    }
+
+    return updatedEsProps.map((elem, key) => {
         return (
             <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                 <li key={key}>

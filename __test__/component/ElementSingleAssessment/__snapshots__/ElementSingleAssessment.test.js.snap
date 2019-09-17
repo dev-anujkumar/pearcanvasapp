@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Element Single Assessment component Render Single Assessment default  1`] = `
+<ElementSingleAssessment
+  elementId={[Function]}
+  index={[Function]}
+  model={
+    Object {
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "elementdata": Object {
+          "assessmentformat": "cite",
+          "assessmentid": "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+          "assessmentitemid": "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+          "assessmentitemtype": "assessmentItem",
+          "posterimage": Object {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png",
+          },
+          "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+          "usagetype": "Diagnostic",
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "subtype": "assessment",
+        "type": "element-assessment",
+      },
+      "figuretype": "assessment",
+      "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "subtype": "",
+      "title": Object {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Open response question updated",
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divAssessment"
+    >
+      <figure
+        className="figureAssessment"
+      >
+        <header>
+          <h4
+            className="heading4ImageTextWidthNumberLabel"
+          >
+            Open response question updated
+          </h4>
+        </header>
+        <div
+          className="singleAssessmentIdInfo"
+        >
+          <strong>
+            ID: 
+          </strong>
+          urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5
+        </div>
+        <div
+          className="singleAssessmentItemIdInfo"
+        >
+          <strong>
+            ITEM ID: 
+          </strong>
+          urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b
+        </div>
+        <div
+          className="singleAssessment_Dropdown_Container"
+        >
+          <div
+            className="singleAssessment_Dropdown_SelectLabel"
+          >
+            Select usage type
+          </div>
+          <div
+            className="singleAssessment_Dropdown_activeDropdown notselect"
+            onClick={[Function]}
+          >
+            <span
+              className="singleAssessment_Dropdown_currentLabel"
+            >
+              Diagnostic
+            </span>
+            <span
+              className="singleAssessment_Dropdown_arrow"
+            >
+              <svg
+                className="dropdown-arrow"
+                viewBox="0 0 9 4.5"
+              >
+                <path
+                  d="M0,0,4.5,4.5,9,0Z"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div
+          className="pearson-component image"
+          data-type="image"
+          data-uri=""
+        >
+          <img
+            alt=""
+            class="imageTextWidth lazyloaded imageeee"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+            src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+            title="View Image"
+          />
+        </div>
+      </figure>
+    </div>
+  </div>
+</ElementSingleAssessment>
+`;

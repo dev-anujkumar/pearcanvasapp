@@ -31,11 +31,11 @@ const initialState = {
         "commentCreator": "c5test01",
         "commentString": "sadsa",
         "commentStatus": "OPEN",
-        "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+        "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
         "replyComments": [{
             "commentCreator": "c5test01",
             "commentDateTime": "2019-08-25T04:56:38.241Z",
-            "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
             "commentString": "zxczcczz",
             "commentType": "commentReply"
         }],
@@ -48,11 +48,11 @@ const initialState = {
         "commentCreator": "c5test01",
         "commentString": "tester",
         "commentStatus": "OPEN",
-        "commentOnEntity": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+        "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
         "replyComments": [{
             "commentCreator": "c5test01",
             "commentDateTime": "2019-08-25T04:56:38.241Z",
-            "commentOnEntity": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
             "commentString": "zxczcczz",
             "commentType": "commentReply"
         }],
@@ -97,7 +97,6 @@ export default function (state = initialState, action) {
                 slateTitle: payload.title
             };
         case FETCH_COMMENT_BY_ELEMENT:
-            console.log("comments======>", state.allComments)
             let commentList = state.allComments
             let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload)
             return {
@@ -105,20 +104,17 @@ export default function (state = initialState, action) {
                 comments: comments
             }
         case TOGGLE_COMMENTS_PANEL:
-            console.log(payload);
             return {
                 ...state,
                 togglePanel: payload
             }
         case TOGGLE_REPLY:
-            console.log(payload);
             return {
                 ...state,
                 toggleReplyForm: payload
             }
         case REPLY_COMMENT:
             const commentsList = state.comments;
-            console.log("comment", commentsList)
             commentsList.forEach((comment, index) => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.replyComments.push(payload.reply)
@@ -156,7 +152,6 @@ export default function (state = initialState, action) {
                 comments: editComment
             }
         case GET_PROJECT_USER:
-            console.log("reducer==.")
             let users = payload;
             users = users.filter(user => user.isMember === true)
             return {

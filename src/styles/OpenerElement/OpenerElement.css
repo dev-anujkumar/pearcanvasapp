@@ -1,8 +1,8 @@
-.opener-label-box{
+.opener-element-container .opener-label-box{
     width: 34%;
     margin-right: 2px;
 }
-.element-dropdown-title{
+.opener-element-container .element-dropdown-title{
     width: 100%;
     height: 50px;
     border: solid 2px #e0e0e0;
@@ -11,14 +11,16 @@
     border-radius:4px;
     position: relative;
 }
-.input-box-container{
+.opener-element-container .input-box-container{
     display: flex;
 }
-.opener-label-text,.opener-number-text,.opener-title-text{
+.opener-element-container .opener-label-text,
+.opener-element-container .opener-number-text,
+.opener-element-container .opener-title-text{
     font-size: 14px;
     color: #6a7070;
 }
-.pearson-component.opener-image.figureData{
+.opener-element-container .pearson-component.opener-image.figureData{
     cursor: copy;
     width: 100%;
     height: 448px;
@@ -26,13 +28,13 @@
     place-items: center;
     background: #000000;
 }
-.pearson-component.opener-image.figureData>img{
+.opener-element-container .pearson-component.opener-image.figureData>img{
     width: 24%;
 }
-.element-dropdown-title.label-content{
+.opener-element-container .element-dropdown-title.label-content{
     padding: 10px 5px;
 }
-ul.element-dropdown-content{
+.opener-element-container ul.element-dropdown-content{
     position: absolute;
     z-index: 1;
     top: 48px;
@@ -47,7 +49,7 @@ ul.element-dropdown-content{
     box-shadow: 1px 1px 2px 1px rgba(148, 148, 148, 0.35);
     transition: all .15s ease-in-out; 
 }
-.element-dropdown-content li {
+.opener-element-container .element-dropdown-content li {
     cursor: pointer;
     display: block;
     list-style: none;
@@ -56,12 +58,12 @@ ul.element-dropdown-content{
     margin-bottom: 2px;
     width: 100%;
 }
-.element-dropdown-content li:hover {
+.opener-element-container .element-dropdown-content li:hover {
     background-color: #1565c0;
     transition: all .2s ease-in-out;
     color: white;
 }
-.element-dropdown-title.label-content>span{   
+.opener-element-container .element-dropdown-title.label-content>span{   
     width: 8px;
     height: 8px;
     float: right;
