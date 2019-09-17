@@ -1,6 +1,6 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { GlossaryFootnoteEditorConfig, EditorConfig } from '../config/EditorConfig';
+import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 
 export class ReactEditor extends React.Component {
   constructor(props) {
@@ -30,9 +30,7 @@ export class ReactEditor extends React.Component {
       e.preventDefault();
     });
   };
-  // handleEditorChange = (e) => {
-  //   tinymce.activeEditor.formatter.apply('p');
-  // }
+
   handleFocus = (e) => {
     if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
       return false;
@@ -47,7 +45,7 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + e.target.id;
     tinymce.init(this.editorConfig);
   }
-  
+
   render() {
     if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
       let activeEditorId = tinymce.activeEditor.id;
@@ -61,7 +59,6 @@ export class ReactEditor extends React.Component {
       <div >
         <Editor
           init={this.editorConfig}
-        // onChange={this.handleEditorChange}
         />
         <p className={this.props.className} placeholder={this.props.placeholder} onFocus={this.handleFocus} contentEditable="true" id={this.props.id} ></p>
       </div>
