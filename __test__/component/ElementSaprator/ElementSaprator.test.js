@@ -2,7 +2,62 @@ import React from 'react'
 import Button from '../../../src/component/ElementButtons/ElementButton.jsx'
 import ElementSaprator from '../../../src/component/ElementSaprator/'
 
-let wrapper, useEffect
+let wrapper, useEffect, esProps
+
+function splithandlerfunction(type) {
+    console.log(type);
+}
+
+esProps = [
+    {
+        buttonType: 'text-elem',
+        buttonHandler: () => splithandlerfunction('text-elem'),
+        tooltipText: 'Text',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'image-elem',
+        buttonHandler: () => splithandlerfunction('image-elem'),
+        tooltipText: 'Image',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'audio-elem',
+        buttonHandler: () => splithandlerfunction('audio-elem'),
+        tooltipText: 'Audio/Video',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'interactive-elem',
+        buttonHandler: () => splithandlerfunction('interactive-elem'),
+        tooltipText: 'Interactive',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'assessment-elem',
+        buttonHandler: () => splithandlerfunction('assessment-elem'),
+        tooltipText: 'Assessment',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'container-elem',
+        buttonHandler: () => splithandlerfunction('container-elem'),
+        tooltipText: 'Container',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'worked-exp-elem',
+        buttonHandler: () => splithandlerfunction('worked-exp-elem'),
+        tooltipText: 'Worked Example',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'opener-elem',
+        buttonHandler: () => splithandlerfunction('opener-elem'),
+        tooltipText: 'Opener Element',
+        tooltipDirection: 'left'
+    }
+]
 
 const mockUseEffect = () => {
     useEffect.mockImplementationOnce(cb => cb())
@@ -10,7 +65,7 @@ const mockUseEffect = () => {
 
 beforeEach(() => {
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( < ElementSaprator / > )
+    wrapper = shallow( < ElementSaprator esProps={esProps}/ > )
     mockUseEffect()
 })
 
@@ -22,7 +77,7 @@ describe('Testing ElementSaprator component', () => {
 
     describe('<ElementSaprator/> Rendering', () => {
             it('should have 9 buttons', () => {
-                    expect(wrapper.find(Button)).toHaveLength(9)
+                    expect(wrapper.find(Button)).toHaveLength(10)
                 }),
 
                 it('Should have 1 <hr/>', () => {
