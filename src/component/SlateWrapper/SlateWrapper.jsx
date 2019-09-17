@@ -217,6 +217,7 @@ class SlateWrapper extends Component {
             }
         } catch (error) {
             // handle error
+            console.error(error);
         }
     }
 
@@ -241,6 +242,7 @@ class SlateWrapper extends Component {
     }
 
 }
+SlateWrapper.displayName = "SlateWrapper"
 
 SlateWrapper.propTypes = {
     /** slate data attached to store and contains complete slate object */
