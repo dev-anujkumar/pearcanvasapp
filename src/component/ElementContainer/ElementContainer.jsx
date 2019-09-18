@@ -20,25 +20,46 @@ class ElementContainer extends Component {
             popup: false,
             comment:"",
             borderToggle : 'showBorder',
-            btnClassName : ''
+            btnClassName : '',
+            ElementId: ''
         };
         
     }
+    componentDidMount(){
+        this.setState({
+            ElementId: this.props.element.id
+        })
+        document.getElementsByClassName('element-container')[0].classList.add('active')
+        document.getElementsByClassName('element-label')[0].classList.add('activeTagBgColor')
+        document.getElementsByClassName('add-comment')[0].classList.add('activeTagBgColor')        
+    }
 
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(nextProps){
-        if(nextProps.elemBorderToggle !== this.props.elemBorderToggle){
-            if(nextProps.elemBorderToggle ==true){
+    componentWillReceiveProps(newProps){
+        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){
+            if(newProps.elemBorderToggle){
                 this.setState({
-                    borderToggle: 'showBorder',
+                    borderToggle : 'showBorder',
                     btnClassName : ''
                 })
             }else{
                 this.setState({
-                    borderToggle: 'hideBorder',
+                    borderToggle : 'hideBorder',
                     btnClassName : ''
                 })
+            } 
+        }else{
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+            })
+            document.getElementsByClassName('element-container')[0].classList.remove('active')
+            if(newProps.elemBorderToggle){
+                document.getElementsByClassName('element-label')[0].classList.remove('activeTagBgColor')
+                document.getElementsByClassName('add-comment')[0].classList.remove('activeTagBgColor')
             }
+            
+    
         }
     }
 
@@ -50,19 +71,7 @@ class ElementContainer extends Component {
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
-    handleBlur = () => {
-        if(this.props.elemBorderToggle){
-            this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
-            })
-        }else{
-            this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
-            })
-        } 
-    }
+    handleBlur = () => {}
 
     /**
      * Renders color-palette button for opener element 
@@ -235,7 +244,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
     
     return {
-        elemBorderToggle: state.toolbarReducer.elemBorderToggle
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        activeElement: state.appStore.activeElement.elementId
     }
 }
     
