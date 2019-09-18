@@ -4,7 +4,7 @@ let config = {
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "MfsqhrUcu66A5zOGDZDWH7hHOvc.*AAJTSQACMDIAAlNLABxHYkYydnFQNC94eGpQMW45ME1NMGtmcFBhV0E9AAJTMQACMDk.*",
+    ssoToken: "1QOFe0ICe7g2l4jr8fIvU7Wr3zM.*AAJTSQACMDIAAlNLABxZaTNwQnU0aCt5WVFGdVJDbDlhTzRXZ2RLREE9AAJTMQACMDk.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -15,8 +15,9 @@ let config = {
     ],
     projectUrn: "urn:pearson:distributable:e80d2cea-a0d2-474f-8896-82caa92a66d3",
     project_ENTITY_URN:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
-    WRAPPER_URL : 'https://localhost:4000' // TO BE CONFIGURED WITH TASKDEF
+    WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
+    LOCK_API_BASE_URL : 'http://localhost:3000'
 };
 
 export default config;

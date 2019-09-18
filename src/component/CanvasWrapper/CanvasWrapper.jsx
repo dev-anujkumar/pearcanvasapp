@@ -18,6 +18,7 @@ import config from './../../config/config';
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { getSlateLockStatus } from './SlateLock_Actions'
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -53,8 +54,22 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
+        // console.log("this.props.slateLevelData>>>", Object.keys(this.props.slateLevelData)[0])
+        let { projectUrn } = config,
+            slateId = this.state.activeSlate
+            // slateId = Object.keys(this.props.slateLevelData)[0]
+        this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
 
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        let { projectUrn } = config,
+            slateId = prevState.activeSlate,
+            newSlateId = Object.keys(nextProps.slateLevelData)[0]
+
+            if(newSlateId && slateId !== newSlateId){
+                nextProps.getSlateLockStatus(projectUrn ,slateId)
+            }
+    }
     componentDidUpdate(){
         if(this.state.navigation) {
             if(document.getElementById("cypress-0")){
@@ -156,6 +171,7 @@ export default connect(
         fetchSlateData,
         toggleCommentsPanel,
         fetchComments,
-        fetchCommentByElement
+        fetchCommentByElement,
+        getSlateLockStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
