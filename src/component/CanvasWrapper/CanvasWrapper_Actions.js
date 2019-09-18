@@ -98,7 +98,7 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-const defineElementTag = (bodymatter = {}) => {
+const defineElementTag = (bodymatter) => {
 	let tagList = {};
 	if (Object.keys(bodymatter).length > 0) {
 		bodymatter.forEach(element => {
@@ -119,6 +119,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		// }).then(slateData => {
 			// let contentUrn = slateData.data[manifestURN].contentUrn,
 			// title = slateData.data[manifestURN].contents.title.text
+			console.log("mockdata[manifestURN].contents.bodymatter",mockdata[manifestURN].contents.bodymatter);
 			dispatch({
 				type: SET_ELEMENT_TAG,
 				payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)

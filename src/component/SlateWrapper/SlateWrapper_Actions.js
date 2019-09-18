@@ -126,11 +126,14 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
             "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
         
        }
+    
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        // console.log("newParentData",newParentData)
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
+                // console.log("newParentData[key]",newParentData[key]);
                 newParentData[key].contents.bodymatter.splice(index, 0, createdFigureElemData);
             //}
         }
