@@ -1,4 +1,5 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss'
+import 'tinymce/plugins/charmap';
 export const EditorConfig = {
     formats: {
         // Changes the default format for h1 to have a class of heading
@@ -14,9 +15,9 @@ export const EditorConfig = {
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
-    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
+    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript charmap ',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder"
+    plugins: "lists advlist placeholder charmap"
 }
 
 export const GlossaryFootnoteEditorConfig = {
