@@ -57,7 +57,7 @@ export default {
             "text": "Heading 2"
         },
         "html": {
-            "text": "<h2 class=\"heading1NummerEins\">Heading 1</h2>"
+            "text": "<h2 class=\"heading2NummerEins\">Heading 1</h2>"
         },
         "comments": true,
         "tcm": true,
@@ -81,7 +81,7 @@ export default {
             "text": "Heading 3"
         },
         "html": {
-            "text": "<h3 class=\"heading1NummerEins\">Heading 1</h3>"
+            "text": "<h3 class=\"heading3NummerEins\">Heading 1</h3>"
         },
         "comments": true,
         "tcm": true,
@@ -105,7 +105,7 @@ export default {
             "text": "Heading 4"
         },
         "html": {
-            "text": "<h4 class=\"heading1NummerEins\">Heading 1</h4>"
+            "text": "<h4 class=\"heading4NummerEins\">Heading 1</h4>"
         },
         "comments": true,
         "tcm": true,
@@ -129,7 +129,7 @@ export default {
             "text": "Heading 5"
         },
         "html": {
-            "text": "<h5 class=\"heading1NummerEins\">Heading 1</h5>"
+            "text": "<h5 class=\"heading5NummerEins\">Heading 1</h5>"
         },
         "comments": true,
         "tcm": true,
@@ -153,7 +153,7 @@ export default {
             "text": "Heading 6"
         },
         "html": {
-            "text": "<h6 class=\"heading1NummerEins\">Heading 1</h6>"
+            "text": "<h6 class=\"heading6NummerEins\">Heading 1</h6>"
         },
         "comments": true,
         "tcm": true,
