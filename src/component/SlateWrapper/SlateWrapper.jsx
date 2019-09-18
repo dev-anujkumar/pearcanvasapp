@@ -9,7 +9,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement
+    createElement, createFigureElement
 } from './SlateWrapper_Actions';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -113,6 +113,13 @@ class SlateWrapper extends Component {
                 this.props.createElement("element-authoredtext", indexToinsert)
                 break;
             case 'image-elem':
+                var eleFigure = {
+                    "type": "figure",
+                    "figuretype": "image",
+                    "subtype": "image50Text",
+                    "alignment": "half-text",
+                }
+                this.props.createFigureElement(eleFigure, Number(index + 1))
                 break;
             case 'audio-elem':
                 break;
@@ -266,6 +273,6 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement
+        createElement,createFigureElement
     }
 )(SlateWrapper);
