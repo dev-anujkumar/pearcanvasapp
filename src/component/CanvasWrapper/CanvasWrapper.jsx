@@ -17,7 +17,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -97,7 +97,15 @@ class CanvasWrapper extends Component {
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });
+        // sendDataToIframe({
+        //     'type': ShowWrapperLoader,
+        //     'message': {}
+        // })
         this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
     }
 
     render() {
