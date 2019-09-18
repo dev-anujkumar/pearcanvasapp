@@ -98,7 +98,7 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-const defineElementTag = (bodymatter={}) => {
+const defineElementTag = (bodymatter = {}) => {
 	let tagList = {};
 	if (Object.keys(bodymatter).length > 0) {
 		bodymatter.forEach(element => {
