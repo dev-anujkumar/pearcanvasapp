@@ -17,7 +17,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle, ShowWrapperLoader } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -47,10 +47,6 @@ class CanvasWrapper extends Component {
         sendDataToIframe({
             'type': HideWrapperLoader,
             'message': { status: true }
-        })
-        sendDataToIframe({
-            'type': ShowWrapperLoader,
-            'message': {}
         })
         sendDataToIframe({
             'type': ShowHeader,

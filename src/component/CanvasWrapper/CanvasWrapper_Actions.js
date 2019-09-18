@@ -131,34 +131,8 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 					[manifestURN]: mockdata[manifestURN]
 				}//slateData.data
 			});
-			// sendDataToIframe({
-			// 	'type': HideWrapperLoader,
-			// 	'message': { status: true }
 			// })
-		// })
 	};
-// 	// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
-// 		axios.get(`${config.REACT_APP_API_URL}v1/slate/content/urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44/urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75`, {
-// 		headers: {
-// 			"Content-Type": "application/json",
-// 			"PearsonSSOSession": config.ssoToken
-// 		}
-// 	}).then(slateData => {
-// 		// let contentUrn = slateData.data[manifestURN].contentUrn,
-// 		// title = slateData.data[manifestURN].contents.title.text
-// 		dispatch({
-//         	type: SET_ELEMENT_TAG,
-// 			payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
-// 		});
-		
-//         dispatch({
-//         	type: FETCH_SLATE_DATA,
-// 			payload: {
-// 				[manifestURN]: mockdata[manifestURN]
-// 			}//slateData.data
-//         });
-// 	})
-// };
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
 	console.log('active Element::', activeElement);
