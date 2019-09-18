@@ -9,7 +9,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement
+    createElement ,createVideoElement
 } from './SlateWrapper_Actions';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -108,6 +108,13 @@ class SlateWrapper extends Component {
             case 'image-elem':
                 break;
             case 'audio-elem':
+                var elevideo = {
+                    "type": "figure",
+                    "figuretype": "video",
+                    "subtype": "figureVideo",
+                    "alignment": "full"
+                }
+                this.props.createVideoElement(elevideo, Number(index + 1))
                 break;
             case 'interactive-elem':
                 break;
@@ -259,6 +266,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement
+        createElement,
+        createVideoElement
     }
 )(SlateWrapper);
