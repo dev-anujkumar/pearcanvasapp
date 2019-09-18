@@ -129,11 +129,9 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
     
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        // console.log("newParentData",newParentData)
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-                // console.log("newParentData[key]",newParentData[key]);
                 newParentData[key].contents.bodymatter.splice(index, 0, createdFigureElemData);
             //}
         }
