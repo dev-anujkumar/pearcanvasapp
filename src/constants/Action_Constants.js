@@ -13,8 +13,12 @@ export const UPDATE_COMMENT = "UPDATE_COMMENT"
 export const GET_PROJECT_USER = "GET_PROJECT_USER"
 export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
+
+/*---------------Element Creation ----------------------*/ 
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
+export const VIDEO_ELEMENT_CREATED = 'VIDEO_ELEMENT_CREATED'
 export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
+
 /*---------------Element Container ----------------------*/ 
 export const ADD_COMMENT = "ADD_COMMENT"
 /*-----------------Toolbar----------------------------*/
