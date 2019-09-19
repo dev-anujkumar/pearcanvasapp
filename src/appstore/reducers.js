@@ -11,7 +11,8 @@ import {
     SET_ELEMENT_TAG,
     AUTHORING_ELEMENT_CREATED,
     ADD_COMMENT,
-    VIDEO_ELEMENT_CREATED
+    VIDEO_ELEMENT_CREATED,
+    ADD_COMMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -48,6 +49,11 @@ export default function (state = initialState, action) {
                 activeElement: action.payload
             }
         case AUTHORING_ELEMENT_CREATED:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
+        case FIGURE_ELEMENT_CREATED:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
