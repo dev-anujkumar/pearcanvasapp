@@ -12,7 +12,7 @@ import {
     AUTHORING_ELEMENT_CREATED,
     ADD_COMMENT,
     VIDEO_ELEMENT_CREATED,
-    ADD_COMMENT
+    FIGURE_ELEMENT_CREATED
 } from '../constants/Action_Constants';
 
 /**
