@@ -5,7 +5,7 @@ import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess } from
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import { exportAllDeclaration } from '@babel/types';
 
-describe('Testing <SlateWrapper> Component', () => {
+xdescribe('Testing <SlateWrapper> Component', () => {
     test('renders without crashing', () => {
         const div = document.createElement('div');
         ReactDOM.render(<SlateWrapper slateData={{}} />, div);

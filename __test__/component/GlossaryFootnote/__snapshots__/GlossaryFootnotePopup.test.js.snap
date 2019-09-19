@@ -69,11 +69,10 @@ exports[`Testing GlossaryFootnote component with props render Footnote  1`] = `
           >
             <ReactEditor
               className="definition-editor"
+              id="footnote-0"
               placeholder="Type Something"
             >
-              <div
-                className="definition-editor"
-              >
+              <div>
                 <Editor
                   cloudChannel="5"
                   init={
@@ -82,17 +81,26 @@ exports[`Testing GlossaryFootnote component with props render Footnote  1`] = `
                       "init_instance_callback": [Function],
                       "inline": true,
                       "menubar": false,
-                      "selector": ".definition-editor",
+                      "object_resizing": false,
+                      "plugins": "placeholder",
+                      "selector": "#glossary-0",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "statusbar": false,
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
-                  onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_53811291681568384695061"
+                    id="tiny-react_39815693681568900216070"
                   />
                 </Editor>
+                <p
+                  className="definition-editor"
+                  contentEditable="true"
+                  id="footnote-0"
+                  onFocus={[Function]}
+                  placeholder="Type Something"
+                />
               </div>
             </ReactEditor>
           </div>
@@ -188,11 +196,10 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
           >
             <ReactEditor
               className="definition-editor"
+              id="glossary-0"
               placeholder="Type Something"
             >
-              <div
-                className="definition-editor"
-              >
+              <div>
                 <Editor
                   cloudChannel="5"
                   init={
@@ -201,17 +208,26 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                       "init_instance_callback": [Function],
                       "inline": true,
                       "menubar": false,
-                      "selector": ".definition-editor",
+                      "object_resizing": false,
+                      "plugins": "placeholder",
+                      "selector": "#glossary-0",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "statusbar": false,
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
-                  onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_88003596761568384695046"
+                    id="tiny-react_61003872361568900216056"
                   />
                 </Editor>
+                <p
+                  className="definition-editor"
+                  contentEditable="true"
+                  id="glossary-0"
+                  onFocus={[Function]}
+                  placeholder="Type Something"
+                />
               </div>
             </ReactEditor>
           </div>
@@ -230,11 +246,10 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
           >
             <ReactEditor
               className="definition-editor"
+              id="glossary-1"
               placeholder="Type Something"
             >
-              <div
-                className="definition-editor"
-              >
+              <div>
                 <Editor
                   cloudChannel="5"
                   init={
@@ -243,17 +258,26 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                       "init_instance_callback": [Function],
                       "inline": true,
                       "menubar": false,
-                      "selector": ".definition-editor",
+                      "object_resizing": false,
+                      "plugins": "placeholder",
+                      "selector": "#glossary-0",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "statusbar": false,
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
-                  onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_85718437571568384695047"
+                    id="tiny-react_56775227071568900216058"
                   />
                 </Editor>
+                <p
+                  className="definition-editor"
+                  contentEditable="true"
+                  id="glossary-1"
+                  onFocus={[Function]}
+                  placeholder="Type Something"
+                />
               </div>
             </ReactEditor>
           </div>
@@ -349,11 +373,10 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
           >
             <ReactEditor
               className="definition-editor"
+              id="glossary-0"
               placeholder="Type Something"
             >
-              <div
-                className="definition-editor"
-              >
+              <div>
                 <Editor
                   cloudChannel="5"
                   init={
@@ -362,17 +385,26 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                       "init_instance_callback": [Function],
                       "inline": true,
                       "menubar": false,
-                      "selector": ".definition-editor",
+                      "object_resizing": false,
+                      "plugins": "placeholder",
+                      "selector": "#glossary-0",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "statusbar": false,
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
-                  onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_79109996241568384695013"
+                    id="tiny-react_7440702841568900216037"
                   />
                 </Editor>
+                <p
+                  className="definition-editor"
+                  contentEditable="true"
+                  id="glossary-0"
+                  onFocus={[Function]}
+                  placeholder="Type Something"
+                />
               </div>
             </ReactEditor>
           </div>
@@ -391,11 +423,10 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
           >
             <ReactEditor
               className="definition-editor"
+              id="glossary-1"
               placeholder="Type Something"
             >
-              <div
-                className="definition-editor"
-              >
+              <div>
                 <Editor
                   cloudChannel="5"
                   init={
@@ -404,17 +435,26 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                       "init_instance_callback": [Function],
                       "inline": true,
                       "menubar": false,
-                      "selector": ".definition-editor",
+                      "object_resizing": false,
+                      "plugins": "placeholder",
+                      "selector": "#glossary-0",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "statusbar": false,
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
-                  onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_80872346151568384695014"
+                    id="tiny-react_13941918051568900216043"
                   />
                 </Editor>
+                <p
+                  className="definition-editor"
+                  contentEditable="true"
+                  id="glossary-1"
+                  onFocus={[Function]}
+                  placeholder="Type Something"
+                />
               </div>
             </ReactEditor>
           </div>
