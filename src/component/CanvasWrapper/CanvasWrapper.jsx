@@ -149,7 +149,7 @@ class CanvasWrapper extends Component {
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            {/* <span className='--rm-place'>Settings</span> */}
+              {/* <span className='--rm-place'>Settings</span> */}
                             <Sidebar slateId={this.state.activeSlate} />
                             {/* put side setting */}
                         </div>

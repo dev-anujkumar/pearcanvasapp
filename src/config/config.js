@@ -4,7 +4,7 @@ let config = {
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "1QOFe0ICe7g2l4jr8fIvU7Wr3zM.*AAJTSQACMDIAAlNLABxZaTNwQnU0aCt5WVFGdVJDbDlhTzRXZ2RLREE9AAJTMQACMDk.*",
+    ssoToken: "3_m5THo_btpuFIfBXTV6MLF3zjA.*AAJTSQACMDIAAlNLABwrV3N5SVdXL2t1enh6eU5XdjN6RkFuWXV4YkU9AAJTMQACMDM.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -17,7 +17,7 @@ let config = {
     project_ENTITY_URN:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
-    LOCK_API_BASE_URL : 'http://localhost:3000'
+    LOCK_API_BASE_URL : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr'
 };
 
 export default config;

@@ -23,3 +23,6 @@ export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
 export const ADD_COMMENT = "ADD_COMMENT"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
+
+/*---------------Slate Lock -------------------*/
+export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"
