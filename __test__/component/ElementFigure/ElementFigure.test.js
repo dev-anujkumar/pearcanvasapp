@@ -196,15 +196,8 @@ describe('Testing Figure element component', () => {
         it('onClick', () => {
             elementFigureInstance.onClick();
         })
-        it('onBlur', () => {
-            elementFigureInstance.onBlur();
-        })
         it('onKeyup', () => {
             elementFigureInstance.onKeyup();
-        })
-    
-        it('onFocus', () => {
-            elementFigureInstance.onFocus();
         })
     })
     
