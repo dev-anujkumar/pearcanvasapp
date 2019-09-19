@@ -12,6 +12,7 @@ import {
     createElement ,createVideoElement
     , createFigureElement
 } from './SlateWrapper_Actions';
+import ListComponent from '../ListComponent'; // In Testing Phase
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -69,8 +70,9 @@ class SlateWrapper extends Component {
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    this.renderElement(_slateBodyMatter, _slateType)
+                                    // this.renderElement(_slateBodyMatter, _slateType)
                                 }
+                                <ListComponent />
                             </div>
                             <SlateFooter />
                         </div>
