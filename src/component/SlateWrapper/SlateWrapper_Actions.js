@@ -43,21 +43,21 @@ export const createElement = (type, index) => (dispatch, getState) => {
 };
 
 export const createVideoElement = (video, index) => (dispatch, getState) => {
-    let _requestData = {
-        "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
-        "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
-        "slateUrn": "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
-        "type": video.type,
-        "index": index,
-        "figuretype": video.figuretype,
-        "subtype": video.subtype,
-        "alignment": video.alignment,
-        "figuredata": {
-            "posterimage": {
-            "path": ""
-            },
-            },
-    };
+    // let _requestData = {
+    //     "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
+    //     "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
+    //     "slateUrn": "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
+    //     "type": video.type,
+    //     "index": index,
+    //     "figuretype": video.figuretype,
+    //     "subtype": video.subtype,
+    //     "alignment": video.alignment,
+    //     "figuredata": {
+    //         "posterimage": {
+    //         "path": ""
+    //         },
+    //         },
+    // };
 
     var createdVideoData = {
        
@@ -153,7 +153,6 @@ export const createVideoElement = (video, index) => (dispatch, getState) => {
         }
         
         dispatch({
-          //  type: AUTHORING_ELEMENT_CREATED,
           type: VIDEO_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData

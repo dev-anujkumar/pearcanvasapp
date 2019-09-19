@@ -141,3 +141,6 @@
   from {top: 30%; opacity: 0}
   to {top: 38%; opacity: 1}
 }
+.dialog-input textarea {
+  resize: none;
+}
