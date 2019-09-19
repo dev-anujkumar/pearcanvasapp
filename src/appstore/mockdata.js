@@ -203,8 +203,7 @@ export default {
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 },
                 {
-        
-                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec465",
                     "type": "figure",
                     "figuretype": "image",
                     "subtype": "image50Text",
@@ -325,7 +324,7 @@ export default {
                 },
                 {
        
-                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
                     "type": "figure",
                     "figuretype": "video",
                     "subtype": "figureVideo",
