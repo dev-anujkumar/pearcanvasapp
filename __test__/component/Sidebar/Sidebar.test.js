@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import Sidebar from '../../../src/component/Sidebar';
 
-describe('Test for Sidebar component', () => {
+xdescribe('Test for Sidebar component', () => {
     let props = {
         elementType: 'element-authoredtext'
     };
