@@ -7,7 +7,6 @@ import {
 	SET_ELEMENT_TAG
 } from '../../constants/Action_Constants';
 import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
-import {HideWrapperLoader} from '../../constants/IFrameMessageTypes';
 import elementTypes from './../Sidebar/elementTypes';
 
 const findElementType = (element) => {

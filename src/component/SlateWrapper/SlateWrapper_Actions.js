@@ -5,8 +5,6 @@ import {
     VIDEO_ELEMENT_CREATED
     ,FIGURE_ELEMENT_CREATED
 } from '../../constants/Action_Constants';
-import { sendDataToIframe } from '../../constants/utility.js';
-import { HideWrapperLoader, ShowWrapperLoader } from '../../constants/IFrameMessageTypes.js';
 let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
