@@ -112,7 +112,11 @@ class CanvasWrapper extends Component {
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });
-        this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+          this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
     }
 
     render() {
