@@ -22,12 +22,17 @@ class ElementAsideContainer extends Component {
     componentDidMount(){
         this.aside.addEventListener("focus", this.props.handleFocus);
     }
-    
+
     componentWillUnmount(){
        this.aside.removeEventListener("focus", this.props.handleFocus);
     }
 
-    /*** renderSlate | renders slate editor area with all elements it contain*/
+       /**
+    * 
+    * @discription - renderSlate | renders slate editor area with all elements it contain
+    * @param {string} element -object of element
+    */ 
+   
     renderContainer({ element: _containerData }) {
           try {
         if (_containerData !== null && _containerData !== undefined) {
@@ -36,59 +41,49 @@ class ElementAsideContainer extends Component {
                 let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
                 let parentEntityUrn = _containerData.contentUrn;
                 return (
-                    <div container-id={parentEntityUrn} container-type={_containerType}>
+                    <div className = "container-aside" container-id={parentEntityUrn} container-type={_containerType}>
                         {
                             this.renderElement(_bodyMatter,parentEntityUrn)
                         }
                     </div>
                 )
             }
-            else {
-                return (
-                    <React.Fragment>
-                        {/*    <LargeLoader />
-                            <LargeLoader />
-                            <LargeLoader />
-                            <LargeLoader /> */}
-                        <div></div>
-                    </React.Fragment>
-                )
-            }
-        }
-        else {
-            // handle error
         }
          } catch (error) {
             // handle error
         } 
     }
+        /**
+    * 
+    * @discription - This function is section break
+    * @param {string} element -object of element
+    */
     section(element) {
-        let firstSection = true;
+       
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentEntityUrn = element.contentUrn;
-        if (firstSection) {
             return (
-                <div container-id = {parentEntityUrn}>
+                <div className = "section" container-id = {parentEntityUrn}>
                     <hr className="section-break" />
                     {this.renderElement(_containerBodyMatter,parentEntityUrn)}
                 </div>
             )
-        }
-        else {
-
-        }
-
     }
+
+      /**
+    * 
+    * @discription - This function is section break
+    * @param {string} _elements -object of element
+    */
  
     sectionBreak(_element,index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        let parentEntityUrn = element.contentUrn;
+        let parentEntityUrn = _element.contentUrn;
         const {elemBorderToggle,borderToggle} = this.props
         return (
-            <div container-id = {parentEntityUrn}>
-
+            <div className = "section-break" container-id = {parentEntityUrn}>
                 <SectionSeperator 
                     elemBorderToggle = {elemBorderToggle}
                     borderToggle = {borderToggle}
@@ -100,9 +95,12 @@ class ElementAsideContainer extends Component {
 
     }
 
-    /**
-     * renderElement | renders single element according to its type
-     */
+     /**
+    * 
+    * @discription - This function is renders element
+    * @param {string} _elements -object of element
+    * @param {string} parentEntityUrn -parent Entity urn for add new element
+    */
     renderElement(_elements,parentEntityUrn) {
         let firstSection = true;
            try {
@@ -143,11 +141,9 @@ class ElementAsideContainer extends Component {
 
             })
         }
-        else {
-            // handle error
-        }
+
       } catch (error) {
-        // handle error
+        console.log("error",error)
      }
     }
 

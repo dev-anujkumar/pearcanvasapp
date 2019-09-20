@@ -12,7 +12,11 @@ class SectionSeperator extends React.Component {
             btnClassName:""
         }
     }
-
+    
+ /**
+    * 
+    * @discription - This function handles the click event on section
+    */ 
      handleSeperator = (e) =>{
         e.stopPropagation();
         e.preventDefault();
@@ -20,9 +24,13 @@ class SectionSeperator extends React.Component {
             sectionFocus: true,
             btnClassName: 'activeTagBgColor'
         }) 
-       
     }
 
+     /**
+    * 
+    * @discription - This function handles the blur event on section
+    */ 
+   
      handleSeperatorBlur = (e)=>{
         e.stopPropagation();
         e.preventDefault();
@@ -36,7 +44,7 @@ class SectionSeperator extends React.Component {
         const {elemBorderToggle,borderToggle} = this.props;
         let showBorder = `section-seperator ${sectionFocus?"section-seperator-focus":""}`
         return (
-            <div tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur} 
+            <div className = "aside-section-seperator" tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur} 
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
 
@@ -54,8 +62,8 @@ class SectionSeperator extends React.Component {
 }
 
 SectionSeperator.propTypes = {
-    elemBorderToggle: PropTypes.string.isRequired,
-    borderToggle:PropTypes.string.isRequired
+    elemBorderToggle: PropTypes.bool,
+    borderToggle:PropTypes.string
 }
 
 export default SectionSeperator
