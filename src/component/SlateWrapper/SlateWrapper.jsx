@@ -12,6 +12,7 @@ import {
     createElement ,createVideoElement
     , createFigureElement , createInteractiveElement
 } from './SlateWrapper_Actions';
+import { sendDataToIframe } from '../../constants/utility.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -109,18 +110,27 @@ class SlateWrapper extends Component {
         } else {
             indexToinsert = Number(index + 1)
         }
+
+        sendDataToIframe({
+            'type': 'ShowLoader',
+            'message': { status: true }
+        });
+
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", indexToinsert)
+                this.props.createElement("element-authoredtext", indexToinsert);
                 break;
             case 'image-elem':
+                
                 var eleFigure = {
                     "type": "figure",
                     "figuretype": "image",
                     "subtype": "image50Text",
                     "alignment": "half-text",
                 }
-                this.props.createFigureElement(eleFigure, Number(index + 1))
+                setTimeout(() => {
+                    this.props.createFigureElement(eleFigure, Number(index + 1))
+                },1000)
                 break;
             case 'audio-elem':
                 var elevideo = {
@@ -129,7 +139,9 @@ class SlateWrapper extends Component {
                     "subtype": "figureVideo",
                     "alignment": "full"
                 }
-                this.props.createVideoElement(elevideo, Number(index + 1))
+                setTimeout(() => {
+                    this.props.createVideoElement(elevideo, Number(index + 1))
+                },1000)
                 break;
             case 'interactive-elem':
                     var eleInteractive = {

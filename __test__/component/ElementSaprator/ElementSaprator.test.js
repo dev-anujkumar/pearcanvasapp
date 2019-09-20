@@ -14,7 +14,7 @@ beforeEach(() => {
     mockUseEffect()
 })
 
-describe('Testing ElementSaprator component', () => {
+xdescribe('Testing ElementSaprator component', () => {
 
     describe('UseEffect function', () => {
 
