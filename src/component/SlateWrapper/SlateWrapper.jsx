@@ -100,7 +100,7 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index) => {
+    splithandlerfunction = (type, index,_parentUrn) => {
         switch (type) {
             case 'text-elem':
                 this.props.createElement("element-authoredtext", Number(index + 1))
@@ -114,9 +114,10 @@ class SlateWrapper extends Component {
             case 'assessment-elem':
                 break;
             case 'container-elem':
+                  this.props.createElement("element-aside", Number(index + 1))
                 break;
             case 'worked-exp-elem':
-                   this.props.createElement("element-aside", Number(index + 1))
+                   this.props.createElement("workedexample", Number(index + 1))
                 break;
             case 'opener-elem':
                 break;
@@ -124,7 +125,7 @@ class SlateWrapper extends Component {
         }
     }
 
-    elementSepratorProps = (index) => {
+    elementSepratorProps = (index,_parentUrn) => {
         return [
             {
                 buttonType: 'text-elem',
@@ -164,7 +165,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index,_parentUrn),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
@@ -201,6 +202,7 @@ class SlateWrapper extends Component {
                                 index={index}
                                 labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
+                                elementSepratorProps = {this.elementSepratorProps}
                             />
                             <ElementSaprator
                                 index={index}

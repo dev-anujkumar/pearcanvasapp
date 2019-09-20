@@ -110,7 +110,20 @@ const defineElementTag = (bodymatter = {}) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
+	dispatch({
+		type: SET_ELEMENT_TAG,
+		payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
+	});
+
+
+	dispatch({
+		type: FETCH_SLATE_DATA,
+		payload: {
+			[manifestURN]: mockdata[manifestURN]
+		}//slateData.data
+	});
+
+	/* axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -132,7 +145,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				[manifestURN]: mockdata[manifestURN]
 			}//slateData.data
 		});
-	})
+	}) */
 };
 
 export const setActiveElement = (activeElement = {}) => dispatch => {

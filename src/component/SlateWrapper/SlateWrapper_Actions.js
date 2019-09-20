@@ -3,8 +3,9 @@ import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
 } from '../../constants/Action_Constants';
-import {elementAside} from '../../../fixtures/elementAsideData';
-/* export const createElement = (type, index) => (dispatch, getState) => {
+import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
+import { slateLevelData, newslateData } from "../../../fixtures/slateTestingData"
+ export const createElement = (type, index) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
         "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
@@ -12,6 +13,7 @@ import {elementAside} from '../../../fixtures/elementAsideData';
         "type": type,
         "index": index
     };
+
 
     axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
@@ -24,10 +26,17 @@ import {elementAside} from '../../../fixtures/elementAsideData';
     ).then(createdElemData => {
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(type == "workedexample"){
+            createdElementData = elementAsideWorkExample
+        }
+        if(type == "element-aside"){
+            createdElementData = elementAside
+        }
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-                newParentData[key].contents.bodymatter.splice(index, 0, createdElemData.data);
+                newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
             //}
         }
         
@@ -38,22 +47,29 @@ import {elementAside} from '../../../fixtures/elementAsideData';
             }
         })
 
-    })
-}; */
-
-export const createElement = (type, index) => (dispatch,getState) => {
-
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    for (let key in newParentData) {
-        for (let k in newParentData[key]) {
-            newParentData[key][k].contents.bodymatter.splice(index, 0, elementAside);
+    }).catch(error => {
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData;
+        if(type == "workedexample"){
+            createdElementData = elementWorkExample
         }
-    }
-    dispatch({
-        type: AUTHORING_ELEMENT_CREATED,
-        payload: {
-            slateLevelData: newParentData
+        if(type == "element-aside"){
+            createdElementData = elementAside
         }
+        for (let key in newParentData) {
+            //for (let k in newParentData[key]) {
+                // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
+                newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
+            //}
+        }
+        
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+        console.log("create Api fail", error);
     })
-};
+}; 

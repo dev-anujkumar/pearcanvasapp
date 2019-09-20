@@ -6,210 +6,157 @@ import { connect } from 'react-redux';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
-
+import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
+import SectionSeperator from './SectionSeperator.jsx';
 // IMPORT - Assets //
 
 class ElementAsideContainer extends Component {
     constructor(props) {
         super(props);
+        this.state= {
+            sectionFocus:false,
+            btnClassName:""
 
-    }
-
-    elementSepratorProps = (index) => {
-        return [
-            {
-                buttonType: 'text-elem',
-                buttonHandler: () => this.splithandlerfunction('text-elem', index),
-                tooltipText: 'Text',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index),
-                tooltipText: 'Image',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'audio-elem',
-                buttonHandler: () => this.splithandlerfunction('audio-elem', index),
-                tooltipText: 'Audio/Video',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'interactive-elem',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem', index),
-                tooltipText: 'Interactive',
-                tooltipDirection: 'left'
-            },
-            {
-                buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index),
-                tooltipText: 'Assessment',
-                tooltipDirection: 'left'
-            }
-        ]
-
-    }
-    splithandlerfunction = (type, index) => {
-        switch (type) {
-            case 'text-elem':
-                this.props.createElement("element-authoredtext", Number(index + 1))
-                break;
-            case 'image-elem':
-                break;
-            case 'audio-elem':
-                break;
-            case 'interactive-elem':
-                break;
-            case 'assessment-elem':
-                break;
-            case 'container-elem':
-                break;
-            case 'worked-exp-elem':
-                   this.props.createElement("element-aside", Number(index + 1))
-                break;
-            case 'opener-elem':
-                break;
-            default:
         }
+    }
+    componentDidMount(){
+        this.aside.addEventListener("focus", this.props.handleFocus);
     }
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
-     renderContainer({ element: _slateData }) {
-      //  try {
-            if (_slateData !== null && _slateData !== undefined) {
-                if (Object.values(_slateData).length > 0) {
-                    let { id: _slateId, type: _slateType, contents: _slateContent, elementdata: _elementData } = _slateData;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent || _elementData ;
-                    return (
-                        <div slate-id={_slateId} slate-type={_slateType}>
-                                {
-                                    this.renderElement(_slateBodyMatter)
-                                }
-                        </div>
-                    )
-                }
-                else {
-                    return (
-                        <React.Fragment>
-                         {/*    <LargeLoader />
+    renderContainer({ element: _containerData }) {
+          try {
+        if (_containerData !== null && _containerData !== undefined) {
+            if (Object.values(_containerData).length > 0) {
+                let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
+                let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
+                return (
+                    <div container-id={_containerId} container-type={_containerType}>
+                        {
+                            this.renderElement(_bodyMatter,)
+                        }
+                    </div>
+                )
+            }
+            else {
+                return (
+                    <React.Fragment>
+                        {/*    <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader /> */}
-                            <div></div>
-                        </React.Fragment>
-                    )
-                }
+                        <div></div>
+                    </React.Fragment>
+                )
             }
-            else {
-                // handle error
-            }
-        /* } catch (error) {
+        }
+        else {
             // handle error
-        } */
-    } 
-    section(element) {
-
-        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
-        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData ;
-        if(firstSection){
-            return (
-                <div>
-                <hr style = {{"border" : "0.5px solid black","margin-top":"20px"}}/>
-                {this.renderElement(_containerBodyMatter)}
-               </div>
-            )
         }
-        else{
-
-        }
-      
+         } catch (error) {
+            // handle error
+        } 
     }
-
-    sectionBreak(element) {
-
+    section(element) {
+        let firstSection = true;
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
-        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData ;
-        if(firstSection){
+        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        if (firstSection) {
             return (
                 <div>
-                <hr className = "section-break"/>
-                {this.renderElement(_containerBodyMatter)}
-               </div>
+                    <hr className="section-break" />
+                    {this.renderElement(_containerBodyMatter)}
+                </div>
             )
         }
-        else{
+        else {
 
         }
-      
+
+    }
+ 
+    sectionBreak(_element,index) {
+        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
+        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        const {elemBorderToggle,borderToggle} = this.props
+        return (
+            <div>
+
+                <SectionSeperator 
+                    elemBorderToggle = {elemBorderToggle}
+                    borderToggle = {borderToggle}
+                 />
+                {this.renderElement(_containerBodyMatter)}
+             
+            </div>
+        )
+
     }
 
     /**
      * renderElement | renders single element according to its type
      */
-     renderElement(_elements) {
-         let firstSection = true;
-    //    try {
-            if (_elements !== null && _elements !== undefined) {
-                return _elements.map((element, index) => {
-                    if(element.type == "manifest" && firstSection ){
-                        firstSection = false;
-                     return  this.section(element);
-                    }else if ( element.type == "manifest" && !firstSection){
-                        return  this.sectionBreak(element);
-                    }
-                    else{
-                        return (
-                            <React.Fragment>
-                             {index === 0 && <ElementSaprator
-                                    upperOne={true}
-                                    index={index}
-                                    key={`elem-separtor-${element.id}`}
-                                    esProps={this.elementSepratorProps(index)}
-                                    elementType={element.type}
-                                />
-                                } 
-                                <ElementContainer
-                                    element={element}
-                                    key={element.id}
-                                    index={index}
-                                   // handleCommentspanel={this.props.handleCommentspanel}
-                                />
-                                <ElementSaprator
-                                    index={index}
-                                    key={`elem-separtor-${element.id}`}
-                                    esProps={this.elementSepratorProps(index)}
-                                    elementType={element.type}
-                                />
-                            </React.Fragment>
-                        )
-                    }
-           
-                })
-            }
-            else {
-                // handle error
-            }
-    //    } catch (error) {
+    renderElement(_elements) {
+        let firstSection = true;
+           try {
+        if (_elements !== null && _elements !== undefined) {
+            return _elements.map((element, index) => {
+                if (element.type == "manifest" && firstSection) {
+                    firstSection = false;
+                    return this.section(element);
+                } else if (element.type == "manifest" && !firstSection) {
+                    return this.sectionBreak(element,index);
+                }
+                else {
+                    return (
+                        <React.Fragment>
+                            {index === 0 && !this.props.element.subtype && <ElementSaprator
+                                upperOne={true}
+                                index={index}
+                                key={`elem-separtor-${element.id}`}
+                                esProps={this.props.elementSepratorProps(index)}
+                                elementType={this.props.element.type}
+                            />
+                            }
+                            <ElementContainer
+                                element={element}
+                                key={element.id}
+                                index={index}
+                            // handleCommentspanel={this.props.handleCommentspanel}
+                            />
+                            <ElementSaprator
+                                index={index}
+                                key={`elem-separtor-${element.id}`}
+                                esProps={this.props.elementSepratorProps(index)}
+                                elementType={this.props.element.type}
+                            />
+                        </React.Fragment>
+                    )
+                }
+
+            })
+        }
+        else {
             // handle error
-      //  }
-    } 
+        }
+      } catch (error) {
+        // handle error
+     }
+    }
 
     /**
      * render | renders title and slate wrapper
      */
     render() {
+        const { element } = this.props
         return (
-           // <React.Fragment>
-                <div>
-                    
-                       { this.renderContainer(this.props)}
-                    
-                </div>
-            //</React.Fragment>
+           <div  className = "aside-container" tabIndex="0" onBlur = {this.props.handleBlur} ref={elem => this.aside = elem} >
+                {element.subtype == "workedexample" ? <hr className={`aside-horizotal-break ${element.designtype == "workedexample2"? 'aside-horizotal-break-green':""}`} /> : ""}
+                {this.renderContainer(this.props)}
+                 {element.subtype == "workedexample" ?<hr className= {`aside-break-bottom ${element.designtype == "workedexample2"? 'aside-break-bottom-green':""}`}></hr>:""}
+           </div>
         );
     }
-
 }
 
 ElementAsideContainer.propTypes = {
@@ -217,18 +164,4 @@ ElementAsideContainer.propTypes = {
     element: PropTypes.object.isRequired
 }
 
-/* const mapStateToProps = state => {
-    return {
-
-    };
-}; */
-
-
-/* export default connect(
-    null,
-    {
-        createElement
-    }
-)(ElementAsideContainer);
- */
 export default ElementAsideContainer;

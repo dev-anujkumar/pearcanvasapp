@@ -65,7 +65,7 @@ class CanvasWrapper extends Component {
                 navigation: false
             });
         } else {
-            if(window.tinymce.activeEditor) {
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
         }

@@ -9,21 +9,21 @@ import ElementAsideContainer from './../ElementAsideContainer';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
-import {addComment} from './ElementContainer_Actions';
+import { addComment } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
-import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
+import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
             popup: false,
-            comment:"",
-            borderToggle : 'showBorder',
-            btnClassName : ''
+            comment: "",
+            borderToggle: 'showBorder',
+            btnClassName: ''
         };
-        
+
     }
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(nextProps) {
@@ -31,12 +31,12 @@ class ElementContainer extends Component {
             if (nextProps.elemBorderToggle == true) {
                 this.setState({
                     borderToggle: 'showBorder',
-                    btnClassName : ''
+                    btnClassName: ''
                 })
             } else {
                 this.setState({
                     borderToggle: 'hideBorder',
-                    btnClassName : ''
+                    btnClassName: ''
                 })
             }
         }
@@ -44,8 +44,8 @@ class ElementContainer extends Component {
 
     handleFocus = () => {
         this.setState({
-            borderToggle : 'active',
-            btnClassName : 'activeTagBgColor'
+            borderToggle: 'active',
+            btnClassName: 'activeTagBgColor'
         })
         this.props.fetchCommentByElement(this.props.element.id);
     }
@@ -53,13 +53,13 @@ class ElementContainer extends Component {
     handleBlur = () => {
         if (this.props.elemBorderToggle) {
             this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
+                borderToggle: 'showBorder',
+                btnClassName: ''
             })
         } else {
             this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
+                borderToggle: 'hideBorder',
+                btnClassName: ''
             })
         }
     }
@@ -69,32 +69,28 @@ class ElementContainer extends Component {
      * @param {e} event
      */
     renderColorPaletteButton = (element) => {
-        if(element.type === "opener"){
-            return <Button type="color-palette" />  
+        if (element.type === "opener") {
+            return <Button type="color-palette" />
         }
-        else{
+        else {
             return null
         }
     }
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { labelText, index, handleCommentspanel} = this.props;
-        switch(element.type) {
+        let { labelText, index, handleCommentspanel,elementSepratorProps } = this.props;
+        switch (element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
-                break;
-            case elementTypeConstant.ELEMENT_ASIDE:
-                editor = <ElementAsideContainer index={index} element = {element} elementId={element.id} type={element.type} model={element.html} />;
-                labelText = 'WE';
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
             case elementTypeConstant.FIGURE:
 
@@ -128,36 +124,47 @@ class ElementContainer extends Component {
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} />;
+                        editor = <ElementSingleAssessment   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} />;
                         labelText = 'QU';
                         break;
                 }
                 break;
+            case elementTypeConstant.ELEMENT_ASIDE:
+                switch (element.subtype) {
+
+                    case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
+                        editor = <ElementAsideContainer  handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        labelText = 'WE';
+                        break;
+                    default:
+                        editor = <ElementAsideContainer handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        labelText = 'AS';
+                }
         }
-        
-        return(
-            <div className = "editor" >
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
-                <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element" />
-                {this.renderColorPaletteButton(element)}
-            </div>
-            : ''}
-            <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
-                {editor}
-            </div>
-            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
-                <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
-                {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
-                {element.tcm && <Button type="tcm" />}
-                </div> :''}
-            { this.state.popup && <PopUp 
-                togglePopup={e => this.handleCommentPopup(e, this)} 
-                active={this.state.popup} 
-                handleChange={this.handleCommentChange}
-                saveContent={this.saveNewComment}
-                rows={COMMENTS_POPUP_ROWS}
-                dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+
+        return (
+            <div className="editor" >
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                    <Button type="element-label" btnClassName={this.state.btnClassName} labelText={labelText} />
+                    <Button type="delete-element" />
+                    {this.renderColorPaletteButton(element)}
+                </div>
+                    : ''}
+                <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
+                    {editor}
+                </div>
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                    <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
+                    {element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
+                    {element.tcm && <Button type="tcm" />}
+                </div> : ''}
+                {this.state.popup && <PopUp
+                    togglePopup={e => this.handleCommentPopup(e, this)}
+                    active={this.state.popup}
+                    handleChange={this.handleCommentChange}
+                    saveContent={this.saveNewComment}
+                    rows={COMMENTS_POPUP_ROWS}
+                    dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                 />}
             </div >
         );
@@ -167,7 +174,7 @@ class ElementContainer extends Component {
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
      */
-    handleCommentPopup(popup){
+    handleCommentPopup(popup) {
         this.setState({
             popup
         });
@@ -184,19 +191,19 @@ class ElementContainer extends Component {
      * @description - This function is for handleChange of popup.
      * @param newComment
      */
-    handleCommentChange=(newComment)=>{
+    handleCommentChange = (newComment) => {
         this.setState({
-            comment:newComment
+            comment: newComment
         })
     }
 
     /**
      * @description - This function is for ADD COMMENT API.
      */
-    saveNewComment=()=>{
-        const {comment}=this.state;  
-        const {id}=this.props.element;
-        this.props.addComment(comment,id);
+    saveNewComment = () => {
+        const { comment } = this.state;
+        const { id } = this.props.element;
+        this.props.addComment(comment, id);
         this.handleCommentPopup(false);
     }
 
@@ -222,22 +229,22 @@ ElementContainer.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addComment: (comments,elementId) => {
-            dispatch(addComment(comments,elementId))
+        addComment: (comments, elementId) => {
+            dispatch(addComment(comments, elementId))
         },
-        fetchCommentByElement:(elementId)=>{
-          dispatch(fetchCommentByElement(elementId))
+        fetchCommentByElement: (elementId) => {
+            dispatch(fetchCommentByElement(elementId))
         }
-      
-      
-}
+
+
+    }
 }
 
 const mapStateToProps = (state) => {
-    
+
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle
     }
 }
-    
-export default connect(mapStateToProps,mapDispatchToProps)(ElementContainer);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ElementContainer);

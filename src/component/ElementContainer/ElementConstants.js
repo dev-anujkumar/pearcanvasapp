@@ -11,5 +11,6 @@ export default {
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
+    ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside"
 }
