@@ -55,7 +55,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
                 <div className='elemDiv-split'>
-                    {elementType !== 'element-aside' && !props.upperOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                         <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
                 </div>
 

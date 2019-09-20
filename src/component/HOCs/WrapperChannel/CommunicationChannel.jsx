@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
 const configModule = {}; // TO BE IMPORTED
+import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 
 
@@ -179,8 +180,9 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             if (message && message.node) {
-                const { entityUrn, containerUrn } = message.node;
-                this.props.fetchSlateData(containerUrn);
+               // const { entityUrn, containerUrn } = message.node;
+                config.slateURN = message.node.entityUrn;
+                this.props.fetchSlateData(message.node.containerUrn);
             }
             /**
              * TO BE IMPLEMENTED

@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ElementAuthoring from '../../../src/component/ElementAuthoring/ElementAuthoring'
 
-describe('Testing Element  component with props', () => {
+xdescribe('Testing Element  component with props', () => {
     let type = "element-authoredtext";
     const elementAuthoring = mount(<ElementAuthoring type={type} />);
     let elementAuthoringInstance = elementAuthoring.find('ElementAuthoring').instance();

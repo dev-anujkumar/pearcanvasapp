@@ -10,13 +10,10 @@ class SectionSeperator extends React.Component {
         this.state= {
             sectionFocus:false,
             btnClassName:""
-
         }
-        this.handleSeperator = this.handleSeperator.bind(this);
-        this.handleSeperatorBlur = this.handleSeperatorBlur.bind(this);
     }
 
-     handleSeperator(e){
+     handleSeperator = (e) =>{
         e.stopPropagation();
         e.preventDefault();
         this.setState({
@@ -26,15 +23,13 @@ class SectionSeperator extends React.Component {
        
     }
 
-     handleSeperatorBlur(e){
+     handleSeperatorBlur = (e)=>{
         e.stopPropagation();
         e.preventDefault();
         this.setState({
             sectionFocus: false,
             btnClassName: ''
         }) 
-   
-     
     }
     render(){
         const {sectionFocus,btnClassName} = this.state;
@@ -59,7 +54,9 @@ class SectionSeperator extends React.Component {
 }
 
 SectionSeperator.propTypes = {
-    
+    elemBorderToggle: PropTypes.string.isRequired,
+    borderToggle:PropTypes.string.isRequired
 }
+
 export default SectionSeperator
 

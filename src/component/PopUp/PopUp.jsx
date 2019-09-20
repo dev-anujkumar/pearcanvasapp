@@ -26,7 +26,7 @@ class PopUp extends React.Component {
                             <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
                             <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div>
                             <div className={`dialog-input ${assessmentClass}`}>
-                                <textarea className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
+                                <textarea autoFocus className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
                                 placeholder={placeholder} rows={rows} cols={cols} maxLength={maxLength}/>
                             </div>
                             <div className={`dialog-buttons ${assessmentClass}`}>
