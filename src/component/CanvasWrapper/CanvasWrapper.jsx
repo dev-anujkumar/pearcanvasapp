@@ -5,7 +5,6 @@ import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
-import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
 import {
     fetchSlateData
@@ -34,7 +33,7 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-       this.props.fetchSlateData(this.state.activeSlate);
+     //  this.props.fetchSlateData(this.state.activeSlate);
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }
