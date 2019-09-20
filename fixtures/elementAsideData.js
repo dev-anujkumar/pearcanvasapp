@@ -237,7 +237,7 @@ export const elementAsideWorkExample2 =
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "type": "element-aside",
     "subtype": "workedexample",
-    "designtype": "workedexample1",
+    "designtype": "workedexample2",
     "elementdata": {
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
         "frontmatter": [],

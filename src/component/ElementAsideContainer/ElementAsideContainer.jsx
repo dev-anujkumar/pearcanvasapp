@@ -22,6 +22,10 @@ class ElementAsideContainer extends Component {
     componentDidMount(){
         this.aside.addEventListener("focus", this.props.handleFocus);
     }
+    
+    componentWillUnmount(){
+       this.aside.removeEventListener("focus", this.props.handleFocus);
+    }
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderContainer({ element: _containerData }) {
@@ -30,10 +34,11 @@ class ElementAsideContainer extends Component {
             if (Object.values(_containerData).length > 0) {
                 let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
                 let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
+                let parentEntityUrn = _containerData.contentUrn;
                 return (
-                    <div container-id={_containerId} container-type={_containerType}>
+                    <div container-id={parentEntityUrn} container-type={_containerType}>
                         {
-                            this.renderElement(_bodyMatter,)
+                            this.renderElement(_bodyMatter,parentEntityUrn)
                         }
                     </div>
                 )
@@ -61,11 +66,12 @@ class ElementAsideContainer extends Component {
         let firstSection = true;
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        let parentEntityUrn = element.contentUrn;
         if (firstSection) {
             return (
-                <div>
+                <div container-id = {parentEntityUrn}>
                     <hr className="section-break" />
-                    {this.renderElement(_containerBodyMatter)}
+                    {this.renderElement(_containerBodyMatter,parentEntityUrn)}
                 </div>
             )
         }
@@ -78,15 +84,16 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element,index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        let parentEntityUrn = element.contentUrn;
         const {elemBorderToggle,borderToggle} = this.props
         return (
-            <div>
+            <div container-id = {parentEntityUrn}>
 
                 <SectionSeperator 
                     elemBorderToggle = {elemBorderToggle}
                     borderToggle = {borderToggle}
                  />
-                {this.renderElement(_containerBodyMatter)}
+                {this.renderElement(_containerBodyMatter,parentEntityUrn)}
              
             </div>
         )
@@ -96,7 +103,7 @@ class ElementAsideContainer extends Component {
     /**
      * renderElement | renders single element according to its type
      */
-    renderElement(_elements) {
+    renderElement(_elements,parentEntityUrn) {
         let firstSection = true;
            try {
         if (_elements !== null && _elements !== undefined) {
@@ -114,7 +121,7 @@ class ElementAsideContainer extends Component {
                                 upperOne={true}
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
-                                esProps={this.props.elementSepratorProps(index)}
+                                esProps={this.props.elementSepratorProps(index,false,parentEntityUrn)}
                                 elementType={this.props.element.type}
                             />
                             }
@@ -127,7 +134,7 @@ class ElementAsideContainer extends Component {
                             <ElementSaprator
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
-                                esProps={this.props.elementSepratorProps(index)}
+                                esProps={this.props.elementSepratorProps(index,false,parentEntityUrn)}
                                 elementType={this.props.element.type}
                             />
                         </React.Fragment>
