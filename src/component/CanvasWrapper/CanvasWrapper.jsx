@@ -43,10 +43,10 @@ class CanvasWrapper extends Component {
         });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
-        sendDataToIframe({
-            'type': HideWrapperLoader,
-            'message': { status: true }
-        })
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
         sendDataToIframe({
             'type': ShowHeader,
             'message': true

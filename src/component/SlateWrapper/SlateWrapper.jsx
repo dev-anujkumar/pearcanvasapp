@@ -13,6 +13,7 @@ import {
     , createFigureElement
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -110,11 +111,8 @@ class SlateWrapper extends Component {
         } else {
             indexToinsert = Number(index + 1)
         }
-
-        sendDataToIframe({
-            'type': 'ShowLoader',
-            'message': { status: true }
-        });
+        /* For showing the spinning loader send HideLoader message to Wrapper component */
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
 
         switch (type) {
             case 'text-elem':
@@ -128,9 +126,7 @@ class SlateWrapper extends Component {
                     "subtype": "image50Text",
                     "alignment": "half-text",
                 }
-                setTimeout(() => {
-                    this.props.createFigureElement(eleFigure, Number(index + 1))
-                },1000)
+                this.props.createFigureElement(eleFigure, Number(index + 1))
                 break;
             case 'audio-elem':
                 var elevideo = {
@@ -139,9 +135,7 @@ class SlateWrapper extends Component {
                     "subtype": "figureVideo",
                     "alignment": "full"
                 }
-                setTimeout(() => {
-                    this.props.createVideoElement(elevideo, Number(index + 1))
-                },1000)
+                this.props.createVideoElement(elevideo, Number(index + 1))
                 break;
             case 'interactive-elem':
                 break;

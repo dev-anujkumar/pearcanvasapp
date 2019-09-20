@@ -6,6 +6,7 @@ import {
     ,FIGURE_ELEMENT_CREATED
 } from '../../constants/Action_Constants';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
 let headers = {
     "Content-Type": "application/json",
@@ -30,10 +31,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
             }
         }
     ).then(createdElemData => {        
-        sendDataToIframe({
-            'type': 'HideLoader',
-            'message': { status: false }
-        })
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
@@ -132,10 +130,8 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
         
        }
 
-       sendDataToIframe({
-        'type': 'HideLoader',
-            'message': { status: false }
-        })
+       /* For hiding the spinning loader send HideLoader message to Wrapper component */
+       sendDataToIframe({'type': HideLoader,'message': { status: false }})
     
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
@@ -255,11 +251,8 @@ export const createVideoElement = (eleVideo, index) => (dispatch, getState) => {
             "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
             "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
         }
-        
-        sendDataToIframe({
-            'type': 'HideLoader',
-            'message': { status: false }
-        })
+        /* For hiding the spinning loader send HideLoader message to Wrapper component */
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
 
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));

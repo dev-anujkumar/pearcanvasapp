@@ -8,6 +8,9 @@ import {
 } from '../../constants/Action_Constants';
 import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+
 
 const findElementType = (element) => {
 	let elementType = {};
@@ -119,10 +122,11 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				"PearsonSSOSession": config.ssoToken
 			}
 		}).then(slateData => {
+			/* For hiding the spinning loader send HideLoader message to Wrapper component */
+			sendDataToIframe({'type': HideLoader,'message': { status: false }});
 			
 			//let contentUrn = slateData.data[manifestURN].contentUrn,
 			//title = slateData.data[manifestURN].contents.title.text
-			console.log("mockdata[manifestURN].contents.bodymatter",slateData.data[manifestURN].contents.bodymatter);
 			dispatch({
 				type: SET_ELEMENT_TAG,
 				payload: defineElementTag(slateData.data[manifestURN].contents.bodymatter)
@@ -139,7 +143,6 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 	};
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
-	console.log('active Element::', activeElement);
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)
