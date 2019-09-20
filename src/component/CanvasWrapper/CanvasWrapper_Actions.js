@@ -112,18 +112,6 @@ const defineElementTag = (bodymatter = {}) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {
-	
-	dispatch({
-		type: SET_ELEMENT_TAG,
-		payload: defineElementTag(slateData.data[manifestURN].contents.bodymatter)
-	});
-	
-	dispatch({
-		type: FETCH_SLATE_DATA,
-		payload: {
-			[manifestURN]: slateData.data[manifestURN]
-		}//slateData.data
-	});
 	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateURN}`, {
 	//	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44/urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75`, {
 			headers: {
