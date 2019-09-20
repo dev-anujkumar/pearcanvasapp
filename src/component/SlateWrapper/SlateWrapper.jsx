@@ -10,7 +10,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement
+    , createFigureElement , createInteractiveElement
 } from './SlateWrapper_Actions';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -132,6 +132,16 @@ class SlateWrapper extends Component {
                 this.props.createVideoElement(elevideo, Number(index + 1))
                 break;
             case 'interactive-elem':
+                    var eleInteractive = {
+                        "type": "figure",
+                        "figuretype": "interactive",
+                        "figuredata": {
+                            "interactiveid": "",
+                            "interactivetype": "fpo",
+                            "interactiveformat": "narrative-link"
+                        },
+                    }
+                    this.props.createInteractiveElement(eleInteractive, Number(index + 1))
                 break;
             case 'assessment-elem':
                 break;
@@ -283,6 +293,7 @@ export default connect(
     {
         createElement,
         createVideoElement,
-        createFigureElement
+        createFigureElement,
+        createInteractiveElement
     }
 )(SlateWrapper);

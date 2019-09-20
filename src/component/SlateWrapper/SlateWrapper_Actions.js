@@ -3,7 +3,8 @@ import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
     VIDEO_ELEMENT_CREATED
-    ,FIGURE_ELEMENT_CREATED
+    ,FIGURE_ELEMENT_CREATED,
+    INTERACTIVE_ELEMENT_CREATED
 } from '../../constants/Action_Constants';
 let headers = {
     "Content-Type": "application/json",
@@ -262,4 +263,75 @@ export const createVideoElement = (eleVideo, index) => (dispatch, getState) => {
         })
 
     // })
+};
+
+export const createInteractiveElement = (eleInteractive, index) => (dispatch, getState) => {
+
+   // axios.post(`${config.REACT_APP_API_URL}v1/figure`,
+   //     JSON.stringify(_requestData),
+   //     {
+   //         headers: {
+   //             "Content-Type": "application/json",
+   //             "PearsonSSOSession": config.ssoToken
+   //         }
+   //     }
+   // ).then(createdFigureElemData => {        
+       var createdInteractiveData = {
+        "id": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+        "type": "figure",
+        "figuretype": "interactive",
+        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        },
+        "subtitle": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "captions": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "credits": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "figuredata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            "interactiveid": "",
+            "interactivetype": "fpo",
+            "interactiveformat": "mmi"
+        },
+        "versionUrn": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+        "contentUrn": "urn:pearson:entity:4602d9f2-b2b6-4882-b988-b06703e21e74"
+    }
+   
+       const parentData = getState().appStore.slateLevelData;
+       const newParentData = JSON.parse(JSON.stringify(parentData));
+       for (let key in newParentData) {
+           //for (let k in newParentData[key]) {
+               // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
+               newParentData[key].contents.bodymatter.splice(index, 0, createdInteractiveData);
+           //}
+       }
+       dispatch({
+           type: INTERACTIVE_ELEMENT_CREATED,
+           payload: {
+               slateLevelData: newParentData
+           }
+       })
+
+   // })
 };
