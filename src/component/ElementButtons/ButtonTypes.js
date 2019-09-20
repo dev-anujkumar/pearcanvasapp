@@ -20,5 +20,6 @@ export default {
     WORKED_EXAMPLE_ELEMENT : "worked-exp-elem",
     ASSESSMENT_ELEMENT : "assessment-elem",
     OPENER_ELEMENT : "opener-elem",
-    SECTION_BREAK_ELEMENT : "section-break-elem"
+    SECTION_BREAK_ELEMENT : "section-break-elem",
+    lock : "lock-icon"
 }

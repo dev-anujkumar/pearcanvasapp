@@ -14,6 +14,7 @@ import {
 } from './SlateWrapper_Actions';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
+import showLockPopup from '../../js/lockPopup'
 
 class SlateWrapper extends Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
                     )
                 }
                 else {
@@ -69,7 +70,7 @@ class SlateWrapper extends Component {
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    this.renderElement(_slateBodyMatter, _slateType)
+                                    this.renderElement(_slateBodyMatter, _slateType, this.props.slateLockInfo)
                                 }
                             </div>
                             <SlateFooter />
@@ -101,7 +102,11 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index, firstOne) => {
+    splithandlerfunction = (type, index, firstOne, slateLockInfo) => {
+        if(slateLockInfo.isLocked){
+            showLockPopup(slateLockInfo.userID)
+            return false
+        }
         let indexToinsert
         // Detects element insertion from the topmost element separator
         if(firstOne){
@@ -142,56 +147,56 @@ class SlateWrapper extends Component {
             case 'opener-elem':
                 break;
             default:
-        }
+        }   
     }
 
-    elementSepratorProps = (index, firstOne) => {
+    elementSepratorProps = (index, firstOne, slateLockInfo) => {
         return [
             {
                 buttonType: 'text-elem',
-                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Text',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Image',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'audio-elem',
-                buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Audio/Video',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'interactive-elem',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'container-elem',
-                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             }
@@ -202,7 +207,7 @@ class SlateWrapper extends Component {
     /**
      * renderElement | renders single element according to its type
      */
-    renderElement(_elements, _slateType) {
+    renderElement(_elements, _slateType, slateLockInfo) {
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
@@ -213,7 +218,7 @@ class SlateWrapper extends Component {
                             <ElementSaprator
                                 firstOne={index === 0}
                                 index={index}
-                                esProps={this.elementSepratorProps(index, true)}
+                                esProps={this.elementSepratorProps(index, true, slateLockInfo)}
                                 elementType={element.type}
                             />
                             : null
@@ -226,7 +231,7 @@ class SlateWrapper extends Component {
                             />
                             <ElementSaprator
                                 index={index}
-                                esProps={this.elementSepratorProps(index)}
+                                esProps={this.elementSepratorProps(index, false, slateLockInfo)}
                                 elementType={element.type}
                                 slateType = {_slateType}
                             />
@@ -273,7 +278,7 @@ SlateWrapper.propTypes = {
 
 const mapStateToProps = state => {
     return {
-
+        slateLockInfo: state.slateLockReducer.slateLockInfo
     };
 };
 

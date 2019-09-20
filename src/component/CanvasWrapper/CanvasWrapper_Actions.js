@@ -122,7 +122,6 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 			
 			//let contentUrn = slateData.data[manifestURN].contentUrn,
 			//title = slateData.data[manifestURN].contents.title.text
-			console.log("mockdata[manifestURN].contents.bodymatter",slateData.data[manifestURN].contents.bodymatter);
 			dispatch({
 				type: SET_ELEMENT_TAG,
 				payload: defineElementTag(slateData.data[manifestURN].contents.bodymatter)

@@ -55,21 +55,12 @@ class CanvasWrapper extends Component {
         // *********************************************************
         // console.log("this.props.slateLevelData>>>", Object.keys(this.props.slateLevelData)[0])
         let { projectUrn } = config,
-            slateId = this.state.activeSlate
-            // slateId = Object.keys(this.props.slateLevelData)[0]
+            slateId = Object.keys(this.props.slateLevelData)[0]
+
         this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
 
-    static getDerivedStateFromProps = (nextProps, prevState) => {
-        let { projectUrn } = config,
-            slateId = prevState.activeSlate,
-            newSlateId = Object.keys(nextProps.slateLevelData)[0]
-
-            if(newSlateId && slateId !== newSlateId){
-                nextProps.getSlateLockStatus(projectUrn ,slateId)
-            }
-    }
-    componentDidUpdate(){
+    componentDidUpdate(prevProps){
         if(this.state.navigation) {
             if(document.getElementById("cypress-0")){
                 document.getElementById("cypress-0").focus();
@@ -82,6 +73,14 @@ class CanvasWrapper extends Component {
             if(window.tinymce.activeEditor) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
+        }
+
+        let { projectUrn } = config,
+            slateId = Object.keys(prevProps.slateLevelData)[0],
+            newSlateId = Object.keys(this.props.slateLevelData)[0]
+
+        if(newSlateId && slateId !== newSlateId){
+            this.props.getSlateLockStatus(projectUrn, newSlateId)
         }
     }
     
@@ -163,7 +162,7 @@ CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
-        elementsTag: state.appStore.elementsTag
+        elementsTag: state.appStore.elementsTag,
     };
 };
 

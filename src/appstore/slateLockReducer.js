@@ -3,9 +3,11 @@ import {
 } from '../constants/Action_Constants'
 
 let initialState = {
-    isLocked: false,
-    timestamp: "",
-    userId: ""
+    slateLockInfo : {
+        isLocked: false,
+        timestamp: "",
+        userId: ""
+    }  
 }
 
 export default (state = initialState, action) => {

@@ -147,3 +147,11 @@
 .activeTagBgColor {
     background-color: green !important;
 }
+.btn-element.lock-icon{
+    padding: 0;
+    background: white;
+    margin: 0;
+    height: 100%;
+    width: 3%;
+    margin-right: 2px;
+}
