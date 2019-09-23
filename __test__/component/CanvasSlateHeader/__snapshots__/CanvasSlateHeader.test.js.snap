@@ -261,6 +261,93 @@ exports[`Testing SlateHeader component with props render container-introduction 
 </SlateHeader>
 `;
 
+exports[`Testing SlateHeader component with props render default Slate  1`] = `
+<SlateHeader
+  slateTitle={Object {}}
+  slateType=""
+>
+  <div
+    className="slate-Title"
+  >
+    <div
+      className="canvas-header"
+      id="canvas-header"
+    >
+      <div
+        className="slate-header"
+      >
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          SLATE:
+        </label>
+      </div>
+      <div
+        className="input-text"
+        style={
+          Object {
+            "minWidth": "675px",
+          }
+        }
+      >
+        <label
+          className="u-hidden"
+          htmlFor="txt-input"
+        />
+        <input
+          className="txt-input"
+          disabled={true}
+          placeholder="title"
+          type="text"
+        />
+      </div>
+      <ElementButton
+        labelText="P"
+        onClick={[Function]}
+        type="backward-nav-active"
+      >
+        <span
+          className="btn-element backward-nav-active"
+          onClick={[Function]}
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </ElementButton>
+      <ElementButton
+        labelText="P"
+        onClick={[Function]}
+        type="forward-nav-active"
+      >
+        <span
+          className="btn-element forward-nav-active"
+          onClick={[Function]}
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </ElementButton>
+    </div>
+  </div>
+</SlateHeader>
+`;
+
 exports[`Testing SlateHeader component with props render section Slate  1`] = `
 <SlateHeader
   slateTitle={Object {}}

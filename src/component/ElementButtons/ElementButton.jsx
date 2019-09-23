@@ -25,16 +25,15 @@ class Button extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn, btnClassName) => {
+    renderButton = (type, clickHandlerFn, btnClassName = '') => {
         let buttonJSX = null
         const { labelText,elementId } = this.props
-
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className="btn-element small add-comment" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;

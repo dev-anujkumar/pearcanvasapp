@@ -5,7 +5,6 @@ import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
-import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
 import {
     fetchSlateData
@@ -17,7 +16,7 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
 import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
@@ -37,7 +36,7 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-       this.props.fetchSlateData(this.state.activeSlate);
+        // this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
         //     document.getElementById("cypress-0").focus();
         // }
@@ -47,10 +46,10 @@ class CanvasWrapper extends Component {
         });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
-        sendDataToIframe({
-            'type': HideWrapperLoader,
-            'message': { status: true }
-        })
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
@@ -100,7 +99,11 @@ class CanvasWrapper extends Component {
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });
-        this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+          this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
     }
 
     render() {

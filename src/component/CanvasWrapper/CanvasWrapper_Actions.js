@@ -5,9 +5,11 @@ import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
 } from '../../constants/Action_Constants';
-import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
-
+import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+
 
 const findElementType = (element) => {
 	let elementType = {};
@@ -40,7 +42,6 @@ const findElementType = (element) => {
 			}
 			break;
 		case 'figure':
-
 			if (element.figuretype && element.subtype !== undefined) {
 				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';
@@ -90,10 +91,17 @@ const findElementType = (element) => {
 				}
 			}
 			break;
+		default: 
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-paragraph';
+			elementType['secondaryOption'] = 'secondary-paragraph';
 	}
 
 	elementType['elementId'] = element.id;
+	if(elementType.elementType)
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+	else
+	elementType['tag'] = 'LO';
 	return elementType;
 }
 
@@ -104,14 +112,15 @@ export const fetchElementTag = (element) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
-	// 	headers: {
-	// 		"Content-Type": "application/json",
-	// 		"PearsonSSOSession": config.ssoToken
-	// 	}
-	// }).then(slateData => {
-	// 	let contentUrn = slateData.data[manifestURN].contentUrn,
-	// 		title = slateData.data[manifestURN].contents.title.text;
+	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateURN}`, {
+		headers: {
+			"Content-Type": "application/json",
+			"PearsonSSOSession": config.ssoToken
+		}
+	}).then(slateData => {
+		sendDataToIframe({'type': HideLoader,'message': { status: false }});
+		// let contentUrn = slateData.data[manifestURN].contentUrn,
+		// 	title = slateData.data[manifestURN].contents.title.text;
 
 		// dispatch(fetchComments(contentUrn, title));
 
@@ -121,7 +130,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				[manifestURN]: mockdata[manifestURN]
 			}//slateData.data
 		});
-	// })
+	});
 };
 
 export const setActiveElement = (activeElement = {}) => dispatch => {

@@ -11,7 +11,6 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
-import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
@@ -63,8 +62,6 @@ export class TinyMceEditor extends Component {
 
     handleFocus=(e)=>{
         this.props.handleEditorFoucs()
-        // if(Object.keys(this.props.element).length > 0)
-        // this.props.setActiveElement(this.props.element);
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }
@@ -131,16 +128,5 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-const mapStateToProps = state => {
-    return {
-        
-    };
-};
-
-export default connect(
-    mapStateToProps, 
-    {
-        setActiveElement
-    }
-)(TinyMceEditor);
+export default TinyMceEditor;
 

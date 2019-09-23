@@ -19,8 +19,8 @@ export const textIcon = (function () {
 })();
 
 export const imageIcon = (function () {
-    return (<svg id="image-media" viewBox="0 0 17 17" width="17" height="17" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="17" height="17" fill="none" /><path d="M15,2h0V14H1V2H15Zm0-1H1A1,1,0,0,0,0,2V14a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Z" transform="translate(0 -1)" /><path d="M13,4.5A1.5,1.5,0,1,1,11.5,3,1.5,1.5,0,0,1,13,4.5Z" transform="translate(0 -1)" /><path d="M14,13H2V11L5.5,5l4,5h1L14,7Z" transform="translate(0 -1)" />
-    </svg>)
+    return (<svg id="image-media" viewBox="0 0 16 14" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="18" fill="none" ></rect><path d="M15,2h0V14H1V2H15Zm0-1H1A1,1,0,0,0,0,2V14a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Z" transform="translate(0 -1)"></path><path d="M13,4.5A1.5,1.5,0,1,1,11.5,3,1.5,1.5,0,0,1,13,4.5Z" transform="translate(0 -1)"></path><path d="M14,13H2V11L5.5,5l4,5h1L14,7Z" transform="translate(0 -1)"></path></svg>)
+    
 })();
 
 export const interativeIcon = (function () {
@@ -30,7 +30,6 @@ export const interativeIcon = (function () {
         <path d="M9.2,18.3H8.9a.87.87,0,0,1-.6-.8V11.7H4.2a1,1,0,0,1-.8-.5,1,1,0,0,1,.1-.9L10.2,2a.81.81,0,0,1,.9-.3.87.87,0,0,1,.6.8V8.3h4.2a1,1,0,0,1,.8.5.76.76,0,0,1-.1.9L9.8,18A.71.71,0,0,1,9.2,18.3ZM5.9,10H9.2a.79.79,0,0,1,.8.8v4.3L14.1,10H10.8a.86.86,0,0,1-.8-.8V4.9Z" />
     </svg>)
 })();
-
 export const audioIcon = (function () {
     return (
         <svg id="audioIcon" viewBox="0 0 17 17" version="1.1" width="17" height="17" xmlns="http://www.w3.org/2000/svg" >
