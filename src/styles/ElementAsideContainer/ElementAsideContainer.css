@@ -1,6 +1,5 @@
 
 .section-break {
-    border : 0.5px solid black;
     margin: 20px -8px 7px -8px;
 }
 
@@ -42,6 +41,7 @@
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom:21px;
+    border : 0.5px solid black;
 }
 .section-seperator-focus{
     border: 1.5px solid #149632;

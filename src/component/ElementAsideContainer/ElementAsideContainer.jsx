@@ -83,7 +83,7 @@ class ElementAsideContainer extends Component {
         let parentEntityUrn = _element.contentUrn;
         const {elemBorderToggle,borderToggle} = this.props
         return (
-            <div className = "section-break" container-id = {parentEntityUrn}>
+            <div className = "aside-section-break" container-id = {parentEntityUrn}>
                 <SectionSeperator 
                     elemBorderToggle = {elemBorderToggle}
                     borderToggle = {borderToggle}
