@@ -200,6 +200,12 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'section-break-elem',
+                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
+                tooltipText: 'Section Break',
+                tooltipDirection: 'left'
             }
         ]
 
