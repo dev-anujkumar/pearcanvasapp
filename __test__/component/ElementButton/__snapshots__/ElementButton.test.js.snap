@@ -509,7 +509,7 @@ exports[`Testing Button component with props render element-label Button compone
   type="element-label"
 >
   <span
-    className="btn-element element-label"
+    className="btn-element element-label undefined"
   >
     UL
   </span>

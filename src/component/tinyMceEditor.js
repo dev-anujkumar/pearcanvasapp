@@ -54,6 +54,7 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig)
         }
     }
+    
     componentDidUpdate(){
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
@@ -62,10 +63,9 @@ export class TinyMceEditor extends Component {
 
     handleFocus=(e)=>{
         this.props.handleEditorFoucs()
-        if(Object.keys(this.props.element).length > 0)
-        this.props.setActiveElement(this.props.element);
+        // if(Object.keys(this.props.element).length > 0)
+        // this.props.setActiveElement(this.props.element);
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
-            // tinymce.init(this.editorConfig);
             return false;
         }
         
@@ -84,14 +84,14 @@ export class TinyMceEditor extends Component {
     }
   
     render() {
-        if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-            let activeEditorId = tinymce.activeEditor.id;
-            let element = document.getElementById(activeEditorId);
-            tinymce.remove('#'+tinymce.activeEditor.id)
-            element.contentEditable = true;
-            this.editorConfig.selector='#'+activeEditorId;
-            tinymce.init(this.editorConfig);
-        }
+        // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
+        //     let activeEditorId = tinymce.activeEditor.id;
+        //     let element = document.getElementById(activeEditorId);
+        //     tinymce.remove('#'+tinymce.activeEditor.id)
+        //     element.contentEditable = true;
+        //     this.editorConfig.selector='#'+activeEditorId;
+        //     tinymce.init(this.editorConfig);
+        // }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;

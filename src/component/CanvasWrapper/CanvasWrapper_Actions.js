@@ -4,7 +4,6 @@ import mockdata from './../../appstore/mockdata';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
-	SET_ELEMENT_TAG
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 
@@ -98,33 +97,23 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-const defineElementTag = (bodymatter = {}) => {
-	let tagList = {};
-	if (Object.keys(bodymatter).length > 0) {
-		bodymatter.forEach(element => {
-			tagList[element.id] = findElementType(element).tag;
-		});
+export const fetchElementTag = (element) => {
+	if (Object.keys(element).length > 0) {
+		return findElementType(element).tag;
 	}
-
-	return tagList;
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
-		headers: {
-			"Content-Type": "application/json",
-			"PearsonSSOSession": config.ssoToken
-		}
-	}).then(slateData => {
-		let contentUrn = slateData.data[manifestURN].contentUrn,
-			title = slateData.data[manifestURN].contents.title.text;
+	// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
+	// 	headers: {
+	// 		"Content-Type": "application/json",
+	// 		"PearsonSSOSession": config.ssoToken
+	// 	}
+	// }).then(slateData => {
+	// 	let contentUrn = slateData.data[manifestURN].contentUrn,
+	// 		title = slateData.data[manifestURN].contents.title.text;
 
-		dispatch({
-			type: SET_ELEMENT_TAG,
-			payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
-		});
-
-		dispatch(fetchComments(contentUrn, title));
+		// dispatch(fetchComments(contentUrn, title));
 
 		dispatch({
 			type: FETCH_SLATE_DATA,
@@ -132,11 +121,10 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				[manifestURN]: mockdata[manifestURN]
 			}//slateData.data
 		});
-	})
+	// })
 };
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
-	console.log('active Element::', activeElement);
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)

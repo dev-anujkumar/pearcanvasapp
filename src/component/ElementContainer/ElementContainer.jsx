@@ -12,7 +12,9 @@ import {addComment} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
+import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -47,6 +49,7 @@ class ElementContainer extends Component {
             borderToggle : 'active',
             btnClassName : 'activeTagBgColor'
         })
+        this.props.setActiveElement(this.props.element);
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
@@ -79,7 +82,8 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { labelText, index, handleCommentspanel} = this.props;
+        let labelText = fetchElementTag(element) || 'P';
+        let { index, handleCommentspanel} = this.props;
         switch(element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
@@ -87,11 +91,11 @@ class ElementContainer extends Component {
                 break
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.FIGURE:
@@ -205,16 +209,12 @@ class ElementContainer extends Component {
 }
 
 ElementContainer.defaultProps = {
-    element: {},
-    elementType: 'heading-4',
-    labelText: 'P'
+    element: {}
 }
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elementType: PropTypes.string,
-    labelText: PropTypes.string,
     elemBorderToggle : PropTypes.string
 }
 
@@ -225,10 +225,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
+        },
+        setActiveElement: (element) => {
+            dispatch(setActiveElement(element));
         }
-      
-      
-}
+    }
 }
 
 

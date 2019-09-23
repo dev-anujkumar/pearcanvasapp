@@ -84,13 +84,13 @@ exports[`Testing GlossaryFootnote component with props render Footnote  1`] = `
                       "menubar": false,
                       "selector": ".definition-editor",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
                   onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_53811291681568384695061"
+                    id="tiny-react_34618954181568905525262"
                   />
                 </Editor>
               </div>
@@ -203,13 +203,13 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                       "menubar": false,
                       "selector": ".definition-editor",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
                   onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_88003596761568384695046"
+                    id="tiny-react_80884995361568905525248"
                   />
                 </Editor>
               </div>
@@ -245,13 +245,13 @@ exports[`Testing GlossaryFootnote component with props render Glossary  1`] = `
                       "menubar": false,
                       "selector": ".definition-editor",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
                   onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_85718437571568384695047"
+                    id="tiny-react_53745649771568905525249"
                   />
                 </Editor>
               </div>
@@ -364,13 +364,13 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                       "menubar": false,
                       "selector": ".definition-editor",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
                   onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_79109996241568384695013"
+                    id="tiny-react_53687377341568905525210"
                   />
                 </Editor>
               </div>
@@ -406,13 +406,13 @@ exports[`Testing GlossaryFootnote component with props render Glossary Footnote 
                       "menubar": false,
                       "selector": ".definition-editor",
                       "setup": [Function],
-                      "toolbar": "bold | italic | underline | strikethrough | removeformat| superscript | subscript ",
+                      "toolbar": "bold italic underline strikethrough removeformat superscript subscript",
                     }
                   }
                   onChange={[Function]}
                 >
                   <div
-                    id="tiny-react_80872346151568384695014"
+                    id="tiny-react_14886164951568905525212"
                   />
                 </Editor>
               </div>
