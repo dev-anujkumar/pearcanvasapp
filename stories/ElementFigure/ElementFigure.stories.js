@@ -329,6 +329,14 @@ const mockData6={
         "mathml": [],
         "footnotes": []
     },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "tableasHTML": ""
+    },
     "figuredata": {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
