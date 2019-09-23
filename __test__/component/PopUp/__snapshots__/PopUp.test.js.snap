@@ -30,6 +30,7 @@ exports[`Testing PopUp component Testing Popup with props  1`] = `
           className="dialog-input undefined"
         >
           <textarea
+            autoFocus={true}
             className="dialog-input-textarea undefined"
             onChange={[Function]}
             placeholder="Type..."
@@ -99,6 +100,7 @@ exports[`Testing PopUp component render PopUp component  1`] = `
           className="dialog-input undefined"
         >
           <textarea
+            autoFocus={true}
             className="dialog-input-textarea undefined"
             onChange={[Function]}
             placeholder="Type..."

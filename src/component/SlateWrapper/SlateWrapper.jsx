@@ -9,8 +9,11 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement
+    createElement ,createVideoElement
+    , createFigureElement
 } from './SlateWrapper_Actions';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -100,14 +103,39 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index) => {
+    splithandlerfunction = (type, index, firstOne) => {
+        let indexToinsert
+        // Detects element insertion from the topmost element separator
+        if(firstOne){
+            indexToinsert = Number(index)
+        } else {
+            indexToinsert = Number(index + 1)
+        }
+        /* For showing the spinning loader send HideLoader message to Wrapper component */
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", Number(index + 1))
+                this.props.createElement("element-authoredtext", indexToinsert);
                 break;
             case 'image-elem':
+                
+                var eleFigure = {
+                    "type": "figure",
+                    "figuretype": "image",
+                    "subtype": "image50Text",
+                    "alignment": "half-text",
+                }
+                this.props.createFigureElement(eleFigure, Number(index + 1))
                 break;
             case 'audio-elem':
+                var elevideo = {
+                    "type": "figure",
+                    "figuretype": "video",
+                    "subtype": "figureVideo",
+                    "alignment": "full"
+                }
+                this.props.createVideoElement(elevideo, Number(index + 1))
                 break;
             case 'interactive-elem':
                 break;
@@ -123,53 +151,53 @@ class SlateWrapper extends Component {
         }
     }
 
-    elementSepratorProps = (index) => {
+    elementSepratorProps = (index, firstOne) => {
         return [
             {
                 buttonType: 'text-elem',
-                buttonHandler: () => this.splithandlerfunction('text-elem', index),
+                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne),
                 tooltipText: 'Text',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index),
+                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne),
                 tooltipText: 'Image',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'audio-elem',
-                buttonHandler: () => this.splithandlerfunction('audio-elem', index),
+                buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne),
                 tooltipText: 'Audio/Video',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'interactive-elem',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem', index),
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne),
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index),
+                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne),
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'container-elem',
-                buttonHandler: () => this.splithandlerfunction('container-elem', index),
+                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne),
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             }
@@ -185,25 +213,25 @@ class SlateWrapper extends Component {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
                     return (
-                        <React.Fragment>
-                            {/* {index === 0 && <ElementSaprator
-                                upperOne={true}
+                        <React.Fragment key={element.id}>
+                            {
+                            index === 0 ? 
+                            <ElementSaprator
+                                firstOne={index === 0}
                                 index={index}
-                                key={`elem-separtor-${element.id}`}
-                                esProps={this.elementSepratorProps(index)}
+                                esProps={this.elementSepratorProps(index, true)}
                                 elementType={element.type}
                             />
-                            } */}
+                            : null
+                             }
                             <ElementContainer
                                 element={element}
-                                key={element.id}
                                 index={index}
                                 labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator
                                 index={index}
-                                key={`elem-separtor-${element.id}`}
                                 esProps={this.elementSepratorProps(index)}
                                 elementType={element.type}
                                 slateType = {_slateType}
@@ -259,6 +287,8 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement
+        createElement,
+        createVideoElement,
+        createFigureElement
     }
 )(SlateWrapper);

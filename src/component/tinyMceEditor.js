@@ -61,7 +61,7 @@ export class TinyMceEditor extends Component {
     }
 
     handleFocus=(e)=>{
-        this.props.handleEditorFoucs()
+        this.props.handleEditorFocus()
         if(Object.keys(this.props.element).length > 0)
         this.props.setActiveElement(this.props.element);
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
