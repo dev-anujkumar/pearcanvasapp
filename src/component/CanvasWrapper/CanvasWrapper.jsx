@@ -34,7 +34,7 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-     //  this.props.fetchSlateData(this.state.activeSlate);
+    //   this.props.fetchSlateData(this.state.activeSlate);
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }

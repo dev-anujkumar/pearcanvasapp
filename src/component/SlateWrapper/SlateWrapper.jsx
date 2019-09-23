@@ -16,12 +16,14 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
-import showLockPopup from '../../js/lockPopup'
-
+import PopUp from '../PopUp';
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
-
+        this.state = {
+            showLockPopup: false,
+            lockOwner: ""
+        }
     }
 
     componentDidMount(){
@@ -29,7 +31,15 @@ class SlateWrapper extends Component {
             document.getElementById("cypress-0").focus();
         }
     }
-
+    static getDerivedStateFromProps = (props, state) =>{
+        const { slateLockInfo : { isLocked } } = props
+        if(!isLocked){
+            return {
+                ...state,
+                showLockPopup: false
+            }
+        }  
+    }
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -70,7 +80,7 @@ class SlateWrapper extends Component {
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
                         <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
-                            <div className='element-list'>
+                            <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 {
                                     this.renderElement(_slateBodyMatter, _slateType, this.props.slateLockInfo)
                                 }
@@ -104,11 +114,79 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index, firstOne, slateLockInfo) => {
+    checkLockStatus = () => {
+        const { slateLockInfo } = this.props
         if(slateLockInfo.isLocked){
-            showLockPopup(slateLockInfo.userID)
+            this.setState({
+                lockOwner: slateLockInfo.userId
+            })
+            // this.togglePopup(true)
+            return true
+            /* event.preventDefault()
+            event.stopPropagation()
+            return false */
+        }
+        else{
             return false
         }
+    }
+    checkSlateLockStatus = (event) => {
+        if(this.checkLockStatus()){
+            this.prohibitPropagation(event)   
+        }
+        this.togglePopup(true)
+    }
+    prohibitPropagation = (event) =>{
+        if(event){
+            event.preventDefault()
+            event.stopPropagation()
+           
+        }
+        return false
+    }
+    showLockPopup = () => {
+        
+        if(this.state.showLockPopup){
+            const { lockOwner } = this.state
+            const dialogText = `The following slate is already in use by another member.\n In use by: `
+            /* showTocBlocker();
+            disableHeader(true); */
+            return(
+                <PopUp  dialogText={dialogText}
+                        rows="1"
+                        cols="1"
+                        /*maxLength*/
+                        active={true}
+                        togglePopup={this.togglePopup}
+                        inputValue={lockOwner}
+                        isLockPopup={true}
+                        isInputDisabled={true}
+                        assessmentClass="lock-message"
+                />
+            )
+        }
+        else{
+            return null
+        }
+    }
+    togglePopup = (toggleValue, event) => {
+        this.setState({
+            showLockPopup: toggleValue
+        })
+        this.prohibitPropagation(event)
+    }
+    
+    splithandlerfunction = (type, index, firstOne, slateLockInfo) => {
+        if(this.checkLockStatus()){
+            this.togglePopup(true)
+        }
+        /* if(slateLockInfo.isLocked){
+            this.setState({
+                lockOwner: slateLockInfo.userId
+            })
+            this.togglePopup(true)
+            return false
+        } */
         let indexToinsert
         // Detects element insertion from the topmost element separator
         if(firstOne){
@@ -270,6 +348,7 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
+                {this.showLockPopup()}
             </React.Fragment>
         );
     }

@@ -19,6 +19,7 @@ const htmlToReactParser = new HtmlToReactParser();
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
+        let context = this
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -42,6 +43,12 @@ export class TinyMceEditor extends Component {
                         return false;
                     }
                 });
+                editor.on('mousedown',function(e) {
+                    if(context.props.slateLockInfo.isLocked){
+                        e.preventDefault();
+                        return false;
+                    }   
+                })
             },
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 
@@ -133,7 +140,7 @@ TinyMceEditor.defaultProps = {
 
 const mapStateToProps = state => {
     return {
-        
+        slateLockInfo: state.slateLockReducer.slateLockInfo
     };
 };
 
