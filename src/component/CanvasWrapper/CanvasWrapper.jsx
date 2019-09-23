@@ -26,7 +26,8 @@ class CanvasWrapper extends Component {
             navigation: false,
             activeSlateIndex: 1,
             activeSlate: config.slateList[1],
-            activeElement: {}
+            activeElement: {},
+            showBlocker : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -103,6 +104,13 @@ class CanvasWrapper extends Component {
         })
     }
 
+    showCanvasBlocker = () =>{
+        console.log("showCanvasBlocker >>")
+        this.setState({
+            showBlocker: true
+        });
+    }
+
     render() {
         let navDisabled = '';
         if(this.state.activeSlateIndex === 0) {
@@ -113,6 +121,7 @@ class CanvasWrapper extends Component {
 
         return (
             <div className='content-composer'>
+                {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <Toolbar />
@@ -127,7 +136,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} />
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
                             </div>
                         </div>
                     </div>

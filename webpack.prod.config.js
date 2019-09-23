@@ -27,7 +27,8 @@ module.exports = env => {
         entry: { main: './src/index.js' },
         output: {
             filename: `[name].${USEHASH}.bundle.js`,
-            path: path.resolve(__dirname, 'dist')
+            path: path.resolve(__dirname, 'dist'),
+            publicPath: './'
         },
         target: 'web',
         module: {

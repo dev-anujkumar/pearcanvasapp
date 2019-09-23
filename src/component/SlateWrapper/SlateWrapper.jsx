@@ -229,6 +229,7 @@ class SlateWrapper extends Component {
                                 index={index}
                                 labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
+                                showBlocker = {this.props.showBlocker}
                             />
                             <ElementSaprator
                                 index={index}
