@@ -21,23 +21,28 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'showBorder',
             btnClassName : '',
-            ElementId: ''
+            ElementId: this.props.index==0?this.props.element.id:''
         };
         
     }
     componentDidMount(){
+        
+        if( this.props.index == 0 ){
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+              
+            })
+        }
         this.setState({
             ElementId: this.props.element.id
-        })
-        document.getElementsByClassName('element-container')[0].classList.add('active')
-        document.getElementsByClassName('element-label')[0].classList.add('activeTagBgColor')
-        document.getElementsByClassName('add-comment')[0].classList.add('activeTagBgColor')        
+        })             
     }
 
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(newProps){
-        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){
-            if(newProps.elemBorderToggle){
+    componentWillReceiveProps(newProps){      
+        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
+             if(newProps.elemBorderToggle){
                 this.setState({
                     borderToggle : 'showBorder',
                     btnClassName : ''
@@ -53,13 +58,6 @@ class ElementContainer extends Component {
                 borderToggle : 'active',
                 btnClassName : 'activeTagBgColor'
             })
-            document.getElementsByClassName('element-container')[0].classList.remove('active')
-            if(newProps.elemBorderToggle){
-                document.getElementsByClassName('element-label')[0].classList.remove('activeTagBgColor')
-                document.getElementsByClassName('add-comment')[0].classList.remove('activeTagBgColor')
-            }
-            
-    
         }
     }
 
@@ -141,7 +139,6 @@ class ElementContainer extends Component {
                 }
                 break;
         }
-        
         return(
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
