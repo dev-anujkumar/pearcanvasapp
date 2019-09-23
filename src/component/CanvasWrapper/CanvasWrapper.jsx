@@ -104,10 +104,9 @@ class CanvasWrapper extends Component {
         })
     }
 
-    showCanvasBlocker = () =>{
-        console.log("showCanvasBlocker >>")
+    showCanvasBlocker = (bFlag) =>{
         this.setState({
-            showBlocker: true
+            showBlocker: bFlag
         });
     }
 

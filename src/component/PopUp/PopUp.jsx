@@ -16,32 +16,32 @@ class PopUp extends React.Component {
         this.state ={ }
     }
     render() {
-        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, deletElement, yesButton, cancelBtnText, deleteInstruction } = this.props;
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement } = this.props;
         return (
             <div>
                 {
                     active ? 
                     <div className={`modal ${assessmentClass}`}>
                         <div className={`modal-content ${assessmentClass}`}>
-                        {!deletElement ?
+                        {!showDeleteElemPopup ?
                             <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
                             : '' }
-                            {!deletElement ? <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div> : ''}
-                            {deletElement ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
+                            {!showDeleteElemPopup ? <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div> : ''}
+                            {showDeleteElemPopup ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
                             <div className={`dialog-input ${assessmentClass}`}>
-                                {!deletElement ?
+                                {!showDeleteElemPopup ?
                                 <textarea autoFocus className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
                                 placeholder={placeholder} rows={rows} cols={cols} maxLength={maxLength}/>
                                 : ''}
                             </div>
-                            {!deletElement ?
+                            {!showDeleteElemPopup ?
                                 <div className={`dialog-buttons ${assessmentClass}`}>
                                     <span className="save-button" onClick={saveContent}>{saveButtonText}</span>
                                     <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>{cancelBtnText}</span> 
                                 </div>
                                 : 
                                 <div className={`dialog-buttons ${assessmentClass}`}>
-                                    <span className="save-button" onClick={saveContent}>{yesButton}</span>
+                                    <span className="save-button" onClick={deleteElement}>{yesButton}</span>
                                     <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>{cancelBtnText}</span>
                                 </div>
                             }

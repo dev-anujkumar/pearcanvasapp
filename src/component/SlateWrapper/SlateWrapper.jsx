@@ -68,7 +68,7 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
-                        <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
+                        <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
                                     this.renderElement(_slateBodyMatter, _slateType)
