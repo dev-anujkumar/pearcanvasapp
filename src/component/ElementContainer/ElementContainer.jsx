@@ -5,6 +5,7 @@ import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
+import ElementInteractive from '../ElementInteractive';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -14,7 +15,7 @@ import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
-
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +24,7 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'showBorder',
             btnClassName : '',
+            showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:''
         };
         
@@ -87,6 +89,33 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * Delete element by id 
+     * @param {elementId} 
+     */
+    showDeleteElemPopup = (popup,elementId, labelText) => {
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showDeleteElemPopup : true
+        });
+
+        // { this.state.popup && <PopUp 
+        //     togglePopup={e => this.handleCommentPopup(e, this)} 
+        //     active={this.state.popup} 
+        //     handleChange={this.handleCommentChange}
+        //     saveContent={this.saveNewComment}
+        //     rows={COMMENTS_POPUP_ROWS}
+        //     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+        //     />}
+    }
+
+    deleteElement = () => {
+        console.log("deleteElement clicked >>> ", this.props.element)
+        // const {id}=this.props.element;
+    }
+
     renderElement = (element = {}) => {
         let editor = '';
         let labelText = fetchElementTag(element) || 'P';
@@ -140,6 +169,25 @@ class ElementContainer extends Component {
                         editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
                         labelText = 'QU';
                         break;
+
+                    case elementTypeConstant.INTERACTIVE:
+
+                        switch (element.figuredata.interactiveformat) {
+                            case elementTypeConstant.INTERACTIVE_MMI:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'SL';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'Pop';
+                                break;
+                                
+                        }
+
                 }
                 break;
         }
@@ -147,7 +195,7 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element" />
+                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
@@ -166,6 +214,10 @@ class ElementContainer extends Component {
                 saveContent={this.saveNewComment}
                 rows={COMMENTS_POPUP_ROWS}
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                showDeleteElemPopup = {this.state.showDeleteElemPopup}
+                deleteElement = {this.deleteElement}
+                // elementId = {element.id}
+                // labelText = {labelText}
                 />}
             </div >
         );
@@ -177,8 +229,11 @@ class ElementContainer extends Component {
      */
     handleCommentPopup(popup){
         this.setState({
-            popup
+            popup,
+            showDeleteElemPopup : false
         });
+        this.props.showBlocker(false);
+        hideBlocker();
     }
 
     // handleCommentPopup(popup){

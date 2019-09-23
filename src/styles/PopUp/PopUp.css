@@ -1,6 +1,6 @@
 .modal { 
     position: fixed; 
-    z-index: 1; 
+    z-index: 999999; 
     left: 0;
     top: 0;
     width: 100%; 
@@ -148,4 +148,11 @@
   outline: none !important;
   border-color: #719ECE;
   box-shadow: inset 0 0 0 1px #3288e6;
+}
+
+.delete-element-text{
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  font-size: 14px;
+  line-height: 2.0em;
 }

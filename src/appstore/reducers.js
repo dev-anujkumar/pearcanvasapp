@@ -11,7 +11,8 @@ import {
     AUTHORING_ELEMENT_CREATED,
     ADD_COMMENT,
     VIDEO_ELEMENT_CREATED,
-    FIGURE_ELEMENT_CREATED
+    FIGURE_ELEMENT_CREATED,
+    INTERACTIVE_ELEMENT_CREATED
 } from '../constants/Action_Constants';
 
 /**
@@ -58,6 +59,11 @@ export default function (state = initialState, action) {
                 slateLevelData: action.payload
             };
         case VIDEO_ELEMENT_CREATED:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
+        case INTERACTIVE_ELEMENT_CREATED:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
