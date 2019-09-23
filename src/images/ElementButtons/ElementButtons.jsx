@@ -57,11 +57,13 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" viewBox="0 0 20 20" width="20" height="20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <g>
-                <rect width="20" height="20" fill="none" />
-                <g>
-                    <path className="st0" d="M17.496,6.945v10.553H2.504V6.945H17.496 M19,5.441H1V19h18V5.441L19,5.441z" />
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="10 10 64 64">
+        <g>
+            <rect width="64" height="64" fill="#fff"></rect>
+            <g id="Group_2311" data-name="Group 2311" transform="translate(-53 -403)">
+              <g id="Rectangle_1349" data-name="Rectangle 1349" transform="translate(69 427)" fill="#fff" stroke="#707070" stroke-width="2"><rect width="49" height="40" fill="none"></rect>
+            </g>
+            <rect id="Rectangle_1350" data-name="Rectangle 1350" width="49" height="10" transform="translate(69 419)" fill="#434343"></rect>
                 </g>
             </g>
         </svg>
