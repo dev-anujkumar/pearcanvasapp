@@ -40,7 +40,7 @@ class ElementContainer extends Component {
         })             
     }
 
-    }
+   
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps){      
         if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
