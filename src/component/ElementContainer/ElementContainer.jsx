@@ -110,7 +110,8 @@ class ElementContainer extends Component {
     }
 
     deleteElement = () => {
-        console.log("deleteElement clicked >>> ")
+        console.log("deleteElement clicked >>> ", this.props.element)
+        // const {id}=this.props.element;
     }
 
     renderElement = (element = {}) => {
