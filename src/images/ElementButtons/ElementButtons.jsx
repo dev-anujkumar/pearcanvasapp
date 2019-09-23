@@ -47,9 +47,9 @@ export const audioIcon = (function () {
 
 export const containerIcon = (function () {
     return (
-        <svg id="containerIcon" viewBox="0 0 16 16" width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+        <svg id="containerIcon" viewBox="1 0 12 13" width="22" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <title>container-icon</title>
-            <rect width="16" height="16" fill="none" />
+            <rect width="20" height="20" fill="none" />
             <path d="M7.5,1,0,4v7l7.5,4L15,11V4ZM7,13.6,1,10.4V5.53l6,3.2Zm-5.7-9L7.5,2.08l6.2,2.48L7.5,7.87ZM14,10.4,8,13.6V8.73l6-3.2Z" transform="translate(0 -1)"></path>
         </svg>
     )

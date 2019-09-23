@@ -206,6 +206,12 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
                 tooltipText: 'Section Break',
                 tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'metadata-anchor',
+                buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
+                tooltipText: 'Metadata Anchor',
+                tooltipDirection: 'left'
             }
         ]
 
