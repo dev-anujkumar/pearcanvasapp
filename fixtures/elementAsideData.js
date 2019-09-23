@@ -170,7 +170,7 @@ export const elementWorkExample =
 					]
 				},
 				"html": {
-					"text": "\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
+					"text": "<h4 class=\"heading4NummerEins\">Heading 4</h4>"
 				},
 				"comments": true,
 				"tcm": true,
@@ -194,8 +194,15 @@ export const elementWorkExample =
 								"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
 								"text": "asdfasdfasdf"
 							},
+							"headers": [
+								{
+									"charStart": 0,
+									"charEnd": -1,
+									"level": 4
+								}
+							],
 							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
+								"text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
 							},
 							"comments": true,
 							"tcm": true,
@@ -212,7 +219,7 @@ export const elementWorkExample =
 								"text": "asdfasdfasdf"
 							},
 							"html": {
-								"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
+								"text": "<p class=\"heading1NummerEins\">Heading 1</p>"
 							},
 							"comments": true,
 							"tcm": true,
@@ -252,7 +259,7 @@ export const elementAsideWorkExample2 =
 					"text": "asdfasdfasdf"
 				},
 				"html": {
-					"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
+					"text": "<h1 class=\"heading1NummerEins\">Heading 1</h1>"
 				},
 				"comments": true,
 				"tcm": true,

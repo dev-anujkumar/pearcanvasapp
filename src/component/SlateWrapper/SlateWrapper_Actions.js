@@ -22,7 +22,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "type": type,
         "index": index
     };
-
+    
      axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
         {
@@ -37,7 +37,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
         if(type == "workedexample"){
-            createdElementData = elementAsideWorkExample
+            createdElementData = elementWorkExample
         }
         if(type == "element-aside"){
             createdElementData = elementAside
