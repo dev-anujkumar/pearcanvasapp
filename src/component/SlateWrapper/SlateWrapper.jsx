@@ -122,11 +122,9 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "figuretype": "image",
-                    "subtype": "image50Text",
-                    "alignment": "half-text",
+                    "subtype": "image50Text"
                 }
-                this.props.createFigureElement(eleFigure, Number(index + 1))
+                this.props.createFigureElement(eleFigure, indexToinsert)
                 break;
             case 'audio-elem':
                 var elevideo = {

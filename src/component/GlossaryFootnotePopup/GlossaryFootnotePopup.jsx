@@ -3,7 +3,7 @@
 */
 
 import React, { Component } from 'react';
-import Button from '../ElementButtons/ElementButton';
+import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import  ReactEditor  from "../tinyMceGlossaryFootnoteEditor"
 
