@@ -127,7 +127,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {
-				[manifestURN]: mockdata[manifestURN]
+				[manifestURN]: slateData.data[manifestURN]
 			}//slateData.data
 		});
 	});
