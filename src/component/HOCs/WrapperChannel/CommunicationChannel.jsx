@@ -180,6 +180,11 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             if (message && message.node) {
+                sendDataToIframe({
+                    'type': 'hideWrapperLoader',
+                    'message': { status: true }
+                })
+                sendDataToIframe({'type': "ShowLoader",'message': { status: true }});
                // const { entityUrn, containerUrn } = message.node;
                 config.slateURN = message.node.entityUrn;
                 this.props.fetchSlateData(message.node.containerUrn);

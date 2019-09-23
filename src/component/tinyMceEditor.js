@@ -55,7 +55,7 @@ export class TinyMceEditor extends Component {
         }
     }
     componentDidUpdate(){
-        if(!tinymce.editors.length){
+        if(!tinymce.editors.length && !this.props.stringlocked){
             tinymce.init(this.editorConfig)
         }
     }

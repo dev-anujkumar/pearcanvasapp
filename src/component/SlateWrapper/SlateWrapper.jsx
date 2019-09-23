@@ -12,6 +12,8 @@ import {
     createElement ,createVideoElement
     , createFigureElement
 } from './SlateWrapper_Actions';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import showLockPopup from '../../js/lockPopup'
@@ -114,11 +116,15 @@ class SlateWrapper extends Component {
         } else {
             indexToinsert = Number(index + 1)
         }
+        /* For showing the spinning loader send HideLoader message to Wrapper component */
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", indexToinsert)
+                this.props.createElement("element-authoredtext", indexToinsert);
                 break;
             case 'image-elem':
+                
                 var eleFigure = {
                     "type": "figure",
                     "figuretype": "image",
