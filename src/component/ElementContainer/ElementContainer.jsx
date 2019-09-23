@@ -5,6 +5,7 @@ import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
+import ElementInteractive from '../ElementInteractive';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -164,6 +165,25 @@ class ElementContainer extends Component {
                         editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
                         labelText = 'QU';
                         break;
+
+                    case elementTypeConstant.INTERACTIVE:
+
+                        switch (element.figuredata.interactiveformat) {
+                            case elementTypeConstant.INTERACTIVE_MMI:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'SL';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'Pop';
+                                break;
+                                
+                        }
+
                 }
                 break;
         }
