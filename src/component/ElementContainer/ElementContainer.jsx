@@ -19,26 +19,47 @@ class ElementContainer extends Component {
         super(props);
         this.state = {
             popup: false,
-            comment: "",
-            borderToggle: 'showBorder',
-            btnClassName: ''
+            comment:"",
+            borderToggle : 'showBorder',
+            btnClassName : '',
+            ElementId: this.props.index==0?this.props.element.id:''
         };
+        
+    }
+    componentDidMount(){
+        
+        if( this.props.index == 0 ){
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+              
+            })
+        }
+        this.setState({
+            ElementId: this.props.element.id
+        })             
+    }
 
     }
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.elemBorderToggle !== this.props.elemBorderToggle) {
-            if (nextProps.elemBorderToggle == true) {
+    componentWillReceiveProps(newProps){      
+        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
+             if(newProps.elemBorderToggle){
                 this.setState({
-                    borderToggle: 'showBorder',
-                    btnClassName: ''
+                    borderToggle : 'showBorder',
+                    btnClassName : ''
                 })
             } else {
                 this.setState({
-                    borderToggle: 'hideBorder',
-                    btnClassName: ''
+                    borderToggle : 'hideBorder',
+                    btnClassName : ''
                 })
-            }
+            } 
+        }else{
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+            })
         }
     }
 
@@ -50,19 +71,7 @@ class ElementContainer extends Component {
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
-    handleBlur = () => {
-        if (this.props.elemBorderToggle) {
-            this.setState({
-                borderToggle: 'showBorder',
-                btnClassName: ''
-            })
-        } else {
-            this.setState({
-                borderToggle: 'hideBorder',
-                btnClassName: ''
-            })
-        }
-    }
+    handleBlur = () => {}
 
     /**
      * Renders color-palette button for opener element 
@@ -141,30 +150,29 @@ class ElementContainer extends Component {
                         labelText = 'AS';
                 }
         }
-
-        return (
-            <div className="editor" >
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={this.state.btnClassName} labelText={labelText} />
-                    <Button type="delete-element" />
-                    {this.renderColorPaletteButton(element)}
-                </div>
-                    : ''}
-                <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
-                    {editor}
-                </div>
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
-                    {element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element.tcm && <Button type="tcm" />}
-                </div> : ''}
-                {this.state.popup && <PopUp
-                    togglePopup={e => this.handleCommentPopup(e, this)}
-                    active={this.state.popup}
-                    handleChange={this.handleCommentChange}
-                    saveContent={this.saveNewComment}
-                    rows={COMMENTS_POPUP_ROWS}
-                    dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+        return(
+            <div className = "editor" >
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
+                <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
+                <Button type="delete-element" />
+                {this.renderColorPaletteButton(element)}
+            </div>
+            : ''}
+            <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
+                {editor}
+            </div>
+            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
+                <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
+                {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
+                {element.tcm && <Button type="tcm" />}
+                </div> :''}
+            { this.state.popup && <PopUp 
+                togglePopup={e => this.handleCommentPopup(e, this)} 
+                active={this.state.popup} 
+                handleChange={this.handleCommentChange}
+                saveContent={this.saveNewComment}
+                rows={COMMENTS_POPUP_ROWS}
+                dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                 />}
             </div >
         );
@@ -243,7 +251,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
 
     return {
-        elemBorderToggle: state.toolbarReducer.elemBorderToggle
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        activeElement: state.appStore.activeElement.elementId
     }
 }
 
