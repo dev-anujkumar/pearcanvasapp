@@ -1,8 +1,4 @@
 
-.section-break {
-    margin: 20px -8px 7px -8px;
-}
-
 .aside-horizotal-break{
     border: 4px solid black; 
     margin: 5px -8px 10px -8px;
@@ -51,4 +47,8 @@
 }
 .aside-container .dropdown {
     margin-left: -23px;
+}
+.section-break,.work-section-break{
+    border : 0.5px solid black;
+    margin: 20px -8px 7px -8px;
 }

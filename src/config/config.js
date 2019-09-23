@@ -4,7 +4,7 @@ let config = {
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "mzGbvO3809PS8mebKxMkuM-Nht8.*AAJTSQACMDIAAlNLABxMS2xkdVk4SlY5VXpGOUpVODM2ZTdKZUtoZkE9AAJTMQACMDk.*",
+    ssoToken: "hYlVYQtV3NoDDAncfurwjaGQRFY.*AAJTSQACMDIAAlNLABxhcmpMY2tJTGtXNDVVU1QwNzZOekpVV3gxTzA9AAJTMQACMDM.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
