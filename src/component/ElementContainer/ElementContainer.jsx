@@ -14,6 +14,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +23,7 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'showBorder',
             btnClassName : '',
+            showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:''
         };
         
@@ -83,6 +85,33 @@ class ElementContainer extends Component {
         else{
             return null
         }
+    }
+
+    /**
+     * Delete element by id 
+     * @param {elementId} 
+     */
+    showDeleteElemPopup = (popup,elementId, labelText) => {
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showDeleteElemPopup : true
+        });
+
+        // { this.state.popup && <PopUp 
+        //     togglePopup={e => this.handleCommentPopup(e, this)} 
+        //     active={this.state.popup} 
+        //     handleChange={this.handleCommentChange}
+        //     saveContent={this.saveNewComment}
+        //     rows={COMMENTS_POPUP_ROWS}
+        //     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+        //     />}
+    }
+
+    deleteElement = () => {
+        console.log("deleteElement clicked >>> ", this.props.element)
+        // const {id}=this.props.element;
     }
 
     renderElement = (element = {}) => {
@@ -163,7 +192,7 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element" />
+                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
@@ -182,6 +211,10 @@ class ElementContainer extends Component {
                 saveContent={this.saveNewComment}
                 rows={COMMENTS_POPUP_ROWS}
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                showDeleteElemPopup = {this.state.showDeleteElemPopup}
+                deleteElement = {this.deleteElement}
+                // elementId = {element.id}
+                // labelText = {labelText}
                 />}
             </div >
         );
@@ -193,8 +226,11 @@ class ElementContainer extends Component {
      */
     handleCommentPopup(popup){
         this.setState({
-            popup
+            popup,
+            showDeleteElemPopup : false
         });
+        this.props.showBlocker(false);
+        hideBlocker();
     }
 
     // handleCommentPopup(popup){
