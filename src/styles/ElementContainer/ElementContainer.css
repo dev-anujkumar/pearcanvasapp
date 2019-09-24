@@ -6,6 +6,7 @@
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
+    max-width: 93.1%;
     /* border: 1.5px solid #aaa; */
 }
 
@@ -14,7 +15,7 @@
 }
 
 .showBorder {
-    border: 1px solid #737373;
+    border: 0.5px solid #737373;
 }
 
 .hideBorder {

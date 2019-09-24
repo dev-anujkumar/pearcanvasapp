@@ -5,7 +5,7 @@ import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
 
-import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon, metaDataAnchor} from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
 import forwardNavDisable from '../../images/ElementButtons/forwardNav_disabled.png';
@@ -43,7 +43,7 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
@@ -118,6 +118,11 @@ class Button extends Component {
             case buttonTypes.SECTION_BREAK_ELEMENT:
                 buttonJSX = <span className="btn-element section-break-elem" onClick={clickHandlerFn}>
                     {sectionBreakElement}
+                    </span>
+                break;
+            case buttonTypes.METADATA_ANCHOR:
+                buttonJSX = <span className="btn-element metadata-anchor" onClick={clickHandlerFn}>
+                    {metaDataAnchor}
                     </span>
                 break;
         }

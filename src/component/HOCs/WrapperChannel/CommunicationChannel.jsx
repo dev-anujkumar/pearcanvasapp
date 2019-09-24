@@ -151,6 +151,10 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'updateSlateTitleByID':
                     this.updateSlateTitleByID(message);
                     break;
+                case 'projectDetails' :
+                     config.projectUrn = message.id;
+                     config.projectEntityUrn = message.entityUrn;
+                    break;
             }
         }
 
@@ -180,13 +184,11 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             if (message && message.node) {
-                sendDataToIframe({
-                    'type': 'hideWrapperLoader',
-                    'message': { status: true }
-                })
+                sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
                 sendDataToIframe({'type': "ShowLoader",'message': { status: true }});
                // const { entityUrn, containerUrn } = message.node;
-                config.slateURN = message.node.entityUrn;
+                config.slateEntityURN = message.node.entityUrn;
+                config.slateManifestURN = message.node.containerUrn;
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

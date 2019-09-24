@@ -10,12 +10,19 @@ import ElementAsideContainer from '../ElementAsideContainer';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
-import { addComment } from './ElementContainer_Actions';
+import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
+<<<<<<< HEAD
 import {setActiveElement} from '../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
+=======
+import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+>>>>>>> 04577b392c7d53c8c08e5cbfffaee4346510a06d
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +31,7 @@ class ElementContainer extends Component {
             comment:"",
             borderToggle : 'showBorder',
             btnClassName : '',
+            showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:''
         };
         
@@ -91,6 +99,19 @@ class ElementContainer extends Component {
         } 
     }
 
+    handleBlurAside = () => {
+        if(this.props.elemBorderToggle){
+            this.setState({
+                borderToggle : 'showBorder',
+                btnClassName : ''
+            })
+        } else {
+            this.setState({
+                borderToggle : 'hideBorder',
+                btnClassName : ''
+            })
+        } 
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -104,6 +125,27 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * show Delete element Popup 
+     * @param {elementId} 
+     */
+    showDeleteElemPopup = (popup) => {
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showDeleteElemPopup : true
+        });
+    }
+
+    deleteElement = () => {
+        const {id, type}=this.props.element;
+        this.handleCommentPopup(false);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        // api needs to run from here
+        this.props.deleteElement(id, type);
+    }
+
     renderElement = (element = {}) => {
         let editor = '';
         let { labelText, index, handleCommentspanel,elementSepratorProps } = this.props;
@@ -113,7 +155,7 @@ class ElementContainer extends Component {
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
+                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
@@ -151,8 +193,8 @@ class ElementContainer extends Component {
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} />;
-                        labelText = 'QU';
+                        editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
+                        labelText = 'Qu';
                         break;
 
                     case elementTypeConstant.INTERACTIVE:
@@ -163,11 +205,11 @@ class ElementContainer extends Component {
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'Pop';
                                 break;
                                 
@@ -191,7 +233,7 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element" />
+                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
@@ -210,6 +252,8 @@ class ElementContainer extends Component {
                 saveContent={this.saveNewComment}
                 rows={COMMENTS_POPUP_ROWS}
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                showDeleteElemPopup = {this.state.showDeleteElemPopup}
+                deleteElement = {this.deleteElement}
                 />}
             </div >
         );
@@ -221,8 +265,11 @@ class ElementContainer extends Component {
      */
     handleCommentPopup(popup) {
         this.setState({
-            popup
+            popup,
+            showDeleteElemPopup : false
         });
+        this.props.showBlocker(false);
+        hideBlocker();
     }
 
     // handleCommentPopup(popup){
@@ -277,16 +324,20 @@ const mapDispatchToProps = (dispatch) => {
         addComment: (comments, elementId) => {
             dispatch(addComment(comments, elementId))
         },
-        fetchCommentByElement: (elementId) => {
-            dispatch(fetchCommentByElement(elementId))
+        fetchCommentByElement:(elementId)=>{
+          dispatch(fetchCommentByElement(elementId))
+        },
+        deleteElement : (id , type)=>{
+            dispatch(deleteElement(id, type))
         },
         setActiveElement:(element) => {
             dispatch(setActiveElement(element))
         }
-
-
     }
 }
+
+
+ 
 
 const mapStateToProps = (state) => {
 

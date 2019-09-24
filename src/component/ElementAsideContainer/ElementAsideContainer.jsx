@@ -103,7 +103,10 @@ class ElementAsideContainer extends Component {
             </div>
         )
 
-    }
+        </div>
+    )
+
+}
 
     /**
    * 
@@ -214,6 +217,7 @@ class ElementAsideContainer extends Component {
 
             )
     }
+   }
 
     /**
      * render | renders title and slate wrapper
