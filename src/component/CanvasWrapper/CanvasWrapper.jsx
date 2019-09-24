@@ -27,7 +27,8 @@ class CanvasWrapper extends Component {
             activeSlateIndex: 1,
             activeSlate: config.slateList[1],
             activeElement: {},
-            showBlocker : false
+            showBlocker : false,
+            editorToolbarRef: null
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -53,6 +54,11 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
+
+        // *************************************************
+        // commenting below setState() to test alternative
+        // *************************************************
+        // this.setState({ editorToolbarRef: this.refs.editorToolbarRef })
     }
 
     componentDidUpdate(){
@@ -121,9 +127,10 @@ class CanvasWrapper extends Component {
         return (
             <div className='content-composer'>
                 {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
-                <div id="editor-toolbar" className="editor-toolbar">
-                    {/* put editor tool */}
+                <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
+                    {/* editor tool goes here */}
                     <Toolbar />
+                    {/* custom list editor component */}
                 </div>
 
                 <div className='workspace'>
@@ -135,13 +142,13 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} refToToolBar={this.state.editorToolbarRef} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            {/* <span className='--rm-place'>Settings</span> */}
+                            {/* side setting component goes here */}
                             <Sidebar slateId={this.state.activeSlate} />
                             {/* put side setting */}
                         </div>

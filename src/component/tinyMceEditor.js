@@ -15,6 +15,7 @@ import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
+import { insertListButton } from './ListElement/eventBinding.js';
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -42,6 +43,7 @@ export class TinyMceEditor extends Component {
                         return false;
                     }
                 });
+                insertListButton(editor);
             },
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 

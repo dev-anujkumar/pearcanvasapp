@@ -36,6 +36,8 @@ class CustomOrderedList extends Component {
                 editor.on('keydown', (e) => {
                     const anchorNode = editor.selection.getSel().anchorNode;
                     let isOnlyMathmlFlag = false;
+                    const _selRange = editor.selection.getRng(true);
+                    const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
 
                     //------- later dependency ----------//
                     if ($(anchorNode).html() !== '<br>' &&
@@ -117,6 +119,7 @@ class CustomOrderedList extends Component {
                     /**
                      * Facilitate indent feature at end of text on TAB key
                      */
+                    console.log('key code', e.which)
                     if (atEnd && e.which == 9 && !e.shiftKey) {
                         editor.commands.indent();
                     }
@@ -132,7 +135,9 @@ class CustomOrderedList extends Component {
                      */
                     if ((e.which == 9)) {
                         let demo = $($(anchorNode).closest('ol')).attr('data-treelevel') || $($(anchorNode).closest('ul')).attr('data-treelevel');
+                        let updatelistFlag = true;
 
+                        // prevent tab indent event at last level of list tree //
                         if (!e.shiftKey) {
                             /**
                              * Case - cursor at last level
@@ -141,13 +146,57 @@ class CustomOrderedList extends Component {
                                 this.preventEventBubling(e);
                                 return false;
                             }
+                            /**
+                             * Case - hit TAB at any first list item irrespective of levels
+                             * if is is first item then prevent default
+                             */
+                            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : $(anchorNode).closest('li');
+                            if ($(closestLi).index() === 0) {
+                                this.preventEventBubling(e);
+                                return false;
+                            }
                         }
-                        this.preventEventBubling(e);
+                        /**
+                         * Case - hit Shift+TAB at a level where it has immediate childs, i.e li > ol > li,li
+                         * and provided it is not on a multiline selection
+                         * Then shift this level one level up along with all its child
+                         * finally perform updateNestedList
+                         */
+                        else if (e.shiftKey && !isMultilineSelection) {
+                            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : $(anchorNode).closest('li');
+                            let closestTreeLevel = $(anchorNode).closest('ol').attr('data-treelevel');
+                            /**
+                             * Case - prevent hitting Shift+TAB on very first list tree level
+                             */
+                            if (closestTreeLevel === '1') {
+                                updatelistFlag = false;
+                                return false;
+                            }
 
-                        setTimeout(() => {
-                            this.updateNestedList(e.target);
-                            return false;
-                        });
+                            if ($(closestLi).children('ol').length > 0) {
+                                $(closestLi).addClass('shfTabEvnt');
+                                updatelistFlag = false;
+                                setTimeout(() => {
+                                    let allOlElems = $('li.shfTabEvnt').find('ol');
+                                    let firstOlElem = allOlElems[0];
+                                    let firstLi = [...firstOlElem.children].slice(0, 1)[0];
+                                    let levelUpOL = $(firstLi).children('ol')[0];
+                                    let liSiblings = [...firstOlElem.children].slice(1);
+                                    levelUpOL.append(...liSiblings);
+                                    $('li.shfTabEvnt').find('ol')[0].remove();
+                                    $('li.shfTabEvnt').append(levelUpOL);
+                                    $('li.shfTabEvnt').removeClass('shfTabEvnt');
+                                    this.updateNestedList(e.target);
+                                });
+                            }
+                        }
+                        // this.preventEventBubling(e);
+                        if (updatelistFlag) {
+                            setTimeout(() => {
+                                this.updateNestedList(e.target);
+                                return false;
+                            });
+                        }
                     }
 
                     let firstChild = editor.targetElm.childNodes[0];

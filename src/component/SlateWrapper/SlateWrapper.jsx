@@ -12,9 +12,11 @@ import {
     createElement ,createVideoElement
     , createFigureElement , createInteractiveElement
 } from './SlateWrapper_Actions';
-import ListComponent from '../ListComponent'; // In Testing Phase
+import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
+import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -22,12 +24,53 @@ class SlateWrapper extends Component {
     constructor(props) {
         super(props);
 
+        this.setListDropRef = this.setListDropRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.customListDropClickAction = this.customListDropClickAction.bind(this);
     }
 
     componentDidMount(){
         if(document.getElementById("cypress-0")){
             document.getElementById("cypress-0").focus();
         }
+
+        // binds handleClickOutside to document mousedown //
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+
+    /**
+     * setListDropRef | sets list drop ref to listDropRef
+     * @param {*} node | node reference to ListButtonDrop component
+     */
+    setListDropRef(node) {
+        this.listDropRef = node;
+    }
+
+    /**
+     * handleClickOutside | currently handles when clicked outside of list drop
+     * @param {*} event | current triggerd event with target
+     */
+    handleClickOutside(event) {
+        // *********************************************************************
+        // handle when clicked outside of listdrop 
+        if (this.listDropRef && !this.listDropRef.contains(event.target)) {
+            if (event.target.classList.contains('fa-list-ol') ||
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                return;
+            let _listWrapperDiv = document.querySelector('#listDropWrapper');
+            if (_listWrapperDiv)
+                _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
+        }
+        // *********************************************************************
+    }
+
+    /**
+     * customListDropClickAction | handle when user clicks one of the ordered list option 
+     * @param {string} type | chosen orderd list type
+     * @param {number} value | entered numeric value
+     */
+    customListDropClickAction(type, value) {
+        console.log(type, value);
     }
 
     /**
@@ -72,9 +115,9 @@ class SlateWrapper extends Component {
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    // this.renderElement(_slateBodyMatter, _slateType)
+                                    this.renderElement(_slateBodyMatter, _slateType)
                                 }
-                                <ListComponent />
+                                {/* <ListComponent /> */}
                             </div>
                             <SlateFooter />
                         </div>
@@ -288,6 +331,14 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
+                <ListButtonDropPortal refToToolBar={this.props.refToToolBar}>
+                    <ListButtonDrop
+                        selectedOption={`lower-alpha`}
+                        startValue={4}
+                        setListDropRef={this.setListDropRef}
+                        onListSelect={this.customListDropClickAction}
+                    />
+                </ListButtonDropPortal>
             </React.Fragment>
         );
     }
