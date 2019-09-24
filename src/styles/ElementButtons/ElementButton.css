@@ -117,8 +117,8 @@
 
 .text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover{
     opacity: 1;
-    border: solid 1px #434343;
     fill: black!important;
+    border: solid 1px #434343;
 }
 
 
