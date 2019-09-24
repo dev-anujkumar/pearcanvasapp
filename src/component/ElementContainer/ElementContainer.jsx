@@ -9,12 +9,14 @@ import ElementInteractive from '../ElementInteractive';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
-import {addComment} from './ElementContainer_Actions';
+import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -88,30 +90,24 @@ class ElementContainer extends Component {
     }
 
     /**
-     * Delete element by id 
+     * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (popup,elementId, labelText) => {
+    showDeleteElemPopup = (popup) => {
         this.props.showBlocker(true);
         showTocBlocker();
         this.setState({
             popup,
             showDeleteElemPopup : true
         });
-
-        // { this.state.popup && <PopUp 
-        //     togglePopup={e => this.handleCommentPopup(e, this)} 
-        //     active={this.state.popup} 
-        //     handleChange={this.handleCommentChange}
-        //     saveContent={this.saveNewComment}
-        //     rows={COMMENTS_POPUP_ROWS}
-        //     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
-        //     />}
     }
 
     deleteElement = () => {
-        console.log("deleteElement clicked >>> ", this.props.element)
-        // const {id}=this.props.element;
+        const {id, type}=this.props.element;
+        this.handleCommentPopup(false);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        // api needs to run from here
+        this.props.deleteElement(id, type);
     }
 
     renderElement = (element = {}) => {
@@ -124,7 +120,7 @@ class ElementContainer extends Component {
                 break
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
@@ -213,8 +209,6 @@ class ElementContainer extends Component {
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                 showDeleteElemPopup = {this.state.showDeleteElemPopup}
                 deleteElement = {this.deleteElement}
-                // elementId = {element.id}
-                // labelText = {labelText}
                 />}
             </div >
         );
@@ -287,10 +281,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
+        },
+        deleteElement : (id , type)=>{
+            dispatch(deleteElement(id, type))
         }
-      
-      
-}
+    }
 }
 
 
