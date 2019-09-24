@@ -31,16 +31,17 @@ const findElementType = (element) => {
 			elementType['primaryOption'] = 'primary-blockquote';
 			switch (element.elementdata.type) {
 				case 'pullquote':
-					elementType['secondaryOption'] = 'secondary-pullquote'
+					elementType['secondaryOption'] = 'secondary-pullquote';
 					break;
 				case 'blockquote':
-					elementType['secondaryOption'] = 'secondary-marginalia'
+					elementType['secondaryOption'] = 'secondary-marginalia';
 					break;
 				case 'marginalia':
-					elementType['secondaryOption'] = 'secondary-marginalia-attribution'
+					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
 			}
 			break;
+
 		case 'figure':
 			if (element.figuretype && element.subtype !== undefined) {
 				if (element.figuretype == 'image') {
@@ -91,6 +92,63 @@ const findElementType = (element) => {
 				}
 			}
 			break;
+
+		case 'element-aside':
+			if(element.subtype === '' || element.subtype === 'sidebar') {
+				elementType['elementType'] = 'element-aside';
+				switch(element.designtype) {
+					case 'asideTacticBox':
+						elementType['primaryOption'] = 'primary-aside-tactic';
+						elementType['secondaryOption'] = 'secondary-aside-tactic';
+						break;
+					case 'asideSidebar01':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb1';
+						break;
+					case 'asideSidebar02':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb2';
+						break;
+					case 'asideSidebar03':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb3';
+						break;
+					case 'asideSidebar04':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb4';
+						break;
+					case 'asideSidebar05':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb5';
+						break;
+					case 'asideSidebarFeature':
+						elementType['primaryOption'] = 'primary-aside-feature';
+						elementType['secondaryOption'] = 'secondary-aside-feature';
+						break;
+					case 'asideActivity':
+						elementType['primaryOption'] = 'primary-aside-activity';
+						elementType['secondaryOption'] = 'secondary-aside-activity';
+						break;	
+					default:
+						elementType['primaryOption'] = 'primary-aside-lol';
+						elementType['secondaryOption'] = 'secondary-aside-lol';
+						break;
+				}
+			} else if(element.subtype === 'workedexample') {
+				elementType['elementType'] = 'element-workedexample';
+				switch(element.designtype) {
+					case 'workedexample1':
+						elementType['primaryOption'] = 'primary-workedexample-we1';
+						elementType['secondaryOption'] = 'secondary-workedexample-we1';
+						break;
+					case 'workedexample2':
+						elementType['primaryOption'] = 'primary-workedexample-we2';
+						elementType['secondaryOption'] = 'secondary-workedexample-we2';
+						break;
+				}
+			}
+			break;
+
 		default: 
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
@@ -113,7 +171,7 @@ export const fetchElementTag = (element) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateURN}`, {
+	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken

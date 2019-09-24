@@ -29,7 +29,6 @@ class CanvasWrapper extends Component {
             navigation: false,
             activeSlateIndex: 0,
             activeSlate: config.slateList[0],
-            activeElement: {},
             showBlocker : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -84,27 +83,27 @@ class CanvasWrapper extends Component {
     }
 
     navigate = (nav) => {
-        let activeSlateIndex = this.state.activeSlateIndex;
-        if(nav === 'next') {
-            if(activeSlateIndex < (config.slateList.length -1)) {
-                activeSlateIndex++;
-            }
-        } else if(nav === 'back') {
-            if(activeSlateIndex > 0 ) {
-                activeSlateIndex--;
-            }
-        }
+        // let activeSlateIndex = this.state.activeSlateIndex;
+        // if(nav === 'next') {
+        //     if(activeSlateIndex < (config.slateList.length -1)) {
+        //         activeSlateIndex++;
+        //     }
+        // } else if(nav === 'back') {
+        //     if(activeSlateIndex > 0 ) {
+        //         activeSlateIndex--;
+        //     }
+        // }
 
-        this.setState({
-            navigation: true,
-            activeSlateIndex,
-            activeSlate:config.slateList[activeSlateIndex]
-        });
-          this.props.fetchSlateData(config.slateList[activeSlateIndex]);
-        sendDataToIframe({
-            'type': HideWrapperLoader,
-            'message': { status: true }
-        })
+        // this.setState({
+        //     navigation: true,
+        //     activeSlateIndex,
+        //     activeSlate:config.slateList[activeSlateIndex]
+        // });
+        // this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
     }
 
     showCanvasBlocker = (bFlag) =>{
@@ -114,12 +113,12 @@ class CanvasWrapper extends Component {
     }
 
     render() {
-        let navDisabled = '';
-        if(this.state.activeSlateIndex === 0) {
-            navDisabled = 'back';
-        } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
-            navDisabled = 'next';
-        }
+        // let navDisabled = '';
+        // if(this.state.activeSlateIndex === 0) {
+        //     navDisabled = 'back';
+        // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
+        //     navDisabled = 'next';
+        // }
 
         return (
             <div className='content-composer'>
@@ -138,7 +137,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
                             </div>
                         </div>
                     </div>
