@@ -95,6 +95,7 @@ const findElementType = (element) => {
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
 			elementType['secondaryOption'] = 'secondary-paragraph';
+			break;
 	}
 
 	elementType['elementId'] = element.id;

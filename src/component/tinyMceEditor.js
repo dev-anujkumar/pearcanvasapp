@@ -61,7 +61,7 @@ export class TinyMceEditor extends Component {
     }
 
     handleFocus=(e)=>{
-        this.props.handleEditorFoucs()
+        this.props.handleEditorFocus()
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }

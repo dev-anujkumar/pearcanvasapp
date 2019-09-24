@@ -37,7 +37,7 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-        // this.props.fetchSlateData(this.state.activeSlate);
+        this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
         //     document.getElementById("cypress-0").focus();
         // }
@@ -138,11 +138,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-<<<<<<< HEAD
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} />
-=======
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
->>>>>>> 662cc77721568f50d21f652b84a0bbba16618155
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
                             </div>
                         </div>
                     </div>
