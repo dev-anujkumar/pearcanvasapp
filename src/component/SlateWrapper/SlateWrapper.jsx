@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement
+    , createFigureElement , createInteractiveElement, swapElement
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
@@ -74,11 +74,23 @@ class SlateWrapper extends Component {
                             <div className='element-list'>
                             <Sortable
                                 options={{
-                                    handle : '.btn-element element-label', //Drag only by element tag name button
-                                    dataIdAttr: 'data-id',
-                                    forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
-                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    // dataIdAttr: 'data-id',
+                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
+                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scroll: true, // or HTMLElement
+                                    // Element dragging started
+                                    onStart:  () => {
+                                        let dataObj = {
+                                            currentIndex : 1,
+                                            swappedIndex : 2,
+                                        }
+                                        this.props.swapElement(dataObj)
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                    onEnd: () => {
+                                        
+                                    }
                                 }}
                                 tag="div"
                             >
@@ -324,6 +336,7 @@ export default connect(
         createElement,
         createVideoElement,
         createFigureElement,
-        createInteractiveElement
+        createInteractiveElement,
+        swapElement
     }
 )(SlateWrapper);

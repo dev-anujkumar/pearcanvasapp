@@ -287,3 +287,35 @@ export const createInteractiveElement = (eleInteractive, index) => (dispatch, ge
 
    // })
 };
+
+export const swapElement = (dataObj) => (dispatch, getState) => {
+    const {currentIndex, swappedIndex} = dataObj;
+
+    let _requestData = {
+            "entityUrn": "string",
+            "containerUrn": "string",
+            "label": "string",
+            "projectUrn": config.projectUrn,
+            "currentParentEntityUrn": "string",
+            "destinationDetails": {
+                    "parentEntityUrn": "string",
+                    "containerType": "string",
+                    "index": swappedIndex
+                }
+            }
+
+    axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
+    JSON.stringify(_requestData),
+    {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    })
+    .then((responseData) =>{
+        console.log('this is response data from swap api', responseData)
+    })
+    .catch((err) => {
+        console.log('Error occured while swaping element', err)
+    })
+}
