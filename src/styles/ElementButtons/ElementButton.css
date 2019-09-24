@@ -100,7 +100,7 @@
     padding-top: 2px;
 }
 
-.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor{
     width: 30px;
     height: 30px;
     display: flex;
@@ -111,10 +111,11 @@
     border: solid 1px #aaaaaa;
     border-radius: 50%;
     align-items: center;
-    opacity: 0.5;
+    opacity: 1;
+    fill: #9e9e9e!important;
 }
 
-.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover{
+.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover{
     opacity: 1;
 }
 
@@ -130,7 +131,7 @@
     width: 100%;
 }
 .section-break-elem svg {
-    fill: #9e9e9e;
+    fill: #9E9E9E;
     width: 20px;
     height: 20px;
     pointer-events: none;
@@ -141,4 +142,8 @@
     cursor: not-allowed !important;
     color: gray !important;
     background: transparent;
+}
+
+.activeTagBgColor {
+    background-color: green !important;
 }

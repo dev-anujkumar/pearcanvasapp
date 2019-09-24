@@ -4,17 +4,18 @@ let config = {
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "MfsqhrUcu66A5zOGDZDWH7hHOvc.*AAJTSQACMDIAAlNLABxHYkYydnFQNC94eGpQMW45ME1NMGtmcFBhV0E9AAJTMQACMDk.*",
+    ssoToken: "Rn2Rkqd7Y1JDPTK_gqJ9HopgPTw.*AAJTSQACMDIAAlNLABxFVXRxcWJlSXFmSHVqdTl4N0VSNm85VE5ZbEk9AAJTMQACMDQ.*",
     userId: 'c5test01',
     assignee:'c5test01',
-    slateURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+    slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
+    slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c'
     ],
-    projectUrn: "urn:pearson:distributable:e80d2cea-a0d2-474f-8896-82caa92a66d3",
-    project_ENTITY_URN:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
+    projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
+    projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     WRAPPER_URL : 'https://localhost:4000' // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
 };

@@ -5,7 +5,6 @@ import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
-import SlateHeader from '../CanvasSlateHeader';
 import Sidebar from '../Sidebar';
 import {
     fetchSlateData
@@ -17,23 +16,25 @@ import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            navigation: false,
             activeSlateIndex: 1,
             activeSlate: config.slateList[1],
-            activeElement: {}
+            activeElement: {},
+            showBlocker : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-       this.props.fetchSlateData(this.state.activeSlate);
+     //  this.props.fetchSlateData(this.state.activeSlate);
        if(document.getElementById("cypress-0")){
            document.getElementById("cypress-0").focus();
        }
@@ -43,10 +44,10 @@ class CanvasWrapper extends Component {
         });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
-        sendDataToIframe({
-            'type': HideWrapperLoader,
-            'message': { status: true }
-        })
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
@@ -55,18 +56,21 @@ class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        if(window.tinymce.activeEditor) {
-            document.getElementById(window.tinymce.activeEditor.id).focus();
-        } 
-        // else {
-        //     document.getElementById("cypress-0").focus();
-        // }
-        // if(document.getElementById("cypress-0")){
-        //     document.getElementById("cypress-0").focus();
-        // }else{
-        //     //document.getElementById(window.tinymce.activeEditor.id).focus();
-        // }
+        if(this.state.navigation) {
+            if(document.getElementById("cypress-0")){
+                document.getElementById("cypress-0").focus();
+            }
+
+            this.setState({
+                navigation: false
+            });
+        } else {
+            if(window.tinymce.activeEditor) {
+                document.getElementById(window.tinymce.activeEditor.id).focus();
+            }
+        }
     }
+    
     handleCommentspanel(elementId){
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId);
@@ -89,10 +93,21 @@ class CanvasWrapper extends Component {
         }
 
         this.setState({
+            navigation: true,
             activeSlateIndex,
             activeSlate:config.slateList[activeSlateIndex]
         });
-        this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+          this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        sendDataToIframe({
+            'type': HideWrapperLoader,
+            'message': { status: true }
+        })
+    }
+
+    showCanvasBlocker = (bFlag) =>{
+        this.setState({
+            showBlocker: bFlag
+        });
     }
 
     render() {
@@ -105,6 +120,7 @@ class CanvasWrapper extends Component {
 
         return (
             <div className='content-composer'>
+                {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <Toolbar />
@@ -119,7 +135,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} />
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
                             </div>
                         </div>
                     </div>
@@ -137,7 +153,6 @@ class CanvasWrapper extends Component {
     
 }
 CanvasWrapper.displayName = "CanvasWrapper"
-
 const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,

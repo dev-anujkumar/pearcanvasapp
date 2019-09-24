@@ -7,7 +7,7 @@ import '../../styles/ElementSaprator/ElementSaprator.css'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType } = props
+    const { esProps, elementType, slateType, sectionBreak } = props
     let buttonRef = useRef(null)
     /**
      * @description: This hook is used for handling the outer click, 
@@ -55,7 +55,7 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
                 <div className='elemDiv-split'>
-                    {elementType !== 'WE' && !props.upperOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                         <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
                 </div>
 
@@ -70,7 +70,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps)}
+                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak)}
                         </ul>
                     </div>
                 </div>
@@ -103,8 +103,30 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps) {
-    return esProps.map((elem, key) => {
+export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak) {
+    let updatedEsProps;
+
+    if(slateType == 'container-introduction'){
+        updatedEsProps = esProps.filter((btnObj) => {
+            return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+        })
+    }else{
+        updatedEsProps = esProps.filter((btnObj) => {
+            return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+        })
+    }
+
+    if(elementType == 'element-aside'){
+        updatedEsProps = esProps.filter((btnObj) => {
+            if(sectionBreak){
+                return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
+            }else{
+                return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+            }
+        })
+    }
+
+    return updatedEsProps.map((elem, key) => {
         return (
             <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                 <li key={key}>

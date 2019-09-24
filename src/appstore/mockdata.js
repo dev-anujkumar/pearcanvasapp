@@ -23,7 +23,7 @@ export default {
                     "html": {
                         "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
                     },
-                    "comments": true,
+                    "comments": false,
                     "tcm": true,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
@@ -156,27 +156,27 @@ export default {
                     "alignment": "text-width",
                     "title": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "12345",
+                        "text": "Label for Figure Image-TextWidth",
                         "textsemantics": [],
                         "mathml": []
                     },
                     "subtitle": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "eresrwqe",
+                        "text": "Title for Figure Image-TextWidth",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
                     },
                     "captions": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "sdafsad",
+                        "text": "Caption for Figure Image-TextWidth",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
                     },
                     "credits": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "asdfasdfasdf",
+                        "text": "Credit for Figure Image-TextWidth",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
@@ -197,13 +197,54 @@ export default {
                         "postertext": "",
                         "tableasHTML": ""
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 },
                 {
-                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                    "id": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+                    "type": "figure",
+                    "figuretype": "interactive",
+                    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                    "title": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": []
+                    },
+                    "subtitle": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "captions": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "credits": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "figuredata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                        "interactiveid": "",
+                        "interactivetype": "fpo",
+                        "interactiveformat": "mmi"
+                    },
+                    "versionUrn": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+                    "contentUrn": "urn:pearson:entity:4602d9f2-b2b6-4882-b988-b06703e21e74"
+                },
+                {
+                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec465",
                     "type": "figure",
                     "figuretype": "image",
                     "subtype": "image50Text",
@@ -211,33 +252,33 @@ export default {
                     "alignment": "half-text",
                     "title": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "12345",
+                        "text": "",
                         "textsemantics": [],
                         "mathml": []
                     },
                     "subtitle": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "eresrwqe",
+                        "text": "",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
                     },
                     "captions": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "sdafsad",
+                        "text": "",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
                     },
                     "credits": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "asdfasdfasdf",
+                        "text": "",
                         "textsemantics": [],
                         "mathml": [],
                         "footnotes": []
                     },
                     "figuredata": {
-                        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+                        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
                         "height": "1225",
                         "width": "1440",
                         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -245,18 +286,19 @@ export default {
                     },
                     "html": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "title": "Label for Figure Image-50% Text",
-                        "subtitle": "Title for Figure Image-50% Text",
-                        "caption": "Caption for Figure Image-50% Text",
-                        "credit": "Credit for Figure Image-50% Text",
+                        "title": "",
+                        "subtitle": "",
+                        "caption": "",
+                        "credit": "",
                         "postertext": "",
                         "tableasHTML": ""
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
-                },
+                
+               },
                 {
                     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
                     "type": "figure",
@@ -316,14 +358,14 @@ export default {
                         "postertext": "",
                         "tableasHTML": ""
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
                     "contentUrn": "urn:pearson:entity:b8c31acf-2c66-4a05-92ac-e0d910ec2720"
                 },
                 {
        
-                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                    "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
                     "type": "figure",
                     "figuretype": "video",
                     "subtype": "figureVideo",
@@ -390,8 +432,8 @@ export default {
                         "postertext": "",
                         "tableasHTML": ""
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 },
@@ -464,23 +506,6 @@ export default {
             "frontmatter": [],
             "bodymatter": [
                 {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "Paragraph"
-                    },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">Paragraph</p>"
-                    },
-                    "comments": true,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                },
-                {
                     "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
                     "type": "element-authoredtext",
                     "subtype": "",
@@ -499,8 +524,25 @@ export default {
                     "html": {
                         "text": "<h1 class=\"heading1NummerEins\">Heading 1</h1>"
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                },
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "Paragraph"
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\">Paragraph</p>"
+                    },
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                 },
@@ -523,8 +565,8 @@ export default {
                     "html": {
                         "text": "<h4 class=\"heading4NummerEins\">Heading 4</h4>"
                     },
-                    "comments": true,
-                    "tcm": true,
+                    "comments": false,
+                    "tcm": false,
                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                 }
@@ -558,8 +600,8 @@ export default {
                     },
                     "versionUrn": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
                     "contentUrn": "urn:pearson:entity:2c10d514-1947-460d-9bd4-f9e31a84d275",
-                    "tcm": true,
-                    "comments": true,
+                    "comments": false,
+                    "tcm": false,
                     "status": "approved"
                 },
                 {
@@ -577,8 +619,8 @@ export default {
                     },
                     "versionUrn": "urn:pearson:work:4c2b1369-73ea-4d90-94fd-1e7ac877d668",
                     "contentUrn": "urn:pearson:entity:ed185293-3805-4aa1-99bd-12809b8a22e7",
-                    "tcm": true,
-                    "comments": true,
+                    "comments": false,
+                    "tcm": false,
                     "status": "approved"
                 },
                 {

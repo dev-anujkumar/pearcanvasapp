@@ -65,20 +65,13 @@ describe('Testing Element Audio-Video component', () => {
         it('render Element component ', () => {  
             console.log(elementAudioVideo.debug());
             expect(elementAudioVideo).toMatchSnapshot();
-        })
-    
+        })   
         it('onClick', () => {
             elementAudioVideoInstance.onClick();
-        })
-        it('onBlur', () => {
-            elementAudioVideoInstance.onBlur();
         })
         it('onKeyup', () => {
             elementAudioVideoInstance.onKeyup();
         })
-    
-        it('onFocus', () => {
-            elementAudioVideoInstance.onFocus();
-        })
+
     })
 });
