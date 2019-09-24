@@ -78,6 +78,7 @@ figure,.element-container{
 
 .pearson-component.image.figureData img{
     max-width: 100%;
+    text-align: center;
 }
  
 [placeholder]:empty::before {
