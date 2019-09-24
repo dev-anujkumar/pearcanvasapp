@@ -50,6 +50,16 @@ export class ElementFigure extends Component {
         //     case MATH_IMAGE:
                 var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
                 switch (model.subtype) {
+                    case "image25Text":
+                        divClass = 'divImage25Text',
+                            figureClass = 'figureImage25Text',
+                            figLabelClass = 'heading4Image25TextNumberLabel',
+                            figTitleClass = 'heading4Image25TextTitle',
+                            dataType = 'image',
+                            imageDimension = 'image25Text',
+                            figCaptionClass = 'figcaptionImage25Text',
+                            figCreditClass = 'paragraphImage25TextCredit';
+                        break;
                     case "image50Text":
                         divClass = 'divImage50Text',
                             figureClass = 'figureImage50Text',
