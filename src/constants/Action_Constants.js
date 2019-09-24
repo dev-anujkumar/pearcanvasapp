@@ -22,5 +22,6 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
 /*---------------Element Container ----------------------*/ 
 export const ADD_COMMENT = "ADD_COMMENT"
+export const DELETE_ELEMENT = "DELETE_ELEMENT"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'

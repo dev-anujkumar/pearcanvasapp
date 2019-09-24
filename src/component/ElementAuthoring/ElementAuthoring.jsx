@@ -20,7 +20,7 @@ export class ElementAuthoring extends Component {
           index={this.props.index}
           elementId={this.props.elementId}
           element={this.props.element}
-          placeholder={placeholder}
+          placeholder="Type Something..."
           className={className}
           model={model}
           handleEditorFocus={this.props.handleFocus}

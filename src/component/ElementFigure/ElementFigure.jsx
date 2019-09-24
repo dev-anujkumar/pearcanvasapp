@@ -19,6 +19,7 @@ WIDER,
 FULL,
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
+
 //import './../../styles/ElementFigure/Book.css';
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -42,14 +43,14 @@ export class ElementFigure extends Component {
         const { type} = this.props;
 
         var figureJsx;
-        switch (model.figuretype) {
+        // switch (model.type) {
 
-            case IMAGE:
-            case TABLE:
-            case MATH_IMAGE:
+        //     case IMAGE:
+        //     case TABLE:
+        //     case MATH_IMAGE:
                 var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
-                switch (true) {
-                    case (model.figuretype === IMAGE && model.alignment === HALF_TEXT):
+                switch (model.subtype) {
+                    case "image50Text":
                         divClass = 'divImage50Text',
                             figureClass = 'figureImage50Text',
                             figLabelClass = 'heading4Image50TextNumberLabel',
@@ -59,7 +60,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50Text',
                             figCreditClass = 'paragraphImage50TextCredit';
                         break;
-                    case (model.figuretype === TABLE && model.alignment === HALF_TEXT):
+                    case 'image50TextTableImage':
                         divClass = 'divImage50TextTableImage',
                             figureClass = 'figureImage50TextTableImage',
                             figLabelClass = 'heading4Image50TextTableImageNumberLabel',
@@ -69,7 +70,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50TextTableImage',
                             figCreditClass = 'paragraphImage50TextTableImageCredit';
                         break;
-                    case (model.figuretype === MATH_IMAGE && model.alignment === HALF_TEXT):
+                    case 'image50TextMathImage':
                             figureClass = 'figureImage50TextMathImage',
                             figLabelClass = 'heading4Image50TextMathImageNumberLabel',
                             figTitleClass = 'heading4Image50TextMathImageTitle',
@@ -78,7 +79,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImage50TextMathImage',
                             figCreditClass = 'paragraphImage50TextMathImageCredit';
                         break;
-                    case (model.figuretype === IMAGE && model.alignment === TEXT_WIDTH):
+                    case 'imageTextWidth':
                         divClass = 'divImageTextWidth',
                             figureClass = 'figureImageTextWidth',
                             figLabelClass = 'heading4ImageTextWidthNumberLabel',
@@ -88,7 +89,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageTextWidth',
                             figCreditClass = 'paragraphImageTextWidthCredit';
                         break;
-                    case (model.figuretype === TABLE && model.alignment === TEXT_WIDTH):
+                    case 'imageTextWidthTableImage':
                         divClass = 'divImageTextWidthTableImage',
                             figureClass = 'figureImageTextWidthTableImage',
                             figLabelClass = 'heading4ImageTextWidthTableImageNumberLabel',
@@ -98,7 +99,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageTextWidthTableImage',
                             figCreditClass = 'paragraphImageTextWidthTableImageCredit';
                         break;
-                    case (model.figuretype === MATH_IMAGE && model.alignment === TEXT_WIDTH):
+                    case 'imageTextWidthMathImage':
                         divClass = 'divImageTextWidthMathImage',
                             figureClass = 'figureImageTextWidthMathImage',
                             figLabelClass = 'heading4ImageTextWidthMathImageNumberLabel',
@@ -109,7 +110,7 @@ export class ElementFigure extends Component {
                             figCreditClass = 'paragraphImageTextWidthMathImageCredit';
                         break;
 
-                    case (model.figuretype === IMAGE && model.alignment === WIDER):
+                    case 'imageWiderThanText':
                         divClass = 'divImageWiderThanText',
                             figureClass = 'figureImageWiderThanText',
                             figLabelClass = 'heading4ImageWiderThanTextNumberLabel',
@@ -119,7 +120,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanText',
                             figCreditClass = 'paragraphImageWiderThanTextCredit';
                         break;
-                    case (model.figuretype === TABLE && model.alignment === WIDER):
+                    case 'imageWiderThanTextTableImage':
                         divClass = 'divImageWiderThanTextTableImage',
                             figureClass = 'figureImageWiderThanTextTableImage',
                             figLabelClass = 'heading4ImageWiderThanTextTableImageNumberLabel',
@@ -129,7 +130,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanTextTableImage',
                             figCreditClass = 'paragraphImageWiderThanTextTableImageCredit';
                         break;
-                    case (model.figuretype === MATH_IMAGE && model.alignment === WIDER):
+                    case 'imageWiderThanTextMathImage':
                         divClass = 'divImageWiderThanTextMathImage',
                             figureClass = 'figureImageWiderThanTextMathImage',
                             figLabelClass = 'heading4ImageWiderThanTextMathImageNumberLabel',
@@ -139,7 +140,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageWiderThanTextMathImage',
                             figCreditClass = 'paragraphImageWiderThanTextMathImageCredit';
                         break;
-                    case (model.figuretype === IMAGE && model.alignment === FULL):
+                    case 'imageFullscreen':
                         divClass = 'divImageFullscreenImage',
                             figureClass = 'figureImageFullscreen',
                             figLabelClass = 'heading4ImageFullscreenNumberLabel',
@@ -149,7 +150,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageFullscreen',
                             figCreditClass = 'paragraphImageFullscreen';
                         break;
-                    case (model.figuretype === TABLE && model.alignment === FULL):
+                    case 'imageFullscreenTableImage':
                         divClass = 'divImageFullscreenTableImage',
                             figureClass = 'figureImageFullscreenTableImage',
                             figLabelClass = 'heading4ImageFullscreenTableImageNumberLabel',
@@ -159,7 +160,7 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageFullscreenTableImage',
                             figCreditClass = 'paragraphImageFullscreenTableImageCredit';
                         break;
-                    case (model.figuretype === MATH_IMAGE && model.alignment === FULL):
+                    case 'imageFullscreenMathImage':
                         divClass = 'divImageFullscreenMathImage',
                             figureClass = 'figureImageFullscreenMathImage',
                             figLabelClass = 'heading4ImageFullscreenMathImageNumberLabel',
@@ -197,8 +198,10 @@ export class ElementFigure extends Component {
                     </div>
 
                 </div>
-                break;
-            case AUTHORED_TEXT:
+         
+            
+            switch (model.subtype) {
+            case "mathml":
                 figLabelClass = "heading4TextNumberLabel"; figTitleClass = "heading4TextTitle"; figCaptionClass = "figcaptionText"; figCreditClass = "paragraphTextCredit";
                 /**JSX for MathML/ChemML Editor*/
                 figureJsx = <div className="divTextFigure">
@@ -225,7 +228,7 @@ export class ElementFigure extends Component {
 
                 </div>
                 break;
-            case CODELISTING:
+            case "codelisting":
                 figLabelClass = "heading4CodeSnippetNumberLabel"; figTitleClass = "heading4CodeSnippetTitle"; figCaptionClass = "figcaptionCodeSnippet"; figCreditClass = "paragraphCodeSnippetCredit";
                 /**JSX for Block Code Editor*/
                 figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">

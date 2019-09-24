@@ -68,7 +68,7 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
-                        <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
+                        <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
                                     this.renderElement(_slateBodyMatter, _slateType)
@@ -122,11 +122,9 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "figuretype": "image",
-                    "subtype": "image50Text",
-                    "alignment": "half-text",
+                    "subtype": "image50Text"
                 }
-                this.props.createFigureElement(eleFigure, Number(index + 1))
+                this.props.createFigureElement(eleFigure, indexToinsert)
                 break;
             case 'audio-elem':
                 var elevideo = {
@@ -212,6 +210,18 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'section-break-elem',
+                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
+                tooltipText: 'Section Break',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'metadata-anchor',
+                buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
+                tooltipText: 'Metadata Anchor',
+                tooltipDirection: 'left'
             }
         ]
 
@@ -242,6 +252,7 @@ class SlateWrapper extends Component {
                                 labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 elementSepratorProps = {this.elementSepratorProps}
+                                showBlocker = {this.props.showBlocker}
                             />
                             <ElementSaprator
                                 index={index}
