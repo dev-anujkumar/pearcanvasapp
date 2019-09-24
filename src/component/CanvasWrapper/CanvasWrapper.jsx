@@ -18,15 +18,17 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
+// import { c2MediaModule } from './../../js/c2_media_module';
+// const c2AssessmentModule = require('../js/c2_assessment_module.js');
+
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            navigation: false,
-            activeSlateIndex: 1,
-            activeSlate: config.slateList[1],
-            activeElement: {},
+            // navigation: false,
+            // activeSlateIndex: 0,
+            // activeSlate: config.slateList[0],
             showBlocker : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -34,10 +36,10 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-     //  this.props.fetchSlateData(this.state.activeSlate);
-       if(document.getElementById("cypress-0")){
-           document.getElementById("cypress-0").focus();
-       }
+        // this.props.fetchSlateData(this.state.activeSlate);
+        // if(document.getElementById("cypress-0")){
+        //     document.getElementById("cypress-0").focus();
+        // }
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -53,22 +55,22 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
+
+
     }
 
     componentDidUpdate(){
-        if(this.state.navigation) {
-            if(document.getElementById("cypress-0")){
-                document.getElementById("cypress-0").focus();
-            }
+        // if(this.state.navigation) {
+            // if(document.getElementById("cypress-0")){
+            //     document.getElementById("cypress-0").focus();
+            // }
 
-            this.setState({
-                navigation: false
-            });
-        } else {
-            if(window.tinymce.activeEditor) {
+        //     this.state.navigation = false;
+        // } else {
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
-        }
+        // }
     }
     
     handleCommentspanel(elementId){
@@ -81,27 +83,27 @@ class CanvasWrapper extends Component {
     }
 
     navigate = (nav) => {
-        let activeSlateIndex = this.state.activeSlateIndex;
-        if(nav === 'next') {
-            if(activeSlateIndex < (config.slateList.length -1)) {
-                activeSlateIndex++;
-            }
-        } else if(nav === 'back') {
-            if(activeSlateIndex > 0 ) {
-                activeSlateIndex--;
-            }
-        }
+        // let activeSlateIndex = this.state.activeSlateIndex;
+        // if(nav === 'next') {
+        //     if(activeSlateIndex < (config.slateList.length -1)) {
+        //         activeSlateIndex++;
+        //     }
+        // } else if(nav === 'back') {
+        //     if(activeSlateIndex > 0 ) {
+        //         activeSlateIndex--;
+        //     }
+        // }
 
-        this.setState({
-            navigation: true,
-            activeSlateIndex,
-            activeSlate:config.slateList[activeSlateIndex]
-        });
-          this.props.fetchSlateData(config.slateList[activeSlateIndex]);
-        sendDataToIframe({
-            'type': HideWrapperLoader,
-            'message': { status: true }
-        })
+        // this.setState({
+        //     navigation: true,
+        //     activeSlateIndex,
+        //     activeSlate:config.slateList[activeSlateIndex]
+        // });
+        // this.props.fetchSlateData(config.slateList[activeSlateIndex]);
+        // sendDataToIframe({
+        //     'type': HideWrapperLoader,
+        //     'message': { status: true }
+        // })
     }
 
     showCanvasBlocker = (bFlag) =>{
@@ -111,12 +113,12 @@ class CanvasWrapper extends Component {
     }
 
     render() {
-        let navDisabled = '';
-        if(this.state.activeSlateIndex === 0) {
-            navDisabled = 'back';
-        } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
-            navDisabled = 'next';
-        }
+        // let navDisabled = '';
+        // if(this.state.activeSlateIndex === 0) {
+        //     navDisabled = 'back';
+        // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
+        //     navDisabled = 'next';
+        // }
 
         return (
             <div className='content-composer'>
@@ -135,14 +137,14 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar slateId={this.state.activeSlate} />
+                            <Sidebar />
                             {/* put side setting */}
                         </div>
                     </div>
@@ -153,10 +155,9 @@ class CanvasWrapper extends Component {
     
 }
 CanvasWrapper.displayName = "CanvasWrapper"
-const mapStateToProps = state => {
+const mapStateToProps = state => {console.log('state:::', state);
     return {
-        slateLevelData: state.appStore.slateLevelData,
-        elementsTag: state.appStore.elementsTag
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 

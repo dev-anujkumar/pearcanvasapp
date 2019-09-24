@@ -26,7 +26,7 @@ const sidebarWithData = mockStore({
         activeElement,
         updateElement
     }
-  });
+});
 
 
 storiesOf('Sidebar')
