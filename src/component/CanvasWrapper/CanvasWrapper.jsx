@@ -17,7 +17,7 @@ import config from './../../config/config';
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus } from './SlateLock_Actions'
+import { getSlateLockStatus, setSlateLock, releaseSlateLock } from './SlateLock_Actions'
 
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -123,7 +123,37 @@ class CanvasWrapper extends Component {
             showBlocker: bFlag
         });
     }
+    releaseSlateLock = (projectUrn, slateId) => {
+        this.props.releaseSlateLock(projectUrn, slateId)
+    }
 
+    debounceReleaseLock = (callback) => {
+        //900000ms - 15mins
+        let timer;
+        let _context = this
+        return function (){ 
+            clearTimeout(timer)
+            timer = setTimeout(()=>{
+                callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
+            },5000)
+        }
+    }
+
+    debounceReleaseTimeout = this.debounceReleaseLock(this.releaseSlateLock);
+
+    setSlateLock = (slateId, lockDuration) => {
+        console.log("SET slate LOCK in canvas>><<><>", slateId)
+        if(this.props.withinLockPeriod){
+            this.debounceReleaseTimeout()
+            // this.debounceReleaseTimeout(this.props.releaseSlateLock)
+        }
+        else{
+            const { projectUrn } = config
+            this.props.setSlateLock(projectUrn, slateId, lockDuration)
+            // this.props.setLockPeriodFlag(true)
+        }
+    }
+    
     render() {
         let navDisabled = '';
         if(this.state.activeSlateIndex === 0) {
@@ -149,7 +179,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
+                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} setSlateLock={this.setSlateLock} />
                             </div>
                         </div>
                     </div>
@@ -171,6 +201,7 @@ const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
         elementsTag: state.appStore.elementsTag,
+        withinLockPeriod: state.slateLockReducer.slateLockInfo.withinLockPeriod
     };
 };
 
@@ -182,6 +213,8 @@ export default connect(
         toggleCommentsPanel,
         fetchComments,
         fetchCommentByElement,
-        getSlateLockStatus
+        getSlateLockStatus,
+        setSlateLock,
+        releaseSlateLock
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

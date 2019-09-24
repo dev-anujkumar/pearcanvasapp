@@ -17,6 +17,8 @@ import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +40,10 @@ class SlateWrapper extends Component {
                 ...state,
                 showLockPopup: false
             }
-        }  
+        }
+        else{
+            return null
+        }
     }
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
@@ -120,21 +125,21 @@ class SlateWrapper extends Component {
             this.setState({
                 lockOwner: slateLockInfo.userId
             })
-            // this.togglePopup(true)
             return true
-            /* event.preventDefault()
-            event.stopPropagation()
-            return false */
         }
         else{
+            const slateId = Object.keys(this.props.slateData)[0],
+                lockDuration = 5400
+            this.props.setSlateLock(slateId, lockDuration)
             return false
         }
     }
     checkSlateLockStatus = (event) => {
         if(this.checkLockStatus()){
-            this.prohibitPropagation(event)   
+            this.prohibitPropagation(event)
+            this.togglePopup(true)
         }
-        this.togglePopup(true)
+        
     }
     prohibitPropagation = (event) =>{
         if(event){
@@ -148,9 +153,9 @@ class SlateWrapper extends Component {
         
         if(this.state.showLockPopup){
             const { lockOwner } = this.state
-            const dialogText = `The following slate is already in use by another member.\n In use by: `
-            /* showTocBlocker();
-            disableHeader(true); */
+            const dialogText = `The following slate is already in use by another member. In use by: `
+            this.props.showBlocker(true)
+            showTocBlocker();
             return(
                 <PopUp  dialogText={dialogText}
                         rows="1"
@@ -162,6 +167,7 @@ class SlateWrapper extends Component {
                         isLockPopup={true}
                         isInputDisabled={true}
                         assessmentClass="lock-message"
+                        withInputBox={true}
                 />
             )
         }
@@ -173,6 +179,8 @@ class SlateWrapper extends Component {
         this.setState({
             showLockPopup: toggleValue
         })
+        this.props.showBlocker(toggleValue)
+        hideBlocker()
         this.prohibitPropagation(event)
     }
     
@@ -180,13 +188,6 @@ class SlateWrapper extends Component {
         if(this.checkLockStatus()){
             this.togglePopup(true)
         }
-        /* if(slateLockInfo.isLocked){
-            this.setState({
-                lockOwner: slateLockInfo.userId
-            })
-            this.togglePopup(true)
-            return false
-        } */
         let indexToinsert
         // Detects element insertion from the topmost element separator
         if(firstOne){

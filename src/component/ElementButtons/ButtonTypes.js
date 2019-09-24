@@ -21,6 +21,6 @@ export default {
     ASSESSMENT_ELEMENT : "assessment-elem",
     OPENER_ELEMENT : "opener-elem",
     SECTION_BREAK_ELEMENT : "section-break-elem",
-    lock : "lock-icon",
+    LOCK : "lock-icon",
     METADATA_ANCHOR : "metadata-anchor"
 }

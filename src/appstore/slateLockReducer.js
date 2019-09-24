@@ -1,5 +1,6 @@
 import {
-    SET_SLATE_LOCK_STATUS
+    SET_SLATE_LOCK_STATUS,
+    SET_LOCK_FLAG
 } from '../constants/Action_Constants'
 
 let initialState = {
@@ -7,7 +8,8 @@ let initialState = {
         isLocked: false,
         timestamp: "",
         userId: ""
-    }  
+    },
+    withinLockPeriod: false
 }
 
 export default (state = initialState, action) => {
@@ -16,6 +18,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 slateLockInfo: action.payload
+            }
+        case SET_LOCK_FLAG:
+            return {
+                ...state,
+                withinLockPeriod: action.payload
             }
         default:
             return state

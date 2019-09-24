@@ -134,10 +134,11 @@ class Button extends Component {
                     {sectionBreakElement}
                     </span>
                 break;
-            case buttonTypes.lock:
+            case buttonTypes.LOCK:
                 buttonJSX = <span className="btn-element lock-icon">
                     {lockIcon}
-                    </span> 
+                    </span>
+                break;
             case buttonTypes.METADATA_ANCHOR:
                 buttonJSX = <span className="btn-element metadata-anchor" onClick={clickHandlerFn}>
                     {metaDataAnchor}

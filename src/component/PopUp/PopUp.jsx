@@ -33,7 +33,7 @@ class PopUp extends React.Component {
                 </div>
             )            
         }
-        else
+        else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
@@ -46,6 +46,11 @@ class PopUp extends React.Component {
     renderInputBox = (props) => {
         if(props.showDeleteElemPopup){
             return null
+        }
+        else if(props.isLockPopup && props.withInputBox){
+            return (
+                <input type="text" className={`dialog-input-textarea ${props.assessmentClass}`} disabled value={props.inputValue} rows={props.rows} cols={props.cols} />
+            )  
         }
         else{
           return (
@@ -77,19 +82,15 @@ class PopUp extends React.Component {
     }
     
     render() {
-        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue, isInputDisabled } = this.props;
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue } = this.props;
         return (
             <div>
                 {
                     active ? 
                     <div className={`modal ${assessmentClass}`}>
                         <div className={`modal-content ${assessmentClass}`}>
-                        {this.renderCloseSymbol(this.props)}
-                        {/* {!showDeleteElemPopup ?
-                            <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
-                            : '' } */}
-                        {this.renderDialogText(this.props)}
-                            {/* {!showDeleteElemPopup ? <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div> : ''} */}
+                            {this.renderCloseSymbol(this.props)}
+                            {this.renderDialogText(this.props)}
                             {showDeleteElemPopup ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
                             <div className={`dialog-input ${assessmentClass}`}>
                                 {this.renderInputBox(this.props)}
@@ -97,7 +98,7 @@ class PopUp extends React.Component {
                             {this.renderButtons(this.props)}
                         </div>
                     </div>
-                         : null
+                    : null
                 } 
             </div>
         );

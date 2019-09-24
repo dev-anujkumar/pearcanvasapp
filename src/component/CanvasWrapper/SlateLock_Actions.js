@@ -1,6 +1,6 @@
 import axios from 'axios'
 import config from '../../config/config';
-import { SET_SLATE_LOCK_STATUS } from '../../constants/Action_Constants'
+import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 
 const WRAPPER_URL = config.WRAPPER_URL
 
@@ -26,7 +26,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
         })
 } 
 
-export const setSlateLock = (projectUrn, slateId, lockDuration, cb) => (dispatch, getState) => {
+export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
     let url =`locks/typ/setlock`
 
     let data = {
@@ -36,12 +36,12 @@ export const setSlateLock = (projectUrn, slateId, lockDuration, cb) => (dispatch
     }
     return axiosInstance.post(url, data)
         .then((res) => {
-            cb(res.data)
-            // stopLoader()
+            console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             dispatch({
-                type: SET_SLATE_LOCK_STATUS,
-                payload: res.data
+                type : SET_LOCK_FLAG,
+                payload : inLockPeriod
             })
+            // stopLoader()
         })
         .catch((err) => {
             window.parent.postMessage({
@@ -53,7 +53,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration, cb) => (dispatch
         })
  }
 
- export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) => {
+export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) => {
     let url = `locks/typ/releaselock`
     let data = {
        projectUrn,
@@ -61,12 +61,16 @@ export const setSlateLock = (projectUrn, slateId, lockDuration, cb) => (dispatch
     }
     return axiosInstance.post(url, data)
        .then((res) => {
-            cb(res.data)
+            console.log("Slate release API success>>Slalte release status", res.data)
         })
         .catch((err) => {
-            console.log("error from set slate>>>>",err)
-            if(cb){
-                cb(err)
-            }
+            console.log("API error from release slate>>>>",err)
         })
 }
+
+/* export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
+    dispatch({
+        type : SET_LOCK_FLAG,
+        payload : inLockPeriod
+    })
+} */
