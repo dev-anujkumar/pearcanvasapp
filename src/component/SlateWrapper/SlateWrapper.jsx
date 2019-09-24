@@ -57,7 +57,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
                     )
                 }
                 else {
@@ -183,8 +183,8 @@ class SlateWrapper extends Component {
         hideBlocker()
         this.prohibitPropagation(event)
     }
-    
-    splithandlerfunction = (type, index, firstOne, slateLockInfo) => {
+        
+    splithandlerfunction = (type, index, firstOne, parentEntityUrn) => {
         if(this.checkLockStatus()){
             this.togglePopup(true)
         }
@@ -234,8 +234,10 @@ class SlateWrapper extends Component {
             case 'assessment-elem':
                 break;
             case 'container-elem':
+                  this.props.createElement("element-aside", Number(index + 1),parentEntityUrn)
                 break;
             case 'worked-exp-elem':
+                   this.props.createElement("workedexample", Number(index + 1),parentEntityUrn)
                 break;
             case 'opener-elem':
                 break;
@@ -243,53 +245,53 @@ class SlateWrapper extends Component {
         }   
     }
 
-    elementSepratorProps = (index, firstOne, slateLockInfo) => {
+    elementSepratorProps = (index, firstOne,parentEntityUrn) => {
         return [
             {
                 buttonType: 'text-elem',
-                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne),
                 tooltipText: 'Text',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne),
                 tooltipText: 'Image',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'audio-elem',
-                buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('audio-elem', index, firstOne),
                 tooltipText: 'Audio/Video',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'interactive-elem',
-                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('interactive-elem', index, firstOne),
                 tooltipText: 'Interactive',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne),
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'container-elem',
-                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne),
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne,parentEntityUrn),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne, slateLockInfo),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
@@ -323,7 +325,7 @@ class SlateWrapper extends Component {
                             <ElementSaprator
                                 firstOne={index === 0}
                                 index={index}
-                                esProps={this.elementSepratorProps(index, true, slateLockInfo)}
+                                esProps={this.elementSepratorProps(index, true)}
                                 elementType={element.type}
                             />
                             : null
@@ -331,13 +333,13 @@ class SlateWrapper extends Component {
                             <ElementContainer
                                 element={element}
                                 index={index}
-                                labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
+                                elementSepratorProps = {this.elementSepratorProps}
                                 showBlocker = {this.props.showBlocker}
                             />
                             <ElementSaprator
                                 index={index}
-                                esProps={this.elementSepratorProps(index, false, slateLockInfo)}
+                                esProps={this.elementSepratorProps(index, false)}
                                 elementType={element.type}
                                 slateType = {_slateType}
                             />

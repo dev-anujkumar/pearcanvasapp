@@ -13,6 +13,7 @@
 .header-label {
     min-width: max-content;
     font-size: 12px;
+    color: #424242
 }
 
 .canvas-header .input-text {
@@ -36,16 +37,15 @@
     transition: opacity .3s;
 }
 
-.txt-input {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
+.input-text .txt-input {
     font-weight: 200;
-    color: #424242;
     width: 100%;
     line-height: 1;
     padding: 0 0 4px 0;
     border: none;
     background: 0;
+    color: #5F5F5F;
+    font-size: 1.0em;
 }
 .slate-header {
     align-self: center;
@@ -55,4 +55,6 @@
 }
 .locked-slate-title{
     align-self: center;
+    /* align-self: center; */
+    margin-top: 2px;
 }

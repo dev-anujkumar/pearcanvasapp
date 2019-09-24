@@ -98,14 +98,14 @@ import config from '../../config/config'
         let slateLabel = this.getLabel(slateType);
 
         let nextDisabled = 'forward-nav-active';
-        if(this.props.disabled === 'next') {
-            nextDisabled = 'forward-nav-disable';
-        }
+        // if(this.props.disabled === 'next') {
+        //     nextDisabled = 'forward-nav-disable';
+        // }
 
         let backDisabled = 'backward-nav-active';
-        if(this.props.disabled === 'back') {
-            backDisabled = 'backward-nav-disable';
-        }
+        // if(this.props.disabled === 'back') {
+        //     backDisabled = 'backward-nav-disable';
+        // }
 
         return (
             <div className="slate-title">

@@ -1,13 +1,36 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Sidebar from '../../../src/component/Sidebar';
+import { updateElement } from './../../../src/component/Sidebar/Sidebar_Action';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
 
-xdescribe('Test for Sidebar component', () => {
+describe('Test for Sidebar component', () => {
+    const mockStore = configureMockStore(middlewares);
+
+    const activeElement = {
+        elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+        elementType: "element-authoredtext",
+        primaryOption: "primary-heading",
+        secondaryOption: "secondary-heading-1",
+        tag: "H1"
+    };
+    
+    const sidebarWithData = mockStore({
+        appStore: {
+            activeElement,
+            updateElement
+        }
+    });
     let props = {
-        elementType: 'element-authoredtext'
+        slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f'
     };
 
-    let sidebar = mount(<Sidebar {...props} />);
+    let sidebar = mount(<Provider store={sidebarWithData}>
+        <Sidebar />
+    </Provider>);
     it('Render element container ', () => {
         expect(sidebar).toMatchSnapshot();
     });
@@ -30,8 +53,8 @@ xdescribe('Test for Sidebar component', () => {
             }
         }
 
-        sidebar.find('div.element-dropdown .element-dropdown-title').simulate('click');
-        sidebar.find('div.element-dropdown ul.element-dropdown-content').simulate('click');
+        sidebar.find('div.element-dropdown-title').at(0).simulate('click');
+        sidebar.find('ul.element-dropdown-content.primary-options').simulate('click');
         sidebarInstance.handlePrimaryOptionChange(target);
 
         sidebarInstance.setState({
@@ -46,6 +69,7 @@ xdescribe('Test for Sidebar component', () => {
             }
         }
 
+        sidebar.find('ul.element-dropdown-content.secondary-options').simulate('click');
         sidebarInstance.handleSecondaryOptionChange(target);
 
         // Attribution for secondary element type

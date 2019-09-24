@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test for Sidebar component Render element container  1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <Connect(Sidebar)>
+    <Sidebar
+      activeElement={
+        Object {
+          "elementId": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+          "elementType": "element-authoredtext",
+          "primaryOption": "primary-heading",
+          "secondaryOption": "secondary-heading-1",
+          "tag": "H1",
+        }
+      }
+      elementType="element-authoredtext"
+      updateElement={[Function]}
+    >
+      <div
+        className="canvas-sidebar"
+      >
+        <div
+          className="canvas-sidebar-heading"
+        >
+          Settings
+        </div>
+        <div
+          className="element-dropdown"
+        >
+          <div
+            className="element-dropdown-title"
+            data-element="primary"
+            onClick={[Function]}
+          >
+            Headings
+            <svg
+              className="dropdown-arrow"
+              viewBox="0 0 9 4.5"
+            >
+              <path
+                d="M0,0,4.5,4.5,9,0Z"
+              />
+            </svg>
+          </div>
+          <ul
+            className="element-dropdown-content primary-options "
+          >
+            <li
+              data-value="primary-paragraph"
+              key="primary-paragraph"
+              onClick={[Function]}
+            >
+              Paragraph
+            </li>
+            <li
+              data-value="primary-heading"
+              key="primary-heading"
+              onClick={[Function]}
+            >
+              Headings
+            </li>
+            <li
+              data-value="primary-blockquote"
+              key="primary-blockquote"
+              onClick={[Function]}
+            >
+              Blockquotes
+            </li>
+            <li
+              data-value="primary-list"
+              key="primary-list"
+              onClick={[Function]}
+            >
+              List
+            </li>
+          </ul>
+        </div>
+        <div
+          className="element-dropdown "
+        >
+          <div
+            className="element-dropdown-title"
+            data-element="secondary"
+            onClick={[Function]}
+          >
+            Heading 1
+            <svg
+              className="dropdown-arrow"
+              viewBox="0 0 9 4.5"
+            >
+              <path
+                d="M0,0,4.5,4.5,9,0Z"
+              />
+            </svg>
+          </div>
+          <ul
+            className="element-dropdown-content secondary-options "
+          >
+            <li
+              data-value="secondary-heading-1"
+              key="secondary-heading-1"
+              onClick={[Function]}
+            >
+              Heading 1
+            </li>
+            <li
+              data-value="secondary-heading-2"
+              key="secondary-heading-2"
+              onClick={[Function]}
+            >
+              Heading 2
+            </li>
+            <li
+              data-value="secondary-heading-3"
+              key="secondary-heading-3"
+              onClick={[Function]}
+            >
+              Heading 3
+            </li>
+            <li
+              data-value="secondary-heading-4"
+              key="secondary-heading-4"
+              onClick={[Function]}
+            >
+              Heading 4
+            </li>
+            <li
+              data-value="secondary-heading-5"
+              key="secondary-heading-5"
+              onClick={[Function]}
+            >
+              Heading 5
+            </li>
+            <li
+              data-value="secondary-heading-6"
+              key="secondary-heading-6"
+              onClick={[Function]}
+            >
+              Heading 6
+            </li>
+          </ul>
+        </div>
+      </div>
+    </Sidebar>
+  </Connect(Sidebar)>
+</Provider>
+`;

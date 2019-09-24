@@ -11,7 +11,6 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
-import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
@@ -61,6 +60,7 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig)
         }
     }
+    
     componentDidUpdate(){
         if(!tinymce.editors.length && !this.props.stringlocked){
             tinymce.init(this.editorConfig)
@@ -69,10 +69,7 @@ export class TinyMceEditor extends Component {
 
     handleFocus=(e)=>{
         this.props.handleEditorFocus()
-        if(Object.keys(this.props.element).length > 0)
-        this.props.setActiveElement(this.props.element);
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
-            // tinymce.init(this.editorConfig);
             return false;
         }
         
@@ -91,14 +88,14 @@ export class TinyMceEditor extends Component {
     }
   
     render() {
-        if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-            let activeEditorId = tinymce.activeEditor.id;
-            let element = document.getElementById(activeEditorId);
-            tinymce.remove('#'+tinymce.activeEditor.id)
-            element.contentEditable = true;
-            this.editorConfig.selector='#'+activeEditorId;
-            tinymce.init(this.editorConfig);
-        }
+        // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
+        //     let activeEditorId = tinymce.activeEditor.id;
+        //     let element = document.getElementById(activeEditorId);
+        //     tinymce.remove('#'+tinymce.activeEditor.id)
+        //     element.contentEditable = true;
+        //     this.editorConfig.selector='#'+activeEditorId;
+        //     tinymce.init(this.editorConfig);
+        // }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-'+this.props.index;
@@ -108,19 +105,19 @@ export class TinyMceEditor extends Component {
         switch (this.props.tagName) {
             case 'p':
                 return (                 
-                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
                 );
             case 'h4':
                 return (
-                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
+                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
                 )
             case 'code':
                 return (
-                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
                 )
             default:
                 return (
-                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

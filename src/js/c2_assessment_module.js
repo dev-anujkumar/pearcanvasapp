@@ -1,0 +1,171 @@
+const authModule = require('./auth_module.js');
+import store from '../store'
+var uname;
+const renderderedTagSelector = '#c2-modal';
+const configModule = require('./config_module.js');
+let config_object = configModule.GET_CONFIG();
+const CMDS_APIKEY = config_object['CMDS_APIKEY'];
+const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
+const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
+const CMDS_DATABASE = config_object['CMDS_DATABASE'];
+const CMIS_US_REPO = config_object['CMIS_US_REPO'];
+const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../jsx/common/components/toggleLoader';
+const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
+
+
+
+// Access individual pattern (from the <script> tag)
+var patternBroker = PatternBroker.default || {}; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
+var patternSearchSelect = PatternSearchSelect.default || {}; //(PatternSearchSelect && PatternSearchSelect !== undefined && PatternSearchSelect !== null) ? PatternSearchSelect.default : {};//this.SearchSCPatterns.default;
+//console.log("patternSearchSelect default: " + '',patternSearchSelect);
+
+let _interactivePattern = {};
+let _interactivePatternConfig = {};
+
+/*Configure the library*/
+var libConfig = {   'locale': 'en_US',
+                    'headers' : {
+                        'Content-Type'        : 'application/json',
+                        'Accept'              : 'application/ld+json',
+                        'X-Roles-Test'        : 'ContentMetadataEditor',
+                        'Prefer'              : 'annotation=true',
+                        'Apikey'              : CMDS_APIKEY,
+                        'X-APIKey'            : CMDS_APIKEY,
+                        'PearsonSSOSession'   : authModule.GET_SSO_TOKEN(),
+                        'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
+                    },
+                    'database'          : CMDS_DATABASE,
+                    'server'            : CMDS_DATA_ENDPOINT,
+                    'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                    'userId'            : uname
+                  };
+
+patternBroker.setup(libConfig);
+
+//var module = {};
+module.exports = {
+  
+  searchAndSelectCallBack: function(data) {
+    console.log("searchAndSelectCallBack data: " + '',data);
+
+    /* returned data format is :
+    { type: web-link,
+      title: xxxx,
+      dateModified: Apr 1 2017,
+      id: urn:pearson:work:33db101a-328f-4011-86da-045175e2f5f9,
+      workExample: https://urn:pearson:manifestation:bf5403a5-273d-4d56-b295-ffe3c7177cf3,
+      taxonomicType: https://schema.pearson.com/ns/taxonomictype/web-link
+    }
+    */
+  },
+  searchAndSelectonSave: function(data) {
+    console.log("searchAndSelectonSave data: " + '',data);
+    $('body').trigger('setAssessment', {data:data});
+
+  },
+  launchAssetBrowser: function(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,callback) {
+    disableHeader(true);
+    //console.log("LAUNCH ASSESSMENT ASSET BROWSER: " + '',fileName,filterType,searchMode,searchSelectAssessmentURN,productId,searchTypeOptVal);
+      if ( _interactivePattern && _interactivePattern.unmount ) {
+          //console.log("_interactivePattern unmount");
+          _interactivePattern.unmount();
+      }
+      
+      uname = store.getState().auth.user ? store.getState().auth.user.userId : "c2test01";
+      var libConfig = {   'locale': 'en_US',
+                    'headers' : {
+                        'Content-Type'        : 'application/json',
+                        'Accept'              : 'application/ld+json',
+                        'X-Roles-Test'        : 'ContentMetadataEditor',
+                        'Prefer'              : 'annotation=true',
+                        'Apikey'              : CMDS_APIKEY,
+                        'X-APIKey'            :  CMDS_APIKEY,
+                        'PearsonSSOSession'   : authModule.GET_SSO_TOKEN(),
+                        'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
+                    },
+                    'database'          : CMDS_DATABASE,
+                    'server'            : CMDS_DATA_ENDPOINT,
+                    'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                    'searchselectserver': CMDS_DATA_ENDPOINT,
+                    'userId'            : uname
+                  };
+
+      patternBroker.setup(libConfig);
+
+      _interactivePatternConfig = {'selector' : renderderedTagSelector};
+      // filename = 'Some pre-specified search term - a string value';
+      _interactivePatternConfig.filename = fileName;
+      // filterType = ['', '', '']  // An array of strings; Each element is a pre-specified type filter; ie.  ["PDF", "Metrodigi Interactive"]
+      // _interactivePatternConfig.filterType = ['Journal','Cite interactive: Graph'];
+
+      _interactivePatternConfig.filterType = filterType;
+
+      // searchmode = 'full' OR 'partial'
+      //_interactivePatternConfig.searchmode = 'full';
+      _interactivePatternConfig.searchmode = searchMode;
+      // searchTypeOptVal = 'journal'  OR  'tdx'  OR  'cite'
+      //_interactivePatternConfig.searchTypeOptVal = searchTypeOptVal;  // Must be specified as one of the three types
+      // searchSelectAssessmentURN - For 2nd-nth question embedding, specify Assessment wURN so the user does not need to search for it again.
+      // If specified, the pattern will directly goto screen for selecting underlaying assessment items
+      // If it's not specified, the pattern will goto main screen where user will need to research for the assessment
+      _interactivePatternConfig.searchSelectAssessmentURN = searchSelectAssessmentURN; 
+      // productId - Chaucer must capture and supply this value to pattern each time the pattern is used.
+      // The pattern will constraint it's search for assessment within specified productId (user does have an option to disable the constraint!)
+      // Due to C1 MDS limitation, for now this will be the UUID part of the 'Register' URN. In future it'll be ISBN.
+      // On PPE, some sample data exists in : ab1ce445-253a-44a4-a7eb-31274955b2d5
+      _interactivePatternConfig.productId = productId;  // Rel 3.6
+      // This for INTL lang support. It's still work in progress. Support for 'fr' is forthcoming.
+      _interactivePatternConfig.language = 'en';  // Rel 3.6
+
+      _interactivePattern = patternBroker.create('interactivePattern',patternSearchSelect);
+      //console.log("_interactivePattern: " + '',_interactivePattern);
+
+      try {
+          if(_interactivePattern.corsId){
+            libConfig.headers['Correlation-Id'] = _interactivePattern.corsId;
+          }
+          patternBroker.setup(libConfig);
+          _interactivePattern.setup(_interactivePatternConfig, module.exports.searchAndSelectCallBack);
+          _interactivePattern.run(_interactivePattern);
+          _interactivePattern.on(callback);
+
+         window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+
+        //alfresco toc issue
+        var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
+
+        // Options for the observer (which mutations to observe)
+        var config = { attributes: true };
+
+        // Callback function to execute when mutations are observed
+        var callbackOb = function (mutationsList, observer) {
+          //console.log(mutationsList)
+          for (var mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {
+              {
+                hideTocBlocker();
+                disableHeader(false);
+                observer.disconnect();
+              }
+            }
+          }
+        };
+        // Create an observer instance linked to the callback function
+        var observer = new MutationObserver(callbackOb);
+
+        // Start observing the target node for configured mutations
+        observer.observe(targetNode, config);
+          
+      } catch (ex1) {
+
+          //console.log("error: " + '',ex1);
+          alert(ex1.message);
+          hideTocBlocker();
+          disableHeader(false);
+      }
+
+  }
+}
+
+//module.exports.launchAssetBrowser();

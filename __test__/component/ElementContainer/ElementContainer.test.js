@@ -69,7 +69,6 @@ xdescribe('Test for element container component', () => {
         expect(elementContainer).toMatchSnapshot();
     })
 
-
     elementContainer.setState({
         popup: true
     });
