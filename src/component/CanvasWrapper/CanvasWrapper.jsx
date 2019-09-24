@@ -37,17 +37,10 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-<<<<<<< HEAD
-    //   this.props.fetchSlateData(this.state.activeSlate);
-       if(document.getElementById("cypress-0")){
-           document.getElementById("cypress-0").focus();
-       }
-=======
         // this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
         //     document.getElementById("cypress-0").focus();
         // }
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -63,7 +56,6 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
-<<<<<<< HEAD
         // console.log("this.props.slateLevelData>>>", Object.keys(this.props.slateLevelData)[0])
         let { projectUrn } = config,
             slateId = Object.keys(this.props.slateLevelData)[0]
@@ -71,30 +63,17 @@ class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
 
-    componentDidUpdate(prevProps){
-        if(this.state.navigation) {
-            if(document.getElementById("cypress-0")){
-                document.getElementById("cypress-0").focus();
-            }
-=======
-
-
-    }
-
     componentDidUpdate(){
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
             // }
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
 
         //     this.state.navigation = false;
         // } else {
             if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
-<<<<<<< HEAD
-        }
 
         let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
@@ -103,9 +82,6 @@ class CanvasWrapper extends Component {
         if(newSlateId && slateId !== newSlateId){
             this.props.getSlateLockStatus(projectUrn, newSlateId)
         }
-=======
-        // }
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
     }
     
     handleCommentspanel(elementId){
@@ -202,23 +178,14 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-<<<<<<< HEAD
-                                <SlateWrapper disabled={navDisabled} handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} tags={this.props.elementsTag} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} setSlateLock={this.setSlateLock} />
-=======
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} />
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} setSlateLock={this.setSlateLock} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-<<<<<<< HEAD
-              {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar slateId={this.state.activeSlate} />
-=======
                             {/* <span className='--rm-place'>Settings</span> */}
                             <Sidebar />
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
                             {/* put side setting */}
                         </div>
                     </div>
@@ -231,13 +198,10 @@ class CanvasWrapper extends Component {
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {console.log('state:::', state);
     return {
-<<<<<<< HEAD
         slateLevelData: state.appStore.slateLevelData,
         elementsTag: state.appStore.elementsTag,
-        withinLockPeriod: state.slateLockReducer.slateLockInfo.withinLockPeriod
-=======
+        withinLockPeriod: state.slateLockReducer.slateLockInfo.withinLockPeriod,
         slateLevelData: state.appStore.slateLevelData
->>>>>>> 398bf2506cef173948182add3f39b9b812ae45ce
     };
 };
 
