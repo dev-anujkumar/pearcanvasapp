@@ -122,11 +122,9 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "figuretype": "image",
-                    "subtype": "image50Text",
-                    "alignment": "half-text",
+                    "subtype": "image50Text"
                 }
-                this.props.createFigureElement(eleFigure, Number(index + 1))
+                this.props.createFigureElement(eleFigure, indexToinsert)
                 break;
             case 'audio-elem':
                 var elevideo = {
@@ -209,6 +207,18 @@ class SlateWrapper extends Component {
                 buttonType: 'opener-elem',
                 buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
                 tooltipText: 'Opener Element',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'section-break-elem',
+                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
+                tooltipText: 'Section Break',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'metadata-anchor',
+                buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
+                tooltipText: 'Metadata Anchor',
                 tooltipDirection: 'left'
             }
         ]
