@@ -76,7 +76,9 @@ figure,.element-container{
     display:block !important;
 }
 
-
+img{
+    max-width: 100%;
+}
  
 [placeholder]:empty::before {
     content: attr(placeholder);
