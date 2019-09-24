@@ -43,7 +43,7 @@ class Button extends Component {
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
+                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
