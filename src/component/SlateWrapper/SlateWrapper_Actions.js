@@ -22,8 +22,9 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": config.slateEntityURN,
         "slateUrn": config.slateManifestURN,
-        "type": type,
-        "index": index
+        "index": index,
+        "type": "AUTHORED_TEXT",
+        "subType" : "H1"
     };
 
     axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
