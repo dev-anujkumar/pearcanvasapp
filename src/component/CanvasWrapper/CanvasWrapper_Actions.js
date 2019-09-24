@@ -139,7 +139,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				}//slateData.data
 			});
 			 }) */
-			//});
+			});
 	};
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
