@@ -38,14 +38,16 @@ class ElementAsideContainer extends Component {
     try {
         if (_containerData !== null && _containerData !== undefined) {
             if (Object.values(_containerData).length > 0) {
-                let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
-                let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
-                let { index } = this.props
-                let parentEntityUrn = _containerData.contentUrn;
+                let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData,
+                 { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData,
+                 { index } = this.props,
+                    parentEntityUrn = _containerData.contentUrn,
+                    filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest"),
+                    elementLength = _bodyMatter.length - filterElement.length
                 return (
                     <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                         {
-                            this.renderElement(_bodyMatter, parentEntityUrn, index)
+                            this.renderElement(_bodyMatter, parentEntityUrn, index,elementLength)
                         }
                     </div>
                 )
@@ -67,10 +69,11 @@ class ElementAsideContainer extends Component {
     let parentEntityUrn = element.contentUrn;
 
     let parentIndex = `${this.props.index}-${index}`
+    let elementLength = _containerBodyMatter.length
     return (
         <div key = {index} className="section" data-id={_elementId} >
             <hr className="work-section-break" />
-            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex)}
+            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex,elementLength)}
         </div>
     )
 }
@@ -87,6 +90,7 @@ class ElementAsideContainer extends Component {
     let parentEntityUrn = _element.contentUrn;
     const { elemBorderToggle, borderToggle } = this.props
     let parentIndex = `${this.props.index}-${index}`
+    let elementLength = _containerBodyMatter.length
     return (
         <div  key = {index} className="aside-section-break" data-id={_elementId}>
             <SectionSeperator
@@ -95,7 +99,7 @@ class ElementAsideContainer extends Component {
                 setActiveElement={this.props.setActiveElement}
                 element={_element}
             />
-            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex, true)}
+            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex,elementLength)}
 
         </div>
     )
@@ -108,8 +112,10 @@ class ElementAsideContainer extends Component {
     * @param {string} _elements -object of element
     * @param {string} parentEntityUrn -parent Entity urn for add new element
     */
-   renderElement(_elements, parentEntityUrn, parentIndex, sectionBreak) {
+   renderElement(_elements, parentEntityUrn, parentIndex, elementLength) {
     let firstSection = true;
+    //let elementLength =_elements.length-1;
+    let showSectionBreak ; 
     try {
         if (_elements !== null && _elements !== undefined) {
             return _elements.map((element, index) => {
@@ -120,7 +126,7 @@ class ElementAsideContainer extends Component {
                     return this.sectionBreak(element, index);
                 }
                 else {
-                    console.log("elementid---", `${parentIndex}-${index}`);
+                     showSectionBreak = (elementLength == index + 1)? true:false
                     return (
                         <React.Fragment>
                             {index === 0 && (!this.props.element.subtype || this.props.element.subtype == "sidebar") && <ElementSaprator
@@ -143,7 +149,7 @@ class ElementAsideContainer extends Component {
                                 key={`elem-separtor-${element.id}`}
                                 esProps={this.props.elementSepratorProps(index, false, parentEntityUrn)}
                                 elementType={this.props.element.type}
-                                sectionBreak={true}
+                                sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
                             />
                         </React.Fragment>
                     )
