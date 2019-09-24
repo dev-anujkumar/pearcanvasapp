@@ -76,7 +76,7 @@ figure,.element-container{
     display:block !important;
 }
 
-img{
+.pearson-component.image.figureData img{
     max-width: 100%;
 }
  
