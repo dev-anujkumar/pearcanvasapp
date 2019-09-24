@@ -12,7 +12,7 @@ import wipElementObject from './ElementWipData';
 const handleElementConversion = (elementData, store) => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
-        let storeElement = store[elementData.slateId];
+        let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let format = elementData.secondaryOption.replace('secondary-', '');
         bodymatter.map((element, index) => {
