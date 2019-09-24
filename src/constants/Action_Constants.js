@@ -18,8 +18,10 @@ export const DELETE_COMMENT = "DELETE_COMMENT";
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
 export const VIDEO_ELEMENT_CREATED = 'VIDEO_ELEMENT_CREATED'
 export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
+export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
 /*---------------Element Container ----------------------*/ 
 export const ADD_COMMENT = "ADD_COMMENT"
+export const DELETE_ELEMENT = "DELETE_ELEMENT"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'

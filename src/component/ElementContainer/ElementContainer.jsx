@@ -5,14 +5,18 @@ import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
+import ElementInteractive from '../ElementInteractive';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
-import {addComment} from './ElementContainer_Actions';
+import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -20,25 +24,45 @@ class ElementContainer extends Component {
             popup: false,
             comment:"",
             borderToggle : 'showBorder',
-            btnClassName : ''
+            btnClassName : '',
+            showDeleteElemPopup : false,
+            ElementId: this.props.index==0?this.props.element.id:''
         };
         
     }
+    componentDidMount(){
+        
+        if( this.props.index == 0 ){
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+              
+            })
+        }
+        this.setState({
+            ElementId: this.props.element.id
+        })             
+    }
 
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(nextProps){
-        if(nextProps.elemBorderToggle !== this.props.elemBorderToggle){
-            if(nextProps.elemBorderToggle ==true){
+    componentWillReceiveProps(newProps){      
+        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
+             if(newProps.elemBorderToggle){
                 this.setState({
-                    borderToggle: 'showBorder',
+                    borderToggle : 'showBorder',
                     btnClassName : ''
                 })
             }else{
                 this.setState({
-                    borderToggle: 'hideBorder',
+                    borderToggle : 'hideBorder',
                     btnClassName : ''
                 })
-            }
+            } 
+        }else{
+            this.setState({
+                borderToggle : 'active',
+                btnClassName : 'activeTagBgColor'
+            })
         }
     }
 
@@ -50,19 +74,7 @@ class ElementContainer extends Component {
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
-    handleBlur = () => {
-        if(this.props.elemBorderToggle){
-            this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
-            })
-        }else{
-            this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
-            })
-        } 
-    }
+    handleBlur = () => {}
 
     /**
      * Renders color-palette button for opener element 
@@ -77,6 +89,27 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * show Delete element Popup 
+     * @param {elementId} 
+     */
+    showDeleteElemPopup = (popup) => {
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showDeleteElemPopup : true
+        });
+    }
+
+    deleteElement = () => {
+        const {id, type}=this.props.element;
+        this.handleCommentPopup(false);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        // api needs to run from here
+        this.props.deleteElement(id, type);
+    }
+
     renderElement = (element = {}) => {
         let editor = '';
         let { labelText, index, handleCommentspanel} = this.props;
@@ -87,7 +120,7 @@ class ElementContainer extends Component {
                 break
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
@@ -129,15 +162,33 @@ class ElementContainer extends Component {
                         editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
                         labelText = 'QU';
                         break;
+
+                    case elementTypeConstant.INTERACTIVE:
+
+                        switch (element.figuredata.interactiveformat) {
+                            case elementTypeConstant.INTERACTIVE_MMI:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'SL';
+                                break;
+                            case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                labelText = 'Pop';
+                                break;
+                                
+                        }
+
                 }
                 break;
         }
-        
         return(
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element" />
+                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
@@ -156,6 +207,8 @@ class ElementContainer extends Component {
                 saveContent={this.saveNewComment}
                 rows={COMMENTS_POPUP_ROWS}
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                showDeleteElemPopup = {this.state.showDeleteElemPopup}
+                deleteElement = {this.deleteElement}
                 />}
             </div >
         );
@@ -167,8 +220,11 @@ class ElementContainer extends Component {
      */
     handleCommentPopup(popup){
         this.setState({
-            popup
+            popup,
+            showDeleteElemPopup : false
         });
+        this.props.showBlocker(false);
+        hideBlocker();
     }
 
     // handleCommentPopup(popup){
@@ -225,17 +281,19 @@ const mapDispatchToProps = (dispatch) => {
         },
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
+        },
+        deleteElement : (id , type)=>{
+            dispatch(deleteElement(id, type))
         }
-      
-      
-}
+    }
 }
 
 
 const mapStateToProps = (state) => {
     
     return {
-        elemBorderToggle: state.toolbarReducer.elemBorderToggle
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        activeElement: state.appStore.activeElement.elementId
     }
 }
     

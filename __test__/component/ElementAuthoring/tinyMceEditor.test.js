@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import tinymce from 'tinymce/tinymce';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
 
-describe('Testing tinyMce  component with  props', () => {
+xdescribe('Testing tinyMce  component with  props', () => {
     const tinyMceEditor = mount( <TinyMceEditor   /> )
     let tinyMceEditorInstance = tinyMceEditor.find('TinyMceEditor').instance();
     it('render tinyMce Editor component ', () => {

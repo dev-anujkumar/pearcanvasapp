@@ -338,7 +338,7 @@ exports[`Testing Button component with props render add-comment Button component
   type="add-comment"
 >
   <span
-    className="btn-element small add-comment"
+    className="btn-element small add-comment "
   >
     <svg
       fill="white"
@@ -509,7 +509,7 @@ exports[`Testing Button component with props render element-label Button compone
   type="element-label"
 >
   <span
-    className="btn-element element-label"
+    className="btn-element element-label "
   >
     UL
   </span>
@@ -542,6 +542,25 @@ exports[`Testing Button component with props render forward-nav-active Button co
 >
   <span
     className="btn-element forward-nav-active"
+  >
+    <img
+      src={
+        Object {
+          "process": [Function],
+        }
+      }
+    />
+  </span>
+</ElementButton>
+`;
+
+exports[`Testing Button component with props render forward-nav-disable Button component   1`] = `
+<ElementButton
+  labelText="P"
+  type="forward-nav-disable"
+>
+  <span
+    className="btn-element forward-nav-disable"
   >
     <img
       src={

@@ -2,6 +2,7 @@ export default {
     OPENER : "opener",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
+/****************Figure Element************************ */    
     FIGURE : "figure",
     FIGURE_IMAGE : "image",
     FIGURE_TABLE : "table",
@@ -10,5 +11,11 @@ export default {
     FIGURE_CODELISTING : "codelisting",
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
-    FIGURE_ASSESSMENT : "assessment"
+    FIGURE_ASSESSMENT : "assessment",
+/****************Figure Interactive Element************************ */
+    INTERACTIVE : "interactive",
+    INTERACTIVE_MMI : "mmi",
+    INTERACTIVE_EXTERNAL_LINK : "external-link",
+    INTERACTIVE_SHOW_HIDE : "showhide",
+    INTERACTIVE_NARRATIVE_LINK : "narrative-link",
 }

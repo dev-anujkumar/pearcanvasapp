@@ -8,6 +8,9 @@ import {
 } from '../../constants/Action_Constants';
 import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+
 
 const findElementType = (element) => {
 	let elementType = {};
@@ -93,7 +96,10 @@ const findElementType = (element) => {
 	}
 
 	elementType['elementId'] = element.id;
+	if(elementType.elementType)
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+	else
+	elementType['tag'] = 'LO';
 	return elementType;
 }
 
@@ -109,32 +115,34 @@ const defineElementTag = (bodymatter = {}) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {
-	// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${manifestURN}`, {
-		// axios.get(`${config.REACT_APP_API_URL}v1/slate/content/urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44/urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75`, {
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 		"PearsonSSOSession": config.ssoToken
-		// 	}
-		// }).then(slateData => {
-			// let contentUrn = slateData.data[manifestURN].contentUrn,
-			// title = slateData.data[manifestURN].contents.title.text
-			console.log("mockdata[manifestURN].contents.bodymatter",mockdata[manifestURN].contents.bodymatter);
+	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
+	//	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44/urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75`, {
+			headers: {
+				"Content-Type": "application/json",
+				"PearsonSSOSession": config.ssoToken
+			}
+		}).then(slateData => {
+			/* For hiding the spinning loader send HideLoader message to Wrapper component */
+			sendDataToIframe({'type': HideLoader,'message': { status: false }});
+			
+			//let contentUrn = slateData.data[manifestURN].contentUrn,
+			//title = slateData.data[manifestURN].contents.title.text
 			dispatch({
 				type: SET_ELEMENT_TAG,
-				payload: defineElementTag(mockdata[manifestURN].contents.bodymatter)
+				payload: defineElementTag(slateData.data[manifestURN].contents.bodymatter)
 			});
 			
 			dispatch({
 				type: FETCH_SLATE_DATA,
 				payload: {
-					[manifestURN]: mockdata[manifestURN]
+					[manifestURN]: slateData.data[manifestURN]
 				}//slateData.data
 			});
-			// })
+			 })
+			//});
 	};
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
-	console.log('active Element::', activeElement);
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)
