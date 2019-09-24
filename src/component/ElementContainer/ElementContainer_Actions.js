@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from '../../config/config';
-
-import { ADD_COMMENT } from "./../../constants/Action_Constants";
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ADD_COMMENT, DELETE_ELEMENT } from "./../../constants/Action_Constants";
 let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
@@ -35,11 +36,22 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             }
             dispatch({
                 type: ADD_COMMENT,
-                payload:
-                    newslateData
+                payload: newslateData
             });
 
         }).catch(error => {
             console.log("Failed to add comment", error);
         })
+}
+
+
+export const deleteElement = (id, type) => (dispatch, getState) => {
+    console.log("deleteElement >> ")
+    setTimeout(() => {
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        // dispatch({
+        //     type: DELETE_ELEMENT,
+        //     payload: {}
+        // });
+    }, 1000);
 }
