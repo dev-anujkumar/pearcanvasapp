@@ -76,7 +76,7 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
         "subtype":eleFigure.subtype,
         "index": index
     };
-    axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
+  axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -85,11 +85,9 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
             }
         }
     ).then(createdFigureElemData => {        
-    console.log("createdFigureElemData",createdFigureElemData);
-     
        /* For hiding the spinning loader send HideLoader message to Wrapper component */
        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-    
+  
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
