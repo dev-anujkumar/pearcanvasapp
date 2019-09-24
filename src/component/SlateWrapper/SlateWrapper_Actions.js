@@ -23,7 +23,31 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "type": type,
         "index": index
     };
-    
+
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let createdElementData = "";
+    if(type == "workedexample"){
+        createdElementData = elementAsideWorkExample
+    }
+    if(type == "element-aside"){
+        createdElementData = elementAside
+    }
+    for (let key in newParentData) {
+        //for (let k in newParentData[key]) {
+            // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
+            newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
+        //}
+
+    }
+
+    dispatch({
+        type: AUTHORING_ELEMENT_CREATED,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
+
      axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
         {
@@ -38,7 +62,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
         if(type == "workedexample"){
-            createdElementData = elementWorkExample
+            createdElementData = elementAsideWorkExample
         }
         if(type == "element-aside"){
             createdElementData = elementAside

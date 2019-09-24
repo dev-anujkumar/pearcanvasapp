@@ -24,6 +24,8 @@ class SectionSeperator extends React.Component {
             sectionFocus: true,
             btnClassName: 'activeTagBgColor'
         }) 
+        console.log("element===>",this.props.element)
+        this.props.setActiveElement(this.props.element)
     }
 
      /**
