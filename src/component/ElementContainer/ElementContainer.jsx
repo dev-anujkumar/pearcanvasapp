@@ -160,7 +160,7 @@ class ElementContainer extends Component {
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
-                        labelText = 'QU';
+                        labelText = 'Qu';
                         break;
 
                     case elementTypeConstant.INTERACTIVE:
