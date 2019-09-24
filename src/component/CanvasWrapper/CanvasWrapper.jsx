@@ -26,9 +26,9 @@ class CanvasWrapper extends Component {
         super(props);
 
         this.state = {
-            navigation: false,
-            activeSlateIndex: 0,
-            activeSlate: config.slateList[0],
+            // navigation: false,
+            // activeSlateIndex: 0,
+            // activeSlate: config.slateList[0],
             showBlocker : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -60,17 +60,17 @@ class CanvasWrapper extends Component {
     }
 
     componentDidUpdate(){
-        if(this.state.navigation) {
-            if(document.getElementById("cypress-0")){
-                document.getElementById("cypress-0").focus();
-            }
+        // if(this.state.navigation) {
+            // if(document.getElementById("cypress-0")){
+            //     document.getElementById("cypress-0").focus();
+            // }
 
-            this.state.navigation = false;
-        } else {
+        //     this.state.navigation = false;
+        // } else {
             if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
-        }
+        // }
     }
     
     handleCommentspanel(elementId){
@@ -144,7 +144,7 @@ class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar slateId={this.state.activeSlate} />
+                            <Sidebar />
                             {/* put side setting */}
                         </div>
                     </div>
@@ -155,7 +155,7 @@ class CanvasWrapper extends Component {
     
 }
 CanvasWrapper.displayName = "CanvasWrapper"
-const mapStateToProps = state => {
+const mapStateToProps = state => {console.log('state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData
     };
