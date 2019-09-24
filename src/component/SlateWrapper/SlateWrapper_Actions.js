@@ -6,6 +6,7 @@ import {
     ,FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED
 } from '../../constants/Action_Constants';
+import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
@@ -25,8 +26,8 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "type": type,
         "index": index
     };
-
-    axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
+    
+     axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -38,10 +39,17 @@ export const createElement = (type, index) => (dispatch, getState) => {
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(type == "workedexample"){
+            createdElementData = elementWorkExample
+        }
+        if(type == "element-aside"){
+            createdElementData = elementAside
+        }
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-                newParentData[key].contents.bodymatter.splice(index, 0, createdElemData.data);
+                newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
             //}
 
         }
@@ -53,7 +61,10 @@ export const createElement = (type, index) => (dispatch, getState) => {
             }
         })
 
-    })
+    }).catch(error => {
+        
+        console.log("create Api fail", error);
+    }) 
 };
 export const createFigureElement = (eleFigure, index) => (dispatch, getState) => {
     let _requestData = {
