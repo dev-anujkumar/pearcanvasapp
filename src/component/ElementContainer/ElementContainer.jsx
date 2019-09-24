@@ -78,6 +78,19 @@ class ElementContainer extends Component {
 
     handleBlur = () => {}
 
+    handleBlurAside = () => {
+        if(this.props.elemBorderToggle){
+            this.setState({
+                borderToggle : 'showBorder',
+                btnClassName : ''
+            })
+        } else {
+            this.setState({
+                borderToggle : 'hideBorder',
+                btnClassName : ''
+            })
+        } 
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -171,11 +184,11 @@ class ElementContainer extends Component {
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'Pop';
                                 break;
                                 

@@ -186,7 +186,7 @@ export const elementWorkExample =
 					"frontmatter": [],
 					"bodymatter": [
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -210,7 +210,7 @@ export const elementWorkExample =
 							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 						},
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0v",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",

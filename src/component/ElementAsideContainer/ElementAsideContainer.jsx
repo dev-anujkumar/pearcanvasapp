@@ -18,13 +18,14 @@ class ElementAsideContainer extends Component {
             btnClassName:""
 
         }
+        this.asideRef = React.createRef();
     }
     componentDidMount(){
-        this.aside.addEventListener("focus", this.props.handleFocus);
+        this.asideRef.current.addEventListener("focus", this.props.handleFocus);
     }
 
     componentWillUnmount(){
-       this.aside.removeEventListener("focus", this.props.handleFocus);
+        this.asideRef.current.removeEventListener("focus", this.props.handleFocus);
     }
 
        /**
@@ -33,43 +34,46 @@ class ElementAsideContainer extends Component {
     * @param {string} element -object of element
     */ 
    
-    renderContainer({ element: _containerData }) {
-          try {
+   renderContainer({ element: _containerData }) {
+    try {
         if (_containerData !== null && _containerData !== undefined) {
             if (Object.values(_containerData).length > 0) {
                 let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
                 let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
+                let { index } = this.props
                 let parentEntityUrn = _containerData.contentUrn;
                 return (
-                    <div className = "container-aside" container-id={parentEntityUrn} container-type={_containerType}>
+                    <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                         {
-                            this.renderElement(_bodyMatter,parentEntityUrn)
+                            this.renderElement(_bodyMatter, parentEntityUrn, index)
                         }
                     </div>
                 )
             }
         }
-         } catch (error) {
-            // handle error
-        } 
+    } catch (error) {
+        // handle error
     }
+}
         /**
     * 
     * @discription - This function is section break
     * @param {string} element -object of element
     */
-    section(element) {
-       
-        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
-        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        let parentEntityUrn = element.contentUrn;
-            return (
-                <div className = "section" container-id = {parentEntityUrn}>
-                    <hr className="section-break" />
-                    {this.renderElement(_containerBodyMatter,parentEntityUrn)}
-                </div>
-            )
-    }
+   section(element, index) {
+
+    let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
+    let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+    let parentEntityUrn = element.contentUrn;
+
+    let parentIndex = `${this.props.index}-${index}`
+    return (
+        <div key = {index} className="section" data-id={_elementId} >
+            <hr className="work-section-break" />
+            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex)}
+        </div>
+    )
+}
 
       /**
     * 
@@ -77,23 +81,26 @@ class ElementAsideContainer extends Component {
     * @param {string} _elements -object of element
     */
  
-    sectionBreak(_element,index) {
-        let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
-        let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        let parentEntityUrn = _element.contentUrn;
-        const {elemBorderToggle,borderToggle} = this.props
-        return (
-            <div className = "aside-section-break" container-id = {parentEntityUrn}>
-                <SectionSeperator 
-                    elemBorderToggle = {elemBorderToggle}
-                    borderToggle = {borderToggle}
-                 />
-                {this.renderElement(_containerBodyMatter,parentEntityUrn)}
-             
-            </div>
-        )
+   sectionBreak(_element, index) {
+    let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
+    let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+    let parentEntityUrn = _element.contentUrn;
+    const { elemBorderToggle, borderToggle } = this.props
+    let parentIndex = `${this.props.index}-${index}`
+    return (
+        <div  key = {index} className="aside-section-break" data-id={_elementId}>
+            <SectionSeperator
+                elemBorderToggle={elemBorderToggle}
+                borderToggle={borderToggle}
+                setActiveElement={this.props.setActiveElement}
+                element={_element}
+            />
+            {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex, true)}
 
-    }
+        </div>
+    )
+
+}
 
      /**
     * 
@@ -101,39 +108,42 @@ class ElementAsideContainer extends Component {
     * @param {string} _elements -object of element
     * @param {string} parentEntityUrn -parent Entity urn for add new element
     */
-    renderElement(_elements,parentEntityUrn) {
-        let firstSection = true;
-           try {
+   renderElement(_elements, parentEntityUrn, parentIndex, sectionBreak) {
+    let firstSection = true;
+    try {
         if (_elements !== null && _elements !== undefined) {
             return _elements.map((element, index) => {
                 if (element.type == "manifest" && firstSection) {
                     firstSection = false;
-                    return this.section(element);
+                    return this.section(element, index);
                 } else if (element.type == "manifest" && !firstSection) {
-                    return this.sectionBreak(element,index);
+                    return this.sectionBreak(element, index);
                 }
                 else {
+                    console.log("elementid---", `${parentIndex}-${index}`);
                     return (
                         <React.Fragment>
-                            {index === 0 && !this.props.element.subtype && <ElementSaprator
+                            {index === 0 && (!this.props.element.subtype || this.props.element.subtype == "sidebar") && <ElementSaprator
                                 upperOne={true}
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
-                                esProps={this.props.elementSepratorProps(index,false,parentEntityUrn)}
+                                esProps={this.props.elementSepratorProps(index, false, parentEntityUrn)}
                                 elementType={this.props.element.type}
                             />
                             }
                             <ElementContainer
                                 element={element}
                                 key={element.id}
-                                index={index}
+                                index={`${parentIndex}-${index}`}
+
                             // handleCommentspanel={this.props.handleCommentspanel}
                             />
                             <ElementSaprator
                                 index={index}
                                 key={`elem-separtor-${element.id}`}
-                                esProps={this.props.elementSepratorProps(index,false,parentEntityUrn)}
+                                esProps={this.props.elementSepratorProps(index, false, parentEntityUrn)}
                                 elementType={this.props.element.type}
+                                sectionBreak={true}
                             />
                         </React.Fragment>
                     )
@@ -142,10 +152,10 @@ class ElementAsideContainer extends Component {
             })
         }
 
-      } catch (error) {
-        console.log("error",error)
-     }
+    } catch (error) {
+        console.log("error", error)
     }
+   }
 
     /**
      * render | renders title and slate wrapper
@@ -153,7 +163,7 @@ class ElementAsideContainer extends Component {
     render() {
         const { element } = this.props
         return (
-           <div  className = "aside-container" tabIndex="0" onBlur = {this.props.handleBlur} ref={elem => this.aside = elem} >
+           <div  className = "aside-container" tabIndex="0" onBlur = {this.props.handleBlur} ref={this.asideRef} >
                 {element.subtype == "workedexample" ? <hr className={`aside-horizotal-break ${element.designtype == "workedexample2"? 'aside-horizotal-break-green':""}`} /> : ""}
                 {this.renderContainer(this.props)}
                  {element.subtype == "workedexample" ?<hr className= {`aside-break-bottom ${element.designtype == "workedexample2"? 'aside-break-bottom-green':""}`}></hr>:""}
