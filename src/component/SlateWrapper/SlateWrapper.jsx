@@ -256,7 +256,7 @@ class SlateWrapper extends Component {
                             <ElementSaprator
                                 index={index}
                                 esProps={this.elementSepratorProps(index)}
-                                elementType={element.type}
+                                elementType=""
                                 slateType = {_slateType}
                             />
                         </React.Fragment>
