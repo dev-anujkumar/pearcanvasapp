@@ -18,7 +18,8 @@ import {
     interativeIcon, 
     audioIcon, 
     containerIcon, 
-    lockIcon
+    lockIcon,
+    metaDataAnchor
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -137,6 +138,10 @@ class Button extends Component {
                 buttonJSX = <span className="btn-element lock-icon">
                     {lockIcon}
                     </span> 
+            case buttonTypes.METADATA_ANCHOR:
+                buttonJSX = <span className="btn-element metadata-anchor" onClick={clickHandlerFn}>
+                    {metaDataAnchor}
+                    </span>
                 break;
         }
         return buttonJSX

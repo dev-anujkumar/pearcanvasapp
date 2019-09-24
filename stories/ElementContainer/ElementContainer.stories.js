@@ -144,6 +144,47 @@ const mockData3={
     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
     
 }
+const mockInter = {
+    "id": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+    "type": "figure",
+    "figuretype": "interactive",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": [],
+        "mathml": []
+    },
+    "subtitle": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": [],
+        "mathml": [],
+        "footnotes": []
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "fpo",
+        "interactiveformat": "mmi"
+    },
+    "versionUrn": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+    "contentUrn": "urn:pearson:entity:4602d9f2-b2b6-4882-b988-b06703e21e74"
+}
 
 const mockStore = configureMockStore(middlewares);
 
@@ -178,6 +219,15 @@ storiesOf('Composites|Element Container')
             <div style={{width:"680px", position:"relative", left:"100px"}}>
             <Provider store={elemContainerData}>
                 <ElementContainer element={mockData3} />
+            </Provider>
+            </div>
+        );
+    })
+    .add('Element Container4', () => {
+        return (
+            <div style={{width:"680px", position:"relative", left:"100px"}}>
+            <Provider store={elemContainerData}>
+                <ElementContainer element={mockInter} />
             </Provider>
             </div>
         );

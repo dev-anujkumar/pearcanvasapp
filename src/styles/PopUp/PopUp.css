@@ -1,6 +1,6 @@
 .modal { 
     position: fixed; 
-    z-index: 1; 
+    z-index: 999999; 
     left: 0;
     top: 0;
     width: 100%; 
@@ -151,4 +151,10 @@
 }
 .dialog-window.lock-message{
   line-height: 30px;
+}
+.delete-element-text{
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  font-size: 14px;
+  line-height: 2.0em;
 }

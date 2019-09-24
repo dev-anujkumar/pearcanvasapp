@@ -10,7 +10,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement
+    , createFigureElement , createInteractiveElement
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
@@ -79,7 +79,7 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     return (
-                        <div className='slate-content' slate-id={_slateId} slate-type={_slateType}>
+                        <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 {
                                     this.renderElement(_slateBodyMatter, _slateType, this.props.slateLockInfo)
@@ -205,11 +205,9 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "figuretype": "image",
-                    "subtype": "image50Text",
-                    "alignment": "half-text",
+                    "subtype": "image50Text"
                 }
-                this.props.createFigureElement(eleFigure, Number(index + 1))
+                this.props.createFigureElement(eleFigure, indexToinsert)
                 break;
             case 'audio-elem':
                 var elevideo = {
@@ -221,6 +219,16 @@ class SlateWrapper extends Component {
                 this.props.createVideoElement(elevideo, Number(index + 1))
                 break;
             case 'interactive-elem':
+                    var eleInteractive = {
+                        "type": "figure",
+                        "figuretype": "interactive",
+                        "figuredata": {
+                            "interactiveid": "",
+                            "interactivetype": "fpo",
+                            "interactiveformat": "narrative-link"
+                        },
+                    }
+                    this.props.createInteractiveElement(eleInteractive, Number(index + 1))
                 break;
             case 'assessment-elem':
                 break;
@@ -283,6 +291,18 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne, slateLockInfo),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'section-break-elem',
+                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
+                tooltipText: 'Section Break',
+                tooltipDirection: 'left'
+            },
+            {
+                buttonType: 'metadata-anchor',
+                buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
+                tooltipText: 'Metadata Anchor',
+                tooltipDirection: 'left'
             }
         ]
 
@@ -312,6 +332,7 @@ class SlateWrapper extends Component {
                                 index={index}
                                 labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
+                                showBlocker = {this.props.showBlocker}
                             />
                             <ElementSaprator
                                 index={index}
@@ -373,6 +394,7 @@ export default connect(
     {
         createElement,
         createVideoElement,
-        createFigureElement
+        createFigureElement,
+        createInteractiveElement
     }
 )(SlateWrapper);

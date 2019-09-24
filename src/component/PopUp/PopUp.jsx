@@ -24,7 +24,16 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        else {
+        else 
+        if(props.showDeleteElemPopup) {
+            return(
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
+                    <span className="cancel-button" id='close-container' onClick={() => props.togglePopup(false)}>{props.cancelBtnText}</span>
+                </div>
+            )            
+        }
+        else
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
@@ -34,25 +43,58 @@ class PopUp extends React.Component {
         }
     }
     
+    renderInputBox = (props) => {
+        if(props.showDeleteElemPopup){
+            return null
+        }
+        else{
+          return (
+            <textarea autoFocus className={`dialog-input-textarea ${props.assessmentClass}`} type="text" onChange={(event)=>props.handleChange(event.target.value)}
+            placeholder={props.placeholder} disabled={props.isInputDisabled} value={props.inputValue} rows={props.rows} cols={props.cols} maxLength={props.maxLength}/>
+          )  
+        }
+    }
+    renderCloseSymbol = (props) => {
+        if(props.showDeleteElemPopup){
+            return null
+        }
+        else{
+            return (
+                <span className={`close ${props.assessmentClass}`} onClick={() => props.togglePopup(false)}>&times;</span>
+            )
+        }
+    }
+    
+    renderDialogText = (props) => {
+        if(props.showDeleteElemPopup){
+            return null
+        }
+        else {
+            return(
+                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
+            )
+        }
+    }
+    
     render() {
-        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, isLockPopup, inputValue, isInputDisabled } = this.props;
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue, isInputDisabled } = this.props;
         return (
             <div>
                 {
                     active ? 
                     <div className={`modal ${assessmentClass}`}>
                         <div className={`modal-content ${assessmentClass}`}>
-                            <span className={`close ${assessmentClass}`} onClick={(e) => togglePopup(false, e)}>&times;</span>
-                            <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div>
+                        {this.renderCloseSymbol(this.props)}
+                        {/* {!showDeleteElemPopup ?
+                            <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
+                            : '' } */}
+                        {this.renderDialogText(this.props)}
+                            {/* {!showDeleteElemPopup ? <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div> : ''} */}
+                            {showDeleteElemPopup ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
                             <div className={`dialog-input ${assessmentClass}`}>
-                                <textarea autoFocus className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
-                                placeholder={placeholder} disabled={isInputDisabled} value={inputValue} rows={rows} cols={cols} maxLength={maxLength}/>
+                                {this.renderInputBox(this.props)}
                             </div>
                             {this.renderButtons(this.props)}
-                            {/* <div className={`dialog-buttons ${assessmentClass}`}>
-                                <span className="save-button" onClick={saveContent}>{saveButtonText}</span>
-                                <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>Cancel</span>
-                            </div> */}
                         </div>
                     </div>
                          : null
@@ -68,7 +110,10 @@ PopUp.defaultProps = {
     rows: "5",
     active: true,
     saveButtonText:"Save",
-    isLockPopup: false
+    isLockPopup: false,
+    yesButton : "Yes",
+    cancelBtnText : "Cancel",
+    deleteInstruction : "Are you sure you want to delete, this action cannot be undone?"
 }
 
 PopUp.propTypes = {

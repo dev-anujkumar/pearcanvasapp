@@ -47,9 +47,9 @@ export const audioIcon = (function () {
 
 export const containerIcon = (function () {
     return (
-        <svg id="containerIcon" viewBox="0 0 16 16" width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+        <svg id="containerIcon" viewBox="1 0 12 13" width="22" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <title>container-icon</title>
-            <rect width="16" height="16" fill="none" />
+            <rect width="20" height="20" fill="none" />
             <path d="M7.5,1,0,4v7l7.5,4L15,11V4ZM7,13.6,1,10.4V5.53l6,3.2Zm-5.7-9L7.5,2.08l6.2,2.48L7.5,7.87ZM14,10.4,8,13.6V8.73l6-3.2Z" transform="translate(0 -1)"></path>
         </svg>
     )
@@ -57,11 +57,13 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" viewBox="0 0 20 20" width="20" height="20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <g>
-                <rect width="20" height="20" fill="none" />
-                <g>
-                    <path className="st0" d="M17.496,6.945v10.553H2.504V6.945H17.496 M19,5.441H1V19h18V5.441L19,5.441z" />
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 64 64">
+        <g>
+            <rect width="64" height="64" fill="#fff"></rect>
+            <g id="Group_2311" data-name="Group 2311" transform="translate(-53 -403)">
+              <g id="Rectangle_1349" data-name="Rectangle 1349" transform="translate(69 427)" fill="#fff" stroke="#707070" stroke-width="2"><rect width="49" height="40" fill="none"></rect>
+            </g>
+            <rect id="Rectangle_1350" data-name="Rectangle 1350" width="49" height="10" transform="translate(69 419)" fill="#434343"></rect>
                 </g>
             </g>
         </svg>
@@ -115,3 +117,22 @@ export const lockIcon = (() => {
         </svg>
     )
 })();
+export const metaDataAnchor = (function(){
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 50 50">
+        <defs>
+          <clipPath id="clip-Anchor">
+            <rect width="64" height="64"/>
+          </clipPath>
+        </defs>
+        <g id="Anchor" clip-path="url(#clip-Anchor)">
+          <rect width="64" height="64" fill="#fff"/>
+          <g id="sailor-anchor" transform="translate(12 11)">
+            <g id="Group_2299" data-name="Group 2299" transform="translate(0)">
+              <path id="Path_1691" data-name="Path 1691" d="M31.645,42A17.161,17.161,0,0,1,15.95,32.448a2.532,2.532,0,0,1-2.566.2,2.486,2.486,0,0,1-1.1-3.338l3.163-6.286,6.286,3.166a2.486,2.486,0,0,1-1.013,4.7,12.055,12.055,0,0,0,8.369,5.883V19.98H27.109a2.486,2.486,0,0,1,0-4.972h1.976v-.624a7.411,7.411,0,1,1,4.97,0v.624h2.121a2.486,2.486,0,0,1,0,4.972H34.056V36.8a12.022,12.022,0,0,0,8.52-5.914,2.485,2.485,0,0,1-1.243-4.7l6.286-3.166,3.164,6.287a2.49,2.49,0,0,1-1.1,3.337,2.519,2.519,0,0,1-2.4-.1A17.219,17.219,0,0,1,31.645,42ZM16.261,29.246l.575,1.561c2.146,5.83,8.1,9.745,14.81,9.745,6.593,0,12.51-3.828,14.722-9.526l.551-1.418.752,1.322a1.058,1.058,0,0,0,1.361.422,1.043,1.043,0,0,0,.462-1.4l-2.513-5-4.994,2.516a1.042,1.042,0,0,0-.462,1.4,1.059,1.059,0,0,0,1.4.46l2.247-1.13-.578,1.678A13.289,13.289,0,0,1,33.42,38.357l-.808.1V18.534h3.566a1.04,1.04,0,0,0,0-2.08H32.612V13.3l.531-.146a5.965,5.965,0,1,0-3.142,0l.531.146v3.151H27.11a1.04,1.04,0,0,0,0,2.08h3.422V38.443l-.815-.105a13.342,13.342,0,0,1-10.963-8.306l-.613-1.7,2,1a1.059,1.059,0,0,0,1.4-.461,1.039,1.039,0,0,0-.461-1.4l-4.994-2.516-2.513,4.994a1.041,1.041,0,0,0,.461,1.4,1.054,1.054,0,0,0,1.4-.46ZM31.572,11.3a3.885,3.885,0,1,1,3.885-3.884A3.889,3.889,0,0,1,31.572,11.3Zm0-6.323a2.439,2.439,0,1,0,2.439,2.439A2.442,2.442,0,0,0,31.572,4.972Z" transform="translate(-12.014)" fill="#252525"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    )
+})()

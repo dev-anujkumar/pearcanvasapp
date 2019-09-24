@@ -203,6 +203,47 @@ export default {
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 },
                 {
+                    "id": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+                    "type": "figure",
+                    "figuretype": "interactive",
+                    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                    "title": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": []
+                    },
+                    "subtitle": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "captions": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "credits": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "",
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
+                    },
+                    "figuredata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                        "interactiveid": "",
+                        "interactivetype": "fpo",
+                        "interactiveformat": "mmi"
+                    },
+                    "versionUrn": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
+                    "contentUrn": "urn:pearson:entity:4602d9f2-b2b6-4882-b988-b06703e21e74"
+                },
+                {
                     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec465",
                     "type": "figure",
                     "figuretype": "image",
