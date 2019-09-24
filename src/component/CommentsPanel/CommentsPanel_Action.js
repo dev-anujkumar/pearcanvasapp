@@ -130,7 +130,7 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
 
 
 export const getProjectUsers = (ENTITY_URN) => dispatch => {
-    let ENTITY_URN = config.project_ENTITY_URN
+    let ENTITY_URN = config.projectEntityUrn
     let url = `${config.JAVA_API_URL}v1/structure/dashboard/ProjectUserInfo/${ENTITY_URN}`
     return axios.get(url,
         {
