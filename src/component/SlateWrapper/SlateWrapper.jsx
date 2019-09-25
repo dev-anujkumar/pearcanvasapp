@@ -43,7 +43,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader disabled={this.props.disabled} onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
@@ -128,7 +128,7 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index, firstOne) => {
+    splithandlerfunction = (type, index, firstOne,parentEntityUrn) => {
         let indexToinsert
         // Detects element insertion from the topmost element separator
         if(firstOne){
@@ -147,7 +147,7 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "subtype": "image50Text"
+                    "subtype": "image25Text"
                 }
                 this.props.createFigureElement(eleFigure, indexToinsert)
                 break;
@@ -175,8 +175,10 @@ class SlateWrapper extends Component {
             case 'assessment-elem':
                 break;
             case 'container-elem':
+                  this.props.createElement("element-aside", Number(index + 1),parentEntityUrn)
                 break;
             case 'worked-exp-elem':
+                   this.props.createElement("workedexample", Number(index + 1),parentEntityUrn)
                 break;
             case 'opener-elem':
                 break;
@@ -184,7 +186,7 @@ class SlateWrapper extends Component {
         }
     }
 
-    elementSepratorProps = (index, firstOne) => {
+    elementSepratorProps = (index, firstOne,parentEntityUrn) => {
         return [
             {
                 buttonType: 'text-elem',
@@ -224,7 +226,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne,parentEntityUrn),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
@@ -272,14 +274,14 @@ class SlateWrapper extends Component {
                             <ElementContainer
                                 element={element}
                                 index={index}
-                                labelText={this.props.tags[element.id]}
                                 handleCommentspanel={this.props.handleCommentspanel}
+                                elementSepratorProps = {this.elementSepratorProps}
                                 showBlocker = {this.props.showBlocker}
                             />
                             <ElementSaprator
                                 index={index}
                                 esProps={this.elementSepratorProps(index)}
-                                elementType={element.type}
+                                elementType=""
                                 slateType = {_slateType}
                             />
                         </React.Fragment>

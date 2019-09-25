@@ -55,7 +55,6 @@ class Sidebar extends Component {
 
         if(this.props.activeElement.elementId !== '') {
             this.props.updateElement({
-                slateId: this.props.slateId,
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: value,
@@ -118,7 +117,6 @@ class Sidebar extends Component {
 
         if(this.props.activeElement.elementId !== '') {
             this.props.updateElement({
-                slateId: this.props.slateId,
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,

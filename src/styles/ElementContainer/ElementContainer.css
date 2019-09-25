@@ -6,6 +6,7 @@
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
+    max-width: 93.1%;
     /* border: 1.5px solid #aaa; */
 }
 
@@ -24,5 +25,5 @@
     padding:10px !important;
 }
 .element-container{
-    padding: 0px 8px !important; 
+    padding: 1px 8px !important; 
 }

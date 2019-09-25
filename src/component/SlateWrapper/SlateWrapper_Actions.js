@@ -6,6 +6,7 @@ import {
     ,FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED
 } from '../../constants/Action_Constants';
+import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
@@ -16,17 +17,18 @@ let headers = {
 }
 export const createElement = (type, index) => (dispatch, getState) => {
     let _requestData = {
+        //type : IMAGE, TEXT
         // "projectUrn" : "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
         // "slateEntityUrn" : "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
         // "slateUrn" : "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
         "projectUrn": config.projectUrn,
         "slateEntityUrn": config.slateEntityURN,
         "slateUrn": config.slateManifestURN,
-        "type": type,
-        "index": index
+        "index": index,
+        "type": "TEXT"
     };
-
-    axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
+    
+     axios.post(`${config.REACT_APP_API_URL}v1/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -34,14 +36,21 @@ export const createElement = (type, index) => (dispatch, getState) => {
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(createdElemData => {        
+    ).then(createdElemData => {   
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData.data;
+        if(type == "workedexample"){
+            createdElementData = elementWorkExample
+        }
+        if(type == "element-aside"){
+            createdElementData = elementAside
+        }
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-                newParentData[key].contents.bodymatter.splice(index, 0, createdElemData.data);
+                newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
             //}
 
         }
@@ -53,18 +62,21 @@ export const createElement = (type, index) => (dispatch, getState) => {
             }
         })
 
-    })
+    }).catch(error => {
+        
+        console.log("create Api fail", error);
+    }) 
 };
 export const createFigureElement = (eleFigure, index) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": config.slateEntityURN,
         "slateUrn": config.slateManifestURN,
-        "type": eleFigure.type,
-        "subtype":eleFigure.subtype,
+        "type": "IMAGE",
+        // "subtype":eleFigure.subtype,
         "index": index
     };
-    axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
+    axios.post(`${config.REACT_APP_API_URL}v1/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -73,11 +85,9 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
             }
         }
     ).then(createdFigureElemData => {        
-    console.log("createdFigureElemData",createdFigureElemData);
-     
        /* For hiding the spinning loader send HideLoader message to Wrapper component */
        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-    
+  
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
