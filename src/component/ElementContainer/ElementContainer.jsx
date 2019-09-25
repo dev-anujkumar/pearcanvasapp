@@ -183,6 +183,11 @@ class ElementContainer extends Component {
 
                 }
                 break;
+
+            case elementTypeConstant.ELEMENT_LIST:
+                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                labelText = 'OL'
+                break;
         }
         return(
             <div className = "editor" >

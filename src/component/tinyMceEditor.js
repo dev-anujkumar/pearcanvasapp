@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';

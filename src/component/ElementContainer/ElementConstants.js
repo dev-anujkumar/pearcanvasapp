@@ -2,6 +2,7 @@ export default {
     OPENER : "opener",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
+    ELEMENT_LIST : "element-list",
 /****************Figure Element************************ */    
     FIGURE : "figure",
     FIGURE_IMAGE : "image",
