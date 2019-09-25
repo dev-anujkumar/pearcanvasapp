@@ -206,7 +206,7 @@ class SlateWrapper extends Component {
                 
                 var eleFigure = {
                     "type": "figure",
-                    "subtype": "image50Text"
+                    "subtype": "image25Text"
                 }
                 this.props.createFigureElement(eleFigure, indexToinsert)
                 break;

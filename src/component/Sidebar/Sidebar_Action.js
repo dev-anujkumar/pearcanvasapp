@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 import { EditorConfig } from './../../config/EditorConfig';
+import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
-import config from './../../config/config';
 
 import wipElementObject from './ElementWipData';
 
