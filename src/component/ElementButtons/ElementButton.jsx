@@ -47,12 +47,12 @@ class Button extends Component {
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} title="note" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
             case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className="btn-element small flag-icon" onClick={()=>clickHandlerFn(elementId)}>
+                buttonJSX = <span className="btn-element small flag-icon" title="flag" onClick={()=>clickHandlerFn(elementId)}>
                     {noteFlag}
                     </span>
                 break;
@@ -64,7 +64,7 @@ class Button extends Component {
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className="btn-element small tcm-icon" onClick={clickHandlerFn}>
+                buttonJSX = <span className="btn-element small tcm-icon" title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
