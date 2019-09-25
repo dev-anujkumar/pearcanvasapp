@@ -51,7 +51,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         }
     })
 
-     axios.post(`${config.REACT_APP_API_URL}v1/authoredtext`,
+     axios.post(`${config.REACT_APP_API_URL}v1/element`,
         JSON.stringify(_requestData),
         {
             headers: {
