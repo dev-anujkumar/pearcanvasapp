@@ -14,15 +14,12 @@ import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-<<<<<<< HEAD
-import {setActiveElement} from '../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
-=======
+import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
->>>>>>> 04577b392c7d53c8c08e5cbfffaee4346510a06d
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -78,6 +75,7 @@ class ElementContainer extends Component {
             borderToggle: 'active',
             btnClassName: 'activeTagBgColor'
         })
+        this.props.setActiveElement(this.props.element);
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
@@ -148,14 +146,15 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { labelText, index, handleCommentspanel,elementSepratorProps } = this.props;
-        switch (element.type) {
+        let labelText = fetchElementTag(element) || 'P';
+        let { index, handleCommentspanel, elementSepratorProps } = this.props;
+        switch(element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
@@ -225,7 +224,7 @@ class ElementContainer extends Component {
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
                         labelText = 'AS';
                 }
         }
@@ -306,17 +305,13 @@ class ElementContainer extends Component {
 }
 
 ElementContainer.defaultProps = {
-    element: {},
-    elementType: 'heading-4',
-    labelText: 'P'
+    element: {}
 }
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elementType: PropTypes.string,
-    labelText: PropTypes.string,
-    elemBorderToggle: PropTypes.string
+    elemBorderToggle : PropTypes.string
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -327,7 +322,10 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
         },
-        deleteElement : (id , type)=>{
+        setActiveElement: (element) => {
+            dispatch(setActiveElement(element))
+        },
+        deleteElement: (id , type)=>{
             dispatch(deleteElement(id, type))
         },
         setActiveElement:(element) => {

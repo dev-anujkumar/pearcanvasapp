@@ -45,10 +45,14 @@ class ElementAsideContainer extends Component {
                     let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
                     let { index } = this.props
                     let parentEntityUrn = _containerData.contentUrn;
+                    let parentUrn = {
+                        manifestUrn:_containerId,
+                        contentUrn :_containerData.contentUrn
+                    }
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                             {
-                                this.renderElement(_bodyMatter, parentEntityUrn, index)
+                                this.renderElement(_bodyMatter, parentUrn, index)
                             }
                         </div>
                     )
@@ -67,13 +71,15 @@ class ElementAsideContainer extends Component {
 
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        let parentEntityUrn = element.contentUrn;
-
+        let parentUrn = {
+            manifestUrn:_elementId,
+            contentUrn :element.contentUrn
+        }
         let parentIndex = `${this.props.index}-${index}`
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-                {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex)}
+                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
             </div>
         )
     }
@@ -87,7 +93,10 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        let parentEntityUrn = _element.contentUrn;
+        let parentUrn = {
+            manifestUrn:_elementId,
+            contentUrn :_element.contentUrn
+        }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
         return (
@@ -98,23 +107,21 @@ class ElementAsideContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
                 />
-                {this.renderElement(_containerBodyMatter, parentEntityUrn, parentIndex, true)}
+                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex, true)}
 
             </div>
         )
 
-        </div>
-    )
-
+    
 }
 
     /**
    * 
    * @discription - This function is renders element
    * @param {string} _elements -object of element
-   * @param {string} parentEntityUrn -parent Entity urn for add new element
+   * @param {string} parentUrn -parent Entity urn for add new element
    */
-    renderElement(_elements, parentEntityUrn, parentIndex, sectionBreak) {
+    renderElement(_elements, parentUrn, parentIndex, sectionBreak) {
         let firstSection = true;
         try {
             if (_elements !== null && _elements !== undefined) {
@@ -133,7 +140,7 @@ class ElementAsideContainer extends Component {
                                     upperOne={true}
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
-                                    esProps={this.props.elementSepratorProps(index, false, parentEntityUrn)}
+                                    esProps={this.props.elementSepratorProps(index, false, parentUrn)}
                                     elementType={this.props.element.type}
                                 />
                                 }
@@ -147,7 +154,7 @@ class ElementAsideContainer extends Component {
                                 <ElementSaprator
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
-                                    esProps={this.props.elementSepratorProps(index, false, parentEntityUrn)}
+                                    esProps={this.props.elementSepratorProps(index, false, parentUrn)}
                                     elementType={this.props.element.type}
                                     sectionBreak={sectionBreak}
                                 />
@@ -162,6 +169,11 @@ class ElementAsideContainer extends Component {
             console.log("error", error)
         }
     }
+     /**
+   * 
+   * @discription - This function is renders workexample
+   * @param {string} designtype -string to select type of work example
+   */
 
     renderWorkExample = (designtype) => {
         return (
@@ -172,6 +184,13 @@ class ElementAsideContainer extends Component {
             </React.Fragment>
         )
     }
+
+       /**
+   * 
+   * @discription - This function is renders diffrent types of border of aside
+   * @param {string} designtype -string to select type of aside container
+   */
+
     borderTop = (designtype) => {
         if (designtype == "asideSidebar01" || designtype == "asideSidebar02" || designtype == "asideSidebar03" || designtype == "asideTacticBox") {
             return (
@@ -206,6 +225,12 @@ class ElementAsideContainer extends Component {
            
         }
     }
+     /**
+   * 
+   * @discription - This function is renders aside container
+   * @param {string} designtype -string to select type of aside container
+   */
+
     renderAside = (designtype) => {
         
             return (
@@ -217,7 +242,7 @@ class ElementAsideContainer extends Component {
 
             )
     }
-   }
+   
 
     /**
      * render | renders title and slate wrapper
@@ -227,9 +252,6 @@ class ElementAsideContainer extends Component {
         return (
             <aside className={`${element.designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
                 {element.subtype == "workedexample" ? this.renderWorkExample(element.designtype) : this.renderAside(element.designtype)}
-                {/* element.subtype == "workedexample" ? <hr className={`aside-horizotal-break ${element.designtype == "workedexample2"? 'aside-horizotal-break-green':""}`} /> : "" */}
-                {/* this.renderContainer(this.props) */}
-                {/* element.subtype == "workedexample" ?<hr className= {`aside-break-bottom ${element.designtype == "workedexample2"? 'aside-break-bottom-green':""}`}></hr>:"" */}
             </aside>
         );
     }

@@ -358,7 +358,7 @@ export const elementAside =
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "type": "element-aside",
     "subtype": "sidebar",
-    "designtype": "asideSidebar02",
+    "designtype": "asideTacticBox",
     "elementdata": {
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
         "frontmatter": [],

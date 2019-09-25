@@ -4,7 +4,6 @@ import mockdata from './../../appstore/mockdata';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
-	SET_ELEMENT_TAG
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -47,18 +46,18 @@ const findElementType = (element) => {
 			elementType['primaryOption'] = 'primary-blockquote';
 			switch (element.elementdata.type) {
 				case 'pullquote':
-					elementType['secondaryOption'] = 'secondary-pullquote'
+					elementType['secondaryOption'] = 'secondary-pullquote';
 					break;
 				case 'blockquote':
-					elementType['secondaryOption'] = 'secondary-marginalia'
+					elementType['secondaryOption'] = 'secondary-marginalia';
 					break;
 				case 'marginalia':
-					elementType['secondaryOption'] = 'secondary-marginalia-attribution'
+					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
 			}
 			break;
-		case 'figure':
 
+		case 'figure':
 			if (element.figuretype && element.subtype !== undefined) {
 				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';
@@ -112,6 +111,68 @@ const findElementType = (element) => {
 				  
 			  }
 			break;
+
+		case 'element-aside':
+			if(element.subtype === '' || element.subtype === 'sidebar') {
+				elementType['elementType'] = 'element-aside';
+				switch(element.designtype) {
+					case 'asideTacticBox':
+						elementType['primaryOption'] = 'primary-aside-tactic';
+						elementType['secondaryOption'] = 'secondary-aside-tactic';
+						break;
+					case 'asideSidebar01':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb1';
+						break;
+					case 'asideSidebar02':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb2';
+						break;
+					case 'asideSidebar03':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb3';
+						break;
+					case 'asideSidebar04':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb4';
+						break;
+					case 'asideSidebar05':
+						elementType['primaryOption'] = 'primary-aside-aside';
+						elementType['secondaryOption'] = 'secondary-aside-sb5';
+						break;
+					case 'asideSidebarFeature':
+						elementType['primaryOption'] = 'primary-aside-feature';
+						elementType['secondaryOption'] = 'secondary-aside-feature';
+						break;
+					case 'asideActivity':
+						elementType['primaryOption'] = 'primary-aside-activity';
+						elementType['secondaryOption'] = 'secondary-aside-activity';
+						break;	
+					default:
+						elementType['primaryOption'] = 'primary-aside-lol';
+						elementType['secondaryOption'] = 'secondary-aside-lol';
+						break;
+				}
+			} else if(element.subtype === 'workedexample') {
+				elementType['elementType'] = 'element-workedexample';
+				switch(element.designtype) {
+					case 'workedexample1':
+						elementType['primaryOption'] = 'primary-workedexample-we1';
+						elementType['secondaryOption'] = 'secondary-workedexample-we1';
+						break;
+					case 'workedexample2':
+						elementType['primaryOption'] = 'primary-workedexample-we2';
+						elementType['secondaryOption'] = 'secondary-workedexample-we2';
+						break;
+				}
+			}
+			break;
+
+		default: 
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-paragraph';
+			elementType['secondaryOption'] = 'secondary-paragraph';
+			break;
 	}
 
 	elementType['elementId'] = element.id;
@@ -123,44 +184,33 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-const defineElementTag = (bodymatter = {}) => {
-	let tagList = {};
-	if (Object.keys(bodymatter).length > 0) {
-		bodymatter.forEach(element => {
-			tagList[element.id] = findElementType(element).tag;
-		});
+export const fetchElementTag = (element) => {
+	if (Object.keys(element).length > 0) {
+		return findElementType(element).tag;
 	}
-
-	return tagList;
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {
+export const fetchSlateData = (manifestURN) => dispatch => {	
 	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
-	//	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44/urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75`, {
-	/* 	headers: {
+		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
-		} */
-	//	}).then(slateData => {
-			/* For hiding the spinning loader send HideLoader message to Wrapper component */
-		//	sendDataToIframe({'type': HideLoader,'message': { status: false }});
-			
-			//let contentUrn = slateData.data[manifestURN].contentUrn,
-			//title = slateData.data[manifestURN].contents.title.text
-		/* 	dispatch({
-				type: SET_ELEMENT_TAG,
-				payload: defineElementTag(slateData.data[manifestURN].contents.bodymatter)
-			});
-			
-			dispatch({
-				type: FETCH_SLATE_DATA,
-				payload: {
-					[manifestURN]: slateData.data[manifestURN]
-				}//slateData.data
-			});
-			 }) */
-			});
-	};
+		}
+	}).then(slateData => {
+		sendDataToIframe({'type': HideLoader,'message': { status: false }});
+		// let contentUrn = slateData.data[manifestURN].contentUrn,
+		// 	title = slateData.data[manifestURN].contents.title.text;
+
+		// dispatch(fetchComments(contentUrn, title));
+
+		dispatch({
+			type: FETCH_SLATE_DATA,
+			payload: {
+				[manifestURN]: slateData.data[manifestURN]
+			}//slateData.data
+		});
+	});
+};
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
 	dispatch({

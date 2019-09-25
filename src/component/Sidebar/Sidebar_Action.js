@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 import { EditorConfig } from './../../config/EditorConfig';
+import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
-    SET_ELEMENT_TAG,
     SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
 
@@ -11,8 +11,8 @@ import wipElementObject from './ElementWipData';
 
 const handleElementConversion = (elementData, store) => {
     store = JSON.parse(JSON.stringify(store));
-    if(Object.keys(store).length > 0 && elementData.slateId === Object.keys(store)[0]) {
-        let storeElement = store[elementData.slateId];
+    if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
+        let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let format = elementData.secondaryOption.replace('secondary-', '');
         bodymatter.map((element, index) => {
@@ -30,9 +30,6 @@ const handleElementConversion = (elementData, store) => {
 
 export const updateElement = (elementData) => (dispatch, getState) => {
     let slateLevelData = handleElementConversion(elementData, getState().appStore.slateLevelData);
-
-    let tagList = getState().appStore.elementsTag;
-    tagList[elementData.elementId] = elementData.labelText;
     
     let activeElementObject = {
         elementId: elementData.elementId,
@@ -41,11 +38,6 @@ export const updateElement = (elementData) => (dispatch, getState) => {
         secondaryOption: elementData.secondaryOption,
         tag: elementData.labelText
     }
-    
-    dispatch({
-        type: SET_ELEMENT_TAG,
-        payload: tagList
-    });
 
     dispatch({
 		type: SET_ACTIVE_ELEMENT,
