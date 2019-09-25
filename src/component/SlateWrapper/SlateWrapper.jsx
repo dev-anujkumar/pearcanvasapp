@@ -33,6 +33,7 @@ class SlateWrapper extends Component {
             document.getElementById("cypress-0").focus();
         }
     }
+    
     static getDerivedStateFromProps = (props, state) =>{
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){

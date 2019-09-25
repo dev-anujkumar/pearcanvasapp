@@ -62,7 +62,7 @@ export class TinyMceEditor extends Component {
     }
     
     componentDidUpdate(){
-        if(!tinymce.editors.length && !this.props.stringlocked){
+        if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
     }
@@ -144,7 +144,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps, 
     {
-        setActiveElement
+        // setActiveElement
     }
 )(TinyMceEditor);
 

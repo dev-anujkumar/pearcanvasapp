@@ -17,7 +17,7 @@ import config from './../../config/config';
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, setSlateLock, releaseSlateLock } from './SlateLock_Actions'
+import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag } from './SlateLock_Actions'
 
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
@@ -63,7 +63,7 @@ class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps, prevState){
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -133,7 +133,9 @@ class CanvasWrapper extends Component {
         return function (){ 
             clearTimeout(timer)
             timer = setTimeout(()=>{
-                callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
+                // callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
+                _context.props.setLockPeriodFlag(false)
+                alert("Lock has been released")
             },5000)
         }
     }
@@ -148,8 +150,10 @@ class CanvasWrapper extends Component {
         }
         else{
             const { projectUrn } = config
+            this.props.setLockPeriodFlag(true)
             this.props.setSlateLock(projectUrn, slateId, lockDuration)
-            // this.props.setLockPeriodFlag(true)
+            this.debounceReleaseTimeout()
+            
         }
     }
     
@@ -200,7 +204,7 @@ const mapStateToProps = state => {console.log('state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData,
         elementsTag: state.appStore.elementsTag,
-        withinLockPeriod: state.slateLockReducer.slateLockInfo.withinLockPeriod,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLevelData: state.appStore.slateLevelData
     };
 };
@@ -215,6 +219,7 @@ export default connect(
         fetchCommentByElement,
         getSlateLockStatus,
         setSlateLock,
-        releaseSlateLock
+        releaseSlateLock,
+        setLockPeriodFlag
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

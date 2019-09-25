@@ -5,6 +5,7 @@ import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Con
 const WRAPPER_URL = config.WRAPPER_URL
 
 const BASE_URL = config.LOCK_API_BASE_URL
+// const BASE_URL = 'http://localhost:3030/'
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
     withCredentials: true //true if we are deploying on server
@@ -37,13 +38,17 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
     return axiosInstance.post(url, data)
         .then((res) => {
             console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
-            dispatch({
+            /* dispatch({
                 type : SET_LOCK_FLAG,
-                payload : inLockPeriod
-            })
+                payload : true
+            }) */
             // stopLoader()
         })
         .catch((err) => {
+            /* dispatch({
+                type : SET_LOCK_FLAG,
+                payload : true
+            }) */
             window.parent.postMessage({
                 'type': 'headerDisable',
                 'message': false 
@@ -62,15 +67,22 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
     return axiosInstance.post(url, data)
        .then((res) => {
             console.log("Slate release API success>>Slalte release status", res.data)
+            dispatch({
+                type : SET_LOCK_FLAG,
+                payload : false
+            })
         })
         .catch((err) => {
             console.log("API error from release slate>>>>",err)
+            dispatch({
+                type : SET_LOCK_FLAG,
+                payload : false
+            })
         })
 }
-
-/* export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
+export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
     dispatch({
         type : SET_LOCK_FLAG,
         payload : inLockPeriod
     })
-} */
+}
