@@ -76,7 +76,10 @@ figure,.element-container{
     display:block !important;
 }
 
-
+.pearson-component.image.figureData img{
+    max-width: 100%;
+    text-align: center;
+}
  
 [placeholder]:empty::before {
     content: attr(placeholder);

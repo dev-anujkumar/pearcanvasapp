@@ -1,4 +1,99 @@
 export default {
+    "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i": {
+        "id": "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f",
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "type": "manifest",
+        "contents": {
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Test Slate 1"
+            },
+            "frontmatter": [],
+            "bodymatter": [
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "headers": [
+                            {
+                                "charStart": 0,
+                                "charEnd": 8,
+                                "level": 1
+                            }
+                        ],
+                        "text": "Heading 1"
+                    },
+                    "html": {
+                        "text": "<h1 class=\"heading1NummerEins\">Heading 1</h1>"
+                    },
+                    "comments": false,
+                    "tcm": false,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                },
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": "Paragraph"
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
+                    },
+                    "comments": false,
+                    "tcm": false,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                },
+                {
+                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e3a",
+                    "type": "element-authoredtext",
+                    "subtype": "",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    },
+                    "html": {
+                        "text": "<p class=\"paragraphNumeroUno\">A basic Visual Studio Code plugin that converts html text to JSX string. You can select your html text and use the shortcut ctrl+alt+x.There are many things to do<br></p>"
+                    },
+                    "comments": false,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                },
+                {
+                    "id": "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04b",
+                    "type": "element-list",
+                    "subtype": "upper-alpha",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "elementdata": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+                        "type": "list",
+                        "listtype": "ordered",
+                        "designtype": "list",
+                        "subtype": "upper-alpha",
+                        "startNumber": "",
+                        "listitems": []
+                    },
+                    "html": {
+                        "text": "<ol class='upper-alpha' data-treelevel='1' style='counter-increment: none;'><li class='reset listItemNumeroUnoUpperAlpha'><br></li></ol>"
+                    },
+                    "comments": false,
+                    "tcm": true,
+                    "versionUrn": "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04b",
+                    "contentUrn": "urn:pearson:entity:16b54b0b-438b-7647-9fd3-09aa34f14d2f"
+                }
+            ]
+        }
+    },
     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
         "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
@@ -29,106 +124,111 @@ export default {
                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                 },
                 {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
+                    "id": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2",
                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "type": "element-aside",
+                    "subtype": "",
+                    "designtype": "",
                     "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                        "frontmatter": [ ],
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            }
+                        ],
+                    "backmatter": [ ]
                     },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">It definitely went through an evolution, but regardless of its phase, all parsers had a similar output — which is an AST. Once we have an AST representation of the JSX code, interpretation is extremely easy.<br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    "contentUrn": "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                    "versionUrn": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2"
                 },
                 {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e2a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
+                    "id": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2",
                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "type": "element-aside",
+                    "subtype": "sidebar",
+                    "designtype": "asideSidebar02",
                     "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                        "frontmatter": [ ],
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\">`\" \\\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel. <br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            }
+                        ],
+                    "backmatter": [ ]
                     },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">Today we’re gonna understand how a JSX parser thinks by implementing one of our own. Unlike Babel, rather than compiling, we’re gonna evaluate the nodes in the AST according to their types, which means that we will be able to use JSX during runtime.<br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    "contentUrn": "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                    "versionUrn": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2"
                 },
                 {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e3a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
+                    "id": "urn:pearson:manifest:e420fcb8-8963-4237-823c-9e1e85c95ec0",
                     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "type": "element-aside",
+                    "subtype": "workedexample",
+                    "designtype": "workedexample1",
                     "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                        "frontmatter": [ ],
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e7a",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            },
+                            {
+                                "type": "section",
+                                "id": "urn:pearson:manifest:b9539bc0-eabc-4ea5-b469-ef72dfcd52b1"
+                            },
+                            {
+                                "type": "section",
+                                "id": "urn:pearson:manifest:9a29e6e2-f3c0-4b4d-993f-6050a09905b7"
+                            }
+                        ],
+                        "backmatter": [ ]
                     },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">A basic Visual Studio Code plugin that converts html text to JSX string. You can select your html text and use the shortcut ctrl+alt+x.There are many things to do<br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                },
-                {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e4a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
-                    },
-                    "html": {
-                        "text": '<p class=\"paragraphNumeroUno\"><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">A basic Visual Studio Code plugin that converts html text to JSX string</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);">You can select your html text and use the shortcut ctrl+alt+x</p><p style="color: rgb(51, 51, 51); font-family: &quot;Segoe UI Web (West European)&quot;, &quot;Segoe UI&quot;, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; background-color: rgb(255, 255, 255);"><strong>There are many things to do</strong></p><br></p>'
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                },
-                {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e5a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
-                    },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\"><ul> <li>Add functionality to validate html code</li> <li>Add support to format the resulting string</li><li>Add support to convert javascript strings to html code</li></ul><br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-                },
-                {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e6a",
-                    "type": "element-authoredtext",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
-                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": ""
-                    },
-                    "html": {
-                        "text": "<p class=\"paragraphNumeroUno\">There could be 1000s of good reasons to learn Javascript Programming. But one thing for sure, to learn any programming language, not only Javascript, you just need to code, and code and finally code until you become expert.<br></p>"
-                    },
-                    "comments": false,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    "contentUrn": "urn:pearson:entity:cecd4361-d86d-45a8-9754-82fedb9f6d6b",
+                    "versionUrn": "urn:pearson:manifest:e420fcb8-8963-4237-823c-9e1e85c95ec0"
                 },
                 {
                     "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e7a",
@@ -297,8 +397,8 @@ export default {
                     "tcm": false,
                     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
-                
-               },
+
+                },
                 {
                     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
                     "type": "figure",
@@ -342,7 +442,7 @@ export default {
                             "imageid": "urn:pearson:alfresco:5e7f87f1-4662-4093-bb10-f3e1ef66e658",
                             "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
                         },
-                
+
                         "audio": {
                             "format": "video/mp4",
                             "path": "https://cite-media-stg.pearson.com/legacy_paths/5e7f87f1-4662-4093-bb10-f3e1ef66e658/smart_figure_3_6_mc_war_part_b_1025689155684_mp4_video_320x240_168000_primary_audio_1.mp4"
@@ -364,7 +464,7 @@ export default {
                     "contentUrn": "urn:pearson:entity:b8c31acf-2c66-4a05-92ac-e0d910ec2720"
                 },
                 {
-       
+
                     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec466",
                     "type": "figure",
                     "figuretype": "video",
@@ -404,25 +504,25 @@ export default {
                         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
                         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
                         "posterimage": {
-                        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-                        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+                            "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
+                            "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
                         },
                         "videos": [
-                        {
-                        "format": "audio/mpeg",
-                        "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
-                        }
+                            {
+                                "format": "audio/mpeg",
+                                "path": "https://cite-media-stg.pearson.com/legacy_paths/42333091-7625-4317-b095-1f450207961f/dipe.mp4"
+                            }
                         ],
-                        "tracks": [ ],
+                        "tracks": [],
                         "srctype": "externallink",
                         "clipinfo": {
-                        "clipid": "",
-                        "starttime": "",
-                        "endtime": "",
-                        "description": "",
-                        "duration": ""
+                            "clipid": "",
+                            "starttime": "",
+                            "endtime": "",
+                            "description": "",
+                            "duration": ""
                         }
-                        },
+                    },
                     "html": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                         "title": "12345",
@@ -438,7 +538,7 @@ export default {
                     "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
                 },
                 // {
-    
+
                 //     "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
                 //     "type": "figure",
                 //     "figuretype": "assessment",
@@ -485,7 +585,7 @@ export default {
                 //     "usagetype": "Diagnostic"
                 //     }
                 //     },
-                    
+
                 //     "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
                 //     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
                 // }
@@ -633,29 +733,29 @@ export default {
                     "title": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                         "text": "Test",
-                        "textsemantics": [ ],
-                        "mathml": [ ]
+                        "textsemantics": [],
+                        "mathml": []
                     },
                     "subtitle": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                         "text": "Test title",
-                        "textsemantics": [ ],
-                        "mathml": [ ],
-                        "footnotes": [ ]
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
                     },
                     "captions": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                         "text": "Caption",
-                        "textsemantics": [ ],
-                        "mathml": [ ],
-                        "footnotes": [ ]
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
                     },
                     "credits": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
                         "text": "Credit",
-                        "textsemantics": [ ],
-                        "mathml": [ ],
-                        "footnotes": [ ]
+                        "textsemantics": [],
+                        "mathml": [],
+                        "footnotes": []
                     },
                     "figuredata": {
                         "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",

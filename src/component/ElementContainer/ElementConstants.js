@@ -13,10 +13,16 @@ export default {
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
+ 
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
     INTERACTIVE_MMI : "mmi",
     INTERACTIVE_EXTERNAL_LINK : "external-link",
     INTERACTIVE_SHOW_HIDE : "showhide",
     INTERACTIVE_NARRATIVE_LINK : "narrative-link",
+/****************Container Element************************ */  
+    ELEMENT_WORKEDEXAMPLE: "workedexample",
+    ELEMENT_ASIDE: "element-aside",
 }
+
+

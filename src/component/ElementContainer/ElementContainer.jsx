@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
 import ElementInteractive from '../ElementInteractive';
+import ElementAsideContainer from '../ElementAsideContainer';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
-import {fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
+import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
+import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -44,6 +46,7 @@ class ElementContainer extends Component {
         })             
     }
 
+   
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps){      
         if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
@@ -52,7 +55,7 @@ class ElementContainer extends Component {
                     borderToggle : 'showBorder',
                     btnClassName : ''
                 })
-            }else{
+            } else {
                 this.setState({
                     borderToggle : 'hideBorder',
                     btnClassName : ''
@@ -68,23 +71,37 @@ class ElementContainer extends Component {
 
     handleFocus = () => {
         this.setState({
-            borderToggle : 'active',
-            btnClassName : 'activeTagBgColor'
+            borderToggle: 'active',
+            btnClassName: 'activeTagBgColor'
         })
+        this.props.setActiveElement(this.props.element);
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
     handleBlur = () => {}
 
+    handleBlurAside = () => {
+        if(this.props.elemBorderToggle){
+            this.setState({
+                borderToggle : 'showBorder',
+                btnClassName : ''
+            })
+        } else {
+            this.setState({
+                borderToggle : 'hideBorder',
+                btnClassName : ''
+            })
+        } 
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
      */
     renderColorPaletteButton = (element) => {
-        if(element.type === "opener"){
-            return <Button type="color-palette" />  
+        if (element.type === "opener") {
+            return <Button type="color-palette" />
         }
-        else{
+        else {
             return null
         }
     }
@@ -112,50 +129,49 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { labelText, index, handleCommentspanel} = this.props;
+        let labelText = fetchElementTag(element) || 'P';
+        let { index, handleCommentspanel, elementSepratorProps } = this.props;
         switch(element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} />
                 labelText = 'OE'
                 break
-
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
-                break;
-
-            case elementTypeConstant.BLOCKFEATURE:
                 editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
+            case elementTypeConstant.BLOCKFEATURE:
+                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
+                break;
             case elementTypeConstant.FIGURE:
 
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index}/>;
+                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -171,11 +187,11 @@ class ElementContainer extends Component {
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'Pop';
                                 break;
                                 
@@ -188,6 +204,17 @@ class ElementContainer extends Component {
                 editor = <ElementAuthoring  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 labelText = 'OL'
                 break;
+            case elementTypeConstant.ELEMENT_ASIDE:
+                switch (element.subtype) {
+
+                    case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
+                        editor = <ElementAsideContainer  handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        labelText = 'WE';
+                        break;
+                    default:
+                        editor = <ElementAsideContainer handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        labelText = 'AS';
+                }
         }
         return(
             <div className = "editor" >
@@ -223,7 +250,7 @@ class ElementContainer extends Component {
      * @description - This function is for handling the closing and opening of popup.
      * @param {event} popup
      */
-    handleCommentPopup(popup){
+    handleCommentPopup(popup) {
         this.setState({
             popup,
             showDeleteElemPopup : false
@@ -243,19 +270,19 @@ class ElementContainer extends Component {
      * @description - This function is for handleChange of popup.
      * @param newComment
      */
-    handleCommentChange=(newComment)=>{
+    handleCommentChange = (newComment) => {
         this.setState({
-            comment:newComment
+            comment: newComment
         })
     }
 
     /**
      * @description - This function is for ADD COMMENT API.
      */
-    saveNewComment=()=>{
-        const {comment}=this.state;  
-        const {id}=this.props.element;
-        this.props.addComment(comment,id);
+    saveNewComment = () => {
+        const { comment } = this.state;
+        const { id } = this.props.element;
+        this.props.addComment(comment, id);
         this.handleCommentPopup(false);
     }
 
@@ -266,40 +293,41 @@ class ElementContainer extends Component {
 }
 
 ElementContainer.defaultProps = {
-    element: {},
-    elementType: 'heading-4',
-    labelText: 'P'
+    element: {}
 }
 
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elementType: PropTypes.string,
-    labelText: PropTypes.string,
     elemBorderToggle : PropTypes.string
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addComment: (comments,elementId) => {
-            dispatch(addComment(comments,elementId))
+        addComment: (comments, elementId) => {
+            dispatch(addComment(comments, elementId))
         },
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
         },
-        deleteElement : (id , type)=>{
+        setActiveElement: (element) => {
+            dispatch(setActiveElement(element))
+        },
+        deleteElement: (id , type)=>{
             dispatch(deleteElement(id, type))
         }
     }
 }
 
 
+ 
+
 const mapStateToProps = (state) => {
-    
+
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         activeElement: state.appStore.activeElement.elementId
     }
 }
-    
-export default connect(mapStateToProps,mapDispatchToProps)(ElementContainer);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ElementContainer);
