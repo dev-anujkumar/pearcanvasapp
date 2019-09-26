@@ -186,39 +186,39 @@ export const fetchElementTag = (element) => {
 	}
 }
 
-// export const fetchSlateData = (manifestURN) => dispatch => {	
-// 	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
-// 		headers: {
-// 			"Content-Type": "application/json",
-// 			"PearsonSSOSession": config.ssoToken
-// 		}
-// 	}).then(slateData => {
-// 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
-// 		let contentUrn = slateData.data[manifestURN].contentUrn;
-// 		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
-// 		// let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
+export const fetchSlateData = (manifestURN) => dispatch => {	
+	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
+		headers: {
+			"Content-Type": "application/json",
+			"PearsonSSOSession": config.ssoToken
+		}
+	}).then(slateData => {
+		sendDataToIframe({'type': HideLoader,'message': { status: false }});
+		let contentUrn = slateData.data[manifestURN].contentUrn;
+		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
+		// let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
 		
-// 		dispatch(fetchComments(contentUrn, title));
-// 		dispatch({
-// 			type: FETCH_SLATE_DATA,
-// 			payload: {
-// 				[manifestURN]: slateData.data[manifestURN]
-// 			}//slateData.data
-// 		});
-// 	});
-// };
-
-///////////////////////////////////////////////////////////////////
-export const fetchSlateData = () => dispatch => {
-	const slateData = Object.values(mockdata);
-	let slateObject = Object.values(slateData)[0];
-	let { contents: slateContent } = slateObject;
-
-	dispatch({
-		type: FETCH_SLATE_DATA,
-		payload: mockdata
+		dispatch(fetchComments(contentUrn, title));
+		dispatch({
+			type: FETCH_SLATE_DATA,
+			payload: {
+				[manifestURN]: slateData.data[manifestURN]
+			}//slateData.data
+		});
 	});
 };
+
+///////////////////////////////////////////////////////////////////
+// export const fetchSlateData = () => dispatch => {
+// 	const slateData = Object.values(mockdata);
+// 	let slateObject = Object.values(slateData)[0];
+// 	let { contents: slateContent } = slateObject;
+
+// 	dispatch({
+// 		type: FETCH_SLATE_DATA,
+// 		payload: mockdata
+// 	});
+// };
 
 export const setActiveElement = (activeElement = {}) => dispatch => {
 	dispatch({
