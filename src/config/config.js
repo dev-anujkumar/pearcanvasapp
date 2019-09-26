@@ -4,11 +4,12 @@ let config = {
     JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "-9KAruU8x-UbAxAfG10VYAXyZjo.*AAJTSQACMDIAAlNLABxVMVpud1pMNzF6NTQwVXJYYnFoR0QyOVN6U0E9AAJTMQACMDM.*",
+    ssoToken: "MZhzMjnu8yJbTrl4D5_33E9G7js.*AAJTSQACMDIAAlNLABw3eUVGTHpGd2VyZW14RHhNWmJ4U3RuNTdzN289AAJTMQACMDQ.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+    slateType : 'section',
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
