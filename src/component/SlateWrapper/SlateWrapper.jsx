@@ -14,7 +14,7 @@ import {
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
-import {TEXT,IMAGE} from './SlateWrapperConstants';
+import config from '../../config/config';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -42,7 +42,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
@@ -104,7 +104,8 @@ class SlateWrapper extends Component {
         }
     }
 
-    splithandlerfunction = (type, index, firstOne,parentEntityUrn) => {
+    splithandlerfunction = (type, index, firstOne,parentUrn) => {
+        console.log("parentUrn===>",parentUrn)
         let indexToinsert
         // Detects element insertion from the topmost element separator
         if(firstOne){
@@ -117,7 +118,7 @@ class SlateWrapper extends Component {
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement(TEXT, indexToinsert);
+                this.props.createElement("element-authoredtext", indexToinsert,parentUrn);
                 break;
             case 'image-elem':
                 this.props.createElement(IMAGE, indexToinsert);
@@ -146,10 +147,10 @@ class SlateWrapper extends Component {
             case 'assessment-elem':
                 break;
             case 'container-elem':
-                  this.props.createElement("element-aside", Number(index + 1),parentEntityUrn)
+                  this.props.createElement("element-aside", Number(index + 1),parentUrn)
                 break;
             case 'worked-exp-elem':
-                   this.props.createElement("workedexample", Number(index + 1),parentEntityUrn)
+                   this.props.createElement("workedexample", Number(index + 1),parentUrn)
                 break;
             case 'opener-elem':
                 break;
@@ -157,11 +158,11 @@ class SlateWrapper extends Component {
         }
     }
 
-    elementSepratorProps = (index, firstOne,parentEntityUrn) => {
+    elementSepratorProps = (index, firstOne,parentUrn) => {
         return [
             {
                 buttonType: 'text-elem',
-                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('text-elem', index, firstOne,parentUrn),
                 tooltipText: 'Text',
                 tooltipDirection: 'left'
             },
@@ -191,13 +192,13 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'container-elem',
-                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('container-elem', index, firstOne,parentUrn),
                 tooltipText: 'Container',
                 tooltipDirection: 'left'
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne,parentEntityUrn),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne,parentUrn),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
