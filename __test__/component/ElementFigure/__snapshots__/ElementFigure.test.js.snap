@@ -1,403 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing Figure element component With block code editor element renders  properly with mock data blockCodeEditor 1`] = `
-<ElementFigure
-  index={28}
-  model={
-    Object {
-      "alignment": "",
-      "captions": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
-        "textsemantics": Array [],
-      },
-      "comments": true,
-      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
-      "credits": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
-        "textsemantics": Array [],
-      },
-      "figuredata": Object {
-        "height": "1225",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
-        "numbered": true,
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
-        "preformattedtext": Array [
-          "vcbc",
-          "bvcbvcb",
-          "vcbcvbvcb",
-        ],
-        "programlanguage": "Java",
-        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
-        "startNumber": "1",
-        "type": "codelisting",
-        "width": "1440",
-      },
-      "figuretype": "codelisting",
-      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-      "subtitle": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
-        "textsemantics": Array [],
-      },
-      "subtype": "codelisting",
-      "tcm": true,
-      "title": Object {
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
-        "textsemantics": Array [],
-      },
-      "type": "figure",
-      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
-    }
-  }
->
-  <div
-    className="figureElement"
-  >
-    <div
-      className="divCodeSnippetFigure blockCodeFigure"
-    >
-      <figure
-        className="figureCodeSnippet"
-      >
-        <header>
-          <TinyMceEditor
-            className="heading4CodeSnippetNumberLabel figureLabel "
-            error={null}
-            index="28-0"
-            model="12345"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Label..."
-            tagName="h4"
-          >
-            <h4
-              className="heading4CodeSnippetNumberLabel figureLabel  cypress-editable"
-              contentEditable="true"
-              id="cypress-28-0"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Label..."
-            >
-              12345
-            </h4>
-          </TinyMceEditor>
-          <TinyMceEditor
-            className="heading4CodeSnippetTitle figureTitle "
-            error={null}
-            index="28-1"
-            model="eresrwqe"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Title..."
-            tagName="h4"
-          >
-            <h4
-              className="heading4CodeSnippetTitle figureTitle  cypress-editable"
-              contentEditable="true"
-              id="cypress-28-1"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Title..."
-            >
-              eresrwqe
-            </h4>
-          </TinyMceEditor>
-        </header>
-        <div
-          className="pearson-component blockcode codeSnippet blockCodeDiv"
-          data-type="codeSnippet"
-        >
-          <pre
-            className="code-listing"
-          >
-            <TinyMceEditor
-              className=""
-              error={null}
-              index="28-2"
-              model={
-                Array [
-                  "vcbc",
-                  "bvcbvcb",
-                  "vcbcvbvcb",
-                ]
-              }
-              onClick={[Function]}
-              onKeyup={[Function]}
-              placeholder="Enter block code..."
-              tagName="code"
-            >
-              <code
-                className=" cypress-editable"
-                contentEditable="true"
-                id="cypress-28-2"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                placeholder="Enter block code..."
-              >
-                vcbc,bvcbvcb,vcbcvbvcb
-              </code>
-            </TinyMceEditor>
-          </pre>
-        </div>
-        <figcaption>
-          <TinyMceEditor
-            className="figcaptionCodeSnippet figureCaption"
-            error={null}
-            index="28-3"
-            model="sdafsad"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Caption..."
-            tagName="p"
-          >
-            <p
-              className="figcaptionCodeSnippet figureCaption cypress-editable"
-              contentEditable="true"
-              id="cypress-28-3"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Caption..."
-            >
-              sdafsad
-            </p>
-          </TinyMceEditor>
-        </figcaption>
-      </figure>
-      <div>
-        <TinyMceEditor
-          className="paragraphCodeSnippetCredit figureCredit"
-          error={null}
-          index="28-4"
-          model="asdfasdfasdf"
-          onClick={[Function]}
-          onKeyup={[Function]}
-          placeholder="Enter Credit..."
-          tagName="p"
-        >
-          <p
-            className="paragraphCodeSnippetCredit figureCredit cypress-editable"
-            contentEditable="true"
-            id="cypress-28-4"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            placeholder="Enter Credit..."
-          >
-            asdfasdfasdf
-          </p>
-        </TinyMceEditor>
-      </div>
-    </div>
-  </div>
-</ElementFigure>
-`;
-
-exports[`Testing Figure element component With block code editor element renders properly with default blockCodeEditor 1`] = `
-<ElementFigure
-  index={27}
-  model={
-    Object {
-      "alignment": "",
-      "captions": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
-        "textsemantics": Array [],
-      },
-      "comments": true,
-      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
-      "credits": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
-        "textsemantics": Array [],
-      },
-      "figuredata": Object {
-        "height": "1225",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
-        "numbered": true,
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
-        "preformattedtext": Array [
-          "",
-        ],
-        "programlanguage": "Java",
-        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
-        "startNumber": "1",
-        "type": "codelisting",
-        "width": "1440",
-      },
-      "figuretype": "codelisting",
-      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-      "subtitle": Object {
-        "footnotes": Array [],
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
-        "textsemantics": Array [],
-      },
-      "subtype": "codelisting",
-      "tcm": true,
-      "title": Object {
-        "mathml": Array [],
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
-        "textsemantics": Array [],
-      },
-      "type": "figure",
-      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
-    }
-  }
->
-  <div
-    className="figureElement"
-  >
-    <div
-      className="divCodeSnippetFigure blockCodeFigure"
-    >
-      <figure
-        className="figureCodeSnippet"
-      >
-        <header>
-          <TinyMceEditor
-            className="heading4CodeSnippetNumberLabel figureLabel "
-            error={null}
-            index="27-0"
-            model="12345"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Label..."
-            tagName="h4"
-          >
-            <h4
-              className="heading4CodeSnippetNumberLabel figureLabel  cypress-editable"
-              contentEditable="true"
-              id="cypress-27-0"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Label..."
-            >
-              12345
-            </h4>
-          </TinyMceEditor>
-          <TinyMceEditor
-            className="heading4CodeSnippetTitle figureTitle "
-            error={null}
-            index="27-1"
-            model="eresrwqe"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Title..."
-            tagName="h4"
-          >
-            <h4
-              className="heading4CodeSnippetTitle figureTitle  cypress-editable"
-              contentEditable="true"
-              id="cypress-27-1"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Title..."
-            >
-              eresrwqe
-            </h4>
-          </TinyMceEditor>
-        </header>
-        <div
-          className="pearson-component blockcode codeSnippet blockCodeDiv"
-          data-type="codeSnippet"
-        >
-          <pre
-            className="code-listing"
-          >
-            <TinyMceEditor
-              className=""
-              error={null}
-              index="27-2"
-              model={
-                Array [
-                  "",
-                ]
-              }
-              onClick={[Function]}
-              onKeyup={[Function]}
-              placeholder="Enter block code..."
-              tagName="code"
-            >
-              <code
-                className=" cypress-editable"
-                contentEditable="true"
-                id="cypress-27-2"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                placeholder="Enter block code..."
-              />
-            </TinyMceEditor>
-          </pre>
-        </div>
-        <figcaption>
-          <TinyMceEditor
-            className="figcaptionCodeSnippet figureCaption"
-            error={null}
-            index="27-3"
-            model="sdafsad"
-            onClick={[Function]}
-            onKeyup={[Function]}
-            placeholder="Enter Caption..."
-            tagName="p"
-          >
-            <p
-              className="figcaptionCodeSnippet figureCaption cypress-editable"
-              contentEditable="true"
-              id="cypress-27-3"
-              onBlur={[Function]}
-              onFocus={[Function]}
-              placeholder="Enter Caption..."
-            >
-              sdafsad
-            </p>
-          </TinyMceEditor>
-        </figcaption>
-      </figure>
-      <div>
-        <TinyMceEditor
-          className="paragraphCodeSnippetCredit figureCredit"
-          error={null}
-          index="27-4"
-          model="asdfasdfasdf"
-          onClick={[Function]}
-          onKeyup={[Function]}
-          placeholder="Enter Credit..."
-          tagName="p"
-        >
-          <p
-            className="paragraphCodeSnippetCredit figureCredit cypress-editable"
-            contentEditable="true"
-            id="cypress-27-4"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            placeholder="Enter Credit..."
-          >
-            asdfasdfasdf
-          </p>
-        </TinyMceEditor>
-      </div>
-    </div>
-  </div>
-</ElementFigure>
-`;
-
 exports[`Testing Figure element component With figure image element renders  properly with default figureImage-Fullscreen 1`] = `
 <ElementFigure
   index={7}
@@ -490,6 +92,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -509,6 +112,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -543,6 +147,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -565,6 +170,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -665,6 +271,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -684,6 +291,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -718,6 +326,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -740,6 +349,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -840,6 +450,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -859,6 +470,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -893,6 +505,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -915,6 +528,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1015,6 +629,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for Figure Image-50% Text
             </h4>
@@ -1036,6 +651,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for Figure Image-50% Text
             </h4>
@@ -1072,6 +688,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for Figure Image-50% Text
             </p>
@@ -1096,6 +713,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for Figure Image-50% Text
           </p>
@@ -1198,6 +816,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for Figure Image-Fullscreen
             </h4>
@@ -1219,6 +838,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for Figure Image-Fullscreen
             </h4>
@@ -1255,6 +875,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for Figure Image-Fullscreen
             </p>
@@ -1279,6 +900,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for Figure Image-Fullscreen
           </p>
@@ -1381,6 +1003,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for Figure Image-TextWidth
             </h4>
@@ -1402,6 +1025,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for Figure Image-TextWidth
             </h4>
@@ -1438,6 +1062,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for Figure Image-TextWidth
             </p>
@@ -1462,6 +1087,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for Figure Image-TextWidth
           </p>
@@ -1564,6 +1190,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for Figure Image-WiderThanText
             </h4>
@@ -1585,6 +1212,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for Figure Image-WiderThanText
             </h4>
@@ -1621,6 +1249,7 @@ exports[`Testing Figure element component With figure image element renders  pro
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for Figure Image-WiderThanText
             </p>
@@ -1645,6 +1274,7 @@ exports[`Testing Figure element component With figure image element renders  pro
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for Figure Image-WiderThanText
           </p>
@@ -1747,6 +1377,7 @@ exports[`Testing Figure element component With figure image element renders prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1766,6 +1397,7 @@ exports[`Testing Figure element component With figure image element renders prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1800,6 +1432,7 @@ exports[`Testing Figure element component With figure image element renders prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1822,6 +1455,7 @@ exports[`Testing Figure element component With figure image element renders prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1922,6 +1556,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1941,6 +1576,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1975,6 +1611,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1997,6 +1634,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2097,6 +1735,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2116,6 +1755,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2150,6 +1790,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2172,6 +1813,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2272,6 +1914,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2291,6 +1934,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2325,6 +1969,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2347,6 +1992,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2447,6 +2093,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for math Image-50% Text
             </h4>
@@ -2468,6 +2115,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for math Image-50% Text
             </h4>
@@ -2504,6 +2152,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for math Image-50% Text
             </p>
@@ -2528,6 +2177,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for math Image-50% Text
           </p>
@@ -2630,6 +2280,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for math Image-Fullscreen
             </h4>
@@ -2651,6 +2302,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for math Image-Fullscreen
             </h4>
@@ -2687,6 +2339,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for math Image-Fullscreen
             </p>
@@ -2711,6 +2364,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for math Image-Fullscreen
           </p>
@@ -2813,6 +2467,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for math Image-TextWidth
             </h4>
@@ -2834,6 +2489,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for math Image-TextWidth
             </h4>
@@ -2870,6 +2526,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for math Image-TextWidth
             </p>
@@ -2894,6 +2551,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for math Image-TextWidth
           </p>
@@ -2996,6 +2654,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for math Image-WiderThanText
             </h4>
@@ -3017,6 +2676,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for math Image-WiderThanText
             </h4>
@@ -3053,6 +2713,7 @@ exports[`Testing Figure element component With math image element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for math Image-WiderThanText
             </p>
@@ -3077,6 +2738,7 @@ exports[`Testing Figure element component With math image element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for math Image-WiderThanText
           </p>
@@ -3179,6 +2841,7 @@ exports[`Testing Figure element component With math image element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3198,6 +2861,7 @@ exports[`Testing Figure element component With math image element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3232,6 +2896,7 @@ exports[`Testing Figure element component With math image element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3254,6 +2919,7 @@ exports[`Testing Figure element component With math image element renders proper
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3353,6 +3019,7 @@ exports[`Testing Figure element component With mathML element renders  properly 
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -3374,6 +3041,7 @@ exports[`Testing Figure element component With mathML element renders  properly 
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -3398,6 +3066,7 @@ exports[`Testing Figure element component With mathML element renders  properly 
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Type Something..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </div>
@@ -3421,6 +3090,7 @@ exports[`Testing Figure element component With mathML element renders  properly 
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -3445,6 +3115,7 @@ exports[`Testing Figure element component With mathML element renders  properly 
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -3546,6 +3217,7 @@ exports[`Testing Figure element component With mathML element renders properly w
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3565,6 +3237,7 @@ exports[`Testing Figure element component With mathML element renders properly w
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3587,6 +3260,7 @@ exports[`Testing Figure element component With mathML element renders properly w
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Type Something..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </div>
@@ -3610,6 +3284,7 @@ exports[`Testing Figure element component With mathML element renders properly w
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3632,6 +3307,7 @@ exports[`Testing Figure element component With mathML element renders properly w
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3732,6 +3408,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3751,6 +3428,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3785,6 +3463,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3807,6 +3486,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3907,6 +3587,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3926,6 +3607,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3960,6 +3642,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3982,6 +3665,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -4082,6 +3766,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -4101,6 +3786,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -4135,6 +3821,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -4157,6 +3844,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -4257,6 +3945,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for table Image-50% Text
             </h4>
@@ -4278,6 +3967,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for table Image-50% Text
             </h4>
@@ -4314,6 +4004,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for table Image-50% Text
             </p>
@@ -4338,6 +4029,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for table Image-50% Text 
           </p>
@@ -4440,6 +4132,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for table Image-Fullscreen
             </h4>
@@ -4461,6 +4154,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for table Image-Fullscreen
             </h4>
@@ -4497,6 +4191,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for table Image-Fullscreen
             </p>
@@ -4521,6 +4216,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for table Image-Fullscreen
           </p>
@@ -4623,6 +4319,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for table Image-TextWidth
             </h4>
@@ -4644,6 +4341,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for table Image-TextWidth
             </h4>
@@ -4680,6 +4378,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for table Image-TextWidth
             </p>
@@ -4704,6 +4403,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for table Image-TextWidth
           </p>
@@ -4806,6 +4506,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               Label for table Image-WiderThanText
             </h4>
@@ -4827,6 +4528,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               Title for table Image-WiderThanText
             </h4>
@@ -4863,6 +4565,7 @@ exports[`Testing Figure element component With table image element renders  prop
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               Caption for table Image-WiderThanText
             </p>
@@ -4887,6 +4590,7 @@ exports[`Testing Figure element component With table image element renders  prop
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             Credit for table Image-WiderThanText
           </p>
@@ -4989,6 +4693,7 @@ exports[`Testing Figure element component With table image element renders prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -5008,6 +4713,7 @@ exports[`Testing Figure element component With table image element renders prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -5042,6 +4748,7 @@ exports[`Testing Figure element component With table image element renders prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -5064,6 +4771,7 @@ exports[`Testing Figure element component With table image element renders prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
