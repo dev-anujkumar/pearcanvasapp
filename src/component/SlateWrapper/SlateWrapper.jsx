@@ -117,7 +117,6 @@ class SlateWrapper extends Component {
                                 {
                                     this.renderElement(_slateBodyMatter, _slateType)
                                 }
-                                {/* <ListComponent /> */}
                             </div>
                             <SlateFooter />
                         </div>
@@ -338,7 +337,7 @@ class SlateWrapper extends Component {
                         selectedOption={`lower-alpha`}
                         startValue={4}
                         setListDropRef={this.setListDropRef}
-                        onListSelect={this.customListDropClickAction}
+                        onListSelect={this.props.convertToListElement}
                     />
                 </ListButtonDropPortal>
             </React.Fragment>

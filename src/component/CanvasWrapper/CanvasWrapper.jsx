@@ -18,6 +18,9 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 
+// IMPORT - Actions //
+import { convertToListElement } from '../ListElement/ListElement_Action.js';
+
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
@@ -37,7 +40,7 @@ class CanvasWrapper extends Component {
 
     componentDidMount() {
         // uncomment to run Canvas Stabilization app as stand alone app //
-        // this.props.fetchSlateData(this.state.activeSlate);
+        this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
         //     document.getElementById("cypress-0").focus();
         // }
@@ -142,7 +145,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} refToToolBar={this.state.editorToolbarRef} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
                             </div>
                         </div>
                     </div>
@@ -173,6 +176,7 @@ export default connect(
         fetchSlateData,
         toggleCommentsPanel,
         fetchComments,
-        fetchCommentByElement
+        fetchCommentByElement,
+        convertToListElement
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

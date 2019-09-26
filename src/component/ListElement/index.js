@@ -1,2 +1,2 @@
-import Component from './CustomOrderedList.jsx'
+import Component from './ListElement.jsx'
 export default Component

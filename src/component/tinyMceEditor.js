@@ -11,11 +11,12 @@ import "tinymce/skins/ui/oxide/content.min.css";
 import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
+// IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
-import { insertListButton } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -37,11 +38,8 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             setup: (editor) => {
-                editor.on('keydown',function(e) {
-                    if(e.keyCode == 13){
-                        e.preventDefault();
-                        return false;
-                    }
+                editor.on('keydown', function (e) {
+                    bindKeyDownEvent(editor, e);
                 });
                 insertListButton(editor);
             },

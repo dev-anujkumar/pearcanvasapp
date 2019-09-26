@@ -149,6 +149,22 @@ const findElementType = (element) => {
 			}
 			break;
 
+		case 'element-list':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-list';
+			switch (element.subtype) {
+				case "upper-alpha":
+					elementType['secondaryOption'] = 'secondary-list-3';
+					break;
+				case "lower-alpha":
+					elementType['secondaryOption'] = 'secondary-list-4';
+					break;
+				default:
+					elementType['secondaryOption'] = 'secondary-list-3';
+					break;
+			}
+			break;
+
 		default: 
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
@@ -197,14 +213,10 @@ export const fetchSlateData = () => dispatch => {
 	const slateData = Object.values(mockdata);
 	let slateObject = Object.values(slateData)[0];
 	let { contents: slateContent } = slateObject;
-	dispatch({
-		type: SET_ELEMENT_TAG,
-		payload: defineElementTag(slateContent.bodymatter)
-	});
 
 	dispatch({
 		type: FETCH_SLATE_DATA,
-		payload: slateData
+		payload: mockdata
 	});
 };
 

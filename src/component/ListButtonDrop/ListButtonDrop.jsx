@@ -52,8 +52,11 @@ const ListButtonDrop = (props) => {
  * @param {string} type | chosen orderd list type
  */
 const onListOptionSelect = (type, props) => {
-    const _value = parseInt(document.getElementById('listINputBox').value);
+    const _value = parseInt(document.getElementById('listINputBox').value || 0);
     props.onListSelect(type, _value);
+    let _listWrapperDiv = document.querySelector('#listDropWrapper');
+    if (_listWrapperDiv)
+        _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
 }
 
 /**
