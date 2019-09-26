@@ -1,34 +1,60 @@
 .horizontalLine {
     display: block;
     height: 2px;
-    border-top: 1px dotted #aaaaaa;
-    margin: 1em 0;
+    width: 102%;
+    /* border-top: 1px dotted #aaaaaa; */
+    margin: 1.2em 0;
     padding: 0;
+    border-top-color: rgb(170, 170, 170);
+    border-top-style: dotted;
+    border-top-width: 1px;
+    border-right-color: rgb(170, 170, 170);
+    border-right-style: dotted;
+    border-right-width: 1px;
+    border-bottom-color: rgb(170, 170, 170);
+    border-bottom-style: dotted;
+    border-bottom-width: 1px;
+    border-left-color: rgb(170, 170, 170);
+    border-left-style: dotted;
+    border-left-width: 1px;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
 }
 
 .elementSapratorContainer {
-    width:100%;
-    /* clear:both; */
+    width: 100%;
+    margin-top: 10px;
+    height: 32px;
+    padding-bottom: 6px !important;
     display: flex;
+    opacity: 0;
 }
 
+.elementSapratorContainer:hover{
+    opacity: 1;
+}
 .elemDiv-split {
-    /* width:3%; */
+    width:5%;
     /* float:left; */
     position: relative;
-    left: 5px;
+    left: -2px;
+
 }
 .elemDiv-hr {
-    width:100%;
+    width: 115%;
     /* float:left; */
     position: relative;
-    left: 6px;
+    left: -2px;
 }
 .elemDiv-expand {
     width:30px;
     /* float:left; */
+    bottom: 1px;
     position: relative;
-    right: -13px;
+    right: -16px;
 }
 
 
@@ -52,8 +78,9 @@
 }
 
 .dropdown-content ul{
-    padding-left: 4px;
+    padding-left: 0px;
     background-color: #ffffff;
+    margin-left: 2px;
 }
 
 .dropdown-content a {
@@ -69,13 +96,13 @@
 
 .show {
     display: block;
-    transition: opacity 1s linear;
-     visibility: 1s linear;
-    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 2s; /* Firefox < 16 */
-     -ms-animation: fadein 2s; /* Internet Explorer */
-      -o-animation: fadein 2s; /* Opera < 12.1 */
-         animation: fadein 2s;
+    /* transition: opacity 1s linear; */
+     /* visibility: 1s linear; */
+     -webkit-animation: fadein 2s; 
+     -moz-animation: fadein 2s; 
+      -ms-animation: fadein 2s; 
+       -o-animation: fadein 2s; 
+          animation: fadein 2s;
 }
 
 @keyframes fadein {
@@ -88,4 +115,10 @@ ul {
     padding: 0px;
     margin: 0px;
     padding-left: 14px;
+}
+li{
+    margin: 3px 0px 0px;
+}
+.opacityClassOn{
+    opacity: 1;
 }

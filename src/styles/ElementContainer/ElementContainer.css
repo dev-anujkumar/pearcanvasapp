@@ -6,9 +6,24 @@
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
-    border: 1.5px solid #aaa;
+    max-width: 93.1%;
+    /* border: 1.5px solid #aaa; */
 }
 
 .element-container.active {
     border: 1.5px solid #149632;
+}
+
+.showBorder {
+    border: 0.5px solid #737373;
+}
+
+.hideBorder {
+    border: none;
+}
+.element-container .cypress-editable{
+    padding:10px !important;
+}
+.element-container{
+    padding: 1px 8px !important; 
 }

@@ -38,15 +38,15 @@ export default {
                 }
             }
         },
-        'primary-learning-objective': {
-            text: 'Learning Objective Item',
-            subtype: {
-                'secondary-learning-objective': {
-                    text: 'Learning Objective',
-                    labelText: 'LO'
-                }
-            }
-        },
+        // 'primary-learning-objective': {
+        //     text: 'Learning Objective Item',
+        //     subtype: {
+        //         'secondary-learning-objective': {
+        //             text: 'Learning Objective',
+        //             labelText: 'LO'
+        //         }
+        //     }
+        // },
         'primary-blockquote': {
             text: 'Blockquotes',
             subtype: {
@@ -107,25 +107,25 @@ export default {
         'primary-image-figure': {
             text: 'Figure Image',
             subtype: {
-                'secondary-image-figure-quarter': {
-                    text: '25% Text Width',
-                    labelText: 'FG'
-                },
+                // 'secondary-image-figure-quarter': {
+                //     text: '25% Text Width',
+                //     labelText: 'Fg'
+                // },
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
-                    labelText: 'FG'
+                    labelText: 'Fg'
                 },
                 'secondary-image-figure-width': {
                     text: 'Text Width',
-                    labelText: 'FG'
+                    labelText: 'Fg'
                 },
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
-                    labelText: 'FG'
+                    labelText: 'Fg'
                 },
                 'secondary-image-figure-full': {
                     text: 'Full Screen',
-                    labelText: 'FG'
+                    labelText: 'Fg'
                 }
             },
             attributes: {
@@ -235,15 +235,17 @@ export default {
             }
         }
     },
-    'others': {
+    'video-audio': {
         'primary-video': {
             text: 'Video',
             subtype: {
                 'secondary-video-smartlink': {
-                    text: 'SPP Video Link (sl)'
+                    text: 'SPP Video Link (sl)',
+                    labelText: 'VID'
                 },
                 'secondary-video-alfresco': {
-                    text: 'Alfresco Video Link'
+                    text: 'Alfresco Video Link',
+                    labelText: 'VID'
                 }
             }
         },
@@ -251,13 +253,100 @@ export default {
             text: 'Audio',
             subtype: {
                 'secondary-audio-smartlink': {
-                    text: 'SPP Audio Link (sl)'
+                    text: 'SPP Audio Link (sl)',
+                    labelText: 'AUD'
                 },
                 'secondary-audio-alfresco': {
-                    text: 'Alfresco Audio Link'
+                    text: 'Alfresco Audio Link',
+                    labelText: 'AUD'
+                }
+            }
+        }
+    },
+    'element-aside': {
+        'primary-aside-lol': {
+            text: 'Learning Objective List',
+            subtype: {
+                'secondary-aside-lol': {
+                    text: 'Learning Objective List',
+                    labelText: 'As'
                 }
             }
         },
+        'primary-aside-aside': {
+            text: 'Aside',
+            subtype: {
+                'secondary-aside-sb1': {
+                    text: 'Sidebar 01',
+                    labelText: 'As'
+                },
+                'secondary-aside-sb2': {
+                    text: 'Sidebar 02',
+                    labelText: 'As'
+                },
+                'secondary-aside-sb3': {
+                    text: 'Sidebar 03',
+                    labelText: 'As'
+                },
+                'secondary-aside-sb4': {
+                    text: 'Sidebar 04',
+                    labelText: 'As'
+                },
+                'secondary-aside-sb5': {
+                    text: 'Sidebar 05',
+                    labelText: 'As'
+                }
+            }
+        },
+        'primary-aside-feature': {
+            text: 'Feature',
+            subtype: {
+                'secondary-aside-feature': {
+                    text: 'Feature',
+                    labelText: 'As'
+                }
+            }
+        },
+        'primary-aside-activity': {
+            text: 'Activity',
+            subtype: {
+                'secondary-aside-activity': {
+                    text: 'Activity',
+                    labelText: 'As'
+                }
+            }
+        },
+        'primary-aside-tactic': {
+            text: 'Tactic Box',
+            subtype: {
+                'secondary-aside-tactic': {
+                    text: 'Tactic Box',
+                    labelText: 'As'
+                }
+            }
+        }
+    },
+    'element-workedexample': {
+        'primary-workedexample-we1': {
+            text: 'Worked Example 1',
+            subtype: {
+                'secondary-workedexample-we1': {
+                    text: 'Worked Example 1',
+                    labelText: 'WE'
+                }
+            }
+        },
+        'primary-workedexample-we2': {
+            text: 'Worked Example 2',
+            subtype: {
+                'secondary-workedexample-we2': {
+                    text: 'Worked Example 2',
+                    labelText: 'WE'
+                }
+            }
+        }
+    },
+    'others': {
         'primary-mmi': {
             text: 'MMI',
             subtype: {
@@ -300,48 +389,6 @@ export default {
         },
         'primary-single-assessment': {
             text: 'Single Assessment',
-            subtype: {
-                
-            }
-        },
-        'primary-aside-lol': {
-            text: 'Learning Objective List',
-            subtype: {
-                
-            }
-        },
-        'primary-aside-aside': {
-            text: 'Aside',
-            subtype: {
-                
-            }
-        },
-        'primary-aside-feature': {
-            text: 'Feature',
-            subtype: {
-                
-            }
-        },
-        'primary-aside-activity': {
-            text: 'Activity',
-            subtype: {
-                
-            }
-        },
-        'primary-workedexample-we1': {
-            text: 'Worked Example 1',
-            subtype: {
-                
-            }
-        },
-        'primary-workedexample-we2': {
-            text: 'Worked Example 2',
-            subtype: {
-                
-            }
-        },
-        'primary-aside-tactic': {
-            text: 'Tactic Box',
             subtype: {
                 
             }

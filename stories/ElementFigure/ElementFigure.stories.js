@@ -14,33 +14,33 @@ const mockData1={
     "alignment": "half-text",
             "title": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "12345",
+            "text": "",
             "textsemantics": [],
             "mathml": []
         },
         "subtitle": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "eresrwqe",
+            "text": "",
             "textsemantics": [],
             "mathml": [],
             "footnotes": []
         },
         "captions": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "sdafsad",
+            "text": "",
             "textsemantics": [],
             "mathml": [],
             "footnotes": []
         },
         "credits": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "asdfasdfasdf",
+            "text": "",
             "textsemantics": [],
             "mathml": [],
             "footnotes": []
         },
         "figuredata": {
-            "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
             "height": "1225",
             "width": "1440",
             "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -48,11 +48,11 @@ const mockData1={
         },
         "html": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "title": "12345",
-            "subtitle": "eresrwqe",
-            "caption": "sdafsad",
-            "credit": "asdfasdfasdf",
-            "postertext": "ssfsfsdsfdsfdsfdsfdsfdfdfd",
+            "title": "",
+            "subtitle": "",
+            "caption": "",
+            "credit": "",
+            "postertext": "",
             "tableasHTML": ""
         },
         "comments" : true,
@@ -72,33 +72,33 @@ const mockData2={
 
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -106,10 +106,10 @@ const mockData2={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -129,33 +129,33 @@ const mockData3={
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
        "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -163,10 +163,10 @@ const mockData3={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -187,33 +187,33 @@ const mockData4={
    
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -221,10 +221,10 @@ const mockData4={
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "postertext": "",
         "tableasHTML": ""
     },
@@ -272,13 +272,22 @@ const mockData5={
     
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
-        "postertext": "hello mathml",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments" : true,
     "tcm" : true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -295,47 +304,54 @@ const mockData6={
     "alignment": "",
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
+    },
+    "html": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "title": "",
+        "subtitle": "",
+        "caption": "",
+        "credit": "",
+        "tableasHTML": ""
     },
     "figuredata": {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+           
+            ]
     },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "12345",
-        "subtitle": "eresrwqe",
-        "caption": "sdafsad",
-        "credit": "asdfasdfasdf",
-        "postertext": "fddffdd",
-        "tableasHTML": ""
-    },
+      
     "comments" : true,
     "tcm" : true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -343,42 +359,42 @@ const mockData6={
 
 }
 
-storiesOf('ElementFigure', module)
+storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <ElementFigure model={mockData1} />)
+    .add('default Figure-50', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementFigure model={mockData1} index="1" /></div>)
     .add('Figure Image-FS', () => {
         return (
-            <>
-                <ElementFigure model={mockData4} />
-            </>
+            <div style={{width:"500px", position:"relative", left:"100px"}}>
+                <ElementFigure model={mockData4} index="2"/>
+                </div>
         );
     })
     .add('Table Image-TW', () => {
         return (
-            <>
-                <ElementFigure model={mockData2} />
-            </>
+            <div style={{width:"500px", position:"relative", left:"100px"}}>
+                <ElementFigure model={mockData2} index="3"/>
+                </div>
         );
     })
     .add('Math Image-WT', () => {
         return (
-            <>
-                <ElementFigure model={mockData3} />
-            </>
+            <div style={{width:"500px", position:"relative", left:"100px"}}>
+                <ElementFigure model={mockData3} index="4" />
+                </div>
         );
     })
     .add('MathML/Chem Editor', () => {
         return (
-            <>
-                <ElementFigure model={mockData5} />
-            </>
+            <div style={{width:"500px", position:"relative", left:"100px"}}>
+                <ElementFigure model={mockData5} index="5"/>
+                </div>
         );
     })
     .add('Block Code Editor', () => {
         return (
-            <>
-                <ElementFigure model={mockData6} />
-            </>
+            <div style={{width:"500px", position:"relative", left:"100px"}}>
+                <ElementFigure model={mockData6} index="6" />
+                </div>
         );
     })

@@ -3,10 +3,14 @@ import PropTypes from 'prop-types'
 
 import '../../styles/ElementButtons/ElementButton.css'
 
-import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon} from '../../images/ElementButtons/ElementButtons.jsx';
+import buttonTypes from './ButtonTypes.js'
+
+import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon, metaDataAnchor} from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
+import forwardNavDisable from '../../images/ElementButtons/forwardNav_disabled.png';
 import backwardNavActive from '../../images/ElementButtons/backwardNavActive.png'
+import backwardNavDisable from '../../images/ElementButtons/backwardNav_disabled.png';
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
@@ -21,94 +25,104 @@ class Button extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn) => {
+    renderButton = (type, clickHandlerFn, btnClassName = '') => {
         let buttonJSX = null
-        const { labelText } = this.props
-
+        const { labelText,elementId } = this.props
         switch(type){
-            case "close-container":
-                buttonJSX = <span className="btn-element" id="close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
+            case buttonTypes.CLOSE_CONTAINER:
+                buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
-            case "add-comment":
-                buttonJSX = <span className="btn-element small" id="add-comment" onClick={clickHandlerFn}>
+            case buttonTypes.ADD_COMMENT:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName}`} title="note" onClick={clickHandlerFn}>
                     {addNote}
                     </span>
                 break;
-            case "comment-flag":
-                buttonJSX = <span className="btn-element small" id="flag-icon" onClick={clickHandlerFn}>
+            case buttonTypes.COMMENT_FLAG:
+                buttonJSX = <span className="btn-element small flag-icon" title="flag" onClick={()=>clickHandlerFn(elementId)}>
                     {noteFlag}
                     </span>
                 break;
-            case "element-label":
-                buttonJSX = <span className="btn-element" id="element-label" onClick={clickHandlerFn}>{labelText.toUpperCase()}</span>
+            case buttonTypes.ELEMENT_BLOCK_LABEL:
+                buttonJSX = <span className={`btn-element element-label ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
-            case "delete-element":
-                buttonJSX = <span className="btn-element" id="delete-icon" ref={this.setActionRef} onClick={clickHandlerFn}>
+            case buttonTypes.DELETE_ELEMENT:
+                buttonJSX = <span className="btn-element delete-icon" onClick={clickHandlerFn}>
                     <img src={deleteIcon} /></span>
                 break;
-            case "tcm":
-                buttonJSX = <span className="btn-element small" id="tcm-icon" onClick={clickHandlerFn}>
+            case buttonTypes.TCM:
+                buttonJSX = <span className="btn-element small tcm-icon" title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;
-            case "forward-nav-active":
-                buttonJSX = <span className="btn-element" id="forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
+            case buttonTypes.FORWARD_NAVIGATION:
+                buttonJSX = <span className="btn-element forward-nav-active" onClick={clickHandlerFn}><img src={forwardNavActive} /></span>
                 break;
-            case "backward-nav-active":
-                buttonJSX = <span className="btn-element" id="backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
+            case buttonTypes.FORWARD_NAVIGATION_DISABLE:
+                buttonJSX = <span className="btn-element forward-nav-disable" onClick={clickHandlerFn}><img src={forwardNavDisable} /></span>
                 break;
-            case "expand":
-                buttonJSX = <span className="btn-element" id="expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
+            case buttonTypes.BACKWARD_NAVIGATION:
+                buttonJSX = <span className="btn-element backward-nav-active" onClick={clickHandlerFn}><img src={backwardNavActive} /></span>
                 break;
-            case "split":
-                buttonJSX = <span className="btn-element" id="split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
+            case buttonTypes.BACKWARD_NAVIGATION_DISABLE:
+                buttonJSX = <span className="btn-element backward-nav-disable" onClick={clickHandlerFn}><img src={backwardNavDisable} /></span>
                 break;
-            case "color-palette":
-                buttonJSX = <span className="btn-element" id="color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+            case buttonTypes.EXPAND:
+                buttonJSX = <span className="btn-element expand-icon" onClick={clickHandlerFn}><img src={expandIcon} /></span>
                 break;
-            case "text-elem":
-                buttonJSX = <span className="btn-element" id="text-elem" onClick={clickHandlerFn}>
+            case buttonTypes.SPLIT_SLATE:
+                buttonJSX = <span className="btn-element split-icon" onClick={clickHandlerFn}><img src={splitIcon} /></span>
+                break;
+            case buttonTypes.COLOR_PALETTE:
+                buttonJSX = <span className="btn-element color-palette" onClick={clickHandlerFn}><img src={colorPalette} /></span>
+                break;
+            case buttonTypes.TEXT_ELEMENT:
+                buttonJSX = <span className="btn-element text-elem" onClick={clickHandlerFn}>
                     {textIcon}
                     </span>
                 break;
-            case "image-elem":
-                buttonJSX = <span className="btn-element" id="image-elem" onClick={clickHandlerFn}>
+            case buttonTypes.IMAGE_ELEMENT:
+                buttonJSX = <span className="btn-element image-elem" onClick={clickHandlerFn}>
                     {imageIcon}
                     </span>
                 break;
-            case "audio-elem":
-                buttonJSX = <span className="btn-element" id="audio-elem" onClick={clickHandlerFn}>
+            case buttonTypes.AUDIO_ELEMENT:
+                buttonJSX = <span className="btn-element audio-elem" onClick={clickHandlerFn}>
                     {audioIcon}
                     </span>
                 break;
-            case "interactive-elem":
-                buttonJSX = <span className="btn-element" id="interactive-elem" onClick={clickHandlerFn}>
+            case buttonTypes.INTERACTIVE_ELEMENT:
+                buttonJSX = <span className="btn-element interactive-elem" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
                 break;
-            case "container-elem":
-                buttonJSX = <span className="btn-element" id="container-elem" onClick={clickHandlerFn}>
+            case buttonTypes.CONTAINER_ELEMENT:
+                buttonJSX = <span className="btn-element container-elem" onClick={clickHandlerFn}>
                     {containerIcon}
                     </span>
                 break;
-            case "worked-exp-elem":
-                buttonJSX = <span className="btn-element" id="worked-exp-elem" onClick={clickHandlerFn}>
+            case buttonTypes.WORKED_EXAMPLE_ELEMENT:
+                buttonJSX = <span className="btn-element worked-exp-elem" onClick={clickHandlerFn}>
                     {workedExampleIcon}
                     </span>
                 break;
-            case "assessment-elem":
-                buttonJSX = <span className="btn-element" id="assessment-elem" onClick={clickHandlerFn}>
+            case buttonTypes.ASSESSMENT_ELEMENT:
+                buttonJSX = <span className="btn-element assessment-elem" onClick={clickHandlerFn}>
                     {assessmentIcon}
                     </span>
                 break;
-            case "opener-elem":
-                buttonJSX = <span className="btn-element" id="opener-elem" onClick={clickHandlerFn}>
+            case buttonTypes.OPENER_ELEMENT:
+                buttonJSX = <span className="btn-element opener-elem" onClick={clickHandlerFn}>
                     {openerElement}
                     </span>
                 break;
-            case "section-break-elem":
-                buttonJSX = <span className="btn-element" id="section-break-elem" onClick={clickHandlerFn}>
+            case buttonTypes.SECTION_BREAK_ELEMENT:
+                buttonJSX = <span className="btn-element section-break-elem" onClick={clickHandlerFn}>
                     {sectionBreakElement}
+                    </span>
+                break;
+            case buttonTypes.METADATA_ANCHOR:
+                buttonJSX = <span className="btn-element metadata-anchor" onClick={clickHandlerFn}>
+                    {metaDataAnchor}
                     </span>
                 break;
         }
@@ -116,10 +130,11 @@ class Button extends Component {
     }
     
     render() {
-        const { type, onClick } = this.props
+        const { type, onClick, elementId, btnClassName } = this.props
+        
         return(
             <>
-                {this.renderButton(type, onClick)}             
+                {this.renderButton(type, onClick, btnClassName)}             
             </>
         )
     }
@@ -136,7 +151,11 @@ Button.propTypes = {
     /** Handler to attach on button click */
     onClick : PropTypes.func,
     /** Required in case of 'element-label' type of button */
-    labelText : PropTypes.string
+    labelText : PropTypes.string,
+    /**custom classname for the button component */
+    btnClassName : PropTypes.string
 }
+
+Button.displayName = 'ElementButton'
 
 export default Button

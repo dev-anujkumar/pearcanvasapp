@@ -6,7 +6,7 @@
 
 .slate-wrapper {
     height: calc(100% - 35px);
-    padding: 10px;
+    padding: 8px;
     overflow: auto;
 }
 
@@ -33,12 +33,13 @@
     background: url('../../images/SlateWrapper/complete_loading.png') no-repeat;
     background-position: center;
     position: relative;
-    margin: -10px auto 0;
+    /* margin: -10px auto 0; */
     left: 0;
     right: 0;
     background-color: #fff;
     padding: 40px 0;
 }
+
 
 .toolbar-disabled{
     opacity: 0.4;

@@ -37,6 +37,7 @@
 
 #artboard-containers {
     height: 100%;
+    overflow:auto;
     /* width: 100%; */
 }
 
@@ -65,7 +66,7 @@
     position: relative;
     padding-left: 90px;
     background-color: #fafafa;
-    height: calc(100% - 62px);
+    /* height: calc(100% - 62px); */
 }
 
 .--rm-place {
@@ -76,4 +77,24 @@
     font-size: 15px;
     color: #424242;
     text-transform: uppercase;
+}
+
+.canvas-blocker{
+    width: 100%;
+    height: 100%;
+    /* position: absolute; */
+    /* position: fixed; */
+    /* left: 0; */
+    top: 0;
+    /* z-index: 16000; */
+    /* opacity: 0.1; */
+    /* background: black; */
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    /* visibility: hidden !important; */
+
 }
