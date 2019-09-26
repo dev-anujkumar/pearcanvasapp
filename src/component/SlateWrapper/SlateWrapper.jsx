@@ -14,6 +14,7 @@ import {
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import {TEXT,IMAGE} from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -116,15 +117,10 @@ class SlateWrapper extends Component {
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", indexToinsert);
+                this.props.createElement(TEXT, indexToinsert);
                 break;
             case 'image-elem':
-                
-                var eleFigure = {
-                    "type": "figure",
-                    "subtype": "image25Text"
-                }
-                this.props.createFigureElement(eleFigure, indexToinsert)
+                this.props.createElement(IMAGE, indexToinsert);
                 break;
             case 'audio-elem':
                 var elevideo = {

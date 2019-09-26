@@ -15,7 +15,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = { slateLevelData };
 
-xdescribe('Tests ElementContainer Actions', () => {
+describe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,
         appStore: slateLevelData
