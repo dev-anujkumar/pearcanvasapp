@@ -182,6 +182,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
+            console.log("setCurrentSlate >> ", message)
             if (message && message.node) {
                 this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
                 sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
@@ -189,6 +190,7 @@ function WithWrapperCommunication(WrappedComponent) {
                // const { entityUrn, containerUrn } = message.node;
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.slateType = message.node.nodeLabel;
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

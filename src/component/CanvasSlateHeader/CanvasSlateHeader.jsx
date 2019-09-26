@@ -96,6 +96,7 @@ import config from '../../config/config'
     render() {
         const { slateType, slateTitle, slateLockInfo } = this.props
         let slateLabel = this.getLabel(slateType);
+        let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : ''; 
 
         let nextDisabled = 'forward-nav-active';
         // if(this.props.disabled === 'next') {
@@ -114,7 +115,7 @@ import config from '../../config/config'
                     <div className="slate-header"><label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label></div>
                     <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>
                         <label className="u-hidden" htmlFor="txt-input" />
-                        <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
+                        <input type="text" className="txt-input" placeholder="title" value={currentSlateTitle} disabled/>
                     </div>
                     {/* <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
                     <Button type={backDisabled} onClick={() => this.handleNavClick("back")}/>
