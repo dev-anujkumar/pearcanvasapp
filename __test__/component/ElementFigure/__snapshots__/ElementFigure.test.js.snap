@@ -1,0 +1,5073 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Figure element component With block code editor element renders  properly with mock data blockCodeEditor 1`] = `
+<ElementFigure
+  index={28}
+  model={
+    Object {
+      "alignment": "",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "numbered": true,
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "preformattedtext": Array [
+          "vcbc",
+          "bvcbvcb",
+          "vcbcvbvcb",
+        ],
+        "programlanguage": "Java",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "startNumber": "1",
+        "type": "codelisting",
+        "width": "1440",
+      },
+      "figuretype": "codelisting",
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "codelisting",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divCodeSnippetFigure blockCodeFigure"
+    >
+      <figure
+        className="figureCodeSnippet"
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4CodeSnippetNumberLabel figureLabel "
+            error={null}
+            index="28-0"
+            model="12345"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4CodeSnippetNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-28-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              12345
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4CodeSnippetTitle figureTitle "
+            error={null}
+            index="28-1"
+            model="eresrwqe"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4CodeSnippetTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-28-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              eresrwqe
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component blockcode codeSnippet blockCodeDiv"
+          data-type="codeSnippet"
+        >
+          <pre
+            className="code-listing"
+          >
+            <TinyMceEditor
+              className=""
+              error={null}
+              index="28-2"
+              model={
+                Array [
+                  "vcbc",
+                  "bvcbvcb",
+                  "vcbcvbvcb",
+                ]
+              }
+              onClick={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter block code..."
+              tagName="code"
+            >
+              <code
+                className=" cypress-editable"
+                contentEditable="true"
+                id="cypress-28-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter block code..."
+              >
+                vcbc,bvcbvcb,vcbcvbvcb
+              </code>
+            </TinyMceEditor>
+          </pre>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionCodeSnippet figureCaption"
+            error={null}
+            index="28-3"
+            model="sdafsad"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionCodeSnippet figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-28-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              sdafsad
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphCodeSnippetCredit figureCredit"
+          error={null}
+          index="28-4"
+          model="asdfasdfasdf"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphCodeSnippetCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-28-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            asdfasdfasdf
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With block code editor element renders properly with default blockCodeEditor 1`] = `
+<ElementFigure
+  index={27}
+  model={
+    Object {
+      "alignment": "",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "numbered": true,
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "preformattedtext": Array [
+          "",
+        ],
+        "programlanguage": "Java",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "startNumber": "1",
+        "type": "codelisting",
+        "width": "1440",
+      },
+      "figuretype": "codelisting",
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "codelisting",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divCodeSnippetFigure blockCodeFigure"
+    >
+      <figure
+        className="figureCodeSnippet"
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4CodeSnippetNumberLabel figureLabel "
+            error={null}
+            index="27-0"
+            model="12345"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4CodeSnippetNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-27-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              12345
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4CodeSnippetTitle figureTitle "
+            error={null}
+            index="27-1"
+            model="eresrwqe"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4CodeSnippetTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-27-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              eresrwqe
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component blockcode codeSnippet blockCodeDiv"
+          data-type="codeSnippet"
+        >
+          <pre
+            className="code-listing"
+          >
+            <TinyMceEditor
+              className=""
+              error={null}
+              index="27-2"
+              model={
+                Array [
+                  "",
+                ]
+              }
+              onClick={[Function]}
+              onKeyup={[Function]}
+              placeholder="Enter block code..."
+              tagName="code"
+            >
+              <code
+                className=" cypress-editable"
+                contentEditable="true"
+                id="cypress-27-2"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter block code..."
+              />
+            </TinyMceEditor>
+          </pre>
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionCodeSnippet figureCaption"
+            error={null}
+            index="27-3"
+            model="sdafsad"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionCodeSnippet figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-27-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              sdafsad
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphCodeSnippetCredit figureCredit"
+          error={null}
+          index="27-4"
+          model="asdfasdfasdf"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphCodeSnippetCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-27-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            asdfasdfasdf
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with default figureImage-Fullscreen 1`] = `
+<ElementFigure
+  index={7}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreen",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreen"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenNumberLabel figureLabel "
+            error={null}
+            index="7-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-7-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageFullscreenTitle figureTitle "
+            error={null}
+            index="7-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-7-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageFullscreen lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreen figureCaption"
+            error={null}
+            index="7-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreen figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-7-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreen figureCredit"
+          error={null}
+          index="7-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreen figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-7-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with default figureImage-TextWidth 1`] = `
+<ElementFigure
+  index={3}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidth",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidth"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidth"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthNumberLabel figureLabel "
+            error={null}
+            index="3-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-3-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthTitle figureTitle "
+            error={null}
+            index="3-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-3-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageTextWidth lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidth figureCaption"
+            error={null}
+            index="3-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidth figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-3-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthCredit figureCredit"
+          error={null}
+          index="3-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-3-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with default figureImage-Wider than Text 1`] = `
+<ElementFigure
+  index={5}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanText",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanText"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanText"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextNumberLabel figureLabel "
+            error={null}
+            index="5-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-5-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTitle figureTitle "
+            error={null}
+            index="5-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-5-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageWiderThanText lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanText figureCaption"
+            error={null}
+            index="5-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanText figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-5-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextCredit figureCredit"
+          error={null}
+          index="5-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-5-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with mock data figureImage-50% Text 1`] = `
+<ElementFigure
+  index={2}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "Caption for Figure Image-50% Text",
+        "credit": "Credit for Figure Image-50% Text",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for Figure Image-50% Text",
+        "tableasHTML": "",
+        "title": "Label for Figure Image-50% Text",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50Text",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImage50Text"
+      resource=""
+    >
+      <figure
+        className="figureImage50Text"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextNumberLabel figureLabel "
+            error={null}
+            index="2-0"
+            model="Label for Figure Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-2-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for Figure Image-50% Text
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextTitle figureTitle "
+            error={null}
+            index="2-1"
+            model="Title for Figure Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-2-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for Figure Image-50% Text
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="image50Text lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50Text figureCaption"
+            error={null}
+            index="2-2"
+            model="Caption for Figure Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50Text figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-2-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for Figure Image-50% Text
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextCredit figureCredit"
+          error={null}
+          index="2-3"
+          model="Credit for Figure Image-50% Text"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-2-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for Figure Image-50% Text
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with mock data figureImage-Fullscreen 1`] = `
+<ElementFigure
+  index={8}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "Caption for Figure Image-Fullscreen",
+        "credit": "Credit for Figure Image-Fullscreen",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for Figure Image-Fullscreen",
+        "tableasHTML": "",
+        "title": "Label for Figure Image-Fullscreen",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreen",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreen"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenNumberLabel figureLabel "
+            error={null}
+            index="8-0"
+            model="Label for Figure Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-8-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for Figure Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageFullscreenTitle figureTitle "
+            error={null}
+            index="8-1"
+            model="Title for Figure Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-8-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for Figure Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageFullscreen lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreen figureCaption"
+            error={null}
+            index="8-2"
+            model="Caption for Figure Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreen figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-8-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for Figure Image-Fullscreen
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreen figureCredit"
+          error={null}
+          index="8-3"
+          model="Credit for Figure Image-Fullscreen"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreen figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-8-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for Figure Image-Fullscreen
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with mock data figureImage-TextWidth 1`] = `
+<ElementFigure
+  index={4}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "Caption for Figure Image-TextWidth",
+        "credit": "Credit for Figure Image-TextWidth",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for Figure Image-TextWidth",
+        "tableasHTML": "",
+        "title": "Label for Figure Image-TextWidth",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidth",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidth"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidth"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthNumberLabel figureLabel "
+            error={null}
+            index="4-0"
+            model="Label for Figure Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-4-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for Figure Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthTitle figureTitle "
+            error={null}
+            index="4-1"
+            model="Title for Figure Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-4-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for Figure Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageTextWidth lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidth figureCaption"
+            error={null}
+            index="4-2"
+            model="Caption for Figure Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidth figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-4-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for Figure Image-TextWidth
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthCredit figureCredit"
+          error={null}
+          index="4-3"
+          model="Credit for Figure Image-TextWidth"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-4-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for Figure Image-TextWidth
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders  properly with mock data figureImage-Wider than Text 1`] = `
+<ElementFigure
+  index={6}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "Caption for Figure Image-WiderThanText",
+        "credit": "Credit for Figure Image-WiderThanText",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for Figure Image-WiderThanText",
+        "tableasHTML": "",
+        "title": "Label for Figure Image-WiderThanText",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanText",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanText"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanText"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextNumberLabel figureLabel "
+            error={null}
+            index="6-0"
+            model="Label for Figure Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-6-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for Figure Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTitle figureTitle "
+            error={null}
+            index="6-1"
+            model="Title for Figure Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-6-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for Figure Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="imageWiderThanText lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanText figureCaption"
+            error={null}
+            index="6-2"
+            model="Caption for Figure Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanText figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-6-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for Figure Image-WiderThanText
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextCredit figureCredit"
+          error={null}
+          index="6-3"
+          model="Credit for Figure Image-WiderThanText"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-6-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for Figure Image-WiderThanText
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With figure image element renders properly with default figureImage-50% Text 1`] = `
+<ElementFigure
+  index={1}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "image",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50Text",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImage50Text"
+      resource=""
+    >
+      <figure
+        className="figureImage50Text"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextNumberLabel figureLabel "
+            error={null}
+            index="1-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-1-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextTitle figureTitle "
+            error={null}
+            index="1-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-1-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="image"
+        >
+          <img
+            alt=""
+            className="image50Text lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50Text figureCaption"
+            error={null}
+            index="1-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50Text figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-1-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextCredit figureCredit"
+          error={null}
+          index="1-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-1-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with default mathImage-Fullscreen 1`] = `
+<ElementFigure
+  index={23}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreenMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreenMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenMathImageNumberLabel figureLabel "
+            error={null}
+            index="23-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-23-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageFullscreenMathImageTitle figureTitle "
+            error={null}
+            index="23-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-23-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageFullscreenMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreenMathImage figureCaption"
+            error={null}
+            index="23-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreenMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-23-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreenMathImageCredit figureCredit"
+          error={null}
+          index="23-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreenMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-23-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with default mathImage-TextWidth 1`] = `
+<ElementFigure
+  index={19}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidthMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidthMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidthMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthMathImageNumberLabel figureLabel "
+            error={null}
+            index="19-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-19-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthMathImageTitle figureTitle "
+            error={null}
+            index="19-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-19-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageTextWidthMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidthMathImage figureCaption"
+            error={null}
+            index="19-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidthMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-19-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthMathImageCredit figureCredit"
+          error={null}
+          index="19-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-19-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with default mathImage-Wider than Text 1`] = `
+<ElementFigure
+  index={21}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanTextMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanTextMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanTextMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextMathImageNumberLabel figureLabel "
+            error={null}
+            index="21-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-21-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextMathImageTitle figureTitle "
+            error={null}
+            index="21-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-21-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageWiderThanTextMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanTextMathImage figureCaption"
+            error={null}
+            index="21-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanTextMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-21-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextMathImageCredit figureCredit"
+          error={null}
+          index="21-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-21-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with mock data mathImage-50% Text 1`] = `
+<ElementFigure
+  index={18}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "Caption for math Image-50% Text",
+        "credit": "Credit for math Image-50% Text",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for math Image-50% Text",
+        "tableasHTML": "",
+        "title": "Label for math Image-50% Text",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50TextMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className=""
+      resource=""
+    >
+      <figure
+        className="figureImage50TextMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextMathImageNumberLabel figureLabel "
+            error={null}
+            index="18-0"
+            model="Label for math Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-18-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for math Image-50% Text
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextMathImageTitle figureTitle "
+            error={null}
+            index="18-1"
+            model="Title for math Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-18-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for math Image-50% Text
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="image50TextMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50TextMathImage figureCaption"
+            error={null}
+            index="18-2"
+            model="Caption for math Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50TextMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-18-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for math Image-50% Text
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextMathImageCredit figureCredit"
+          error={null}
+          index="18-3"
+          model="Credit for math Image-50% Text"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-18-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for math Image-50% Text
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with mock data mathImage-Fullscreen 1`] = `
+<ElementFigure
+  index={24}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "Caption for math Image-Fullscreen",
+        "credit": "Credit for math Image-Fullscreen",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for math Image-Fullscreen",
+        "tableasHTML": "",
+        "title": "Label for math Image-Fullscreen",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreenMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreenMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenMathImageNumberLabel figureLabel "
+            error={null}
+            index="24-0"
+            model="Label for math Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-24-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for math Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageFullscreenMathImageTitle figureTitle "
+            error={null}
+            index="24-1"
+            model="Title for math Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-24-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for math Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageFullscreenMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreenMathImage figureCaption"
+            error={null}
+            index="24-2"
+            model="Caption for math Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreenMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-24-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for math Image-Fullscreen
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreenMathImageCredit figureCredit"
+          error={null}
+          index="24-3"
+          model="Credit for math Image-Fullscreen"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreenMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-24-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for math Image-Fullscreen
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with mock data mathImage-TextWidth 1`] = `
+<ElementFigure
+  index={20}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "Caption for math Image-TextWidth",
+        "credit": "Credit for math Image-TextWidth",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for math Image-TextWidth",
+        "tableasHTML": "",
+        "title": "Label for math Image-TextWidth",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidthMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidthMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidthMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthMathImageNumberLabel figureLabel "
+            error={null}
+            index="20-0"
+            model="Label for math Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-20-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for math Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthMathImageTitle figureTitle "
+            error={null}
+            index="20-1"
+            model="Title for math Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-20-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for math Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageTextWidthMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidthMathImage figureCaption"
+            error={null}
+            index="20-2"
+            model="Caption for math Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidthMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-20-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for math Image-TextWidth
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthMathImageCredit figureCredit"
+          error={null}
+          index="20-3"
+          model="Credit for math Image-TextWidth"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-20-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for math Image-TextWidth
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders  properly with mock data mathImage-Wider than Text 1`] = `
+<ElementFigure
+  index={22}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "Caption for math Image-WiderThanText",
+        "credit": "Credit for math Image-WiderThanText",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for math Image-WiderThanText",
+        "tableasHTML": "",
+        "title": "Label for math Image-WiderThanText",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanTextMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanTextMathImage"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanTextMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextMathImageNumberLabel figureLabel "
+            error={null}
+            index="22-0"
+            model="Label for math Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-22-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for math Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextMathImageTitle figureTitle "
+            error={null}
+            index="22-1"
+            model="Title for math Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-22-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for math Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="imageWiderThanTextMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanTextMathImage figureCaption"
+            error={null}
+            index="22-2"
+            model="Caption for math Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanTextMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-22-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for math Image-WiderThanText
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextMathImageCredit figureCredit"
+          error={null}
+          index="22-3"
+          model="Credit for math Image-WiderThanText"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-22-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for math Image-WiderThanText
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With math image element renders properly with default mathImage-50% Text 1`] = `
+<ElementFigure
+  index={17}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "mathImage",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50TextMathImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className=""
+      resource=""
+    >
+      <figure
+        className="figureImage50TextMathImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextMathImageNumberLabel figureLabel "
+            error={null}
+            index="17-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextMathImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-17-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextMathImageTitle figureTitle "
+            error={null}
+            index="17-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextMathImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-17-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="mathImage"
+        >
+          <img
+            alt=""
+            className="image50TextMathImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50TextMathImage figureCaption"
+            error={null}
+            index="17-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50TextMathImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-17-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextMathImageCredit figureCredit"
+          error={null}
+          index="17-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextMathImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-17-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With mathML element renders  properly with mock data mathML 1`] = `
+<ElementFigure
+  index={26}
+  model={
+    Object {
+      "alignment": "",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "elementdata": Object {
+          "mathml": Array [],
+          "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+          "text": "fdgdf",
+          "textsemantics": Array [],
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "type": "element-authoredtext",
+      },
+      "figuretype": "authoredtext",
+      "html": Object {
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "eresrwqe",
+        "tableasHTML": "",
+        "title": "12345",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "mathml",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divTextFigure"
+    >
+      <figure
+        className="figureText"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4TextNumberLabel figureLabel "
+            error={null}
+            index="26-0"
+            model="12345"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4TextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-26-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              12345
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4TextTitle figureTitle "
+            error={null}
+            index="26-1"
+            model="eresrwqe"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4TextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-26-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              eresrwqe
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          data-type="mathml"
+        >
+          <TinyMceEditor
+            className="paragraphNumeroUno mathml figureData mathmlDiv"
+            error={null}
+            index="26-2"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Type Something..."
+            tagName="p"
+          >
+            <p
+              className="paragraphNumeroUno mathml figureData mathmlDiv cypress-editable"
+              contentEditable="true"
+              id="cypress-26-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Type Something..."
+            />
+          </TinyMceEditor>
+        </div>
+        <figcaption
+          className="figcaptionText"
+        >
+          <TinyMceEditor
+            className="figcaptionText figureCaption"
+            error={null}
+            index="26-3"
+            model="sdafsad"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionText figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-26-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              sdafsad
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphTextCredit figureCredit"
+          error={null}
+          index="26-4"
+          model="asdfasdfasdf"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphTextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-26-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            asdfasdfasdf
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With mathML element renders properly with default mathML 1`] = `
+<ElementFigure
+  index={25}
+  model={
+    Object {
+      "alignment": "",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "elementdata": Object {
+          "mathml": Array [],
+          "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+          "text": "fdgdf",
+          "textsemantics": Array [],
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "type": "element-authoredtext",
+      },
+      "figuretype": "authoredtext",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "subtype": "mathml",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divTextFigure"
+    >
+      <figure
+        className="figureText"
+        resource=""
+      >
+        <header>
+          <TinyMceEditor
+            className="heading4TextNumberLabel figureLabel "
+            error={null}
+            index="25-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4TextNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-25-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4TextTitle figureTitle "
+            error={null}
+            index="25-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4TextTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-25-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          data-type="mathml"
+        >
+          <TinyMceEditor
+            className="paragraphNumeroUno mathml figureData mathmlDiv"
+            error={null}
+            index="25-2"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Type Something..."
+            tagName="p"
+          >
+            <p
+              className="paragraphNumeroUno mathml figureData mathmlDiv cypress-editable"
+              contentEditable="true"
+              id="cypress-25-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Type Something..."
+            />
+          </TinyMceEditor>
+        </div>
+        <figcaption
+          className="figcaptionText"
+        >
+          <TinyMceEditor
+            className="figcaptionText figureCaption"
+            error={null}
+            index="25-3"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionText figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-25-3"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphTextCredit figureCredit"
+          error={null}
+          index="25-4"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphTextCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-25-4"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with default tableImage-Fullscreen 1`] = `
+<ElementFigure
+  index={15}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreenTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreenTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenTableImageNumberLabel figureLabel "
+            error={null}
+            index="15-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-15-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageTitle figureTitle "
+            error={null}
+            index="15-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-15-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageFullscreenTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreenTableImage figureCaption"
+            error={null}
+            index="15-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreenTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-15-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreenTableImageCredit figureCredit"
+          error={null}
+          index="15-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreenTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-15-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with default tableImage-TextWidth 1`] = `
+<ElementFigure
+  index={11}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidthTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidthTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidthTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthTableImageNumberLabel figureLabel "
+            error={null}
+            index="11-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-11-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthTableImageTitle figureTitle "
+            error={null}
+            index="11-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-11-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageTextWidthTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidthTableImage figureCaption"
+            error={null}
+            index="11-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidthTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-11-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthTableImageCredit figureCredit"
+          error={null}
+          index="11-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-11-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with default tableImage-Wider than Text 1`] = `
+<ElementFigure
+  index={13}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanTextTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanTextTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanTextTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageNumberLabel figureLabel "
+            error={null}
+            index="13-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-13-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageTitle figureTitle "
+            error={null}
+            index="13-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-13-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageWiderThanTextTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanTextTableImage figureCaption"
+            error={null}
+            index="13-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanTextTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-13-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextTableImageCredit figureCredit"
+          error={null}
+          index="13-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-13-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with mock data tableImage-50% Text 1`] = `
+<ElementFigure
+  index={10}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "Caption for table Image-50% Text",
+        "credit": "Credit for table Image-50% Text ",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for table Image-50% Text",
+        "tableasHTML": "",
+        "title": "Label for table Image-50% Text",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50TextTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImage50TextTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImage50TextTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextTableImageNumberLabel figureLabel "
+            error={null}
+            index="10-0"
+            model="Label for table Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-10-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for table Image-50% Text
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextTableImageTitle figureTitle "
+            error={null}
+            index="10-1"
+            model="Title for table Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-10-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for table Image-50% Text
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="image50TextTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50TextTableImage figureCaption"
+            error={null}
+            index="10-2"
+            model="Caption for table Image-50% Text"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50TextTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-10-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for table Image-50% Text
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextTableImageCredit figureCredit"
+          error={null}
+          index="10-3"
+          model="Credit for table Image-50% Text "
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-10-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for table Image-50% Text 
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with mock data tableImage-Fullscreen 1`] = `
+<ElementFigure
+  index={16}
+  model={
+    Object {
+      "alignment": "full",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "Caption for table Image-Fullscreen",
+        "credit": "Credit for table Image-Fullscreen",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for table Image-Fullscreen",
+        "tableasHTML": "",
+        "title": "Label for table Image-Fullscreen",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageFullscreenTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageFullscreenTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageFullscreenTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageFullscreenTableImageNumberLabel figureLabel "
+            error={null}
+            index="16-0"
+            model="Label for table Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageFullscreenTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-16-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for table Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageTitle figureTitle "
+            error={null}
+            index="16-1"
+            model="Title for table Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-16-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for table Image-Fullscreen
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageFullscreenTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageFullscreenTableImage figureCaption"
+            error={null}
+            index="16-2"
+            model="Caption for table Image-Fullscreen"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageFullscreenTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-16-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for table Image-Fullscreen
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageFullscreenTableImageCredit figureCredit"
+          error={null}
+          index="16-3"
+          model="Credit for table Image-Fullscreen"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageFullscreenTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-16-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for table Image-Fullscreen
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with mock data tableImage-TextWidth 1`] = `
+<ElementFigure
+  index={12}
+  model={
+    Object {
+      "alignment": "text-width",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "Caption for table Image-TextWidth",
+        "credit": "Credit for table Image-TextWidth",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for table Image-TextWidth",
+        "tableasHTML": "",
+        "title": "Label for table Image-TextWidth",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageTextWidthTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageTextWidthTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageTextWidthTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageTextWidthTableImageNumberLabel figureLabel "
+            error={null}
+            index="12-0"
+            model="Label for table Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-12-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for table Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageTextWidthTableImageTitle figureTitle "
+            error={null}
+            index="12-1"
+            model="Title for table Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageTextWidthTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-12-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for table Image-TextWidth
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageTextWidthTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageTextWidthTableImage figureCaption"
+            error={null}
+            index="12-2"
+            model="Caption for table Image-TextWidth"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageTextWidthTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-12-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for table Image-TextWidth
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageTextWidthTableImageCredit figureCredit"
+          error={null}
+          index="12-3"
+          model="Credit for table Image-TextWidth"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageTextWidthTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-12-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for table Image-TextWidth
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders  properly with mock data tableImage-Wider than Text 1`] = `
+<ElementFigure
+  index={14}
+  model={
+    Object {
+      "alignment": "wider",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "Caption for table Image-WiderThanText",
+        "credit": "Credit for table Image-WiderThanText",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "Title for table Image-WiderThanText",
+        "tableasHTML": "",
+        "title": "Label for table Image-WiderThanText",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "imageWiderThanTextTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImageWiderThanTextTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImageWiderThanTextTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageNumberLabel figureLabel "
+            error={null}
+            index="14-0"
+            model="Label for table Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-14-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            >
+              Label for table Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4ImageWiderThanTextTableImageTitle figureTitle "
+            error={null}
+            index="14-1"
+            model="Title for table Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4ImageWiderThanTextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-14-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            >
+              Title for table Image-WiderThanText
+            </h4>
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="imageWiderThanTextTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImageWiderThanTextTableImage figureCaption"
+            error={null}
+            index="14-2"
+            model="Caption for table Image-WiderThanText"
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImageWiderThanTextTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-14-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            >
+              Caption for table Image-WiderThanText
+            </p>
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImageWiderThanTextTableImageCredit figureCredit"
+          error={null}
+          index="14-3"
+          model="Credit for table Image-WiderThanText"
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImageWiderThanTextTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-14-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          >
+            Credit for table Image-WiderThanText
+          </p>
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;
+
+exports[`Testing Figure element component With table image element renders properly with default tableImage-50% Text 1`] = `
+<ElementFigure
+  index={9}
+  model={
+    Object {
+      "alignment": "half-text",
+      "captions": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "sdafsad",
+        "textsemantics": Array [],
+      },
+      "comments": true,
+      "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+      "credits": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "asdfasdfasdf",
+        "textsemantics": Array [],
+      },
+      "figuredata": Object {
+        "height": "1225",
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "width": "1440",
+      },
+      "figuretype": "table",
+      "html": Object {
+        "caption": "",
+        "credit": "",
+        "postertext": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "subtitle": "",
+        "tableasHTML": "",
+        "title": "",
+      },
+      "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+      "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+      "subtitle": Object {
+        "footnotes": Array [],
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "eresrwqe",
+        "textsemantics": Array [],
+      },
+      "subtype": "image50TextTableImage",
+      "tcm": true,
+      "title": Object {
+        "mathml": Array [],
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "12345",
+        "textsemantics": Array [],
+      },
+      "type": "figure",
+      "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+    }
+  }
+>
+  <div
+    className="figureElement"
+  >
+    <div
+      className="divImage50TextTableImage"
+      resource=""
+    >
+      <figure
+        className="figureImage50TextTableImage"
+        resource=""
+      >
+        <header
+          className="figure-header"
+        >
+          <TinyMceEditor
+            className="heading4Image50TextTableImageNumberLabel figureLabel "
+            error={null}
+            index="9-0"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Label..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTableImageNumberLabel figureLabel  cypress-editable"
+              contentEditable="true"
+              id="cypress-9-0"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Label..."
+            />
+          </TinyMceEditor>
+          <TinyMceEditor
+            className="heading4Image50TextTableImageTitle figureTitle "
+            error={null}
+            index="9-1"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Title..."
+            tagName="h4"
+          >
+            <h4
+              className="heading4Image50TextTableImageTitle figureTitle  cypress-editable"
+              contentEditable="true"
+              id="cypress-9-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Title..."
+            />
+          </TinyMceEditor>
+        </header>
+        <div
+          className="pearson-component image figureData"
+          data-type="table"
+        >
+          <img
+            alt=""
+            className="image50TextTableImage lazyload"
+            data-src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            draggable="false"
+            src="https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            title=""
+          />
+        </div>
+        <figcaption>
+          <TinyMceEditor
+            className="figcaptionImage50TextTableImage figureCaption"
+            error={null}
+            index="9-2"
+            model=""
+            onClick={[Function]}
+            onKeyup={[Function]}
+            placeholder="Enter Caption..."
+            tagName="p"
+          >
+            <p
+              className="figcaptionImage50TextTableImage figureCaption cypress-editable"
+              contentEditable="true"
+              id="cypress-9-2"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              placeholder="Enter Caption..."
+            />
+          </TinyMceEditor>
+        </figcaption>
+      </figure>
+      <div>
+        <TinyMceEditor
+          className="paragraphImage50TextTableImageCredit figureCredit"
+          error={null}
+          index="9-3"
+          model=""
+          onClick={[Function]}
+          onKeyup={[Function]}
+          placeholder="Enter Credit..."
+          tagName="p"
+        >
+          <p
+            className="paragraphImage50TextTableImageCredit figureCredit cypress-editable"
+            contentEditable="true"
+            id="cypress-9-3"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            placeholder="Enter Credit..."
+          />
+        </TinyMceEditor>
+      </div>
+    </div>
+  </div>
+</ElementFigure>
+`;

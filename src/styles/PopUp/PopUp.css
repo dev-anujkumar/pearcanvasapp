@@ -1,11 +1,12 @@
 .modal { 
     position: fixed; 
-    z-index: 1; 
+    z-index: 999999; 
     left: 0;
     top: 0;
     width: 100%; 
     height: 100%; 
     overflow: auto; 
+    cursor:default;
   }
   
   .modal-content {   
@@ -28,14 +29,19 @@
     animation-name: animatetop;
     animation-duration: 0.8s;
   }
- 
+  .modal.single_assessment{
+     background-color: rgba(0,0,0, 0.5) !important;
+    
+  }
   .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
   }
-  
+  .close.single_assessment{
+    visibility: hidden;
+  }
   .close:hover,
   .close:focus {
     color: black;
@@ -43,16 +49,29 @@
     cursor: pointer;
   }
 
-  .dialog-window{
+  /* .dialog-window{
     margin-bottom: .5em;
     
+  } */
+  .dialog-window,.dialog-window.single_assessment{
+    margin-top: 0.3em;
+    margin-bottom: .5em;
+    font-size: 1.5em;
+    color: #007fa3;
+    font-weight: bold;
+    font-family: Helvetica, sans-serif;
+    
   }
-  .dialog-text{
+  /* .dialog-text{
     font-size: 1.1em;
     color: #007fa3;
     font-weight: bold;
-  }
-
+  } */
+  /* .dialog-text.single_assessment{
+       font-family: Helvetica, sans-serif;
+       margin:0;
+       padding:0;
+      } */
   .dialog-input-textarea {
     border-radius: 3px;
     background: #fff;
@@ -63,9 +82,20 @@
     font-size: inherit;
     min-height: 2.5em;
     margin: 0 0 .25em;
+    
     border: 1px solid;
   }
-
+  .dialog-input-textarea.single_assessment{
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 36px;
+    font: 400 13.3333px Arial ;
+    padding:3.6px 9.648px;
+    margin:0px 0px 3.6px;
+    border:none;
+    margin-top:10px;
+}
    .cancel-button{
     border-radius: 3px;
     border: 0;
@@ -101,8 +131,28 @@
 .dialog-buttons{
     padding: 17px 8px 40px;
 }
-
+.dialog-buttons.single_assessment{
+  width:100%;
+  margin:10px 0;
+  padding:0px;
+  height:30px;
+ }
 @keyframes animatetop {
   from {top: 30%; opacity: 0}
   to {top: 38%; opacity: 1}
+}
+.dialog-input textarea {
+  resize: none;
+}
+.dialog-input textarea:focus {
+  outline: none !important;
+  border-color: #719ECE;
+  box-shadow: inset 0 0 0 1px #3288e6;
+}
+
+.delete-element-text{
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  font-size: 14px;
+  line-height: 2.0em;
 }

@@ -26,7 +26,7 @@ import PropTypes from 'prop-types'
      */
 
     handleNavClick(nav) {
-        alert(nav);
+        this.props.onNavigate(nav);
     }
 
     setDynamicStyle = (type,className) => {
@@ -76,17 +76,29 @@ import PropTypes from 'prop-types'
     render() {
         const { slateType, slateTitle } = this.props
         let slateLabel = this.getLabel(slateType);
+        let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : ''; 
+
+        let nextDisabled = 'forward-nav-active';
+        // if(this.props.disabled === 'next') {
+        //     nextDisabled = 'forward-nav-disable';
+        // }
+
+        let backDisabled = 'backward-nav-active';
+        // if(this.props.disabled === 'back') {
+        //     backDisabled = 'backward-nav-disable';
+        // }
 
         return (
             <div className="slate-Title">
                 <div className="canvas-header" id="canvas-header">
-                    <label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label>
+                    <div className="slate-header"><label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label></div>
                     <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>
                         <label className="u-hidden" htmlFor="txt-input" />
-                        <input type="text" className="txt-input" placeholder="title" value={slateTitle.text} disabled/>
+                        <input type="text" className="txt-input" placeholder="title" value={currentSlateTitle} disabled/>
                     </div>
-                    <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/>
-                    <Button type="forward-nav-active" onClick={() => this.handleNavClick("for")}/>
+                    {/* <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
+                    <Button type={backDisabled} onClick={() => this.handleNavClick("back")}/>
+                    <Button type={nextDisabled} onClick={() => this.handleNavClick("next")}/>
                 </div>
             </div>
         )

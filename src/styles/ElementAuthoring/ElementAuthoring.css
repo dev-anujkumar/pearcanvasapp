@@ -22,8 +22,9 @@
 .element-list img{
     pointer-events:none;
 }
-.tox.tox-tinymce.tox-tinymce-inline{
+#editor-toolbar .tox.tox-tinymce.tox-tinymce-inline{
     display:block !important;
+    border: none!important;
 }
 .cypress-editable{
     height:100%;

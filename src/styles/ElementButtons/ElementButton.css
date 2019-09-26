@@ -11,65 +11,76 @@
 }
 
 .btn-element.small {
-    padding: 0 6px;
+    padding: 2px 5px;
 }
 
 .btn-element.small > img {
     width: 12px;
 }
 
-.btn-element#element-label {
-    cursor: move;
-    font-size: 12px;
+.btn-element.element-label {
+    font-size: 14px;
+    font-weight: 200;
+    position: sticky;
     color: white;
-    width: 100%;
+    padding: 6px 0px;
+    align-items: center;
     text-align: center;
+    height: 30px;
+    width: 30px;
+    cursor: move;
+    background-color: grey;
 }
 
-.btn-element#flag-icon {
+.btn-element.flag-icon {
     background-color: #fa5d54;
 }
 
-.btn-element#delete-icon {
-    padding: 6px 10px 4px;
+.btn-element.delete-icon {
+    padding: 5px;
     width: 100%;
     background-color: #fa5d54;
+    padding-bottom: 3px;
 }
 
-.btn-element#split-icon,
-.btn-element#expand-icon,
-.btn-element#forward-nav-active,
-.btn-element#backward-nav-active,
-.btn-element#color-palette {
+.btn-element.split-icon,
+.btn-element.expand-icon,
+.btn-element.forward-nav-active,
+.btn-element.backward-nav-active,
+.btn-element.color-palette {
     background-color: transparent;
 }
 
-#split-icon,#expand-icon{
+.split-icon,.expand-icon{
     padding: 0;
 }
 
-.btn-element#split-icon > img {
+.btn-element.split-icon > img {
     width: 30px;
 }
 
-.btn-element#forward-nav-active,
-.btn-element#backward-nav-active {
+.btn-element.forward-nav-active,
+.btn-element.backward-nav-active,
+.btn-element.backward-nav-disable,
+.btn-element.forward-nav-disable {
     padding: 0;
     background: transparent;
     margin:0px;
 }
 
-.btn-element#forward-nav-active > img,
-.btn-element#backward-nav-active > img {
+.btn-element.forward-nav-active > img,
+.btn-element.backward-nav-active > img,
+.btn-element.backward-nav-disable > img,
+.btn-element.forward-nav-disable > img {
     /* width: 26px; */
     width: 33px;
     height: 28px;
 }
 
-.btn-element#expand-icon > img {
-    width: 40px;
+.btn-element.expand-icon > img {
+    width: 36px;
 }
-.btn-element#close-container {
+.btn-element.close-container {
     width: 10%;
     height:20px;
     float: left;
@@ -79,60 +90,17 @@
     padding: 0;
 }
 
-/* #flag-icon{
-    cursor: pointer;
-    height: 18px;
-    width: 10px;
-    padding: 0 5px;
-    margin-bottom: 2px;
-    background-color: #fa5d54
-} */
-
-/* #delete-icon{
-    background-color: #fa5d54;
-    padding: 4px 5px;
-    height: 28px;
-    width: 24px;
-    cursor: pointer;
-   
-} */
-
-/* #delete-icon>img{
-    height: 24px;
-    width: 24px;
-    background-size: 82% 82%;
-} */
-
-/* #tcm-icon, #add-comment{
-    cursor: pointer;
-    height: 18px;
-    width: 10px;
-    padding: 0 5px;
-    margin-bottom: 2px;
-    background-color: grey;
-} */
-
-/* #forward-nav-active, #backward-nav-active{
-    width: 30px;
-    height: 27px;
-    cursor: pointer;
-} */
-
-/* #split-icon{
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-} */
-
-#expand-icon{
+.expand-icon{
     width: 30px;
     height: 30px;
     left: -2px;
     z-index: 10;
     cursor: pointer;
+    margin-bottom: -6px;
+    padding-top: 2px;
 }
 
-.btn-element#text-elem, #image-elem, #audio-elem, #interactive-elem, #container-elem, #worked-exp-elem, #assessment-elem, #opener-elem, #section-break-elem{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor{
     width: 30px;
     height: 30px;
     display: flex;
@@ -143,28 +111,41 @@
     border: solid 1px #aaaaaa;
     border-radius: 50%;
     align-items: center;
-    opacity: 0.5;
-}
-
-#text-elem:hover, #image-elem:hover, #audio-elem:hover, #interactive-elem:hover, #container-elem:hover, #worked-exp-elem:hover, #assessment-elem:hover, #opener-elem:hover, #section-break-elem:hover{
     opacity: 1;
+    fill: #9e9e9e!important;
+}
+
+.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover{
+    opacity: 1;
+    fill: black!important;
+    border: solid 1px #434343;
 }
 
 
-#color-palette{
-    padding: 6px 0;
+.color-palette{
+    padding: 0px 0px;
     background-size: contain;
-    width: 30px;
-    height: 30px;
-    text-align: center;
+    width: 40px;
     position: absolute;
-    color: white;
     cursor: pointer;
 }
-
-#section-break-elem svg {
-    fill: #9e9e9e;
+.btn-element.color-palette>img {
+    width: 100%;
+}
+.section-break-elem svg {
+    fill: #9E9E9E;
     width: 20px;
     height: 20px;
     pointer-events: none;
+}
+.btn-element.backward-nav-disable,
+.btn-element.forward-nav-disable {
+    height: 27px;
+    cursor: not-allowed !important;
+    color: gray !important;
+    background: transparent;
+}
+
+.activeTagBgColor {
+    background-color: green !important;
 }

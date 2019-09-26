@@ -33,7 +33,7 @@ export const figureImage50TextElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -89,7 +89,7 @@ export const figureImage50TextElementWithData = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/2ed117e6-1306-496b-9386-b2394debd50e/Lighthouse.jpg",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -144,7 +144,7 @@ export const figureImageTextWidthElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -254,7 +254,7 @@ export const figureImageWiderElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -310,7 +310,7 @@ export const figureImageWiderElementWithData = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/e40f498a-77ab-491c-8c0b-07690ea2b049/Koala.jpg",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -368,7 +368,7 @@ export const figureImageFullElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -482,7 +482,7 @@ export const tableImage50TextElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -594,7 +594,7 @@ export const tableImageTextWidthElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -706,7 +706,7 @@ export const tableImageWiderElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -818,7 +818,7 @@ export const tableImageFullElementDefault = {
         "footnotes": []
     },
     "figuredata": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
@@ -1353,41 +1353,49 @@ export const mathmlEditorDefault = {
     "alignment": "",
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "12345",
+        "text": "",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "eresrwqe",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "sdafsad",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "asdfasdfasdf",
+        "text": "",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
-
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
         "title": "",
         "subtitle": "",
         "caption": "",
         "credit": "",
-        "postertext": "",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "fdgdf",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments": true,
     "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -1431,13 +1439,22 @@ export const mathmlEditorWithData = {
 
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for block code editor",
-        "subtitle": "Title for block code editor",
-        "caption": "Caption for block code editor",
-        "credit": "Credit for block code editor",
-        "postertext": "sdfsdfsfsdffsdfsdfsdfsdfsæ",
+        "title": "12345",
+        "subtitle": "eresrwqe",
+        "caption": "sdafsad",
+        "credit": "asdfasdfasdf",
         "tableasHTML": ""
     },
+    "figuredata": {
+        "type": "element-authoredtext",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "fdgdf",
+        "textsemantics": [ ],
+        "mathml": [ ]
+        }
+        },
     "comments": true,
     "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -1482,17 +1499,15 @@ export const blockCodeEditorDefault = {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
-    },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "",
-        "subtitle": "",
-        "caption": "",
-        "credit": "",
-        "postertext": "",
-        "tableasHTML": ""
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+            ""
+            ]
     },
     "comments": true,
     "tcm": true,
@@ -1538,17 +1553,17 @@ export const blockCodeEditorWithData = {
         "path": "https://cite-media-stg.pearson.com/legacy_paths/600efdb1-a28c-4ec3-8b54-9aad364c8c2c/MAP_06-03_nash-stage-2_1440.png",
         "height": "1225",
         "width": "1440",
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
-    },
-    "html": {
-        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "title": "Label for block code editor",
-        "subtitle": "Title for block code editor",
-        "caption": "Caption for block code editor",
-        "credit": "Credit for block code editor",
-        "postertext": "c=a+b;",
-        "tableasHTML": ""
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelisting",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "Java",
+        "preformattedtext": [
+            "vcbc",
+            "bvcbvcb",
+            "vcbcvbvcb"
+            ]
     },
     "comments": true,
     "tcm": true,

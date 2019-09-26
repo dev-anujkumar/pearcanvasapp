@@ -15,27 +15,37 @@ class PopUp extends React.Component {
         super(props);
         this.state ={ }
     }
-
     render() {
-        const { dialogText , placeholder , rows , active , saveContent , togglePopup } = this.props;
-
+        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement } = this.props;
         return (
             <div>
                 {
                     active ? 
-                    <div className="modal">
-                        <div className="modal-content">
-                            <span className="close" onClick={() => togglePopup(false)}>&times;</span>
-                            <div className="dialog-window">
-                                <p className="dialog-text">{dialogText}</p>
+                    <div className={`modal ${assessmentClass}`}>
+                        <div className={`modal-content ${assessmentClass}`}>
+                        {!showDeleteElemPopup ?
+                            <span className={`close ${assessmentClass}`} onClick={() => togglePopup(false)}>&times;</span>
+                            : '' }
+                            {!showDeleteElemPopup ? <div className={`dialog-window ${assessmentClass}`} >{dialogText}</div> : ''}
+                            {showDeleteElemPopup ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
+                            <div className={`dialog-input ${assessmentClass}`}>
+                                {!showDeleteElemPopup ?
+                                <textarea autoFocus className={`dialog-input-textarea ${assessmentClass}`} type="text" onChange={(event)=>handleChange(event.target.value)}
+                                placeholder={placeholder} rows={rows} cols={cols} maxLength={maxLength}/>
+                                : ''}
                             </div>
-                            <div className="dialog-input">
-                                <textarea className="dialog-input-textarea" type="text" placeholder={placeholder} rows={rows} />
-                            </div>
-                            <div className="dialog-buttons">
-                                <span className="save-button" onClick={saveContent}>Save</span>
-                                <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>Cancel</span>
-                            </div>
+                            {!showDeleteElemPopup ?
+                                <div className={`dialog-buttons ${assessmentClass}`}>
+                                    <span className="save-button" onClick={saveContent}>{saveButtonText}</span>
+                                    <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>{cancelBtnText}</span> 
+                                </div>
+                                : 
+                                <div className={`dialog-buttons ${assessmentClass}`}>
+                                    <span className="save-button" onClick={deleteElement}>{yesButton}</span>
+                                    <span className="cancel-button" id='close-container' onClick={() => togglePopup(false)}>{cancelBtnText}</span>
+                                </div>
+                            }
+
                         </div>
                     </div>
                          : null
@@ -46,19 +56,29 @@ class PopUp extends React.Component {
 }
 
 PopUp.defaultProps = {
-    dialogText: "Please enter a comment:",
+    dialogText: "",
     placeholder: "Type...",
     rows: "5",
-    active: true
+    active: true,
+    saveButtonText:"Save",
+    yesButton : "Yes",
+    cancelBtnText : "Cancel",
+    deleteInstruction : "Are you sure you want to delete, this action cannot be undone?"
 }
 
 PopUp.propTypes = {
-      dialogText : PropTypes.string.isRequired,     // Text responsible for header Text for the Popup.
-      placeholder : PropTypes.string.isRequired,    // Text responsible for placeholder for the Popup.
-      rows : PropTypes.string.isRequired,           // Responsible for no of rows in the Popup.
+      dialogText : PropTypes.string.isRequired,      // Text responsible for header Text for the Popup.
+      placeholder : PropTypes.string.isRequired,     // Text responsible for placeholder for the Popup.
+      rows : PropTypes.string.isRequired,            // Responsible for no of rows in the Popup.
+      cols : PropTypes.string,                       // Responsible for no of columns in the Popup.
+      maxLength: PropTypes.string,                   // Responsible for max character length in the Popup.
       active : PropTypes.bool,                       // Responsible for show and hide of the Popup.
       togglePopup : PropTypes.func,                  // Function Responsible for closing of the Popup.
-      saveContent : PropTypes.func                  // Function Responsible for saving content of the Popup.
+      saveContent : PropTypes.func   ,               // Function Responsible for saving content of the Popup.
+      saveButtonText:PropTypes.string.isRequired,    // Responsible for Text in save-button in the Popup.
+      assessmentClass:PropTypes.string ,             //Responsible for making the PopUp customized for Single Assessment
+      cancelPopUp:PropTypes.func,                    //Function Responsible for Cancel operation of the Popup.
+      closePopUp:PropTypes.func,                     //Function Responsible for Close operation of the Popup.
 }
 
 export default PopUp;

@@ -83,12 +83,12 @@
     font-family: 'Open Sans', sans-serif;
 }
 
-#glossary-editor-textarea {
+.definition-editor {
     background-color: #eee;
     width: 90%;
     border: none;
     outline: none;
-    margin: 0 11px;
+    margin: 0 11px 1px;
     font-size: 14px;
     font-family: 'Open Sans', sans-serif;
     line-height: 1.80em;
@@ -101,4 +101,23 @@
     line-height: 1.80em;
     letter-spacing: 0.01em;
     margin: 0;
+    outline: none;
+}
+#toolbarGlossaryFootnote .tox-toolbar {
+    background: transparent !important;
+}
+#toolbarGlossaryFootnote .tox-tbtn {
+    border: 1px solid #ccc !important;
+    margin: 2px 0px !important;
+}
+#toolbarGlossaryFootnote .tox .tox-tbtn {
+    border-radius: 0 !important;
+}
+
+#toolbarGlossaryFootnote{
+    margin: 11px 11px 11px !important;
+}
+
+#toolbarGlossaryFootnote .tox .tox-toolbar__group{
+    padding: 1px 4px 2px 4px !important;
 }

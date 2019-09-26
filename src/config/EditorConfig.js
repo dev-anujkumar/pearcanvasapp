@@ -1,4 +1,6 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss'
+import tinymce from 'tinymce/tinymce';
+import 'tinymce/plugins/charmap';
 export const EditorConfig = {
     formats: {
         // Changes the default format for h1 to have a class of heading
@@ -9,12 +11,19 @@ export const EditorConfig = {
         'heading-4': { block: 'h4', classes: 'heading4NummerEins' },
         'heading-5': { block: 'h5', classes: 'heading5NummerEins' },
         'heading-6': { block: 'h6', classes: 'heading6NummerEins' },
-        'BQ': { block: 'blockquote', classes: 'blockquoteMarginalia', wrapper: true},
-        'PQ': { block: 'h3', classes: 'pullQuoteNumeroUno' },
-        'MA': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
+        'marginalia': { block: 'blockquote', classes: 'blockquoteMarginalia', wrapper: true},
+        'pullquote': { block: 'h3', classes: 'pullQuoteNumeroUno' },
+        'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
     toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent  Glossary Footnote numlist bullist | superscript subscript charmap',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder"
+    plugins: "lists advlist placeholder charmap"
+}
+
+export const GlossaryFootnoteEditorConfig = {
+    formats: {
+        'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
+    },
+    toolbar: 'bold italic underline strikethrough removeformat superscript subscript'
 }
