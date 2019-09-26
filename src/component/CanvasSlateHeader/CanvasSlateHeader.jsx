@@ -84,7 +84,7 @@ import config from '../../config/config'
     
     checkSlateLock = (slateLockInfo) => {
         if(slateLockInfo){
-            if(slateLockInfo.isLocked){
+            if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
                 return this.renderSlateLockJSX(slateLockInfo.userId)
             }
             else {

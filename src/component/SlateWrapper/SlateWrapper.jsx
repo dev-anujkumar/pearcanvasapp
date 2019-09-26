@@ -29,7 +29,7 @@ class SlateWrapper extends Component {
     }
 
     componentDidMount(){
-        if(document.getElementById("cypress-0")){
+        if(document.getElementById("cypress-0") && !this.props.slateLockInfo.isLocked){
             document.getElementById("cypress-0").focus();
         }
     }

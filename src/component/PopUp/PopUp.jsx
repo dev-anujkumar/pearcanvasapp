@@ -60,7 +60,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup){
+        if(props.showDeleteElemPopup || props.isLockPopup){
             return null
         }
         else{
@@ -76,7 +76,7 @@ class PopUp extends React.Component {
         }
         else {
             return(
-                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window delete-element-text ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }

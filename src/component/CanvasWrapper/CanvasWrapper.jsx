@@ -71,7 +71,7 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id && !this.props.slateLockInfo.isLocked)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
 
@@ -133,9 +133,11 @@ class CanvasWrapper extends Component {
         return function (){ 
             clearTimeout(timer)
             timer = setTimeout(()=>{
-                // callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
-                _context.props.setLockPeriodFlag(false)
-                alert("Lock has been released")
+                if(_context.props.withinLockPeriod){
+                    callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
+                    _context.props.setLockPeriodFlag(false)
+                    alert("Lock has been released")
+                }  
             },5000)
         }
     }
@@ -152,8 +154,7 @@ class CanvasWrapper extends Component {
             const { projectUrn } = config
             this.props.setLockPeriodFlag(true)
             this.props.setSlateLock(projectUrn, slateId, lockDuration)
-            this.debounceReleaseTimeout()
-            
+            this.debounceReleaseTimeout()  
         }
     }
     
@@ -205,7 +206,7 @@ const mapStateToProps = state => {console.log('state:::', state);
         slateLevelData: state.appStore.slateLevelData,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        slateLevelData: state.appStore.slateLevelData
+        slateLockInfo: state.slateLockReducer.slateLockInfo
     };
 };
 
@@ -220,6 +221,7 @@ export default connect(
         getSlateLockStatus,
         setSlateLock,
         releaseSlateLock,
-        setLockPeriodFlag
+        setLockPeriodFlag,
+        releaseSlateLock
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

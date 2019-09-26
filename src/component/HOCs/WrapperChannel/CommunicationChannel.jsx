@@ -13,7 +13,6 @@ const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 
-
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -184,6 +183,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             if (message && message.node) {
+                this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
                 sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
                 sendDataToIframe({'type': "ShowLoader",'message': { status: true }});
                // const { entityUrn, containerUrn } = message.node;
