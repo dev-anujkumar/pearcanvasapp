@@ -5,6 +5,9 @@
  * Last modified - 24-09-2019
  */
 
+// IMPORT - dependencies
+require('./polyfills.js')
+
 /**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
@@ -29,7 +32,7 @@ export const positionListDrop = (event) => {
     let { left: _targetLeft, width: _targetWidth } = _target.getBoundingClientRect();
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     // *** let { width: _wrapperWidth } = _listWrapperDiv.getBoundingClientRect(); *** //
-    let _wrapperWidth = 275;
+    let _wrapperWidth = 275;  // static because dom remains hidden //
     let _offsetLeft = _targetLeft - (_wrapperWidth / 2) + (_targetWidth / 2);
     _listWrapperDiv.style.left = `${_offsetLeft}px`;
     if (!_listWrapperDiv.querySelector('.fr-popup').classList.contains('fr-active')) {
@@ -47,9 +50,9 @@ export const bindKeyDownEvent = (editor, e) => {
     const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
 
     //------- later dependency ----------//
-    if ($(anchorNode).html() !== '<br>' &&
-        $(e.target).closest('.divCodeSnippetFigure').length &&
-        $(e.target).closest('.code-listing').length) {
+    if (anchorNode.innerHTML !== '<br>' &&
+        e.target.closest('.divCodeSnippetFigure') &&
+        e.target.closest('.code-listing')) {
         return false;
     }
 
@@ -62,13 +65,13 @@ export const bindKeyDownEvent = (editor, e) => {
             isOnlyMathmlFlag = false;
 
             // if only mathml image is present in editor //
-            if (($(editor.targetElm).text().length === 0) ||
-                ($(editor.targetElm).html().indexOf('Wirisformula') != -1)) {
+            if ((editor.targetElm.textContent.length === 0) ||
+                (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
                 isOnlyMathmlFlag = true;
             }
 
             // creating new paragraph //
-            let getChildSelection = $($(anchorNode).children()[0]).prop('tagName');
+            let getChildSelection = anchorNode.children[0].tagName;
             if (getChildSelection === "IMG" || getChildSelection === "STRONG" || getChildSelection === "EM" || getChildSelection === "U") {
                 prohibitEventBubling(e);
                 return;
@@ -77,14 +80,15 @@ export const bindKeyDownEvent = (editor, e) => {
              * Case - hit enter on last element of list
              * That is there will no sibling next to..
              */
-            if ($(anchorNode).next()[0] === undefined) {
+            if (anchorNode.nextSibling === undefined || anchorNode.nextSibling === null) {
                 /**
                  * Case - AND if that last element is at outermost level i.e, data-treelevel == 1
                  */
-                if ($($(anchorNode).closest('ol')).attr('data-treelevel') === '1' ||
-                    $($(anchorNode).closest('ul')).attr('data-treelevel') === '1') {
-                    if ($($(anchorNode).children()[1]).prop('tagName') === "OL" ||
-                        $($(anchorNode).children()[1]).prop('tagName') === "UL") {
+                if ((anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel') === '1') ||
+                    (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('data-treelevel') === '1')) {
+                    if (anchorNode.children[1] &&
+                        (anchorNode.children[1].tagName === "OL" ||
+                            anchorNode.children[1].tagName === "UL")) {
                         isOnlyMathmlFlag = false;
                         prohibitEventBubling(e);
                         return false;
@@ -105,7 +109,7 @@ export const bindKeyDownEvent = (editor, e) => {
      * Case - if editor does not contain any list item 
      * then perform normal create Para elememt
      */
-    if ($(editor.targetElm).find('li').length == 0) {
+    if (editor.targetElm.querySelectorAll('li').length == 0) {
         if ((e.metaKey && e.which == 13) || (e.which == 13)) {
             prohibitEventBubling(e);
             createNewParagraphElement(e, editor);
@@ -141,7 +145,7 @@ export const bindKeyDownEvent = (editor, e) => {
      * Facilitate TAB key on list
      */
     if ((e.which == 9)) {
-        let demo = $($(anchorNode).closest('ol')).attr('data-treelevel') || $($(anchorNode).closest('ul')).attr('data-treelevel');
+        let demo = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('data-treelevel'));
         let updatelistFlag = true;
 
         // prevent tab indent event at last level of list tree //
@@ -157,8 +161,8 @@ export const bindKeyDownEvent = (editor, e) => {
              * Case - hit TAB at any first list item irrespective of levels
              * if is is first item then prevent default
              */
-            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : $(anchorNode).closest('li');
-            if ($(closestLi).index() === 0) {
+            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+            if (closestLi.closest('ol').findChildren('li').indexOf(anchorNode) === 0) {
                 prohibitEventBubling(e);
                 return false;
             }
@@ -170,8 +174,8 @@ export const bindKeyDownEvent = (editor, e) => {
          * finally perform updateNestedList
          */
         else if (e.shiftKey && !isMultilineSelection) {
-            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : $(anchorNode).closest('li');
-            let closestTreeLevel = $(anchorNode).closest('ol').attr('data-treelevel');
+            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+            let closestTreeLevel = anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel');
             /**
              * Case - prevent hitting Shift+TAB on very first list tree level
              */
@@ -181,19 +185,19 @@ export const bindKeyDownEvent = (editor, e) => {
                 return false;
             }
 
-            if ($(closestLi).children('ol').length > 0) {
-                $(closestLi).addClass('shfTabEvnt');
+            if (closestLi.findChildren('ol').length > 0) {
+                closestLi.classList.add('shfTabEvnt');
                 updatelistFlag = false;
                 setTimeout(() => {
-                    let allOlElems = $('li.shfTabEvnt').find('ol');
+                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
-                    let levelUpOL = $(firstLi).children('ol')[0];
+                    let levelUpOL = firstLi.findChildren('ol')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    $('li.shfTabEvnt').find('ol')[0].remove();
-                    $('li.shfTabEvnt').append(levelUpOL);
-                    $('li.shfTabEvnt').removeClass('shfTabEvnt');
+                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
+                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
+                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
                     updateNestedList(e.target);
                 });
             }
@@ -214,9 +218,9 @@ export const bindKeyDownEvent = (editor, e) => {
          * Case - hit enter on last element of list
          * That is a sibling next to it.., then do not perform anything
          */
-        if ($(anchorNode).next()[0] !== undefined &&
-            ($(anchorNode).next()[0].tagName !== "OL" ||
-                $(anchorNode).next()[0].tagName !== "UL")) {
+        if (anchorNode.nextSibling !== null &&
+            (anchorNode.nextSibling.tagName !== "OL" ||
+                anchorNode.nextSibling.tagName !== "UL")) {
             prohibitEventBubling(e);
             return false;
         }
@@ -228,6 +232,10 @@ export const bindKeyDownEvent = (editor, e) => {
     }
 }
 
+/**
+ * updateNestedList | takes care of formatting of list from very top
+ * @param {*} element | target element
+ */
 const updateNestedList = (element) => {
     let decimalOlClassList = ['decimal', 'lower-alpha', 'lower-roman', 'decimal'];
     let decimalLiClassList = ['listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber'];
@@ -244,29 +252,29 @@ const updateNestedList = (element) => {
     let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
 
-    let allOlElement = $(element).find('ol');
+    let allOlElement = element.querySelectorAll('ol');
     if (allOlElement.length == 0) {
-        allOlElement = $(element).find('ul');
+        allOlElement = element.querySelectorAll('ul');
     }
-    let treelevel = parseInt($(allOlElement[0]).attr('data-treelevel'));
-    let olClass = $(allOlElement[0]).attr('class');
+    let treelevel = parseInt(allOlElement[0].getAttribute('data-treelevel'));
+    let olClass = allOlElement[0].getAttribute('class');
     for (let i = 0; i < allOlElement.length; i++) {
-        $(allOlElement[i]).addClass(olClass);
-        let parentTreeLevel = $($(allOlElement[i]).parents('ol')).attr('data-treelevel');
+        allOlElement[i].classList.add(olClass);
+        let parentTreeLevel = allOlElement[i].parents('ol') && allOlElement[i].parents('ol').getAttribute('data-treelevel') || undefined;
         if (parentTreeLevel == undefined) {
-            parentTreeLevel = $($(allOlElement[i]).parents('ul')).attr('data-treelevel');
+            parentTreeLevel = allOlElement[i].parents('ul') && allOlElement[i].parents('ul').getAttribute('data-treelevel') || undefined;
         }
         if (parentTreeLevel) {
             treelevel = parseInt(parentTreeLevel) + 1;
         }
-        $(allOlElement[i]).attr('data-treelevel', treelevel);
+        allOlElement[i].setAttribute('data-treelevel', treelevel);
 
-        let childLielement = $(allOlElement[i]).children();
+        let childLielement = allOlElement[i].children;
 
-        $(allOlElement[i]).removeClass();
-        $(childLielement).removeClass();
-        if ($(allOlElement[i]).css("counter-increment") == 'none') {
-            $(childLielement[0]).addClass('reset');
+        allOlElement[i].removeAllClass();
+        [...childLielement].forEach((elem) => { elem.removeAllClass() });
+        if (allOlElement[i].getCss("counter-increment") == 'none') {
+            childLielement[0].classList.add('reset');
         }
 
         if (treelevel > 4) {
@@ -276,45 +284,45 @@ const updateNestedList = (element) => {
         switch (olClass) {
 
             case "decimal":
-                $(allOlElement[i]).addClass(decimalOlClassList[treelevel - 1]);
-                $(childLielement).addClass(decimalLiClassList[treelevel - 1]);
+                allOlElement[i].classList.add(decimalOlClassList[treelevel - 1]);
+                [...childLielement].forEach((elem) => { elem.classList.add(decimalLiClassList[treelevel - 1]) });
                 break;
 
             case "upper-alpha":
-                $(allOlElement[i]).addClass(upperAlphaClassList[treelevel - 1]);
-                $(childLielement).addClass(upperAlphaLiClassList[treelevel - 1]);
+                allOlElement[i].classList.add(upperAlphaClassList[treelevel - 1]);
+                [...childLielement].forEach((elem) => { elem.classList.add(upperAlphaLiClassList[treelevel - 1]) });
                 break;
             case "lower-alpha":
-                $(allOlElement[i]).addClass(lowerAlphaClassList[treelevel - 1]);
-                $(childLielement).addClass(lowerAlphaLiClassList[treelevel - 1]);
+                allOlElement[i].classList.add(lowerAlphaClassList[treelevel - 1]);
+                [...childLielement].forEach((elem) => { elem.classList.add(lowerAlphaLiClassList[treelevel - 1]) });
                 break;
             case "upper-roman":
-                $(allOlElement[i]).addClass(upperRomanClassList[treelevel - 1]);
-                $(childLielement).addClass(upperRomanLiClassList[treelevel - 1]);
+                allOlElement[i].classList.add(upperRomanClassList[treelevel - 1]);
+                [...childLielement].forEach((elem) => { elem.classList.add(upperRomanLiClassList[treelevel - 1]) });
                 break;
             case "lower-roman":
-                $(allOlElement[i]).addClass(lowerRomanClassList[treelevel - 1]);
-                $(childLielement).addClass(lowerRomanLiClassList[treelevel - 1]);
+                allOlElement[i].classList.add(lowerRomanClassList[treelevel - 1]);
+                [...childLielement].forEach((elem) => { elem.classList.add(lowerRomanLiClassList[treelevel - 1]) });
                 break;
 
             case "none":
-                $(allOlElement[i]).addClass('none');
-                $(childLielement).removeClass();
-                $(childLielement).addClass('listItemNumeroUnoNone');
-                $(childLielement[0]).addClass('reset');
+                allOlElement[i].classList.add('none');
+                [...childLielement].forEach((elem) => { elem.removeAllClass() });
+                [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoNone') });
+                childLielement[0].classList.add('reset');
 
                 break;
             case "disc":
-                $(childLielement).addClass('listItemNumeroUnoBullet');
+                [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
                 break;
         }
         treelevel = treelevel + 1;
     }
 
-    if ($(allOlElement[i]).css("counter-increment") == 'none') {
+    if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
         for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
-                $(lis[i]).addClass("reset");
+                lis[i].classList.add("reset");
             }
         }
     }
