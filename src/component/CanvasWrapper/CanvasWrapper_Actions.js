@@ -5,31 +5,16 @@ import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
 } from '../../constants/Action_Constants';
-import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
+import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
 
 const findElementType = (element) => {
 	let elementType = {};
 
 	switch (element.type) {
-		case 'element-aside':
-			elementType['elementType'] = 'element-authoredtext';
-			if (element.elementdata.headers) {
-				elementType['primaryOption'] = 'primary-heading';
-				elementType['secondaryOption'] = 'secondary-heading-'
-			} else {
-				elementType['primaryOption'] = 'primary-paragraph';
-				elementType['secondaryOption'] = 'secondary-paragraph';
-			}
-			break;
-		case 'manifest':
-			elementType['elementType'] = 'element-authoredtext';
-				elementType['primaryOption'] = 'primary-paragraph';
-				elementType['secondaryOption'] = 'secondary-paragraph';
-			break;
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
 			if (element.elementdata.headers) {
@@ -81,7 +66,7 @@ const findElementType = (element) => {
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
-					switch (element.figuredata.srctype) {
+					switch(element.figuredata.srctype) {
 						case 'internal':
 							elementType['secondaryOption'] = 'secondary-video-alfresco';
 							break;
@@ -93,7 +78,7 @@ const findElementType = (element) => {
 				} else if (element.figuretype == 'audio') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-audio';
-					switch (element.figuredata.srctype) {
+					switch(element.figuredata.srctype) {
 						case 'internal':
 							elementType['secondaryOption'] = 'secondary-audio-alfresco';
 							break;
@@ -101,15 +86,11 @@ const findElementType = (element) => {
 						default:
 							elementType['secondaryOption'] = 'secondary-audio-smartlink';
 							break;
-
-
+						
+							
 					}
 				}
 			}
-			case 'element-aside' :
-			  if (element.subType && element.subtype !== undefined) {
-				  
-			  }
 			break;
 
 		case 'element-aside':
@@ -176,11 +157,10 @@ const findElementType = (element) => {
 	}
 
 	elementType['elementId'] = element.id;
-	if (elementType.elementType && elementType.elementType !== 'element-aside' && elementType.elementType !== 'manifest')
-		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+	if(elementType.elementType)
+	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	else
-		elementType['tag'] = 'LO';
-	console.log('elementType', elementType);
+	elementType['tag'] = 'LO';
 	return elementType;
 }
 
@@ -198,11 +178,11 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		}
 	}).then(slateData => {
 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
-		// let contentUrn = slateData.data[manifestURN].contentUrn,
-		// 	title = slateData.data[manifestURN].contents.title.text;
-
-		// dispatch(fetchComments(contentUrn, title));
-
+		let contentUrn = slateData.data[manifestURN].contentUrn;
+		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
+		// let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
+		
+		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {

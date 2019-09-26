@@ -83,20 +83,7 @@ class ElementContainer extends Component {
   
     }
 
-    handleBlurAside = () => {
-        if(this.props.elemBorderToggle){
-            this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
-            })
-        } else {
-            this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
-            })
-        } 
-    }
-
+    
     handleBlurAside = () => {
         if(this.props.elemBorderToggle){
             this.setState({

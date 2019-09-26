@@ -15,8 +15,7 @@ let headers = {
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
     PearsonSSOSession: config.ssoToken,
 }
-export const createElement = (type, index,parentUrn) => (dispatch, getState) => {
-    console.log("parentUrn======>",parentUrn);
+export const createElement = (type, index) => (dispatch, getState) => {
     let _requestData = {
         //type : IMAGE, TEXT
         // "projectUrn" : "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
@@ -28,31 +27,7 @@ export const createElement = (type, index,parentUrn) => (dispatch, getState) => 
         "index": index,
         "type": "TEXT"
     };
-
-    const parentData = getState().appStore.slateLevelData;
-    const newParentData = JSON.parse(JSON.stringify(parentData));
-    let createdElementData = "";
-    if(type == "workedexample"){
-        createdElementData = elementAsideWorkExample
-    }
-    if(type == "element-aside"){
-        createdElementData = elementAside
-    }
-    for (let key in newParentData) {
-        //for (let k in newParentData[key]) {
-            // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-            newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
-        //}
-
-    }
-
-    dispatch({
-        type: AUTHORING_ELEMENT_CREATED,
-        payload: {
-            slateLevelData: newParentData
-        }
-    })
-
+    
      axios.post(`${config.REACT_APP_API_URL}v1/element`,
         JSON.stringify(_requestData),
         {
@@ -67,7 +42,7 @@ export const createElement = (type, index,parentUrn) => (dispatch, getState) => 
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData.data;
         if(type == "workedexample"){
-            createdElementData = elementAsideWorkExample
+            createdElementData = elementWorkExample
         }
         if(type == "element-aside"){
             createdElementData = elementAside
