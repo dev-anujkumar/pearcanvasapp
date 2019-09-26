@@ -16,6 +16,7 @@ import {
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import config from '../../config/config';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 
@@ -43,7 +44,7 @@ class SlateWrapper extends Component {
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle } = _slateContent;
                     return (
-                        <SlateHeader onNavigate={this.props.navigate} slateType={_slateType} slateTitle={_slateTitle} />
+                        <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} />
                     )
                 }
                 else {
