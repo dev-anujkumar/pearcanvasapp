@@ -14,7 +14,7 @@ export const EditorConfig = {
         'MA': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
-    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript jsplus_special_symbols ',
+    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent  Glossary Footnote numlist bullist | superscript subscript charmap',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder"
 }

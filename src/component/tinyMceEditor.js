@@ -11,6 +11,9 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
+import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
+import GlossaryFootnoteMenu from './GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+import './../styles/Tiny.css';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
@@ -31,8 +34,22 @@ export class TinyMceEditor extends React.Component {
             toolbar: EditorConfig.toolbar,
             image_advtab: false,
             setup: (editor) => {
-
+                editor.on('keydown',function(e) {
+                    if(e.keyCode == 13){
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+                editor.ui.registry.addButton('Glossary', {
+                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+                    onAction: () => this.openGlossaryPopUp()
+                });
+                editor.ui.registry.addButton('Footnote', {
+                    text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+                    onAction: () => alert('Footnote clicked!')
+                });
             },
+          
             init_instance_callback: (editor) => {
                //  editor.fire('focus');                 
                 

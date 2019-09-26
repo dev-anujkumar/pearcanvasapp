@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { TinyMceEditor } from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
-
+import GlossaryFootnoteMenu from './../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,11 @@ export class ElementAuthoring extends Component {
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
   }
-
+  openGlossaryPopUp=()=>{
+    return <div className="open-glosssary">
+    <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>
+    </div>
+  }
   render() {
     const { type ,className,placeholder,model} = this.props
      return (

@@ -12,6 +12,11 @@ import {
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
+import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+// import { c2MediaModule } from './../../js/c2_media_module';
+// const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -22,8 +27,18 @@ export class CanvasWrapper extends Component {
         // uncomment to run Canvas Stabilization app as stand alone app //
        // this.props.fetchSlateData();
     }
-
+    showPopUp=()=>{return  (      
+        <div className="footnote-sidebar">
+        <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>
+        </div>);}
     render() {
+        // let navDisabled = '';
+        // if(this.state.activeSlateIndex === 0) {
+        //     navDisabled = 'back';
+        // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
+        //     navDisabled = 'next';
+        // }
+        
         return (
             <div className='content-composer'>
                 <div className="overlay-container">
@@ -46,7 +61,8 @@ export class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar />
+                            <Sidebar showPopUp={this.showPopUp}/>
+                            {/* <GlossaryFootnoteMenu glossaryFootnote="Glossary"/> */}
                             {/* put side setting */}
                         </div>
                     </div>
