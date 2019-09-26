@@ -7,6 +7,7 @@ import search from '../../images/CommentsPanel/search.svg'
 import arrowDown from '../../images/CommentsPanel/arrow-down.svg'
 import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
+import {utils} from '../../js/utils'
 import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
 
 class CommentsPanel extends React.Component {
@@ -110,7 +111,7 @@ class CommentsPanel extends React.Component {
                 ...this.state.filters,
                 status: {
                     value: status,
-                    label: status//Utils.toTitleCase(status)
+                    label: utils.toTitleCase(status)
                 }
             },
             showStatusDropdown: false

@@ -183,12 +183,14 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
+            console.log("setCurrentSlate >> ", message)
             if (message && message.node) {
                 sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
                 sendDataToIframe({'type': "ShowLoader",'message': { status: true }});
                // const { entityUrn, containerUrn } = message.node;
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.slateType = message.node.nodeLabel;
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

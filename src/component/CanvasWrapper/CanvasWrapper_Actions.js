@@ -194,11 +194,11 @@ export const fetchElementTag = (element) => {
 // 		}
 // 	}).then(slateData => {
 // 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
-// 		// let contentUrn = slateData.data[manifestURN].contentUrn,
-// 		// 	title = slateData.data[manifestURN].contents.title.text;
-
-// 		// dispatch(fetchComments(contentUrn, title));
-
+// 		let contentUrn = slateData.data[manifestURN].contentUrn;
+// 		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
+// 		// let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
+		
+// 		dispatch(fetchComments(contentUrn, title));
 // 		dispatch({
 // 			type: FETCH_SLATE_DATA,
 // 			payload: {
