@@ -237,7 +237,7 @@ class ElementAsideContainer extends Component {
                 <React.Fragment>
                     {this.borderTop(designtype)}
                     {this.renderContainer(this.props)}
-                    <div id="aside-border-bottom" className={designtype + "BorderBottom"} />
+                    <div className={designtype + "BorderBottom"} />
                 </React.Fragment>
 
             )
