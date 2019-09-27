@@ -44,13 +44,22 @@ export class TinyMceEditor extends Component {
                         return false;
                     }
                 });
-                editor.ui.registry.addButton('Glossary', {
-                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
-                    onAction: () => this.openGlossaryPopUp()
-                });
                 editor.ui.registry.addButton('Footnote', {
+                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+                    onAction: () => {
+                     
+                        this.selectText(editor);
+                      
+                    }
+                });
+                editor.ui.registry.addButton('Glossary', {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
-                    onAction: () => alert('Footnote clicked!')
+                    onAction: () => {
+                        let sectedText = window.getSelection();
+                        console.log("sectedText=====",sectedText);
+                        let insertionText  = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText +'</dfn>'
+                        editor.insertContent(insertionText);
+                    }
                 });
             },
           
@@ -60,6 +69,11 @@ export class TinyMceEditor extends Component {
             }
         }
     };
+    selectText=(editor) => {
+      editor.insertContent('<sup><a href="#" data-uri="' + "123" + '" data-footnoteelementid="' + "123" + '" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>');
+      
+        
+    }
     componentDidMount(){
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
@@ -82,6 +96,7 @@ export class TinyMceEditor extends Component {
             let activeEditorId = tinymce.activeEditor.id;
             
             tinymce.remove('#'+tinymce.activeEditor.id)
+            console
             document.getElementById(activeEditorId).contentEditable = true;
         }
         this.editorConfig.selector='#'+e.target.id;
