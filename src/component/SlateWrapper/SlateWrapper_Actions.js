@@ -28,7 +28,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
         "type": "TEXT"
     };
     
-     axios.post(`${config.REACT_APP_API_URL}v1/element`,
+     axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -48,11 +48,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
             createdElementData = elementAside
         }
         for (let key in newParentData) {
-            //for (let k in newParentData[key]) {
-                // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
                 newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
-            //}
-
         }
 
         dispatch({
@@ -67,16 +63,16 @@ export const createElement = (type, index) => (dispatch, getState) => {
         console.log("create Api fail", error);
     }) 
 };
-export const createFigureElement = (eleFigure, index) => (dispatch, getState) => {
+export const createFigureElement = (type, index) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": config.slateEntityURN,
         "slateUrn": config.slateManifestURN,
-        "type": "IMAGE",
-        // "subtype":eleFigure.subtype,
+        "type": type,
+        // "subtype":"image25Text",
         "index": index
     };
-    axios.post(`${config.REACT_APP_API_URL}v1/element`,
+    axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -89,7 +85,7 @@ export const createFigureElement = (eleFigure, index) => (dispatch, getState) =>
        sendDataToIframe({'type': HideLoader,'message': { status: false }})
   
         const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
+        const newParentData = parentData//JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
@@ -279,7 +275,7 @@ export const createInteractiveElement = (eleInteractive, index) => (dispatch, ge
         "versionUrn": "urn:pearson:work:2b35e92c-0e52-47b5-b5a9-277fd9a24923",
         "contentUrn": "urn:pearson:entity:4602d9f2-b2b6-4882-b988-b06703e21e74"
     }
-   
+    sendDataToIframe({'type': HideLoader,'message': { status: false }})
        const parentData = getState().appStore.slateLevelData;
        const newParentData = JSON.parse(JSON.stringify(parentData));
        for (let key in newParentData) {
@@ -299,15 +295,14 @@ export const createInteractiveElement = (eleInteractive, index) => (dispatch, ge
 };
 
 export const swapElement = (dataObj) => (dispatch, getState) => {
-    const {oldIndex, newIndex, workUrn, entityUrn, type, currentSlateEntityUrn} = dataObj;
-  
+    const {oldIndex, newIndex, currentSlateEntityUrn, swappedElementData} = dataObj;
     let _requestData = {
                 "projectUrn": config.projectUrn,
                 "currentSlateEntityUrn":currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
                 "destSlateEntityUrn":config.slateEntityURN,
-                "workUrn":workUrn,
-                "entityUrn":entityUrn,
-                "type": type,
+                "workUrn":swappedElementData.id,
+                "entityUrn":swappedElementData.contentUrn,
+                "type": swappedElementData.type,
                 "index": newIndex
              }
 
@@ -321,6 +316,17 @@ export const swapElement = (dataObj) => (dispatch, getState) => {
     })
     .then((responseData) =>{
         console.log('this is response status from swap api', responseData.status)
+         /* For hiding the spinning loader send HideLoader message to Wrapper component */
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+    
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = parentData//JSON.parse(JSON.stringify(parentData));
+        for (let key in newParentData) {
+            //for (let k in newParentData[key]) {
+                // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
+                newParentData[key].contents.bodymatter.splice(newIndex, 0, swappedElementData);
+            //}
+        }
     })
     .catch((err) => {
         console.log('Error occured while swaping element', err)

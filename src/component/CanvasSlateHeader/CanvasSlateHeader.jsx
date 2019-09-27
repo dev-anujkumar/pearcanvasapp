@@ -39,8 +39,12 @@ import PropTypes from 'prop-types'
         if(className === 'input-text'){
             if(type ===  'container-introduction'){
                 return {minWidth: '559px'}
+            }else if(type ===  'assessment'){
+                return {minWidth: '585px'}
+            }else if(type === 'section'){
+                return {minWidth : '656px'}
             }
-          return  {minWidth: type == 'section' ? '696px' : '675px'}
+        //   return  {minWidth: type == 'section' ? '696px' : '675px'}
         }
 
     }
