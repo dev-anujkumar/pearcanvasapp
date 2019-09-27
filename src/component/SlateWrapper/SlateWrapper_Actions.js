@@ -315,10 +315,10 @@ export const swapElement = (dataObj) => (dispatch, getState) => {
         }
     })
     .then((responseData) =>{
-        console.log('this is response status from swap api', responseData.status)
-         /* For hiding the spinning loader send HideLoader message to Wrapper component */
+        if(responseData && responseData.status == '200'){
+        /* For hiding the spinning loader send HideLoader message to Wrapper component */
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
-    
+            
         const parentData = getState().appStore.slateLevelData;
         const newParentData = parentData//JSON.parse(JSON.stringify(parentData));
         for (let key in newParentData) {
@@ -339,6 +339,9 @@ export const swapElement = (dataObj) => (dispatch, getState) => {
                 slateLevelData: newArr
             }
         })
+        }
+        console.log('this is response status from swap api', responseData.status)
+        
     })
     .catch((err) => {
         console.log('Error occured while swaping element', err)
