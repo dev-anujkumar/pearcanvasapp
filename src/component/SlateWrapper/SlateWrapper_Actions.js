@@ -324,9 +324,21 @@ export const swapElement = (dataObj) => (dispatch, getState) => {
         for (let key in newParentData) {
             //for (let k in newParentData[key]) {
                 // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-                newParentData[key].contents.bodymatter.splice(newIndex, 0, swappedElementData);
+                let newArr = newParentData[key].contents.bodymatter//.splice(newIndex, 0, swappedElementData);
+                [newArr[newIndex], newArr[oldIndex]] = [newArr[oldIndex], newArr[newIndex]];
+                if(bodymatter.type == 'element-aside' && bodymatter.id == currentSlateEntityUrn){
+                    //Swap inside WE
+                    let weArr = newArr.elementdata.bodymatter
+                    [weArr[newIndex], weArr[oldIndex]] = [weArr[oldIndex], weArr[newIndex]];
+                }
             //}
         }
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newArr
+            }
+        })
     })
     .catch((err) => {
         console.log('Error occured while swaping element', err)
