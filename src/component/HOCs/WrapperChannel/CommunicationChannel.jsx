@@ -191,6 +191,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.slateType = message.node.nodeLabel;
+                this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

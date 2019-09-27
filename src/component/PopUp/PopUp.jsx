@@ -17,7 +17,7 @@ class PopUp extends React.Component {
     }
 
     renderButtons = (props) => {
-        if(props.isLockPopup){ //Slate lock popup
+        if(props.isLockPopup || props.isLockReleasePopup){ //Slate lock popup
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
@@ -44,7 +44,7 @@ class PopUp extends React.Component {
     }
     
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup){
             return null
         }
         else if(props.isLockPopup && props.withInputBox){
@@ -60,7 +60,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup){
             return null
         }
         else{
@@ -73,6 +73,11 @@ class PopUp extends React.Component {
     renderDialogText = (props) => {
         if(props.showDeleteElemPopup){
             return null
+        }
+        else if(props.isLockReleasePopup){
+            return(
+                <div className={`dialog-window delete-element-text ${props.assessmentClass}`} >{props.dialogText}</div>
+            )
         }
         else {
             return(

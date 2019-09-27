@@ -18,6 +18,8 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag } from './SlateLock_Actions'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import PopUp from '../PopUp';
 
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
@@ -30,7 +32,8 @@ class CanvasWrapper extends Component {
             // navigation: false,
             // activeSlateIndex: 0,
             // activeSlate: config.slateList[0],
-            showBlocker : false
+            showBlocker : false,
+            showReleasePopup : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -56,9 +59,10 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
-        // console.log("this.props.slateLevelData>>>", Object.keys(this.props.slateLevelData)[0])
+        console.log("this.props.slateLevelData>>>", config.slateManifestURN)
         let { projectUrn } = config,
-            slateId = Object.keys(this.props.slateLevelData)[0]
+            // slateId = Object.keys(this.props.slateLevelData)[0]
+            slateId = config.slateManifestURN
 
         this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
@@ -71,17 +75,17 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id && !this.props.slateLockInfo.isLocked)) {
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
             }
 
-        let { projectUrn } = config,
+        /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
             newSlateId = Object.keys(this.props.slateLevelData)[0]
 
         if(newSlateId && slateId !== newSlateId){
             this.props.getSlateLockStatus(projectUrn, newSlateId)
-        }
+        } */
     }
     
     handleCommentspanel(elementId){
@@ -136,16 +140,18 @@ class CanvasWrapper extends Component {
                 if(_context.props.withinLockPeriod){
                     callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
                     _context.props.setLockPeriodFlag(false)
-                    alert("Lock has been released")
+                    // alert("Lock has been released")
+                    _context.setState({
+                        showReleasePopup: true
+                    })
                 }  
-            },5000)
+            },900000)
         }
     }
 
     debounceReleaseTimeout = this.debounceReleaseLock(this.releaseSlateLock);
 
     setSlateLock = (slateId, lockDuration) => {
-        console.log("SET slate LOCK in canvas>><<><>", slateId)
         if(this.props.withinLockPeriod){
             this.debounceReleaseTimeout()
             // this.debounceReleaseTimeout(this.props.releaseSlateLock)
@@ -155,6 +161,41 @@ class CanvasWrapper extends Component {
             this.props.setLockPeriodFlag(true)
             this.props.setSlateLock(projectUrn, slateId, lockDuration)
             this.debounceReleaseTimeout()  
+        }
+    }
+    toggleLockReleasePopup = (toggleValue, event) => {
+        this.setState({
+            showReleasePopup: toggleValue
+        })
+        this.showCanvasBlocker(toggleValue)
+        hideBlocker()
+        this.prohibitPropagation(event)
+    }
+
+    prohibitPropagation = (event) =>{
+        if(event){
+            event.preventDefault()
+            event.stopPropagation()
+        }
+        return false
+    }
+
+    showLockReleasePopup = () => {
+        if(this.state.showReleasePopup){
+            // this.showCanvasBlocker(true)
+            showTocBlocker();
+            const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
+            return(
+                <PopUp  dialogText={dialogText}
+                        active={true}
+                        togglePopup={this.toggleLockReleasePopup}
+                        isLockReleasePopup={true}
+                        isInputDisabled={true}
+                />
+            )
+        }
+        else{
+            return null
         }
     }
     
@@ -194,7 +235,8 @@ class CanvasWrapper extends Component {
                             {/* put side setting */}
                         </div>
                     </div>
-                </div>  
+                </div>
+                {this.showLockReleasePopup()}  
             </div>
         );
     }
@@ -221,7 +263,6 @@ export default connect(
         getSlateLockStatus,
         setSlateLock,
         releaseSlateLock,
-        setLockPeriodFlag,
-        releaseSlateLock
+        setLockPeriodFlag
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

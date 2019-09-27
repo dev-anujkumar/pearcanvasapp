@@ -30,7 +30,7 @@ class SlateWrapper extends Component {
     }
 
     componentDidMount(){
-        if(document.getElementById("cypress-0") && !this.props.slateLockInfo.isLocked){
+        if(document.getElementById("cypress-0")){
             document.getElementById("cypress-0").focus();
         }
     }
@@ -185,7 +185,7 @@ class SlateWrapper extends Component {
         hideBlocker()
         this.prohibitPropagation(event)
     }
-
+    
     splithandlerfunction = (type, index, firstOne,parentUrn) => {
         console.log("parentUrn===>",parentUrn)
         if(this.checkLockStatus()){
