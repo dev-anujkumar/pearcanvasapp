@@ -31,7 +31,7 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
         className="input-text"
         style={
           Object {
-            "minWidth": "696px",
+            "minWidth": "656px",
           }
         }
       >
@@ -44,6 +44,7 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
       <ElementButton
@@ -118,7 +119,7 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
         className="input-text"
         style={
           Object {
-            "minWidth": "675px",
+            "minWidth": "585px",
           }
         }
       >
@@ -131,6 +132,7 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
       <ElementButton
@@ -218,6 +220,7 @@ exports[`Testing SlateHeader component with props render container-introduction 
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
       <ElementButton
@@ -290,11 +293,6 @@ exports[`Testing SlateHeader component with props render default Slate  1`] = `
       </div>
       <div
         className="input-text"
-        style={
-          Object {
-            "minWidth": "675px",
-          }
-        }
       >
         <label
           className="u-hidden"
@@ -305,6 +303,7 @@ exports[`Testing SlateHeader component with props render default Slate  1`] = `
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
       <ElementButton
@@ -379,7 +378,7 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
         className="input-text"
         style={
           Object {
-            "minWidth": "696px",
+            "minWidth": "656px",
           }
         }
       >
@@ -392,6 +391,7 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
       <ElementButton

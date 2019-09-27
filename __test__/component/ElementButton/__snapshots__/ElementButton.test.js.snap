@@ -89,8 +89,8 @@ exports[`Testing Button component with props render Container element Button com
       height="16"
       id="containerIcon"
       version="1.1"
-      viewBox="0 0 16 16"
-      width="16"
+      viewBox="1 0 12 13"
+      width="22"
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>
@@ -98,8 +98,8 @@ exports[`Testing Button component with props render Container element Button com
       </title>
       <rect
         fill="none"
-        height="16"
-        width="16"
+        height="20"
+        width="20"
       />
       <path
         d="M7.5,1,0,4v7l7.5,4L15,11V4ZM7,13.6,1,10.4V5.53l6,3.2Zm-5.7-9L7.5,2.08l6.2,2.48L7.5,7.87ZM14,10.4,8,13.6V8.73l6-3.2Z"
@@ -119,17 +119,17 @@ exports[`Testing Button component with props render Image element Button compone
     className="btn-element image-elem"
   >
     <svg
-      height="17"
+      height="18"
       id="image-media"
       version="1.1"
-      viewBox="0 0 17 17"
-      width="17"
+      viewBox="0 0 16 14"
+      width="18"
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect
         fill="none"
-        height="17"
-        width="17"
+        height="18"
+        width="18"
       />
       <path
         d="M15,2h0V14H1V2H15Zm0-1H1A1,1,0,0,0,0,2V14a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Z"
@@ -307,23 +307,44 @@ exports[`Testing Button component with props render Worked example Button compon
     className="btn-element worked-exp-elem"
   >
     <svg
-      height="20"
+      height="25"
       id="workedExampleIcon"
-      version="1.1"
-      viewBox="0 0 20 20"
-      width="20"
+      viewBox="10 10 64 64"
+      width="25"
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>
         <rect
-          fill="none"
-          height="20"
-          width="20"
+          fill="#fff"
+          height="64"
+          width="64"
         />
-        <g>
-          <path
-            className="st0"
-            d="M17.496,6.945v10.553H2.504V6.945H17.496 M19,5.441H1V19h18V5.441L19,5.441z"
+        <g
+          data-name="Group 2311"
+          id="Group_2311"
+          transform="translate(-53 -403)"
+        >
+          <g
+            data-name="Rectangle 1349"
+            fill="#fff"
+            id="Rectangle_1349"
+            stroke="#707070"
+            stroke-width="2"
+            transform="translate(69 427)"
+          >
+            <rect
+              fill="none"
+              height="40"
+              width="49"
+            />
+          </g>
+          <rect
+            data-name="Rectangle 1350"
+            fill="#434343"
+            height="10"
+            id="Rectangle_1350"
+            transform="translate(69 419)"
+            width="49"
           />
         </g>
       </g>
@@ -339,6 +360,7 @@ exports[`Testing Button component with props render add-comment Button component
 >
   <span
     className="btn-element small add-comment "
+    title="note"
   >
     <svg
       fill="white"
@@ -460,6 +482,7 @@ exports[`Testing Button component with props render comment-flag Button componen
   <span
     className="btn-element small flag-icon"
     onClick={[Function]}
+    title="flag"
   >
     <svg
       fill="white"
@@ -599,6 +622,7 @@ exports[`Testing Button component with props render tcm Button component   1`] =
 >
   <span
     className="btn-element small tcm-icon"
+    title="Track Changes"
   >
     <svg
       fill="white"
