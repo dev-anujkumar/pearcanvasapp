@@ -69,7 +69,7 @@ beforeEach(() => {
     mockUseEffect()
 })
 
-xdescribe('Testing ElementSaprator component', () => {
+describe('Testing ElementSaprator component', () => {
 
     describe('UseEffect function', () => {
 
@@ -77,7 +77,7 @@ xdescribe('Testing ElementSaprator component', () => {
 
     describe('<ElementSaprator/> Rendering', () => {
             it('should have 9 buttons', () => {
-                    expect(wrapper.find(Button)).toHaveLength(10)
+                    expect(wrapper.find(Button)).toHaveLength(9)
                 }),
 
                 it('Should have 1 <hr/>', () => {

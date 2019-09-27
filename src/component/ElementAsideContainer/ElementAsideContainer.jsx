@@ -7,6 +7,7 @@ import Sortable from 'react-sortablejs';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
@@ -83,17 +84,25 @@ class ElementAsideContainer extends Component {
                                     // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scroll: true, // or HTMLElement
                                     // Element dragging started
-                                    onStart:  () => {
+                                   
+                                  
+                                   // Element dragging ended
+                                   onEnd:  (/**Event*/evt) => {
+                                        
+                                        let swappedElementData = _containerBodyMatter[evt.oldIndex]
+
                                         let dataObj = {
-                                            currentIndex : 1,
-                                            swappedIndex : 2,
+                                            oldIndex : evt.oldIndex,
+                                            newIndex : evt.newIndex,
+                                            workUrn : swappedElementData.id,
+                                            currentSlateEntityUrn : parentEntityUrn,
+                                            entityUrn : swappedElementData.contentUrn,
+                                            type : swappedElementData.type   
                                         }
                                         this.props.swapElement(dataObj)
+                                        // console.log('this.element data', dataObj, swappedElementData);
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
-                                    onEnd: () => {
-                                        
-                                    }
                                 }}
                                 tag="div"
                             >
@@ -209,4 +218,16 @@ ElementAsideContainer.propTypes = {
     element: PropTypes.object.isRequired
 }
 
-export default ElementAsideContainer;
+const mapStateToProps = state => {
+    return {
+
+    };
+};
+
+
+export default connect(
+    mapStateToProps,
+    {
+        swapElement
+    }
+)(ElementAsideContainer);
