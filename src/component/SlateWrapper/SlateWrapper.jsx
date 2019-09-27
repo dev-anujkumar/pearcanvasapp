@@ -73,7 +73,7 @@ class SlateWrapper extends Component {
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 {
-                                    this.renderElement(_slateBodyMatter, _slateType)
+                                    this.renderElement(_slateBodyMatter, config.slateType)
                                 }
                             </div>
                             <SlateFooter />
@@ -204,12 +204,6 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
-                tooltipText: 'Opener Element',
-                tooltipDirection: 'left'
-            },
-            {
                 buttonType: 'section-break-elem',
                 buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
                 tooltipText: 'Section Break',
@@ -220,7 +214,13 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
                 tooltipText: 'Metadata Anchor',
                 tooltipDirection: 'left'
-            }
+            },
+            {
+                buttonType: 'opener-elem',
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                tooltipText: 'Opener Element',
+                tooltipDirection: 'left'
+            },
         ]
 
     }
