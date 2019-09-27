@@ -1,3 +1,2 @@
-/*---------------Slate Wrapper ----------------------*/ 
-export const TEXT = "TEXT"
-export const IMAGE = "IMAGE"
+export const TEXT="TEXT";
+export const IMAGE="IMAGE";

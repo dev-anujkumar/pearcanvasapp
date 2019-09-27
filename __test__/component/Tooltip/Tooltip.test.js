@@ -13,7 +13,7 @@ beforeEach(() => {
     mockUseEffect()
 })
 
-xdescribe('Tooltip testing', () => {
+describe('Tooltip testing', () => {
     it('Should have 1 tooltip class div', () => {
         expect(wrapper.find('.tooltip')).toHaveLength(1)
     }),

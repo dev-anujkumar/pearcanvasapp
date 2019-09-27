@@ -60,3 +60,6 @@ figure.figureVideo{
 figure.figureAudio{
     margin-bottom: 2px !important;
 }
+.divAudio,.divVideo{
+    margin-top: 1px;
+}
