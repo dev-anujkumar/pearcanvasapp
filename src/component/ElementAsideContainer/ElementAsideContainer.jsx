@@ -82,7 +82,35 @@ class ElementAsideContainer extends Component {
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
+                <Sortable
+                                options={{
+                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    // dataIdAttr: 'data-id',
+                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
+                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    scroll: true, // or HTMLElement
+                                   
+                                    // Element dragging ended
+                                    onEnd:  (/**Event*/evt) => {
+                                        
+                                        let swappedElementData = _containerBodyMatter[evt.oldIndex]
+
+                                        let dataObj = {
+                                            oldIndex : evt.oldIndex,
+                                            newIndex : evt.newIndex,
+                                            swappedElementData : swappedElementData   
+                                        }
+                                        this.props.swapElement(dataObj)
+                                        // console.log('this.element data', dataObj);
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                   
+                                }}
+                                tag="div"
+                            >
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
+
+                            </Sortable>
             </div>
         )
     }

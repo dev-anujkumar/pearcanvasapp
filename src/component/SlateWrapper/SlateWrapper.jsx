@@ -90,9 +90,7 @@ class SlateWrapper extends Component {
                                         let dataObj = {
                                             oldIndex : evt.oldIndex,
                                             newIndex : evt.newIndex,
-                                            workUrn : swappedElementData.id,
-                                            entityUrn : swappedElementData.contentUrn,
-                                            type : swappedElementData.type   
+                                            swappedElementData : swappedElementData   
                                         }
                                         this.props.swapElement(dataObj)
                                         // console.log('this.element data', dataObj);
