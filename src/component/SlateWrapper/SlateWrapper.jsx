@@ -90,7 +90,7 @@ class SlateWrapper extends Component {
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 {
-                                    this.renderElement(_slateBodyMatter, _slateType, this.props.slateLockInfo)
+                                    this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                                 }
                             </div>
                             <SlateFooter />
@@ -188,7 +188,6 @@ class SlateWrapper extends Component {
     }
     
     splithandlerfunction = (type, index, firstOne,parentUrn) => {
-        console.log("parentUrn===>",parentUrn)
         if(this.checkLockStatus()){
             this.togglePopup(true)
         }
@@ -289,12 +288,6 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
-                tooltipText: 'Opener Element',
-                tooltipDirection: 'left'
-            },
-            {
                 buttonType: 'section-break-elem',
                 buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
                 tooltipText: 'Section Break',
@@ -305,7 +298,13 @@ class SlateWrapper extends Component {
                 buttonHandler: () => this.splithandlerfunction('metadata-anchor', index, firstOne),
                 tooltipText: 'Metadata Anchor',
                 tooltipDirection: 'left'
-            }
+            },
+            {
+                buttonType: 'opener-elem',
+                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                tooltipText: 'Opener Element',
+                tooltipDirection: 'left'
+            },
         ]
 
     }

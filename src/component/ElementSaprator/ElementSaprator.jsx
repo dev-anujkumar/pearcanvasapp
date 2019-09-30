@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
+import config from '../../config/config';
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
@@ -106,9 +107,9 @@ export function addMediaClickHandler() {
 export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak) {
     let updatedEsProps;
 
-    if(slateType == 'container-introduction'){
+    if(config.slateType == 'container-introduction'){
         updatedEsProps = esProps.filter((btnObj) => {
-            return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            return btnObj.buttonType !== 'section-break-elem';
         })
     }else{
         updatedEsProps = esProps.filter((btnObj) => {
