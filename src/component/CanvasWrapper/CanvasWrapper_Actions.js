@@ -246,18 +246,6 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 	});
 };
 
-///////////////////////////////////////////////////////////////////
-// export const fetchSlateData = () => dispatch => {
-// 	const slateData = Object.values(mockdata);
-// 	let slateObject = Object.values(slateData)[0];
-// 	let { contents: slateContent } = slateObject;
-
-// 	dispatch({
-// 		type: FETCH_SLATE_DATA,
-// 		payload: mockdata
-// 	});
-// };
-
 export const setActiveElement = (activeElement = {}) => dispatch => {
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,

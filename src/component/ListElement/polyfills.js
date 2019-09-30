@@ -5,10 +5,10 @@
  * Last modified - 26-09-2019
  */
 
-const that = window
+const _window_ = window
 
 // matches polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.matches = ElementPrototype.matches ||
         ElementPrototype.matchesSelector ||
         ElementPrototype.webkitMatchesSelector ||
@@ -21,7 +21,7 @@ that.Element && function (ElementPrototype) {
 }(Element.prototype);
 
 // matches polyfill for Text
-that.Text && function (TextPrototype) {
+_window_.Text && function (TextPrototype) {
     TextPrototype.matches = TextPrototype.matches ||
         TextPrototype.matchesSelector ||
         TextPrototype.webkitMatchesSelector ||
@@ -34,7 +34,7 @@ that.Text && function (TextPrototype) {
 }(Text.prototype);
 
 // closest polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.closest = ElementPrototype.closest ||
         function (selector) {
             var el = this;
@@ -44,7 +44,7 @@ that.Element && function (ElementPrototype) {
 }(Element.prototype);
 
 // closest polyfill for Text
-that.Text && function (TextPrototype) {
+_window_.Text && function (TextPrototype) {
     TextPrototype.closest = TextPrototype.closest ||
         function (selector) {
             var el = this;
@@ -54,7 +54,7 @@ that.Text && function (TextPrototype) {
 }(Text.prototype);
 
 // parents polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.parents = ElementPrototype.parents ||
         function (selector) {
             var el = this.parentNode;
@@ -64,7 +64,7 @@ that.Element && function (ElementPrototype) {
 }(Element.prototype);
 
 // parents polyfill for Text
-that.Text && function (TextPrototype) {
+_window_.Text && function (TextPrototype) {
     TextPrototype.parents = TextPrototype.parents ||
         function (selector) {
             var el = this.parentNode;
@@ -74,7 +74,7 @@ that.Text && function (TextPrototype) {
 }(Text.prototype);
 
 // children(selector) polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.findChildren = ElementPrototype.findChildren ||
         function (selector) {
             let childrens = this.children.length ? [...this.children] : []
@@ -83,7 +83,7 @@ that.Element && function (ElementPrototype) {
 }(Element.prototype);
 
 // removeClass() polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.removeAllClass = ElementPrototype.removeAllClass ||
         function () {
             let classes = [...this.classList];
@@ -94,7 +94,7 @@ that.Element && function (ElementPrototype) {
 }(Element.prototype);
 
 // css polyfill
-that.Element && function (ElementPrototype) {
+_window_.Element && function (ElementPrototype) {
     ElementPrototype.getCss = ElementPrototype.getCss ||
         function (selector) {
             // getComputedStyle for modern browsers, currentStyle for IE

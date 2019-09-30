@@ -17,9 +17,6 @@ export const insertListButton = (editor) => {
         tooltip: 'Insert Ordered List',
         onAction: () => {
             positionListDrop(event);
-            // var selectedText = editor.selection.getContent({format: 'html'});
-            // let cell = editor.dom.getParent(editor.selection.getStart(), ".Editor");
-            // editor.insertContent('&nbsp;<strong>It\'s my button!</strong>&nbsp;');
         }
     });
 }
@@ -97,8 +94,9 @@ export const bindKeyDownEvent = (editor, e) => {
                     createNewParagraphElement(e, editor);
                     return false;
                 }
-                setTimeout(() => {
-                    updateNestedList(e.target);
+                let timeoutInstance = setTimeout(() => {
+                    clearTimeout(timeoutInstance);
+                    updateNestedList(e.target);                    
                     return false;
                 });
             }
@@ -188,7 +186,8 @@ export const bindKeyDownEvent = (editor, e) => {
             if (closestLi.findChildren('ol').length > 0) {
                 closestLi.classList.add('shfTabEvnt');
                 updatelistFlag = false;
-                setTimeout(() => {
+                let timeoutInstance = setTimeout(() => {
+                    clearTimeout(timeoutInstance);
                     let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
@@ -204,8 +203,9 @@ export const bindKeyDownEvent = (editor, e) => {
         }
         // prohibitEventBubling(e);
         if (updatelistFlag) {
-            setTimeout(() => {
-                updateNestedList(e.target);
+            let timeoutInstance = setTimeout(() => {
+                clearTimeout(timeoutInstance);
+                updateNestedList(e.target);                
                 return false;
             });
         }
@@ -225,8 +225,9 @@ export const bindKeyDownEvent = (editor, e) => {
             return false;
         }
         // else update list content //
-        setTimeout(() => {
-            updateNestedList(e.target);
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance);
+            updateNestedList(e.target);            
             return false;
         });
     }

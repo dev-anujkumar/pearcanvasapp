@@ -32,7 +32,7 @@ const ListButtonDrop = (props) => {
                 <div className="topText">Enter numerical value</div>
                 <div>
                     <div id="listInputCover" className="">
-                        <input id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} />
+                        <input id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} />
                         <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" className="fr-command fr-btn fr-btn-font_awesome" data-cmd="popupGoBtn">
                             <i className="fa fa-check" aria-hidden="true"></i>
                             <span className="fr-sr-only">submit</span>
@@ -178,6 +178,15 @@ const handleCtrlV = (e) => {
 
         return false
     }
+}
+/**
+ * handleRightClickCtrlV | pervent to rightClick+paste any value on input
+ * @param {object} e | received event of input
+ */
+const handleRightClickCtrlV = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    return false
 }
 
 ListButtonDrop.propTypes = {

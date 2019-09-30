@@ -406,8 +406,6 @@ class SlateWrapper extends Component {
                 </div>
                 <ListButtonDropPortal refToToolBar={this.props.refToToolBar}>
                     <ListButtonDrop
-                        selectedOption={`lower-alpha`}
-                        startValue={4}
                         setListDropRef={this.setListDropRef}
                         onListSelect={this.props.convertToListElement}
                     />
