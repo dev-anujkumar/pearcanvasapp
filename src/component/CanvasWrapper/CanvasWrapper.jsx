@@ -18,6 +18,7 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle} from '../../constants/IFrameMessageTypes.js';
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+import { throwStatement } from '@babel/types';
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
@@ -29,7 +30,8 @@ class CanvasWrapper extends Component {
             // navigation: false,
             // activeSlateIndex: 0,
             // activeSlate: config.slateList[0],
-            showBlocker : false
+            showBlocker : false,
+            showGlossaryFootnotePopup : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -111,10 +113,19 @@ class CanvasWrapper extends Component {
             showBlocker: bFlag
         });
     }
-    showPopUp=()=>{return  (      
-        <div className="footnote-sidebar">
-        <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>
-        </div>);}
+
+
+    
+    openGlossaryFootnotePopUp=()=>{
+              if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
+        return (
+        <GlossaryFootnoteMenu glossaryFootnote={this.props.glossaryFootnoteValue.type} activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
+        )
+        
+    }
+    
+    }    
+
     render() {
         // let navDisabled = '';
         // if(this.state.activeSlateIndex === 0) {
@@ -146,8 +157,9 @@ class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar showPopUp={this.showPopUp}/>
-                            {/* <GlossaryFootnoteMenu glossaryFootnote="Glossary"/> */}
+                            {this.openGlossaryFootnotePopUp()}
+                             <Sidebar showPopUp={this.showPopUp}/>
+                            {/*  <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>  */}
                             {/* put side setting */}
                         </div>
                     </div>
@@ -157,10 +169,13 @@ class CanvasWrapper extends Component {
     }
     
 }
+
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {console.log('state:::', state);
     return {
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue
+
     };
 };
 

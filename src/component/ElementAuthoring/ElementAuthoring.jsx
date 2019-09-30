@@ -12,15 +12,12 @@ export class ElementAuthoring extends Component {
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
   }
-  openGlossaryPopUp=()=>{
-    return <div className="open-glosssary">
-    <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>
-    </div>
-  }
+
   render() {
-    const { className, placeholder, model} = this.props
+    const { className, placeholder, model,openGlossaryFootnotePopUp} = this.props
      return (
         <TinyMceEditor
+          openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
           elementId={this.props.elementId}
           element={this.props.element}

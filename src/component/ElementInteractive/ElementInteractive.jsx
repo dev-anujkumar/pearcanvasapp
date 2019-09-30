@@ -5,7 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
-import { TinyMceEditor } from "../tinyMceEditor"
+import  TinyMceEditor  from "../tinyMceEditor"
 
 
 /**

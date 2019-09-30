@@ -44,13 +44,13 @@ export class TinyMceEditor extends Component {
                         return false;
                     }
                 });
-                editor.ui.registry.addButton('Glossary', {
-                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
-                    onAction: () => this.openGlossaryPopUp()
-                });
                 editor.ui.registry.addButton('Footnote', {
+                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+                    onAction: () => this.openGlossaryPopUp(true,"Footnote")
+                });
+                editor.ui.registry.addButton('Glossary', {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
-                    onAction: () => alert('Footnote clicked!')
+                    onAction: () => this.openGlossaryPopUp(true,"Glossary")
                 });
             },
           
@@ -91,7 +91,9 @@ export class TinyMceEditor extends Component {
     handleBlur=(e)=>{
         this.props.handleBlur()
     }
-  
+    openGlossaryPopUp=(value,type)=>{
+        this.props.openGlossaryFootnotePopUp(value,type);
+    }
     render() {
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
