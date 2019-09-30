@@ -91,24 +91,24 @@ class ElementAsideContainer extends Component {
                                     // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
                                     // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scroll: true, // or HTMLElement
-                                   
+                                    filter: "div.elementSapratorContainer",
+                                    draggable: "div.editor",
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
                                         
-                                        let swappedElementData = _containerBodyMatter[evt.oldIndex]
+                                        let swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
 
                                         let dataObj = {
-                                            oldIndex : evt.oldIndex,
-                                            newIndex : evt.newIndex,
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData   
                                         }
                                         this.props.swapElement(dataObj)
                                         // console.log('this.element data', dataObj);
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
-                                   
                                 }}
-                                tag="div"
+                                tag=".element-container"
                             >
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
 

@@ -37,7 +37,7 @@ class SlateWrapper extends Component {
             document.getElementById("cypress-0").focus();
         }
     }
-    
+   
     static getDerivedStateFromProps = (props, state) =>{
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){
@@ -93,21 +93,45 @@ class SlateWrapper extends Component {
                             <div className='element-list'>
                             <Sortable
                                 options={{
+                                    group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                        sort: false,  // sorting inside list
+
+                                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                        
+                                       
+
+                                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                       
+
+                                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                        scrollSpeed: 10,
                                     // handle : '.btn-element element-label', //Drag only by element tag name button
-                                    // dataIdAttr: 'data-id',
+                                    dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
-                                   
+                                    filter: "div.elementSapratorContainer",
+                                    draggable: "div.editor",
+                                    forceFallback: true,
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
-                                        
-                                        let swappedElementData = _slateBodyMatter[evt.oldIndex]
+                                        console.log('index of the sortable element',evt, evt.newDraggableIndex, evt.oldDraggableIndex);
+                                        let swappedElementData;
+
+                                        // if(evt.oldDraggableIndex == 0){
+                                        //     swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        // }else{
+                                            swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        //}
 
                                         let dataObj = {
-                                            oldIndex : evt.oldIndex,
-                                            newIndex : evt.newIndex,
-                                            swappedElementData : swappedElementData   
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            slateId:_slateId   
                                         }
-                                        this.props.swapElement(dataObj)
+
+                                        this.props.swapElement(dataObj,()=>{
+                                            this.forceUpdate();
+                                        })
                                         // console.log('this.element data', dataObj);
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
@@ -374,6 +398,7 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
+        console.log('this is render of slatewrapper', this.props)
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
