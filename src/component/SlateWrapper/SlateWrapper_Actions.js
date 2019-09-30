@@ -72,7 +72,7 @@ export const createFigureElement = (type, index) => (dispatch, getState) => {
         // "subtype":"image25Text",
         "index": index
     };
-    axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+   return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {

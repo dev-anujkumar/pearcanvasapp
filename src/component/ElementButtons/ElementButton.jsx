@@ -5,7 +5,22 @@ import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
 
-import { workedExampleIcon,sectionBreakElement, assessmentIcon, openerElement, noteFlag , tcmIcon, addNote, textIcon, imageIcon, interativeIcon, audioIcon, containerIcon, metaDataAnchor} from '../../images/ElementButtons/ElementButtons.jsx';
+import { 
+    workedExampleIcon,
+    sectionBreakElement, 
+    assessmentIcon, 
+    openerElement, 
+    noteFlag , 
+    tcmIcon, 
+    addNote, 
+    textIcon, 
+    imageIcon, 
+    interativeIcon, 
+    audioIcon, 
+    containerIcon, 
+    lockIcon,
+    metaDataAnchor
+} from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
 import forwardNavDisable from '../../images/ElementButtons/forwardNav_disabled.png';
@@ -15,7 +30,6 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
-
 
 class Button extends Component {
    
@@ -118,6 +132,11 @@ class Button extends Component {
             case buttonTypes.SECTION_BREAK_ELEMENT:
                 buttonJSX = <span className="btn-element section-break-elem" onClick={clickHandlerFn}>
                     {sectionBreakElement}
+                    </span>
+                break;
+            case buttonTypes.LOCK:
+                buttonJSX = <span className="btn-element lock-icon">
+                    {lockIcon}
                     </span>
                 break;
             case buttonTypes.METADATA_ANCHOR:
