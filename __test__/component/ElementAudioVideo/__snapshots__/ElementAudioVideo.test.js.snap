@@ -109,6 +109,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -130,6 +131,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -178,6 +180,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -202,6 +205,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -310,6 +314,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -331,6 +336,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -379,6 +385,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -403,6 +410,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -511,6 +519,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -532,6 +541,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -580,6 +590,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -604,6 +615,7 @@ exports[`Testing Element Audio-Video component With Audio element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -712,6 +724,7 @@ exports[`Testing Element Audio-Video component With Audio element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -733,6 +746,7 @@ exports[`Testing Element Audio-Video component With Audio element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -781,6 +795,7 @@ exports[`Testing Element Audio-Video component With Audio element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -805,6 +820,7 @@ exports[`Testing Element Audio-Video component With Audio element renders proper
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -923,6 +939,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -944,6 +961,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -1000,6 +1018,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -1024,6 +1043,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -1142,6 +1162,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -1163,6 +1184,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -1219,6 +1241,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -1243,6 +1266,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -1361,6 +1385,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -1382,6 +1407,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -1438,6 +1464,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -1462,6 +1489,7 @@ exports[`Testing Element Audio-Video component With Video element renders  prope
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>
@@ -1580,6 +1608,7 @@ exports[`Testing Element Audio-Video component With Video element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
+              suppressContentEditableWarning={true}
             >
               12345
             </h4>
@@ -1601,6 +1630,7 @@ exports[`Testing Element Audio-Video component With Video element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
+              suppressContentEditableWarning={true}
             >
               eresrwqe
             </h4>
@@ -1657,6 +1687,7 @@ exports[`Testing Element Audio-Video component With Video element renders proper
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Caption..."
+              suppressContentEditableWarning={true}
             >
               sdafsad
             </p>
@@ -1681,6 +1712,7 @@ exports[`Testing Element Audio-Video component With Video element renders proper
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter Credit..."
+            suppressContentEditableWarning={true}
           >
             asdfasdfasdf
           </p>

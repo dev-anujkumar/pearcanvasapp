@@ -21,6 +21,7 @@ const htmlToReactParser = new HtmlToReactParser();
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
+        let context = this
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -55,12 +56,19 @@ export class TinyMceEditor extends Component {
                 editor.ui.registry.addButton('Glossary', {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => {
-                        let sectedText = window.getSelection();
+                        let sectedText = window.getSelection().toString();
                         console.log("sectedText=====",sectedText);
                         let insertionText  = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText +'</dfn>'
                         editor.insertContent(insertionText);
                     }
                 });
+                editor.on('mousedown',function(e) {
+                    if(context.props.slateLockInfo.isLocked){
+                        e.preventDefault();
+                        e.stopPropagation()
+                        return false;
+                    }   
+                })
             },
           
             init_instance_callback: (editor) => {
@@ -70,9 +78,8 @@ export class TinyMceEditor extends Component {
         }
     };
     selectText=(editor) => {
-      editor.insertContent('<sup><a href="#" data-uri="' + "123" + '" data-footnoteelementid="' + "123" + '" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>');
-      
-        
+        console.log("editor====>",editor)
+        editor.insertContent('<sup><a href="#" data-uri="' + "123" + '" data-footnoteelementid="' + "123" + '" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>');
     }
     componentDidMount(){
         if(!tinymce.editors.length){
@@ -108,6 +115,7 @@ export class TinyMceEditor extends Component {
     }
   
     render() {
+        const { slateLockInfo:{ isLocked } } = this.props
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -125,19 +133,19 @@ export class TinyMceEditor extends Component {
         switch (this.props.tagName) {
             case 'p':
                 return (                 
-                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</p>
+                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</p>
                 );
             case 'h4':
                 return (
-                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</h4>
+                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</h4>
                 )
             case 'code':
                 return (
-                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true">{htmlToReactParser.parse(this.props.model)}</code>
+                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</code>
                 )
             default:
                 return (
-                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable="true" dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model.text }}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }
@@ -155,5 +163,16 @@ TinyMceEditor.defaultProps = {
     error: null,
 };
 
-export default TinyMceEditor;
+const mapStateToProps = state => {
+    return {
+        slateLockInfo: state.slateLockReducer.slateLockInfo
+    };
+};
+
+export default connect(
+    mapStateToProps, 
+    {
+        // setActiveElement
+    }
+)(TinyMceEditor);
 
