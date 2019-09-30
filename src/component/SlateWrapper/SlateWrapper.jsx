@@ -95,8 +95,6 @@ class SlateWrapper extends Component {
                                 options={{
                                     // handle : '.btn-element element-label', //Drag only by element tag name button
                                     // dataIdAttr: 'data-id',
-                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
-                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scroll: true, // or HTMLElement
                                    
                                     // Element dragging ended
