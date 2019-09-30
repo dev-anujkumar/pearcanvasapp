@@ -81,14 +81,7 @@ figure,.element-container{
     text-align: center;
 }
  
-[placeholder]:empty::before {
-    content: attr(placeholder);
-    color: #ADADAD; 
-}
-/* 
-[placeholder]:empty:focus::before {
-    content: "";
-} */
+
 
 .divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
     line-height: 25px;

@@ -11,6 +11,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import { EditorConfig } from '../config/EditorConfig';
+import  config  from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
@@ -57,6 +58,11 @@ export class TinyMceEditor extends Component {
         }
     };
     componentDidMount(){
+        
+        if(document.getElementById("cypress-"+config.currentInsertedIndex)){
+            document.getElementById("cypress-"+config.currentInsertedIndex).focus();
+        }
+        
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
@@ -90,6 +96,8 @@ export class TinyMceEditor extends Component {
   
     render() {
         const { slateLockInfo:{ isLocked } } = this.props
+        /* const { slateLockInfo } = this.props
+        const isLocked = slateLockInfo && slateLockInfo.isLocked ? true : false */
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
