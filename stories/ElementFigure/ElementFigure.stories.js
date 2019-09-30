@@ -244,27 +244,27 @@ const mockData5={
     "alignment": "",
     "title": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
+        "text": "12345",
         "textsemantics": [],
         "mathml": []
     },
     "subtitle": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
+        "text": "eresrwqe",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "captions": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
+        "text": "sdafsad",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []
     },
     "credits": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-        "text": "",
+        "text": "asdfasdfasdf",
         "textsemantics": [],
         "mathml": [],
         "footnotes": []

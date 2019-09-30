@@ -13,7 +13,7 @@ import {
     VIDEO_ELEMENT_CREATED,
     FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED,
-    DELETE_ELEMENT,OPEN_GLOSSARY_FOOTNOTE
+    DELETE_ELEMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -24,8 +24,8 @@ import {
 const initialState = {
     slateLevelData: {},
     // elementsTag: {},
-    activeElement: {},
-    };
+    activeElement: {}
+};
 
 /**
  * This method actually updates app store as per incoming payload
