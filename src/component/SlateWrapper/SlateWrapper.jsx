@@ -328,7 +328,7 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer                            
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
@@ -353,7 +353,7 @@ class SlateWrapper extends Component {
             console.error(error);
         }
     }
-
+    
     /**
      * render | renders title and slate wrapper
      */

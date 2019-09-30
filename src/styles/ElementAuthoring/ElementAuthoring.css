@@ -43,6 +43,3 @@ h3.pullQuoteNumeroUno{
 p.blockquoteTextCredit{
     pointer-events: none;
 }
-.open-glosssary{
-    z-index: 1000;
-}

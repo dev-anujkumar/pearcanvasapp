@@ -21,7 +21,6 @@ import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag }
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
-
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
@@ -127,10 +126,6 @@ class CanvasWrapper extends Component {
             showBlocker: bFlag
         });
     }
-    showPopUp=()=>{return  (      
-        <div className="footnote-sidebar">
-        <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>
-        </div>);}
     releaseSlateLock = (projectUrn, slateId) => {
         this.props.releaseSlateLock(projectUrn, slateId)
     }
@@ -185,6 +180,18 @@ class CanvasWrapper extends Component {
         return false
     }
 
+
+    
+    openGlossaryFootnotePopUp=()=>{
+              if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
+        return (
+        <GlossaryFootnoteMenu glossaryFootnote={this.props.glossaryFootnoteValue.type} activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
+        )
+        
+    }
+    
+    }    
+
     showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
             // this.showCanvasBlocker(true)
@@ -235,8 +242,9 @@ class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar showPopUp={this.showPopUp}/>
-                            {/* <GlossaryFootnoteMenu glossaryFootnote="Glossary"/> */}
+                            {this.openGlossaryFootnotePopUp()}
+                             <Sidebar showPopUp={this.showPopUp}/>
+                            {/*  <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>  */}
                             {/* put side setting */}
                         </div>
                     </div>
@@ -247,10 +255,12 @@ class CanvasWrapper extends Component {
     }
     
 }
+
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {console.log('state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData,
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo

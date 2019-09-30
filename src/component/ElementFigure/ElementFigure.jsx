@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // IMPORT - Components //
-import { TinyMceEditor } from "../tinyMceEditor"
+import  TinyMceEditor  from "../tinyMceEditor"
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -179,6 +179,16 @@ export class ElementFigure extends Component {
                             imageDimension = 'imageFullscreenMathImage',
                             figCaptionClass = 'figcaptionImageFullscreenMathImage',
                             figCreditClass = 'paragraphImageFullscreenMathImageCredit';
+                        break;
+                    case 'image50TextEditorTable':
+                        divClass = 'divImage50TextTableEditor',
+                            figureClass = 'figureImage50TextEditorTable',
+                            figLabelClass = 'heading4ImageFullscreenMathImageNumberLabel',
+                            figTitleClass = 'heading4Image50TextEditorTableNumberLabel',
+                            dataType = 'tableasmarkup',
+                            imageDimension = 'image50TextEditorTable',
+                            figCaptionClass = 'figcaptionImage50TextEditorTable',
+                            figCreditClass = 'paragraphImage50TextEditorTableCredit';
                         break;
                 }
                 /**JSX for Figure Image, Table Image, Math Image*/

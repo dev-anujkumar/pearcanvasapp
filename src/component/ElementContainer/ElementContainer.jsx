@@ -10,6 +10,7 @@ import ElementAsideContainer from '../ElementAsideContainer';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
+import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -29,12 +30,14 @@ class ElementContainer extends Component {
             borderToggle : 'showBorder',
             btnClassName : '',
             showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:''
+            ElementId: this.props.index==0?this.props.element.id:'',
+            showGlossaryFootnotePopup:"",
         };
         
     }
     componentDidMount(){
         
+
         if( this.props.index == 0 ){
             this.setState({
                 borderToggle : 'active',
@@ -47,7 +50,7 @@ class ElementContainer extends Component {
         })             
     }
 
-   
+  
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps){      
         if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
@@ -141,11 +144,11 @@ class ElementContainer extends Component {
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
+                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} />;
                 break;
             case elementTypeConstant.FIGURE:
 
@@ -284,7 +287,9 @@ class ElementContainer extends Component {
         this.props.addComment(comment, id);
         this.handleCommentPopup(false);
     }
-
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
+    }
     render = () => {
         const { element } = this.props;
         return this.renderElement(element);
@@ -317,6 +322,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setActiveElement:(element) => {
             dispatch(setActiveElement(element))
+        },
+        glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
         }
     }
 }
@@ -328,7 +336,8 @@ const mapStateToProps = (state) => {
 
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
-        activeElement: state.appStore.activeElement.elementId
+        activeElement: state.appStore.activeElement.elementId    
+
     }
 }
 
