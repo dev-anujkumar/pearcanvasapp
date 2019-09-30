@@ -17,7 +17,7 @@ const findElementType = (element) => {
 	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
-			if (element.elementdata.headers) {
+			if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
 				elementType['primaryOption'] = 'primary-heading';
 				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
 			} else {

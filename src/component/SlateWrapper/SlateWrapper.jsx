@@ -18,7 +18,7 @@ import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {IMAGE}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -248,39 +248,28 @@ class SlateWrapper extends Component {
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", indexToinsert,parentUrn);
+                this.props.createElement(TEXT, indexToinsert,parentUrn);
                 break;
             case 'image-elem':
-                this.props.createFigureElement(IMAGE, indexToinsert);
+                // this.props.createFigureElement(IMAGE, indexToinsert);
+                this.props.createElement(IMAGE, indexToinsert,parentUrn);
                 break;
             case 'audio-elem':
-                var elevideo = {
-                    "type": "figure",
-                    "figuretype": "video",
-                    "subtype": "figureVideo",
-                    "alignment": "full"
-                }
-                this.props.createVideoElement(elevideo, Number(index + 1))
+                // this.props.createVideoElement(elevideo, indexToinsert)
+                this.props.createElement(VIDEO, indexToinsert,parentUrn);
                 break;
             case 'interactive-elem':
-                    var eleInteractive = {
-                        "type": "figure",
-                        "figuretype": "interactive",
-                        "figuredata": {
-                            "interactiveid": "",
-                            "interactivetype": "fpo",
-                            "interactiveformat": "narrative-link"
-                        },
-                    }
-                    this.props.createInteractiveElement(eleInteractive, Number(index + 1))
+                    //this.props.createInteractiveElement('INTERACTIVE', Number(index + 1))
+                    this.props.createElement(INTERACTIVE, indexToinsert,parentUrn);
                 break;
             case 'assessment-elem':
+                    this.props.createElement(ASSESSMENT, indexToinsert,parentUrn);
                 break;
             case 'container-elem':
-                  this.props.createElement("element-aside", Number(index + 1),parentUrn)
+                  this.props.createElement(CONTAINER, indexToinsert,parentUrn)
                 break;
             case 'worked-exp-elem':
-                   this.props.createElement("workedexample", Number(index + 1),parentUrn)
+                   this.props.createElement("workedexample", indexToinsert,parentUrn)
                 break;
             case 'opener-elem':
                 break;
