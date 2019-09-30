@@ -6,6 +6,7 @@ import React, { Component } from "react";
 import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
+import config from '../../config/config'
 
 /**
 * @description - SlateHeader is a class based component. It is defined simply
@@ -39,8 +40,12 @@ import PropTypes from 'prop-types'
         if(className === 'input-text'){
             if(type ===  'container-introduction'){
                 return {minWidth: '559px'}
+            }else if(type ===  'assessment'){
+                return {minWidth: '585px'}
+            }else if(type === 'section'){
+                return {minWidth : '656px'}
             }
-          return  {minWidth: type == 'section' ? '696px' : '675px'}
+        //   return  {minWidth: type == 'section' ? '696px' : '675px'}
         }
 
     }
@@ -72,9 +77,28 @@ import PropTypes from 'prop-types'
         }
         return returnType;
     }
-
+    renderSlateLockJSX = (userName = "") => {
+        return (
+            <div className="canvas-header slate-lock-block">
+                <Button type="lock-icon" />
+                <span className="locked-slate-title">Locked Slate: {userName} </span><br />
+            </div>
+        )
+    }
+    
+    checkSlateLock = (slateLockInfo) => {
+        if(slateLockInfo){
+            if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
+                return this.renderSlateLockJSX(slateLockInfo.userId)
+            }
+            else {
+                return null
+            }
+        }  
+    }
+    
     render() {
-        const { slateType, slateTitle } = this.props
+        const { slateType, slateTitle, slateLockInfo } = this.props
         let slateLabel = this.getLabel(slateType);
         let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : ''; 
 
@@ -89,7 +113,8 @@ import PropTypes from 'prop-types'
         // }
 
         return (
-            <div className="slate-Title">
+            <div className="slate-title">
+                {this.checkSlateLock(slateLockInfo)}
                 <div className="canvas-header" id="canvas-header">
                     <div className="slate-header"><label className="header-label" style={this.setDynamicStyle(this.props.slateType,'header-label')}>{slateLabel}</label></div>
                     <div className="input-text" style={this.setDynamicStyle(this.props.slateType,'input-text')}>

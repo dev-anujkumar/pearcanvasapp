@@ -1,8 +1,8 @@
 let config = {
-    REACT_APP_API_URL : "https://10.11.3.7:8443/cypress-api/",
+    REACT_APP_API_URL : "https://10.11.7.24:8443/cypress-api/",
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
-    JAVA_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/",
-    NARRATIVE_API_URL: "https://10.11.3.7:8443/app/toc-javaapp/v1/",
+    JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
+    NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     ssoToken: "MZhzMjnu8yJbTrl4D5_33E9G7js.*AAJTSQACMDIAAlNLABw3eUVGTHpGd2VyZW14RHhNWmJ4U3RuNTdzN289AAJTMQACMDQ.*",
     userId: 'c5test01',
@@ -19,6 +19,7 @@ let config = {
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
+    LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.PATTERN_ADD_ASSET || 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.PATTERN_BROKER || 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
