@@ -58,12 +58,11 @@ export class TinyMceEditor extends Component {
         }
     };
     componentDidMount(){
-        
         if(document.getElementById("cypress-"+config.currentInsertedIndex)){
             document.getElementById("cypress-"+config.currentInsertedIndex).focus();
         }
-        
-        if(!tinymce.editors.length){
+        const { slateLockInfo:{ isLocked } } = this.props
+        if(!tinymce.editors.length && !isLocked){
             tinymce.init(this.editorConfig)
         }
     }
@@ -79,7 +78,6 @@ export class TinyMceEditor extends Component {
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }
-        
         if(tinymce.activeEditor){
             let activeEditorId = tinymce.activeEditor.id;
             
