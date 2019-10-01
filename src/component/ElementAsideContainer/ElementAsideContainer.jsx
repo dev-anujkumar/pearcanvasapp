@@ -2,9 +2,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sortable from 'react-sortablejs';
+
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
@@ -22,12 +25,14 @@ class ElementAsideContainer extends Component {
     }
     componentDidMount() {
         this.asideRef.current.addEventListener("focus", this.handleFocus);
+
     }
 
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
     handleFocus = () => {
+        console.log("handle focus==========>")
         this.props.setActiveElement(this.props.element);
         this.props.handleFocus()
     }
@@ -79,7 +84,37 @@ class ElementAsideContainer extends Component {
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
+                <Sortable
+                                options={{
+                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    // dataIdAttr: 'data-id',
+                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
+                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    scroll: true, // or HTMLElement
+                                    filter: "div.elementSapratorContainer",
+                                    draggable: "div.editor",
+                                    // Element dragging ended
+                                    onEnd:  (/**Event*/evt) => {
+                                        
+                                        let swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            workedExample : true      
+                                        }
+                                        this.props.swapElement(dataObj)
+                                        // console.log('this.element data', dataObj);
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                }}
+                                tag=".element-container"
+                            >
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
+
+                            </Sortable>
             </div>
         )
     }
@@ -136,7 +171,7 @@ class ElementAsideContainer extends Component {
                         console.log("elementid---", `${parentIndex}-${index}`);
                         return (
                             <React.Fragment>
-                                {index === 0 && (!this.props.element.subtype || this.props.element.subtype == "sidebar") && <ElementSaprator
+                                {index === 0 && ( !this.props.element.hasOwnProperty() || this.props.element.subtype == "sidebar") && <ElementSaprator
                                     upperOne={true}
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
@@ -249,9 +284,11 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props
+        let designtype = element.hasOwnProperty("designtype") ?  element.designtype : "",
+            subtype = element.hasOwnProperty("subtype") ?  element.subtype : "";
         return (
-            <aside className={`${element.designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
-                {element.subtype == "workedexample" ? this.renderWorkExample(element.designtype) : this.renderAside(element.designtype)}
+            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
     }
@@ -262,4 +299,16 @@ ElementAsideContainer.propTypes = {
     element: PropTypes.object.isRequired
 }
 
-export default ElementAsideContainer;
+const mapStateToProps = state => {
+    return {
+
+    };
+};
+
+
+export default connect(
+    mapStateToProps,
+    {
+        swapElement
+    }
+)(ElementAsideContainer);

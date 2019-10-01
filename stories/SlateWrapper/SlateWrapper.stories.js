@@ -500,9 +500,10 @@ export const slateDataForAssess = {
 const mockStore = configureMockStore(middlewares);
 
 const slateRenderData = mockStore({
-    appStore: { slateLevelData: {} },
+    appStore: { slateLevelData: {},activeElement:{elementId:""} },
     toolbarReducer: { elemBorderToggle: true },
-    commentsPanelReducer: {}
+    commentsPanelReducer: {},
+    slateLockReducer:{slateLockInfo:false}   
 });
 
 storiesOf('Composites|Slate Wrapper', module)

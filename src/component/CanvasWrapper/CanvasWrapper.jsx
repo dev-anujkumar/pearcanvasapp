@@ -18,9 +18,9 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag } from './SlateLock_Actions'
+import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
-
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
@@ -38,7 +38,7 @@ class CanvasWrapper extends Component {
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
         // this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
@@ -59,7 +59,6 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
-        console.log("this.props.slateLevelData>>>", config.slateManifestURN)
         let { projectUrn } = config,
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
@@ -180,6 +179,18 @@ class CanvasWrapper extends Component {
         return false
     }
 
+
+    
+    openGlossaryFootnotePopUp=()=>{
+              if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
+        return (
+        <GlossaryFootnoteMenu glossaryFootnote={this.props.glossaryFootnoteValue.type} activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
+        )
+        
+    }
+    
+    }    
+
     showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
             // this.showCanvasBlocker(true)
@@ -200,13 +211,13 @@ class CanvasWrapper extends Component {
     }
     
     render() {
+        console.log('this is s ')
         // let navDisabled = '';
         // if(this.state.activeSlateIndex === 0) {
         //     navDisabled = 'back';
         // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
         //     navDisabled = 'next';
         // }
-
         return (
             <div className='content-composer'>
                 {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -231,7 +242,9 @@ class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            <Sidebar />
+                            {this.openGlossaryFootnotePopUp()}
+                             <Sidebar showPopUp={this.showPopUp}/>
+                            {/*  <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>  */}
                             {/* put side setting */}
                         </div>
                     </div>
@@ -242,10 +255,12 @@ class CanvasWrapper extends Component {
     }
     
 }
+
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {console.log('state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData,
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo

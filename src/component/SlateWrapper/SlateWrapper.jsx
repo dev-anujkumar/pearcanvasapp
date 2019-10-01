@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sortable from 'react-sortablejs';
+
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
@@ -10,17 +12,27 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement
+    , createFigureElement , createInteractiveElement, swapElement
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import config from '../../config/config';
-import {IMAGE,TEXT}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
 
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -51,6 +63,7 @@ class SlateWrapper extends Component {
     }
     
     static getDerivedStateFromProps = (props, state) =>{
+        console.log('kkkkkkkk',props)
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){
             return {
@@ -100,12 +113,74 @@ class SlateWrapper extends Component {
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
-                            <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
+                            <div className='element-list'>
+                            <Sortable
+                                options={{
+                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
+                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                    dragoverBubble: false,
+	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                    
+
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    
+
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
+                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
+                                    scroll: true, // or HTMLElement
+                                    filter: ".elementSapratorContainer",
+                                    draggable: ".editor",
+                                    forceFallback: true,
+                                    onStart: function (/**Event*/evt) {
+                                        // same properties as onEnd
+                                    },
+                                   
+                                    // Element dragging ended
+                                    onEnd:  (/**Event*/evt) => {
+                                        console.log('index of the sortable element',evt, evt.newDraggableIndex, evt.oldDraggableIndex);
+                                        let swappedElementData;
+                                        swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            slateId:_slateId,
+                                            workedExample : false   
+                                        }
+
+                                        this.props.swapElement(dataObj,(bodyObj)=>{
+                                            console.log('rrrrrr',bodyObj)
+                                        })
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                   
+                                }}
+                               
+                                // [Optional] Use ref to get the sortable instance
+                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
+                                ref={(c) => {
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
+                                }}
+    
+                // [Optional] A tag to specify the wrapping element. Defaults to "div".
+                tag="div"
+    
+                onChange={(items, sortable, evt) => { }}
+                            >
                                 {
-                                    this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                                    this['cloneCOSlateControlledSource_' + random]
+                                    //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                                 }
+                            </Sortable>
                             </div>
                             <SlateFooter />
                         </div>
@@ -217,39 +292,28 @@ class SlateWrapper extends Component {
 
         switch (type) {
             case 'text-elem':
-                this.props.createElement("element-authoredtext", indexToinsert,parentUrn);
+                this.props.createElement(TEXT, indexToinsert,parentUrn);
                 break;
             case 'image-elem':
-                this.props.createFigureElement(IMAGE, indexToinsert);
+                // this.props.createFigureElement(IMAGE, indexToinsert);
+                this.props.createElement(IMAGE, indexToinsert,parentUrn);
                 break;
             case 'audio-elem':
-                var elevideo = {
-                    "type": "figure",
-                    "figuretype": "video",
-                    "subtype": "figureVideo",
-                    "alignment": "full"
-                }
-                this.props.createVideoElement(elevideo, Number(index + 1))
+                // this.props.createVideoElement(elevideo, indexToinsert)
+                this.props.createElement(VIDEO, indexToinsert,parentUrn);
                 break;
             case 'interactive-elem':
-                    var eleInteractive = {
-                        "type": "figure",
-                        "figuretype": "interactive",
-                        "figuredata": {
-                            "interactiveid": "",
-                            "interactivetype": "fpo",
-                            "interactiveformat": "narrative-link"
-                        },
-                    }
-                    this.props.createInteractiveElement(eleInteractive, Number(index + 1))
+                    //this.props.createInteractiveElement('INTERACTIVE', Number(index + 1))
+                    this.props.createElement(INTERACTIVE, indexToinsert,parentUrn);
                 break;
             case 'assessment-elem':
+                    this.props.createElement(ASSESSMENT, indexToinsert,parentUrn);
                 break;
             case 'container-elem':
-                  this.props.createElement("element-aside", Number(index + 1),parentUrn)
+                  this.props.createElement(CONTAINER, indexToinsert,parentUrn)
                 break;
             case 'worked-exp-elem':
-                   this.props.createElement("workedexample", Number(index + 1),parentUrn)
+                   this.props.createElement("workedexample", indexToinsert,parentUrn)
                 break;
             case 'opener-elem':
                 break;
@@ -342,7 +406,7 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer                            
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
@@ -367,11 +431,12 @@ class SlateWrapper extends Component {
             console.error(error);
         }
     }
-
+    
     /**
      * render | renders title and slate wrapper
      */
     render() {
+        console.log('this is render of slatewrapper', this.props)
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -410,6 +475,7 @@ export default connect(
         createElement,
         createVideoElement,
         createFigureElement,
-        createInteractiveElement
+        createInteractiveElement,
+        swapElement
     }
 )(SlateWrapper);
