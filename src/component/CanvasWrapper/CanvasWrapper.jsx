@@ -18,6 +18,7 @@ import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag } from './SlateLock_Actions'
+import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
 
@@ -187,6 +188,18 @@ class CanvasWrapper extends Component {
         return false
     }
 
+
+    
+    openGlossaryFootnotePopUp=()=>{
+              if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
+        return (
+        <GlossaryFootnoteMenu glossaryFootnote={this.props.glossaryFootnoteValue.type} activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
+        )
+        
+    }
+    
+    }    
+
     showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
             // this.showCanvasBlocker(true)
@@ -213,7 +226,6 @@ class CanvasWrapper extends Component {
         // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
         //     navDisabled = 'next';
         // }
-
         return (
             <div className='content-composer'>
                 {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -239,7 +251,9 @@ class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* side setting component goes here */}
-                            <Sidebar />
+                            {this.openGlossaryFootnotePopUp()}
+                             <Sidebar showPopUp={this.showPopUp}/>
+                            {/*  <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>  */}
                             {/* put side setting */}
                         </div>
                     </div>
@@ -250,10 +264,12 @@ class CanvasWrapper extends Component {
     }
     
 }
+
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {console.log('state:::', state);
     return {
         slateLevelData: state.appStore.slateLevelData,
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo

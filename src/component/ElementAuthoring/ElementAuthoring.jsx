@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
-
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
@@ -14,9 +13,10 @@ export class ElementAuthoring extends Component {
   }
 
   render() {
-    const { className, placeholder, model} = this.props
+    const { className, placeholder, model,openGlossaryFootnotePopUp} = this.props
      return (
         <TinyMceEditor
+          openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
           elementId={this.props.elementId}
           element={this.props.element}

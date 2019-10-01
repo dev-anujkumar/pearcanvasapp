@@ -2,9 +2,17 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 
-import { withInfo } from '@storybook/addon-info';
-
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 import ElementAudioVideo from './../../src/component/ElementAudioVideo';
+import { withInfo } from '@storybook/addon-info';
+const mockStore = configureMockStore(middlewares);
+
+const elemAudioVideoData = mockStore({
+    slateLockReducer:{slateLockInfo:false}   
+  });
 const audioElementTypeSLDefault = {
     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
     "type": "figure",
@@ -563,35 +571,35 @@ const videoElementTypeAlfrescoWithData = {
 
 storiesOf('Components|ElementAudioVideo', module)
     .addDecorator(withInfo)
-    .add('Audio Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <ElementAudioVideo model={audioElementTypeSLDefault} index="1" /></div>)
-    .add('Audio Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}><ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2" /></div>)
+    .add('Audio Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}>  <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeSLDefault} index="1" /></Provider> </div>)
+    .add('Audio Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2" /></Provider></div>)
     .add('Audio Type-SL with data', () => {
         return (
-            <div style={{ width: "500px", position: "relative", left: "100px" }}>
-                <ElementAudioVideo model={audioElementTypeSLWithData} index="3" />
+            <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}>
+                <ElementAudioVideo model={audioElementTypeSLWithData} index="3" /></Provider>
             </div>
         );
     })
     .add('Audio Type-Alfresco with data', () => {
         return (
-            <div style={{ width: "500px", position: "relative", left: "100px" }}>
-                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} index="4" />
+            <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}>
+                <ElementAudioVideo model={audioElementTypeAlfrescoWithData} index="4" /></Provider>
             </div>
         );
     })
-    .add('Video Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}><ElementAudioVideo model={videoElementTypeSLDefault} index="5" /></div>)
-    .add('Video Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <ElementAudioVideo model={videoElementTypeAlfrescoDefault} index="6" /></div>)
+    .add('Video Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}><ElementAudioVideo model={videoElementTypeSLDefault} index="5" /></Provider></div>)
+    .add('Video Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}>  <Provider store={elemAudioVideoData}><ElementAudioVideo model={videoElementTypeAlfrescoDefault} index="6" /></Provider></div>)
     .add('Video Type-SL with data', () => {
         return (
-            <div style={{ width: "500px", position: "relative", left: "100px" }}>
-                <ElementAudioVideo model={videoElementTypeSLWithData} index="7" />
+            <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}>
+                <ElementAudioVideo model={videoElementTypeSLWithData} index="7" /></Provider>
             </div>
         );
     })
     .add('Video Type-Alfresco with data', () => {
         return (
-            <div style={{ width: "500px", position: "relative", left: "100px" }}>
-                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} index="8" />
+            <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}>
+                <ElementAudioVideo model={videoElementTypeAlfrescoWithData} index="8" /></Provider>
             </div>
         );
     })

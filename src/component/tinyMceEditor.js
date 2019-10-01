@@ -13,6 +13,9 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
+import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
+import GlossaryFootnoteMenu from './GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+//import './../styles/Tiny.css';
 import  config  from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
@@ -51,24 +54,56 @@ export class TinyMceEditor extends Component {
                         return false;
                     }   
                 })
+                editor.on('click', (e) => {
+                    console.log('Editor was clicked: ' , e.target.nodeName);
+                    if( e.target.parentElement.nodeName == "SUP"){
+                        this.props.openGlossaryFootnotePopUp(true,"Footnote");
+                    }
+                    if( e.target.nodeName == "DFN"){
+                        this.props.openGlossaryFootnotePopUp(true,"Glossary");
+                    }
+                });
+           
+
+                editor.ui.registry.addButton('Footnote', {
+                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+                    onAction: () => this.addFootnote(editor)
+                   
+                });
+                editor.ui.registry.addButton('Glossary', {
+                    text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+                    onAction: () => this.addGlossary(editor)
+                });
             },
+          
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 
                 
             }
         }
     };
-    componentDidMount(){
+    addFootnote = (editor) => {
+        editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+        this.props.openGlossaryFootnotePopUp(true,"Footnote");
         
+    }
+    addGlossary = (editor) => {
+        let sectedText = window.getSelection().toString();
+        let insertionText  = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText +'</dfn>'
+        editor.insertContent(insertionText);
+        this.props.openGlossaryFootnotePopUp(true,"Glossary");
+
+    }
+  
+    componentDidMount(){
         if(document.getElementById("cypress-"+config.currentInsertedIndex)){
             document.getElementById("cypress-"+config.currentInsertedIndex).focus();
         }
-        
-        if(!tinymce.editors.length){
+        const { slateLockInfo:{ isLocked } } = this.props
+        if(!tinymce.editors.length && !isLocked){
             tinymce.init(this.editorConfig)
         }
     }
-    
     componentDidUpdate(){
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
@@ -80,10 +115,8 @@ export class TinyMceEditor extends Component {
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }
-        
         if(tinymce.activeEditor){
             let activeEditorId = tinymce.activeEditor.id;
-            
             tinymce.remove('#'+tinymce.activeEditor.id)
             document.getElementById(activeEditorId).contentEditable = true;
         }
@@ -94,7 +127,7 @@ export class TinyMceEditor extends Component {
     handleBlur=(e)=>{
         this.props.handleBlur()
     }
-  
+ 
     render() {
         const { slateLockInfo:{ isLocked } } = this.props
         /* const { slateLockInfo } = this.props
