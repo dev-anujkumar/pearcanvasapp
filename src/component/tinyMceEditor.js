@@ -47,7 +47,7 @@ export class TinyMceEditor extends Component {
                 });
 
                 editor.on('click', (e) => {
-                    console.log('Editor was clicked: ' , e.target.parentElement.nodeName);
+                    console.log('Editor was clicked: ' , e.target.nodeName);
                     if( e.target.parentElement.nodeName == "SUP"){
                         this.props.openGlossaryFootnotePopUp(true,"Footnote");
                     }
@@ -76,11 +76,6 @@ export class TinyMceEditor extends Component {
     };
     addFootnote = (editor) => {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-        tinymce.activeEditor.$('#123').on('click', function(e) {
-            // This never fires
-            console.log('Link clicked...');
-          });
-       //  cp.addEventListener('click', this.openFootnote); 
         this.props.openGlossaryFootnotePopUp(true,"Footnote");
         
     }
