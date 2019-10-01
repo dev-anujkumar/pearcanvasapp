@@ -346,12 +346,13 @@ export default {
             }
         }
     },
-    'others': {
+    'element-interactive': {
         'primary-mmi': {
             text: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
-                    text: 'MMI'
+                    text: 'MMI',
+                    labelText: 'MMI'
                 }
             }
         },
@@ -359,34 +360,47 @@ export default {
             text: 'Smart Link',
             subtype: {
                 'secondary-interactive-smartlink-third': {
-                    text: '3rd Party'
+                    text: '3rd Party',
+                    labelText: 'SL'
                 },
                 'secondary-interactive-smartlink-pdf': {
-                    text: 'PDF'
+                    text: 'PDF',
+                    labelText: 'SL'
                 },
                 'secondary-interactive-smartlink-web': {
-                    text: 'External Website Link'
+                    text: 'External Website Link',
+                    labelText: 'SL'
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
-                    text: 'Legacy Web Link'
+                    text: 'Legacy Web Link',
+                    labelText: 'SL'
                 },
                 'secondary-interactive-smartlink-tab': {
-                    text: 'Table'
+                    text: 'Table',
+                    labelText: 'SL'
                 }
             }
         },
         'primary-showhide': {
             text: 'Show Hide',
             subtype: {
-                
+                'secondary-interactive-showhide': {
+                    text: 'Show Hide',
+                    labelText: 'SH'
+                }
             }
         },
         'primary-popup': {
             text: 'Pop Up Window',
             subtype: {
-                
+                'secondary-interactive-popup': {
+                    text: 'Pop Up Window',
+                    labelText: 'Pop'
+                }
             }
-        },
+        }
+    },
+    'others': {
         'primary-single-assessment': {
             text: 'Single Assessment',
             subtype: {

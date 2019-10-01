@@ -17,7 +17,7 @@ const findElementType = (element) => {
 	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
-			if (element.elementdata.headers) {
+			if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
 				elementType['primaryOption'] = 'primary-heading';
 				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
 			} else {
@@ -43,7 +43,7 @@ const findElementType = (element) => {
 			break;
 
 		case 'figure':
-			if (element.figuretype && element.subtype !== undefined) {
+			if (element.figuretype) {
 				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-figure';
@@ -88,6 +88,44 @@ const findElementType = (element) => {
 							break;
 						
 							
+					}
+				} else if (element.figuretype == 'interactive') {
+					elementType['elementType'] = 'element-interactive';
+					switch(element.figuredata.interactivetype) {
+						case '3rd-party':
+							elementType['primaryOption'] = 'primary-smartlink';
+							elementType['secondaryOption'] = 'secondary-interactive-smartlink-third';
+							break;
+						case 'pdf':
+							elementType['primaryOption'] = 'primary-smartlink';
+							elementType['secondaryOption'] = 'secondary-interactive-smartlink-pdf';
+							break;
+						case 'web-link':
+							elementType['primaryOption'] = 'primary-smartlink';
+							elementType['secondaryOption'] = 'secondary-interactive-smartlink-web';
+							break;
+						case 'pop-up-web-link':
+							elementType['primaryOption'] = 'primary-smartlink';
+							elementType['secondaryOption'] = 'secondary-interactive-smartlink-pop-up-web-link';
+							break;
+						case 'table':
+							elementType['primaryOption'] = 'primary-smartlink';
+							elementType['secondaryOption'] = 'secondary-interactive-smartlink-tab';
+							break;
+						case 'showhide':
+							elementType['primaryOption'] = 'primary-showhide';
+							elementType['secondaryOption'] = 'secondary-interactive-showhide';
+							break;
+						case 'popup':
+							elementType['primaryOption'] = 'primary-popup';
+							elementType['secondaryOption'] = 'secondary-interactive-popup';
+							break;
+						case 'fpo':
+						case 'flashcards':
+						default:
+							elementType['primaryOption'] = 'primary-mmi';
+							elementType['secondaryOption'] = 'secondary-interactive-mmi';
+							break;
 					}
 				}
 			}

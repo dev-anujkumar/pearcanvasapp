@@ -4,12 +4,13 @@ let config = {
     JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "MZhzMjnu8yJbTrl4D5_33E9G7js.*AAJTSQACMDIAAlNLABw3eUVGTHpGd2VyZW14RHhNWmJ4U3RuNTdzN289AAJTMQACMDQ.*",
+    ssoToken: "E3wVMJ2pF3pMSSczl2X1I5BI1hY.*AAJTSQACMDIAAlNLABxnVVVrcnNyd0pIQ3FodDJTK1NrekUyVUI2N0E9AAJTMQACMDQ.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     slateType : 'section',
+    currentInsertedIndex : 0,
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
@@ -19,6 +20,7 @@ let config = {
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
+    LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.PATTERN_ADD_ASSET || 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.PATTERN_BROKER || 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',

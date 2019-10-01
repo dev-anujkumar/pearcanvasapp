@@ -1,3 +1,6 @@
+.slate-title{
+    /* height: 100%; */
+}
 .canvas-header {
     min-width: 790px;
     max-width: 600px;
@@ -46,6 +49,13 @@
     font-size: 1.0em;
 }
 .slate-header {
+    align-self: center;
+}
+.canvas-header.slate-lock-block{
+    display: flex;
+}
+.locked-slate-title{
+    align-self: center;
     /* align-self: center; */
     margin-top: 8px;
 }
