@@ -12,6 +12,7 @@ const mockStore = configureMockStore(middlewares);
 
 const slateData = mockStore({
     slateLevelData: {},
+    slateLockReducer:{slateLockInfo:false}   
 });
 
 const paragraphModel = {

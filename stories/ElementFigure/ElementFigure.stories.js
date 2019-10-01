@@ -4,7 +4,15 @@ import { storiesOf } from '@storybook/react';
 
 import { withInfo } from '@storybook/addon-info';
 import ElementFigure from './../../src/component/ElementFigure';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+const mockStore = configureMockStore(middlewares);
 
+const elemFigureData = mockStore({
+    slateLockReducer:{slateLockInfo:false}   
+  });
 const mockData1={
     "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
     "type": "figure",
@@ -362,39 +370,39 @@ const mockData6={
 storiesOf('Components|ElementFigure', module)
 
     .addDecorator(withInfo)
-    .add('default Figure-50', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementFigure model={mockData1} index="1" /></div>)
+    .add('default Figure-50', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <Provider store={elemFigureData}> <ElementFigure model={mockData1} index="1" /></Provider></div>)
     .add('Figure Image-FS', () => {
         return (
-            <div style={{width:"500px", position:"relative", left:"100px"}}>
-                <ElementFigure model={mockData4} index="2"/>
+            <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>
+                <ElementFigure model={mockData4} index="2"/></Provider>
                 </div>
         );
     })
     .add('Table Image-TW', () => {
         return (
-            <div style={{width:"500px", position:"relative", left:"100px"}}>
-                <ElementFigure model={mockData2} index="3"/>
+            <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>
+                <ElementFigure model={mockData2} index="3"/></Provider>
                 </div>
         );
     })
     .add('Math Image-WT', () => {
         return (
-            <div style={{width:"500px", position:"relative", left:"100px"}}>
-                <ElementFigure model={mockData3} index="4" />
+            <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>
+                <ElementFigure model={mockData3} index="4" /></Provider>
                 </div>
         );
     })
     .add('MathML/Chem Editor', () => {
         return (
-            <div style={{width:"500px", position:"relative", left:"100px"}}>
-                <ElementFigure model={mockData5} index="5"/>
+            <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>
+                <ElementFigure model={mockData5} index="5"/></Provider>
                 </div>
         );
     })
     .add('Block Code Editor', () => {
         return (
-            <div style={{width:"500px", position:"relative", left:"100px"}}>
-                <ElementFigure model={mockData6} index="6" />
+            <div style={{width:"500px", position:"relative", left:"100px"}}><Provider store={elemFigureData}>
+                <ElementFigure model={mockData6} index="6" /></Provider>
                 </div>
         );
     })
