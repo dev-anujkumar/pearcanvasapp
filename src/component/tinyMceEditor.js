@@ -62,8 +62,6 @@ export class TinyMceEditor extends Component {
                         this.props.openGlossaryFootnotePopUp(true,"Glossary");
                     }
                 });
-           
-
                 editor.ui.registry.addButton('Footnote', {
                     text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
                     onAction: () => this.addFootnote(editor)
@@ -73,6 +71,51 @@ export class TinyMceEditor extends Component {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => this.addGlossary(editor)
                 });
+                editor.on('BeforeExecCommand',function(e) {
+                    let content = e.target.getContent()
+                    if(e.command == "indent"){
+                        if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+                            e.preventDefault()
+                        }
+                    }
+                    if(e.command == "outdent"){
+                        if(content.match(/paragraphNumeroUno\b/)){
+                            e.preventDefault()
+                        }
+                    }  
+                })
+                editor.on('ExecCommand',function(e) {
+                    let content = e.target.getContent()
+                    switch(e.command){
+
+                        case "indent":
+                            if(content.match(/paragraphNumeroUno\b/)){
+                                content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
+                            } 
+                            else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
+                                content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUnoIndentLevel2")
+                            }
+                            else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
+                                content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
+                            }
+                            editor.setContent(content)
+                            break;
+
+                        case "outdent":
+                            if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+                                content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
+                            } 
+                            else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
+                                content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel1")
+                            }
+                            else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
+                                content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
+                            }
+                            editor.setContent(content)
+                            break;
+                    }
+                    console.log("command Event>>><<>>????", e)
+                })
             },
           
             init_instance_callback: (editor) => {
