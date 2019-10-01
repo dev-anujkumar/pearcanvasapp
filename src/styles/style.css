@@ -96,6 +96,13 @@ h1, h2, h3, h4, h5, p {
     }
 }
 
+
+.cypress-editable span:empty::before {
+    content: attr(placeholder);
+    color: #ADADAD; 
+    display: block;
+}
+
 /* .content-editor:before {
     display: block;
 }

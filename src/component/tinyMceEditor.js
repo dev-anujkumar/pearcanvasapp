@@ -138,9 +138,12 @@ export class TinyMceEditor extends Component {
     }
   
     componentDidMount(){
-        if(document.getElementById("cypress-"+config.currentInsertedIndex)){
+        if(config.currentInsertedType === "TEXT"){
             document.getElementById("cypress-"+config.currentInsertedIndex).focus();
+        }else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
+            document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
         }
+
         const { slateLockInfo:{ isLocked } } = this.props
         if(!tinymce.editors.length && !isLocked){
             tinymce.init(this.editorConfig)

@@ -64,10 +64,5 @@ figure.figureAudio{
     margin-top: 1px;
 }   
 
-.cypress-editable:empty::before {
-    content: attr(placeholder);
-    color: #ADADAD; 
-    display: block;
-}
 
 
