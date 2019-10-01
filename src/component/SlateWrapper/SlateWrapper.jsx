@@ -392,7 +392,7 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer                            
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
@@ -417,7 +417,7 @@ class SlateWrapper extends Component {
             console.error(error);
         }
     }
-
+    
     /**
      * render | renders title and slate wrapper
      */
@@ -458,10 +458,14 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
+<<<<<<< HEAD
         createElement,
         createVideoElement,
         createFigureElement,
         createInteractiveElement,
         swapElement
+=======
+        createElement
+>>>>>>> 8d893b8e78828d406bdb127d5d119d626eb87faa
     }
 )(SlateWrapper);

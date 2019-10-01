@@ -63,7 +63,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -84,7 +83,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -130,7 +128,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -154,7 +151,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -223,7 +219,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -244,7 +239,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -290,7 +284,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -314,7 +307,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -386,7 +378,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -407,7 +398,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -449,7 +439,6 @@ exports[`Testing Interactive element component With figure image element renders
                 onBlur={[Function]}
                 onFocus={[Function]}
                 placeholder="Enter call to action..."
-                suppressContentEditableWarning={true}
               />
             </TinyMceEditor>
           </a>
@@ -473,7 +462,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -497,7 +485,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -569,7 +556,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -590,7 +576,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -632,7 +617,6 @@ exports[`Testing Interactive element component With figure image element renders
                 onBlur={[Function]}
                 onFocus={[Function]}
                 placeholder="Enter call to action..."
-                suppressContentEditableWarning={true}
               />
             </TinyMceEditor>
           </a>
@@ -656,7 +640,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -680,7 +663,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -768,7 +750,6 @@ exports[`Testing Interactive element component With figure image element renders
                     onBlur={[Function]}
                     onFocus={[Function]}
                     placeholder="Enter shown text"
-                    suppressContentEditableWarning={true}
                   />
                 </TinyMceEditor>
                 <p
@@ -796,7 +777,6 @@ exports[`Testing Interactive element component With figure image element renders
                         onBlur={[Function]}
                         onFocus={[Function]}
                         placeholder="Enter hidden text"
-                        suppressContentEditableWarning={true}
                       />
                     </TinyMceEditor>
                   </a>
@@ -881,7 +861,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -902,7 +881,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -954,7 +932,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -978,7 +955,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1050,7 +1026,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1071,7 +1046,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1113,7 +1087,6 @@ exports[`Testing Interactive element component With figure image element renders
                 onBlur={[Function]}
                 onFocus={[Function]}
                 placeholder="Enter call to action..."
-                suppressContentEditableWarning={true}
               />
             </TinyMceEditor>
           </a>
@@ -1137,7 +1110,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1161,7 +1133,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1233,7 +1204,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1254,7 +1224,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1300,7 +1269,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1324,7 +1292,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1396,7 +1363,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1417,7 +1383,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1463,7 +1428,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1487,7 +1451,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1559,7 +1522,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1580,7 +1542,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1626,7 +1587,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1650,7 +1610,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1722,7 +1681,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1743,7 +1701,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1789,7 +1746,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1813,7 +1769,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -1885,7 +1840,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -1906,7 +1860,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -1952,7 +1905,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -1976,7 +1928,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2048,7 +1999,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2069,7 +2019,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2115,7 +2064,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2139,7 +2087,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2211,7 +2158,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2232,7 +2178,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2278,7 +2223,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2302,7 +2246,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2374,7 +2317,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2395,7 +2337,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2437,7 +2378,6 @@ exports[`Testing Interactive element component With figure image element renders
                 onBlur={[Function]}
                 onFocus={[Function]}
                 placeholder="Enter call to action..."
-                suppressContentEditableWarning={true}
               />
             </TinyMceEditor>
           </a>
@@ -2461,7 +2401,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2485,7 +2424,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2557,7 +2495,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2578,7 +2515,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2624,7 +2560,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2648,7 +2583,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2720,7 +2654,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2741,7 +2674,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2787,7 +2719,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2811,7 +2742,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -2883,7 +2813,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -2904,7 +2833,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -2950,7 +2878,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -2974,7 +2901,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3046,7 +2972,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3067,7 +2992,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3113,7 +3037,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3137,7 +3060,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3206,7 +3128,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3227,7 +3148,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3273,7 +3193,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3297,7 +3216,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>
@@ -3366,7 +3284,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Label..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
           <TinyMceEditor
@@ -3387,7 +3304,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter Title..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </header>
@@ -3433,7 +3349,6 @@ exports[`Testing Interactive element component With figure image element renders
               onBlur={[Function]}
               onFocus={[Function]}
               placeholder="Enter caption..."
-              suppressContentEditableWarning={true}
             />
           </TinyMceEditor>
         </figcaption>
@@ -3457,7 +3372,6 @@ exports[`Testing Interactive element component With figure image element renders
             onBlur={[Function]}
             onFocus={[Function]}
             placeholder="Enter credit..."
-            suppressContentEditableWarning={true}
           />
         </TinyMceEditor>
       </div>

@@ -27,3 +27,7 @@
 .element-container{
     padding: 1px 8px !important; 
 }
+a.paragraphNumeroUnoFootnote {
+    text-decoration: none !important;
+    cursor: pointer;
+}
