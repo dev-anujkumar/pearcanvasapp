@@ -46,7 +46,13 @@ export class TinyMceEditor extends Component {
                         return false;
                     }
                 });
-
+                editor.on('mousedown',function(e) {
+                    if(context.props.slateLockInfo.isLocked){
+                        e.preventDefault();
+                        e.stopPropagation()
+                        return false;
+                    }   
+                })
                 editor.on('click', (e) => {
                     console.log('Editor was clicked: ' , e.target.nodeName);
                     if( e.target.parentElement.nodeName == "SUP"){
