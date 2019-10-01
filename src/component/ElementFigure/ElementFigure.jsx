@@ -180,6 +180,46 @@ export class ElementFigure extends Component {
                             figCaptionClass = 'figcaptionImageFullscreenMathImage',
                             figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
+                        case 'image50TextEditorTable':
+                            divClass = 'divImage50TextTableEditor',
+                                figureClass = 'figureImage50TextEditorTable',
+                                figLabelClass = 'heading4ImageFullscreenTableEditorNumberLabel',
+                                figTitleClass = 'heading4Image50TextEditorTableNumberLabel',
+                                dataType = 'tableasmarkup',
+                                imageDimension = 'image50TextEditorTable',
+                                figCaptionClass = 'figcaptionImage50TextEditorTable',
+                                figCreditClass = 'paragraphImage50TextEditorTableCredit';
+                            break;
+                            case 'imageTextWidthTableEditor':
+                        divClass = 'divImageTextWidthTableEditor',
+                            figureClass = 'figureImageTextWidthTableEditor',
+                            figLabelClass = 'heading4ImageTextWidthTableEditorNumberLabel',
+                            figTitleClass = 'heading4ImageTextWidthEditorTableNumberLabel',
+                            dataType = 'tableasmarkup',
+                            imageDimension = 'imageTextWidthTableEditor',
+                            figCaptionClass = 'figcaptionImageTextWidthEditorTable',
+                            figCreditClass = 'paragraphImageTextWidthEditorTableCredit';
+                        break;
+                        case 'imageWiderThanTextEditorTable':
+                        divClass = 'divImageWiderThanTextTableEditor',
+                            figureClass = 'figureImageWiderThanTextEditorTable',
+                            figLabelClass = 'heading4ImageWiderThanTextTableEditorNumberLabel',
+                            figTitleClass = 'heading4ImageWiderThanTextEditorTableNumberLabel',
+                            dataType = 'tableasmarkup',
+                            imageDimension = 'imageWiderThanTextEditorTable',
+                            figCaptionClass = 'figcaptionImageWiderThanTextEditorTable',
+                            figCreditClass = 'paragraphImageWiderThanTextEditorTableCredit';
+                        break;
+                        case 'imageFullscreenTableEditor':
+                        divClass = 'divImageFullscreenTableEditor',
+                            figureClass = 'figureImageFullscreenEditorTable',
+                            figLabelClass = 'heading4ImageFullscreenEditorTableNumberLabel',
+                            figTitleClass = 'heading4ImageFullscreenEditorTableNumberLabel',
+                            dataType = 'tableasmarkup',
+                            imageDimension = 'imageFullscreenTableEditor',
+                            figCaptionClass = 'figcaptionImageFullscreenEditorTable',
+                            figCreditClass = 'paragraphImageFullscreenEditorTableCredit';
+                        break;
                 }
                 /**JSX for Figure Image, Table Image, Math Image*/
                 figureJsx = <div className={divClass} resource="">
