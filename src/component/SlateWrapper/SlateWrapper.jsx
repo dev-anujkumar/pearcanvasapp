@@ -63,7 +63,7 @@ class SlateWrapper extends Component {
     }
     
     static getDerivedStateFromProps = (props, state) =>{
-        console.log('kkkkkkkk',props)
+     
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){
             return {
@@ -132,7 +132,7 @@ class SlateWrapper extends Component {
 
                                     scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                                     scrollSpeed: 10,
-                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    handle : '.element-label', //Drag only by element tag name button
                                     dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
                                     filter: ".elementSapratorContainer",
@@ -144,7 +144,6 @@ class SlateWrapper extends Component {
                                    
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
-                                        console.log('index of the sortable element',evt, evt.newDraggableIndex, evt.oldDraggableIndex);
                                         let swappedElementData;
                                         swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
@@ -155,9 +154,7 @@ class SlateWrapper extends Component {
                                             workedExample : false   
                                         }
 
-                                        this.props.swapElement(dataObj,(bodyObj)=>{
-                                            console.log('rrrrrr',bodyObj)
-                                        })
+                                        this.props.swapElement(dataObj,(bodyObj)=>{})
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
                                    
@@ -436,7 +433,6 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        console.log('this is render of slatewrapper', this.props)
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
