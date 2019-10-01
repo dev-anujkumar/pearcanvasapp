@@ -207,12 +207,121 @@ export default {
         'primary-blockcode-equation': {
             text: 'Block Code Editor',
             subtype: {
-                'secondary-blockcode-equation': {
-                    text: 'Block Code Editor',
+                'secondary-blockcode-language-Default': {
+                    text: 'Select',
                     labelText: 'BCE'
-                }
+                },
+                'secondary-blockcode-language-C++': {
+                    text: 'C++',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Java': {
+                    text: 'Java',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-C': {
+                    text: 'C',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Python': {
+                    text: 'Python',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Javascript': {
+                    text: 'Javascript',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-HTML': {
+                    text: 'HTML',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-CSS': {
+                    text: 'CSS',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Apache': {
+                    text: 'Apache',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-C#': {
+                    text: 'C#',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-JSON': {
+                    text: 'JSON',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Makefile': {
+                    text: 'Makefile',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Kotlin': {
+                    text: 'Kotlin',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-R': {
+                    text: 'R',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Perl': {
+                    text: 'Perl',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-PHP': {
+                    text: 'PHP',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-GO': {
+                    text: 'GO',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Ruby': {
+                    text: 'Ruby',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Lisp': {
+                    text: 'Lisp',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Objective_C': {
+                    text: 'Objective C',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Scala': {
+                    text: 'Scala',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Shell_Session': {
+                    text: 'Shell Session',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-SQL': {
+                    text: 'SQL',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Swift': {
+                    text: 'Swift',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-XML': {
+                    text: 'XML',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-Matlab': {
+                    text: 'Matlab',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-GLSL': {
+                    text: 'GLSL',
+                    labelText: 'BCE'
+                },
+                'secondary-blockcode-language-SML': {
+                    text: 'SML',
+                    labelText: 'BCE'
+                },
             }
         },
+		
         'primary-editor-table-equation': {
             text: 'Table Editor',
             subtype: {
