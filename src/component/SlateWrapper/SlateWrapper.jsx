@@ -9,8 +9,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement
+    createElement
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
@@ -317,7 +316,7 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer                            
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
@@ -342,7 +341,7 @@ class SlateWrapper extends Component {
             console.error(error);
         }
     }
-
+    
     /**
      * render | renders title and slate wrapper
      */
@@ -382,9 +381,6 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement,
-        createVideoElement,
-        createFigureElement,
-        createInteractiveElement
+        createElement
     }
 )(SlateWrapper);

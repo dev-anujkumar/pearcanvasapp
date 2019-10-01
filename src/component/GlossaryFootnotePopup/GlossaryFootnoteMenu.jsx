@@ -2,9 +2,10 @@
 * Root Component of Glossary Footnote Component.
 */
 import React from 'react';
+import { connect } from 'react-redux';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
-
+import {glossaaryFootnotePopup} from './GlossaryFootnote_Actions';
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
 * to make a skeleton of Glossary and Footnote.
@@ -12,33 +13,38 @@ import PropTypes from 'prop-types'
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
-        this.closePopup = this.closePopup.bind(this);
-        this.saveContent = this.saveContent.bind(this);
-
     }
     render() {
         const { glossaryFootnote } = this.props;
         return (
-            <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={this.closePopup} saveContent={this.saveContent} />
+ 
+                <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />
         )
     }
+
 
     /**
     * @description - This function is to close the Glossary and Footnote Popup.
     * @param {event} 
     */
 
-    closePopup() {
-        //alert("close")
+    togglePopup = () => {
+        this.setState({
+            showPopUp: this.props.activePopUp
+        })
     }
-
+    closePopup = () => {
+        //this.togglePopup()
+        this.props.glossaaryFootnotePopup(false);
+    }
     /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 
     */
-    saveContent() {
-        //alert("save")
+
+    saveContent =() => {
+        //  this.togglePopup()
+        this.props.glossaaryFootnotePopup(false);
     }
 }
 
@@ -54,4 +60,18 @@ GlossaryFootnoteMenu.propTypes = {
     /** Handler to save content of popup on save button click */
     saveContent: PropTypes.func
 }
-export default GlossaryFootnoteMenu;
+const mapStateToProps = state => {console.log('state:::', state);
+    return {
+      
+        glossaryFootnoteValue:state.glossaryFootnoteValue
+
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        glossaaryFootnotePopup:(popUpStatus)=>{
+            dispatch(glossaaryFootnotePopup(popUpStatus))
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(GlossaryFootnoteMenu);
