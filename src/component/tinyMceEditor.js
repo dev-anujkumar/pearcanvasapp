@@ -116,9 +116,7 @@ export class TinyMceEditor extends Component {
         
         if(tinymce.activeEditor){
             let activeEditorId = tinymce.activeEditor.id;
-            
             tinymce.remove('#'+tinymce.activeEditor.id)
-            console
             document.getElementById(activeEditorId).contentEditable = true;
         }
         this.editorConfig.selector='#'+e.target.id;
