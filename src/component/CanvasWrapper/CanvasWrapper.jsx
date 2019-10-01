@@ -211,6 +211,7 @@ class CanvasWrapper extends Component {
     }
     
     render() {
+        console.log('this is s ')
         // let navDisabled = '';
         // if(this.state.activeSlateIndex === 0) {
         //     navDisabled = 'back';

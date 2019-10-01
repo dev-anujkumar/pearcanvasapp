@@ -30,3 +30,6 @@ export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 /*---------------Slate Lock -------------------*/
 export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"
 export const SET_LOCK_FLAG = "SET_LOCK_FLAG"
+
+/*---------------Swap Element -------------------*/
+export const SWAP_ELEMENT = 'SWAP_ELEMENT'

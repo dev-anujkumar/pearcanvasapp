@@ -2,9 +2,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sortable from 'react-sortablejs';
+
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
@@ -81,7 +84,37 @@ class ElementAsideContainer extends Component {
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
+                <Sortable
+                                options={{
+                                    // handle : '.btn-element element-label', //Drag only by element tag name button
+                                    // dataIdAttr: 'data-id',
+                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
+                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    scroll: true, // or HTMLElement
+                                    filter: "div.elementSapratorContainer",
+                                    draggable: "div.editor",
+                                    // Element dragging ended
+                                    onEnd:  (/**Event*/evt) => {
+                                        
+                                        let swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            workedExample : true      
+                                        }
+                                        this.props.swapElement(dataObj)
+                                        // console.log('this.element data', dataObj);
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                }}
+                                tag=".element-container"
+                            >
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
+
+                            </Sortable>
             </div>
         )
     }
@@ -266,4 +299,16 @@ ElementAsideContainer.propTypes = {
     element: PropTypes.object.isRequired
 }
 
-export default ElementAsideContainer;
+const mapStateToProps = state => {
+    return {
+
+    };
+};
+
+
+export default connect(
+    mapStateToProps,
+    {
+        swapElement
+    }
+)(ElementAsideContainer);
