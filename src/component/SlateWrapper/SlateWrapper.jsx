@@ -21,8 +21,18 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
 
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
@@ -37,8 +47,9 @@ class SlateWrapper extends Component {
             document.getElementById("cypress-0").focus();
         }
     }
-   
+    
     static getDerivedStateFromProps = (props, state) =>{
+        console.log('kkkkkkkk',props)
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){
             return {
@@ -88,59 +99,72 @@ class SlateWrapper extends Component {
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                             <Sortable
                                 options={{
-                                    group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
-                                        sort: false,  // sorting inside list
+                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
+                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                    dragoverBubble: false,
+	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                    
 
-                                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-                                        
-                                       
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    
 
-                                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-                                       
-
-                                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                        scrollSpeed: 10,
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
                                     // handle : '.btn-element element-label', //Drag only by element tag name button
                                     dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
-                                    filter: "div.elementSapratorContainer",
-                                    draggable: "div.editor",
+                                    filter: ".elementSapratorContainer",
+                                    draggable: ".editor",
                                     forceFallback: true,
+                                    onStart: function (/**Event*/evt) {
+                                        // same properties as onEnd
+                                    },
+                                   
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
                                         console.log('index of the sortable element',evt, evt.newDraggableIndex, evt.oldDraggableIndex);
                                         let swappedElementData;
-
-                                        // if(evt.oldDraggableIndex == 0){
-                                        //     swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                        // }else{
-                                            swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                        //}
-
+                                        swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
-                                            slateId:_slateId   
+                                            slateId:_slateId,
+                                            workedExample : false   
                                         }
 
-                                        this.props.swapElement(dataObj,()=>{
-                                            this.forceUpdate();
+                                        this.props.swapElement(dataObj,(bodyObj)=>{
+                                            console.log('rrrrrr',bodyObj)
                                         })
-                                        // console.log('this.element data', dataObj);
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
                                    
                                 }}
-                                tag="div"
+                               
+                                // [Optional] Use ref to get the sortable instance
+                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
+                                ref={(c) => {
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
+                                }}
+    
+                // [Optional] A tag to specify the wrapping element. Defaults to "div".
+                tag="div"
+    
+                onChange={(items, sortable, evt) => { }}
                             >
                                 {
-                                    this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                                    this['cloneCOSlateControlledSource_' + random]
+                                    //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                                 }
                             </Sortable>
                             </div>

@@ -5,7 +5,8 @@ import {
     VIDEO_ELEMENT_CREATED
     ,FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED,
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    SWAP_ELEMENT
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -66,7 +67,7 @@ export const createElement = (type, index) => (dispatch, getState) => {
 
 
 export const swapElement = (dataObj,cb) => (dispatch, getState) => {
-    const {oldIndex, newIndex, currentSlateEntityUrn, swappedElementData,slateId} = dataObj;
+    const {oldIndex, newIndex, currentSlateEntityUrn, swappedElementData,slateId, workedExample} = dataObj;
     let _requestData = {
                 "projectUrn": config.projectUrn,
                 "currentSlateEntityUrn":currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
@@ -94,39 +95,27 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
         const parentData = getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
-        let newArr = [];
-       // for (let key in newParentData) {
-
-            //for (let k in newParentData[key]) {
-                // newParentData[key][k].contents.bodymatter.splice(index, 0, createdElemData.data);
-               // newArr = newParentData[key].contents.bodymatter//.splice(newIndex, 0, swappedElementData);
-
-            //    try{
-                // [newParentData[key].contents.bodymatter[newIndex], newParentData[key].contents.bodymatter[oldIndex]] = [newParentData[key].contents.bodymatter[oldIndex], newParentData[key].contents.bodymatter[newIndex]];
-            //    }
-            //    catch(e){
-            //        console.log('Error while swapping', e)
-            //    }
-
-            //    for(let i in newArr){
-            //         if(newArr[i].type == 'element-aside' && newArr[i].id == currentSlateEntityUrn){
-            //             //Swap inside WE
-            //             // let weArr = newArr[i].elementdata.bodymatter
-            //             [newArr[i].elementdata.bodymatter[newIndex], newArr[i].elementdata.bodymatter[oldIndex]] = [newArr[i].elementdata.bodymatter[oldIndex], newArr[i].elementdata.bodymatter[newIndex]];
-            //         }
-            //    }
-                newParentData = JSON.parse(JSON.stringify(newParentData));
-                console.log('thsi is newArr', newArr, newParentData)
-
-            //}
-       // }
+        // let newBodymatter = newParentData[slateId].contents.bodymatter;
+        if(workedExample){
+            //swap WE element
+            // for(let i in newBodymatter){
+            //     if(newBodymatter[i].type == 'element-aside' && newBodymatter[i].id == currentSlateEntityUrn){
+            //         //Swap inside WE
+            //         // let weArr = newArr[i].elementdata.bodymatter
+            //         [newArr[i].elementdata.bodymatter[newIndex], newArr[i].elementdata.bodymatter[oldIndex]] = [newArr[i].elementdata.bodymatter[oldIndex], newArr[i].elementdata.bodymatter[newIndex]];
+            //     }
+            // }
+        }
+     
+            
+        newParentData = JSON.parse(JSON.stringify(newParentData));
         dispatch({
-            type: FETCH_SLATE_DATA,
+            type: SWAP_ELEMENT,
             payload: {
                 slateLevelData: newParentData
             }
         })
-        cb();
+        cb(newParentData)
         }
         console.log('this is response status from swap api', responseData.status)
         

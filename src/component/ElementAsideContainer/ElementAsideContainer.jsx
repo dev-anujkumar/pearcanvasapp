@@ -101,7 +101,9 @@ class ElementAsideContainer extends Component {
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
-                                            swappedElementData : swappedElementData   
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            workedExample : true      
                                         }
                                         this.props.swapElement(dataObj)
                                         // console.log('this.element data', dataObj);
