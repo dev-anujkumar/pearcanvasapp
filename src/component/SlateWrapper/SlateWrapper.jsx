@@ -49,6 +49,10 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
+        this.renderDefaultElement();
+    }
+
+    renderDefaultElement = () =>{
         let _slateData = this.props.slateData
         if (_slateData !== null && _slateData !== undefined) {
             if (Object.values(_slateData).length > 0) {
@@ -56,6 +60,8 @@ class SlateWrapper extends Component {
                 let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent;
                 if (_slateBodyMatter.length == 0) {
+                    /* For showing the spinning loader send HideLoader message to Wrapper component */
+                    sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                     this.props.createElement(TEXT, "0");
                 }
             }
@@ -469,9 +475,6 @@ export default connect(
     mapStateToProps,
     {
         createElement,
-        createVideoElement,
-        createFigureElement,
-        createInteractiveElement,
         swapElement
     }
 )(SlateWrapper);
