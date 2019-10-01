@@ -104,10 +104,6 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig)
         }
     }
-    openFootnote =() => {
-       console.log("footenodeeee");
-       this.props.openGlossaryFootnotePopUp(true,"Footnote");
-   }
     componentDidUpdate(){
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)

@@ -30,8 +30,7 @@ class ElementContainer extends Component {
             borderToggle : 'showBorder',
             btnClassName : '',
             showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:'',
-            showGlossaryFootnotePopup:"",
+            ElementId: this.props.index==0?this.props.element.id:''
         };
         
     }
@@ -154,35 +153,35 @@ class ElementContainer extends Component {
 
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
+                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} />;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
+                        editor = <ElementSingleAssessment  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id}/>;
                         labelText = 'Qu';
                         break;
 
@@ -190,15 +189,15 @@ class ElementContainer extends Component {
 
                         switch (element.figuredata.interactiveformat) {
                             case elementTypeConstant.INTERACTIVE_MMI:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} />;
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
+                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} />;
                                 labelText = 'Pop';
                                 break;
                                 
@@ -210,7 +209,7 @@ class ElementContainer extends Component {
                 switch (element.subtype) {
 
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        editor = <ElementAsideContainer   setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
                         labelText = 'WE';
                         break;
                     default:

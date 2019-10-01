@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
-import GlossaryFootnoteMenu from './../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);

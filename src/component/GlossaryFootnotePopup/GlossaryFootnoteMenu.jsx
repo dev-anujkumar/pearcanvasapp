@@ -13,15 +13,12 @@ import {glossaaryFootnotePopup} from './GlossaryFootnote_Actions';
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            showPopUp:true
-        };
     }
     render() {
         const { glossaryFootnote } = this.props;
         return (
-           this.state.showPopUp ?
-                <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} /> : ""
+ 
+                <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />
         )
     }
 
