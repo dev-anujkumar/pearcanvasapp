@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import { EditorConfig } from './../../config/EditorConfig';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT

@@ -1,20 +1,22 @@
+// import store from '../store';
+import store from './../appstore/store';
+import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader';
+
 // const authModule = require('./auth_module.js');
 const config = require('./../config/config');
-const authModule = { GET_SSO_TOKEN : function() { return config.ssoToken } };
+let config_object = config.default;
+const authModule = { GET_SSO_TOKEN : function() { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}' ;
 const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
 //const images_path = 'dist/images/c2/';
 
-// import store from '../store';
-import store from './../appstore/store';
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../jsx/common/components/toggleLoader'
 var uname;
 
 const renderderedTagSelector = '#c2-modal';
 
 // const configModule = require('./config_module.js');
 // let config_object = configModule.GET_CONFIG();
-let config_object = config.PATTERNS;
+let config_patterns = config_object.PATTERNS;
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
@@ -28,11 +30,11 @@ const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
 const EPS_API = config_object['EPS_API'];
 const CMIS_REPO = config_object['CMIS_REPO'];
 //const CMIS_REPO = '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]';
-const PATTERN_ADD_ASSET = config_object['PATTERN_ADD_ASSET'];
-const PATTERN_BROKER = config_object['PATTERN_BROKER'];
-const PATTERN_PRODUCT_LINK = config_object['PATTERN_PRODUCT_LINK'];
-const PATTERN_VENDOR = config_object['PATTERN_VENDOR'];
-const PATTERN_SEARCH_SELECT = config_object['PATTERN_SEARCH_SELECT'];
+const PATTERN_ADD_ASSET = config_patterns['PATTERN_ADD_ASSET'];
+const PATTERN_BROKER = config_patterns['PATTERN_BROKER'];
+const PATTERN_PRODUCT_LINK = config_patterns['PATTERN_PRODUCT_LINK'];
+const PATTERN_VENDOR = config_patterns['PATTERN_VENDOR'];
+const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
 
 
 /* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
@@ -51,20 +53,20 @@ var addAnAssetConfig = {};
 
 /*Configure the library*/
 var libConfig = { 'locale': 'en_US',
-                  'headers' : {
-                      'Content-Type'   : 'application/json',
-                      'Accept'         : 'application/ld+json',
-                      'X-Roles-Test'   : 'ContentMetadataEditor',
-                      'Prefer'         : 'annotation=true',
-                      'Apikey'         : CMDS_APIKEY,
-                      'x-apikey'       : CMDS_APIKEY,
-                      'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
-                      'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
-                  },
-                    'database'          : CMDS_DATABASE,
-                    'server'            : CMDS_DATA_ENDPOINT,
-                    'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                    'userId'            : uname
+                'headers' : {
+                    'Content-Type'   : 'application/json',
+                    'Accept'         : 'application/ld+json',
+                    'X-Roles-Test'   : 'ContentMetadataEditor',
+                    'Prefer'         : 'annotation=true',
+                    'Apikey'         : CMDS_APIKEY,
+                    'x-apikey'       : CMDS_APIKEY,
+                    'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
+                    'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
+                },
+                'database'          : CMDS_DATABASE,
+                'server'            : CMDS_DATA_ENDPOINT,
+                'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                'userId'            : uname
                 };
 
 patternBroker.setup(libConfig);

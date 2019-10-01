@@ -107,10 +107,10 @@ export default {
         'primary-image-figure': {
             text: 'Figure Image',
             subtype: {
-                // 'secondary-image-figure-quarter': {
-                //     text: '25% Text Width',
-                //     labelText: 'Fg'
-                // },
+                'secondary-image-figure-quarter': {
+                    text: '25% Text Width',
+                    labelText: 'Fg'
+                },
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'Fg'
@@ -142,19 +142,19 @@ export default {
             subtype: {
                 'secondary-image-table-half': {
                     text: '50% Text Width',
-                    labelText: 'TB'
+                    labelText: 'Tb'
                 },
                 'secondary-image-table-width': {
                     text: 'Text Width',
-                    labelText: 'TB'
+                    labelText: 'Tb'
                 },
                 'secondary-image-table-wider': {
                     text: 'Wider Than Text',
-                    labelText: 'TB'
+                    labelText: 'Tb'
                 },
                 'secondary-image-table-full': {
                     text: 'Full Screen',
-                    labelText: 'TB'
+                    labelText: 'Tb'
                 }
             },
             attributes: {
@@ -171,19 +171,19 @@ export default {
             subtype: {
                 'secondary-image-equation-half': {
                     text: '50% Text Width',
-                    labelText: 'EQ'
+                    labelText: 'Eq'
                 },
                 'secondary-image-equation-width': {
                     text: 'Text Width',
-                    labelText: 'EQ'
+                    labelText: 'Eq'
                 },
                 'secondary-image-equation-wider': {
                     text: 'Wider Than Text',
-                    labelText: 'EQ'
+                    labelText: 'Eq'
                 },
                 'secondary-image-equation-full': {
                     text: 'Full Screen',
-                    labelText: 'EQ'
+                    labelText: 'Eq'
                 }
             },
             attributes: {
@@ -216,20 +216,8 @@ export default {
         'primary-editor-table-equation': {
             text: 'Table Editor',
             subtype: {
-                'secondary-editor-table-half': {
-                    text: '50% Text Width',
-                    labelText: 'TE'
-                },
-                'secondary-editor-table-width': {
-                    text: 'Text Width',
-                    labelText: 'TE'
-                },
-                'secondary-editor-table-wider': {
-                    text: 'Wider Than Text',
-                    labelText: 'TE'
-                },
-                'secondary-editor-table-full': {
-                    text: 'Full Screen',
+                'secondary-editor-table-equation': {
+                    text: 'Table Editor',
                     labelText: 'TE'
                 }
             }
@@ -346,6 +334,21 @@ export default {
             }
         }
     },
+    'element-assessment': {
+        'primary-single-assessment': {
+            text: 'Single Assessment',
+            subtype: {
+                'secondary-single-assessment-cite': {
+                    text: 'CITE',
+                    labelText: 'Qu'
+                },
+                'secondary-single-assessment-tdx': {
+                    text: 'TDX',
+                    labelText: 'Qu'
+                }
+            }
+        }
+    },
     'others': {
         'primary-mmi': {
             text: 'MMI',
@@ -383,12 +386,6 @@ export default {
         },
         'primary-popup': {
             text: 'Pop Up Window',
-            subtype: {
-                
-            }
-        },
-        'primary-single-assessment': {
-            text: 'Single Assessment',
             subtype: {
                 
             }

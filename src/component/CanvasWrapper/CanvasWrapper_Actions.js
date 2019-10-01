@@ -48,6 +48,9 @@ const findElementType = (element) => {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-figure';
 					switch (element.subtype) {
+						case 'image50Text':
+							elementType['secondaryOption'] = 'secondary-image-figure-half';
+							break;
 						case 'imageTextWidth':
 							elementType['secondaryOption'] = 'secondary-image-figure-width';
 							break;
@@ -57,11 +60,77 @@ const findElementType = (element) => {
 						case 'imageFullscreen':
 							elementType['secondaryOption'] = 'secondary-image-figure-full';
 							break;
-						case 'image50Text':
+						case 'image25Text':
 						default:
-							elementType['secondaryOption'] = 'secondary-image-figure-half';
+							elementType['secondaryOption'] = 'secondary-image-figure-quarter';
 							break;
-
+					}
+				} else if(element.figuretype == 'table') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-table';
+					switch(element.subtype) {
+						case 'image50TextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-half';
+							break;
+						case 'imageTextWidthTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-width';
+							break;
+						case 'imageWiderThanTextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-wider';
+							break;
+						case 'imageFullscreenTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-full';
+							break;
+					}
+				} else if(element.figuretype == 'mathImage') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-equation';
+					switch(element.subtype) {
+						case 'image50TextMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-half';
+							break;
+						case 'imageTextWidthMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-width';
+							break;
+						case 'imageWiderThanTextMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-wider';
+							break;
+						case 'imageFullscreenMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-full';
+							break;
+					}
+				} else if(element.figuretype == 'authoredtext') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-mathml-equation';
+					switch(element.subtype) {
+						case 'mathml':
+							elementType['secondaryOption'] = 'secondary-mathml-equation';
+							break;
+					}
+				} else if(element.figuretype == 'codelisting') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-table';
+					switch(element.subtype) {
+						case 'image50TextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-half';
+							break;
+						case 'imageTextWidthTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-width';
+							break;
+						case 'imageWiderThanTextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-wider';
+							break;
+						case 'imageFullscreenTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-full';
+							break;
+					}
+				} else if(element.figuretype == 'tableasmarkup') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-editor-table-equation';
+					switch(element.subtype) {
+						case 'image50TextEditorTable':
+							elementType['secondaryOption'] = 'secondary-editor-table-equation';
+							break;
 					}
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
@@ -89,6 +158,8 @@ const findElementType = (element) => {
 						
 							
 					}
+				} else if (element.figuretype == 'assessment') {
+					elementType['elementType'] = 'element-assessment';
 				}
 			}
 			break;
