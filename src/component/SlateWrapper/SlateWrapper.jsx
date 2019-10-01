@@ -15,7 +15,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import config from '../../config/config';
-import {IMAGE}from './SlateWrapperConstants';
+import {IMAGE,TEXT}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -33,6 +33,20 @@ class SlateWrapper extends Component {
     componentDidMount(){
         if(document.getElementById("cypress-0")){
             document.getElementById("cypress-0").focus();
+        }
+    }
+
+    componentDidUpdate() {
+        let _slateData = this.props.slateData
+        if (_slateData !== null && _slateData !== undefined) {
+            if (Object.values(_slateData).length > 0) {
+                let _slateObject = Object.values(_slateData)[0];
+                let { contents: _slateContent } = _slateObject;
+                let { bodymatter: _slateBodyMatter } = _slateContent;
+                if (_slateBodyMatter.length == 0) {
+                    this.props.createElement(TEXT, "0");
+                }
+            }
         }
     }
     
