@@ -117,7 +117,6 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
         })
         cb(newParentData)
         }
-        console.log('this is response status from swap api', responseData.status)
         
     })
     .catch((err) => {
