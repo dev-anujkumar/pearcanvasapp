@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // IMPORT - Components //
-import {TinyMceEditor} from "../tinyMceEditor"
+import TinyMceEditor from "../tinyMceEditor"
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';

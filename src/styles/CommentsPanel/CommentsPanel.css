@@ -3,6 +3,7 @@
 /* ---------------------------------*/
 * {
     box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
 }
 html {
     font-size: 12px ;
@@ -71,8 +72,8 @@ html {
     align-items: center
 }
 .panel-navigation .search-container img {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     margin-right: 8px
 }
 .panel-navigation .add-structure {
@@ -119,7 +120,7 @@ html {
     color: #424242;
     width: 100%;
     line-height: 1;
-    padding: 6px 0 4px 0;
+    padding: 6px 0 4px 0 !important;
     border: none;
     border-bottom: solid 1px transparent;
     background: 0;
@@ -412,7 +413,7 @@ menu li {
 }
   #comments-panel .property-title {
     flex-flow: column;
-    padding: 7px 3px;
+    padding: 5px 0px;
     width: 60px;
     font-weight: bolder;
     color: #111;
@@ -509,8 +510,8 @@ menu li {
 
 .modal__close_Panel {
     position: absolute;
-    right: 1em;
-    top: 1.8em;
+    right: -6px;
+    top: 1.6em;
     width: 3.1em;
     height: 1.1em;
     cursor: pointer;
@@ -535,4 +536,14 @@ menu li {
 
 .modal__close_Panel:before {
     transform: rotate(-45deg);
+}
+.hyphens{
+    font-family: 'Open Sans', sans-serif;
+    color: #717171; 
+}
+.capitalize {
+    text-transform: capitalize;
+}
+.defaultAssignee{
+    margin-left:15px;
 }

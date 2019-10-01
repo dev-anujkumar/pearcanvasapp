@@ -174,7 +174,7 @@ export const elementWorkExample =
 				},
 				"comments": true,
 				"tcm": true,
-				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
 				"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 			},
 			{
@@ -357,8 +357,8 @@ export const elementAside =
     "id": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "type": "element-aside",
-    "subtype": "",
-    "designtype": "workedexample1",
+    "subtype": "sidebar",
+    "designtype": "asideTacticBox",
     "elementdata": {
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
         "frontmatter": [],
@@ -373,7 +373,24 @@ export const elementAside =
 					"text": "asdfasdfasdf"
 				},
 				"html": {
-					"text": " "
+					"text": "<p class=\"paragraphNumeroUno\"></p>"
+				},
+				"comments": true,
+				"tcm": true,
+				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+			},
+			{
+				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+				"type": "element-authoredtext",
+				"subtype": "",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+				"elementdata": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": "asdfasdfasdf"
+				},
+				"html": {
+					"text": "<p class=\"paragraphNumeroUno\"></p>"
 				},
 				"comments": true,
 				"tcm": true,
@@ -396,7 +413,7 @@ export const  element = {
 		"text": "asdfasdfasdf"
 	},
 	"html": {
-		"text": " "
+		"text": "<p class=\"paragraphNumeroUno\"></p>"
 	},
 	"comments": true,
 	"tcm": true,

@@ -19,6 +19,7 @@ import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -78,8 +79,11 @@ class ElementContainer extends Component {
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
-    handleBlur = () => {}
+    handleBlur =() =>{
+  
+    }
 
+    
     handleBlurAside = () => {
         if(this.props.elemBorderToggle){
             this.setState({
@@ -203,11 +207,11 @@ class ElementContainer extends Component {
                 switch (element.subtype) {
 
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer  handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
+                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} />;
                         labelText = 'AS';
                 }
         }
@@ -310,6 +314,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteElement: (id , type)=>{
             dispatch(deleteElement(id, type))
+        },
+        setActiveElement:(element) => {
+            dispatch(setActiveElement(element))
         }
     }
 }
