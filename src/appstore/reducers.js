@@ -13,7 +13,8 @@ import {
     VIDEO_ELEMENT_CREATED,
     FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED,
-    DELETE_ELEMENT
+    DELETE_ELEMENT,
+    SWAP_ELEMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -74,6 +75,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
+        case SWAP_ELEMENT : 
+                return {
+                    ...state,
+                    slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
+                }
         default:
             return state;
     }
