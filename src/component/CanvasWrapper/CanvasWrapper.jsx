@@ -38,7 +38,7 @@ class CanvasWrapper extends Component {
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
         // this.props.fetchSlateData(this.state.activeSlate);
         // if(document.getElementById("cypress-0")){
@@ -59,7 +59,6 @@ class CanvasWrapper extends Component {
             'message': true
         })
         // *********************************************************
-        console.log("this.props.slateLevelData>>>", config.slateManifestURN)
         let { projectUrn } = config,
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN

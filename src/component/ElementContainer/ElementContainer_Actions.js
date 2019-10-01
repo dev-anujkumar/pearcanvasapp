@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ADD_COMMENT, DELETE_ELEMENT ,OPENGLOSSARYFOOTNOTE} from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED } from "./../../constants/Action_Constants";
 let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
@@ -45,14 +45,45 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
 }
 
 
-export const deleteElement = (id, type) => (dispatch, getState) => {
-    console.log("deleteElement >> ")
-    setTimeout(() => {
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        // dispatch({
-        //     type: DELETE_ELEMENT,
-        //     payload: {}
-        // });
-    }, 1000);
-}
+export const deleteElement = (elmId, type) => (dispatch, getState) => {
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "entityUrn": config.slateEntityURN,
+        "workUrn": elmId
+    };    
+    axios.delete(`${config.REACT_APP_API_URL}v1/slate/element`,
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(deleteElemData => {   
+        if(deleteElemData.status === 200){
+            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            for (let key in newParentData) {
+                for (let i = 0; i < newParentData[key].contents.bodymatter.length; i++) {
+                    let workUrn = newParentData[key].contents.bodymatter[i].id;
+                    if (workUrn === elmId) {
+                        newParentData[key].contents.bodymatter.splice(i, 1);
+                    }
+                }
+            }
+            
+    
+            dispatch({
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        }
 
+    }).catch(error => {
+        
+        console.log("delete Api fail", error);
+    }) 
+}

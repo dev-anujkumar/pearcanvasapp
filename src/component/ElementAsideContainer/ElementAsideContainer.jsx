@@ -22,12 +22,14 @@ class ElementAsideContainer extends Component {
     }
     componentDidMount() {
         this.asideRef.current.addEventListener("focus", this.handleFocus);
+
     }
 
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
     handleFocus = () => {
+        console.log("handle focus==========>")
         this.props.setActiveElement(this.props.element);
         this.props.handleFocus()
     }
@@ -136,7 +138,7 @@ class ElementAsideContainer extends Component {
                         console.log("elementid---", `${parentIndex}-${index}`);
                         return (
                             <React.Fragment>
-                                {index === 0 && (!this.props.element.subtype || this.props.element.subtype == "sidebar") && <ElementSaprator
+                                {index === 0 && ( !this.props.element.hasOwnProperty() || this.props.element.subtype == "sidebar") && <ElementSaprator
                                     upperOne={true}
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
@@ -249,9 +251,11 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props
+        let designtype = element.hasOwnProperty("designtype") ?  element.designtype : "",
+            subtype = element.hasOwnProperty("subtype") ?  element.subtype : "";
         return (
-            <aside className={`${element.designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
-                {element.subtype == "workedexample" ? this.renderWorkExample(element.designtype) : this.renderAside(element.designtype)}
+            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
+                {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
     }
