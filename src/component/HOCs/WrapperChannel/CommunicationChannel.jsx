@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
+import { showHeaderBlocker, hideBlocker } from '../../../js/toggleLoader';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -19,7 +20,8 @@ function WithWrapperCommunication(WrappedComponent) {
             super(props);
             this.state = {
                 project_urn: "",
-                isTableLaunched: false
+                isTableLaunched: false,
+                showBlocker : false
             };
         }
 
@@ -135,9 +137,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                 case 'canvasBlocker':
                     {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
+                        if(message.status) {
+                            this.showCanvasBlocker(true);
+                            showHeaderBlocker();
+                        } else {
+                            this.showCanvasBlocker(false);
+                            hideBlocker();
+                        }
+                        
                     }
                     break;
                 case 'TocLoader':
@@ -190,6 +197,8 @@ function WithWrapperCommunication(WrappedComponent) {
                // const { entityUrn, containerUrn } = message.node;
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
+                config.disablePrev = message.disablePrev;
+                config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 this.props.fetchSlateData(message.node.containerUrn);
@@ -249,10 +258,16 @@ function WithWrapperCommunication(WrappedComponent) {
              *  */
         }
 
+        showCanvasBlocker = (bFlag) =>{
+            this.setState({
+                showBlocker: bFlag
+            });
+        }
+
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} />
+                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} />
                 </React.Fragment>
             )
         }

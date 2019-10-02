@@ -32,7 +32,7 @@ class CanvasWrapper extends Component {
             // navigation: false,
             // activeSlateIndex: 0,
             // activeSlate: config.slateList[0],
-            showBlocker : false,
+            // showBlocker : false,
             showReleasePopup : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -41,19 +41,13 @@ class CanvasWrapper extends Component {
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
         // this.props.fetchSlateData(this.state.activeSlate);
-        // if(document.getElementById("cypress-0")){
-        //     document.getElementById("cypress-0").focus();
-        // }
+        
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
         });
         // *********************************************************
         // *************** TO BE PLACED PROPERLY *****************//
-        // sendDataToIframe({
-        //     'type': HideWrapperLoader,
-        //     'message': { status: true }
-        // })
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
@@ -120,11 +114,6 @@ class CanvasWrapper extends Component {
         // })
     }
 
-    showCanvasBlocker = (bFlag) =>{
-        this.setState({
-            showBlocker: bFlag
-        });
-    }
     releaseSlateLock = (projectUrn, slateId) => {
         this.props.releaseSlateLock(projectUrn, slateId)
     }
@@ -166,7 +155,7 @@ class CanvasWrapper extends Component {
         this.setState({
             showReleasePopup: toggleValue
         })
-        this.showCanvasBlocker(toggleValue)
+        this.props.showCanvasBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
     }
@@ -211,7 +200,6 @@ class CanvasWrapper extends Component {
     }
     
     render() {
-        console.log('this is s ')
         // let navDisabled = '';
         // if(this.state.activeSlateIndex === 0) {
         //     navDisabled = 'back';
@@ -220,7 +208,7 @@ class CanvasWrapper extends Component {
         // }
         return (
             <div className='content-composer'>
-                {this.state.showBlocker ? <div className="canvas-blocker" ></div> : '' }
+                {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* put editor tool */}
                     <Toolbar />
@@ -235,7 +223,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.showCanvasBlocker} setSlateLock={this.setSlateLock} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} />
                             </div>
                         </div>
                     </div>
@@ -257,7 +245,7 @@ class CanvasWrapper extends Component {
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"
-const mapStateToProps = state => {console.log('state:::', state);
+const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,

@@ -12,6 +12,8 @@ let config = {
     slateType : 'section',
     currentInsertedIndex : 0,
     currentInsertedType : "",
+    disableNext : false,
+    disablePrev : false,
     slateList: [
         'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e',
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
