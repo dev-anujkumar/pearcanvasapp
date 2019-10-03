@@ -22,16 +22,8 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
+import { guid } from '../../constants/utility.js';
 
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
 let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
@@ -136,7 +128,7 @@ class SlateWrapper extends Component {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
-                                            slateId:_slateId,
+                                            // slateId:_slateId,
                                             workedExample : false   
                                         }
 
