@@ -82,50 +82,30 @@ export class TinyMceEditor extends Component {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => this.addGlossary(editor)
                 });
-                editor.on('BeforeExecCommand',function(e) {
-                    let content = e.target.getContent()
-                    if(e.command == "indent"){
-                        if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
-                            e.preventDefault()
-                        }
-                    }
-                    if(e.command == "outdent"){
-                        if(content.match(/paragraphNumeroUno\b/)){
-                            e.preventDefault()
-                        }
-                    }  
-                })
-                editor.on('ExecCommand',function(e) {
+
+                editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
-
                         case "indent":
-                            if(content.match(/paragraphNumeroUno\b/)){
-                                content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
-                            } 
-                            else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
-                                content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUnoIndentLevel2")
-                            }
-                            else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
-                                content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
-                            }
-                            editor.setContent(content)
+                            this.onBeforeIndent(e, content)
+                            break;
+                        case "outdent":
+                            this.onBeforeOutdent(e, content)
+                            break;
+                    }
+                })
+
+                editor.on('ExecCommand', (e) => {
+                    let content = e.target.getContent()
+                    switch(e.command){
+                        case "indent":
+                            this.handleIndent(e, editor, content)
                             break;
 
                         case "outdent":
-                            if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
-                                content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
-                            } 
-                            else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
-                                content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel1")
-                            }
-                            else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
-                                content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
-                            }
-                            editor.setContent(content)
+                            this.handleOutdent(e, editor, content)
                             break;
                     }
-                    console.log("command Event>>><<>>????", e)
                 })
             },
           
@@ -139,6 +119,40 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         args.content = testElement.innerText;
+    }
+    handleIndent = (e, editor, content) => {
+        if(content.match(/paragraphNumeroUno\b/)){
+            content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
+        } 
+        else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
+            content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUnoIndentLevel2")
+        }
+        else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
+            content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
+        }
+        editor.setContent(content)
+    }
+    handleOutdent = (e, editor, content) => {
+        if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
+        } 
+        else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
+            content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel1")
+        }
+        else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
+            content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
+        }
+        editor.setContent(content)
+    }
+    onBeforeIndent = (e, content) => {
+        if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            e.preventDefault()
+        }
+    }
+    onBeforeOutdent = (e, content) => {
+        if(content.match(/paragraphNumeroUno\b/)){
+            e.preventDefault()
+        }
     }
     addFootnote = (editor) => {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);

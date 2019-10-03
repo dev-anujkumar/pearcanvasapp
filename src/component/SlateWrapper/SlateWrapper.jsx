@@ -120,9 +120,10 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
-                            <div className='element-list'>
+                            <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                             <Sortable
                                 options={{
                                     // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
@@ -146,6 +147,7 @@ class SlateWrapper extends Component {
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd
+                                        _context.checkSlateLockStatus(evt)
                                     },
                                    
                                     // Element dragging ended
@@ -261,7 +263,7 @@ class SlateWrapper extends Component {
                         inputValue={lockOwner}
                         isLockPopup={true}
                         isInputDisabled={true}
-                        assessmentClass="lock-message"
+                        slateLockClass="lock-message"
                         withInputBox={true}
                 />
             )
@@ -282,6 +284,7 @@ class SlateWrapper extends Component {
     splithandlerfunction = (type, index, firstOne,parentUrn) => {
         if(this.checkLockStatus()){
             this.togglePopup(true)
+            return false
         }
         let indexToinsert
         // Detects element insertion from the topmost element separator
