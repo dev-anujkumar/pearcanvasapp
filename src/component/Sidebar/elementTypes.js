@@ -63,7 +63,8 @@ export default {
                     labelText: 'BQ',
                     attributes: {
                         attribution: {
-                            text: 'Attribution'
+                            text: 'Attribution',
+                            isEditable: true
                         }
                     }
                 }
@@ -130,10 +131,12 @@ export default {
             },
             attributes: {
                 alt_text: {
-                    text: 'Alt Text'
+                    text: 'Alt Text',
+                    isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description'
+                    text: 'Long Description',
+                    isEditable: false
                 }
             }
         },
@@ -159,10 +162,12 @@ export default {
             },
             attributes: {
                 alt_text: {
-                    text: 'Alt Text'
+                    text: 'Alt Text',
+                    isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description'
+                    text: 'Long Description',
+                    isEditable: false
                 }
             }
         },
@@ -188,10 +193,12 @@ export default {
             },
             attributes: {
                 alt_text: {
-                    text: 'Alt Text'
+                    text: 'Alt Text',
+                    isEditable: false
                 },
                 long_description: {
-                    text: 'Long Description'
+                    text: 'Long Description',
+                    isEditable: false
                 }
             }
         },
@@ -200,7 +207,7 @@ export default {
             subtype: {
                 'secondary-mathml-equation': {
                     text: 'Math ML / Chem Editor',
-                    labelText: 'MML'
+                    labelText: 'MML',
                 }
             }
         },
