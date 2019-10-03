@@ -21,6 +21,7 @@ import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
+import config from '../../config/config';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -227,7 +228,7 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
+                { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
