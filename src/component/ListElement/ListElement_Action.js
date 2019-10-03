@@ -12,19 +12,20 @@ import {
 let _listObjectTemplate_ = {
     "id": "",
     "type": "element-list",
-    "subtype": "upper-alpha",
+    "subtype": "",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "designtype": "list",
     "elementdata": {
         "schema": "http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
         "type": "list",
         "listtype": "ordered",
         "designtype": "list",
-        "subtype": "upper-alpha",
+        "subtype": "",
         "startNumber": "",
         "listitems": []
     },
     "html": {
-        "text": ""
+        "text": ``
     },
     "comments": false,
     "tcm": true,
@@ -42,6 +43,8 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
     bodymatter.map((element, index) => {
         if (activeElement.elementId === element.id) {
             _listObjectTemplate_.id = element.id;
+            _listObjectTemplate_.subtype = type;
+            _listObjectTemplate_.elementdata.subtype = type;
             _listObjectTemplate_.versionUrn = element.versionUrn;
             _listObjectTemplate_.contentUrn = element.versionUrn;
             _listObjectTemplate_.html.text = getInitialListContent(type, startvalue, element.html.text);
@@ -58,8 +61,9 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
 
 const updateElementType = (activeElement) => (dispatch) => {
     const newActiveElement = {
-        elementId: activeElement.id,
+        elementId: activeElement.elementId,
         elementType: "element-authoredtext",
+        elementWipType: "element-list",
         primaryOption: "primary-list",
         secondaryOption: "secondary-list-3",
         tag: "OL"
@@ -75,7 +79,7 @@ const getInitialListContent = (type, startvalue, preText) => {
     let htmlContent = new DOMParser().parseFromString(preText, "text/xml");
     let innerText = htmlContent.firstChild.textContent || '<br />';
     startvalue = (startvalue > 0) && (startvalue - 1) || 0;
-    
+
     switch (type) {
         case 'decimal':
             return `<ol class='decimal' data-treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoNumber'>${innerText}</li></ol>`;

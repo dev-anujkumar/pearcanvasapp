@@ -189,6 +189,7 @@ const findElementType = (element) => {
 
 		case 'element-list':
 			elementType['elementType'] = 'element-authoredtext';
+			elementType['elementWipType'] = 'element-list';
 			elementType['primaryOption'] = 'primary-list';
 			switch (element.subtype) {
 				case "upper-alpha":

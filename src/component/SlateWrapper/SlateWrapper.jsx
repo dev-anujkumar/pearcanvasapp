@@ -480,11 +480,17 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
-                <ListButtonDropPortal refToToolBar={this.props.refToToolBar}>
-                    <ListButtonDrop
-                        setListDropRef={this.setListDropRef}
-                        onListSelect={this.props.convertToListElement}
-                    />
+                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                    {
+                        (selectedType, startValue) => (
+                            <ListButtonDrop
+                                selectedOption={selectedType}
+                                startValue={startValue}
+                                setListDropRef={this.setListDropRef}
+                                onListSelect={this.props.convertToListElement}
+                            />
+                        )
+                    }
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
             </React.Fragment>
