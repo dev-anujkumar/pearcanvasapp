@@ -171,6 +171,17 @@ export class TinyMceEditor extends Component {
         if(!tinymce.editors.length){
             tinymce.init(this.editorConfig)
         }
+
+        //Focus after swapping element
+        // if(config.swappedElementType === "element-authoredtext"){
+        //     this.editorConfig.selector='#'+"cypress-"+config.swappedElementIndex;
+        //     tinymce.init(this.editorConfig);
+        //     document.getElementById("cypress-"+config.swappedElementIndex).focus();
+        // }else if(config.swappedElementType === "figure"){
+        //     this.editorConfig.selector='#'+"cypress-"+config.swappedElementIndex+"-0";
+        //     tinymce.init(this.editorConfig);
+        //     document.getElementById("cypress-"+config.swappedElementIndex+"-0").focus();
+        // }
     }
 
     handleFocus=(e)=>{
@@ -178,6 +189,7 @@ export class TinyMceEditor extends Component {
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }
+
         if(tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))){
             let activeEditorId = tinymce.activeEditor.id;
             tinymce.remove('#'+tinymce.activeEditor.id)

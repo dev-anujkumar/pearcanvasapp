@@ -52,20 +52,20 @@ describe('Tests Slate Wrapper Actions', () => {
         });
     });
 
-    xit('testing------- SWAP ELEMENT ------action', () => {
+    it('testing------- SWAP ELEMENT ------action', () => {
         store = mockStore(() => initialState);
         const typee = "element-authoredtext";
-        const index = 1;
+        const index = 2;
 
         let swappedElementData = {
-            id : "urn:pearson:work:17903611-27e0-43ca-8afb-50d336e5ab34",
-            contentUrn : "urn:pearson:entity:8ea3d039-8160-41ca-9120-05dc28fd7615"
+            id : "urn:pearson:work:8a3e6ed2-e67b-4222-bf20-da5fddcaf929",
+            contentUrn : "urn:pearson:entity:a4ecf47d-44b5-4555-acf3-e9445c6d2fd1"
         }
 
         let _requestData = {
-            "projectUrn": "urn:pearson:entity:0c16d559-6953-438b-9170-1ed387cb1ad3",
-            "currentSlateEntityUrn":"urn:pearson:entity:0c16d559-6953-438b-9170-1ed387cb1ad3",
-            "destSlateEntityUrn":"urn:pearson:entity:0c16d559-6953-438b-9170-1ed387cb1ad3",
+            "projectUrn": "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+            "currentSlateEntityUrn":"urn:pearson:entity:c8d3d2b2-176c-48fc-8383-33444fe335f5",
+            "destSlateEntityUrn":"urn:pearson:entity:c8d3d2b2-176c-48fc-8383-33444fe335f5",
             "workUrn":swappedElementData.id,
             "entityUrn":swappedElementData.contentUrn,
             "type": typee,
@@ -73,8 +73,8 @@ describe('Tests Slate Wrapper Actions', () => {
         }
 
         let dataObj = {
-            oldIndex : 0,
-            newIndex : 1,
+            oldIndex : 1,
+            newIndex : 2,
             swappedElementData : swappedElementData,
             // slateId:_slateId,
             workedExample : false   
@@ -94,7 +94,7 @@ describe('Tests Slate Wrapper Actions', () => {
             });
         });
 
-        return store.dispatch(actions.swapElement(dataObj, cb)).then(() => {
+        return store.dispatch(actions.swapElement(dataObj)).then(() => {
             // const { type } = store.getActions();
             // expect(type).toBe(SWAP_ELEMENT);
             expect(store.getActions().type).toEqual(expectedActions.type)

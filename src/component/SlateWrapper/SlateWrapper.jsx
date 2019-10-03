@@ -186,18 +186,32 @@ class SlateWrapper extends Component {
                                     },
                                    
                                     // Element dragging ended
-                                    onEnd:  (/**Event*/evt) => {
-                                        let swappedElementData;
+                                    onUpdate:  (/**Event*/evt) => {
+                                        console.log('ggggggggggg',evt)
+                                        let swappedElementData, swappedElementId;
                                         swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        swappedElementId =tinymce.$(evt.item).find('.cypress-editable').attr('id');
+                                        console.log('this is active editor id', swappedElementId)
+                                      //  tinymce.remove('#'+swappedElementId);
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
                                             // slateId:_slateId,
-                                            workedExample : false   
+                                            workedExample : false,
+                                            swappedElementId : swappedElementId   
                                         }
-
-                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                        if(tinymce.activeEditor.id==swappedElementId){
+                                            tinymce.remove('#'+swappedElementId);
+                                        }
+                                        this.props.swapElement(dataObj,()=>{
+                                            if(tinymce.activeEditor.id==swappedElementId){
+                                                document.getElementById(tinymce.activeEditor.id).contentEditable = true;
+                                                document.getElementById(tinymce.activeEditor.id).focus();
+                                            }
+                                            // if(swappedElementType === "element-authoredtext")
+                                            
+                                        })
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
                                    
