@@ -52,7 +52,8 @@ top: 6px;
 }
 .singleAssessment_Dropdown_options{
     position: absolute;
-    margin-left: 110px;
+    padding-left: 0px;
+    margin-left: 122px;
     width: 202px;
     margin-top: 10px;
     max-height: 220px;
@@ -71,6 +72,7 @@ top: 6px;
  }
 .singleAssessment_Dropdown_currentLabel{
     font-size: 14px;
+    margin:0 0 0 8px;
 }
 .figureAssessment {
     max-width:100% !important;
