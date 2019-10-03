@@ -14,8 +14,11 @@ import {
     createElement ,createVideoElement
     , createFigureElement , createInteractiveElement, swapElement
 } from './SlateWrapper_Actions';
+import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
+import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrapperConstants';
 // IMPORT - Assets //
@@ -36,6 +39,10 @@ let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
+
+        this.setListDropRef = this.setListDropRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
             showLockPopup: false,
             lockOwner: ""
@@ -46,6 +53,44 @@ class SlateWrapper extends Component {
         if(document.getElementById("cypress-0")){
             document.getElementById("cypress-0").focus();
         }
+
+        // binds handleClickOutside to document mousedown //
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+
+    /**
+     * setListDropRef | sets list drop ref to listDropRef
+     * @param {*} node | node reference to ListButtonDrop component
+     */
+    setListDropRef(node) {
+        this.listDropRef = node;
+    }
+
+    /**
+     * handleClickOutside | currently handles when clicked outside of list drop
+     * @param {*} event | current triggerd event with target
+     */
+    handleClickOutside(event) {
+        // *********************************************************************
+        // handle when clicked outside of listdrop 
+        if (this.listDropRef && !this.listDropRef.contains(event.target)) {
+            if (event.target.classList.contains('fa-list-ol') ||
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                return;
+            let _listWrapperDiv = document.querySelector('#listDropWrapper');
+            if (_listWrapperDiv)
+                _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
+        }
+        // *********************************************************************
+    }
+
+    /**
+     * customListDropClickAction | handle when user clicks one of the ordered list option 
+     * @param {string} type | chosen orderd list type
+     * @param {number} value | entered numeric value
+     */
+    customListDropClickAction(type, value) {
+        console.log(type, value);
     }
 
     componentDidUpdate() {
@@ -120,9 +165,10 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
-                            <div className='element-list'>
+                            <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                             <Sortable
                                 options={{
                                     // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
@@ -146,6 +192,7 @@ class SlateWrapper extends Component {
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd
+                                        _context.checkSlateLockStatus(evt)
                                     },
                                    
                                     // Element dragging ended
@@ -261,7 +308,7 @@ class SlateWrapper extends Component {
                         inputValue={lockOwner}
                         isLockPopup={true}
                         isInputDisabled={true}
-                        assessmentClass="lock-message"
+                        slateLockClass="lock-message"
                         withInputBox={true}
                 />
             )
@@ -282,6 +329,7 @@ class SlateWrapper extends Component {
     splithandlerfunction = (type, index, firstOne,parentUrn) => {
         if(this.checkLockStatus()){
             this.togglePopup(true)
+            return false
         }
         let indexToinsert
         // Detects element insertion from the topmost element separator
@@ -451,6 +499,18 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
+                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                    {
+                        (selectedType, startValue) => (
+                            <ListButtonDrop
+                                selectedOption={selectedType}
+                                startValue={startValue}
+                                setListDropRef={this.setListDropRef}
+                                onListSelect={this.props.convertToListElement}
+                            />
+                        )
+                    }
+                </ListButtonDropPortal>
                 {this.showLockPopup()}
             </React.Fragment>
         );
