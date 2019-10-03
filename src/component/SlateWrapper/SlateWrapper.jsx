@@ -12,7 +12,8 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement, swapElement
+    , createFigureElement , createInteractiveElement, swapElement,
+    setSplittedElementIndex
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -25,6 +26,8 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+
+const { WRAPPER_URL } = config
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -438,6 +441,20 @@ class SlateWrapper extends Component {
 
     }
 
+    handleSplitSlate = (index) => {
+        let iframeWin = window.parent
+        if (iframeWin) {
+            iframeWin.postMessage(
+                {
+                    'type': 'splitCurrentSlate',
+                    'message': {}
+                },
+                WRAPPER_URL);
+        }
+        this.props.setSplittedElementIndex(index+1)
+    }
+    
+
     /**
      * renderElement | renders single element according to its type
      */
@@ -469,6 +486,7 @@ class SlateWrapper extends Component {
                                 esProps={this.elementSepratorProps(index, false)}
                                 elementType={element.type}
                                 slateType = {_slateType}
+                                handleSplitSlate = {this.handleSplitSlate}
                             />
                         </React.Fragment>
                     )
@@ -535,6 +553,7 @@ export default connect(
     mapStateToProps,
     {
         createElement,
-        swapElement
+        swapElement,
+        setSplittedElementIndex
     }
 )(SlateWrapper);

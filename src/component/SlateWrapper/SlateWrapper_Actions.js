@@ -6,7 +6,8 @@ import {
     ,FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED,
     FETCH_SLATE_DATA,
-    SWAP_ELEMENT
+    SWAP_ELEMENT,
+    SET_SPLIT_INDEX
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -118,4 +119,55 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
     .catch((err) => {
         console.log('Error occured while swaping element', err)
     })
+}
+
+export const setSplittedElementIndex = (index) => (dispatch, getState) => {
+    return dispatch({
+        type : SET_SPLIT_INDEX,
+        payload : index
+    })
+}
+export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
+   let slateDataList = []
+   let splitIndex = getState().appStore.splittedElementIndex
+   let oldSlateData = {
+        "id": config.slateManifestURN,
+        "type": "manifest",
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": [],
+            "backmatter": []
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "contentUrn": config.slateEntityURN,
+        "versionUrn": config.slateManifestURN
+    }
+    let newSlateData = {
+        "id": newSlateObj.containerUrn,
+        "type": "manifest",
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": [],
+            "backmatter": []
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "contentUrn": newSlateObj.entityUrn,
+        "versionUrn": newSlateObj.containerUrn
+    }
+    let oldSlateBodymatter = [...getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter]
+    let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
+
+    oldSlateBodymatter.forEach((oldSlateBody)=>{
+        oldSlateData.contents.bodymatter.push({
+            type: oldSlateBody.type,
+            id: oldSlateBody.id
+        })
+    })
+    newSlateBodymatter.forEach((newSlateBody)=>{
+        oldSlateData.contents.bodymatter.push({
+            type: newSlateBody.type,
+            id: newSlateBody.id
+        })
+    })
+    console.log("splittedElementIndex>>>><<<>>>>>POPOPOPOP",splitIndex)
 }

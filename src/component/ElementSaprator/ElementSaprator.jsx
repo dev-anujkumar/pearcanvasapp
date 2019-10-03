@@ -52,6 +52,15 @@ export default function ElementSaprator(props) {
         // Return our parent array
         return parents;
     };
+
+    /**
+     * @description: OnClick handler for split slate button
+     */
+    const splitSlateClickHandler = () => {
+        // alert('split slate button clicked')
+        props.handleSplitSlate(props.index)
+        console.log('split slate button clicked')
+    }
     
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
@@ -88,10 +97,11 @@ ElementSaprator.propTypes = {
 /**
  * @description: OnClick handler for split slate button
  */
-export function splitSlateClickHandler() {
+/* export function splitSlateClickHandler() {
     // alert('split slate button clicked')
+    props.handleSplitSlate()
     console.log('split slate button clicked')
-}
+} */
 
 /**
  * @description: OnClick handler for add Element button

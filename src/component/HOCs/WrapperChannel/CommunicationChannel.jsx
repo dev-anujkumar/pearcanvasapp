@@ -78,11 +78,8 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                     break;
                 case 'newSplitedSlate':
-                    {
-                        /**             
-                         * TO BE IMPLEMENTED             
-                         * */
-                    }
+                    this.hanndleSplitSlate(message)
+                    console.log("NEW SLATE FORMED BY SPLITTING SLATE??>>?>?>:l>:p{l ",message)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -167,7 +164,9 @@ function WithWrapperCommunication(WrappedComponent) {
         sendDataToIframe = (messageObj) => {
             sendDataToIframe(messageObj);
         }
-
+        hanndleSplitSlate = (newSlateObj) => {
+            this.props.handleSplitSlate(newSlateObj)
+        }
         sendingPermissions = () => {
             /**
              * TO BE VERIFIED
