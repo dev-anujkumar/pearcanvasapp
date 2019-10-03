@@ -18,7 +18,7 @@ export const EditorConfig = {
     },
     toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent  Glossary Footnote customListButton bullist | superscript subscript charmap',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap"
+    plugins: "lists advlist placeholder charmap paste"
 }
 
 export const GlossaryFootnoteEditorConfig = {

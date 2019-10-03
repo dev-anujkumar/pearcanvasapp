@@ -51,7 +51,7 @@ export const deleteElement = (elmId, type) => (dispatch, getState) => {
         "entityUrn": config.slateEntityURN,
         "workUrn": elmId
     };    
-    axios.delete(`${config.REACT_APP_API_URL}v1/slate/element`,
+    axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -64,16 +64,13 @@ export const deleteElement = (elmId, type) => (dispatch, getState) => {
             sendDataToIframe({'type': HideLoader,'message': { status: false }})
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
-            for (let key in newParentData) {
-                for (let i = 0; i < newParentData[key].contents.bodymatter.length; i++) {
-                    let workUrn = newParentData[key].contents.bodymatter[i].id;
-                    if (workUrn === elmId) {
-                        newParentData[key].contents.bodymatter.splice(i, 1);
-                    }
+            for (let i = 0; i < newParentData[config.slateManifestURN].contents.bodymatter.length; i++) {
+                let workUrn = newParentData[config.slateManifestURN].contents.bodymatter[i].id;
+                if (workUrn === elmId) {
+                    newParentData[config.slateManifestURN].contents.bodymatter.splice(i, 1);
                 }
             }
             
-    
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: {
