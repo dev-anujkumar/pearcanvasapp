@@ -8,10 +8,7 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import {
-    createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement
-} from './SlateWrapper_Actions';
+import { createElement } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import config from '../../config/config';
@@ -382,9 +379,6 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement,
-        createVideoElement,
-        createFigureElement,
-        createInteractiveElement
+        createElement
     }
 )(SlateWrapper);

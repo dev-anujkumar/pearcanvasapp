@@ -3,14 +3,14 @@ import store from './../appstore/store';
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader';
 
 // const authModule = require('./auth_module.js');
-const config = require('./../config/config');
-let config_object = config.default;
+const configOBJ = require('./../config/config');
+let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN : function() { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}' ;
 const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
 //const images_path = 'dist/images/c2/';
 
-var uname;
+var uname = "c5test01";
 
 const renderderedTagSelector = '#c2-modal';
 
@@ -70,13 +70,13 @@ var libConfig = { 'locale': 'en_US',
                 };
 
 patternBroker.setup(libConfig);
-//var module = {};
-module.exports = {
+// var module = {};
+export const c2MediaModule = {
 
     addAnAsset:addAnAsset,
     productLinkOnsaveCallBack: function(assetPopoverFlag,data,callback) {
         //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
-        module.exports.launchAssetBrowser(assetPopoverFlag,data.nodeRef, data.repoInstance, data.repoName, callback);
+        this.launchAssetBrowser(assetPopoverFlag,data.nodeRef, data.repoInstance, data.repoName, callback);
 
     },
 
@@ -176,7 +176,7 @@ module.exports = {
             addAnAsset.unmount();
         }
 
-        uname = store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+        uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
         var libConfig = {   'locale': 'en_US',
                         'headers' : {
                             'Content-Type'        : 'application/json',
@@ -218,7 +218,7 @@ module.exports = {
                 libConfig.headers['Correlation-Id'] = addAnAsset.corsId;
             }
             patternBroker.setup(libConfig);
-            addAnAsset.setup(addAnAssetConfig, module.exports.AddanAssetCallBack);
+            addAnAsset.setup(addAnAssetConfig, this.AddanAssetCallBack);
             addAnAsset.run(addAnAsset);
             addAnAsset.on(callback);
 
@@ -281,7 +281,7 @@ module.exports = {
         if ( addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '' ) {
 
             //console.log("addAnAssetConfig.nodeRef already set: " + addAnAssetConfig.nodeRef);
-            module.exports.launchAssetBrowser(addAnAssetConfig.nodeRef);
+            this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
         } else {
 
@@ -298,7 +298,7 @@ module.exports = {
                     if(cmisRepo.length > 0){
                         const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                             if(canWeProceedWithPL){
-                                uname = store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+                                uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
                                 var libConfig = {   'locale': 'en_US',
                                                 'headers' : {
                                                     'Content-Type'        : 'application/json',
@@ -326,7 +326,7 @@ module.exports = {
                                     libConfig.headers['Correlation-Id'] = productLink.corsId;
                                 }
                                 patternBroker.setup(libConfig);
-                                productLink.setup(productLinkConfig, module.exports.productLinkOnsaveCallBack);
+                                productLink.setup(productLinkConfig, this.productLinkOnsaveCallBack);
                                 productLink.run(productLink);
                                 productLink.on(callback);
                             }else{
@@ -342,26 +342,26 @@ module.exports = {
                 console.log('CMIS REPO - should not be Empty, Provide Valid REPO Values');
             }
         }
-        var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];		
-        // Options for the observer (which mutations to observe)		
-        var config = { attributes: true };		
-        // Callback function to execute when mutations are observed		
-        var callbackOb = function (mutationsList, observer) {		
-            //console.log(mutationsList)		
-            for (var mutation of mutationsList) {		
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {		
-                   {		
-                    hideTocBlocker();	
-                    disableHeader(false);
-                    observer.disconnect();		
-                   }		
-                }		
-            }		
-        };		
-        // Create an observer instance linked to the callback function		
-        var observer = new MutationObserver(callbackOb);		
-        // Start observing the target node for configured mutations		
-        observer.observe(targetNode, config);
+        // var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];		
+        // // Options for the observer (which mutations to observe)		
+        // var config = { attributes: true };		
+        // // Callback function to execute when mutations are observed		
+        // var callbackOb = function(mutationsList, observer) {		
+        //     //console.log(mutationsList)		
+        //     for (var mutation of mutationsList) {		
+        //         if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {		
+        //            {		
+        //             hideTocBlocker();	
+        //             disableHeader(false);
+        //             observer.disconnect();		
+        //            }		
+        //         }		
+        //     }		
+        // };		
+        // // Create an observer instance linked to the callback function		
+        // var observer = new MutationObserver(callbackOb);		
+        // // Start observing the target node for configured mutations		
+        // observer.observe(targetNode, config);
     }
 }
 

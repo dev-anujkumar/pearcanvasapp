@@ -21,7 +21,7 @@ import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag }
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
 
-// import { c2MediaModule } from './../../js/c2_media_module';
+import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
 class CanvasWrapper extends Component {
@@ -36,6 +36,10 @@ class CanvasWrapper extends Component {
             showReleasePopup : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
+
+        c2MediaModule.onLaunchAddAnAsset(function(alfrescoData) {
+            console.log("alfrescoData:::", alfrescoData);
+        });
     }
 
     componentDidMount() {        
