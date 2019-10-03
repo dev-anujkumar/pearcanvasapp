@@ -36,7 +36,7 @@ export class ReactEditor extends React.Component {
       return false;
     }
 
-    if (tinymce.activeEditor) {
+    if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
       let activeEditorId = tinymce.activeEditor.id;
       tinymce.remove('#' + tinymce.activeEditor.id)
       document.getElementById(activeEditorId).contentEditable = true;
@@ -47,14 +47,14 @@ export class ReactEditor extends React.Component {
   }
 
   render() {
-    if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-      let activeEditorId = tinymce.activeEditor.id;
-      let element = document.getElementById(activeEditorId);
-      tinymce.remove('#' + tinymce.activeEditor.id)
-      element.contentEditable = true;
-      this.editorConfig.selector = '#' + activeEditorId;
-      tinymce.init(this.editorConfig);
-    }
+    // if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
+    //   let activeEditorId = tinymce.activeEditor.id;
+    //   let element = document.getElementById(activeEditorId);
+    //   tinymce.remove('#' + tinymce.activeEditor.id)
+    //   element.contentEditable = true;
+    //   this.editorConfig.selector = '#' + activeEditorId;
+    //   tinymce.init(this.editorConfig);
+    // }
     return (
       <div >
         <Editor

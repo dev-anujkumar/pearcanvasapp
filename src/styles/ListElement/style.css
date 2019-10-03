@@ -1,0 +1,52 @@
+ol {
+    margin-left: 2em !important;
+    margin-bottom: 1em !important;
+    padding-left: 1em !important;
+}
+
+ol li {
+    font-size: 1em !important;
+    list-style-type: none !important;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-size: 1.080em;
+    font-weight: normal;
+    line-height: 1.90em;
+    letter-spacing: 0.01em;
+    margin-left: 0em !important;
+    margin-bottom: .65em !important;
+    color: black !important;
+}
+
+ol li {
+    list-style-type: none !important;
+    font-size: 1em !important;
+}
+
+div.cypress-editable ol, li ol {
+    counter-reset: section !important;
+}
+
+ol li.listItemNumeroUnoUpperAlpha::before {
+    counter-increment: section;
+    content: counter(section, upper-alpha)". ";
+}
+
+ol li.listItemNumeroUnoLowerAlpha::before {
+    counter-increment: section;
+    content: counter(section, lower-alpha)". ";
+}
+
+ol li.listItemNumeroUnoNumber::before {
+    counter-increment: section;
+    content: counter(section, decimal)". ";
+}
+
+ol li.listItemNumeroUnoUpperRoman::before {
+    counter-increment: section;
+    content: counter(section, upper-roman)". ";
+}
+
+ol li.listItemNumeroUnoLowerRoman::before {
+    counter-increment: section;
+    content: counter(section, lower-roman)". ";
+}

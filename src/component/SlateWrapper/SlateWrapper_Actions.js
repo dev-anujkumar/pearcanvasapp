@@ -14,13 +14,10 @@ import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
   };
-let headers = {
-    "Content-Type": "application/json",
-    ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken,
-}
+
 export const createElement = (type, index) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
+    config.currentInsertedType = type;
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": config.slateEntityURN,
@@ -48,9 +45,8 @@ export const createElement = (type, index) => (dispatch, getState) => {
      /*    if(type == "element-aside"){
             createdElementData = elementAside
         } */
-        for (let key in newParentData) {
-                newParentData[key].contents.bodymatter.splice(index, 0, createdElementData);
-        }
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        
 
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
