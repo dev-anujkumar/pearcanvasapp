@@ -256,7 +256,7 @@ export class TinyMceEditor extends Component {
                         )
                     default:
                         return (
-                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model.text }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                         )
                 }
             }
