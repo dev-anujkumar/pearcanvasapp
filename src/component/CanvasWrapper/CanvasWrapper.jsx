@@ -68,9 +68,9 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
-                document.getElementById(window.tinymce.activeEditor.id).focus();
-            }
+            // if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
+            //     document.getElementById(window.tinymce.activeEditor.id).focus();
+            // }
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
