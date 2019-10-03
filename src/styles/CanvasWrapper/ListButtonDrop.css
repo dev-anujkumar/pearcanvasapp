@@ -1,0 +1,373 @@
+i.fa.fa-list-ol {
+    display: block;
+    font-size: 14px;
+    width: 14px;
+    /* margin: 12px; */
+    text-align: center;
+    float: none;
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+i.fa.fa-list-ol:before {
+    content: "\F0CB";
+}
+
+#listDropWrapper {
+    position: absolute;
+    background: #fff;
+    /* left: -100px !important; */
+}
+
+#listDropWrapper .fr-popup.fr-active {
+    display: block;
+}
+
+#listDropWrapper .fr-popup {
+    display: none;
+    color: #222;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin-top: 0px;
+    text-align: left;
+    border: 0;
+    border-top: 5px solid #222;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.2;
+    position: relative;
+}
+
+#listDropWrapper .fr-popup .fr-buttons {
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px 1px rgba(0, 0, 0, .16);
+    padding: 0 2px;
+    white-space: nowrap;
+    line-height: 0;
+    border-bottom: 0;
+}
+
+#listDropWrapper .numbered-list-dropdown {
+    width: 275px;
+    height: 200px;
+    box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+#list-input-layer #listInputCover .fr-btn {
+    float: right;
+    width: 10%;
+    height: 30px;
+    font-size: 100%;
+    background: #000;
+    margin: 0px;
+    color: #fff;
+    padding: 0px;
+}
+
+#listDropWrapper .fr-popup .fr-buttons .fr-btn {
+    display: inline-block;
+    float: none;
+}
+
+#listDropWrapper .fr-popup .fr-command.fr-btn {
+    background: 0 0;
+    color: #222;
+    -moz-outline: 0;
+    outline: 0;
+    border: 0;
+    line-height: 1;
+    cursor: pointer;
+    text-align: left;
+    margin: 0 2px;
+    -webkit-transition: background .2s ease 0s;
+    -moz-transition: background .2s ease 0s;
+    -ms-transition: background .2s ease 0s;
+    -o-transition: background .2s ease 0s;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    z-index: 2;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-decoration: none;
+    user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    float: left;
+    padding: 0;
+    width: 38px;
+    height: 38px;
+}
+
+#listDropWrapper button, #listDropWrapper html [type="button"], #listDropWrapper [type="reset"], #listDropWrapper [type="submit"] {
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    -webkit-font-smoothing: inherit;
+    font-family: sans-serif;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 0;
+    text-decoration: none;
+    outline: none;
+}
+
+#listDropWrapper .custom-button {
+    width: 80px!important;
+    height: 90px!important;
+    margin: 5px!important;
+    cursor: pointer!important;
+    float: left!important;
+}
+
+#listDropWrapper .fr-popup .fr-buttons .fr-btn i, #tinymceToolbar .tox-editor-container .tox-tbtn i {
+    float: left;
+}
+
+#listDropWrapper .fr-toolbar .fr-command.fr-btn i, .fr-popup .fr-command.fr-btn i {
+    display: block;
+    font-size: 14px;
+    width: 14px;
+    margin: 12px;
+    text-align: center;
+    float: none;
+}
+
+#listDropWrapper .fa, #tinymceToolbar .fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#listDropWrapper .fr-toolbar .fr-command.fr-btn span.fr-sr-only, .fr-popup .fr-command.fr-btn span.fr-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+#listDropWrapper .fr-toolbar .fr-command.fr-btn span, .fr-popup .fr-command.fr-btn span {
+    font-size: 14px;
+    display: block;
+    line-height: 17px;
+    min-width: 34px;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 17px;
+    font-weight: 700;
+    padding: 0 2px;
+}
+
+#listDropWrapper .fr-popup.fr-desktop .fr-command:hover, #listDropWrapper .fr-popup.fr-desktop .fr-command:focus {
+    outline: 0;
+    color: #222;
+    background: #ebebeb;
+}
+
+#list-input-layer {
+    padding: 15px 0 8px;
+    clear: both;
+    overflow: hidden;
+    border-top: 1px solid #ccc;
+    margin: 10px 10px 0px;
+}
+
+#list-input-layer .topText {
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+
+#listInputCover {
+    clear: both;
+    overflow: hidden;
+}
+
+#list-input-layer .list-input-box {
+    float: left;
+    width: 90%;
+    height: 30px;
+    font-size: 100%;
+    border: 1px solid #ccc;
+    padding: 0 5px;
+    font-size: 12px;
+}
+
+#listDropWrapper .fr-popup input, #listDropWrapper .fr-popup textarea {
+    user-select: text;
+    -o-user-select: text;
+    -moz-user-select: text;
+    -khtml-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    outline: 0;
+}
+
+#list-input-layer .fa {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+#list-input-layer .fa.fa-check:before {
+    content: "\F00C";
+}
+
+#list-input-layer .error-holder {
+    clear: both;
+    overflow: hidden;
+    padding-top: 5px;
+}
+
+#list-input-layer #errorAlpha {
+    display: none;
+    color: red;
+}
+
+#listDropWrapper .fr-popup .fr-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #222;
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    margin-left: -5px;
+    display: inline-block;
+}
+
+#listDropWrapper .list-options {
+    width: 80px;
+    height: 90px;
+    margin: 5px;
+    float: left;
+    padding: 5px 9px;
+    border: 2px solid #f0f0f0;
+    box-sizing: border-box !important;
+    user-select: none !important;
+    font-family: sans-serif;
+    cursor: pointer;
+    -webkit-transition: all .2s ease 0s;
+    -moz-transition: all .2s ease 0s;
+    -ms-transition: all .2s ease 0s;
+    -o-transition: all .2s ease 0s;
+}
+
+#listDropWrapper .list-option-row {
+    width: 100%;
+    float: left;
+    height: 25%;
+    font-size: 11px;
+    line-height: 20px;
+}
+
+#listDropWrapper .list-option-row.no-style {
+    text-align: center;
+    transform: translateY(-50%);
+    top: 50%;
+    position: relative;
+}
+
+#listDropWrapper .list-options.selected {
+    border-color: #05a0c7;
+}
+
+#listDropWrapper .list-options:not(.selected):hover {
+    border-color: #d6d6d5;
+    box-shadow: 1px 1px 6px -3px grey;
+}
+
+#listDropWrapper .decimal-button {
+    background-image: url('../../images/CanvasWrapper/decimal-normal.png')!important;
+}
+
+#listDropWrapper .upper-alpha-button {
+    background-image: url('../../images/CanvasWrapper/upper-alpha-normal.png')!important;
+}
+
+#listDropWrapper .lower-alpha-button {
+    background-image: url('../../images/CanvasWrapper/lower-alpha-normal.png')!important;
+}
+
+#listDropWrapper .upper-roman-button {
+    background-image: url('../../images/CanvasWrapper/upper-roman-normal.png')!important;
+}
+
+#listDropWrapper .lower-roman-button {
+    background-image: url('../../images/CanvasWrapper/lower-roman-normal.png')!important;
+}
+
+#listDropWrapper .no-style-button {
+    background-image: url('../../images/CanvasWrapper/no-style-normal.png')!important;
+}

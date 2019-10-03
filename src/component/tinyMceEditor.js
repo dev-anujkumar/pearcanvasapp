@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
@@ -11,6 +12,7 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
+// IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 import GlossaryFootnoteMenu from './GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
@@ -19,6 +21,7 @@ import  config  from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
+import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -42,12 +45,10 @@ export class TinyMceEditor extends Component {
             remove_linebreaks: false,
             paste_preprocess:this.pastePreProcess,
             setup: (editor) => {
-                editor.on('keydown',function(e) {
-                    if(e.keyCode == 13){
-                        e.preventDefault();
-                        return false;
-                    }
+                editor.on('keydown', function (e) {
+                    bindKeyDownEvent(editor, e);
                 });
+                insertListButton(editor);
                 editor.on('mousedown',function(e) {
                     if(context.props.slateLockInfo.isLocked){
                         e.preventDefault();

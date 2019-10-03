@@ -187,6 +187,23 @@ const findElementType = (element) => {
 			}
 			break;
 
+		case 'element-list':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['elementWipType'] = 'element-list';
+			elementType['primaryOption'] = 'primary-list';
+			switch (element.subtype) {
+				case "upper-alpha":
+					elementType['secondaryOption'] = 'secondary-list-3';
+					break;
+				case "lower-alpha":
+					elementType['secondaryOption'] = 'secondary-list-4';
+					break;
+				default:
+					elementType['secondaryOption'] = 'secondary-list-3';
+					break;
+			}
+			break;
+
 		default: 
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
