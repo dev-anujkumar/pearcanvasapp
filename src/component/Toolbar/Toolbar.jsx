@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 import '../../styles/Toolbar/Toolbar.css';
 import {toggleElemBordersAction} from './Toolbar_Actions.js';
+import config from '../../config/config';
 
 const _Toolbar = props => {
 
@@ -40,13 +41,15 @@ const _Toolbar = props => {
                 </div>
                 {_elemToggleBtnJsx('pageNumber')}
             </div>
-            <div className='element-borders'>
-            
-            <div className='elemBorderText'>
-                Element Borders
+            {config.PERMISSIONS.includes('toggle_element_borders') &&
+                <div className='element-borders'>
+
+                    <div className='elemBorderText'>
+                        Element Borders
                 </div>
-            {_elemToggleBtnJsx('border')}
-            </div>
+                    {_elemToggleBtnJsx('border')}
+                </div>
+            }
         </div>
     )
 }

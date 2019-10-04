@@ -21,6 +21,7 @@ import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
+import config from '../../config/config';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -227,7 +228,7 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} />
+                { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}
@@ -235,8 +236,8 @@ class ElementContainer extends Component {
                 {editor}
             </div>
             {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
-                <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
-                {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
+                {config.PERMISSIONS.includes('notes_adding') && <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                {config.PERMISSIONS.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
                 </div> :''}
             { this.state.popup && <PopUp 
