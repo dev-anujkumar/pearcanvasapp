@@ -27,7 +27,6 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
 
-const { WRAPPER_URL } = config
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
