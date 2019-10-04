@@ -8,10 +8,14 @@ import Sortable from 'react-sortablejs';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
+import { guid } from '../../constants/utility.js';
+
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 // IMPORT - Assets //
+
+let random = guid();
 
 class ElementAsideContainer extends Component {
     constructor(props) {
@@ -81,38 +85,69 @@ class ElementAsideContainer extends Component {
             contentUrn :element.contentUrn
         }
         let parentIndex = `${this.props.index}-${index}`
+        this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
                 <Sortable
                                 options={{
-                                    // handle : '.btn-element element-label', //Drag only by element tag name button
-                                    // dataIdAttr: 'data-id',
-                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
-                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
+                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                    dragoverBubble: false,
+	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                    
+
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    
+
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
+                                    handle : '.element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
-                                    filter: "div.elementSapratorContainer",
-                                    draggable: "div.editor",
+                                    filter: ".elementSapratorContainer",
+                                    draggable: ".editor",
+                                    forceFallback: true,
+                                    onStart: function (/**Event*/evt) {
+                                        // same properties as onEnd
+                                    },
+                                   
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
-                                        
-                                        let swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
-
+                                        let swappedElementData;
+                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
-                                            workedExample : true      
+                                            // slateId:_slateId,
+                                            workedExample : true   
                                         }
-                                        this.props.swapElement(dataObj)
-                                        // console.log('this.element data', dataObj);
+
+                                        this.props.swapElement(dataObj,(bodyObj)=>{})
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
+                                   
                                 }}
-                                tag=".element-container"
+                               
+                                // [Optional] Use ref to get the sortable instance
+                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
+                                ref={(c) => {
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
+                                }}
+                    
+                                // [Optional] A tag to specify the wrapping element. Defaults to "div".
+                                tag="div"
+    
                             >
-                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
+                                {this['cloneCOSlateControlledSource__' + random]}
+
+                                {/* {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)} */}
 
                             </Sortable>
             </div>

@@ -53,6 +53,10 @@ export default function ElementSaprator(props) {
         return parents;
     };
 
+    function closeDropDown () {
+        setShowClass(false);
+    }
+    
     /**
      * @description: OnClick handler for split slate button
      */
@@ -78,7 +82,7 @@ export default function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak)}
+                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)}
                         </ul>
                     </div>
                 </div>
@@ -103,7 +107,7 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak) {
+export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps;
 
     if(config.slateType == 'container-introduction'){
@@ -127,10 +131,15 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
     }
 
     return updatedEsProps.map((elem, key) => {
+        function buttonHandlerFunc() {
+            closeDropDown();
+            elem.buttonHandler();
+        }
+
         return (
             <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                 <li key={key}>
-                    <Button type={elem.buttonType} onClick={elem.buttonHandler} />
+                    <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                 </li>
             </Tooltip>)
     })
