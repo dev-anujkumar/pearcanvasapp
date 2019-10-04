@@ -30,6 +30,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 
     handleNavClick(nav) {
         config.currentInsertedType = "";
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         if(nav === "back"){
             sendDataToIframe({'type': PreviousSlate,'message': {}})
         }else{

@@ -33,3 +33,6 @@ export const SET_LOCK_FLAG = "SET_LOCK_FLAG"
 
 /*---------------Swap Element -------------------*/
 export const SWAP_ELEMENT = 'SWAP_ELEMENT'
+
+/*--------------- Split Slate -------------------*/
+export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'

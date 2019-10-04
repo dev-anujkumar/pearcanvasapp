@@ -7,7 +7,8 @@ import {
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
   };
@@ -114,5 +115,71 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
     })
     .catch((err) => {
         console.log('Error occured while swaping element', err)
+    })
+}
+
+export const setSplittedElementIndex = (index) => (dispatch, getState) => {
+    return dispatch({
+        type : SET_SPLIT_INDEX,
+        payload : index
+    })
+}
+export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
+   let slateDataList = []
+   let splitIndex = getState().appStore.splittedElementIndex
+   let oldSlateData = {
+        "id": config.slateManifestURN,
+        "type": "manifest",
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": [],
+            "backmatter": []
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "contentUrn": config.slateEntityURN,
+        "versionUrn": config.slateManifestURN
+    }
+    let newSlateData = {
+        "id": newSlateObj.containerUrn,
+        "type": "manifest",
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": [],
+            "backmatter": []
+        },
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+        "contentUrn": newSlateObj.entityUrn,
+        "versionUrn": newSlateObj.containerUrn
+    }
+    let oldSlateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter
+    let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
+
+    oldSlateBodymatter.forEach((oldSlateBody)=>{
+        oldSlateData.contents.bodymatter.push({
+            type: oldSlateBody.type,
+            id: oldSlateBody.id
+        })
+    })
+    newSlateBodymatter.forEach((newSlateBody)=>{
+        newSlateData.contents.bodymatter.push({
+            type: newSlateBody.type,
+            id: newSlateBody.id
+        })
+    })
+    slateDataList.push(oldSlateData, newSlateData)
+
+    return axios.put(
+        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}`,
+        JSON.stringify({slateDataList}),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            } 
+        }
+    ).then(res =>{
+        sendDataToIframe({'type': NextSlate,'message': {}})
+    }).catch(error =>{
+        console.log("SPLIT SLATE API ERROR : ", error)
     })
 }
