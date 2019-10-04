@@ -4,6 +4,7 @@ import ReplyComment from './ReplyComment.jsx';
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
+import config from '../../config/config'
 class Comments extends React.Component {
     constructor(props) {
         super(props)
@@ -179,11 +180,11 @@ class Comments extends React.Component {
     actionsMenu = () => {
         return (
             <ul className="comment-action-menu action-menu">
-                <li onClick={() => this.toggleReplyForm(true)}>Reply</li>
-                <li onClick={this.resolveComment}>Resolve</li>
-                <li onClick={this.editComment}>Edit</li>
-                <li onClick={this.changeAssignee}>Change Assignee</li>
-                <li onClick={this.deleteComment}>Delete</li>
+                {config.PERMISSIONS.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
+                {config.PERMISSIONS.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
+                {config.PERMISSIONS.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {config.PERMISSIONS.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
+                {config.PERMISSIONS.includes('notes_deleting') && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
     }

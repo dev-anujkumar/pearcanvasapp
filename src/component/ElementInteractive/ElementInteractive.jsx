@@ -26,7 +26,7 @@ class Interactive extends React.Component {
      * @param {event} index
      */
 
-    renderInteractiveType = (element, itemId, index) => {
+    renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
         switch (context) {
@@ -277,12 +277,12 @@ class Interactive extends React.Component {
                             <div className="sh-container">
                                 <div>
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
-                                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                     <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
                                     <a className="paragraphNumeroUno">
                                         <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} placeholder="Enter hidden text" 
                                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} tagName={'p'}
-                                        handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}/></a>
+                                        handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} /></a>
                                     </p>
                                 </div>
                             </div>
@@ -299,9 +299,9 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} 
-                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} 
-                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </header>
                     <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" >
@@ -319,18 +319,18 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                                    onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
                     <figcaption>
                         <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
+                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                 </div>
             </div>
         }
@@ -341,10 +341,10 @@ class Interactive extends React.Component {
 
 
     render() {
-        const { model, itemId, index } = this.props;
+        const { model, itemId, index, slateLockInfo } = this.props;
         return (
             <div className="interactive-element">
-                {this.renderInteractiveType(model, itemId,index)}
+                {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
             </div>
         )
     }

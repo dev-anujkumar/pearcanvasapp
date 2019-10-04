@@ -16,22 +16,35 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, placeholder, model } = this.props
+        const { className, placeholder, model, element } = this.props
+        //***************************************************************
+        //************ this is to cover wip conversion case *************
+        let wipModel = null;
+        if (!model) {
+            let subType = element.subtype;
+            let startNumber = isNaN(parseInt(element.elementdata.startNumber)) && 0 || element.elementdata.startNumber;
+            startNumber = (startNumber > 0) && (startNumber - 1) || 0;
+            wipModel = {
+                "text": `<ol class='${subType}' data-treelevel='1' style='counter-increment: section ${startNumber};'><li class='reset listItemNumeroUnoUpperAlpha'>This is a default text and will perform working once wip conversion is ready</li></ol>`
+            }
+        }
+        //***************************************************************
         return (
             <TinyMceEditor
-                openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
+                openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
                 elementId={this.props.elementId}
                 element={this.props.element}
                 placeholder="Type Something..."
                 className={className}
-                model={model}
+                model={wipModel || model}
                 handleEditorFocus={this.props.handleFocus}
                 onFocus={this.onFocus}
                 handleBlur={this.props.handleBlur}
                 onKeyup={this.onKeyup}
                 onBlur={this.onBlur}
                 onClick={this.onClick}
+                slateLockInfo={slateLockInfo}
             />
         )
     }
