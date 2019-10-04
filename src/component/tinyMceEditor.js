@@ -210,11 +210,6 @@ export class TinyMceEditor extends Component {
         if(toolBar){
             toolBar.parentNode.removeChild(toolBar)
         }
-        // if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id){
-        //     tinymce.remove('#' +tinymce.activeEditor.id)
-        //     document.getElementById(e.target.id).contentEditable = true;
-        //     document.getElementById(e.target.id).focus();
-        // }
 
         if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
