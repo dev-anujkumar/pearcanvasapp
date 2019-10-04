@@ -45,6 +45,7 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
             _listObjectTemplate_.id = element.id;
             _listObjectTemplate_.subtype = type;
             _listObjectTemplate_.elementdata.subtype = type;
+            _listObjectTemplate_.elementdata.startNumber = startvalue;
             _listObjectTemplate_.versionUrn = element.versionUrn;
             _listObjectTemplate_.contentUrn = element.versionUrn;
             _listObjectTemplate_.html.text = getInitialListContent(type, startvalue, element.html.text);

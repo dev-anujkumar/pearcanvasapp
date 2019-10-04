@@ -32,8 +32,8 @@ const ListButtonDrop = (props) => {
                 <div className="topText">Enter numerical value</div>
                 <div>
                     <div id="listInputCover" className="">
-                        <input id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} />
-                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" className="fr-command fr-btn fr-btn-font_awesome" data-cmd="popupGoBtn">
+                        <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} />
+                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className="fr-command fr-btn fr-btn-font_awesome disabledListBtn" data-cmd="popupGoBtn">
                             <i className="fa fa-check" aria-hidden="true"></i>
                             <span className="fr-sr-only">submit</span>
                         </button>
@@ -52,7 +52,8 @@ const ListButtonDrop = (props) => {
  * @param {string} type | chosen orderd list type
  */
 const onListOptionSelect = (type, props) => {
-    const _value = parseInt(document.getElementById('listINputBox').value || 0);
+    let _value = parseInt(document.getElementById('listINputBox').value || 0);
+    _value = isNaN(_value) && 0 || _value;
     props.onListSelect(type, _value);
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     if (_listWrapperDiv)
