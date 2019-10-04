@@ -182,7 +182,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             } 
         }
     ).then(res =>{
-        console.log("SPLIT SLATE SUCCESS : ")
         sendDataToIframe({'type': NextSlate,'message': {}})
     }).catch(error =>{
         console.log("SPLIT SLATE API ERROR : ", error)

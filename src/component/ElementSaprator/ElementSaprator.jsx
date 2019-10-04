@@ -57,9 +57,7 @@ export default function ElementSaprator(props) {
      * @description: OnClick handler for split slate button
      */
     const splitSlateClickHandler = () => {
-        // alert('split slate button clicked')
         props.toggleSplitSlatePopup(true, props.index)
-        console.log('split slate button clicked')
     }
     
     return (

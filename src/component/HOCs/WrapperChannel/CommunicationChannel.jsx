@@ -79,7 +79,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'newSplitedSlate':
                     this.hanndleSplitSlate(message)
-                    console.log("NEW SLATE FORMED BY SPLITTING SLATE??>>?>?>:l>:p{l ",message)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
