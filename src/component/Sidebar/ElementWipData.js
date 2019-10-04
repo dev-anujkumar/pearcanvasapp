@@ -231,7 +231,7 @@ export default {
     // "list-5": {},
     // "list-6": {},
     // "list-7": {},
-    "image-figure-half": {},
+    /* "image-figure-half": {},
     "image-figure-width": {},
     "image-figure-wider": {},
     "image-figure-full": {},
@@ -243,6 +243,7 @@ export default {
     "video-smartlink": {},
     "video-alfresco": {},
     "audio-smartlink": {},
-    "audio-alfresco": {}
+    "audio-alfresco": {},
+    "mathml-equation":{} */
     //interactive types and others
 }

@@ -209,7 +209,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
+                editor = <ListElement   openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} />;
                 labelText = 'OL'
                 break;
             case elementTypeConstant.ELEMENT_ASIDE:

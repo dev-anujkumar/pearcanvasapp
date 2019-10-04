@@ -76,33 +76,35 @@ class Sidebar extends Component {
 
     primaryOption = () => {
         let primaryOptions = '';
-        let primaryOptionObject = elementList[this.state.activeElementType];
-        let primaryOptionList = Object.keys(primaryOptionObject);
-        if(primaryOptionList.length > 0) {
-            primaryOptions = primaryOptionList.map(item => {
-                return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
-                    {primaryOptionObject[item].text}
-                </li>;
-            });
-
-            let active = '';
-            if(this.state.elementDropdown === 'primary') {
-                active = 'active';
+        if(this.state.activeElementType){
+            let primaryOptionObject = elementList[this.state.activeElementType];
+            let primaryOptionList = Object.keys(primaryOptionObject);
+            if(primaryOptionList.length > 0) {
+                primaryOptions = primaryOptionList.map(item => {
+                    return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
+                        {primaryOptionObject[item].text}
+                    </li>;
+                });
+    
+                let active = '';
+                if(this.state.elementDropdown === 'primary') {
+                    active = 'active';
+                }
+    
+                primaryOptions = <div
+                    className="element-dropdown">
+                    <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
+                        {primaryOptionObject[this.state.activePrimaryOption].text}
+                        {dropdownArrow}
+                    </div>
+                    <ul className={`element-dropdown-content primary-options ${active}`}>
+                        {primaryOptions}
+                    </ul>
+                </div>;
             }
-
-            primaryOptions = <div
-                className="element-dropdown">
-                <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
-                    {primaryOptionObject[this.state.activePrimaryOption].text}
-                    {dropdownArrow}
-                </div>
-                <ul className={`element-dropdown-content primary-options ${active}`}>
-                    {primaryOptions}
-                </ul>
-            </div>;
-        }
-
-        return primaryOptions;
+    
+            return primaryOptions;
+        } 
     }
 
     handleSecondaryOptionChange = e => {
@@ -128,39 +130,42 @@ class Sidebar extends Component {
 
     secondaryOption = () => {
         let secondaryOptions = '';
-        let primaryOptionObject = elementList[this.state.activeElementType];
-        let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
-        let secondaryOptionList = Object.keys(secondaryOptionObject);
-        if(secondaryOptionList.length > 1) {
-            secondaryOptions = secondaryOptionList.map(item => {
-                return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
-                    {secondaryOptionObject[item].text}
-                </li>;
-            });
-
-            let display = '';
-            if(!(secondaryOptionList.length > 1)) {
-                display = 'hidden';
+        if(this.state.activeElementType){
+            let primaryOptionObject = elementList[this.state.activeElementType];
+            let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
+            let secondaryOptionList = Object.keys(secondaryOptionObject);
+            if(secondaryOptionList.length > 1) {
+                secondaryOptions = secondaryOptionList.map(item => {
+                    return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
+                        {secondaryOptionObject[item].text}
+                    </li>;
+                });
+    
+                let display = '';
+                if(!(secondaryOptionList.length > 1)) {
+                    display = 'hidden';
+                }
+    
+                let active = '';
+                if(this.state.elementDropdown === 'secondary') {
+                    active = 'active';
+                }
+    
+                secondaryOptions = <div
+                    className={`element-dropdown ${display}`}>
+                    <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
+                        {secondaryOptionObject[this.state.activeSecondaryOption].text}
+                        {dropdownArrow}
+                    </div>
+                    <ul className={`element-dropdown-content secondary-options ${active}`}>
+                        {secondaryOptions}
+                    </ul>
+                </div>;
             }
-
-            let active = '';
-            if(this.state.elementDropdown === 'secondary') {
-                active = 'active';
-            }
-
-            secondaryOptions = <div
-                className={`element-dropdown ${display}`}>
-                <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
-                    {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                    {dropdownArrow}
-                </div>
-                <ul className={`element-dropdown-content secondary-options ${active}`}>
-                    {secondaryOptions}
-                </ul>
-            </div>;
+    
+            return secondaryOptions;
         }
-
-        return secondaryOptions;
+        
     }
 
     handleAttrChange = (event) => {
@@ -176,34 +181,36 @@ class Sidebar extends Component {
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
-        let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
-        let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
-        if(primaryOptionList.attributes) {
-            attributionsObject = primaryOptionList.attributes;
-            attributionsList = Object.keys(attributionsObject);
-        } else if(secondaryOptionList.attributes) {
-            attributionsObject = secondaryOptionList.attributes;
-            attributionsList = Object.keys(attributionsObject);
-        }
-
-        if(attributionsList.length > 0) {
-            let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-            let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
-            let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
-
-            attributions = attributionsList.map(item => {
-                return <div key={item} data-attribution={attributionsObject[item].text}>
-                    <div>{attributionsObject[item].text}</div>
-                    <textarea className="attribution-editor" name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
-                </div>
-            });
-
-            attributions = <div className="attributions">
-                {attributions}
-            </div>;
-        }
-
-        return attributions;
+        if(this.state.activeElementType){
+            let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
+            let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
+            if(primaryOptionList.attributes) {
+                attributionsObject = primaryOptionList.attributes;
+                attributionsList = Object.keys(attributionsObject);
+            } else if(secondaryOptionList.attributes) {
+                attributionsObject = secondaryOptionList.attributes;
+                attributionsList = Object.keys(attributionsObject);
+            }
+    
+            if(attributionsList.length > 0) {
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
+    
+                attributions = attributionsList.map(item => {
+                    return <div key={item} data-attribution={attributionsObject[item].text}>
+                        <div>{attributionsObject[item].text}</div>
+                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                    </div>
+                });
+    
+                attributions = <div className="attributions">
+                    {attributions}
+                </div>;
+            }
+    
+            return attributions;
+        }  
     }
 
     render = () => {
