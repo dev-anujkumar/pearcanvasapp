@@ -40,6 +40,14 @@ class PopUp extends React.Component {
                 </div>
             )            
         }
+        if(props.isSplitSlatePopup){
+            return(
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.handleSplit}>Yes</span>
+                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                </div>
+            )
+        }
         else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -51,7 +59,7 @@ class PopUp extends React.Component {
     }
     
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup || this.props.tocDelete){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete){
             return null
         }
         else if(props.isLockPopup && props.withInputBox){
@@ -67,7 +75,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.tocDelete){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete){
             return null
         }
         else{
@@ -90,6 +98,11 @@ class PopUp extends React.Component {
         else if(props.isLockReleasePopup){
             return(
                 <div className={`dialog-window delete-element-text ${props.slateLockClass}`} >{props.dialogText}</div>
+            )
+        }
+        else if(props.isSplitSlatePopup){
+            return(
+                <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
         else {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'font-awesome/css/font-awesome.css';
+// import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
@@ -178,11 +178,11 @@ export class TinyMceEditor extends Component {
     }
 
     componentDidMount() {
-        if (config.currentInsertedType === "TEXT") {
+        /* if (config.currentInsertedType === "TEXT") {
             document.getElementById("cypress-" + config.currentInsertedIndex).focus();
         } else if (config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE") {
             document.getElementById("cypress-" + config.currentInsertedIndex + "-0").focus();
-        }
+        } */
 
         const { slateLockInfo: { isLocked } } = this.props
         if (!tinymce.editors.length && !isLocked) {
@@ -193,7 +193,6 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             tinymce.init(this.editorConfig)
         }
-        console.log("updaewwwww====>");
     }
 
     handleFocus = (e) => {
