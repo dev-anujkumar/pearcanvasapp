@@ -12,7 +12,10 @@ import PropTypes from 'prop-types';
 const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import { showHeaderBlocker, hideBlocker } from '../../../js/toggleLoader';
+import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
+
+import PopUp from '../../PopUp';
+import { getSlateLockStatus } from '../../CanvasWrapper/SlateLock_Actions';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -223,16 +226,108 @@ function WithWrapperCommunication(WrappedComponent) {
              *  */
         }
 
+        deleteAccepted = () => {
+            that.sendDataToIframe({ 'type': 'deleteAccepted', 'message': message })
+        }
+
+        deleteRejected = () => {
+            that.sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
+            disableHeader(false);
+        }
+
+        deleteTocItem = (message) => {
+            let that = this;
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
+
+            // vex.dialog.open({
+            //     message: 'Warning!',
+            //     input: [
+            //         '<div class="delete-element-text">Are you sure you want to delete, this action cannot be undone?</div>',
+            //     ].join(''),
+            //     buttons: [
+            //         $.extend({}, vex.dialog.buttons.YES, { text: 'Yes' }),
+            //         $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+            //     ],
+            //     callback: function (data) {
+            //         if (!data) {
+            //             that.sendDataToIframe({ 'type': 'deleteRejected', 'message': {} })
+            //             disableHeader(false);
+            //         } else {
+            //             that.sendDataToIframe({ 'type': 'deleteAccepted', 'message': message })
+            //         }
+            //     }
+            // });
+            
+            <PopUp 
+                togglePopup={this.deleteRejected}
+                active={true}
+                saveContent={this.deleteAccepted}
+                saveButtonText='Yes'
+                dialogText='Are you sure you want to delete this slate/container with pending changes?'
+                tocDelete = {true}
+                tocDeleteClass = 'tocDeleteClass'
+                />
+        }
+
         checkSlateLockAndDeleteSlate = (message, type) => {
+            let that=this;
+            let projectUrn = message.changedValue.projectUrn;
+            let userName = 'c5test01'//this.getCookie("USER_NAME");
+            let deleteSlateId = message.changedValue.containerUrn;
             /**
-             * TO BE IMPLEMENTED
-             *  */
+             * Delete element details for logging
+             */
+
+            that.deleteTocItem(message);
+
+    
+            // getSlateLockStatus(projectUrn, deleteSlateId, (response) => {          
+            //     if (response == "error"){
+            //         if(type==='withPendingTrack') {
+            //             // that.deleteTocItemWithPendingTrack(message);
+            //         }
+            //         else {
+            //             that.deleteTocItem(message);
+            //         }
+            //         return false;
+            //     }
+            //     try{
+            //         let status = {
+            //             slateLocked : response.isLocked,
+            //             userInfo : response.userId    
+            //         }
+            //         if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
+            //             status.slateLocked = false;
+            //         }
+                    
+            //         if(status.slateLocked){
+            //             that.slateLockAlert(status.userInfo);
+            //         }
+        
+            //         else{
+            //             if(type==='withPendingTrack') {
+            //                 // that.deleteTocItemWithPendingTrack(message);
+            //             }
+            //             else {
+            //                 that.deleteTocItem(message);
+            //             }
+            //         }
+            //     }
+            //     catch(err){
+            //         if(type==='withPendingTrack') {
+            //             // that.deleteTocItemWithPendingTrack(message);
+            //         }
+            //         else {
+            //             that.deleteTocItem(message);
+            //         }
+            //     }   
+            // });
         }
 
         onDeleteTocItem = (message, type) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
+            this.checkSlateLockAndDeleteSlate(message, type)
         }
 
         onSingleContainerDelete = () => {
