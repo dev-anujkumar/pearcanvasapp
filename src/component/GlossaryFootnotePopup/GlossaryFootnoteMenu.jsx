@@ -14,17 +14,11 @@ class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
     }
-    componentDidMount(){
-        console.log("glossaryFootnoteValue===>")
-    }
-    componentDidUpdate(){
-        console.log("glossaryFootnoteValueupdarwwww======>")
-    }
     render() {
-        const { glossaryFootnote,activePopUp } = this.props;
+        const { glossaryFootnote,activePopUp,glossaaryFootnotePopup} = this.props;
         return (
  
-            activePopUp ?  <GlossaryFootnotePopup glossaryFootnote={this.props.glossaryFootnoteValue.type} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />:null
+           <GlossaryFootnotePopup glossaaryFootnotePopup = {glossaaryFootnotePopup} glossaryFootnote={this.props.glossaryFootnoteValue.type} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />
         )
     }
 
@@ -34,13 +28,7 @@ class GlossaryFootnoteMenu extends React.Component {
     * @param {event} 
     */
 
-    togglePopup = () => {
-        this.setState({
-            showPopUp: this.props.activePopUp
-        })
-    }
     closePopup = () => {
-        //this.togglePopup()
         this.props.glossaaryFootnotePopup(false);
     }
     /**
@@ -49,7 +37,6 @@ class GlossaryFootnoteMenu extends React.Component {
     */
 
     saveContent =() => {
-        //  this.togglePopup()
         this.props.glossaaryFootnotePopup(false);
     }
 }

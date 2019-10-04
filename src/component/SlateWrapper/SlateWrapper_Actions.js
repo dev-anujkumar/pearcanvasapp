@@ -46,8 +46,6 @@ export const createElement = (type, index) => (dispatch, getState) => {
             createdElementData = elementAside
         } */
         newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        
-
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {

@@ -172,8 +172,11 @@ export class TinyMceEditor extends Component {
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
         let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
-        editor.insertContent(insertionText);
-        this.props.openGlossaryFootnotePopUp(true, "Glossary");
+        if(sectedText !== ""){
+            editor.insertContent(insertionText);
+            this.props.openGlossaryFootnotePopUp(true, "Glossary");
+        }
+        
 
 
     }
