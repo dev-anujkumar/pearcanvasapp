@@ -32,6 +32,7 @@ export class ListElement extends Component {
                 onKeyup={this.onKeyup}
                 onBlur={this.onBlur}
                 onClick={this.onClick}
+                slateLockInfo={slateLockInfo}
             />
         )
     }

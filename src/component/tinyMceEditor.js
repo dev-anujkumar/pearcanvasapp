@@ -296,7 +296,7 @@ export class TinyMceEditor extends Component {
 
         const mapStateToProps = state => {
             return {
-                slateLockInfo: state.slateLockReducer.slateLockInfo
+                
             };
         };
 
