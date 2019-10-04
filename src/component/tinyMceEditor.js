@@ -17,7 +17,7 @@ import { EditorConfig } from '../config/EditorConfig';
 import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
 import GlossaryFootnoteMenu from './GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 //import './../styles/Tiny.css';
-import  config  from '../config/config';
+import config from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
@@ -30,7 +30,7 @@ export class TinyMceEditor extends Component {
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
-            inline:true,
+            inline: true,
             formats: EditorConfig.formats,
             menubar: false,
             statusbar: false,
@@ -43,41 +43,50 @@ export class TinyMceEditor extends Component {
             force_br_newlines: true,
             forced_root_block: '',
             remove_linebreaks: false,
-            paste_preprocess:this.pastePreProcess,
+            paste_preprocess: this.pastePreProcess,
             setup: (editor) => {
                 editor.on('keydown', function (e) {
+                    /* if (e.keyCode == 13) {
+                        e.preventDefault();
+                        return false;
+                    } */
                     bindKeyDownEvent(editor, e);
                 });
+                
                 insertListButton(editor);
                 editor.on('mousedown',function(e) {
                     if(context.props.slateLockInfo.isLocked){
                         e.preventDefault();
                         e.stopPropagation()
                         return false;
-                    }   
+                    }
                 })
                 editor.on('click', (e) => {
-                    console.log('Editor was clicked: ' , e.target.nodeName);
-                    if( e.target.parentElement.nodeName == "SUP"){
-                        this.props.openGlossaryFootnotePopUp(true,"Footnote");
+                    console.log('Editor was clicked: ', e.target.nodeName);
+                    if (e.target.parentElement.nodeName == "SUP") {
+                        this.props.openGlossaryFootnotePopUp(true, "Footnote");
                     }
-                    if( e.target.nodeName == "DFN"){
-                        this.props.openGlossaryFootnotePopUp(true,"Glossary");
+                    else if (e.target.nodeName == "DFN") {
+                        this.props.openGlossaryFootnotePopUp(true, "Glossary");
+                    } else {
+                        this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
                 editor.on('nodeChange', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                    if(activeElement.innerText.trim().length){
-                        activeElement.classList.remove('place-holder') 
-                    }
-                    else{
-                        activeElement.classList.add('place-holder') 
+                    if (activeElement) {
+                        if (activeElement.innerText.trim().length) {
+                            activeElement.classList.remove('place-holder')
+                        }
+                        else {
+                            activeElement.classList.add('place-holder')
+                        }
                     }
                 });
                 editor.ui.registry.addButton('Footnote', {
                     text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
                     onAction: () => this.addFootnote(editor)
-                   
+
                 });
                 editor.ui.registry.addButton('Glossary', {
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
@@ -109,14 +118,14 @@ export class TinyMceEditor extends Component {
                     }
                 })
             },
-          
+
             init_instance_callback: (editor) => {
                 //  editor.fire('focus');                 
-                
+
             }
         }
     };
-    pastePreProcess = (plugin,args)=>{
+    pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         args.content = testElement.innerText;
@@ -157,56 +166,59 @@ export class TinyMceEditor extends Component {
     }
     addFootnote = (editor) => {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-        this.props.openGlossaryFootnotePopUp(true,"Footnote");
-        
+        this.props.openGlossaryFootnotePopUp(true, "Footnote");
+
     }
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
-        let insertionText  = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText +'</dfn>'
+        let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
         editor.insertContent(insertionText);
-        this.props.openGlossaryFootnotePopUp(true,"Glossary");
-       
+        this.props.openGlossaryFootnotePopUp(true, "Glossary");
+
 
     }
-  
-    componentDidMount(){
-        if(config.currentInsertedType === "TEXT"){
-            document.getElementById("cypress-"+config.currentInsertedIndex).focus();
-        }else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
-            document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
+
+    componentDidMount() {
+        if (config.currentInsertedType === "TEXT") {
+            document.getElementById("cypress-" + config.currentInsertedIndex).focus();
+        } else if (config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE") {
+            document.getElementById("cypress-" + config.currentInsertedIndex + "-0").focus();
         }
 
-        const { slateLockInfo:{ isLocked } } = this.props
-        if(!tinymce.editors.length && !isLocked){
+        const { slateLockInfo: { isLocked } } = this.props
+        if (!tinymce.editors.length && !isLocked) {
             tinymce.init(this.editorConfig)
         }
     }
-    componentDidUpdate(){
-        if(!tinymce.editors.length){
+    componentDidUpdate() {
+        if (!tinymce.editors.length) {
             tinymce.init(this.editorConfig)
         }
+        console.log("updaewwwww====>");
     }
 
-    handleFocus=(e)=>{
+    handleFocus = (e) => {
         this.props.handleEditorFocus()
-        if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
+        console.log("activeEditor=====>", tinymce.activeEditor);
+        if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
             return false;
         }
-        if(tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))){
+        if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
-            tinymce.remove('#'+tinymce.activeEditor.id)
-            if(document.getElementById(activeEditorId))
+            tinymce.remove('#' + tinymce.activeEditor.id)
+            if (document.getElementById(activeEditorId))
                 document.getElementById(activeEditorId).contentEditable = true;
         }
-        this.editorConfig.selector='#'+e.target.id;
+        this.editorConfig.selector = '#' + e.target.id;
         tinymce.init(this.editorConfig);
     }
 
-    handleBlur=(e)=>{
+    handleBlur = (e) => {
         this.props.handleBlur()
     }
     render() {
-        const { slateLockInfo:{ isLocked } } = this.props
+        const { slateLockInfo: { isLocked } } = this.props
+        console.log("locked------>", isLocked)
         /* const { slateLockInfo } = this.props
         const isLocked = slateLockInfo && slateLockInfo.isLocked ? true : false */
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
@@ -219,67 +231,79 @@ export class TinyMceEditor extends Component {
         // }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
-        let id = 'cypress-'+this.props.index;
+        let id = 'cypress-' + this.props.index;
         let placeHolderClass = '';
-        if(this.props.model && this.props.model.text) {
+        if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            if(!testElem.innerText.length)
-            placeHolderClass = 'place-holder';
+            if (!testElem.innerText.length)
+                placeHolderClass = 'place-holder';
         }
-        else {
+        else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
             let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model;
-            if(!testElem.innerText.length){
+            testElem.innerHTML = this.props.model.figuredata.text;
+            if (!testElem.innerText.length) {
+                placeHolderClass = 'place-holder';
+            }
+        } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.figuredata.preformattedtext;
+            if (!testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         }
-            
-        classes = this.props.className + " cypress-editable "+placeHolderClass;       
-        /**Render editable tag based on tagName*/
-        switch (this.props.tagName) {
-            case 'p':
-                return (                 
-                    <p id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</p>
-                );
-            case 'h4':
-                return (
-                    <h4 id={id} onBlur = {this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}></h4>
-                )
-            case 'code':
-                return (
-                    <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</code>
-                )
-            default:
-                return (
-                    <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model.text }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
-                )
+            else {
+                let testElem = document.createElement('div');
+                testElem.innerHTML = this.props.model;
+                if (!testElem.innerText.length) {
+                    placeHolderClass = 'place-holder';
+                }
+            }
+                classes = this.props.className + " cypress-editable " + placeHolderClass;
+                /**Render editable tag based on tagName*/
+                switch (this.props.tagName) {
+                    case 'p':
+                        return (
+                            <p id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</p>
+                        );
+                    case 'h4':
+                        return (
+                            <h4 id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}></h4>
+                        )
+                    case 'code':
+                        return (
+                            <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</code>
+                        )
+                    default:
+                        return (
+                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                        )
+                }
+            }
         }
-    }
-}
 
-TinyMceEditor.propTypes = {
-    /** class name of the element type to be rendered */
-    className: PropTypes.string,
-    /** Detail of element in JSON object */
-    model: PropTypes.object,
+        TinyMceEditor.propTypes = {
+            /** class name of the element type to be rendered */
+            className: PropTypes.string,
+            /** Detail of element in JSON object */
+            model: PropTypes.object,
 
-};
+        };
 
-TinyMceEditor.defaultProps = {
-    error: null,
-};
+        TinyMceEditor.defaultProps = {
+            error: null,
+        };
 
-const mapStateToProps = state => {
-    return {
-        slateLockInfo: state.slateLockReducer.slateLockInfo
-    };
-};
+        const mapStateToProps = state => {
+            return {
+                slateLockInfo: state.slateLockReducer.slateLockInfo
+            };
+        };
 
-export default connect(
-    mapStateToProps, 
-    {
-        // setActiveElement
-    }
-)(TinyMceEditor);
+        export default connect(
+            mapStateToProps,
+            {
+                // setActiveElement
+            }
+        )(TinyMceEditor);
 

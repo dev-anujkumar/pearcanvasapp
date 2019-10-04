@@ -14,11 +14,17 @@ class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentDidMount(){
+        console.log("glossaryFootnoteValue===>")
+    }
+    componentDidUpdate(){
+        console.log("glossaryFootnoteValueupdarwwww======>")
+    }
     render() {
-        const { glossaryFootnote } = this.props;
+        const { glossaryFootnote,activePopUp } = this.props;
         return (
  
-                <GlossaryFootnotePopup glossaryFootnote={glossaryFootnote} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />
+            activePopUp ?  <GlossaryFootnotePopup glossaryFootnote={this.props.glossaryFootnoteValue.type} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />:null
         )
     }
 
@@ -63,7 +69,7 @@ GlossaryFootnoteMenu.propTypes = {
 const mapStateToProps = state => {console.log('state:::', state);
     return {
       
-        glossaryFootnoteValue:state.glossaryFootnoteValue
+        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue
 
     };
 };
