@@ -226,7 +226,7 @@ export class ElementFigure extends Component {
                     <figure className={figureClass} resource="">
                         <header className="figure-header">
 
-                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick}cslateLockInfo={slateLockInfo} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
 
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
 
