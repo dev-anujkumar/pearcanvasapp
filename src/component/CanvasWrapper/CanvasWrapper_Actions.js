@@ -63,82 +63,158 @@ const findElementType = (element) => {
 							break;
 
 					}
-				// } else if (element.figuretype == 'table') {
-				// 	elementType['elementType'] = 'figure';
-				// 	elementType['primaryOption'] = 'primary-image-figure';
-				// 	switch (element.subtype) {
-				// 		case 'imageTextWidth':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
-				// 			break;
-				// 		case 'imageWiderThanText':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
-				// 			break;
-				// 		case 'imageFullscreen':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
-				// 			break;
-				// 		case 'image50Text':
-				// 		default:
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
-				// 			break;
+				} else if (element.figuretype == 'table') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-table';
+					switch (element.subtype) {
+						case 'imageTextWidthTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-width';
+							break;
+						case 'imageWiderThanTextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-wider';
+							break;
+						case 'imageFullscreenTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-full';
+							break;
+						case 'image50TextTableImage':
+						default:
+							elementType['secondaryOption'] = 'secondary-image-table-half';
+							break;
 
-				// 	}
-				// } else if (element.figuretype == '') {
-				// 	elementType['elementType'] = 'figure';
-				// 	elementType['primaryOption'] = 'primary-image-figure';
-				// 	switch (element.subtype) {
-				// 		case 'imageTextWidth':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
-				// 			break;
-				// 		case 'imageWiderThanText':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
-				// 			break;
-				// 		case 'imageFullscreen':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
-				// 			break;
-				// 		case 'image50Text':
-				// 		default:
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
-				// 			break;
+					}
+				} else if (element.figuretype == 'mathImage') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-image-equation';
+					switch (element.subtype) {
+						case 'imageTextWidthMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-width';
+							break;
+						case 'imageWiderThanTextMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-wider';
+							break;
+						case 'imageFullscreenMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-full';
+							break;
+						case 'image50TextMathImage':
+						default:
+							elementType['secondaryOption'] = 'secondary-image-equation-half';
+							break;
 
-				// 	}
-				// } else if (element.figuretype == '') {
-				// 	elementType['elementType'] = 'figure';
-				// 	elementType['primaryOption'] = 'primary-image-figure';
-				// 	switch (element.subtype) {
-				// 		case 'imageTextWidth':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
-				// 			break;
-				// 		case 'imageWiderThanText':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
-				// 			break;
-				// 		case 'imageFullscreen':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
-				// 			break;
-				// 		case 'image50Text':
-				// 		default:
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
-				// 			break;
+					}
+				} 
+				else if (element.figuretype == 'tableasmarkup') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-editor-table-equation';
+					switch (element.subtype) {
+						case 'imageTextWidthTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-width';
+							break;
+						case 'imageWiderThanTextEditorTable':
+							elementType['secondaryOption'] = 'secondary-editor-table-wider';
+							break;
+						case 'imageFullscreenTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-full';
+							break;
+						case 'image50TextEditorTable':
+						default:
+							elementType['secondaryOption'] = 'secondary-editor-table-half';
+							break;
 
-				// 	}
-				// } else if (element.figuretype == '') {
-				// 	elementType['elementType'] = 'figure';
-				// 	elementType['primaryOption'] = 'primary-image-figure';
-				// 	switch (element.subtype) {
-				// 		case 'imageTextWidth':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
-				// 			break;
-				// 		case 'imageWiderThanText':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
-				// 			break;
-				// 		case 'imageFullscreen':
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
-				// 			break;
-				// 		case 'image50Text':
-				// 		default:
-				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
-				// 			break;
+					}
+				}else if (element.figuretype == 'authoredtext') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-mathml-equation';
+				
+				 } else if (element.figuretype == 'codelisting') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-blockcode-equation';
+					switch (element.figuretype.programlanguage) {
+						case 'C++':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C++';
+							break;
+						case 'Java':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Java';
+							break;
+						case 'C':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C';
+							break;
+						case 'Python':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Python';
+							break;
+						case 'Javascript':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Javascript';
+							break;
+						case 'HTML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-HTML';
+							break;
+						case 'CSS':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-CSS';
+							break;
+						case 'Apache':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Apache';
+							break;
+						case 'C#':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C#';
+							break;
+						case 'JSON':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-JSON';
+							break;
+						case 'Makefile':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Makefile';
+							break;
+						case 'Kotlin':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Kotlin';
+							break;
+						case 'R':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-R';
+							break;
+						case 'Perl':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Perl';
+							break;
+						case 'PHP':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-PHP';
+							break;
+						case 'GO':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-GO';
+							break;
+						case 'Ruby':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Ruby';
+							break;
+						case 'Lisp':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Lisp';
+							break;
+						case 'Objective_C':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Objective_C';
+							break;
+						case 'Scala':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Scala';
+							break;
+						case 'Shell_Session':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Shell_Session';
+							break;
+						case 'SQL':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-SQL';
+							break;
+						case 'Swift':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Swift';
+							break;
+						case 'XML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-XML';
+							break;
+						case 'Matlab':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Matlab';
+							break;
+						case 'GLSL':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-GLSL';
+							break;
+						case 'SML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-SML';
+							break;
+						default:
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Default';
+							break;
 
-				// 	}
+					}
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
@@ -203,10 +279,21 @@ const findElementType = (element) => {
 							elementType['secondaryOption'] = 'secondary-interactive-mmi';
 							break;
 					}
+				} else if (element.figuretype == 'assessment') {
+					elementType['elementType'] = 'element-assessment';
+					elementType['primaryOption'] = 'primary-single-assessment';
+					switch (element.figuredata.elementdata.assessmentformat) {
+						case 'tdx':
+							elementType['secondaryOption'] = 'secondary-single-assessment-TDX';
+							break;
+						case 'cite':
+						default:
+							elementType['secondaryOption'] = 'secondary-single-assessment-CITE';
+							break;
 				}
 			}
 			break;
-
+		}
 		case 'element-aside':
 			if(element.subtype === '' || element.subtype === 'sidebar') {
 				elementType['elementType'] = 'element-aside';
