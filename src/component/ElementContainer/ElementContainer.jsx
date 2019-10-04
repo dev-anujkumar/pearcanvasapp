@@ -236,8 +236,8 @@ class ElementContainer extends Component {
                 {editor}
             </div>
             {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
-                <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />
-                {element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
+                {config.PERMISSIONS.includes('notes_adding') && <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                {config.PERMISSIONS.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
                 </div> :''}
             { this.state.popup && <PopUp 
