@@ -52,7 +52,7 @@ describe('Tests Slate Wrapper Actions', () => {
         });
     });
 
-    it('testing------- SWAP ELEMENT ------action', () => {
+    xit('testing------- SWAP ELEMENT ------action', () => {
         store = mockStore(() => initialState);
         const typee = "element-authoredtext";
         const index = 2;
