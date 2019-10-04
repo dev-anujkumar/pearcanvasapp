@@ -19,6 +19,7 @@ export class ListElement extends Component {
         const { className, placeholder, model } = this.props
         return (
             <TinyMceEditor
+                openGlossaryFootnotePopUp = {this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
                 elementId={this.props.elementId}
                 element={this.props.element}

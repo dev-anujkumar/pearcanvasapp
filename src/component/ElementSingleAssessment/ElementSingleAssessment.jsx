@@ -26,7 +26,7 @@ export class ElementSingleAssessment extends Component {
         this.state = {
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: props.model && props.model.figuredata && props.model.figuredata.elementdata ? props.model.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: props.model && props.figuredata && props.figuredata.elementdata ? props.figuredata.elementdata.usagetype : "Quiz",
 
         };
     }

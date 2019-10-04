@@ -56,10 +56,7 @@ export class ReactEditor extends React.Component {
     //   tinymce.init(this.editorConfig);
     // }
     return (
-      <div >
-        <Editor
-          init={this.editorConfig}
-        />
+      <div>   
         <p className={this.props.className} placeholder={this.props.placeholder} onFocus={this.handleFocus} contentEditable="true" id={this.props.id} ></p>
       </div>
     )
