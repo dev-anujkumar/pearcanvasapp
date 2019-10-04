@@ -79,7 +79,9 @@ class CanvasWrapper extends Component {
         // } else {
             if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
-             }
+             }else if(tinymce.$('.cypress-editable').length){
+                tinymce.$('.cypress-editable').eq(0).trigger('focus');
+             }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],

@@ -205,6 +205,11 @@ export class TinyMceEditor extends Component {
             return false;
         }
 
+        // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
+        let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');
+        if(toolBar){
+            toolBar.parentNode.removeChild(toolBar)
+        }
         // if(tinymce.activeEditor && tinymce.activeEditor.id !== e.target.id){
         //     tinymce.remove('#' +tinymce.activeEditor.id)
         //     document.getElementById(e.target.id).contentEditable = true;
