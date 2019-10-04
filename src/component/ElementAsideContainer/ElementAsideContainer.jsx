@@ -91,8 +91,8 @@ class ElementAsideContainer extends Component {
                                     // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
                                     // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scroll: true, // or HTMLElement
-                                    filter: "div.elementSapratorContainer",
-                                    draggable: "div.editor",
+                                    filter: ".elementSapratorContainer",
+                                    draggable: ".editor",
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
                                         
@@ -110,7 +110,7 @@ class ElementAsideContainer extends Component {
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
                                 }}
-                                tag=".element-container"
+                                tag="div"
                             >
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
 

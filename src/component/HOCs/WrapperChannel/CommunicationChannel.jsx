@@ -16,6 +16,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 
 import PopUp from '../../PopUp';
 import { getSlateLockStatus } from '../../CanvasWrapper/SlateLock_Actions';
+import { thisExpression } from '@babel/types';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -24,7 +25,9 @@ function WithWrapperCommunication(WrappedComponent) {
             this.state = {
                 project_urn: "",
                 isTableLaunched: false,
-                showBlocker : false
+                showBlocker : false,
+                toggleTocDelete : false,
+                tocDeleteMessage : null
             };
         }
 
@@ -224,20 +227,12 @@ function WithWrapperCommunication(WrappedComponent) {
              *  */
         }
 
-        deleteAccepted = () => {
-            that.sendDataToIframe({ 'type': 'deleteAccepted', 'message': message })
-        }
-
-        deleteRejected = () => {
-            that.sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
-            disableHeader(false);
-        }
-
         deleteTocItem = (message) => {
             let that = this;
             hideBlocker();
             showTocBlocker();
             disableHeader(true);
+
 
             // vex.dialog.open({
             //     message: 'Warning!',
@@ -258,15 +253,10 @@ function WithWrapperCommunication(WrappedComponent) {
             //     }
             // });
             
-            <PopUp 
-                togglePopup={this.deleteRejected}
-                active={true}
-                saveContent={this.deleteAccepted}
-                saveButtonText='Yes'
-                dialogText='Are you sure you want to delete this slate/container with pending changes?'
-                tocDelete = {true}
-                tocDeleteClass = 'tocDeleteClass'
-                />
+            this.setState({
+                    toggleTocDelete : true,
+                    tocDeleteMessage : message
+            }) 
         }
 
         checkSlateLockAndDeleteSlate = (message, type) => {
@@ -369,7 +359,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} />
+                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} toggleTocDelete = {this.state.toggleTocDelete} tocDeleteMessage = {this.state.tocDeleteMessage}/>
                 </React.Fragment>
             )
         }

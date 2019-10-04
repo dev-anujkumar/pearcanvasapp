@@ -25,7 +25,8 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, disableHeader } from '../../js/toggleLoader';
+
 
 function guid() {
     function s4() {
@@ -49,7 +50,8 @@ class SlateWrapper extends Component {
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
-            splittedSlateIndex : 0
+            splittedSlateIndex : 0,
+            toggleTocDeletePopup : false
         }
     }
 
@@ -459,7 +461,7 @@ class SlateWrapper extends Component {
             )
         }
     }
-    
+
     toggleSplitSlatePopup = (value, index) => {
         this.setState({
             showSplitSlatePopup : value,
@@ -481,6 +483,42 @@ class SlateWrapper extends Component {
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
+    deleteAccepted = () => {
+        this.setState({
+            toggleTocDeletePopup : !this.state.toggleTocDeletePopup
+        })
+        sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
+        this.deleteRejected()
+    }
+
+    deleteRejected = () => {
+        this.setState({
+            toggleTocDeletePopup : !this.state.toggleTocDeletePopup
+        })
+        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
+        // disableHeader(false);
+        // // this.props.showBlocker(false)
+        // hideBlocker();
+        this.props.showBlocker(false)
+        hideBlocker();
+    }
+
+    showTocDeletePopup= () => {
+        if(this.props.toggleTocDelete){
+            return(
+                <PopUp 
+                togglePopup={this.deleteRejected}
+                active={true}
+                saveContent={this.deleteAccepted}
+                saveButtonText='Yes'
+                dialogText='Are you sure you want to delete this slate/container with pending changes?'
+                tocDelete = {true}
+                tocDeleteClass = 'tocDeleteClass'
+                />
+                
+            )
+        }
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -559,6 +597,7 @@ class SlateWrapper extends Component {
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
                 {this.showSplitSlatePopup()}
+                {this.showTocDeletePopup()}
             </React.Fragment>
         );
     }
