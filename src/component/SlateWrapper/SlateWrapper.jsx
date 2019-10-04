@@ -17,7 +17,7 @@ import {
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -478,15 +478,7 @@ class SlateWrapper extends Component {
     
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
-        let iframeWin = window.parent
-        if (iframeWin) {
-            iframeWin.postMessage(
-                {
-                    'type': 'splitCurrentSlate',
-                    'message': {}
-                },
-                WRAPPER_URL);
-        }
+        sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
