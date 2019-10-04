@@ -7,6 +7,10 @@
     outline: none;
     background: #fff;
 }
+.interactive-element .cypress-editable.place-holder::before{
+    margin-top : 2px !important;
+}
+
  .id-info {
     padding: 5px 0 10px;
 } 
