@@ -12,6 +12,7 @@ export const UPDATE_COMMENT = "UPDATE_COMMENT"
 export const GET_PROJECT_USER = "GET_PROJECT_USER"
 export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
+export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
 /*---------------Element Creation ----------------------*/ 
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"

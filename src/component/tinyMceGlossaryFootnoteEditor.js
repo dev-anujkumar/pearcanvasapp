@@ -25,7 +25,8 @@ export class ReactEditor extends React.Component {
   }
 
   onEditorBlur = (editor) => {
-    editor.on('blur', function (e) {
+    editor.on('blur',  (e) => {
+      this.props.glossaaryFootnotePopup(false);   
       e.stopImmediatePropagation();
       e.preventDefault();
     });

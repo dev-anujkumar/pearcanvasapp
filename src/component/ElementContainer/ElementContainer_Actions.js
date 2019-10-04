@@ -12,11 +12,22 @@ let headers = {
 }
 export const addComment = (commentString, elementId) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
-    let newComment = {
+     let newComment = {
         comment: commentString,
         commentCreator: config.userId,
         assignee: config.assignee
-    };
+    }; 
+
+    let Comment =  {
+        commentType: "comment",
+        commentDateTime: new Date().toISOString(),   //"2019-04-09T14:22:28.218Z"
+        commentAssignee: config.userId,
+        commentCreator: config.userId,
+        commentString: commentString,
+        commentStatus: "OPEN",
+        commentOnEntity: elementId,
+        replyComments: []
+    }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
         { headers: headers }
@@ -38,6 +49,10 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             dispatch({
                 type: ADD_COMMENT,
                 payload: newslateData
+            });
+            dispatch({
+                type: ADD_NEW_COMMENT,
+                payload: Comment
             });
 
         }).catch(error => {
