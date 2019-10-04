@@ -42,6 +42,14 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
     const { bodymatter } = contents;
     bodymatter.map((element, index) => {
         if (activeElement.elementId === element.id) {
+            //***************************************************************
+            //************ this is to cover wip conversion case *************
+            if (!element.html) {
+                element.html = {
+                    "text": "<ol class='upper-alpha' data-treelevel='1' style='counter-increment: none;'><li class='reset listItemNumeroUnoUpperAlpha'>This is a default text and will perform working once wip conversion is ready</li></ol>"
+                }
+            }
+            //***************************************************************
             _listObjectTemplate_.id = element.id;
             _listObjectTemplate_.subtype = type;
             _listObjectTemplate_.elementdata.subtype = type;
