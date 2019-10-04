@@ -48,7 +48,9 @@ class SlateWrapper extends Component {
         this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
             showLockPopup: false,
-            lockOwner: ""
+            lockOwner: "",
+            showSplitSlatePopup: false,
+            splittedSlateIndex : 0
         }
     }
 
@@ -440,8 +442,42 @@ class SlateWrapper extends Component {
         ]
 
     }
+    showSplitSlatePopup = () => {
+        if(this.state.showSplitSlatePopup){
+            const dialogText = `Are you sure you want to split this slate at the selected section? `
+            this.props.showBlocker(true)
+            showTocBlocker();
 
-    handleSplitSlate = (index) => {
+            return(
+                <PopUp  dialogText={dialogText}
+                        active={true}
+                        togglePopup={this.toggleSplitSlatePopup}
+                        isSplitSlatePopup={true}
+                        handleSplit={this.handleSplitSlate}
+                        isInputDisabled={true}
+                        splitSlateClass="split-slate"
+                />
+            )
+        }
+    }
+    
+    toggleSplitSlatePopup = (value, index) => {
+        this.setState({
+            showSplitSlatePopup : value,
+        })
+        if(value){
+            this.setState({
+                splittedSlateIndex : index + 1
+            })
+        }
+        else{
+            this.props.showBlocker(false)
+            hideBlocker();
+        }
+    }
+    
+    handleSplitSlate = () => {
+        this.toggleSplitSlatePopup(false)
         let iframeWin = window.parent
         if (iframeWin) {
             iframeWin.postMessage(
@@ -451,7 +487,7 @@ class SlateWrapper extends Component {
                 },
                 WRAPPER_URL);
         }
-        this.props.setSplittedElementIndex(index+1)
+        this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
 
@@ -486,7 +522,7 @@ class SlateWrapper extends Component {
                                 esProps={this.elementSepratorProps(index, false)}
                                 elementType={element.type}
                                 slateType = {_slateType}
-                                handleSplitSlate = {this.handleSplitSlate}
+                                toggleSplitSlatePopup = {this.toggleSplitSlatePopup}
                             />
                         </React.Fragment>
                     )
@@ -530,6 +566,7 @@ class SlateWrapper extends Component {
                     }
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
+                {this.showSplitSlatePopup()}
             </React.Fragment>
         );
     }

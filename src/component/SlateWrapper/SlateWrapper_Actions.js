@@ -11,7 +11,8 @@ import {
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
   };
@@ -154,7 +155,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         "contentUrn": newSlateObj.entityUrn,
         "versionUrn": newSlateObj.containerUrn
     }
-    let oldSlateBodymatter = [...getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter]
+    let oldSlateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter
     let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
 
     oldSlateBodymatter.forEach((oldSlateBody)=>{
@@ -164,10 +165,26 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         })
     })
     newSlateBodymatter.forEach((newSlateBody)=>{
-        oldSlateData.contents.bodymatter.push({
+        newSlateData.contents.bodymatter.push({
             type: newSlateBody.type,
             id: newSlateBody.id
         })
     })
-    console.log("splittedElementIndex>>>><<<>>>>>POPOPOPOP",splitIndex)
+    slateDataList.push(oldSlateData, newSlateData)
+
+    return axios.put(
+        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}`,
+        JSON.stringify({slateDataList}),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            } 
+        }
+    ).then(res =>{
+        console.log("SPLIT SLATE SUCCESS : ")
+        sendDataToIframe({'type': NextSlate,'message': {}})
+    }).catch(error =>{
+        console.log("SPLIT SLATE API ERROR : ", error)
+    })
 }
