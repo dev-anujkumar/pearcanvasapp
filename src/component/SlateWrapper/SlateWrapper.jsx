@@ -555,12 +555,13 @@ class SlateWrapper extends Component {
                 </div>
                 <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
                     {
-                        (selectedType, startValue) => (
+                        (selectedType, startValue, inputRef) => (
                             <ListButtonDrop
                                 selectedOption={selectedType}
                                 startValue={startValue}
                                 setListDropRef={this.setListDropRef}
                                 onListSelect={this.props.convertToListElement}
+                                inputRef={inputRef}
                             />
                         )
                     }

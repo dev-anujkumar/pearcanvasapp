@@ -96,7 +96,7 @@ export const bindKeyDownEvent = (editor, e) => {
                 }
                 let timeoutInstance = setTimeout(() => {
                     clearTimeout(timeoutInstance);
-                    updateNestedList(e.target);                    
+                    updateNestedList(e.target);
                     return false;
                 });
             }
@@ -130,19 +130,19 @@ export const bindKeyDownEvent = (editor, e) => {
      */
     console.log('key code', e.which)
     if (atEnd && e.which == 9 && !e.shiftKey) {
-        editor.commands.indent();
+        editor.editorCommands.commands.exec.indent();
     }
     /**
      * Facilitate indent feature at end of text on shift+TAB key
      */
     if (atEnd && e.which == 9 && e.shiftKey) {
-        editor.commands.outdent();
+        editor.editorCommands.commands.exec.outdent();
     }
 
     /**
      * Facilitate TAB key on list
      */
-    if ((e.which == 9)) {
+    if ((e.which == 9) && anchorNode.closest('li')) {
         let demo = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('data-treelevel'));
         let updatelistFlag = true;
 
@@ -160,7 +160,7 @@ export const bindKeyDownEvent = (editor, e) => {
              * if is is first item then prevent default
              */
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            if (closestLi.closest('ol').findChildren('li').indexOf(anchorNode) === 0) {
+            if (closestLi.closest('ol').findChildren('li').indexOf(closestLi) === 0) {
                 prohibitEventBubling(e);
                 return false;
             }
@@ -205,7 +205,7 @@ export const bindKeyDownEvent = (editor, e) => {
         if (updatelistFlag) {
             let timeoutInstance = setTimeout(() => {
                 clearTimeout(timeoutInstance);
-                updateNestedList(e.target);                
+                updateNestedList(e.target);
                 return false;
             });
         }
@@ -227,7 +227,7 @@ export const bindKeyDownEvent = (editor, e) => {
         // else update list content //
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
-            updateNestedList(e.target);            
+            updateNestedList(e.target);
             return false;
         });
     }
@@ -269,7 +269,9 @@ const updateNestedList = (element) => {
             treelevel = parseInt(parentTreeLevel) + 1;
         }
         allOlElement[i].setAttribute('data-treelevel', treelevel);
-
+        if (treelevel > 1) {
+            allOlElement[i].style.counterIncrement = null;
+        }
         let childLielement = allOlElement[i].children;
 
         allOlElement[i].removeAllClass();
