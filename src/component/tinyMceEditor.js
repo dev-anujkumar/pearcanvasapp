@@ -72,6 +72,7 @@ export class TinyMceEditor extends Component {
                     }
                 });
                 editor.on('nodeChange', (e) => {
+                    
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
                         if (activeElement.innerText.trim().length) {
@@ -220,6 +221,7 @@ export class TinyMceEditor extends Component {
         }
         this.editorConfig.selector = '#' + e.target.id;
         tinymce.init(this.editorConfig);
+    
     }
 
     handleBlur = (e) => {

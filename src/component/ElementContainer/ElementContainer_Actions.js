@@ -2,11 +2,8 @@ import axios from 'axios';
 import config from '../../config/config';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ADD_COMMENT, 
-    DELETE_ELEMENT, 
-    AUTHORING_ELEMENT_CREATED,
-    ADD_NEW_COMMENT
- } from "./../../constants/Action_Constants";
+
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED } from "./../../constants/Action_Constants";
 let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
@@ -36,7 +33,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
         { headers: headers }
     )
         .then(response => {
-            
+            sendDataToIframe({'type': HideLoader,'message': { status: false }});
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
@@ -44,12 +41,11 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             let { contents: _slateContent } = _slateObject;
             // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
-            for (let key in _slateBodyMatter) {
-                console.log("_slateBodyMatter[key]",_slateBodyMatter[key])
-                if (_slateBodyMatter[key].id.toString() === elementId) {
-                    _slateBodyMatter[key].comments = true
-                } 
-            }
+            const element = _slateBodyMatter.map(element => 
+             {   if(element.id === elementId){
+                    element['comments'] = true
+                }}
+                );
             dispatch({
                 type: ADD_COMMENT,
                 payload: newslateData

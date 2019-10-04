@@ -6,28 +6,32 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
   slateType="section"
 >
   <div
-    className="slate-Title"
+    className="slate-title"
   >
     <div
       className="canvas-header"
       id="canvas-header"
     >
-      <label
-        className="header-label"
-        style={
-          Object {
-            "fontSize": "12px",
-            "minWidth": "max-content",
-          }
-        }
+      <div
+        className="slate-header"
       >
-        SLATE:
-      </label>
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          SLATE:
+        </label>
+      </div>
       <div
         className="input-text"
         style={
           Object {
-            "minWidth": "696px",
+            "minWidth": "656px",
           }
         }
       >
@@ -40,16 +44,16 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
-      <Button
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="backward-nav-active"
       >
         <span
-          className="btn-element"
-          id="backward-nav-active"
+          className="btn-element backward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -60,15 +64,14 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
             }
           />
         </span>
-      </Button>
-      <Button
+      </ElementButton>
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="forward-nav-active"
       >
         <span
-          className="btn-element"
-          id="forward-nav-active"
+          className="btn-element forward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -79,7 +82,7 @@ exports[`Testing SlateHeader component with props render SlateHeader component  
             }
           />
         </span>
-      </Button>
+      </ElementButton>
     </div>
   </div>
 </SlateHeader>
@@ -91,28 +94,32 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
   slateType="assessment"
 >
   <div
-    className="slate-Title"
+    className="slate-title"
   >
     <div
       className="canvas-header"
       id="canvas-header"
     >
-      <label
-        className="header-label"
-        style={
-          Object {
-            "fontSize": "12px",
-            "minWidth": "max-content",
-          }
-        }
+      <div
+        className="slate-header"
       >
-        ASSESSMENT SLATE:
-      </label>
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          ASSESSMENT SLATE:
+        </label>
+      </div>
       <div
         className="input-text"
         style={
           Object {
-            "minWidth": "675px",
+            "minWidth": "585px",
           }
         }
       >
@@ -125,16 +132,16 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
-      <Button
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="backward-nav-active"
       >
         <span
-          className="btn-element"
-          id="backward-nav-active"
+          className="btn-element backward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -145,15 +152,14 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
             }
           />
         </span>
-      </Button>
-      <Button
+      </ElementButton>
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="forward-nav-active"
       >
         <span
-          className="btn-element"
-          id="forward-nav-active"
+          className="btn-element forward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -164,7 +170,7 @@ exports[`Testing SlateHeader component with props render assessment Slate  1`] =
             }
           />
         </span>
-      </Button>
+      </ElementButton>
     </div>
   </div>
 </SlateHeader>
@@ -176,23 +182,27 @@ exports[`Testing SlateHeader component with props render container-introduction 
   slateType="container-introduction"
 >
   <div
-    className="slate-Title"
+    className="slate-title"
   >
     <div
       className="canvas-header"
       id="canvas-header"
     >
-      <label
-        className="header-label"
-        style={
-          Object {
-            "fontSize": "12px",
-            "minWidth": "max-content",
-          }
-        }
+      <div
+        className="slate-header"
       >
-        INTRODUCTORY SLATE:
-      </label>
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          INTRODUCTORY SLATE:
+        </label>
+      </div>
       <div
         className="input-text"
         style={
@@ -210,16 +220,16 @@ exports[`Testing SlateHeader component with props render container-introduction 
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
-      <Button
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="backward-nav-active"
       >
         <span
-          className="btn-element"
-          id="backward-nav-active"
+          className="btn-element backward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -230,15 +240,14 @@ exports[`Testing SlateHeader component with props render container-introduction 
             }
           />
         </span>
-      </Button>
-      <Button
+      </ElementButton>
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="forward-nav-active"
       >
         <span
-          className="btn-element"
-          id="forward-nav-active"
+          className="btn-element forward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -249,7 +258,90 @@ exports[`Testing SlateHeader component with props render container-introduction 
             }
           />
         </span>
-      </Button>
+      </ElementButton>
+    </div>
+  </div>
+</SlateHeader>
+`;
+
+exports[`Testing SlateHeader component with props render default Slate  1`] = `
+<SlateHeader
+  slateTitle={Object {}}
+  slateType=""
+>
+  <div
+    className="slate-title"
+  >
+    <div
+      className="canvas-header"
+      id="canvas-header"
+    >
+      <div
+        className="slate-header"
+      >
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          SLATE:
+        </label>
+      </div>
+      <div
+        className="input-text"
+      >
+        <label
+          className="u-hidden"
+          htmlFor="txt-input"
+        />
+        <input
+          className="txt-input"
+          disabled={true}
+          placeholder="title"
+          type="text"
+          value=""
+        />
+      </div>
+      <ElementButton
+        labelText="P"
+        onClick={[Function]}
+        type="backward-nav-active"
+      >
+        <span
+          className="btn-element backward-nav-active"
+          onClick={[Function]}
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </ElementButton>
+      <ElementButton
+        labelText="P"
+        onClick={[Function]}
+        type="forward-nav-active"
+      >
+        <span
+          className="btn-element forward-nav-active"
+          onClick={[Function]}
+        >
+          <img
+            src={
+              Object {
+                "process": [Function],
+              }
+            }
+          />
+        </span>
+      </ElementButton>
     </div>
   </div>
 </SlateHeader>
@@ -261,28 +353,32 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
   slateType="section"
 >
   <div
-    className="slate-Title"
+    className="slate-title"
   >
     <div
       className="canvas-header"
       id="canvas-header"
     >
-      <label
-        className="header-label"
-        style={
-          Object {
-            "fontSize": "12px",
-            "minWidth": "max-content",
-          }
-        }
+      <div
+        className="slate-header"
       >
-        SLATE:
-      </label>
+        <label
+          className="header-label"
+          style={
+            Object {
+              "fontSize": "12px",
+              "minWidth": "max-content",
+            }
+          }
+        >
+          SLATE:
+        </label>
+      </div>
       <div
         className="input-text"
         style={
           Object {
-            "minWidth": "696px",
+            "minWidth": "656px",
           }
         }
       >
@@ -295,16 +391,16 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
           disabled={true}
           placeholder="title"
           type="text"
+          value=""
         />
       </div>
-      <Button
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="backward-nav-active"
       >
         <span
-          className="btn-element"
-          id="backward-nav-active"
+          className="btn-element backward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -315,15 +411,14 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
             }
           />
         </span>
-      </Button>
-      <Button
+      </ElementButton>
+      <ElementButton
         labelText="P"
         onClick={[Function]}
         type="forward-nav-active"
       >
         <span
-          className="btn-element"
-          id="forward-nav-active"
+          className="btn-element forward-nav-active"
           onClick={[Function]}
         >
           <img
@@ -334,7 +429,7 @@ exports[`Testing SlateHeader component with props render section Slate  1`] = `
             }
           />
         </span>
-      </Button>
+      </ElementButton>
     </div>
   </div>
 </SlateHeader>
