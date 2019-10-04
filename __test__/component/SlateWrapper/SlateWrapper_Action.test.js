@@ -43,7 +43,6 @@ describe('Tests Slate Wrapper Actions', () => {
                 response: ""
             });
         });
-
         return store.dispatch(actions.createFigureElement(typee, index)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(FIGURE_ELEMENT_CREATED);
