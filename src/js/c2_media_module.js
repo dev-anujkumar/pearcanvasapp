@@ -1,6 +1,6 @@
 // import store from '../store';
 import store from './../appstore/store';
-import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader';
+import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
 
 // const authModule = require('./auth_module.js');
 const configOBJ = require('./../config/config');
@@ -28,19 +28,25 @@ const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
 //const list = [{"repo":CMIS_UK_REPO,"repoName":"UK"}, {"repo":CMIS_US_REPO,"repoName":"US"}];
 // let list = [];
 const EPS_API = config_object['EPS_API'];
-const CMIS_REPO = config_object['CMIS_REPO'];
+const CMIS_REPO = config_object['CMIS_REPO'].toString();
 //const CMIS_REPO = '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]';
 const PATTERN_ADD_ASSET = config_patterns['PATTERN_ADD_ASSET'];
 const PATTERN_BROKER = config_patterns['PATTERN_BROKER'];
 const PATTERN_PRODUCT_LINK = config_patterns['PATTERN_PRODUCT_LINK'];
 const PATTERN_VENDOR = config_patterns['PATTERN_VENDOR'];
 const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
-
+// if(Object.keys(config_patterns).length > 0) {
+//     Object.values(config_patterns).forEach(pattern => {
+//         const script = document.createElement("script");
+//         script.type = "text/javascript";
+//         script.src = pattern;
+//         document.head.appendChild(script);
+//     });
+// }
 
 /* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
 if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
 if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */
-
 
 var patternBroker = PatternBroker.default;
 var patternProductLink = PatternProductLink.default;
@@ -63,16 +69,16 @@ var libConfig = { 'locale': 'en_US',
                     'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
                     'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
                 },
-                'database'          : CMDS_DATABASE,
-                'server'            : CMDS_DATA_ENDPOINT,
-                'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                'userId'            : uname
+                    'database'          : CMDS_DATABASE,
+                    'server'            : CMDS_DATA_ENDPOINT,
+                    'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                    'userId'            : uname
                 };
 
 patternBroker.setup(libConfig);
+
 // var module = {};
 export const c2MediaModule = {
-
     addAnAsset:addAnAsset,
     productLinkOnsaveCallBack: function(assetPopoverFlag,data,callback) {
         //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
@@ -249,7 +255,7 @@ export const c2MediaModule = {
             var observer = new MutationObserver(callbackOb);
 
             // Start observing the target node for configured mutations
-            observer.observe(targetNode, config);
+           // observer.observe(targetNode, config);
 
         } catch (ex1) {
 
@@ -293,7 +299,7 @@ export const c2MediaModule = {
             }
 
             if(CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== ''){
-                try{
+               // try{
                     const cmisRepo = JSON.parse(CMIS_REPO);
                     if(cmisRepo.length > 0){
                         const canWeProceedWithPL = this.validateRegistries(cmisRepo);
@@ -315,13 +321,14 @@ export const c2MediaModule = {
                                                 'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                                                 'userId'            : uname
                                             };
-                  
+                                console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
                                 var productLinkConfig = {'selector' : renderderedTagSelector};
                                 productLinkConfig.repoList = cmisRepo;
                                 productLinkConfig.language = 'en';  // YS
                                 productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
                                 productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
                                 productLink = patternBroker.create('ProductLink', patternProductLink);
+                                console.log('jjjj',productLink.corsId)
                                 if(productLink.corsId){
                                     libConfig.headers['Correlation-Id'] = productLink.corsId;
                                 }
@@ -335,33 +342,34 @@ export const c2MediaModule = {
                     }else{
                         console.log('CMIS REPO - Should have atleast one Registry');
                     }
-                }catch(error){
-                    console.log('CMIS REPO - Invalid JSON Object', error);    
-                }
+              //  }
+                // catch(error){
+                //     console.log('CMIS REPO - Invalid JSON Object', error);    
+                // }
             }else {
                 console.log('CMIS REPO - should not be Empty, Provide Valid REPO Values');
             }
         }
-        // var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];		
-        // // Options for the observer (which mutations to observe)		
-        // var config = { attributes: true };		
-        // // Callback function to execute when mutations are observed		
-        // var callbackOb = function(mutationsList, observer) {		
-        //     //console.log(mutationsList)		
-        //     for (var mutation of mutationsList) {		
-        //         if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {		
-        //            {		
-        //             hideTocBlocker();	
-        //             disableHeader(false);
-        //             observer.disconnect();		
-        //            }		
-        //         }		
-        //     }		
-        // };		
-        // // Create an observer instance linked to the callback function		
-        // var observer = new MutationObserver(callbackOb);		
-        // // Start observing the target node for configured mutations		
-        // observer.observe(targetNode, config);
+        var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];		
+        // Options for the observer (which mutations to observe)		
+        var config = { attributes: true };		
+        // Callback function to execute when mutations are observed		
+        var callbackOb = function (mutationsList, observer) {		
+            //console.log(mutationsList)		
+            for (var mutation of mutationsList) {		
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {		
+                   {		
+                    hideTocBlocker();	
+                    disableHeader(false);
+                    observer.disconnect();		
+                   }		
+                }		
+            }		
+        };		
+        // Create an observer instance linked to the callback function		
+        var observer = new MutationObserver(callbackOb);		
+        // Start observing the target node for configured mutations		
+       // observer.observe(targetNode, config);
     }
 }
 

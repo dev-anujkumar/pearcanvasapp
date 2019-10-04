@@ -37,9 +37,7 @@ class CanvasWrapper extends Component {
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
 
-        c2MediaModule.onLaunchAddAnAsset(function(alfrescoData) {
-            console.log("alfrescoData:::", alfrescoData);
-        });
+        
     }
 
     componentDidMount() {        
@@ -68,9 +66,15 @@ class CanvasWrapper extends Component {
             slateId = config.slateManifestURN
 
         this.props.getSlateLockStatus(projectUrn ,slateId) 
+        setTimeout(()=>{c2MediaModule.onLaunchAddAnAsset(function(alfrescoData) {
+            console.log("alfrescoData:::", alfrescoData);
+        });},20000)
+        
+    
     }
 
     componentDidUpdate(prevProps, prevState){
+        
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -98,6 +102,7 @@ class CanvasWrapper extends Component {
             'type': TocToggle,
             'message': {"open":false}
         });
+        
     }
 
     navigate = (nav) => {
