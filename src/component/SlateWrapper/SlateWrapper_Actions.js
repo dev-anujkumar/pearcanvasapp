@@ -2,10 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
-    VIDEO_ELEMENT_CREATED
-    ,FIGURE_ELEMENT_CREATED,
-    INTERACTIVE_ELEMENT_CREATED,
-    FETCH_SLATE_DATA,
+    
     SWAP_ELEMENT
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';

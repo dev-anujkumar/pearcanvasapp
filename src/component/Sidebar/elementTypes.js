@@ -108,10 +108,10 @@ export default {
         'primary-image-figure': {
             text: 'Figure Image',
             subtype: {
-                // 'secondary-image-figure-quarter': {
-                //     text: '25% Text Width',
-                //     labelText: 'Fg'
-                // },
+                'secondary-image-figure-quarter': {
+                    text: '25% Text Width',
+                    labelText: 'Fg'
+                },
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'Fg'
@@ -328,7 +328,6 @@ export default {
                 },
             }
         },
-		
         'primary-editor-table-equation': {
             text: 'Table Editor',
             subtype: {
@@ -520,7 +519,14 @@ export default {
         'primary-single-assessment': {
             text: 'Single Assessment',
             subtype: {
-                
+                'secondary-single-assessment-CITE': {
+                    text: 'CITE',
+                    labelText: 'Qu'
+                },
+                'secondary-single-assessment-TDX': {
+                    text: 'TDX',
+                    labelText: 'Qu'
+                },
             }
         }
     }
