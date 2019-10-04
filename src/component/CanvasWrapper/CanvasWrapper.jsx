@@ -21,6 +21,10 @@ import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag }
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
+
+// IMPORT - Actions //
+import { convertToListElement } from '../ListElement/ListElement_Action.js';
+
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
@@ -33,6 +37,7 @@ class CanvasWrapper extends Component {
             // activeSlateIndex: 0,
             // activeSlate: config.slateList[0],
             // showBlocker : false,
+            editorToolbarRef: null,
             showReleasePopup : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -57,6 +62,10 @@ class CanvasWrapper extends Component {
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
 
+        // *************************************************
+        // commenting below setState() to test alternative
+        // *************************************************
+        // this.setState({ editorToolbarRef: this.refs.editorToolbarRef })
         this.props.getSlateLockStatus(projectUrn ,slateId) 
     }
 
@@ -68,9 +77,9 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            // if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
-            //     document.getElementById(window.tinymce.activeEditor.id).focus();
-            // }
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
+                document.getElementById(window.tinymce.activeEditor.id).focus();
+             }
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
@@ -170,15 +179,15 @@ class CanvasWrapper extends Component {
 
 
     
-    openGlossaryFootnotePopUp=()=>{
-              if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
+ /*    openGlossaryFootnotePopUp=()=>{
+       if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
         return (
-        <GlossaryFootnoteMenu glossaryFootnote={this.props.glossaryFootnoteValue.type} activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
+        <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
         )
         
     }
     
-    }    
+    }     */
 
     showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
@@ -200,6 +209,7 @@ class CanvasWrapper extends Component {
     }
     
     render() {
+        
         // let navDisabled = '';
         // if(this.state.activeSlateIndex === 0) {
         //     navDisabled = 'back';
@@ -209,9 +219,10 @@ class CanvasWrapper extends Component {
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
-                <div id="editor-toolbar" className="editor-toolbar">
-                    {/* put editor tool */}
+                <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
+                    {/* editor tool goes here */}
                     <Toolbar />
+                    {/* custom list editor component */}
                 </div>
 
                 <div className='workspace'>
@@ -223,16 +234,16 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             {/* <span className='--rm-place'>Settings</span> */}
-                            {this.openGlossaryFootnotePopUp()}
-                             <Sidebar showPopUp={this.showPopUp}/>
-                            {/*  <GlossaryFootnoteMenu glossaryFootnote="Glossary"/>  */}
+                           
+                            {this.props.glossaryFootnoteValue.popUpStatus ?  <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />: <Sidebar showPopUp={this.showPopUp}/> }
+                            {/*  <Sidebar showPopUp={this.showPopUp}/> */}
                             {/* put side setting */}
                         </div>
                     </div>
@@ -263,6 +274,7 @@ export default connect(
         toggleCommentsPanel,
         fetchComments,
         fetchCommentByElement,
+        convertToListElement,
         getSlateLockStatus,
         setSlateLock,
         releaseSlateLock,

@@ -21,7 +21,15 @@ class GlossaryFootnotePopup extends Component {
             document.getElementById("footnote-0").focus();
         }
     }
-
+    componentDidUpdate(){
+        if (document.getElementById("glossary-0")) {
+            document.getElementById("glossary-0").focus();
+        }
+        if (document.getElementById("footnote-0")) {
+            document.getElementById("footnote-0").focus();
+        }
+        console.log("glossaryFootnoteValueupdarwwww==================================>")
+    }
     render() {
          const { glossaryFootnote ,closePopup , saveContent} = this.props;
          let id = glossaryFootnote === 'Glossary'? 'glossary-1' : 'footnote-0';
