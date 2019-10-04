@@ -2,6 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ListButtonDrop from '../../../src/component/ListButtonDrop/ListButtonDrop.jsx';
 import ListButtonPortal from '../../../src/component/ListButtonDrop/ListButtonDropPortal.jsx';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+import { listMockData } from '../../../fixtures/slateTestingData.js';
+
+const mockStore = configureMockStore(middlewares);
+const store = mockStore({
+    appStore: {
+        activeElement: {
+            elementId: "urn:pearson:work:726de1de-e703-4daf-8907-a125ffa3a04b",
+            elementType: "element-authoredtext",
+            elementWipType: "element-list",
+            primaryOption: "primary-list",
+            secondaryOption: "secondary-list-3",
+            tag: "OL"
+        }
+    }
+});
 
 describe('Testing <ListButtonDrop> Component', () => {
 
@@ -41,9 +60,20 @@ describe('Testing <ListButtonDrop> Component', () => {
         const div = document.createElement('div');
         div.id = 'editor-toolbar';
         ReactDOM.render(
-            <ListButtonPortal>
-                <ListButtonDrop {...props} />
-            </ListButtonPortal>,
+            <Provider store={store}>
+                <ListButtonPortal slateData={listMockData}>
+                    {
+                        (selectedType, startValue) => (
+                            <ListButtonDrop
+                                selectedOption={selectedType}
+                                startValue={startValue}
+                                setListDropRef={function (node) { nodeRef = node }}
+                                onListSelect={spy}
+                            />
+                        )
+                    }
+                </ListButtonPortal>
+            </Provider>,
             div);
         ReactDOM.unmountComponentAtNode(div);
     })

@@ -160,3 +160,15 @@
   font-size: 14px;
   line-height: 2.0em;
 }
+.dialog-window.split-slate{
+  margin-top: 1.3em;
+    font-family: "Helvetica Neue", sans-serif;
+    color: #847676;
+    font-size: 1em;
+    line-height: 2.0em;
+    font-weight: normal;
+}
+.save-button.split-slate,
+.cancel-button.split-slate{
+  font-family: "Helvetica Neue", sans-serif;
+}

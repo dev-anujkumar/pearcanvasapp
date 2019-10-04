@@ -12,11 +12,12 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
-    , createFigureElement , createInteractiveElement, swapElement
+    , createFigureElement , createInteractiveElement, swapElement,
+    setSplittedElementIndex
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -25,6 +26,7 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -45,7 +47,9 @@ class SlateWrapper extends Component {
         this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
             showLockPopup: false,
-            lockOwner: ""
+            lockOwner: "",
+            showSplitSlatePopup: false,
+            splittedSlateIndex : 0
         }
     }
 
@@ -437,6 +441,46 @@ class SlateWrapper extends Component {
         ]
 
     }
+    showSplitSlatePopup = () => {
+        if(this.state.showSplitSlatePopup){
+            const dialogText = `Are you sure you want to split this slate at the selected section? `
+            this.props.showBlocker(true)
+            showTocBlocker();
+
+            return(
+                <PopUp  dialogText={dialogText}
+                        active={true}
+                        togglePopup={this.toggleSplitSlatePopup}
+                        isSplitSlatePopup={true}
+                        handleSplit={this.handleSplitSlate}
+                        isInputDisabled={true}
+                        splitSlateClass="split-slate"
+                />
+            )
+        }
+    }
+    
+    toggleSplitSlatePopup = (value, index) => {
+        this.setState({
+            showSplitSlatePopup : value,
+        })
+        if(value){
+            this.setState({
+                splittedSlateIndex : index + 1
+            })
+        }
+        else{
+            this.props.showBlocker(false)
+            hideBlocker();
+        }
+    }
+    
+    handleSplitSlate = () => {
+        this.toggleSplitSlatePopup(false)
+        sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
+        this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
+    }
+    
 
     /**
      * renderElement | renders single element according to its type
@@ -469,6 +513,7 @@ class SlateWrapper extends Component {
                                 esProps={this.elementSepratorProps(index, false)}
                                 elementType={element.type}
                                 slateType = {_slateType}
+                                toggleSplitSlatePopup = {this.toggleSplitSlatePopup}
                             />
                         </React.Fragment>
                     )
@@ -501,17 +546,19 @@ class SlateWrapper extends Component {
                 </div>
                 <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
                     {
-                        (selectedType, startValue) => (
+                        (selectedType, startValue, inputRef) => (
                             <ListButtonDrop
                                 selectedOption={selectedType}
                                 startValue={startValue}
                                 setListDropRef={this.setListDropRef}
                                 onListSelect={this.props.convertToListElement}
+                                inputRef={inputRef}
                             />
                         )
                     }
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
+                {this.showSplitSlatePopup()}
             </React.Fragment>
         );
     }
@@ -535,6 +582,7 @@ export default connect(
     mapStateToProps,
     {
         createElement,
-        swapElement
+        swapElement,
+        setSplittedElementIndex
     }
 )(SlateWrapper);

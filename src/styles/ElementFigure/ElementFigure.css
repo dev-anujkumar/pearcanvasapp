@@ -6,6 +6,9 @@
     border: none;
     outline: none;
 }
+.figureElement .cypress-editable.place-holder::before{
+    margin-top : 2px !important;
+}
 .figureElement .cypress-editable:not(pre){
 padding:0px;
 }

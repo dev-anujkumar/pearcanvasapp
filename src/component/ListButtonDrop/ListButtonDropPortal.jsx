@@ -18,11 +18,11 @@ class ListButtonDropPortal extends Component {
         this.el = this.createParentElement();
         this.startValue = null;
         this.selectedOption = null;
+        this.inputRef = React.createRef();
     }
 
     shouldComponentUpdate(nextProp, nextState) {
         if (this.props.slateData === nextProp.slateData && this.props.activeElement === nextProp.activeElement) {
-            console.log(true)
             return false;
         }
         return true;
@@ -37,6 +37,7 @@ class ListButtonDropPortal extends Component {
         //     refBtn.appendChild(this.el);
         // }
         // **********************************
+        this.inputRef.current.value = this.startValue;
     }
 
     componentWillUnmount = () => {
@@ -102,7 +103,7 @@ class ListButtonDropPortal extends Component {
         const { children } = this.props;
         this.getListDropPopUpState(this.props.slateData, this.props.activeElement)
         return ReactDOM.createPortal(
-            children(this.selectedOption, this.startValue),
+            children(this.selectedOption, this.startValue, this.inputRef),
             this.el
         );
     }
