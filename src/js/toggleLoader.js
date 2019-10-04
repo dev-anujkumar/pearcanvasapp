@@ -28,6 +28,10 @@ export const showTocBlocker = () => {
     disableHeader(true);
 }
 
+export const showHeaderBlocker = () => {
+    disableHeader(true);
+}
+
 export const hideTocBlocker = () => {
     sendDataToIframe({'type': "blockerTOC",'message': {status: false}});
 }

@@ -7,6 +7,8 @@ import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
 import config from '../../config/config'
+import { HideLoader, NextSlate, PreviousSlate} from '../../constants/IFrameMessageTypes.js';
+import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
 * @description - SlateHeader is a class based component. It is defined simply
@@ -27,7 +29,12 @@ import config from '../../config/config'
      */
 
     handleNavClick(nav) {
-        this.props.onNavigate(nav);
+        config.currentInsertedType = "";
+        if(nav === "back"){
+            sendDataToIframe({'type': PreviousSlate,'message': {}})
+        }else{
+            sendDataToIframe({'type': NextSlate,'message': {}})
+        }
     }
 
     setDynamicStyle = (type,className) => {
@@ -121,9 +128,9 @@ import config from '../../config/config'
                         <label className="u-hidden" htmlFor="txt-input" />
                         <input type="text" className="txt-input" placeholder="title" value={currentSlateTitle} disabled/>
                     </div>
-                    {/* <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
-                    <Button type={backDisabled} onClick={() => this.handleNavClick("back")}/>
-                    <Button type={nextDisabled} onClick={() => this.handleNavClick("next")}/>
+                    {/*  <Button type="backward-nav-active" onClick={() => this.handleNavClick("back")}/> */}
+                    <Button type={ (!config.disablePrev) ? 'backward-nav-active' : 'backward-nav-disable'} onClick={() => this.handleNavClick("back")}/>
+                    <Button type={ (!config.disableNext) ? 'forward-nav-active' : 'forward-nav-disable'} onClick={() => this.handleNavClick("next")}/>
                 </div>
             </div>
         )

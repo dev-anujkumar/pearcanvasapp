@@ -96,6 +96,24 @@ h1, h2, h3, h4, h5, p {
     }
 }
 
+.cypress-editable.place-holder::before{
+    content: attr(placeholder);
+    color: #ADADAD; 
+    display: block;
+    position : absolute;
+    margin-top : 7px;
+}
+/* .cypress-editable:empty::before {
+    content: attr(placeholder);
+    color: #ADADAD; 
+    display: block;
+}
+.cypress-editable p:empty::before {
+    content: " rrr ";
+    color: #ADADAD; 
+    display: block;
+} */
+
 /* .content-editor:before {
     display: block;
 }

@@ -2,25 +2,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sortable from 'react-sortablejs';
+
 // IMPORT - Components //
 import SlateHeader from '../CanvasSlateHeader';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
-import { createElement } from './SlateWrapper_Actions';
+import {
+    createElement ,createVideoElement
+    , createFigureElement , createInteractiveElement, swapElement
+} from './SlateWrapper_Actions';
+import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
+import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
 
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
+
+        this.setListDropRef = this.setListDropRef.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
             showLockPopup: false,
             lockOwner: ""
@@ -31,9 +53,68 @@ class SlateWrapper extends Component {
         if(document.getElementById("cypress-0")){
             document.getElementById("cypress-0").focus();
         }
+
+        // binds handleClickOutside to document mousedown //
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+
+    /**
+     * setListDropRef | sets list drop ref to listDropRef
+     * @param {*} node | node reference to ListButtonDrop component
+     */
+    setListDropRef(node) {
+        this.listDropRef = node;
+    }
+
+    /**
+     * handleClickOutside | currently handles when clicked outside of list drop
+     * @param {*} event | current triggerd event with target
+     */
+    handleClickOutside(event) {
+        // *********************************************************************
+        // handle when clicked outside of listdrop 
+        if (this.listDropRef && !this.listDropRef.contains(event.target)) {
+            if (event.target.classList.contains('fa-list-ol') ||
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                return;
+            let _listWrapperDiv = document.querySelector('#listDropWrapper');
+            if (_listWrapperDiv)
+                _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
+        }
+        // *********************************************************************
+    }
+
+    /**
+     * customListDropClickAction | handle when user clicks one of the ordered list option 
+     * @param {string} type | chosen orderd list type
+     * @param {number} value | entered numeric value
+     */
+    customListDropClickAction(type, value) {
+        console.log(type, value);
+    }
+
+    componentDidUpdate() {
+        this.renderDefaultElement();
+    }
+
+    renderDefaultElement = () =>{
+        let _slateData = this.props.slateData
+        if (_slateData !== null && _slateData !== undefined) {
+            if (Object.values(_slateData).length > 0) {
+                let _slateObject = Object.values(_slateData)[0];
+                let { contents: _slateContent } = _slateObject;
+                let { bodymatter: _slateBodyMatter } = _slateContent;
+                if (_slateBodyMatter.length == 0) {
+                    /* For showing the spinning loader send HideLoader message to Wrapper component */
+                    sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                    this.props.createElement(TEXT, "0");
+                }
+            }
+        }
     }
     
     static getDerivedStateFromProps = (props, state) =>{
+     
         const { slateLockInfo : { isLocked } } = props
         if(!isLocked){
             return {
@@ -83,12 +164,73 @@ class SlateWrapper extends Component {
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
+                            <Sortable
+                                options={{
+                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
+                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                    dragoverBubble: false,
+	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                    
+
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    
+
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
+                                    handle : '.element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
+                                    scroll: true, // or HTMLElement
+                                    filter: ".elementSapratorContainer",
+                                    draggable: ".editor",
+                                    forceFallback: true,
+                                    onStart: function (/**Event*/evt) {
+                                        // same properties as onEnd
+                                        _context.checkSlateLockStatus(evt)
+                                    },
+                                   
+                                    // Element dragging ended
+                                    onEnd:  (/**Event*/evt) => {
+                                        let swappedElementData;
+                                        swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            slateId:_slateId,
+                                            workedExample : false   
+                                        }
+
+                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                    },
+                                   
+                                }}
+                               
+                                // [Optional] Use ref to get the sortable instance
+                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
+                                ref={(c) => {
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
+                                }}
+    
+                // [Optional] A tag to specify the wrapping element. Defaults to "div".
+                tag="div"
+    
+                onChange={(items, sortable, evt) => { }}
+                            >
                                 {
-                                    this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                                    this['cloneCOSlateControlledSource_' + random]
+                                    //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                                 }
+                            </Sortable>
                             </div>
                             <SlateFooter />
                         </div>
@@ -166,7 +308,7 @@ class SlateWrapper extends Component {
                         inputValue={lockOwner}
                         isLockPopup={true}
                         isInputDisabled={true}
-                        assessmentClass="lock-message"
+                        slateLockClass="lock-message"
                         withInputBox={true}
                 />
             )
@@ -187,6 +329,7 @@ class SlateWrapper extends Component {
     splithandlerfunction = (type, index, firstOne,parentUrn) => {
         if(this.checkLockStatus()){
             this.togglePopup(true)
+            return false
         }
         let indexToinsert
         // Detects element insertion from the topmost element separator
@@ -314,7 +457,7 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer                            
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
@@ -339,7 +482,7 @@ class SlateWrapper extends Component {
             console.error(error);
         }
     }
-
+    
     /**
      * render | renders title and slate wrapper
      */
@@ -356,6 +499,18 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
+                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                    {
+                        (selectedType, startValue) => (
+                            <ListButtonDrop
+                                selectedOption={selectedType}
+                                startValue={startValue}
+                                setListDropRef={this.setListDropRef}
+                                onListSelect={this.props.convertToListElement}
+                            />
+                        )
+                    }
+                </ListButtonDropPortal>
                 {this.showLockPopup()}
             </React.Fragment>
         );
@@ -379,6 +534,7 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     {
-        createElement
+        createElement,
+        swapElement
     }
 )(SlateWrapper);

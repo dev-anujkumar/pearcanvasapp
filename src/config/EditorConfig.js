@@ -16,9 +16,9 @@ export const EditorConfig = {
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
-    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent numlist bullist | superscript subscript charmap ',
+    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent  Glossary Footnote customListButton bullist | superscript subscript charmap',
     contentStyle: CONTENT_STYLE,
-    plugins: "lists advlist placeholder charmap"
+    plugins: "lists advlist placeholder charmap paste"
 }
 
 export const GlossaryFootnoteEditorConfig = {

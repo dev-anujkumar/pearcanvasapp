@@ -1,5 +1,4 @@
 {
-    
     "name": "cypress-canvas-refactor",
     "version": "1.0.0",
     "description": "Pearson Cypress Canvas Stablization",
@@ -98,11 +97,14 @@
         "react-loadable": "^5.5.0",
         "react-redux": "^7.1.0",
         "react-router-dom": "^5.0.1",
+        "react-sortablejs": "^1.5.1",
         "redux": "^4.0.4",
         "redux-logger": "^3.0.6",
         "redux-saga": "^1.0.5",
         "redux-thunk": "^2.3.0",
+        "sortablejs": "^1.10.0",
         "tinymce": "^5.0.13",
-        "utils": "^0.3.1"
+        "utils": "^0.3.1",
+        "font-awesome": ">=4.4.0"
     }
 }

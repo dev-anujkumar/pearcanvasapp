@@ -38,9 +38,9 @@ export class ElementAudioVideo extends Component {
                     <figure className="figureAudio"  >
                         <header className="figureHeader">
 
-                            <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} />
 
-                            <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} />
 
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : DEFAULT_ASSET}</div>
@@ -50,12 +50,12 @@ export class ElementAudioVideo extends Component {
                             </audio>
                         </div>
                         <figcaption className="figcaptionAudio" >
-                            <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption} onKeyup={this.onKeyup} onClick={this.onClick} />
                         </figcaption>
 
                     </figure>
                     <div >
-                        <TinyMceEditor  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credit} onKeyup={this.onKeyup} onClick={this.onClick} />
+                        <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credit} onKeyup={this.onKeyup} onClick={this.onClick} />
                     </div>
                 </div>
                 break;
@@ -67,8 +67,8 @@ export class ElementAudioVideo extends Component {
                     <figure className="figureVideo" >
 
                         <header className="figureHeader">
-                            <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} />
-                            <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} />
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : DEFAULT_ASSET}</div>
                         <div className="pearson-component video" data-type="video" >
@@ -80,11 +80,11 @@ export class ElementAudioVideo extends Component {
                             </video>
                         </div>
                         <figcaption className="figcaptionVideo" >
-                            <TinyMceEditor  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption}  onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption}  onKeyup={this.onKeyup} onClick={this.onClick} />
                         </figcaption>
                     </figure>
                     <div >
-                        <TinyMceEditor handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credit}  onKeyup={this.onKeyup} onClick={this.onClick} />
+                        <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credit}  onKeyup={this.onKeyup} onClick={this.onClick} />
                     </div>
                 </div>
                 break;

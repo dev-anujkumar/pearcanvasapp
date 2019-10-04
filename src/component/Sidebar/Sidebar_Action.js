@@ -17,9 +17,11 @@ const handleElementConversion = (elementData, store) => {
         bodymatter.map((element, index) => {
             if(elementData.elementId === element.id) {
                 let wipData = wipElementObject[format];
-                wipData.id = elementData.elementId;
-                element = wipData;
-                bodymatter[index] = element;
+                if(wipData){
+                    wipData.id = elementData.elementId;
+                    element = wipData;
+                    bodymatter[index] = element;
+                } 
             }
         });
     }

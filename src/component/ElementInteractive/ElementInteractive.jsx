@@ -276,11 +276,11 @@ class Interactive extends React.Component {
                         <div data-reactroot="">
                             <div className="sh-container">
                                 <div>
-                                    <TinyMceEditor index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
+                                    <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
                                      onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
                                     <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
                                     <a className="paragraphNumeroUno">
-                                        <TinyMceEditor index={`${index}-1`} placeholder="Enter hidden text" 
+                                        <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} placeholder="Enter hidden text" 
                                         onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} tagName={'p'}
                                         handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}/></a>
                                     </p>
@@ -298,9 +298,9 @@ class Interactive extends React.Component {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
-                            <TinyMceEditor index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} 
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} 
                              onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
-                            <TinyMceEditor index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} 
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} 
                              onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
                     </header>
                     <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{itemId}</div>
@@ -318,18 +318,18 @@ class Interactive extends React.Component {
                                 )
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
-                                    <TinyMceEditor index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
+                                    <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
                                     onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
                                  </a>
                         }
                     </div>
                     <figcaption>
-                        <TinyMceEditor index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
+                        <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
                          onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
                     </figcaption>
                 </figure>
                 <div>
-                    <TinyMceEditor index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
+                    <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
                      onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} />
                 </div>
             </div>
