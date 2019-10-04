@@ -27,7 +27,7 @@ import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
-
+import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -280,6 +280,7 @@ export default connect(
         getSlateLockStatus,
         setSlateLock,
         releaseSlateLock,
-        setLockPeriodFlag
+        setLockPeriodFlag,
+        handleSplitSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

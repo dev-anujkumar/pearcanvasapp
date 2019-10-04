@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import 'font-awesome/css/font-awesome.css';
+// import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
@@ -179,11 +178,11 @@ export class TinyMceEditor extends Component {
     }
 
     componentDidMount() {
-        if (config.currentInsertedType === "TEXT") {
+        /* if (config.currentInsertedType === "TEXT") {
             document.getElementById("cypress-" + config.currentInsertedIndex).focus();
         } else if (config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE") {
             document.getElementById("cypress-" + config.currentInsertedIndex + "-0").focus();
-        }
+        } */
 
         const { slateLockInfo: { isLocked } } = this.props
         if (!tinymce.editors.length && !isLocked) {
@@ -194,7 +193,6 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             tinymce.init(this.editorConfig)
         }
-        console.log("updaewwwww====>");
     }
 
     handleFocus = (e) => {
@@ -227,8 +225,6 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked } } = this.props
         console.log("locked------>", isLocked)
-        /* const { slateLockInfo } = this.props
-        const isLocked = slateLockInfo && slateLockInfo.isLocked ? true : false */
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -302,16 +298,5 @@ export class TinyMceEditor extends Component {
             error: null,
         };
 
-        const mapStateToProps = state => {
-            return {
-                slateLockInfo: state.slateLockReducer.slateLockInfo
-            };
-        };
-
-        export default connect(
-            mapStateToProps,
-            {
-                // setActiveElement
-            }
-        )(TinyMceEditor);
+        export default TinyMceEditor;
 

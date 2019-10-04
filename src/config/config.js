@@ -4,7 +4,7 @@ let config = {
     JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "EiFGuwLt6yvAlBpmYGJybnasrZE.*AAJTSQACMDIAAlNLABw0SDZ6dUwxTzRzcmlMMkhMZWM3QUlvaEFia1E9AAJTMQACMDM.*",
+    ssoToken: "Uqm9DCHQMi-rIvbBq9eVTf3qG6A.*AAJTSQACMDIAAlNLABxhL05GMG9hN1JDckJSNmNaaHdaQUYwYUxJVms9AAJTMQACMDE.*",
     userId: 'c5test01',
     assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
@@ -19,6 +19,7 @@ let config = {
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c'
     ],
+    PERMISSIONS : [],
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
