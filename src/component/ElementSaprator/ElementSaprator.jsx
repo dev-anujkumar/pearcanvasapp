@@ -66,7 +66,7 @@ export default function ElementSaprator(props) {
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
                 <div className='elemDiv-split'>
                     {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                        <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
+                       { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
                 </div>
 
             <div className='elemDiv-hr'>
@@ -76,7 +76,7 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        <Button onClick={toggleElementList} className="dropbtn" type="expand" />
+                       { config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>

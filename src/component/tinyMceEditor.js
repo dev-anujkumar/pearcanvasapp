@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
@@ -219,8 +218,6 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked } } = this.props
         console.log("locked------>", isLocked)
-        /* const { slateLockInfo } = this.props
-        const isLocked = slateLockInfo && slateLockInfo.isLocked ? true : false */
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -294,16 +291,5 @@ export class TinyMceEditor extends Component {
             error: null,
         };
 
-        const mapStateToProps = state => {
-            return {
-                slateLockInfo: state.slateLockReducer.slateLockInfo
-            };
-        };
-
-        export default connect(
-            mapStateToProps,
-            {
-                // setActiveElement
-            }
-        )(TinyMceEditor);
+        export default TinyMceEditor;
 

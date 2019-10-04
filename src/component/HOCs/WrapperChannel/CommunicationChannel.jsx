@@ -158,6 +158,15 @@ function WithWrapperCommunication(WrappedComponent) {
                      config.projectUrn = message.id;
                      config.projectEntityUrn = message.entityUrn;
                     break;
+                case 'permissionsDetails' :                    
+                    this.handlePermissioning(message);
+                    break;
+            }
+        }
+
+        handlePermissioning = (message) => {
+            if(message && message.permissions) {                  
+                config.PERMISSIONS = message.permissions;              
             }
         }
 
