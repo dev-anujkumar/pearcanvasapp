@@ -188,7 +188,7 @@ export default function (state = initialState, action) {
             let addnewComment = JSON.parse(JSON.stringify(state.comments))
             let addedComment;
             if(state.comments[0].commentOnEntity == payload.commentOnEntity){
-                 added = [
+                addedComment = [
                     ...addnewComment,payload
                  ]
                 
