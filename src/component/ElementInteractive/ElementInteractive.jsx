@@ -293,7 +293,6 @@ class Interactive extends React.Component {
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
         }
-
         else {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
