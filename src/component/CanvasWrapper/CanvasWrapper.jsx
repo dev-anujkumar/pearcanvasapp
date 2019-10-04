@@ -77,9 +77,9 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
+            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id && !this.props.slateLockInfo.isLocked)) {
                 document.getElementById(window.tinymce.activeEditor.id).focus();
-             }else if(tinymce.$('.cypress-editable').length){
+             }else if(tinymce.$('.cypress-editable').length && !this.props.slateLockInfo.isLocked){
                 tinymce.$('.cypress-editable').eq(0).trigger('focus');
              }     
 

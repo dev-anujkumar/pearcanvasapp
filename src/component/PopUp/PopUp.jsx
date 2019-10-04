@@ -92,9 +92,14 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
             )
         }
+        else if(props.isLockPopup){
+            return (
+                <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
+            )  
+        }
         else {
             return(
-                <div className={`dialog-window delete-element-text ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }
