@@ -6,6 +6,7 @@ const fs = require('fs');
 const open = require('open');
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+var proxyMiddleware = require('http-proxy-middleware');
 
 const app = express();
 const DIST_DIR = __dirname;
@@ -15,6 +16,7 @@ const COMPRESSION = process.env.COMPRESSION || false;
 
 if (process.env.NODE_ENV === 'development') {
     const webpackConfig = require('../../webpack.dev.config.js');
+    var devConfig = webpackConfig.devServer;
     const compiler = webpack(webpackConfig);
 
     if (COMPRESSION) {
@@ -37,6 +39,12 @@ if (process.env.NODE_ENV === 'development') {
     app.use(webpackHotMiddleware(compiler, {
         log: console.log
     }));
+
+    if(devConfig.proxy) {
+        Object.keys(devConfig.proxy).forEach(function(context) {
+          app.use(proxyMiddleware(context, devConfig.proxy[context]));
+        });
+      }
 
     /* ----- for local node testing over https ----- */
     https.createServer({
