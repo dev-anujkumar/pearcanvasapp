@@ -63,6 +63,82 @@ const findElementType = (element) => {
 							break;
 
 					}
+				// } else if (element.figuretype == 'table') {
+				// 	elementType['elementType'] = 'figure';
+				// 	elementType['primaryOption'] = 'primary-image-figure';
+				// 	switch (element.subtype) {
+				// 		case 'imageTextWidth':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
+				// 			break;
+				// 		case 'imageWiderThanText':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
+				// 			break;
+				// 		case 'imageFullscreen':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
+				// 			break;
+				// 		case 'image50Text':
+				// 		default:
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
+				// 			break;
+
+				// 	}
+				// } else if (element.figuretype == '') {
+				// 	elementType['elementType'] = 'figure';
+				// 	elementType['primaryOption'] = 'primary-image-figure';
+				// 	switch (element.subtype) {
+				// 		case 'imageTextWidth':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
+				// 			break;
+				// 		case 'imageWiderThanText':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
+				// 			break;
+				// 		case 'imageFullscreen':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
+				// 			break;
+				// 		case 'image50Text':
+				// 		default:
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
+				// 			break;
+
+				// 	}
+				// } else if (element.figuretype == '') {
+				// 	elementType['elementType'] = 'figure';
+				// 	elementType['primaryOption'] = 'primary-image-figure';
+				// 	switch (element.subtype) {
+				// 		case 'imageTextWidth':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
+				// 			break;
+				// 		case 'imageWiderThanText':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
+				// 			break;
+				// 		case 'imageFullscreen':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
+				// 			break;
+				// 		case 'image50Text':
+				// 		default:
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
+				// 			break;
+
+				// 	}
+				// } else if (element.figuretype == '') {
+				// 	elementType['elementType'] = 'figure';
+				// 	elementType['primaryOption'] = 'primary-image-figure';
+				// 	switch (element.subtype) {
+				// 		case 'imageTextWidth':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-width';
+				// 			break;
+				// 		case 'imageWiderThanText':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-wider';
+				// 			break;
+				// 		case 'imageFullscreen':
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-full';
+				// 			break;
+				// 		case 'image50Text':
+				// 		default:
+				// 			elementType['secondaryOption'] = 'secondary-image-figure-half';
+				// 			break;
+
+				// 	}
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';

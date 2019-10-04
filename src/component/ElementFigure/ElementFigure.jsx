@@ -265,7 +265,7 @@ export class ElementFigure extends Component {
                         </header>
                         <div data-type="mathml">
 
-                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.mathml} type={type} onKeyup={this.onKeyup} onClick={this.onClick} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.elementdata.text} type={type} onKeyup={this.onKeyup} onClick={this.onClick} />
 
                         </div>
                         <figcaption className="figcaptionText" >

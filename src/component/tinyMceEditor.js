@@ -65,12 +65,15 @@ export class TinyMceEditor extends Component {
                     }
                 });
                 editor.on('nodeChange', (e) => {
+                    
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                    if(activeElement.innerText.trim().length){
-                        activeElement.classList.remove('place-holder') 
-                    }
-                    else{
-                        activeElement.classList.add('place-holder') 
+                    if(activeElement){
+                        if(activeElement.innerText.trim().length){
+                            activeElement.classList.remove('place-holder') 
+                        }
+                        else{
+                            activeElement.classList.add('place-holder') 
+                        }
                     }
                 });
                 editor.ui.registry.addButton('Footnote', {
@@ -177,7 +180,8 @@ export class TinyMceEditor extends Component {
         if(tinymce.activeEditor && tinymce.activeEditor.id===e.target.id) {
             return false;
         }
-        if(tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))){
+     
+        if(tinymce.activeEditor !=null && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))){
             let activeEditorId = tinymce.activeEditor.id;
             tinymce.remove('#'+tinymce.activeEditor.id)
             if(document.getElementById(activeEditorId))
@@ -185,6 +189,7 @@ export class TinyMceEditor extends Component {
         }
         this.editorConfig.selector='#'+e.target.id;
         tinymce.init(this.editorConfig);
+    
     }
 
     handleBlur=(e)=>{
@@ -212,13 +217,17 @@ export class TinyMceEditor extends Component {
             if(!testElem.innerText.length)
             placeHolderClass = 'place-holder';
         }
-        else {
+        else  {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
             if(!testElem.innerText.length){
                 placeHolderClass = 'place-holder';
             }
         }
+        // else {
+        //     let testElem = document.createElement('div');
+        //        testElem.innerHTML = this.props.model;
+        // }
             
         classes = this.props.className + " cypress-editable "+placeHolderClass;       
         /**Render editable tag based on tagName*/

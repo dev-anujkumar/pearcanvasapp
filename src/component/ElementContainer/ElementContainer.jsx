@@ -242,6 +242,7 @@ class ElementContainer extends Component {
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                 showDeleteElemPopup = {this.state.showDeleteElemPopup}
                 deleteElement = {this.deleteElement}
+                
                 />}
             </div >
         );
