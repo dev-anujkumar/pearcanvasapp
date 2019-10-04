@@ -43,6 +43,7 @@ const findElementType = (element) => {
 			break;
 
 		case 'figure':
+			
 			if (element.figuretype) {
 				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';

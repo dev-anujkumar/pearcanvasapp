@@ -22,7 +22,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
         { headers: headers }
     )
         .then(response => {
-            //sendDataToIframe({'type': HideLoader,'message': { status: false }});
+            sendDataToIframe({'type': HideLoader,'message': { status: false }});
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];

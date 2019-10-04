@@ -347,6 +347,7 @@ export default {
                     text: 'Full Screen',
                     labelText: 'TE'
                 }
+                
             }
         }
     },
