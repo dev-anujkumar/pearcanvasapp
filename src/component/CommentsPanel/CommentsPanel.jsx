@@ -9,6 +9,7 @@ import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
 import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
+import config from '../../config/config';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -289,6 +290,7 @@ class CommentsPanel extends React.Component {
                             <div className="panel-navigation__header-title">Comments</div>
                             <label onClick={() => toggleCommentsPanel(false)} className="modal__close_Panel"></label>
                             <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
+                            {config.PERMISSIONS.includes('notes_access_manager') && 
                             <div className="add-structure">
                                 <div className="filter">
                                     <span> Sort by</span>
@@ -329,6 +331,7 @@ class CommentsPanel extends React.Component {
                                 </div>
 
                             </div>
+                        }
                         </div>
                         <div id="panel-canvas" className="comments-canvas">
                             {this.renderComment(this.props.comments)}
