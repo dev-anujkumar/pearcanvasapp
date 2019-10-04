@@ -62,8 +62,10 @@ export const createElement = (type, index) => (dispatch, getState) => {
 };
 
 
-export const swapElement = (dataObj,cb) => (dispatch, getState) => {
-    const {oldIndex, newIndex, currentSlateEntityUrn, swappedElementData,slateId, workedExample} = dataObj;
+export const swapElement = (dataObj, cb) => (dispatch, getState) => {
+    const {oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId} = dataObj;
+    const slateId = config.slateManifestURN;
+    
     let _requestData = {
                 "projectUrn": config.projectUrn,
                 "currentSlateEntityUrn":currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
@@ -72,7 +74,9 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
                 "entityUrn":swappedElementData.contentUrn,
                 "type": swappedElementData.type,
                 "index": newIndex
-             }
+            }
+            config.swappedElementType = _requestData.type;
+            config.swappedElementIndex = _requestData.index;
 
     axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
     JSON.stringify(_requestData),
@@ -84,13 +88,24 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
     })
     .then((responseData) =>{
         if(responseData && responseData.status == '200'){
-            
+       
+        //Remove old tinymce instance to hide multiple toolbar
+       
+       
+        // document.getElementById(activeEditorIdTiny).focus();
+        
+        // else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
+        //     document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
+        // }
+
         /* For hiding the spinning loader send HideLoader message to Wrapper component */
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
             
         const parentData = getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
+        console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
+
         // let newBodymatter = newParentData[slateId].contents.bodymatter;
         if(workedExample){
             //swap WE element
@@ -111,6 +126,8 @@ export const swapElement = (dataObj,cb) => (dispatch, getState) => {
                 slateLevelData: newParentData
             }
         })
+
+ 
         cb(newParentData)
         }
         

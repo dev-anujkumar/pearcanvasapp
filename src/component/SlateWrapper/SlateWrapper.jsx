@@ -26,17 +26,8 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrap
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+import { guid } from '../../constants/utility.js';
 
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
 let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
@@ -200,18 +191,31 @@ class SlateWrapper extends Component {
                                     },
                                    
                                     // Element dragging ended
-                                    onEnd:  (/**Event*/evt) => {
-                                        let swappedElementData;
+                                    onUpdate:  (/**Event*/evt) => {
+                                        let swappedElementData, swappedElementId;
                                         swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        // swappedElementId =tinymce.$(evt.item).find('.cypress-editable').attr('id');
+                                        // console.log('this is active editor id', swappedElementId)
+                                      //  tinymce.remove('#'+swappedElementId);
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
-                                            slateId:_slateId,
-                                            workedExample : false   
+                                            // slateId:_slateId,
+                                            workedExample : false,
+                                            swappedElementId : swappedElementId   
                                         }
-
-                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                        // if(tinymce.activeEditor.id==swappedElementId){
+                                        //     tinymce.remove('#'+swappedElementId);
+                                        // }
+                                        this.props.swapElement(dataObj,()=>{
+                                            // if(tinymce.activeEditor.id==swappedElementId){
+                                            //     document.getElementById(tinymce.activeEditor.id).contentEditable = true;
+                                            //     document.getElementById(tinymce.activeEditor.id).focus();
+                                            // }
+                                            // if(swappedElementType === "element-authoredtext")
+                                            
+                                        })
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
                                    

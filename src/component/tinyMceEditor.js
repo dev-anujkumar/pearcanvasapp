@@ -199,11 +199,19 @@ export class TinyMceEditor extends Component {
     }
 
     handleFocus = (e) => {
-        this.props.handleEditorFocus()
+        this.props.handleEditorFocus();
+
         console.log("activeEditor=====>", tinymce.activeEditor);
         if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
             return false;
         }
+
+        // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
+        let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');
+        if(toolBar){
+            toolBar.parentNode.removeChild(toolBar)
+        }
+
         if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
             tinymce.remove('#' + tinymce.activeEditor.id)
