@@ -1,7 +1,6 @@
 import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
-import { classBody } from '@babel/types';
 
 const WRAPPER_URL = config.WRAPPER_URL
 
