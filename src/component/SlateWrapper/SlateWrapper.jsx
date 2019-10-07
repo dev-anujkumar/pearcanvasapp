@@ -271,7 +271,7 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if(slateLockInfo.isLocked){
+        if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
             this.setState({
                 lockOwner: slateLockInfo.userId
             })

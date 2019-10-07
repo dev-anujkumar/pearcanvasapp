@@ -1,6 +1,7 @@
 import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
+import { classBody } from '@babel/types';
 
 const WRAPPER_URL = config.WRAPPER_URL
 
@@ -22,6 +23,20 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
                 payload: res.data
                 // payload: {}
             })
+        })
+        .catch((err) => {
+            console.log("Slate lock info fetch failed:", err)
+        })
+} 
+
+export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+    let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
+    
+    return axiosInstance.get(url)
+        .then((res) => {
+            console.log("Slate lock info fetch success:", res)
+            if(callback)
+                callback(res.data)
         })
         .catch((err) => {
             console.log("Slate lock info fetch failed:", err)

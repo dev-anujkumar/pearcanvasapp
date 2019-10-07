@@ -25,7 +25,6 @@ export const imageIcon = (function () {
 
 export const interativeIcon = (function () {
     return (<svg viewBox="0 0 18 18" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <title>widget-icon</title>
         <rect width="18" height="18" fill="none" />
         <path d="M9.2,18.3H8.9a.87.87,0,0,1-.6-.8V11.7H4.2a1,1,0,0,1-.8-.5,1,1,0,0,1,.1-.9L10.2,2a.81.81,0,0,1,.9-.3.87.87,0,0,1,.6.8V8.3h4.2a1,1,0,0,1,.8.5.76.76,0,0,1-.1.9L9.8,18A.71.71,0,0,1,9.2,18.3ZM5.9,10H9.2a.79.79,0,0,1,.8.8v4.3L14.1,10H10.8a.86.86,0,0,1-.8-.8V4.9Z" />
     </svg>)
@@ -33,7 +32,6 @@ export const interativeIcon = (function () {
 export const audioIcon = (function () {
     return (
         <svg id="audioIcon" viewBox="0 0 17 17" version="1.1" width="17" height="17" xmlns="http://www.w3.org/2000/svg" >
-            <title>media-icon</title>
             <rect width="17" height="17" fill="none" />
             <g>
                 <path d="M15.8,13.5H5.2a.79.79,0,0,1-.8-.8V2.3a.79.79,0,0,1,.8-.8H15.7a.79.79,0,0,1,.8.8V12.8A.68.68,0,0,1,15.8,13.5ZM6,12h9V3H6Z" />
@@ -48,7 +46,6 @@ export const audioIcon = (function () {
 export const containerIcon = (function () {
     return (
         <svg id="containerIcon" viewBox="1 0 12 13" width="22" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <title>container-icon</title>
             <rect width="20" height="20" fill="none" />
             <path d="M7.5,1,0,4v7l7.5,4L15,11V4ZM7,13.6,1,10.4V5.53l6,3.2Zm-5.7-9L7.5,2.08l6.2,2.48L7.5,7.87ZM14,10.4,8,13.6V8.73l6-3.2Z" transform="translate(0 -1)"></path>
         </svg>
@@ -74,7 +71,6 @@ export const workedExampleIcon = (function () {
 export const assessmentIcon = (function () {
     return (
         <svg id="assessmentIcon" viewBox="0 0 22 22" version="1.1" width="22" height="22" xmlns="http://www.w3.org/2000/svg" >
-            <title>Assessment</title>
             <rect width="22" height="22" fill="none" />
             <path d="M15.371,6.367c-0.799,0-1.598,0.229-2.371,0.645V5c0-1.654-1.346-3-3-3H8v2h2c0.551,0,1,0.449,1,1,v2.012c-0.773-0.416-1.572-0.645-2.371-0.645C5.312,6.367,3,9.863,3,13c0,4.542,3.467,9,7,9c0.262,0,0.518-0.106,0.704-0.29,C10.995,21.424,11.608,21,12,21c0.391,0,1.004,0.423,1.295,0.709C13.482,21.896,13.736,22,14,22c3.533,0,7-4.458,7-9,C21,9.863,18.688,6.367,15.371,6.367z M14.348,19.975C13.869,19.588,12.979,19,12,19s-1.869,0.588-2.348,0.975,C7.369,19.646,5,16.175,5,13c0-2.142,1.585-4.633,3.629-4.633c0.879,0,1.775,0.451,2.664,1.339c0.391,0.391,1.023,0.391,1.414,0,c0.889-0.888,1.785-1.339,2.664-1.339C17.415,8.367,19,10.858,19,13C19,16.175,16.631,19.646,14.348,19.975z" />
         </svg>
@@ -84,7 +80,6 @@ export const assessmentIcon = (function () {
 export const openerElement = (function () {
     return (
         <svg id="openerElement" viewBox="0 0 17 17" width="17" height="17" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <title>Opener Element</title>
             <rect width="17" height="17" fill="none" />
             <path className="cls-1" d="M8.75,9.06v8.75H0V8.94A6.61,6.61,0,0,1,5.62,2.19l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z" /><path className="cls-1" d="M20,9.06v8.75H11.25V8.94a6.62,6.62,0,0,1,5.63-6.75l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z" /></svg>
     )

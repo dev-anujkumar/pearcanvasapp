@@ -65,7 +65,7 @@ export class TinyMceEditor extends Component {
                 
                 insertListButton(editor);
                 editor.on('mousedown',function(e) {
-                    if(context.props.slateLockInfo.isLocked){
+                    if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
                         e.preventDefault();
                         e.stopPropagation()
                         return false;
@@ -258,8 +258,8 @@ export class TinyMceEditor extends Component {
             document.getElementById("cypress-" + config.currentInsertedIndex + "-0").focus();
         } */
 
-        const { slateLockInfo: { isLocked } } = this.props
-        if (!tinymce.editors.length && !isLocked) {
+        const { slateLockInfo: { isLocked, userId } } = this.props
+        if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             tinymce.init(this.editorConfig)
         }
     }
@@ -298,8 +298,9 @@ export class TinyMceEditor extends Component {
         this.props.handleBlur()
     }
     render() {
-        const { slateLockInfo: { isLocked } } = this.props
+        const { slateLockInfo: { isLocked, userId } } = this.props
         console.log("locked------>", isLocked)
+        const lockCondition = isLocked && config.userId !== userId
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -343,19 +344,19 @@ export class TinyMceEditor extends Component {
                 switch (this.props.tagName) {
                     case 'p':
                         return (
-                            <p id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</p>
+                            <p id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
                         );
                     case 'h4':
                         return (
-                            <h4 id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}></h4>
+                            <h4 id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
                         )
                     case 'code':
                         return (
-                            <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</code>
+                            <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
                         )
                     default:
                         return (
-                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                         )
                 }
             }
