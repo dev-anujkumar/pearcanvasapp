@@ -58,10 +58,12 @@ class ElementAsideContainer extends Component {
                         manifestUrn:_containerId,
                         contentUrn :_containerData.contentUrn
                     }
+                    let filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest");
+                    let elementLength = _bodyMatter.length - filterElement.length;
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                             {
-                                this.renderElement(_bodyMatter, parentUrn, index)
+                                this.renderElement(_bodyMatter, parentUrn, index,elementLength)
                             }
                         </div>
                     )
@@ -85,7 +87,8 @@ class ElementAsideContainer extends Component {
             contentUrn :element.contentUrn
         }
         let parentIndex = `${this.props.index}-${index}`
-        this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex)
+        let elementLength = _containerBodyMatter.length
+        this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
@@ -147,7 +150,7 @@ class ElementAsideContainer extends Component {
                             >
                                 {this['cloneCOSlateControlledSource__' + random]}
 
-                                {/* {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)} */}
+                               {/*   {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)} */}
 
                             </Sortable>
             </div>
@@ -169,6 +172,7 @@ class ElementAsideContainer extends Component {
         }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
+        let elementLength = _containerBodyMatter.length
         return (
             <div className="aside-section-break" data-id={_elementId}>
                 <SectionSeperator
@@ -177,7 +181,7 @@ class ElementAsideContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
                 />
-                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex, true)}
+                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
 
             </div>
         )
@@ -191,8 +195,9 @@ class ElementAsideContainer extends Component {
    * @param {string} _elements -object of element
    * @param {string} parentUrn -parent Entity urn for add new element
    */
-    renderElement(_elements, parentUrn, parentIndex, sectionBreak) {
+    renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
+        let showSectionBreak ; 
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
@@ -203,7 +208,7 @@ class ElementAsideContainer extends Component {
                         return this.sectionBreak(element, index);
                     }
                     else {
-                        console.log("elementid---", `${parentIndex}-${index}`);
+                        showSectionBreak = (elementLength == index + 1)? true:false
                         return (
                             <React.Fragment>
                                 {index === 0 && ( !this.props.element.hasOwnProperty() || this.props.element.subtype == "sidebar") && <ElementSaprator
@@ -226,7 +231,7 @@ class ElementAsideContainer extends Component {
                                     key={`elem-separtor-${element.id}`}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn)}
                                     elementType={this.props.element.type}
-                                    sectionBreak={sectionBreak}
+                                    sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
                                 />
                             </React.Fragment>
                         )
