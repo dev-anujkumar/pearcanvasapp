@@ -453,7 +453,6 @@ class SlateWrapper extends Component {
             const dialogText = `Are you sure you want to split this slate at the selected section? `
             this.props.showBlocker(true)
             showTocBlocker();
-
             return(
                 <PopUp  dialogText={dialogText}
                         active={true}
@@ -465,6 +464,9 @@ class SlateWrapper extends Component {
                 />
             )
         }
+        else{
+            return null
+        }
     }
     
     toggleSplitSlatePopup = (value, index) => {
@@ -474,16 +476,17 @@ class SlateWrapper extends Component {
         if(value){
             this.setState({
                 splittedSlateIndex : index + 1
-            })
+            }) 
         }
         else{
-            this.props.showBlocker(false)
+            this.props.showBlocker(value)
             hideBlocker();
         }
     }
     
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
+        sendDataToIframe({ 'type': ShowLoader, 'message':{status: true}});
         sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
