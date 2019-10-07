@@ -50,10 +50,10 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
                 type : SET_LOCK_FLAG,
                 payload : true
             }) */
-            window.parent.postMessage({
+            /* window.parent.postMessage({
                 'type': 'headerDisable',
                 'message': false 
-            }, WRAPPER_URL)
+            }, WRAPPER_URL) */
             // stopLoader()
             console.log("error from set slate>>>>",err)
         })

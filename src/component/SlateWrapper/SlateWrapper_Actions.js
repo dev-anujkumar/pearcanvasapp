@@ -2,8 +2,8 @@ import axios from 'axios';
 import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
-    
-    SWAP_ELEMENT
+    SWAP_ELEMENT,
+    SET_SPLIT_INDEX
 } from '../../constants/Action_Constants';
 import {elementAside,elementAsideWorkExample,elementWorkExample} from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
