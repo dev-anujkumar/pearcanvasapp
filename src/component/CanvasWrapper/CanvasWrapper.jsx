@@ -77,11 +77,12 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id && !this.props.slateLockInfo.isLocked)) {
-                document.getElementById(window.tinymce.activeEditor.id).focus();
-             }else if(tinymce.$('.cypress-editable').length && !this.props.slateLockInfo.isLocked){
-                tinymce.$('.cypress-editable').eq(0).trigger('focus');
-             }     
+        const { slateLockInfo: { isLocked, userId } } = this.props
+        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
+            document.getElementById(window.tinymce.activeEditor.id).focus();
+        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
+            tinymce.$('.cypress-editable').eq(0).trigger('focus');
+        }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
