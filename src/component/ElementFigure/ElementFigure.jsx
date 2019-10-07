@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
+import { c2MediaModule } from './../../js/c2_media_module';
 import { FIGURE,
 IMAGE,
 TABLE,
@@ -28,6 +30,9 @@ DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 export class ElementFigure extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            imgSrc: null
+        }
     }
 
     onKeyup = () => {
@@ -35,6 +40,174 @@ export class ElementFigure extends Component {
     }
     onClick = () => {
         console.log("onClick")
+    }
+    handleC2MediaClick = (e) => {
+        if (e.target.tagName.toLowerCase() === "p") {
+            //console.log("CLICKED IN BUTTON TEXT");
+            //e.stopImmediatePropagation();
+            e.stopPropagation();
+            return;
+        }
+        ////console.log("LAUNCHING C2 MEDIA MODAL");
+        let that = this;
+        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                    //let imageData = data['data'];
+                    let imageData = data;
+                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+                    let width = imageData['width'] ? imageData['width'] : "";
+                    let height = imageData['height'] ? imageData['height'] : "";
+                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
+                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+                    //console.log("SMART LINK STRING: " + '',smartLinkString);
+                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
+                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
+
+                    if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+
+                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+                        that.setState({ imgSrc: epsURL })
+
+                        //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataalttext", "");
+                        //     $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('alt', "");
+                        //     $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('title', "");
+                        //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatalongdescription", "");
+
+                        // //console.log("FIGURE DATA -- IMAGE: " + 'imageId: ', imageId, ' epsURL: ', epsURL, ' width: ',width,' height: ', height,' uniqID: ', uniqID, ' figureType: ', figureType);
+
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataimageid", imageId);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatapath", epsURL);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatawidth", width);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataheight", height);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figurefiguretype", figureType);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataalttext", "");
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataalttext", altText);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatalongdescription", "");
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatalongdescription", longDesc);
+
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('data-src', epsURL);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('src', epsURL);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('alt', "");
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('alt', altText);
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('title', "");
+                        // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('title', altText);
+
+                    } else if (figureType === "video" || figureType === "audio") {
+                        //let clipInfoData=JSON.parse(imageData['clipinfo']);
+                        if (figureType === "video" && epsURL === "") {
+                            epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+                        }
+                        let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
+                        let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
+                        // let clipLength=Object.keys(clipInfo).length
+                        let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
+                        let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
+                        //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
+                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+                        //console.log("FIGURE DATA -- VIDEO: " + 'mediaId: ', mediaId, 'videoFormat', videoFormat, ' epsURL: ', epsURL, ' width: ',width,' height: ', height,' uniqID: ', uniqID, ' figureType: ', figureType);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfo", clipInfo);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideoid", smartLinkURl);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideosformat", videoFormat);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideospath", smartLinkURl);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figurefiguretype", figureType);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimageid", "");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimagepath", epsURL);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavendorName", "");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('data-src', epsURL);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('src', epsURL);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfo", clipInfo);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfoClipid", clipInfo.id);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfoStarttime", clipInfo.start);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfoEndtime", clipInfo.end);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfoDescription", clipInfo.description);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataclipinfoDuration", clipInfo.duration);
+                    } else if (smartLinkType) {
+
+                        //console.log("IN A SMARTLINK");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveid", smartLinkPath);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", "");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimageid", epsURL);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterpath", epsURL);
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivesmartlinkpath", "");
+                        $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivesmartlinkpath", smartLinkPath);
+
+                        if (smartLinkType.toLowerCase() === "3rd party interactive" || smartLinkType.toLowerCase() === "metrodigi interactive" || smartLinkType.toLowerCase() === "table") {
+                            //console.log("IN A 3rd Party");
+                            if (epsURL == "") {
+                                epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png";
+                                $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimageid", epsURL);
+                                $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimagepath", epsURL);
+                            }
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatawidth", width);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataheight", height);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatasmartlinkoptimizedmobileval", imageData['smartlinkoptimizedmobileval']);
+                            if (imageData['vendorName'] && imageData['vendorName'] !== null && imageData['vendorName'] !== '') {
+                                $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavendorName", imageData['vendorName']);
+                            }
+                            //$('.editor-instance[data-id="' + that.state.elementid +'"]').attr("data-figuredataposterpath",epsURL);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('data-src', epsURL);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('src', epsURL);
+                            if (smartLinkType.toLowerCase() == "table")
+                                $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "smartlink-tab");
+                            else
+                                $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "3rd-party");
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", "external-link");
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideoid", smartLinkPath);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideospath", smartLinkPath);
+
+                        } else if (smartLinkType.toLowerCase() === "website") {
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "web-link");
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", "external-link");
+                        } else if (smartLinkType.toLowerCase() === "pdf") {
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "pdf");
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", "external-link");
+                        } else if (smartLinkType.toLowerCase() === "mdpopup") {
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", "pop-up-web-link");
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", "external-link");
+                        } else if (smartLinkType.toLowerCase() === "video" || smartLinkType.toLowerCase() === "audio") {
+                            let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
+
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideoid", smartLinkPath);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavideospath", smartLinkPath);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figurefiguretype", smartLinkType.toLowerCase());
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimagepath", posterURL);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('data-src', posterURL);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').find('img:not(img.Wirisformula)').attr('src', posterURL);
+                            $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatavendorName", "");
+                        }
+
+                    }
+
+                    // let trackingElement = $('.editor-instance[data-id="' + that.state.elementid + '"]').find('.fr-element')[0];
+
+                    // if (that.props.isCO && that.props.index === 0) {
+                    //     trackingElement = document.getElementById("chapterOpenerDiv");
+                    // }
+                    // let model = $(trackingElement).html();
+                    // ////console.log("MODEL FROM C2 CLICK: " + '',model);
+                    // that.handleFigureModelChange(model);
+
+                    /*let dataToSend = that.getFigureData("");
+        
+                    ////console.log("DATA TO SEND: " + '', dataToSend);
+                    that.props.figureData({variables: { id: that.state.elementid, figuredata: JSON.stringify(dataToSend) }});*/
+
+                })
+            })
+        });
+        hideTocBlocker();
+        disableHeader(false);
+
     }
     /*** @description - This function is for handling the different types of figure-element.
      * @param model object that defined the type of element*/
@@ -231,8 +404,8 @@ export class ElementFigure extends Component {
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="pearson-component image figureData" data-type={dataType} >
-                            <img src= {model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE}
+                        <div className="pearson-component image figureData" data-type={dataType} onClick={this.handleC2MediaClick} >
+                            <img src= {this.state.imgSrc? this.state.imgSrc : (model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
                                 data-src={model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
                                 title=""
                                 alt=""

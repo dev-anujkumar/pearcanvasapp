@@ -1,20 +1,22 @@
+// import store from '../store';
+import store from './../appstore/store';
+import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
+
 // const authModule = require('./auth_module.js');
-const config = require('./../config/config');
-const authModule = { GET_SSO_TOKEN : function() { return config.ssoToken } };
+const configOBJ = require('./../config/config');
+let config_object = configOBJ.default;
+const authModule = { GET_SSO_TOKEN : function() { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}' ;
 const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
 //const images_path = 'dist/images/c2/';
 
-// import store from '../store';
-import store from './../appstore/store';
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../jsx/common/components/toggleLoader'
-var uname;
+var uname = "c5test01";
 
 const renderderedTagSelector = '#c2-modal';
 
 // const configModule = require('./config_module.js');
 // let config_object = configModule.GET_CONFIG();
-let config_object = config.PATTERNS;
+let config_patterns = config_object.PATTERNS;
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
@@ -26,19 +28,25 @@ const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
 //const list = [{"repo":CMIS_UK_REPO,"repoName":"UK"}, {"repo":CMIS_US_REPO,"repoName":"US"}];
 // let list = [];
 const EPS_API = config_object['EPS_API'];
-const CMIS_REPO = config_object['CMIS_REPO'];
+const CMIS_REPO = config_object['CMIS_REPO'].toString();
 //const CMIS_REPO = '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]';
-const PATTERN_ADD_ASSET = config_object['PATTERN_ADD_ASSET'];
-const PATTERN_BROKER = config_object['PATTERN_BROKER'];
-const PATTERN_PRODUCT_LINK = config_object['PATTERN_PRODUCT_LINK'];
-const PATTERN_VENDOR = config_object['PATTERN_VENDOR'];
-const PATTERN_SEARCH_SELECT = config_object['PATTERN_SEARCH_SELECT'];
-
+const PATTERN_ADD_ASSET = config_patterns['PATTERN_ADD_ASSET'];
+const PATTERN_BROKER = config_patterns['PATTERN_BROKER'];
+const PATTERN_PRODUCT_LINK = config_patterns['PATTERN_PRODUCT_LINK'];
+const PATTERN_VENDOR = config_patterns['PATTERN_VENDOR'];
+const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
+// if(Object.keys(config_patterns).length > 0) {
+//     Object.values(config_patterns).forEach(pattern => {
+//         const script = document.createElement("script");
+//         script.type = "text/javascript";
+//         script.src = pattern;
+//         document.head.appendChild(script);
+//     });
+// }
 
 /* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
 if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
 if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */
-
 
 var patternBroker = PatternBroker.default;
 var patternProductLink = PatternProductLink.default;
@@ -51,16 +59,16 @@ var addAnAssetConfig = {};
 
 /*Configure the library*/
 var libConfig = { 'locale': 'en_US',
-                  'headers' : {
-                      'Content-Type'   : 'application/json',
-                      'Accept'         : 'application/ld+json',
-                      'X-Roles-Test'   : 'ContentMetadataEditor',
-                      'Prefer'         : 'annotation=true',
-                      'Apikey'         : CMDS_APIKEY,
-                      'x-apikey'       : CMDS_APIKEY,
-                      'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
-                      'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
-                  },
+                'headers' : {
+                    'Content-Type'   : 'application/json',
+                    'Accept'         : 'application/ld+json',
+                    'X-Roles-Test'   : 'ContentMetadataEditor',
+                    'Prefer'         : 'annotation=true',
+                    'Apikey'         : CMDS_APIKEY,
+                    'x-apikey'       : CMDS_APIKEY,
+                    'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
+                    'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
+                },
                     'database'          : CMDS_DATABASE,
                     'server'            : CMDS_DATA_ENDPOINT,
                     'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
@@ -68,13 +76,13 @@ var libConfig = { 'locale': 'en_US',
                 };
 
 patternBroker.setup(libConfig);
-//var module = {};
-module.exports = {
 
+// var module = {};
+export const c2MediaModule = {
     addAnAsset:addAnAsset,
-    productLinkOnsaveCallBack: function(assetPopoverFlag,data,callback) {
+    productLinkOnsaveCallBack: function(data,callback) {
         //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
-        module.exports.launchAssetBrowser(assetPopoverFlag,data.nodeRef, data.repoInstance, data.repoName, callback);
+        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
 
     },
 
@@ -160,9 +168,9 @@ module.exports = {
        callback(data);
     },
 
-    launchAssetBrowser: function(assetPopoverFlag, product, server, repo,callback) {
+    launchAssetBrowser: function(product, server, repo,callback) {
 
-        //console.log("launchAssetBrowser called: " + product, server, repo, assetPopoverFlag);
+        //console.log("launchAssetBrowser called: " + product, server, repo, );
 
         let productRef = product;
         let serverRef = server;
@@ -174,7 +182,7 @@ module.exports = {
             addAnAsset.unmount();
         }
 
-        uname = store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+        uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
         var libConfig = {   'locale': 'en_US',
                         'headers' : {
                             'Content-Type'        : 'application/json',
@@ -197,11 +205,8 @@ module.exports = {
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
-        if(assetPopoverFlag){
-            addAnAssetConfig.tabVisibility = tab_visibility_for_asset_popover;
-        }else{
-            addAnAssetConfig.tabVisibility = tab_visibility;
-        }
+        addAnAssetConfig.tabVisibility = tab_visibility;
+
         addAnAssetConfig['cmis'] = '{"wURN":false}';
         addAnAssetConfig['epsserver'] = EPS_API;
         addAnAssetConfig.imagePreview =  '{"imagePreview":true}';
@@ -216,7 +221,7 @@ module.exports = {
                 libConfig.headers['Correlation-Id'] = addAnAsset.corsId;
             }
             patternBroker.setup(libConfig);
-            addAnAsset.setup(addAnAssetConfig, module.exports.AddanAssetCallBack);
+            addAnAsset.setup(addAnAssetConfig, this.AddanAssetCallBack);
             addAnAsset.run(addAnAsset);
             addAnAsset.on(callback);
 
@@ -279,7 +284,7 @@ module.exports = {
         if ( addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '' ) {
 
             //console.log("addAnAssetConfig.nodeRef already set: " + addAnAssetConfig.nodeRef);
-            module.exports.launchAssetBrowser(addAnAssetConfig.nodeRef);
+            this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
         } else {
 
@@ -291,12 +296,12 @@ module.exports = {
             }
 
             if(CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== ''){
-                try{
+               // try{
                     const cmisRepo = JSON.parse(CMIS_REPO);
                     if(cmisRepo.length > 0){
                         const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                             if(canWeProceedWithPL){
-                                uname = store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+                                uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
                                 var libConfig = {   'locale': 'en_US',
                                                 'headers' : {
                                                     'Content-Type'        : 'application/json',
@@ -313,18 +318,19 @@ module.exports = {
                                                 'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                                                 'userId'            : uname
                                             };
-                  
+                                console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
                                 var productLinkConfig = {'selector' : renderderedTagSelector};
                                 productLinkConfig.repoList = cmisRepo;
                                 productLinkConfig.language = 'en';  // YS
                                 productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
                                 productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
                                 productLink = patternBroker.create('ProductLink', patternProductLink);
+                                console.log('jjjj',productLink.corsId)
                                 if(productLink.corsId){
                                     libConfig.headers['Correlation-Id'] = productLink.corsId;
                                 }
                                 patternBroker.setup(libConfig);
-                                productLink.setup(productLinkConfig, module.exports.productLinkOnsaveCallBack);
+                                productLink.setup(productLinkConfig, this.productLinkOnsaveCallBack);
                                 productLink.run(productLink);
                                 productLink.on(callback);
                             }else{
@@ -333,9 +339,10 @@ module.exports = {
                     }else{
                         console.log('CMIS REPO - Should have atleast one Registry');
                     }
-                }catch(error){
-                    console.log('CMIS REPO - Invalid JSON Object', error);    
-                }
+              //  }
+                // catch(error){
+                //     console.log('CMIS REPO - Invalid JSON Object', error);    
+                // }
             }else {
                 console.log('CMIS REPO - should not be Empty, Provide Valid REPO Values');
             }
