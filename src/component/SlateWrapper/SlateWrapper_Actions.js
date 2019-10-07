@@ -13,13 +13,13 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
   };
 
-export const createElement = (type, index) => (dispatch, getState) => {
+export const createElement = (type, index,parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let _requestData = {
         "projectUrn": config.projectUrn,
-        "slateEntityUrn": config.slateEntityURN,
-        "slateUrn": config.slateManifestURN,
+        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
+        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
         "index": index,
         "type": type
     };
@@ -37,13 +37,16 @@ export const createElement = (type, index) => (dispatch, getState) => {
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData.data;
-        if(type == "workedexample"){
-            createdElementData = elementWorkExample
+        if(createdElementData.type == 'manifest'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
+                if(item.id == parentUrn.manifestUrn){
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })   
+        }else{
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
-     /*    if(type == "element-aside"){
-            createdElementData = elementAside
-        } */
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+       
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
