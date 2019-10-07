@@ -82,8 +82,7 @@ export class TinyMceEditor extends Component {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
-                editor.on('nodeChange', (e) => {
-                    
+                editor.on('keyup', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
                         if (activeElement.innerText.trim().length) {
