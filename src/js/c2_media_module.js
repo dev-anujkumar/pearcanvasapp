@@ -10,7 +10,7 @@ const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true
 const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
 //const images_path = 'dist/images/c2/';
 
-var uname = "c5test01";
+var uname = config_object['userId'];
 
 const renderderedTagSelector = '#c2-modal';
 
@@ -182,7 +182,7 @@ export const c2MediaModule = {
             addAnAsset.unmount();
         }
 
-        uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+        //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
         var libConfig = {   'locale': 'en_US',
                         'headers' : {
                             'Content-Type'        : 'application/json',
@@ -301,7 +301,7 @@ export const c2MediaModule = {
                     if(cmisRepo.length > 0){
                         const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                             if(canWeProceedWithPL){
-                                uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+                                //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
                                 var libConfig = {   'locale': 'en_US',
                                                 'headers' : {
                                                     'Content-Type'        : 'application/json',
@@ -318,14 +318,14 @@ export const c2MediaModule = {
                                                 'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                                                 'userId'            : uname
                                             };
-                                console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
+                                //console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
                                 var productLinkConfig = {'selector' : renderderedTagSelector};
                                 productLinkConfig.repoList = cmisRepo;
                                 productLinkConfig.language = 'en';  // YS
                                 productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
                                 productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
                                 productLink = patternBroker.create('ProductLink', patternProductLink);
-                                console.log('jjjj',productLink.corsId)
+                                //console.log('jjjj',productLink.corsId)
                                 if(productLink.corsId){
                                     libConfig.headers['Correlation-Id'] = productLink.corsId;
                                 }
