@@ -21,7 +21,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -271,7 +271,7 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if(slateLockInfo.isLocked){
+        if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
             this.setState({
                 lockOwner: slateLockInfo.userId
             })
@@ -372,9 +372,12 @@ class SlateWrapper extends Component {
                   this.props.createElement(CONTAINER, indexToinsert,parentUrn)
                 break;
             case 'worked-exp-elem':
-                   this.props.createElement("workedexample", indexToinsert,parentUrn)
+                   this.props.createElement(WORKED_EXAMPLE , indexToinsert,parentUrn)
                 break;
             case 'opener-elem':
+                break;
+            case 'section-break-elem':
+                    this.props.createElement(SECTION_BREAK, indexToinsert,parentUrn)
                 break;
             default:
         }   
@@ -426,7 +429,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'section-break-elem',
-                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne,parentUrn),
                 tooltipText: 'Section Break',
                 tooltipDirection: 'left'
             },
@@ -450,7 +453,6 @@ class SlateWrapper extends Component {
             const dialogText = `Are you sure you want to split this slate at the selected section? `
             this.props.showBlocker(true)
             showTocBlocker();
-
             return(
                 <PopUp  dialogText={dialogText}
                         active={true}
@@ -462,6 +464,9 @@ class SlateWrapper extends Component {
                 />
             )
         }
+        else{
+            return null
+        }
     }
     
     toggleSplitSlatePopup = (value, index) => {
@@ -471,16 +476,17 @@ class SlateWrapper extends Component {
         if(value){
             this.setState({
                 splittedSlateIndex : index + 1
-            })
+            }) 
         }
         else{
-            this.props.showBlocker(false)
+            this.props.showBlocker(value)
             hideBlocker();
         }
     }
     
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
+        sendDataToIframe({ 'type': ShowLoader, 'message':{status: true}});
         sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
