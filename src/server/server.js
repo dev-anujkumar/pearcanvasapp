@@ -6,6 +6,7 @@ const fs = require('fs');
 const open = require('open');
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+var proxyMiddleware = require('http-proxy-middleware');
 
 const app = express();
 const DIST_DIR = __dirname;
@@ -15,6 +16,7 @@ const COMPRESSION = process.env.COMPRESSION || false;
 
 if (process.env.NODE_ENV === 'development') {
     const webpackConfig = require('../../webpack.dev.config.js');
+    var devConfig = webpackConfig.devServer;
     const compiler = webpack(webpackConfig);
 
     if (COMPRESSION) {
@@ -29,6 +31,21 @@ if (process.env.NODE_ENV === 'development') {
         });
     }
 
+    app.get('/plugins/tiny_mce_wiris/plugin.js', function (request, response){
+        response.sendFile(path.resolve(__dirname, '../../dist', 'plugins/tiny_mce_wiris/plugin.js'))
+    })
+    app.use(
+        ['**/configurationjs**', '/pluginwiris_engine/**'],
+        proxyMiddleware({
+            target: 'https://dev-structuredauthoring.pearson.com/', 
+            changeOrigin: true,
+            pathRewrite: {
+                '^/static/js' : '/tinywiris/tinymce4/js/tinymce'
+            }
+         })
+      );
+    
+
     app.use(webpackDevMiddleware(compiler, {
         publicPath: webpackConfig.output.publicPath,
         stats: { colors: true }
@@ -37,6 +54,12 @@ if (process.env.NODE_ENV === 'development') {
     app.use(webpackHotMiddleware(compiler, {
         log: console.log
     }));
+
+    if(devConfig.proxy) {
+        Object.keys(devConfig.proxy).forEach(function(context) {
+          app.use(proxyMiddleware(context, devConfig.proxy[context]));
+        });
+      }
 
     /* ----- for local node testing over https ----- */
     https.createServer({

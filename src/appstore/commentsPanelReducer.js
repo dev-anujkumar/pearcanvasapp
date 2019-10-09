@@ -16,7 +16,8 @@ import {
     UPDATE_COMMENT,
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    ADD_NEW_COMMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -79,7 +80,8 @@ const initialState = {
     toggleReplyForm: true,
     togglePanel: false,
     users: [],
-    slateTitle: ""
+    slateTitle: "",
+    comments: []
 }
 
 /**
@@ -128,7 +130,7 @@ export default function (state = initialState, action) {
             }
         case RESOLVE_COMMENT:
 
-            let resolveComment = JSON.parse(JSON.stringify(state.comments)) 
+            let resolveComment = JSON.parse(JSON.stringify(state.comments))
             resolveComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentStatus = payload.resolveOrOpen
@@ -160,7 +162,7 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_ASSIGNEE:
-            let updateComment = JSON.parse(JSON.stringify(state.comments)) 
+            let updateComment = JSON.parse(JSON.stringify(state.comments))
             updateComment.forEach((comment, index) => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentAssignee = payload.newAssignee
@@ -180,6 +182,21 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 comments: deleteComment
+            }
+        case ADD_NEW_COMMENT:
+            let addComment = JSON.parse(JSON.stringify(state.allComments))
+            let addnewComment = JSON.parse(JSON.stringify(state.comments))
+            let addedComment;
+            if(state.comments[0].commentOnEntity == payload.commentOnEntity){
+                addedComment = [
+                    ...addnewComment,payload
+                 ]
+                
+            }
+            return {
+                ...state,
+                allComments: [...addComment, payload],
+                comments: addedComment ? addedComment: addnewComment
             }
         default:
             return state;

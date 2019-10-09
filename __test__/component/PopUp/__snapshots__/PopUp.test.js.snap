@@ -3,10 +3,14 @@
 exports[`Testing PopUp component Testing Popup with props  1`] = `
 <PopUp
   active={true}
+  cancelBtnText="Cancel"
+  deleteInstruction="Are you sure you want to delete, this action cannot be undone?"
   dialogText="Please enter a comment:"
+  isLockPopup={false}
   placeholder="Type..."
   rows="5"
   saveButtonText="Save"
+  yesButton="Yes"
 >
   <div>
     <div
@@ -22,7 +26,7 @@ exports[`Testing PopUp component Testing Popup with props  1`] = `
           ×
         </span>
         <div
-          className="dialog-window undefined"
+          className="dialog-window delete-element-text undefined"
         >
           Please enter a comment:
         </div>
@@ -63,10 +67,14 @@ exports[`Testing PopUp component Testing Popup with props  1`] = `
 exports[`Testing PopUp component Testing Popup with props  2`] = `
 <PopUp
   active={false}
+  cancelBtnText="Cancel"
+  deleteInstruction="Are you sure you want to delete, this action cannot be undone?"
   dialogText="Please enter a comment:"
+  isLockPopup={false}
   placeholder="Type..."
   rows="5"
   saveButtonText="Save"
+  yesButton="Yes"
 >
   <div />
 </PopUp>
@@ -75,10 +83,14 @@ exports[`Testing PopUp component Testing Popup with props  2`] = `
 exports[`Testing PopUp component render PopUp component  1`] = `
 <PopUp
   active={true}
+  cancelBtnText="Cancel"
+  deleteInstruction="Are you sure you want to delete, this action cannot be undone?"
   dialogText=""
+  isLockPopup={false}
   placeholder="Type..."
   rows="5"
   saveButtonText="Save"
+  yesButton="Yes"
 >
   <div>
     <div
@@ -94,7 +106,7 @@ exports[`Testing PopUp component render PopUp component  1`] = `
           ×
         </span>
         <div
-          className="dialog-window undefined"
+          className="dialog-window delete-element-text undefined"
         />
         <div
           className="dialog-input undefined"

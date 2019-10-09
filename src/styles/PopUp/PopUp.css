@@ -151,8 +151,10 @@
 }
 .dialog-window.lock-message{
   font-size: 1.2em;
-  line-height: 2.0em;
-  font-weight: 100;
+    line-height: 2.0em;
+    font-weight: 100;
+    font-family: "Helvetica Neue", sans-serif;
+    color: #847676;
 }
 .delete-element-text{
   font-family: "Helvetica Neue", sans-serif;

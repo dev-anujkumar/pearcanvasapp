@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
+
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED } from "./../../constants/Action_Constants";
 let headers = {
     "Content-Type": "application/json",
@@ -11,17 +12,28 @@ let headers = {
 }
 export const addComment = (commentString, elementId) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
-    let newComment = {
+     let newComment = {
         comment: commentString,
         commentCreator: config.userId,
         assignee: config.assignee
-    };
+    }; 
+
+    let Comment =  {
+        commentType: "comment",
+        commentDateTime: new Date().toISOString(),   //"2019-04-09T14:22:28.218Z"
+        commentAssignee: config.userId,
+        commentCreator: config.userId,
+        commentString: commentString,
+        commentStatus: "OPEN",
+        commentOnEntity: elementId,
+        replyComments: []
+    }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
         { headers: headers }
     )
         .then(response => {
-            
+            sendDataToIframe({'type': HideLoader,'message': { status: false }});
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
@@ -29,14 +41,18 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             let { contents: _slateContent } = _slateObject;
             // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
-            for (let key in _slateBodyMatter) {
-                if (_slateBodyMatter[key].id.toString() === elementId) {
-                    _slateBodyMatter[key].comments = true
-                }
-            }
+            const element = _slateBodyMatter.map(element => 
+             {   if(element.id === elementId){
+                    element['comments'] = true
+                }}
+                );
             dispatch({
                 type: ADD_COMMENT,
                 payload: newslateData
+            });
+            dispatch({
+                type: ADD_NEW_COMMENT,
+                payload: Comment
             });
 
         }).catch(error => {
