@@ -181,3 +181,16 @@
 .cancel-button.split-slate{
   font-family: "Helvetica Neue", sans-serif;
 }
+.tocDeleteHeader {
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  line-height: 2.0em;
+  margin-bottom: .5em;
+  font-size: 1.5em;
+  color: #007fa3;
+  font-weight: bold;
+}
+.tocDeleteClass {
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+}

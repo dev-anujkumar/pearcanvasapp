@@ -143,10 +143,7 @@ class ElementAsideContainer extends Component {
                                         let sortable = c.sortable;
                                     }
                                 }}
-                    
-                                // [Optional] A tag to specify the wrapping element. Defaults to "div".
                                 tag="div"
-    
                             >
                                 {this['cloneCOSlateControlledSource__' + random]}
 
