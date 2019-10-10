@@ -5,7 +5,12 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
-import TinyMceEditor from "../tinyMceEditor"
+import TinyMceEditor from "../tinyMceEditor";
+import { c2AssessmentModule } from './../../js/c2_assessment_module';
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import config from '../../config/config';
+import { utils } from '../../js/utils';
+import PopUp from '../PopUp'
 
 
 /**
@@ -15,7 +20,10 @@ import TinyMceEditor from "../tinyMceEditor"
 class Interactive extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            itemID : null,
+            showAssesmentpopup: false
+        };
 
     }
 
@@ -26,6 +34,130 @@ class Interactive extends React.Component {
      * @param {event} index
      */
 
+    handleC2InteractiveClick = (value) => {
+
+        let that = this;
+        let fileName = "";
+        let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()] || ['CITE'];
+        let searchMode = "partial";
+        let searchSelectAssessmentURN = "";
+        let productId = "";
+        let searchTypeOptVal = "";
+        showTocBlocker();
+        disableHeader(true);
+        this.togglePopup(false);
+
+        //  vex.dialog.prompt({
+        //     message: 'PLEASE ENTER A PRODUCT UUID',
+        //     placeholder: 'UUID',
+        //     callback: function (value) {
+        productId = (value && value !== "") ? value : "Unspecified";
+
+        
+        //productId = "Unspecified";
+        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
+            console.log(interactiveData)
+            let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
+
+            if (tempInteractiveType === 'video-mcq') {
+                let responseData = await axios.get(config_object.SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
+                    {
+                        headers: {
+                            "x-apikey": config.MANIFEST_APIKEY
+                        }
+                    });
+                interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
+                interactiveData['path'] = responseData['data']["thumbnail"]['src'];
+                interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
+            }
+            let posterImage = {};
+            let itemsData = interactiveData['itemsData'];
+            let id = interactiveData['id'] ? interactiveData['id'] : "";
+            let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
+            let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
+            posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
+            posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
+            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
+            let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
+            let imageId = "";
+            let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
+            var interactiveFormat;
+            that.setState({itemID : workExample})
+
+
+            // if (interactiveData['itemsData'] && interactiveData['itemsData']['taxonomicType'] && interactiveData['itemsData']['taxonomicType'][0] && typeof interactiveData['itemsData']['taxonomicType'][0] === 'string') {
+            //     interactiveFormat = editor_utils.getTaxonomicFormat(interactiveData['itemsData']['taxonomicType'][0]);
+            // } else {
+            //     if (interactiveData.type === 'MMI') {
+            //         interactiveFormat = 'mmi';
+            //     }
+            //     else {
+            //         interactiveFormat = "";
+            //         vex.dialog.alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+            //     }
+            // }
+
+            // var interactiveTaxonomicType;
+            // if (interactiveData['itemsData'] && interactiveData['itemsData']['taxonomicType'] && interactiveData['itemsData']['taxonomicType'][1] && typeof interactiveData['itemsData']['taxonomicType'][1] === 'string') {
+            //     interactiveTaxonomicType = editor_utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
+            // } else {
+            //     vex.dialog.alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+            // }
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveid", workExample);
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", interactiveTaxonomicType);
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", interactiveFormat);
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimageid", imageId);
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterpath", epsURL);
+
+            // if (interactiveTaxonomicType === 'video-mcq') {
+            //     if (totalduration) {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatatotalduration", totalduration);
+            //     }
+            //     else {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredatatotalduration");
+            //     }
+            //     if (posterImage['imageId'] || posterImage['path']) {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimage", JSON.stringify(posterImage));
+            //     }
+            //     else {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterimage");
+            //     }
+            //     if (posterImage['path']) {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterpath", posterImage['path']);
+            //     }
+            //     else {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterpath");
+            //     }
+
+            //     if (alttext) {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataalttext", alttext);
+            //     }
+            //     else {
+            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataalttext");
+            //     }
+            // }
+            // else {
+            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredatatotalduration");
+            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterimage");
+            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataalttext");
+            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterpath");
+
+            // }
+            // that.state.editorContext = interactiveTaxonomicType;
+            // /* that.setState({
+            //     editorContext : interactiveTaxonomicType
+            // }) */
+
+            // /*
+            //     opening alt text sidebar when asset is added by clicking on the title part of the element
+            // */
+            // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('header .fr-element').eq(0).click()
+        }); 
+        //     }
+        // })
+
+    }
+     
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
@@ -302,8 +434,8 @@ class Interactive extends React.Component {
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
                              onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </header>
-                    <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{itemId}</div>
-                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" >
+                    <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
+                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(true)}} >
                         {
                             imageDimension !== '' ?
                                 (context === 'table' ?
@@ -336,6 +468,10 @@ class Interactive extends React.Component {
         return jsx;
     }
 
+    togglePopup = (value)=>{
+        this.setState({showAssesmentpopup:value})
+    }
+
 
 
 
@@ -344,6 +480,7 @@ class Interactive extends React.Component {
         return (
             <div className="interactive-element">
                 {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
+                {this.state.showAssesmentpopup? <PopUp handleC2Click ={this.handleC2InteractiveClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
             </div>
         )
     }

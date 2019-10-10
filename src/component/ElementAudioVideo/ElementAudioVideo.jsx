@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
@@ -15,7 +16,8 @@ export class ElementAudioVideo extends Component {
     constructor(props) {
         super(props);
         this.state={
-            imgSrc: null
+            imgSrc: null,
+            assetData : null
         }
     }
 
@@ -55,7 +57,7 @@ export class ElementAudioVideo extends Component {
 
                     if (figureType === "video" || figureType === "audio") {
 
-                        let clipInfoData=JSON.parse(imageData['clipinfo']);
+                        let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
                         if (figureType === "video" && epsURL === "") {
                             epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
                         }
@@ -70,7 +72,9 @@ export class ElementAudioVideo extends Component {
                         let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
                         let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
                         let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-                        that.setState({ imgSrc: epsURL })
+                        that.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+                        disableHeader(false)
+                        hideTocBlocker();
 
                     }
                 })
@@ -100,7 +104,7 @@ export class ElementAudioVideo extends Component {
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : DEFAULT_ASSET}</div>
+                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
                         <div className="pearson-component audio" data-type="audio">
                             <audio controls="none" preload="none" className="audio" onClick={this.handleC2MediaClick}>
                                 <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
@@ -127,7 +131,7 @@ export class ElementAudioVideo extends Component {
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
                         </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{assetPath !== "" ? assetPath : DEFAULT_ASSET}</div>
+                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
                               poster={this.state.imgSrc?this.state.imgSrc : (posterImage !== "" ? posterImage : DEFAULT_VIDEO_POSTER_IMAGE)}
