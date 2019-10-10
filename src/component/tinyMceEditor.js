@@ -103,6 +103,11 @@ export class TinyMceEditor extends Component {
                     onAction: () => this.addGlossary(editor)
                 });
 
+                editor.ui.registry.addButton('Asset Popover', {
+                    text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+                    onAction: () => this.addGlossary(editor)
+                });
+
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
