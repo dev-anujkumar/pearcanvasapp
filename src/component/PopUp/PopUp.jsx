@@ -41,6 +41,13 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if(props.assessmentAndInteractive)
+        return(
+            <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
+                <span className={`save-button ${props.splitSlateClass}`} onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Ok</span>
+                <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Cancel</span>
+            </div>
+        )
         else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -59,6 +66,12 @@ class PopUp extends React.Component {
             return (
                 <input type="text" className={`dialog-input-textarea ${props.slateLockClass}`} disabled value={props.inputValue} rows={props.rows} cols={props.cols} />
             )  
+        }
+        else if(props.assessmentAndInteractive){
+            return (
+                <input id="inputUUID" autoFocus className={`dialog-input-textarea ${props.assessmentAndInteractive}`} type="text"
+                placeholder={"UUID"}/>
+              )  
         }
         else{
           return (
