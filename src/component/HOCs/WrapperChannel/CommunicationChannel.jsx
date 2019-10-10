@@ -162,6 +162,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'projectDetails' :
                      config.projectUrn = message.id;
                      config.projectEntityUrn = message.entityUrn;
+                     config.alfrescoMetaData = message.alfresco;
                     break;
                 case 'permissionsDetails' :                    
                     this.handlePermissioning(message);
