@@ -8,10 +8,14 @@ import Sortable from 'react-sortablejs';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
+import { guid } from '../../constants/utility.js';
+
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 // IMPORT - Assets //
+
+let random = guid();
 
 class ElementAsideContainer extends Component {
     constructor(props) {
@@ -54,10 +58,12 @@ class ElementAsideContainer extends Component {
                         manifestUrn:_containerId,
                         contentUrn :_containerData.contentUrn
                     }
+                    let filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest");
+                    let elementLength = _bodyMatter.length - filterElement.length;
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                             {
-                                this.renderElement(_bodyMatter, parentUrn, index)
+                                this.renderElement(_bodyMatter, parentUrn, index,elementLength)
                             }
                         </div>
                     )
@@ -81,38 +87,67 @@ class ElementAsideContainer extends Component {
             contentUrn :element.contentUrn
         }
         let parentIndex = `${this.props.index}-${index}`
+        let elementLength = _containerBodyMatter.length
+        this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
                 <Sortable
                                 options={{
-                                    // handle : '.btn-element element-label', //Drag only by element tag name button
-                                    // dataIdAttr: 'data-id',
-                                    // forceFallback: false,  // ignore the HTML5 DnD behaviour and force the fallback to kick in
-                                    // fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
+                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                    dragoverBubble: false,
+	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                    
+
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    
+
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
+                                    handle : '.element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
                                     filter: ".elementSapratorContainer",
                                     draggable: ".editor",
+                                    forceFallback: true,
+                                    onStart: function (/**Event*/evt) {
+                                        // same properties as onEnd
+                                    },
+                                   
                                     // Element dragging ended
                                     onEnd:  (/**Event*/evt) => {
-                                        
-                                        let swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
-
+                                        let swappedElementData;
+                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
                                             newIndex : evt.newDraggableIndex,
                                             swappedElementData : swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
-                                            workedExample : true      
+                                            // slateId:_slateId,
+                                            workedExample : true   
                                         }
-                                        this.props.swapElement(dataObj)
-                                        // console.log('this.element data', dataObj);
+
+                                        this.props.swapElement(dataObj,(bodyObj)=>{})
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                     },
+                                   
+                                }}
+                               
+                                // [Optional] Use ref to get the sortable instance
+                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
+                                ref={(c) => {
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
                                 }}
                                 tag="div"
                             >
-                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex)}
+                                {this['cloneCOSlateControlledSource__' + random]}
+
+                               {/*   {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)} */}
 
                             </Sortable>
             </div>
@@ -134,6 +169,7 @@ class ElementAsideContainer extends Component {
         }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
+        let elementLength = _containerBodyMatter.length
         return (
             <div className="aside-section-break" data-id={_elementId}>
                 <SectionSeperator
@@ -142,7 +178,7 @@ class ElementAsideContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
                 />
-                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex, true)}
+                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
 
             </div>
         )
@@ -156,8 +192,9 @@ class ElementAsideContainer extends Component {
    * @param {string} _elements -object of element
    * @param {string} parentUrn -parent Entity urn for add new element
    */
-    renderElement(_elements, parentUrn, parentIndex, sectionBreak) {
+    renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
+        let showSectionBreak ; 
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
@@ -168,7 +205,7 @@ class ElementAsideContainer extends Component {
                         return this.sectionBreak(element, index);
                     }
                     else {
-                        console.log("elementid---", `${parentIndex}-${index}`);
+                        showSectionBreak = (elementLength == index + 1)? true:false
                         return (
                             <React.Fragment>
                                 {index === 0 && ( !this.props.element.hasOwnProperty() || this.props.element.subtype == "sidebar") && <ElementSaprator
@@ -191,7 +228,7 @@ class ElementAsideContainer extends Component {
                                     key={`elem-separtor-${element.id}`}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn)}
                                     elementType={this.props.element.type}
-                                    sectionBreak={sectionBreak}
+                                    sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
                                 />
                             </React.Fragment>
                         )

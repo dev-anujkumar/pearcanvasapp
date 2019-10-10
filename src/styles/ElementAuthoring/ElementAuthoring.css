@@ -19,7 +19,7 @@
     outline:none;
     border:none;
 }
-.element-list img{
+.element-list img:not('.Wirisformula'){
     pointer-events:none;
 }
 #editor-toolbar .tox.tox-tinymce.tox-tinymce-inline{

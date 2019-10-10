@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 
 // IMPORT - Assets //
 import './../../styles/ElementFigure/ElementFigure.css';
+import { c2MediaModule } from './../../js/c2_media_module';
 import { FIGURE,
 IMAGE,
 TABLE,
@@ -28,6 +30,9 @@ DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 export class ElementFigure extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            imgSrc: null
+        }
     }
 
     onKeyup = () => {
@@ -35,6 +40,50 @@ export class ElementFigure extends Component {
     }
     onClick = () => {
         console.log("onClick")
+    }
+    handleC2MediaClick = (e) => {
+        if (e.target.tagName.toLowerCase() === "p") {
+            e.stopPropagation();
+            return;
+        }
+        ////console.log("LAUNCHING C2 MEDIA MODAL");
+        let that = this;
+        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                    //let imageData = data['data'];
+                    let imageData = data;
+                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+                    let width = imageData['width'] ? imageData['width'] : "";
+                    let height = imageData['height'] ? imageData['height'] : "";
+                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
+                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+                    //console.log("SMART LINK STRING: " + '',smartLinkString);
+                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
+                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
+
+                    if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+
+                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+                        that.setState({ imgSrc: epsURL })
+                        document.querySelector("[name='alt_text']").innerHTML = altText;
+                        document.querySelector("[name='long_description']").innerHTML = longDesc;
+
+                    }
+                })
+            })
+        });
+        hideTocBlocker();
+        disableHeader(false);
+
     }
     /*** @description - This function is for handling the different types of figure-element.
      * @param model object that defined the type of element*/
@@ -231,8 +280,8 @@ export class ElementFigure extends Component {
                             <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} onKeyup={this.onKeyup} onClick={this.onClick} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="pearson-component image figureData" data-type={dataType} >
-                            <img src= {model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE}
+                        <div className="pearson-component image figureData" data-type={dataType} onClick={this.handleC2MediaClick} >
+                            <img src= {this.state.imgSrc? this.state.imgSrc : (model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
                                 data-src={model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
                                 title=""
                                 alt=""

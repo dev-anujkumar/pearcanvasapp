@@ -28,6 +28,20 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
         })
 } 
 
+export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+    let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
+    
+    return axiosInstance.get(url)
+        .then((res) => {
+            console.log("Slate lock info fetch success:", res)
+            if(callback)
+                callback(res.data)
+        })
+        .catch((err) => {
+            console.log("Slate lock info fetch failed:", err)
+        })
+} 
+
 export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
     let url =`locks/typ/setlock`
 
@@ -50,10 +64,10 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
                 type : SET_LOCK_FLAG,
                 payload : true
             }) */
-            window.parent.postMessage({
+            /* window.parent.postMessage({
                 'type': 'headerDisable',
                 'message': false 
-            }, WRAPPER_URL)
+            }, WRAPPER_URL) */
             // stopLoader()
             console.log("error from set slate>>>>",err)
         })

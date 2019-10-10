@@ -25,8 +25,6 @@ import PopUp from '../PopUp';
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
-// import { c2MediaModule } from './../../js/c2_media_module';
-// const c2AssessmentModule = require('../js/c2_assessment_module.js');
 import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -66,8 +64,8 @@ class CanvasWrapper extends Component {
         // commenting below setState() to test alternative
         // *************************************************
         // this.setState({ editorToolbarRef: this.refs.editorToolbarRef })
-        this.props.getSlateLockStatus(projectUrn ,slateId) 
-    }
+        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        }
 
     componentDidUpdate(prevProps, prevState){
         // if(this.state.navigation) {
@@ -77,9 +75,12 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
-                document.getElementById(window.tinymce.activeEditor.id).focus();
-             }
+        const { slateLockInfo: { isLocked, userId } } = this.props
+        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
+            document.getElementById(window.tinymce.activeEditor.id).focus();
+        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
+            tinymce.$('.cypress-editable').eq(0).trigger('focus');
+        }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
