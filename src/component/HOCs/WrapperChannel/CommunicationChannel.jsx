@@ -259,11 +259,19 @@ function WithWrapperCommunication(WrappedComponent) {
             }) 
         }
 
+        //Toggle Delete Popup
+        modifyState = (args) =>{
+            this.setState({
+                toggleTocDelete : args,
+                // tocDeleteMessage : message
+        }) 
+        }
+
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that=this;
-            let projectUrn = message.changedValue.projectUrn;
-            let userName = 'c5test01'//this.getCookie("USER_NAME");
-            let deleteSlateId = message.changedValue.containerUrn;
+            // let projectUrn = message.changedValue.projectUrn;
+            // let userName = 'c5test01'//this.getCookie("USER_NAME");
+            // let deleteSlateId = message.changedValue.containerUrn;
             /**
              * Delete element details for logging
              */
@@ -359,7 +367,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} toggleTocDelete = {this.state.toggleTocDelete} tocDeleteMessage = {this.state.tocDeleteMessage}/>
+                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} toggleTocDelete = {this.state.toggleTocDelete} tocDeleteMessage = {this.state.tocDeleteMessage} modifyState = {this.modifyState}/>
                 </React.Fragment>
             )
         }

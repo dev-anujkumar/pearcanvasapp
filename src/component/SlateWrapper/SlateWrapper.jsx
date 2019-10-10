@@ -25,7 +25,7 @@ import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SE
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { hideBlocker, showTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 
 let random = guid();
@@ -41,7 +41,6 @@ class SlateWrapper extends Component {
             lockOwner: "",
             showSplitSlatePopup: false,
             splittedSlateIndex : 0,
-            toggleTocDeletePopup : false
         }
     }
 
@@ -492,24 +491,17 @@ class SlateWrapper extends Component {
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
-    deleteAccepted = () => {
-        this.setState({
-            toggleTocDeletePopup : !this.state.toggleTocDeletePopup
-        })
+    deleteAccepted = () => { 
         sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
         this.deleteRejected()
     }
 
     deleteRejected = () => {
-        this.setState({
-            toggleTocDeletePopup : !this.state.toggleTocDeletePopup
-        })
-        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
-        // disableHeader(false);
-        // // this.props.showBlocker(false)
-        // hideBlocker();
-        this.props.showBlocker(false)
         hideBlocker();
+        hideTocBlocker();
+        disableHeader(true) ;
+        this.props.modifyState(false)
+        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
     }
 
     showTocDeletePopup= () => {
@@ -520,7 +512,7 @@ class SlateWrapper extends Component {
                 active={true}
                 saveContent={this.deleteAccepted}
                 saveButtonText='Yes'
-                dialogText='Are you sure you want to delete this slate/container with pending changes?'
+                dialogText='Are you sure you want to delete, this action cannot be undone?'
                 tocDelete = {true}
                 tocDeleteClass = 'tocDeleteClass'
                 />

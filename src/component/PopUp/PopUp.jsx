@@ -90,9 +90,12 @@ class PopUp extends React.Component {
             return null
         }
         else if(props.tocDelete){
-            //jsx dialogh text
+            //jsx dialog text
             return(
-                <div className={`dialog-window delete-element-text ${props.tocDeleteClass}`} >{props.dialogText}</div>
+                <>
+                    <h2 className = 'tocDeleteHeader'>Warning!</h2>
+                    <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>
+                </>
             )
         }
         else if(props.isLockReleasePopup){
@@ -117,14 +120,6 @@ class PopUp extends React.Component {
         }
     }
 
-    renderHeader = (props) => {
-        if(props.tocDelete) {
-            //header jsx
-            return(
-                <div className={`dialog-window delete-element-text ${props.tocDeleteClass}`} >{`Hello header`}</div>
-            )
-        } 
-    }
     
     render() {
         const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue } = this.props;
@@ -133,7 +128,6 @@ class PopUp extends React.Component {
                 {
                     active ? 
                     <div className={`modal ${assessmentClass}`}>
-                        {this.renderHeader(this.props)}
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}
