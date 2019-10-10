@@ -33,8 +33,10 @@ class ElementContainer extends Component {
             btnClassName : '',
             showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:'',
-            showColorPalette : false
+            showColorPalette : false,
+            activeColorIndex: 0
         };
+        this.colors = ["#000000", "#003057", "#505759", "#005A70", "#006128"]
         
     }
     componentDidMount(){
@@ -108,11 +110,19 @@ class ElementContainer extends Component {
             showColorPaletteList : !showColorPaletteList
         })
     }
+    selectColor = (event) => {
+        const selectedColor = event.target.getAttribute('data-value')
+        console.log("color>>>",selectedColor)
+        this.setState({
+            activeColorIndex : this.colors.indexOf(selectedColor)
+        })
+    }
+    
     renderPaletteList = () =>{
-        if(this.state.showColorPaletteList){
-            const colors = ["#000000", "#003057", "#505759", "#005A70", "#006128"]
-            return colors.map( (color, index) =>{
-                    return <li className={`color-palette-item ${selected}`} onClick={(index)=> this.selectColor(index)} key={index} data-value={color}></li>
+        const { showColorPaletteList, activeColorIndex } = this.state
+        if(showColorPaletteList){
+            return this.colors.map( (color, index) => {
+                    return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
                 }
             )
         }
@@ -165,7 +175,8 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         switch(element.type) {
             case elementTypeConstant.OPENER:
-                editor = <OpenerElement index={index} elementId={element.id} type={element.type} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                const { activeColorIndex } = this.state
+                editor = <OpenerElement backgroundColor={this.colors[activeColorIndex]} index={index} elementId={element.id} type={element.type} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:

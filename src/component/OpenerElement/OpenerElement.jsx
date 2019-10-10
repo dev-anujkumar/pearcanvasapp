@@ -95,7 +95,7 @@ class OpenerElement extends Component {
     }
     
     render() {
-        const {element} = this.props
+        const {element, backgroundColor} = this.props
         return (
             <div className = "opener-element-container">
                 <div className = "input-box-container">
@@ -115,7 +115,7 @@ class OpenerElement extends Component {
                         <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
                     </div>
                 </div>
-                <figure className="pearson-component opener-image figureData">
+                <figure className="pearson-component opener-image figureData" style={{ backgroundColor: `${backgroundColor}` }}>
                     <img src={noImage}
                         draggable="false" 
                     />
