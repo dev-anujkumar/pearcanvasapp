@@ -15,7 +15,7 @@ import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 
 import PopUp from '../../PopUp';
-import { getSlateLockStatus } from '../../CanvasWrapper/SlateLock_Actions';
+import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 
 function WithWrapperCommunication(WrappedComponent) {
@@ -257,7 +257,7 @@ function WithWrapperCommunication(WrappedComponent) {
             that.deleteTocItem(message);
 
     
-            // getSlateLockStatus(projectUrn, deleteSlateId, (response) => {          
+            // getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
             //     if (response == "error"){
             //         if(type==='withPendingTrack') {
             //             // that.deleteTocItemWithPendingTrack(message);
@@ -297,7 +297,7 @@ function WithWrapperCommunication(WrappedComponent) {
             //             that.deleteTocItem(message);
             //         }
             //     }   
-            // });
+            //});
         }
 
         onDeleteTocItem = (message, type) => {
