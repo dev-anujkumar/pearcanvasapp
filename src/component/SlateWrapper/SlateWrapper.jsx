@@ -25,7 +25,7 @@ import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE,
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 
 let random = guid();
@@ -40,7 +40,7 @@ class SlateWrapper extends Component {
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
-            splittedSlateIndex: 0
+            splittedSlateIndex : 0,
         }
     }
 
@@ -503,7 +503,36 @@ class SlateWrapper extends Component {
         sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
+    
+    deleteAccepted = () => { 
+        sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
+        this.deleteRejected()
+    }
 
+    deleteRejected = () => {
+        hideBlocker();
+        hideTocBlocker();
+        disableHeader(true) ;
+        this.props.modifyState(false)
+        sendDataToIframe({ 'type': 'deleteRejected', 'message': {} });
+    }
+
+    showTocDeletePopup= () => {
+        if(this.props.toggleTocDelete){
+            return(
+                <PopUp 
+                togglePopup={this.deleteRejected}
+                active={true}
+                saveContent={this.deleteAccepted}
+                saveButtonText='Yes'
+                dialogText='Are you sure you want to delete, this action cannot be undone?'
+                tocDelete = {true}
+                tocDeleteClass = 'tocDeleteClass'
+                />
+                
+            )
+        }
+    }
 
     /**
      * renderElement | renders single element according to its type
@@ -582,6 +611,7 @@ class SlateWrapper extends Component {
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
                 {this.showSplitSlatePopup()}
+                {this.showTocDeletePopup()}
             </React.Fragment>
         );
     }

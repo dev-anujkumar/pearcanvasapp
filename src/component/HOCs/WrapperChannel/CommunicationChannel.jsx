@@ -12,7 +12,11 @@ import PropTypes from 'prop-types';
 const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import { showHeaderBlocker, hideBlocker } from '../../../js/toggleLoader';
+import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
+
+import PopUp from '../../PopUp';
+import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import { thisExpression } from '@babel/types';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -21,7 +25,9 @@ function WithWrapperCommunication(WrappedComponent) {
             this.state = {
                 project_urn: "",
                 isTableLaunched: false,
-                showBlocker : false
+                showBlocker : false,
+                toggleTocDelete : false,
+                tocDeleteMessage : null
             };
         }
 
@@ -233,16 +239,81 @@ function WithWrapperCommunication(WrappedComponent) {
              *  */
         }
 
+        deleteTocItem = (message) => {
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
+            
+            this.setState({
+                    toggleTocDelete : true,
+                    tocDeleteMessage : message
+            }) 
+        }
+
+        //Toggle Delete Popup
+        modifyState = (args) =>{
+            this.setState({
+                toggleTocDelete : args,
+            }) 
+        }
+
         checkSlateLockAndDeleteSlate = (message, type) => {
+            let that=this;
+            // let projectUrn = message.changedValue.projectUrn;
+            // let userName = 'c5test01'//this.getCookie("USER_NAME");
+            // let deleteSlateId = message.changedValue.containerUrn;
             /**
-             * TO BE IMPLEMENTED
-             *  */
+             * Delete element details for logging
+             */
+
+            that.deleteTocItem(message);
+
+    
+            // getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
+            //     if (response == "error"){
+            //         if(type==='withPendingTrack') {
+            //             // that.deleteTocItemWithPendingTrack(message);
+            //         }
+            //         else {
+            //             that.deleteTocItem(message);
+            //         }
+            //         return false;
+            //     }
+            //     try{
+            //         let status = {
+            //             slateLocked : response.isLocked,
+            //             userInfo : response.userId    
+            //         }
+            //         if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
+            //             status.slateLocked = false;
+            //         }
+                    
+            //         if(status.slateLocked){
+            //             that.slateLockAlert(status.userInfo);
+            //         }
+        
+            //         else{
+            //             if(type==='withPendingTrack') {
+            //                 // that.deleteTocItemWithPendingTrack(message);
+            //             }
+            //             else {
+            //                 that.deleteTocItem(message);
+            //             }
+            //         }
+            //     }
+            //     catch(err){
+            //         if(type==='withPendingTrack') {
+            //             // that.deleteTocItemWithPendingTrack(message);
+            //         }
+            //         else {
+            //             that.deleteTocItem(message);
+            //         }
+            //     }   
+            //});
         }
 
         onDeleteTocItem = (message, type) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
+            this.checkSlateLockAndDeleteSlate(message, type)
         }
 
         onSingleContainerDelete = () => {
@@ -287,7 +358,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} />
+                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} toggleTocDelete = {this.state.toggleTocDelete} tocDeleteMessage = {this.state.tocDeleteMessage} modifyState = {this.modifyState}/>
                 </React.Fragment>
             )
         }
