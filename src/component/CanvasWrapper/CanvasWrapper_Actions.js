@@ -281,7 +281,7 @@ const findElementType = (element) => {
 							break;
 					}
 				} else if (element.figuretype == 'assessment') {
-					elementType['elementType'] = 'element-assessment';
+					/* elementType['elementType'] = 'element-assessment';
 					elementType['primaryOption'] = 'primary-single-assessment';
 					switch (element.figuredata.elementdata.assessmentformat) {
 						case 'tdx':
@@ -291,7 +291,7 @@ const findElementType = (element) => {
 						default:
 							elementType['secondaryOption'] = 'secondary-single-assessment-CITE';
 							break;
-				}
+				} */
 			}
 			break;
 		}

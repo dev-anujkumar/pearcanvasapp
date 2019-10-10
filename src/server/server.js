@@ -31,6 +31,21 @@ if (process.env.NODE_ENV === 'development') {
         });
     }
 
+    app.get('/plugins/tiny_mce_wiris/plugin.js', function (request, response){
+        response.sendFile(path.resolve(__dirname, '../../dist', 'plugins/tiny_mce_wiris/plugin.js'))
+    })
+    app.use(
+        ['**/configurationjs**', '/pluginwiris_engine/**'],
+        proxyMiddleware({
+            target: 'https://dev-structuredauthoring.pearson.com/', 
+            changeOrigin: true,
+            pathRewrite: {
+                '^/static/js' : '/tinywiris/tinymce4/js/tinymce'
+            }
+         })
+      );
+    
+
     app.use(webpackDevMiddleware(compiler, {
         publicPath: webpackConfig.output.publicPath,
         stats: { colors: true }

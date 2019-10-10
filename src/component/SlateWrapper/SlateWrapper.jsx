@@ -271,7 +271,7 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if (slateLockInfo.isLocked) {
+        if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
             this.setState({
                 lockOwner: slateLockInfo.userId
             })
@@ -462,17 +462,19 @@ class SlateWrapper extends Component {
             const dialogText = `Are you sure you want to split this slate at the selected section? `
             this.props.showBlocker(true)
             showTocBlocker();
-
-            return (
-                <PopUp dialogText={dialogText}
-                    active={true}
-                    togglePopup={this.toggleSplitSlatePopup}
-                    isSplitSlatePopup={true}
-                    handleSplit={this.handleSplitSlate}
-                    isInputDisabled={true}
-                    splitSlateClass="split-slate"
+            return(
+                <PopUp  dialogText={dialogText}
+                        active={true}
+                        togglePopup={this.toggleSplitSlatePopup}
+                        isSplitSlatePopup={true}
+                        handleSplit={this.handleSplitSlate}
+                        isInputDisabled={true}
+                        splitSlateClass="split-slate"
                 />
             )
+        }
+        else{
+            return null
         }
     }
 
@@ -482,17 +484,18 @@ class SlateWrapper extends Component {
         })
         if (value) {
             this.setState({
-                splittedSlateIndex: index + 1
-            })
+                splittedSlateIndex : index + 1
+            }) 
         }
-        else {
-            this.props.showBlocker(false)
+        else{
+            this.props.showBlocker(value)
             hideBlocker();
         }
     }
 
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
+        sendDataToIframe({ 'type': ShowLoader, 'message':{status: true}});
         sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
