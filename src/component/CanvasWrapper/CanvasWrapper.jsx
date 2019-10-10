@@ -25,7 +25,7 @@ import PopUp from '../PopUp';
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
-import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -280,6 +280,7 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setLockPeriodFlag,
-        handleSplitSlate
+        handleSplitSlate,
+        setUpdatedSlateTitle
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

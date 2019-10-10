@@ -131,7 +131,11 @@ class SlateWrapper extends Component {
                     let _slateObject = Object.values(_slateData)[0];
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { type: _slateType, contents: _slateContent } = _slateObject;
-                    let { title: _slateTitle } = _slateContent;
+                    let title ={
+                        text:this.props.slateTitleUpdated
+                    }
+                    let _slateTitle =  title.text? title: _slateContent.title
+                   // let { title: _slateTitle } = _slateContent;
                     return (
                         <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
                     )
@@ -592,7 +596,8 @@ SlateWrapper.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        slateTitleUpdated:state.appStore.slateTitleUpdated
     };
 };
 

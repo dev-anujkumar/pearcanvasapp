@@ -197,6 +197,18 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             console.log("setCurrentSlate >> ", message)
+            if (message['category'] === 'titleChange') {
+                let currentSlateObject = {
+                    id: message.id,
+                    type: message.type,
+                    parentId: message.parentId,
+                    parentType: message.parentType || message.node.nodeParentLabel,
+                    container: message.container,
+                    title: message.title,
+                    entityUrn: message.entityUrn
+                }
+                this.props.setUpdatedSlateTitle(currentSlateObject)
+            }
             if (message && message.node) {
                 this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
                 sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
@@ -270,6 +282,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 showBlocker: bFlag
             });
         }
+
 
         render() {
             return (

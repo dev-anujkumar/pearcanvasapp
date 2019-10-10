@@ -3,7 +3,8 @@ import config from '../../config/config';
 import {
     AUTHORING_ELEMENT_CREATED,
     SWAP_ELEMENT,
-    SET_SPLIT_INDEX
+    SET_SPLIT_INDEX,
+    SET_UPDATED_SLATE_TITLE
 } from '../../constants/Action_Constants';
 import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -213,4 +214,10 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     }).catch(error => {
         console.log("SPLIT SLATE API ERROR : ", error)
     })
+}
+export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_UPDATED_SLATE_TITLE,
+        payload: newSlateObj
+    }) 
 }

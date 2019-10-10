@@ -15,7 +15,8 @@ import {
     INTERACTIVE_ELEMENT_CREATED,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
-    SET_SPLIT_INDEX
+    SET_SPLIT_INDEX,
+    SET_UPDATED_SLATE_TITLE
 } from '../constants/Action_Constants';
 
 /**
@@ -87,6 +88,11 @@ export default function (state = initialState, action) {
                 ...state,
                 splittedElementIndex : action.payload
             }
+         case SET_UPDATED_SLATE_TITLE:
+                    return {
+                        ...state,
+                        slateTitleUpdated : action.payload.title
+                    }
         default:
             return state;
     }
