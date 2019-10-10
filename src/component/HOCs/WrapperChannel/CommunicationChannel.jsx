@@ -228,30 +228,9 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         deleteTocItem = (message) => {
-            let that = this;
             hideBlocker();
             showTocBlocker();
             disableHeader(true);
-
-
-            // vex.dialog.open({
-            //     message: 'Warning!',
-            //     input: [
-            //         '<div class="delete-element-text">Are you sure you want to delete, this action cannot be undone?</div>',
-            //     ].join(''),
-            //     buttons: [
-            //         $.extend({}, vex.dialog.buttons.YES, { text: 'Yes' }),
-            //         $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
-            //     ],
-            //     callback: function (data) {
-            //         if (!data) {
-            //             that.sendDataToIframe({ 'type': 'deleteRejected', 'message': {} })
-            //             disableHeader(false);
-            //         } else {
-            //             that.sendDataToIframe({ 'type': 'deleteAccepted', 'message': message })
-            //         }
-            //     }
-            // });
             
             this.setState({
                     toggleTocDelete : true,
@@ -263,8 +242,7 @@ function WithWrapperCommunication(WrappedComponent) {
         modifyState = (args) =>{
             this.setState({
                 toggleTocDelete : args,
-                // tocDeleteMessage : message
-        }) 
+            }) 
         }
 
         checkSlateLockAndDeleteSlate = (message, type) => {
