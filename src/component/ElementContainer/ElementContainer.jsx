@@ -32,7 +32,8 @@ class ElementContainer extends Component {
             borderToggle : 'showBorder',
             btnClassName : '',
             showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:''
+            ElementId: this.props.index==0?this.props.element.id:'',
+            showColorPalette : false
         };
         
     }
@@ -101,13 +102,36 @@ class ElementContainer extends Component {
             })
         } 
     }
+    toggleColorPaletteList = () => {
+        const { showColorPaletteList } = this.state
+        this.setState({
+            showColorPaletteList : !showColorPaletteList
+        })
+    }
+    renderPaletteList = () =>{
+        if(this.state.showColorPaletteList){
+            const colors = ["#000000", "#003057", "#505759", "#005A70", "#006128"]
+            return colors.map( (color, index) =>{
+                    return <li className={`color-palette-item ${selected}`} onClick={(index)=> this.selectColor(index)} key={index} data-value={color}></li>
+                }
+            )
+        }
+        else {
+            return null
+        }
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
      */
     renderColorPaletteButton = (element) => {
-        if (element.type === "opener") {
-            return <Button type="color-palette" />
+        if (element.type === elementTypeConstant.OPENER) {
+            return (
+                <>
+                    <Button onClick={this.toggleColorPaletteList} type="color-palette" />
+                    <ul className="color-palette-list">{this.renderPaletteList()}</ul>  
+                </>
+            )
         }
         else {
             return null
@@ -141,7 +165,7 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         switch(element.type) {
             case elementTypeConstant.OPENER:
-                editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement index={index} elementId={element.id} type={element.type} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:

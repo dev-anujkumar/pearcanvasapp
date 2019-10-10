@@ -21,7 +21,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK, OPENER}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -341,7 +341,7 @@ class SlateWrapper extends Component {
         }
         let indexToinsert
         // Detects element insertion from the topmost element separator
-        if(firstOne){
+        if(firstOne || type == "opener-elem"){
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -375,6 +375,7 @@ class SlateWrapper extends Component {
                    this.props.createElement(WORKED_EXAMPLE , indexToinsert,parentUrn)
                 break;
             case 'opener-elem':
+                    this.props.createElement(OPENER, indexToinsert, parentUrn)
                 break;
             case 'section-break-elem':
                     this.props.createElement(SECTION_BREAK, indexToinsert,parentUrn)
@@ -441,7 +442,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', 0, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },

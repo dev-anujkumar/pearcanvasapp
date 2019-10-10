@@ -8,6 +8,11 @@ import {
 } from './../../constants/Action_Constants';
 
 import wipElementObject from './ElementWipData';
+const { REACT_APP_API_URL, ssoToken } = config
+const headers = {
+    "Content-Type": "application/json",
+    "PearsonSSOSession": ssoToken
+}
 
 const handleElementConversion = (elementData, store) => {
     store = JSON.parse(JSON.stringify(store));
@@ -17,6 +22,10 @@ const handleElementConversion = (elementData, store) => {
         let format = elementData.secondaryOption.replace('secondary-', '');
         bodymatter.map((element, index) => {
             if(elementData.elementId === element.id) {
+                /* convertElement(element, elementData)
+                .then(newWipData => {
+                    console.log("Promise response>>>", newWipData)
+                }) */
                 let wipData = wipElementObject[format];
                 if(wipData){
                     wipData.id = elementData.elementId;

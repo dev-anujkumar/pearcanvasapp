@@ -95,6 +95,7 @@ class OpenerElement extends Component {
     }
     
     render() {
+        const {element} = this.props
         return (
             <div className = "opener-element-container">
                 <div className = "input-box-container">
