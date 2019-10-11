@@ -26,7 +26,7 @@ import PopUp from '../PopUp';
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
-import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -238,7 +238,7 @@ class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
                             </div>
                         </div>
                     </div>
@@ -284,6 +284,7 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setLockPeriodFlag,
-        handleSplitSlate
+        handleSplitSlate,
+        setUpdatedSlateTitle
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
