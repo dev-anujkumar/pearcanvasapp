@@ -82,10 +82,13 @@ export class TinyMceEditor extends Component {
                     }
                     else if (e.target.nodeName == "DFN") {
                         this.props.openGlossaryFootnotePopUp(true, "Glossary");
-                    } else {
+                    } else if(e.target.nodeName == "ABBR"){
+                        this.props.openAssetPopoverPopUp(true)
+                    }else {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
+
                 editor.on('keyup', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
@@ -212,9 +215,9 @@ export class TinyMceEditor extends Component {
             text: "",
             icon: "assetPopoverIcon",
             tooltip: "Asset Popover",
-            onAction: function (_) {
+            onAction:  () =>{
              console.log('asset poppover clicked');
-             this.props.openAssetPopoverPopUp(true);
+             this.addAssetPopover(editor)
             },
             onSetup: (buttonApi) => {
             /*
@@ -279,6 +282,10 @@ export class TinyMceEditor extends Component {
         
 
 
+    }
+
+    addAssetPopover = (editor) => {
+        this.props.openAssetPopoverPopUp(true);
     }
 
     componentDidMount() {

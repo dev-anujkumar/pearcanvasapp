@@ -6,15 +6,16 @@ import  React, { Component } from 'react';
 const ReactDOM = require('react-dom');
 import { connect } from 'react-redux';
 
-import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction,removeAssetLinkAction } from '../../actions/assetPopoverActions.js';
-import './assetPopoverStyles.css';
+import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction,removeAssetLinkAction } from './AssetPopover_Actions.js';
+import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import FigureCard from './FigureCard.jsx';
-import { saveAssetLinkedMedia } from '../editor_tools_module.jsx';
-import { hasReviewerRole } from '../../js/utility_module'
-const configModule = require('../../js/config_module.js');
-const configObject = configModule.GET_CONFIG();
-const WRAPPER_URL = `${configObject.WRAPPER_URL}`
+// import { saveAssetLinkedMedia } from '../editor_tools_module.jsx';
+// import { hasReviewerRole } from '../../js/utility_module'
+// const configModule = require('../../js/config_module.js');
+// const configObject = configModule.GET_CONFIG();
+const config = require('../../config/config.js')
+const WRAPPER_URL = config.WRAPPER_URL;
 
 class AssetPopoverSearch extends React.Component {
 
@@ -106,7 +107,7 @@ class AssetPopoverSearch extends React.Component {
                             }else{
                                // if(isSearchResultFound ||  shouldShowApoBody) {
                                     return  <section className= "modalFooter">
-                                            <button disabled = {!shouldOpenCurrentlyLinked || hasReviewerRole() } className= "myButton" onClick= {() => this.removeLink()}>Remove Link</button>
+                                            <button disabled = {!shouldOpenCurrentlyLinked } className= "myButton" onClick= {() => this.removeLink()}>Remove Link</button>
                                             <button disabled = {!isFigureSelected} className= "myButton" onClick= { this.apoSearchClose}>Cancel</button>    
                                         </section>
                                 //}
@@ -138,7 +139,7 @@ class AssetPopoverSearch extends React.Component {
                         <svg className="icon--16 header__search-icon">
                             <use xlinkHref="#search"/>
                         </svg>
-                        <input className= "searchBarApo" placeholder= "Search for images..." type= "text"  readOnly = {hasReviewerRole()} onChange= {(e) => this.searchForFigures(e, stateImageData)}/>
+                        <input className= "searchBarApo" placeholder= "Search for images..." type= "text" onChange= {(e) => this.searchForFigures(e, stateImageData)}/>
                         <label className= "modal__close" onClick= { this.apoSearchClose}></label>
 
                     </section>

@@ -4,8 +4,7 @@ import commentsPanelReducer from './commentsPanelReducer.js'
 import toolbarReducer from './toolbarReducer.js';
 import glossaryFootnoteReducer from './glossaryFootnoteReducer';
 import slateLockReducer from './slateLockReducer';
-import assetPopoverReducer from './assetPopoverReducer';
-
+import assetPopOverSearch from './assetPopoverReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -13,5 +12,5 @@ export default combineReducers({
     toolbarReducer : toolbarReducer,
     glossaryFootnoteReducer:glossaryFootnoteReducer,
     slateLockReducer,
-    assetPopoverReducer
+    assetPopOverSearch
 });

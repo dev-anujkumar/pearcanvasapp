@@ -6,7 +6,7 @@ import CommentsPanel from '../CommentsPanel'
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
-import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
     fetchSlateData
 } from './CanvasWrapper_Actions';
@@ -267,7 +267,7 @@ const mapStateToProps = state => {
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopoverReducer.showApoSearch
+        showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
 
