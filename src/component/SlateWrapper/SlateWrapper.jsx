@@ -22,6 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK}from './SlateWrapperConstants';
+import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -40,7 +41,8 @@ class SlateWrapper extends Component {
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
-            splittedSlateIndex : 0
+            splittedSlateIndex : 0,
+            hasError : false
         }
     }
 
@@ -511,13 +513,19 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer                            
+                            <ElementContainer
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
-                                elementSepratorProps = {this.elementSepratorProps}
-                                showBlocker = {this.props.showBlocker}
-                            />
+                                elementSepratorProps={this.elementSepratorProps}
+                                showBlocker={this.props.showBlocker}
+                            >
+                                {
+                                    (isHovered, isPageNumberEnabled, activeElement) => (
+                                        <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                    )
+                                }
+                            </ElementContainer>
                             <ElementSaprator
                                 index={index}
                                 esProps={this.elementSepratorProps(index, false)}
@@ -542,6 +550,17 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
+        if (this.state.hasError) {
+            return (
+                <div className='slate-content'>
+                    <h3>Error occurred while loading elements</h3>
+                <React.Fragment>
+                        <LargeLoader />
+                        <LargeLoader />
+                    </React.Fragment>
+                </div>
+            )
+        }
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -573,6 +592,10 @@ class SlateWrapper extends Component {
         );
     }
 
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
 }
 SlateWrapper.displayName = "SlateWrapper"
 

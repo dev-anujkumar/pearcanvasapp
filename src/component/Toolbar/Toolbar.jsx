@@ -23,6 +23,7 @@ const _Toolbar = props => {
                     />: 
                  <input 
                     type="checkbox" 
+                    onChange={props.togglePageNumbering}
                     />
                     }
                     <span className="slider round"></span>
