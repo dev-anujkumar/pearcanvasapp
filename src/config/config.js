@@ -5,9 +5,10 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "OZK1-r5niDZv8jztZuks0KquVbI.*AAJTSQACMDIAAlNLABx3T0owZytnUkRiQ0taL2o5bTViL3Bzd3pDSDA9AAJTMQACMDQ.*",
+    ssoToken: "qoSh2c3ho2OJ6Pn1bb49VNRYAh8.*AAJTSQACMDIAAlNLABx0K2tBUUVmbXNreE5BWEwvMjRZUXhOa21DSm89AAJTMQACMDQ.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
+    userEmail : 'c5test01@mctest.local',
     assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -22,14 +23,30 @@ let config = {
         'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c'
     ],
     PERMISSIONS : [],
+    //c2 required keys and urls
     CMDS_APIKEY: process.env.CMDS_APIKEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.CMDS_DATA_ENDPOINT || 'https://staging.data.pearson.com',
     CMDS_SCHEMA_ENDPOINT: process.env.CMDS_SCHEMA_ENDPOINT || 'https://staging.schema.pearson.com',
     CMDS_DATABASE: process.env.CMDS_DATABASE || '?db=qa2',
     CMIS_REPO   : process.env.CMIS_REPO || '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]',
     EPS_API: process.env.EPS_API || 'https://us-school-stg.pearsoned.com/school',
+    //c4 required keys and urls
+    CTOOL_APIKEY: process.env.CTOOL_APIKEY || 'INpAP0MaiVP9Rohy4rB0ue3j2SGE3Abk',
+    CTOOL_PUBSLATE: process.env.CTOOL_PUBSLATE || 'https://staging.api.pearson.com/content/tools/wip2cite/publishslate/v1/',
+    CTOOL_PUBTITLE: process.env.CTOOL_PUBTITLE || 'https://staging.api.pearson.com/content/tools/wip2cite/publishtitle/v1/',
+    CTOOL_PUBTITLES3: process.env.CTOOL_PUBTITLES3 || 'https://staging.api.pearson.com/content/tools/wip2cite/publishtitles3/v1/',
+    CTOOL_DISCIPLINEID: process.env.CTOOL_DISCIPLINEID || 'https://staging.api.pearson.com/content/tools/printondemand/disciplineid/v1/',
+    CTOOL_REGISTERPOD: process.env.CTOOL_REGISTERPOD || 'https://staging.api.pearson.com/content/tools/printondemand/registerpod/v1/',
+    CTOOL_DASHBOARD:process.env.CTOOL_REGISTERPOD || 'https://staging.api.pearson.com/content/tools/chaucerdashboard/v1', 
+    EPUB_ENDPOINT: process.env.EPUB_ENDPOINT || 'https://staging.api.pearson.com/content/tools/transformation/narrative/v1',
+    C6PUB_ENDPOINT: process.env.C6PUB_ENDPOINT || 'https://staging.api.pearson.com/content/delivery/publish/v2/',
+    C6PUB_API_KEY: process.env.C6PUB_API_KEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
+    C6REDIS_SERVER_UPDATE: 'api/projects/',
+    C4_API_URL: "./api",
+
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
+    citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
     WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',

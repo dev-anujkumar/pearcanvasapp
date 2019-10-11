@@ -160,12 +160,20 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                     this.props.fetchAuthUser()
                      config.projectUrn = message.id;
+                     config.citeUrn = message.citeUrn;
                      config.projectEntityUrn = message.entityUrn;
                      config.alfrescoMetaData = message.alfresco;
                     break;
-                case 'permissionsDetails' :                    
+                case 'permissionsDetails':
                     this.handlePermissioning(message);
+                    break;
+                case 'slatePreview':
+                    this.props.publishContent('slatePreview');
+                    break;
+                case 'projectPreview':
+                    this.props.publishContent('projectPreview');
                     break;
             }
         }
