@@ -83,7 +83,8 @@ class ElementAsideContainer extends Component {
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
             manifestUrn:_elementId,
-            contentUrn :element.contentUrn
+            contentUrn :element.contentUrn,
+            elementType:_elementType
         }
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
@@ -165,7 +166,8 @@ class ElementAsideContainer extends Component {
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
             manifestUrn:_elementId,
-            contentUrn :_element.contentUrn
+            contentUrn :_element.contentUrn,
+            elementType:_elementType
         }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
@@ -177,6 +179,7 @@ class ElementAsideContainer extends Component {
                     borderToggle={borderToggle}
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
+                    showDeleteElemPopup = {this.props.showDeleteElemPopup}
                 />
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
 
@@ -223,6 +226,9 @@ class ElementAsideContainer extends Component {
                                     element={element}
                                     key={element.id}
                                     index={`${parentIndex}-${index}`}
+                                    parentUrn ={parentUrn}
+                                    showBlocker={this.props.showBlocker}
+                                    asideData = {asideData}
 
                                 // handleCommentspanel={this.props.handleCommentspanel}
                                 />
