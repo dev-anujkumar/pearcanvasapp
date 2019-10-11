@@ -22,7 +22,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
-
+import AssessmentSlateCanvas from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -140,6 +140,9 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element) || 'P';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         switch(element.type) {
+            case elementTypeConstant.ASSESSMENT_SLATE:
+                editor = <AssessmentSlateCanvas type={element.type} model={element} elementId={element.id}/>
+                labelText = 'AS'
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
@@ -228,7 +231,8 @@ class ElementContainer extends Component {
             <div className = "editor" >
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
+                { this.props.slateType !=='assessment'? ( config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
+                : null }
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}

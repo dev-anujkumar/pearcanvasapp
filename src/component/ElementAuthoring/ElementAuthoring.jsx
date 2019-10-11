@@ -14,7 +14,8 @@ export class ElementAuthoring extends Component {
 
   render() {
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo} = this.props
-     return (
+    try {
+      return (
         <TinyMceEditor
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
@@ -32,6 +33,10 @@ export class ElementAuthoring extends Component {
           slateLockInfo={slateLockInfo}
         />
     )
+    } catch (error) {
+      return <div></div>
+    }
+    
   }
   onClick() {
 

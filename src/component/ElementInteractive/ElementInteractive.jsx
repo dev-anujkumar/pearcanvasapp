@@ -341,11 +341,18 @@ class Interactive extends React.Component {
 
     render() {
         const { model, itemId, index, slateLockInfo } = this.props;
-        return (
-            <div className="interactive-element">
-                {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-            </div>
-        )
+        try {
+            return (
+                <div className="interactive-element">
+                    {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
+                </div>
+            )
+        } catch (error) {
+            return (
+                <div className="interactive-element">
+                </div>
+            )
+        } 
     }
 
     onFocus = () => {

@@ -84,7 +84,6 @@ export class ElementSingleAssessment extends Component {
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={this.toggleUsageTypeDropdown} >
                         <span className="singleAssessment_Dropdown_currentLabel">{model.figuredata.elementdata ? this.state.activeAsseessmentUsageType : "Quiz"}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
-
                     </div>
 
                 </div>
@@ -128,11 +127,20 @@ export class ElementSingleAssessment extends Component {
     }
     render() {
         const { model, index, elementId } = this.props;
-        return (
-            <div className="figureElement">
-                {this.renderAssessmentType(model, index)}
-            </div>
-        );
+        try {
+            return (
+                <div className="figureElement">
+                    {this.renderAssessmentType(model, index)}
+                </div>
+            );
+        } catch (error) {
+            return (
+                <div className="figureElement">
+                    {this.renderAssessmentType(model, index)}
+                </div>
+            );
+        }
+        
     }
 }
 
