@@ -16,11 +16,8 @@ import {
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
-<<<<<<< HEAD
-    GET_PAGE_NUMBER
-=======
+    GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE
->>>>>>> d3a61518d73ae0ec8d806af664b0707c5f2191f3
 } from '../constants/Action_Constants';
 
 /**
