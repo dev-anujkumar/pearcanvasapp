@@ -221,7 +221,7 @@ class ElementContainer extends Component {
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer    showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
         }
