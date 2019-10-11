@@ -24,7 +24,8 @@ import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.j
 
 import {
     tinymceFormulaIcon,
-    tinymceFormulaChemistryIcon
+    tinymceFormulaChemistryIcon,
+    assetPopoverIcon
   } from "./../svgIcons.jsx";
 
 export class TinyMceEditor extends Component {
@@ -33,6 +34,7 @@ export class TinyMceEditor extends Component {
         let context = this;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
+        this.assetPopoverButton = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -53,8 +55,10 @@ export class TinyMceEditor extends Component {
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
                 this.setMathmlFormulaIcon(editor);
+                this.setAssetPopoverIcon(editor);
                 this.addChemistryFormulaButton(editor);
                 this.addMathmlFormulaButton(editor);
+                this.addAssetPopoverIcon(editor);
                 editor.on('keydown', function (e) {
                     /* if (e.keyCode == 13) {
                         e.preventDefault();
@@ -103,11 +107,6 @@ export class TinyMceEditor extends Component {
                     onAction: () => this.addGlossary(editor)
                 });
 
-                editor.ui.registry.addButton('Asset Popover', {
-                    text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
-                    onAction: () => this.addGlossary(editor)
-                });
-
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
@@ -140,6 +139,14 @@ export class TinyMceEditor extends Component {
             }
         }
     };
+
+    setAssetPopoverIcon = editor => {
+        editor.ui.registry.addIcon(
+            "assetPopoverIcon",
+            assetPopoverIcon
+          );
+    }
+
     setChemistryFormulaIcon = editor => {
         /*
           Adding custom icon for wiris chemistry editor
@@ -200,6 +207,24 @@ export class TinyMceEditor extends Component {
           }
         });
       };
+    addAssetPopoverIcon = editor => {
+        editor.ui.registry.addButton("assetPopoverIcon", {
+            text: "",
+            icon: "assetPopoverIcon",
+            tooltip: "Asset Popover",
+            onAction: function (_) {
+             console.log('asset poppover clicked');
+             this.props.openAssetPopoverPopUp(true);
+            },
+            onSetup: (buttonApi) => {
+            /*
+            make merge menu button apis available globally among compnenet
+            */
+            //  this.assetPopoverButton = buttonApi;
+            //  this.assetPopoverButton.setDisabled(true);           
+            }
+        });
+    }
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;

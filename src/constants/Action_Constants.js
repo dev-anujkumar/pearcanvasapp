@@ -37,3 +37,9 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
+
+/*--------------- Asset Popover -------------------*/
+export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
+export const APO_BUTTON = 'APO_BUTTON'
+
+

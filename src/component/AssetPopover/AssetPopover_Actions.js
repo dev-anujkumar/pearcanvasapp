@@ -1,5 +1,6 @@
 import Axios from "axios";
 import store from '../store.js';
+import {APO_SEARCH_SAVE, APO_BUTTON} from '../../constants/Action_Constants';
 
 const config = require('../js/config').GET_CONFIG();
 const configModule = require('../js/config_module.js');
@@ -38,7 +39,7 @@ export const selectedFigureAction = (selectedFigure) => {
 //Action to save the links to a figure
 export const apoSearchSaveAction = (apoObject, args) => {
   return {
-    type : 'APO_SEARCH_SAVE',
+    type : APO_SEARCH_SAVE,
     payload : {
       apoObject : apoObject,
       imageData : args
@@ -87,6 +88,15 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
 
 }
 
+export default assetPopoverPopup = (args) => {
+  return {
+    type : 'TOGGLE_APO_SEARCH',
+    payload : {
+      apoObject : {},
+      toggleApo : true,
+  }  
+  }
+}
 //mockdata
 // export const searchForFiguresAction = (searchTerm, stateImageData) => {
 

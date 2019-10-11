@@ -15,6 +15,9 @@ import {
     , createFigureElement , createInteractiveElement, swapElement,
     setSplittedElementIndex
 } from './SlateWrapper_Actions';
+
+import { openAssetPopoverPopUp} from '../AssetPopover/AssetPopover_Actions';
+
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTypes.js';

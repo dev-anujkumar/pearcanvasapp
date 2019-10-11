@@ -11,6 +11,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
 import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -145,41 +146,41 @@ class ElementContainer extends Component {
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.FIGURE:
 
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -191,15 +192,15 @@ class ElementContainer extends Component {
 
                         switch (element.figuredata.interactiveformat) {
                             case elementTypeConstant.INTERACTIVE_MMI:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'Pop';
                                 break;
                                 
@@ -209,7 +210,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
             case elementTypeConstant.ELEMENT_ASIDE:
@@ -299,6 +300,10 @@ class ElementContainer extends Component {
     openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
     }
+    openAssetPopoverPopUp = (toggleApoPopup) => {
+        this.props.assetPopoverPopup(toggleApoPopup)
+    }
+
     render = () => {
         const { element } = this.props;
         return this.renderElement(element);
@@ -334,6 +339,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
+        },
+        assetPopoverPopup:(toggleApoPopup) => {
+            dispatch(assetPopoverPopup(toggleApoPopup))
         }
     }
 }

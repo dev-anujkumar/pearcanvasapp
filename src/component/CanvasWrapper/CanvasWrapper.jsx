@@ -6,6 +6,7 @@ import CommentsPanel from '../CommentsPanel'
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch';
 import {
     fetchSlateData
 } from './CanvasWrapper_Actions';
@@ -36,7 +37,8 @@ class CanvasWrapper extends Component {
             // activeSlate: config.slateList[0],
             // showBlocker : false,
             editorToolbarRef: null,
-            showReleasePopup : false
+            showReleasePopup : false,
+            toggleApo : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -234,6 +236,7 @@ class CanvasWrapper extends Component {
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
+                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
                             </div>
@@ -263,7 +266,8 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        showApoSearch : state.assetPopoverReducer.showApoSearch
     };
 };
 
