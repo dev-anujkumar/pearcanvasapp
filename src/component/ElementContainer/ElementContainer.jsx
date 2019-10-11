@@ -319,7 +319,6 @@ class ElementContainer extends Component {
         this.setState({ isHovered: false })
     }
 }
-import { format } from 'url';
 
 ElementContainer.defaultProps = {
     element: {}
