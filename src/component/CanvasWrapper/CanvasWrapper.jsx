@@ -78,9 +78,9 @@ class CanvasWrapper extends Component {
         //     this.state.navigation = false;
         // } else {
         const { slateLockInfo: { isLocked, userId } } = this.props
-        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && false) {
+        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
             document.getElementById(window.tinymce.activeEditor.id).focus();
-        }else if(tinymce.$('.cypress-editable').length && false){
+        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
             tinymce.$('.cypress-editable').eq(0).trigger('focus');
         }     
 
