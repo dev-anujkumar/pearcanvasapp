@@ -22,7 +22,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
-import AssessmentSlateCanvas from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
+import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
+import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -141,8 +142,9 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor = <AssessmentSlateCanvas type={element.type} model={element} elementId={element.id}/>
+                editor =<AssessmentSlateCanvas />
                 labelText = 'AS'
+                break;
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
                 labelText = 'OE'

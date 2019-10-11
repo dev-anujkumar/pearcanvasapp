@@ -43,28 +43,28 @@ export class AssessmentSlateData extends Component {
         }
         return assessmentTypeValue
     }
-    // assessmentSlateDefaultContent=()=>{
-    //     return (
-    //         <div className="slate_initial_selection">
-    //             <div className="slate_assessment_type_label">Please select an assessment type.</div>
-    //             <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
-    //                 <span className="slate_assessment_dropdown_label">{this.state.activeAssessmentType}</span>
-    //                 <span className="slate_assessment_dropdown_image"></span>
-    //                 <div className="clr"></div>
-    //             </div>
-    //             {
-    //                 <ul className="slate_assessment_type_dropdown_options notselect" ref={this.typeDropdownRef}>
-    //                     {this.selectAssessmentType()}
-    //                 </ul>
-    //             }
-    //             {
-    //                 this.state.activeAssessmentType!='Select'?
-    //                 (<div className="slate_assessment_type_button">Add assessment</div>):(<div className="slate_assessment_disabled_button">Add assessment</div>)
-    //             }
-    //             <div className="clr"></div>
-    //         </div>
-    //     )
-    // }
+    assessmentSlateDefaultContent=()=>{
+        return (
+            <div className="slate_initial_selection">
+                <div className="slate_assessment_type_label">Please select an assessment type.</div>
+                <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
+                    <span className="slate_assessment_dropdown_label">{this.state.activeAssessmentType}</span>
+                    <span className="slate_assessment_dropdown_image"></span>
+                    <div className="clr"></div>
+                </div>
+                {
+                    <ul className="slate_assessment_type_dropdown_options notselect" ref={this.typeDropdownRef}>
+                        {this.selectAssessmentType()}
+                    </ul>
+                }
+                {
+                    this.state.activeAssessmentType!='Select'?
+                    (<div className="slate_assessment_type_button">Add assessment</div>):(<div className="slate_assessment_disabled_button">Add assessment</div>)
+                }
+                <div className="clr"></div>
+            </div>
+        )
+    }
     toggleUsageTypeDropdown = () => {
         this.usageTypeDropdownRef.current.classList.remove('notselect')
     }
@@ -179,7 +179,7 @@ export class AssessmentSlateData extends Component {
         } else if (type === 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
             return (
                 <div>
-                    <LearningTool />
+                    {/* <LearningTool /> */}
                 </div>
             )
         } else if (type === 'assessment1' ) {
@@ -215,7 +215,7 @@ export class AssessmentSlateData extends Component {
         const { type } = this.props;
         return (
             <div>
-                {this.assessmentSlateContent(type)}
+                {this.assessmentSlateDefaultContent()}
             </div>
         );
     }

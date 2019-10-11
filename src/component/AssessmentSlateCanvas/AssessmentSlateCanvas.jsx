@@ -18,8 +18,9 @@ export class AssessmentSlateCanvas extends Component {
     }
     render() {
         return(
+            <div >
             <AssessmentSlateData type={this.props.type}/>
-
+            </div>
         );
     }
 }

@@ -1,17 +1,17 @@
-const authModule = require('./auth_module.js');
-import store from '../store'
+//import store from '../store'
 var uname;
 const renderderedTagSelector = '#c2-modal';
-const configModule = require('./config_module.js');
-let config_object = configModule.GET_CONFIG();
+const configOBJ = require('./../config/config');
+let config_object = configOBJ.default;
 const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
 const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
 const CMDS_DATABASE = config_object['CMDS_DATABASE'];
 const CMIS_US_REPO = config_object['CMIS_US_REPO'];
 const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../jsx/common/components/toggleLoader';
+import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
+const authModule = { GET_SSO_TOKEN : function() { return config_object.ssoToken } };
 
 
 
@@ -22,6 +22,7 @@ var patternSearchSelect = PatternSearchSelect.default || {}; //(PatternSearchSel
 
 let _interactivePattern = {};
 let _interactivePatternConfig = {};
+var uname = config_object['userId'];
 
 /*Configure the library*/
 var libConfig = {   'locale': 'en_US',
@@ -44,7 +45,7 @@ var libConfig = {   'locale': 'en_US',
 patternBroker.setup(libConfig);
 
 //var module = {};
-module.exports = {
+export const c2AssessmentModule = {
   
   searchAndSelectCallBack: function(data) {
     console.log("searchAndSelectCallBack data: " + '',data);
@@ -72,7 +73,6 @@ module.exports = {
           _interactivePattern.unmount();
       }
       
-      uname = store.getState().auth.user ? store.getState().auth.user.userId : "c2test01";
       var libConfig = {   'locale': 'en_US',
                     'headers' : {
                         'Content-Type'        : 'application/json',
@@ -126,7 +126,7 @@ module.exports = {
             libConfig.headers['Correlation-Id'] = _interactivePattern.corsId;
           }
           patternBroker.setup(libConfig);
-          _interactivePattern.setup(_interactivePatternConfig, module.exports.searchAndSelectCallBack);
+          _interactivePattern.setup(_interactivePatternConfig, this.searchAndSelectCallBack);
           _interactivePattern.run(_interactivePattern);
           _interactivePattern.on(callback);
 

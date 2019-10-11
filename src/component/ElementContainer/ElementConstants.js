@@ -25,5 +25,5 @@ export default {
     ELEMENT_ASIDE: "element-aside",
 
 /****************Assessment Slate Element************************ */  
-ASSESSMENT_SLATE : "element-assessment"
+    ASSESSMENT_SLATE : "element-assessment"
 }

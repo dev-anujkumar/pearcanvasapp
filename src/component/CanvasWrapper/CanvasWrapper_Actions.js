@@ -400,7 +400,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		let contentUrn = slateData.data[manifestURN].contentUrn;
 		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
 		//let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
-		
+		console.log('slate data',slateData.data[manifestURN])
 		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,
