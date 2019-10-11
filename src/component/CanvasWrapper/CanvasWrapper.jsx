@@ -27,6 +27,7 @@ import PopUp from '../PopUp';
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
+import { PageNumberContext } from './CanvasContexts.js';
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +39,8 @@ class CanvasWrapper extends Component {
             // showBlocker : false,
             editorToolbarRef: null,
             showReleasePopup : false,
-            toggleApo : false
+            toggleApo : false,
+            isPageNumberEnabled : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
@@ -224,7 +226,7 @@ class CanvasWrapper extends Component {
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
                     {/* editor tool goes here */}
-                    <Toolbar />
+                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
                     {/* custom list editor component */}
                 </div>
 
@@ -238,7 +240,9 @@ class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
+                                <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
+                                </PageNumberContext.Provider>                                
                             </div>
                         </div>
                     </div>
@@ -257,6 +261,11 @@ class CanvasWrapper extends Component {
         );
     }
     
+    togglePageNumbering = () => {
+        this.setState((state) => ({
+            isPageNumberEnabled: !state.isPageNumberEnabled
+        }));
+    }
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"

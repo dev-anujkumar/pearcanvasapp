@@ -9,6 +9,7 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
+import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
@@ -225,7 +226,13 @@ class ElementAsideContainer extends Component {
                                     index={`${parentIndex}-${index}`}
 
                                 // handleCommentspanel={this.props.handleCommentspanel}
-                                />
+                                >
+                                    {
+                                        (isHovered, isPageNumberEnabled, activeElement) => (
+                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                        )
+                                    }
+                                </ElementContainer>
                                 <ElementSaprator
                                     index={index}
                                     key={`elem-separtor-${element.id}`}

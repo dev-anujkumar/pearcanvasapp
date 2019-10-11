@@ -185,12 +185,18 @@ export class ElementAudioVideo extends Component {
         return audioVideoJSX;
     }
     render() {
-        const { model, index, slateLockInfo} = this.props;
-        return (
-            <div className="figureElement">
-                {this.renderAudioVideoType(model,index,slateLockInfo)}
-            </div>
-        );
+        const { model, index, slateLockInfo } = this.props;
+        try {
+            return (
+                <div className="figureElement">
+                    {this.renderAudioVideoType(model, index, slateLockInfo)}
+                </div>
+            );
+        } catch (error) {
+            return (
+                <div className="figureElement"></div>
+            )
+        }
     }
 }
 

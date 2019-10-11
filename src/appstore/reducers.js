@@ -16,6 +16,7 @@ import {
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
+    GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE
 } from '../constants/Action_Constants';
 
@@ -28,7 +29,8 @@ const initialState = {
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
-    splittedElementIndex : 0
+    splittedElementIndex: 0,
+    pageNumberData: {}
 };
 
 /**
@@ -87,6 +89,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 splittedElementIndex : action.payload
+            }
+        case GET_PAGE_NUMBER:
+            return {
+                ...state,
+                pageNumberData: action.payload
             }
          case SET_UPDATED_SLATE_TITLE:
                     return {
