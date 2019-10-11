@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import config from '../../config/config';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
@@ -29,59 +30,90 @@ export class ElementAudioVideo extends Component {
     onClick = () => {
         console.log("onClick")
     }
+    dataFromAlfresco = (data) => {
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+        //console.log("SMART LINK PATH: " + '',smartLinkPath);
+        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        //console.log("SMART LINK STRING: " + '',smartLinkString);
+        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        //console.log("SMART LINK DESC: " + '',smartLinkDesc);
+        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        //console.log("SMART LINK TYPE: " + '',smartLinkType);
+        if (figureType === "video" || figureType === "audio") {
+
+            let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
+            if (figureType === "video" && epsURL === "") {
+                epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+            }
+            let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
+            let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
+            // let clipLength=Object.keys(clipInfo).length
+            let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
+            let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
+            //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
+            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+
+        }
+    }
+    handleC2ExtendedClick = (data) => {
+        let data_1 = data;
+        let that = this;
+        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                that.dataFromAlfresco(data);
+            })
+        })
+
+    }
     handleC2MediaClick = (e) => {
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;
         }
-        ////console.log("LAUNCHING C2 MEDIA MODAL");
         let that = this;
+        ////console.log("LAUNCHING C2 MEDIA MODAL");
+        let alfrescoPath = config.alfrescoMetaData;
+        var data_1 = false;
 
-        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                    //let imageData = data['data'];
-                    let imageData = data;
-                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-                    let width = imageData['width'] ? imageData['width'] : "";
-                    let height = imageData['height'] ? imageData['height'] : "";
-                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
-                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-                    //console.log("SMART LINK STRING: " + '',smartLinkString);
-                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
-                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
+        if (alfrescoPath && alfrescoPath.nodeRef) {
+            data_1 = alfrescoPath;
+            /*
+                data according to new project api 
+            */
+            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-                    if (figureType === "video" || figureType === "audio") {
+            /*
+                data according to old core api and c2media
+            */
+            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-                        let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
-                        if (figureType === "video" && epsURL === "") {
-                            epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
-                        }
-                        let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-                        let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
-                        // let clipLength=Object.keys(clipInfo).length
-                        let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
-                        let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-                        //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
-                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-                        that.setState({ imgSrc: epsURL,assetData :smartLinkURl })
-                        disableHeader(false)
-                        hideTocBlocker();
+            this.handleC2ExtendedClick(data_1)
 
-                    }
+        } else {
+            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                        that.dataFromAlfresco(data);
+                    })
                 })
-            })
-        });
-        hideTocBlocker();
-        disableHeader(false);
+            });
+        }
 
     }
     /*** @description - This function is for handling the Audio-Video-element.
@@ -153,12 +185,18 @@ export class ElementAudioVideo extends Component {
         return audioVideoJSX;
     }
     render() {
-        const { model, index, slateLockInfo} = this.props;
-        return (
-            <div className="figureElement">
-                {this.renderAudioVideoType(model,index,slateLockInfo)}
-            </div>
-        );
+        const { model, index, slateLockInfo } = this.props;
+        try {
+            return (
+                <div className="figureElement">
+                    {this.renderAudioVideoType(model, index, slateLockInfo)}
+                </div>
+            );
+        } catch (error) {
+            return (
+                <div className="figureElement"></div>
+            )
+        }
     }
 }
 

@@ -22,6 +22,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -32,7 +33,8 @@ class ElementContainer extends Component {
             borderToggle : 'showBorder',
             btnClassName : '',
             showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:''
+            ElementId: this.props.index==0?this.props.element.id:'',
+            isHovered: false
         };
         
     }
@@ -54,7 +56,7 @@ class ElementContainer extends Component {
   
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps){      
-        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
+        if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
              if(newProps.elemBorderToggle){
                 this.setState({
                     borderToggle : 'showBorder',
@@ -226,7 +228,7 @@ class ElementContainer extends Component {
                 }
         }
         return(
-            <div className = "editor" >
+            <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
                 { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
@@ -252,6 +254,13 @@ class ElementContainer extends Component {
                 deleteElement = {this.deleteElement}
                 
                 />}
+                {
+                    <PageNumberContext.Consumer>
+                        {
+                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement)
+                        }
+                    </PageNumberContext.Consumer>                    
+                }
             </div >
         );
     }
@@ -304,6 +313,12 @@ class ElementContainer extends Component {
         const { element } = this.props;
         return this.renderElement(element);
     }
+    handleOnMouseOver = () => {
+        this.setState({ isHovered: true })
+    }
+    handleOnMouseOut = () => {
+        this.setState({ isHovered: false })
+    }
 }
 
 ElementContainer.defaultProps = {
@@ -346,7 +361,7 @@ const mapStateToProps = (state) => {
 
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
-        activeElement: state.appStore.activeElement.elementId,
+        activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo
     }
 }
