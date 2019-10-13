@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     apoObject : {},
     imageData : [],
     searchTerm : '' ,                        //Figure name to be find
+    currentlyLinkedImageData : {}
 };
 
 export default function reducer (state = INITIAL_STATE, action) {
@@ -20,6 +21,7 @@ export default function reducer (state = INITIAL_STATE, action) {
                 showApoSearch : action.payload.toggleApo,
                 apoObject : action.payload.apoObject,
                 showApoCurrentlyLinked : action.payload.showApoCurrentlyLinked,
+                currentlyLinkedImageData : action.payload.currentlyLinkedImageData,
                 showApoFooter : true,
                 showApoBody : false,
                 noSearchResultFound : true,

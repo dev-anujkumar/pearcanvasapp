@@ -21,7 +21,7 @@ import config from '../config/config';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
 import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
-
+import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
@@ -82,8 +82,14 @@ export class TinyMceEditor extends Component {
                     }
                     else if (e.target.nodeName == "DFN") {
                         this.props.openGlossaryFootnotePopUp(true, "Glossary");
-                    } else if(e.target.nodeName == "ABBR"){
-                        this.props.openAssetPopoverPopUp(true)
+                    }else if (e.target.nodeName == 'ABBR'){
+                        let assetId = e.target.attributes['asset-id'].nodeValue;
+                        let dataUrn = e.target.attributes['data-uri'].nodeValue;
+                        let apoObject = {
+                            'assetId' : assetId,
+                            'dataUrn' : dataUrn
+                        }
+                        authorAssetPopOver(true, apoObject);
                     }else {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
@@ -213,18 +219,22 @@ export class TinyMceEditor extends Component {
     addAssetPopoverIcon = editor => {
         editor.ui.registry.addButton("assetPopoverIcon", {
             text: "",
-            icon: "assetPopoverIcon",
+            icon: "assetpopovericon",
             tooltip: "Asset Popover",
             onAction:  () =>{
-             console.log('asset poppover clicked');
-             this.addAssetPopover(editor)
+            //console.log('asset poppover clicked');
+            let selectedText = window.getSelection().toString();
+            if(selectedText.length){
+                this.addAssetPopover(editor, selectedText)
+            }
+            
             },
             onSetup: (buttonApi) => {
             /*
             make merge menu button apis available globally among compnenet
             */
-            //  this.assetPopoverButton = buttonApi;
-            //  this.assetPopoverButton.setDisabled(true);           
+            this.assetPopoverButton = buttonApi;
+            // this.assetPopoverButton.setDisabled(true);           
             }
         });
     }
@@ -284,7 +294,9 @@ export class TinyMceEditor extends Component {
 
     }
 
-    addAssetPopover = (editor) => {
+    addAssetPopover = (editor, selectedText) => {
+        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>'
+        editor.insertContent(insertionText); 
         this.props.openAssetPopoverPopUp(true);
     }
 

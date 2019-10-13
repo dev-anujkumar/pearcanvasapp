@@ -14,6 +14,7 @@ import FigureCard from './FigureCard.jsx';
 // import { hasReviewerRole } from '../../js/utility_module'
 // const configModule = require('../../js/config_module.js');
 // const configObject = configModule.GET_CONFIG();
+import { saveAssetLinkedMedia, clearAssetPopoverLink} from './openApoFunction.js';
 const config = require('../../config/config.js')
 const WRAPPER_URL = config.WRAPPER_URL;
 
@@ -25,6 +26,12 @@ class AssetPopoverSearch extends React.Component {
 
     //Close the popup
     apoSearchClose = () => {
+        let assetPopoverSpan = document.getElementById('asset-popover-attacher');
+
+        if(assetPopoverSpan){
+            let originalText = assetPopoverSpan.innerHTML;
+            assetPopoverSpan.outerHTML = originalText;
+        }
         this.props.apoSearchClose();
         window.parent.postMessage({ 'type': 'enableToc', 'message': {} }, WRAPPER_URL);
     }
@@ -40,9 +47,9 @@ class AssetPopoverSearch extends React.Component {
     }
 
     //Fn for return selectedfigure after save on selected figure 
-    apoSearchSave = (apoObject, args) =>{
+    apoSearchSave = (apoObject, imageObj) =>{
         //set id and args in state and after that trigger the function "saveAssetLinkedMedia" in editor_tools_modules
-        this.props.apoSearchSave(apoObject, args);
+        // this.props.apoSearchSave(apoObject, args);
         // //Check if nothing selected
 
         // if(args ==='undefiined' || args === ''){   
@@ -51,6 +58,7 @@ class AssetPopoverSearch extends React.Component {
         //     //Now close the popup
         //     this.apoSearchClose();
         // }
+        saveAssetLinkedMedia(apoObject, imageObj)
         this.apoSearchClose(); 
     }
 
@@ -62,7 +70,8 @@ class AssetPopoverSearch extends React.Component {
 
     //Remove link 
     removeLink = () => {
-        this.props.removeAssetLink();      
+        clearAssetPopoverLink(this.props.apoObject.assetId)
+        // this.props.removeAssetLink();      
         this.apoSearchClose(); 
     }
 
@@ -78,7 +87,7 @@ class AssetPopoverSearch extends React.Component {
                 <section className= "modalSubHeader">
                     <h3 className= "currentlyLinkedHeader"><i>Currently Linked to-</i></h3>
                     <input type='radio' disabled name='selectedradio'  checked className= "currentlyLinkedRadio"/>
-                    <span> {this.props.apoObject.title.text}</span>
+                    <span> {this.props.currentlyLinkedImageData.title}</span>
                 </section>
            // </div> 
         )
@@ -183,7 +192,8 @@ const mapStateToProps = (state, props) => {
         apoObject : state.assetPopOverSearch.apoObject,
         searchTerm : state.assetPopOverSearch.searchTerm,
         figureDetails : state.assetPopOverSearch.figureDetails,
-        timeByAPI : state.assetPopOverSearch.timeByAPI
+        timeByAPI : state.assetPopOverSearch.timeByAPI,
+        currentlyLinkedImageData : state.assetPopOverSearch.currentlyLinkedImageData
     }
 }
  

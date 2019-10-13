@@ -24,6 +24,7 @@ import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -311,7 +312,8 @@ class ElementContainer extends Component {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
     }
     openAssetPopoverPopUp = (toggleApoPopup) => {
-        this.props.assetPopoverPopup(toggleApoPopup)
+        authorAssetPopOver(toggleApoPopup)
+        // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
     render = () => {
@@ -355,9 +357,6 @@ const mapDispatchToProps = (dispatch) => {
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
-        },
-        assetPopoverPopup:(toggleApoPopup) => {
-            dispatch(assetPopoverPopup(toggleApoPopup))
         }
     }
 }
