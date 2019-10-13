@@ -43,12 +43,12 @@ position: relative;
     position: relative;
     }
 .singleAssessment_Dropdown_SelectLabel{
-width: 120px;
-float: left;
-font-size: 13px;
-color: #424242;
-position: relative;
-top: 6px;
+    width: 120px;
+    float: left;
+    font-size: 13px;
+    color: #424242;
+    position: relative;
+    top: 6px;
 }
 .singleAssessment_Dropdown_options{
     position: absolute;
