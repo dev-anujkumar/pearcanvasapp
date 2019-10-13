@@ -131,10 +131,11 @@ class ElementContainer extends Component {
 
     deleteElement = () => {
         const {id, type}=this.props.element;
+        const {parentUrn,asideData} = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         // api needs to run from here
-        this.props.deleteElement(id, type);
+        this.props.deleteElement(id, type,parentUrn,asideData);
     }
 
     renderElement = (element = {}) => {
@@ -218,11 +219,11 @@ class ElementContainer extends Component {
                 switch (element.subtype) {
 
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer   setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
         }
@@ -341,8 +342,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element) => {
             dispatch(setActiveElement(element))
         },
-        deleteElement: (id , type)=>{
-            dispatch(deleteElement(id, type))
+        deleteElement: (id , type,parentUrn,asideData)=>{
+            dispatch(deleteElement(id, type,parentUrn,asideData))
         },
         setActiveElement:(element) => {
             dispatch(setActiveElement(element))
