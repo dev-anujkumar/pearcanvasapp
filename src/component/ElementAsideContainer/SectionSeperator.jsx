@@ -52,7 +52,7 @@ class SectionSeperator extends React.Component {
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
-                        <Button  type="delete-element" />
+                        <Button  onClick={() => this.props.showDeleteElemPopup(true)} type="delete-element" />
                     </div>:""
                  }
                 <hr className="section-break" />
