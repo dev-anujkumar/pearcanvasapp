@@ -10,7 +10,7 @@ const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true
 const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
 //const images_path = 'dist/images/c2/';
 
-var uname = "c5test01";
+var uname = config_object['userId'];
 
 const renderderedTagSelector = '#c2-modal';
 
@@ -80,9 +80,9 @@ patternBroker.setup(libConfig);
 // var module = {};
 export const c2MediaModule = {
     addAnAsset:addAnAsset,
-    productLinkOnsaveCallBack: function(assetPopoverFlag,data,callback) {
+    productLinkOnsaveCallBack: function(data,callback) {
         //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
-        this.launchAssetBrowser(assetPopoverFlag,data.nodeRef, data.repoInstance, data.repoName, callback);
+        this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
 
     },
 
@@ -168,9 +168,9 @@ export const c2MediaModule = {
        callback(data);
     },
 
-    launchAssetBrowser: function(assetPopoverFlag, product, server, repo,callback) {
+    launchAssetBrowser: function(product, server, repo,callback) {
 
-        //console.log("launchAssetBrowser called: " + product, server, repo, assetPopoverFlag);
+        //console.log("launchAssetBrowser called: " + product, server, repo, );
 
         let productRef = product;
         let serverRef = server;
@@ -182,7 +182,7 @@ export const c2MediaModule = {
             addAnAsset.unmount();
         }
 
-        uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+        //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
         var libConfig = {   'locale': 'en_US',
                         'headers' : {
                             'Content-Type'        : 'application/json',
@@ -205,11 +205,8 @@ export const c2MediaModule = {
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
-        if(assetPopoverFlag){
-            addAnAssetConfig.tabVisibility = tab_visibility_for_asset_popover;
-        }else{
-            addAnAssetConfig.tabVisibility = tab_visibility;
-        }
+        addAnAssetConfig.tabVisibility = tab_visibility;
+
         addAnAssetConfig['cmis'] = '{"wURN":false}';
         addAnAssetConfig['epsserver'] = EPS_API;
         addAnAssetConfig.imagePreview =  '{"imagePreview":true}';
@@ -304,7 +301,7 @@ export const c2MediaModule = {
                     if(cmisRepo.length > 0){
                         const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                             if(canWeProceedWithPL){
-                                uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
+                                //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
                                 var libConfig = {   'locale': 'en_US',
                                                 'headers' : {
                                                     'Content-Type'        : 'application/json',
@@ -321,14 +318,14 @@ export const c2MediaModule = {
                                                 'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                                                 'userId'            : uname
                                             };
-                                console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
+                                //console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
                                 var productLinkConfig = {'selector' : renderderedTagSelector};
                                 productLinkConfig.repoList = cmisRepo;
                                 productLinkConfig.language = 'en';  // YS
                                 productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
                                 productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
                                 productLink = patternBroker.create('ProductLink', patternProductLink);
-                                console.log('jjjj',productLink.corsId)
+                                //console.log('jjjj',productLink.corsId)
                                 if(productLink.corsId){
                                     libConfig.headers['Correlation-Id'] = productLink.corsId;
                                 }

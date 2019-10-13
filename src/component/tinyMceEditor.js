@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import 'font-awesome/css/font-awesome.css';
+// import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
@@ -23,10 +22,17 @@ const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
 import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
 
+import {
+    tinymceFormulaIcon,
+    tinymceFormulaChemistryIcon
+  } from "./../svgIcons.jsx";
+
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
-        let context = this
+        let context = this;
+        this.chemistryMlMenuButton = null;
+        this.mathMlMenuButton = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -45,6 +51,10 @@ export class TinyMceEditor extends Component {
             remove_linebreaks: false,
             paste_preprocess: this.pastePreProcess,
             setup: (editor) => {
+                this.setChemistryFormulaIcon(editor);
+                this.setMathmlFormulaIcon(editor);
+                this.addChemistryFormulaButton(editor);
+                this.addMathmlFormulaButton(editor);
                 editor.on('keydown', function (e) {
                     /* if (e.keyCode == 13) {
                         e.preventDefault();
@@ -55,7 +65,7 @@ export class TinyMceEditor extends Component {
                 
                 insertListButton(editor);
                 editor.on('mousedown',function(e) {
-                    if(context.props.slateLockInfo.isLocked){
+                    if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
                         e.preventDefault();
                         e.stopPropagation()
                         return false;
@@ -72,7 +82,7 @@ export class TinyMceEditor extends Component {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
-                editor.on('nodeChange', (e) => {
+                editor.on('keyup', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
                         if (activeElement.innerText.trim().length) {
@@ -125,6 +135,66 @@ export class TinyMceEditor extends Component {
             }
         }
     };
+    setChemistryFormulaIcon = editor => {
+        /*
+          Adding custom icon for wiris chemistry editor
+        */
+        editor.ui.registry.addIcon(
+          "tinymceFormulaChemistryIcon",
+          tinymceFormulaChemistryIcon
+        );
+      };
+      setMathmlFormulaIcon = editor => {
+        /*
+          Adding custom icon for wiris Mathml editor
+        */
+        editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
+      };
+      addChemistryFormulaButton = editor => {
+        /*
+          Adding button and bind exec command on clicking the button to open the chemistry editor
+        */
+        editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
+          text: "",
+          icon: "tinymceformulachemistryicon",
+          tooltip: "Wiris editor chemistry",
+          onAction: function (_) {
+            editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+          },
+          onSetup: (buttonApi) => {
+            /*
+              make merge menu button apis available globally among compnenet
+            */
+            this.chemistryMlMenuButton = buttonApi;
+            //this.chemistryMlMenuButton.setDisabled(true);
+          }
+        });
+      };
+      addMathmlFormulaButton = editor => {
+        /*
+          Adding button and bind exec command on clicking the button to open the Mathml editor
+          Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
+          copying from wiris plugin file(onAction)
+        */
+        editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
+          text: "",
+          icon: "tinymceformulaicon",
+          tooltip: "Wiris editor math",
+          onAction: function (_) {
+            var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
+            wirisPluginInstance.core.getCustomEditors().disable();
+            wirisPluginInstance.openNewFormulaEditor();
+            //editor.execCommand('tiny_mce_wiris_openFormulaEditor');
+          },
+          onSetup: (buttonApi) => {
+            /*
+              make merge menu button apis available globally among compnenet
+            */
+            this.mathMlMenuButton = buttonApi;
+            //this.mathMlMenuButton.setDisabled(true);
+          }
+        });
+      };
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
@@ -172,21 +242,21 @@ export class TinyMceEditor extends Component {
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
         let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
-        editor.insertContent(insertionText);
-        this.props.openGlossaryFootnotePopUp(true, "Glossary");
-
-
+        if(sectedText !== ""){
+            editor.insertContent(insertionText);
+            this.props.openGlossaryFootnotePopUp(true, "Glossary");
+        }
     }
 
     componentDidMount() {
-        if (config.currentInsertedType === "TEXT") {
+        /* if (config.currentInsertedType === "TEXT") {
             document.getElementById("cypress-" + config.currentInsertedIndex).focus();
         } else if (config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE") {
             document.getElementById("cypress-" + config.currentInsertedIndex + "-0").focus();
-        }
+        } */
 
-        const { slateLockInfo: { isLocked } } = this.props
-        if (!tinymce.editors.length && !isLocked) {
+        const { slateLockInfo: { isLocked, userId } } = this.props
+        if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             tinymce.init(this.editorConfig)
         }
     }
@@ -194,15 +264,22 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             tinymce.init(this.editorConfig)
         }
-        console.log("updaewwwww====>");
     }
 
     handleFocus = (e) => {
-        this.props.handleEditorFocus()
+        this.props.handleEditorFocus();
+
         console.log("activeEditor=====>", tinymce.activeEditor);
         if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
             return false;
         }
+
+        // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
+        let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');
+        if(toolBar){
+            toolBar.parentNode.removeChild(toolBar)
+        }
+
         if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
             tinymce.remove('#' + tinymce.activeEditor.id)
@@ -211,16 +288,16 @@ export class TinyMceEditor extends Component {
         }
         this.editorConfig.selector = '#' + e.target.id;
         tinymce.init(this.editorConfig);
+    
     }
 
     handleBlur = (e) => {
         this.props.handleBlur()
     }
     render() {
-        const { slateLockInfo: { isLocked } } = this.props
+        const { slateLockInfo: { isLocked, userId } } = this.props
         console.log("locked------>", isLocked)
-        /* const { slateLockInfo } = this.props
-        const isLocked = slateLockInfo && slateLockInfo.isLocked ? true : false */
+        const lockCondition = isLocked && config.userId !== userId
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -264,19 +341,19 @@ export class TinyMceEditor extends Component {
                 switch (this.props.tagName) {
                     case 'p':
                         return (
-                            <p id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</p>
+                            <p id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
                         );
                     case 'h4':
                         return (
-                            <h4 id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}></h4>
+                            <h4 id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
                         )
                     case 'code':
                         return (
-                            <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked}>{htmlToReactParser.parse(this.props.model)}</code>
+                            <code id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
                         )
                     default:
                         return (
-                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!isLocked} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                            <div id={id} onBlur={this.handleBlur} onFocus={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                         )
                 }
             }
@@ -294,16 +371,5 @@ export class TinyMceEditor extends Component {
             error: null,
         };
 
-        const mapStateToProps = state => {
-            return {
-                slateLockInfo: state.slateLockReducer.slateLockInfo
-            };
-        };
-
-        export default connect(
-            mapStateToProps,
-            {
-                // setActiveElement
-            }
-        )(TinyMceEditor);
+        export default TinyMceEditor;
 

@@ -24,7 +24,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        else 
+        else if(props.tocDelete){
+            return(
+                <div className={`dialog-buttons ${props.tocDeleteClass}`}>
+                    <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
+                    <span className="cancel-button" id='close-container' onClick={props.togglePopup}>Cancel</span>
+                </div>
+            )
+        }else
         if(props.showDeleteElemPopup) {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -33,6 +40,21 @@ class PopUp extends React.Component {
                 </div>
             )            
         }
+        if(props.isSplitSlatePopup){
+            return(
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.handleSplit}>Yes</span>
+                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                </div>
+            )
+        }
+        if(props.assessmentAndInteractive)
+        return(
+            <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
+                <span className={`save-button ${props.splitSlateClass}`} onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Ok</span>
+                <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Cancel</span>
+            </div>
+        )
         else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -40,17 +62,23 @@ class PopUp extends React.Component {
                     <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
-        }
+        } 
     }
     
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete){
             return null
         }
         else if(props.isLockPopup && props.withInputBox){
             return (
                 <input type="text" className={`dialog-input-textarea ${props.slateLockClass}`} disabled value={props.inputValue} rows={props.rows} cols={props.cols} />
             )  
+        }
+        else if(props.assessmentAndInteractive){
+            return (
+                <input id="inputUUID" autoFocus className={`dialog-input-textarea ${props.assessmentAndInteractive}`} type="text"
+                placeholder={"UUID"}/>
+              )  
         }
         else{
           return (
@@ -60,7 +88,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete){
             return null
         }
         else{
@@ -74,17 +102,37 @@ class PopUp extends React.Component {
         if(props.showDeleteElemPopup){
             return null
         }
+        else if(props.tocDelete){
+            //jsx dialog text
+            return(
+                <>
+                    <h2 className = 'tocDeleteHeader'>Warning!</h2>
+                    <div className={` ${props.tocDeleteClass}`} >{props.dialogText}</div>
+                </>
+            )
+        }
         else if(props.isLockReleasePopup){
             return(
                 <div className={`dialog-window delete-element-text ${props.slateLockClass}`} >{props.dialogText}</div>
             )
         }
+        else if(props.isSplitSlatePopup){
+            return(
+                <div className={`dialog-window ${props.splitSlateClass}`} >{props.dialogText}</div>
+            )
+        }
+        else if(props.isLockPopup){
+            return (
+                <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
+            )  
+        }
         else {
             return(
-                <div className={`dialog-window delete-element-text ${props.assessmentClass}`} >{props.dialogText}</div>
+                <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
             )
         }
     }
+
     
     render() {
         const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue } = this.props;
@@ -119,7 +167,8 @@ PopUp.defaultProps = {
     isLockPopup: false,
     yesButton : "Yes",
     cancelBtnText : "Cancel",
-    deleteInstruction : "Are you sure you want to delete, this action cannot be undone?"
+    deleteInstruction : "Are you sure you want to delete, this action cannot be undone?",
+
 }
 
 PopUp.propTypes = {

@@ -52,12 +52,23 @@ export default function ElementSaprator(props) {
         // Return our parent array
         return parents;
     };
+
+    function closeDropDown () {
+        setShowClass(false);
+    }
+    
+    /**
+     * @description: OnClick handler for split slate button
+     */
+    const splitSlateClickHandler = () => {
+        props.toggleSplitSlatePopup(true, props.index)
+    }
     
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
                 <div className='elemDiv-split'>
                     {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                        <Button type='split' onClick={splitSlateClickHandler} /> </Tooltip> : ''}
+                       { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
                 </div>
 
             <div className='elemDiv-hr'>
@@ -67,11 +78,11 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        <Button onClick={toggleElementList} className="dropbtn" type="expand" />
+                       { config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak)}
+                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)}
                         </ul>
                     </div>
                 </div>
@@ -86,14 +97,6 @@ ElementSaprator.propTypes = {
 }
 
 /**
- * @description: OnClick handler for split slate button
- */
-export function splitSlateClickHandler() {
-    // alert('split slate button clicked')
-    console.log('split slate button clicked')
-}
-
-/**
  * @description: OnClick handler for add Element button
  */
 export function addMediaClickHandler() {
@@ -104,7 +107,7 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak) {
+export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps;
 
     if(config.slateType == 'container-introduction'){
@@ -128,10 +131,15 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
     }
 
     return updatedEsProps.map((elem, key) => {
+        function buttonHandlerFunc() {
+            closeDropDown();
+            elem.buttonHandler();
+        }
+
         return (
             <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
                 <li key={key}>
-                    <Button type={elem.buttonType} onClick={elem.buttonHandler} />
+                    <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                 </li>
             </Tooltip>)
     })

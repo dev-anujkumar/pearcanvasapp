@@ -107,30 +107,114 @@ const findElementType = (element) => {
 							elementType['secondaryOption'] = 'secondary-mathml-equation';
 							break;
 					}
-				} else if(element.figuretype == 'codelisting') {
+				} else if (element.figuretype == 'codelisting') {
 					elementType['elementType'] = 'figure';
-					elementType['primaryOption'] = 'primary-image-table';
-					switch(element.subtype) {
-						case 'image50TextTableImage':
-							elementType['secondaryOption'] = 'secondary-image-table-half';
+					elementType['primaryOption'] = 'primary-blockcode-equation';
+					switch (element.figuretype.programlanguage) {
+						case 'C++':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C++';
 							break;
-						case 'imageTextWidthTableImage':
-							elementType['secondaryOption'] = 'secondary-image-table-width';
+						case 'Java':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Java';
 							break;
-						case 'imageWiderThanTextTableImage':
-							elementType['secondaryOption'] = 'secondary-image-table-wider';
+						case 'C':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C';
 							break;
-						case 'imageFullscreenTableImage':
-							elementType['secondaryOption'] = 'secondary-image-table-full';
+						case 'Python':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Python';
 							break;
+						case 'Javascript':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Javascript';
+							break;
+						case 'HTML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-HTML';
+							break;
+						case 'CSS':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-CSS';
+							break;
+						case 'Apache':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Apache';
+							break;
+						case 'C#':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-C#';
+							break;
+						case 'JSON':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-JSON';
+							break;
+						case 'Makefile':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Makefile';
+							break;
+						case 'Kotlin':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Kotlin';
+							break;
+						case 'R':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-R';
+							break;
+						case 'Perl':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Perl';
+							break;
+						case 'PHP':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-PHP';
+							break;
+						case 'GO':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-GO';
+							break;
+						case 'Ruby':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Ruby';
+							break;
+						case 'Lisp':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Lisp';
+							break;
+						case 'Objective_C':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Objective_C';
+							break;
+						case 'Scala':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Scala';
+							break;
+						case 'Shell_Session':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Shell_Session';
+							break;
+						case 'SQL':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-SQL';
+							break;
+						case 'Swift':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Swift';
+							break;
+						case 'XML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-XML';
+							break;
+						case 'Matlab':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Matlab';
+							break;
+						case 'GLSL':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-GLSL';
+							break;
+						case 'SML':
+							elementType['secondaryOption'] = 'secondary-blockcode-language-SML';
+							break;
+						default:
+							elementType['secondaryOption'] = 'secondary-blockcode-language-Default';
+							break;
+
 					}
-				} else if(element.figuretype == 'tableasmarkup') {
+				} else if (element.figuretype == 'tableasmarkup') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-editor-table-equation';
-					switch(element.subtype) {
-						case 'image50TextEditorTable':
-							elementType['secondaryOption'] = 'secondary-editor-table-equation';
+					switch (element.subtype) {
+						case 'imageTextWidthTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-width';
 							break;
+						case 'imageWiderThanTextEditorTable':
+							elementType['secondaryOption'] = 'secondary-editor-table-wider';
+							break;
+						case 'imageFullscreenTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-full';
+							break;
+						case 'image50TextEditorTable':
+						default:
+							elementType['secondaryOption'] = 'secondary-editor-table-half';
+							break;
+
 					}
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
@@ -158,8 +242,6 @@ const findElementType = (element) => {
 						
 							
 					}
-				} else if (element.figuretype == 'assessment') {
-					elementType['elementType'] = 'element-assessment';
 				} else if (element.figuretype == 'interactive') {
 					elementType['elementType'] = 'element-interactive';
 					switch(element.figuredata.interactivetype) {
@@ -198,12 +280,24 @@ const findElementType = (element) => {
 							elementType['secondaryOption'] = 'secondary-interactive-mmi';
 							break;
 					}
+				} else if (element.figuretype == 'assessment') {
+					elementType['elementType'] = 'element-assessment';
+					elementType['primaryOption'] = 'primary-single-assessment';
+					switch (element.figuredata.elementdata.assessmentformat) {
+						case 'tdx':
+							elementType['secondaryOption'] = 'secondary-single-assessment-tdx';
+							break;
+						case 'cite':
+						default:
+							elementType['secondaryOption'] = 'secondary-single-assessment-cite';
+							break;
+					}
 				}
 			}
 			break;
 
 		case 'element-aside':
-			if(element.subtype === '' || element.subtype === 'sidebar') {
+			if (element.subtype === '' || element.subtype === 'sidebar') {
 				elementType['elementType'] = 'element-aside';
 				switch(element.designtype) {
 					case 'asideTacticBox':
@@ -243,7 +337,7 @@ const findElementType = (element) => {
 						elementType['secondaryOption'] = 'secondary-aside-lol';
 						break;
 				}
-			} else if(element.subtype === 'workedexample') {
+			} else if (element.subtype === 'workedexample') {
 				elementType['elementType'] = 'element-workedexample';
 				switch(element.designtype) {
 					case 'workedexample1':
@@ -260,7 +354,6 @@ const findElementType = (element) => {
 
 		case 'element-list':
 			elementType['elementType'] = 'element-authoredtext';
-			elementType['elementWipType'] = 'element-list';
 			elementType['primaryOption'] = 'primary-list';
 			switch (element.subtype) {
 				case "upper-alpha":
@@ -279,10 +372,10 @@ const findElementType = (element) => {
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
 			elementType['secondaryOption'] = 'secondary-paragraph';
-			break;
 	}
 
 	elementType['elementId'] = element.id;
+	elementType['elementWipType'] = element.type;
 	if(elementType.elementType)
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	else

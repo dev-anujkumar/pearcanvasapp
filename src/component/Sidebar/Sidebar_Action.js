@@ -7,8 +7,78 @@ import {
 } from './../../constants/Action_Constants';
 
 import wipElementObject from './ElementWipData';
+import elementTypes from './../Sidebar/elementTypes';
 
-const handleElementConversion = (elementData, store) => {
+const { REACT_APP_API_URL, ssoToken } = config;
+
+const headers = {
+    "Content-Type" : "application/json",
+    "PearsonSSOSession": ssoToken
+}
+
+const convertElement = (oldElementData, newElementData, oldElementInfo, store, index) => dispatch => {
+    
+    // const oldElementInfo = findElementType(oldElementData)
+    // Input Element
+    const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
+        inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
+        inputPrimaryOptionEnum = inputPrimaryOptionType['enum'],
+        overallType = inputPrimaryOptionsList['enumType']
+
+    const inputSubTypeList = inputPrimaryOptionType['subtype'],
+        inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]],
+        inputSubTypeEnum = inputSubType['enum']
+    
+    // Output Element
+    const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
+        outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']],
+        outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
+
+    const outputSubTypeList = outputPrimaryOptionType['subtype'],
+        outputSubType = outputSubTypeList[[newElementData['secondaryOption']]],
+        outputSubTypeEnum = outputSubType['enum']
+
+    const conversionDataToSend = {
+        ...oldElementData,
+        inputType : inputPrimaryOptionEnum,
+        inputSubType : inputSubTypeEnum,
+        outputType : outputPrimaryOptionEnum,
+        outputSubType: outputSubTypeEnum
+    }
+    console.log("input enum>>>", inputPrimaryOptionEnum, inputSubTypeEnum)
+    console.log("Output enum>>>", outputPrimaryOptionEnum, outputSubTypeEnum, overallType)
+    console.log("oldElementInfo>>", oldElementInfo)
+    const url = `${REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
+    axios.post(url, JSON.stringify(conversionDataToSend), { headers })
+    .then(res =>{
+        // let storeElement = store[config.slateManifestURN];
+        // let bodymatter = storeElement.contents.bodymatter;
+        store[config.slateManifestURN].contents.bodymatter[index] = res.data;
+        console.log("Conversion API SUCCESS",store)
+        let activeElementObject = {
+            elementId: newElementData.elementId,
+            elementType: newElementData.elementType,
+            primaryOption: newElementData.primaryOption,
+            secondaryOption: newElementData.secondaryOption,
+            tag: newElementData.labelText
+        };
+
+        dispatch({
+            type: FETCH_SLATE_DATA,
+            payload: store
+        });
+
+        dispatch({
+            type: SET_ACTIVE_ELEMENT,
+            payload: activeElementObject
+        });
+    })
+    .catch(err =>{
+        console.log(err) 
+    })
+}
+
+const handleElementConversion = (elementData, store, activeElement) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];
@@ -16,12 +86,13 @@ const handleElementConversion = (elementData, store) => {
         let format = elementData.secondaryOption.replace('secondary-', '');
         bodymatter.map((element, index) => {
             if(elementData.elementId === element.id) {
-                let wipData = wipElementObject[format];
-                if(wipData){
-                    wipData.id = elementData.elementId;
-                    element = wipData;
-                    bodymatter[index] = element;
-                } 
+                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index))
+                // let wipData = wipElementObject[format];
+                // if(wipData){
+                //     wipData.id = elementData.elementId;
+                //     element = wipData;
+                //     bodymatter[index] = element;
+                // } 
             }
         });
     }
@@ -29,24 +100,26 @@ const handleElementConversion = (elementData, store) => {
     return store;
 }
 
-export const updateElement = (elementData) => (dispatch, getState) => {
-    let slateLevelData = handleElementConversion(elementData, getState().appStore.slateLevelData);
+export const updateElement = (elementData) => (dispatch, getState) => { console.log('store::', elementData, getState());
+    let appStore =  getState().appStore;
+    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement));
+    // let slateLevelData = handleElementConversion(elementData, getState().appStore.slateLevelData);
     
-    let activeElementObject = {
-        elementId: elementData.elementId,
-        elementType: elementData.elementType,
-        primaryOption: elementData.primaryOption,
-        secondaryOption: elementData.secondaryOption,
-        tag: elementData.labelText
-    }
+    // let activeElementObject = {
+    //     elementId: elementData.elementId,
+    //     elementType: elementData.elementType,
+    //     primaryOption: elementData.primaryOption,
+    //     secondaryOption: elementData.secondaryOption,
+    //     tag: elementData.labelText
+    // }
 
-    dispatch({
-		type: SET_ACTIVE_ELEMENT,
-		payload: activeElementObject
-	});
+    // dispatch({
+	// 	type: SET_ACTIVE_ELEMENT,
+	// 	payload: activeElementObject
+	// });
 
-    dispatch({
-        type: FETCH_SLATE_DATA,
-        payload: slateLevelData
-    });
+    // dispatch({
+    //     type: FETCH_SLATE_DATA,
+    //     payload: slateLevelData
+    // });
 }

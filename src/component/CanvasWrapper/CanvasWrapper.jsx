@@ -25,8 +25,8 @@ import PopUp from '../PopUp';
 import { c2MediaModule } from './../../js/c2_media_module';
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-// const c2AssessmentModule = require('../js/c2_assessment_module.js');
 
+import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -67,13 +67,8 @@ class CanvasWrapper extends Component {
         // commenting below setState() to test alternative
         // *************************************************
         // this.setState({ editorToolbarRef: this.refs.editorToolbarRef })
-        this.props.getSlateLockStatus(projectUrn ,slateId) 
-        setTimeout(()=>{c2MediaModule.onLaunchAddAnAsset(function(alfrescoData) {
-            console.log("alfrescoData:::", alfrescoData);
-        });},20000)
-        
-    
-    }
+        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        }
 
     componentDidUpdate(prevProps, prevState){
         
@@ -84,9 +79,12 @@ class CanvasWrapper extends Component {
 
         //     this.state.navigation = false;
         // } else {
-            if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id)) {
-                document.getElementById(window.tinymce.activeEditor.id).focus();
-             }
+        const { slateLockInfo: { isLocked, userId } } = this.props
+        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
+            document.getElementById(window.tinymce.activeEditor.id).focus();
+        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
+            tinymce.$('.cypress-editable').eq(0).trigger('focus');
+        }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
@@ -242,7 +240,7 @@ class CanvasWrapper extends Component {
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
+                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
                             </div>
                         </div>
                     </div>
@@ -264,11 +262,10 @@ class CanvasWrapper extends Component {
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"
-const mapStateToProps = state => {
+const mapStateToProps = state => {console.log('state:::', state.appStore);
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo
     };
@@ -286,6 +283,8 @@ export default connect(
         getSlateLockStatus,
         setSlateLock,
         releaseSlateLock,
-        setLockPeriodFlag
+        setLockPeriodFlag,
+        handleSplitSlate,
+        setUpdatedSlateTitle
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

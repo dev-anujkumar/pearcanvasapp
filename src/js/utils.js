@@ -1920,7 +1920,77 @@ export const utils= {
             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ', ' + date.getUTCFullYear() + ' @ ' + date.toLocaleTimeString();
-    }
+    },
+    getTaxonomicType(data) {
+        let format = '';
+        switch (true) {
+            case (data.toLowerCase().indexOf("flashcards") !== -1):
+                format = "flashcards";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-slideshow-video") !== -1):
+                format = "gallery-video";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
+                format = "gallery-image";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-graph") !== -1):
+                format = "graph";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-simulation") !== -1):
+                format = "simulation";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-survey") !== -1):
+                format = "survey";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-timeline") !== -1):
+                format = "timeline";
+                break;
+
+            case (data.toLowerCase().indexOf("cite-interactive-fill-in-blank") !== -1):
+                format = "fill-in-blank";
+                break;
+            case (data.toLowerCase().indexOf("cite-interactive-multiple-choice") !== -1):
+                format = "mcq";
+                break;
+            case (data.toLowerCase().indexOf("cite-interactive-hotspot") !== -1):
+                format = "hotspot";
+                break;
+            case (data.toLowerCase().indexOf("cite-accounting-tables") !== -1):
+                format = "accountingtable";
+                break;
+            case (data.toLowerCase().indexOf("cite-interactive-video-with-interactive") !== -1):
+                format = "video-mcq";
+                break;
+        }
+        return format;
+    },
+    getTaxonomicFormat(data) {
+
+        let type = [];
+
+        switch (true) {
+            case (data.toLowerCase().indexOf("mmi") !== -1):
+                type = 'mmi';
+                break;
+
+            case (data.toLowerCase().indexOf("cite") !== -1):
+                type = 'cite';
+                break;
+
+            case (data.toLowerCase().indexOf("tdx") !== -1):
+                type = 'tdx';
+                break;
+        }
+
+        return type;
+
+    },
 
 
 };

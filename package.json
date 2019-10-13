@@ -105,6 +105,7 @@
         "sortablejs": "^1.10.0",
         "tinymce": "^5.0.13",
         "utils": "^0.3.1",
-        "font-awesome": ">=4.4.0"
+        "font-awesome": ">=4.4.0",
+        "http-proxy-middleware": "^0.19.1"
     }
 }

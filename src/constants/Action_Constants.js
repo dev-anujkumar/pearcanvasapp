@@ -1,6 +1,6 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
 export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
-
+export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -12,6 +12,7 @@ export const UPDATE_COMMENT = "UPDATE_COMMENT"
 export const GET_PROJECT_USER = "GET_PROJECT_USER"
 export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
+export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
 /*---------------Element Creation ----------------------*/ 
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
@@ -33,3 +34,6 @@ export const SET_LOCK_FLAG = "SET_LOCK_FLAG"
 
 /*---------------Swap Element -------------------*/
 export const SWAP_ELEMENT = 'SWAP_ELEMENT'
+
+/*--------------- Split Slate -------------------*/
+export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
