@@ -7,7 +7,7 @@ import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import {
-    fetchSlateData
+    fetchSlateData,fetchAuthUser
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
@@ -24,6 +24,7 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
+import {publishContent,} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
@@ -290,6 +291,8 @@ export default connect(
         releaseSlateLock,
         setLockPeriodFlag,
         handleSplitSlate,
-        setUpdatedSlateTitle
+        setUpdatedSlateTitle,
+        publishContent,
+        fetchAuthUser
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
