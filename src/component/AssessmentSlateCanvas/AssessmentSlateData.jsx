@@ -1,5 +1,3 @@
-
-
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -25,7 +23,17 @@ export class AssessmentSlateData extends Component {
 
 
     }
-
+    addAssessment=(assessmentType)=>{
+        if(assessmentType=="Full Assessment CITE"){
+            console.log("Full Assessment CITE");
+        }else if(assessmentType=="Full Assessment TDX"){
+            console.log("Full Assessment TDX");
+        }else if(assessmentType=="Full Assessment PUF"){
+            console.log("Full Assessment PUF");
+        }else{
+            console.log("Learning App Type");
+        }
+    }
     toggleAssessmentTypeDropdown = () => {
         this.typeDropdownRef.current.classList.remove('notselect')
     }
@@ -116,9 +124,9 @@ export class AssessmentSlateData extends Component {
     //         </div>
     //     )
     // }
-    assessmentSlateContent = (type) => {
+    assessmentSlateContent = () => {
         var assessmentSlateJSX;
-        if (type === 'assessment'&& this.state.activeAssessmentType !== 'Learning App Type') {
+        if (this.state.activeAssessmentType === 'Learning App Type') {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">
@@ -147,7 +155,7 @@ export class AssessmentSlateData extends Component {
                 }
                 <div className="clr"></div>
             </div>
-        } else if (type === 'learning') {
+        } else if (this.state.activeAssessmentType === 'learning') {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">
@@ -176,13 +184,13 @@ export class AssessmentSlateData extends Component {
                 }
                 <div className="clr"></div>
             </div>
-        } else if (type === 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
+        } else if (this.state.activeAssessmentType=== 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
             return (
                 <div>
                     {/* <LearningTool /> */}
                 </div>
             )
-        } else if (type === 'assessment1' ) {
+        } else if (this.state.activeAssessmentType=== 'assessment1' ) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
                 <div className="slate_popup_get_title">{"'" + this.state.slateAssessmentTitle + "'"}</div>
@@ -204,7 +212,7 @@ export class AssessmentSlateData extends Component {
                 }
                 {
                     this.state.activeAssessmentType != 'Select' ?
-                        (<div className="slate_assessment_type_button">Add assessment</div>) : (<div className="slate_assessment_disabled_button">Add assessment</div>)
+                        (<div className="slate_assessment_type_button" onClick={this.addAssessment(this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
                 }
                 <div className="clr"></div>
             </div>
@@ -215,7 +223,7 @@ export class AssessmentSlateData extends Component {
         const { type } = this.props;
         return (
             <div>
-                {this.assessmentSlateDefaultContent()}
+                {this.assessmentSlateContent()}
             </div>
         );
     }

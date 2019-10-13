@@ -94,7 +94,6 @@ class SlateWrapper extends Component {
     renderDefaultElement = () =>{
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
-            console.log("config.slateType >> ", config.slateType)
             if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
                 let _slateObject = Object.values(_slateData)[0];
                 let { contents: _slateContent } = _slateObject;
@@ -104,7 +103,7 @@ class SlateWrapper extends Component {
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(TEXT, "0");
                 }
-            }else {
+            }else if(Object.values(this.props.slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                  console.log("assessment in renderDefaultElement >>");
                  this.props.createElement(ASSESSMENT_SLATE, "0");
