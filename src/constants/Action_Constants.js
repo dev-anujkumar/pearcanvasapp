@@ -37,3 +37,6 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
+
+/*--------------- Refresh Slate -------------------*/
+export const REFRESH_SLATE = 'REFRESH_SLATE'

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
 const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
+import axios from 'axios'
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 
@@ -61,7 +62,7 @@ function WithWrapperCommunication(WrappedComponent) {
         handleIncommingMessages = (e) => {
             let messageType = e.data.type;
             let message = e.data.message;
-
+console.log("messageType",message)
             switch (messageType) {
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -167,13 +168,31 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'permissionsDetails' :                    
                     this.handlePermissioning(message);
                     break;
+                case 'refreshSlate' :                    
+                    this.handleRefreshSlate(message);
+                    break;
             }
         }
 
         handlePermissioning = (message) => {
             if(message && message.permissions) {                  
-                config.PERMISSIONS = message.permissions;              
+                config.PERMISSIONS = message.permissions;            
             }
+        }
+
+        handleRefreshSlate = (message) => {
+            let id = config.slateManifestURN;
+            //config.slateManifestURN;
+            axios.get('https://contentapis-qa.pearsoncms.net/structure-api/container/v2/' + id, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(response => {
+                this.props.fetchSlateData(id);
+            }).catch((err) => {
+                sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false });              
+            })
         }
 
         sendDataToIframe = (messageObj) => {
