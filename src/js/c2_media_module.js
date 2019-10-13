@@ -252,7 +252,7 @@ export const c2MediaModule = {
             var observer = new MutationObserver(callbackOb);
 
             // Start observing the target node for configured mutations
-           // observer.observe(targetNode, config);
+            observer.observe(targetNode, config);
 
         } catch (ex1) {
 
@@ -366,7 +366,7 @@ export const c2MediaModule = {
         // Create an observer instance linked to the callback function		
         var observer = new MutationObserver(callbackOb);		
         // Start observing the target node for configured mutations		
-       // observer.observe(targetNode, config);
+        observer.observe(targetNode, config);
     }
 }
 

@@ -50,12 +50,6 @@ let config = {
     WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
-    CMDS_APIKEY: process.env.CMDS_APIKEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
-    CMDS_DATA_ENDPOINT: process.env.CMDS_DATA_ENDPOINT || 'https://staging.data.pearson.com',
-    CMDS_SCHEMA_ENDPOINT: process.env.CMDS_SCHEMA_ENDPOINT || 'https://staging.schema.pearson.com',
-    CMDS_DATABASE: process.env.CMDS_DATABASE || '?db=qa2',
-    CMIS_REPO   : process.env.CMIS_REPO || '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]',
-    EPS_API: process.env.EPS_API || 'https://us-school-stg.pearsoned.com/school',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.PATTERN_ADD_ASSET || 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.PATTERN_BROKER || 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
