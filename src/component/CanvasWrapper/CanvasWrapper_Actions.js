@@ -10,6 +10,10 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
+const axiosApiInstance = axios.create({
+	baseURL: config.C4_API_URL,
+	withCredentials: true
+})
 
 const findElementType = (element) => {
 	let elementType = {};
@@ -416,4 +420,33 @@ export const setActiveElement = (activeElement = {}) => dispatch => {
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement)
 	});
+}
+export const fetchAuthUser = () => dispatch=> {
+    let userDataURL;
+	let axiosInstance;
+
+    if (process.env.NODE_ENV === 'development') {
+        userDataURL = 'dev-user'
+        axiosInstance = axiosApiInstance
+
+    } else {
+        if (!sessionStorage.validSession) return Promise.reject(new Error('No session'))
+        const sessionData = JSON.parse(JSON.parse(sessionStorage.validSession).data)
+        if (!sessionData.valid) return Promise.reject(new Error('No valid session'))
+        userDataURL = `users/${sessionData.uid}`
+        axiosInstance = axiosPearsonInstance
+    }
+    return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
+		headers: {
+            "Content-Type": "application/json",
+			"PearsonSSOSession":  config.ssoToken
+		}
+	}).then((response) => {
+            let userInfo = response.data;
+            config.userEmail = userInfo.email;
+        })
+        .catch(err => {
+            console.log('axios Error', err);
+            //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
+        })
 }

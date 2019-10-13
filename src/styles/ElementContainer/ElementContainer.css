@@ -1,6 +1,7 @@
 .editor {
     margin-bottom: 5px;
     display: flex;
+    position: relative;
 }
 
 .element-container {
