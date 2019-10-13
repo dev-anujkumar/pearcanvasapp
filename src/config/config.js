@@ -5,7 +5,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "lV5io0c1GN9sVy2hZYAdLYp3bOY.*AAJTSQACMDIAAlNLABxwL1dWM1hhZ0IwOU9lNStEM2hlcUt0dEFDUkU9AAJTMQACMDQ.*",
+    ssoToken: "dVCtKQDnZyYYr4vSDNu00QscIT8.*AAJTSQACMDIAAlNLABxNY2xNUTFxYndYdE9DUWxXYkRpNFhUTFRNSkE9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
     userEmail : 'c5test01@mctest.local',
@@ -47,7 +47,7 @@ let config = {
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-    WRAPPER_URL : 'https://localhost:4000', // TO BE CONFIGURED WITH TASKDEF
+    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     CMDS_APIKEY: process.env.CMDS_APIKEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
