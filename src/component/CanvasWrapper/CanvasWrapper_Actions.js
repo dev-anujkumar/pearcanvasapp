@@ -15,7 +15,7 @@ const axiosApiInstance = axios.create({
 	withCredentials: true
 })
 
-const findElementType = (element) => {
+const findElementType = (element, index) => {
 	let elementType = {};
 
 	switch (element.type) {
@@ -379,6 +379,7 @@ const findElementType = (element) => {
 	}
 
 	elementType['elementId'] = element.id;
+	elementType['index'] = index;
 	elementType['elementWipType'] = element.type;
 	if(elementType.elementType)
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
@@ -387,9 +388,9 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element) => {
+export const fetchElementTag = (element, index = 0) => {
 	if (Object.keys(element).length > 0) {
-		return findElementType(element).tag;
+		return findElementType(element, index).tag;
 	}
 }
 
@@ -402,25 +403,25 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 	}).then(slateData => {
 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
 		let contentUrn = slateData.data[manifestURN].contentUrn;
-		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
-		//let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
+		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
 		
 		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {
 				[manifestURN]: slateData.data[manifestURN]
-			}//slateData.data
+			}
 		});
 	});
 };
 
-export const setActiveElement = (activeElement = {}) => dispatch => {
+export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
-		payload: findElementType(activeElement)
+		payload: findElementType(activeElement, index)
 	});
 }
+
 export const fetchAuthUser = () => dispatch=> {
     let userDataURL;
 	let axiosInstance;

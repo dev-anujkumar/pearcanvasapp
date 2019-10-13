@@ -22,7 +22,6 @@ import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import PopUp from '../PopUp';
 
-import { c2MediaModule } from './../../js/c2_media_module';
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,} from '../../js/header'

@@ -79,7 +79,7 @@ class ElementContainer extends Component {
             borderToggle: 'active',
             btnClassName: 'activeTagBgColor'
         })
-        this.props.setActiveElement(this.props.element);
+        this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
@@ -138,8 +138,8 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let labelText = fetchElementTag(element) || 'P';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
+        let labelText = fetchElementTag(element, index) || 'P';
         switch(element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
@@ -334,23 +334,17 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
         },
-        setActiveElement: (element) => {
-            dispatch(setActiveElement(element))
+        setActiveElement: (element, index) => {
+            dispatch(setActiveElement(element, index))
         },
         deleteElement: (id , type,parentUrn,asideData)=>{
             dispatch(deleteElement(id, type,parentUrn,asideData))
-        },
-        setActiveElement:(element) => {
-            dispatch(setActiveElement(element))
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
         }
     }
 }
-
-
- 
 
 const mapStateToProps = (state) => {
 

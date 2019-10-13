@@ -18,7 +18,6 @@ const headers = {
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, index) => dispatch => {
     
-    // const oldElementInfo = findElementType(oldElementData)
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
@@ -45,18 +44,16 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum
     }
-    console.log("input enum>>>", inputPrimaryOptionEnum, inputSubTypeEnum)
-    console.log("Output enum>>>", outputPrimaryOptionEnum, outputSubTypeEnum, overallType)
-    console.log("oldElementInfo>>", oldElementInfo)
+    
     const url = `${REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { headers })
     .then(res =>{
         // let storeElement = store[config.slateManifestURN];
         // let bodymatter = storeElement.contents.bodymatter;
         store[config.slateManifestURN].contents.bodymatter[index] = res.data;
-        console.log("Conversion API SUCCESS",store)
         let activeElementObject = {
             elementId: newElementData.elementId,
+            index: index,
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,
@@ -83,18 +80,10 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
-        let format = elementData.secondaryOption.replace('secondary-', '');
-        bodymatter.map((element, index) => {
-            if(elementData.elementId === element.id) {
-                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index))
-                // let wipData = wipElementObject[format];
-                // if(wipData){
-                //     wipData.id = elementData.elementId;
-                //     element = wipData;
-                //     bodymatter[index] = element;
-                // } 
-            }
-        });
+        let index = activeElement.index;
+        if(elementData.elementId === bodymatter[index].id) {
+            dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index));
+        }
     }
     
     return store;
