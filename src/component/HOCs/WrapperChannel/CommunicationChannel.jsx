@@ -25,9 +25,9 @@ function WithWrapperCommunication(WrappedComponent) {
             this.state = {
                 project_urn: "",
                 isTableLaunched: false,
-                showBlocker : false,
-                toggleTocDelete : false,
-                tocDeleteMessage : null
+                showBlocker: false,
+                toggleTocDelete: false,
+                tocDeleteMessage: null
             };
         }
 
@@ -139,14 +139,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                 case 'canvasBlocker':
                     {
-                        if(message.status) {
+                        if (message.status) {
                             this.showCanvasBlocker(true);
                             showHeaderBlocker();
                         } else {
                             this.showCanvasBlocker(false);
                             hideBlocker();
                         }
-                        
+
                     }
                     break;
                 case 'TocLoader':
@@ -160,19 +160,27 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                     this.props.fetchAuthUser()
                      config.projectUrn = message.id;
+                     config.citeUrn = message.citeUrn;
                      config.projectEntityUrn = message.entityUrn;
                      config.alfrescoMetaData = message.alfresco;
                     break;
-                case 'permissionsDetails' :                    
+                case 'permissionsDetails':
                     this.handlePermissioning(message);
+                    break;
+                case 'slatePreview':
+                    this.props.publishContent('slatePreview');
+                    break;
+                case 'projectPreview':
+                    this.props.publishContent('projectPreview');
                     break;
             }
         }
 
         handlePermissioning = (message) => {
-            if(message && message.permissions) {                  
-                config.PERMISSIONS = message.permissions;              
+            if (message && message.permissions) {
+                config.PERMISSIONS = message.permissions;
             }
         }
 
@@ -204,23 +212,22 @@ function WithWrapperCommunication(WrappedComponent) {
 
         setCurrentSlate = (message) => {
             console.log("setCurrentSlate >> ", message)
+            let currentSlateObject = {};
             if (message['category'] === 'titleChange') {
-                let currentSlateObject = {
-                    id: message.id,
-                    type: message.type,
-                    parentId: message.parentId,
-                    parentType: message.parentType || message.node.nodeParentLabel,
-                    container: message.container,
+                currentSlateObject = {
                     title: message.title,
-                    entityUrn: message.entityUrn
                 }
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
                 this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
-                sendDataToIframe({'type': 'hideWrapperLoader','message': { status: true }})
-                sendDataToIframe({'type': "ShowLoader",'message': { status: true }});
-               // const { entityUrn, containerUrn } = message.node;
+                sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                // const { entityUrn, containerUrn } = message.node;
+                currentSlateObject = {
+                    title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
+                }
+                this.props.setUpdatedSlateTitle(currentSlateObject)
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.disablePrev = message.disablePrev;
@@ -244,22 +251,22 @@ function WithWrapperCommunication(WrappedComponent) {
             hideBlocker();
             showTocBlocker();
             disableHeader(true);
-            
+
             this.setState({
-                    toggleTocDelete : true,
-                    tocDeleteMessage : message
-            }) 
+                toggleTocDelete: true,
+                tocDeleteMessage: message
+            })
         }
 
         //Toggle Delete Popup
-        modifyState = (args) =>{
+        modifyState = (args) => {
             this.setState({
-                toggleTocDelete : args,
-            }) 
+                toggleTocDelete: args,
+            })
         }
 
         checkSlateLockAndDeleteSlate = (message, type) => {
-            let that=this;
+            let that = this;
             // let projectUrn = message.changedValue.projectUrn;
             // let userName = 'c5test01'//this.getCookie("USER_NAME");
             // let deleteSlateId = message.changedValue.containerUrn;
@@ -269,7 +276,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
             that.deleteTocItem(message);
 
-    
+
             // getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
             //     if (response == "error"){
             //         if(type==='withPendingTrack') {
@@ -288,11 +295,11 @@ function WithWrapperCommunication(WrappedComponent) {
             //         if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
             //             status.slateLocked = false;
             //         }
-                    
+
             //         if(status.slateLocked){
             //             that.slateLockAlert(status.userInfo);
             //         }
-        
+
             //         else{
             //             if(type==='withPendingTrack') {
             //                 // that.deleteTocItemWithPendingTrack(message);
@@ -349,7 +356,7 @@ function WithWrapperCommunication(WrappedComponent) {
              *  */
         }
 
-        showCanvasBlocker = (bFlag) =>{
+        showCanvasBlocker = (bFlag) => {
             this.setState({
                 showBlocker: bFlag
             });
@@ -359,7 +366,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker = {this.state.showBlocker} showCanvasBlocker = {this.showCanvasBlocker} toggleTocDelete = {this.state.toggleTocDelete} tocDeleteMessage = {this.state.tocDeleteMessage} modifyState = {this.modifyState}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
                 </React.Fragment>
             )
         }

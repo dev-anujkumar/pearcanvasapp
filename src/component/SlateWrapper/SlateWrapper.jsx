@@ -21,6 +21,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,ASSESSMENT_SLATE}from './SlateWrapperConstants';
+import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -40,6 +41,7 @@ class SlateWrapper extends Component {
             lockOwner: "",
             showSplitSlatePopup: false,
             splittedSlateIndex : 0,
+            hasError : false
         }
     }
 
@@ -103,7 +105,7 @@ class SlateWrapper extends Component {
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(TEXT, "0");
                 }
-            }else if(Object.values(this.props.slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
+            }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                  console.log("assessment in renderDefaultElement >>");
                  this.props.createElement(ASSESSMENT_SLATE, "0");
@@ -565,7 +567,13 @@ class SlateWrapper extends Component {
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
-                            />
+                            >
+                            {
+                                   (isHovered, isPageNumberEnabled, activeElement) => (
+                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                   )
+                               }
+                           </ElementContainer>
                             { _slateType !== 'assessment'? 
                             <ElementSaprator
                                 index={index}
@@ -593,6 +601,17 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
+        if (this.state.hasError) {
+            return (
+                <div className='slate-content'>
+                    <h3>Error occurred while loading elements</h3>
+                <React.Fragment>
+                        <LargeLoader />
+                        <LargeLoader />
+                    </React.Fragment>
+                </div>
+            )
+        }
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
@@ -625,6 +644,10 @@ class SlateWrapper extends Component {
         );
     }
 
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
 }
 SlateWrapper.displayName = "SlateWrapper"
 

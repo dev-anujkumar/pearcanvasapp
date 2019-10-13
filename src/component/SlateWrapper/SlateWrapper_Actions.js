@@ -4,6 +4,7 @@ import {
     AUTHORING_ELEMENT_CREATED,ASSESSMENT_ELEMENT_CREATED,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
+    GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE
 } from '../../constants/Action_Constants';
 import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
@@ -318,6 +319,59 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         sendDataToIframe({ 'type': NextSlate, 'message': {} })
     }).catch(error => {
         console.log("SPLIT SLATE API ERROR : ", error)
+    })
+}
+
+/**
+ * getElementPageNumber | is to get page number on pagenumber option toggle
+ */
+export const getElementPageNumber = () => (dispatch) => { }
+
+/**
+ * setElementPageNumber | is to set page number relative to element back to store and backend
+ * @param {object} numberObject , contains pagenumber object relative to element
+ */
+export const setElementPageNumber = (numberObject) => (dispatch, getState) => {
+    const { pageNumberData } = getState().appStore;
+    let { id, type, pageid, pagenumber } = numberObject;
+    // let mock = {
+    //     'urn:pearson:work:57a64368-ad55-4b07-83bc-74d00eb77af3': {
+    //         id: 'urn:pearson:work:57a64368-ad55-4b07-83bc-74d00eb77af3',
+    //         type: 'element-authoredtext',
+    //         pagereference: {
+    //             pageid: 'urn:pearson:manifest:7aa45b74-e3b6-4031-a647-c99052642ca7',
+    //             pagenumber: '24'
+    //         }
+    //     }
+    // }
+    // if pagenumber data is not present for current element
+    if (!pageNumberData.hasOwnProperty(id)) {
+        let newPageNumber = {
+            id: id,
+            type: type,
+            pagereference: {
+                pageid: pageid,
+                pagenumber: pagenumber
+            }
+        }
+        pageNumberData[id] = newPageNumber;
+    }
+    else {
+        let existingPageNumber = pageNumberData[id];
+        let { pagereference } = existingPageNumber;
+        if (pagereference.pagenumber) {
+            pagereference.pagenumber = pagenumber;
+        }
+        else {
+            existingPageNumber.pagereference = {
+                pageid: pageid,
+                pagenumber: pagenumber
+            }
+        }
+    }
+    dispatch({
+        type: GET_PAGE_NUMBER,
+        payload: pageNumberData
     })
 }
 export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) =>{

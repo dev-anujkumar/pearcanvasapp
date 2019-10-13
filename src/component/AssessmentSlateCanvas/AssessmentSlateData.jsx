@@ -11,10 +11,11 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            assessmentId: null,
+            assessmentItemId : null,
             activeAssessmentType: 'Select',
             activeAssessmentUsageType: props.model && props.elementdata ? props.elementdata.usagetype : "Quiz",
-
+            showElmComponent:false,
 
         }
 
@@ -23,17 +24,68 @@ export class AssessmentSlateData extends Component {
 
 
     }
-    addAssessment=(assessmentType)=>{
-        if(assessmentType=="Full Assessment CITE"){
-            console.log("Full Assessment CITE");
-        }else if(assessmentType=="Full Assessment TDX"){
-            console.log("Full Assessment TDX");
-        }else if(assessmentType=="Full Assessment PUF"){
-            console.log("Full Assessment PUF");
-        }else{
-            console.log("Learning App Type");
-        }
+    changeLearningApp=()=>{
+        console.log("Learning App Type>>>>>>")
     }
+    // changeAssessment =(e)=> {
+    //     let assessmentFormat = $('.editor-instance[data-id="' + this.props.id +'"]').attr("data-elementdataassessmentformat");
+    //     !hasReviewerRole();
+    //     if(assessmentFormat == 'puf') {
+    //         this.setState({
+    //            dropdownValue : 'Full Assessment PUF',
+    //            showElmComponent:true,
+    //         },() => {
+    //             this.centerAddAssessmentFunc(e, 'Full Assessment PUF');
+    //         })
+    //     }else if (this.state.assessmentformat === "learningtemplate") {
+    //        this.changeLearningApp();
+    //     }else {
+    //        this.addAssessment();
+    //     }
+    //    // this.state.assessmentformat === "learningtemplate"? !hasReviewerRole() && this.changeLearningApp:
+    // }
+    addC2MediaAssessment=(activeAssessmentType)=>{
+        console.log("addC2MediaAssessment Type");
+        this.props.handleC2AssessmentClick(activeAssessmentType);
+            
+       
+    }
+    // closePopUp(){
+    //     window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
+    //    this.setState({
+    //     changeLearningData:false
+    //    },() =>{
+    //        disableHeader(false);
+    //    })       
+    //  }
+
+    // closeElmWindow(){
+    //     this.setState({
+    //         showElmComponent:false
+    //        });
+    //        hideTocBlocker();
+    //        disableHeader(false);
+    //  }
+    mainAddAssessment = (e, activeAssessmentType) => {
+        switch(activeAssessmentType){
+            case 'Learning App Type':
+                return this.changeLearningApp()
+    
+            case 'Full Assessment PUF':
+                this.setState({
+                    showElmComponent : true
+                })
+                console.log("ËLM COMPONENT")
+                // showTocBlocker();
+                // disableHeader(true);
+                // window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: true} }, WRAPPER_URL); 
+                break;
+    
+            default:
+                return this.addC2MediaAssessment(activeAssessmentType)
+    
+        }
+     }
     toggleAssessmentTypeDropdown = () => {
         this.typeDropdownRef.current.classList.remove('notselect')
     }
@@ -126,6 +178,9 @@ export class AssessmentSlateData extends Component {
     // }
     assessmentSlateContent = () => {
         var assessmentSlateJSX;
+        // if(this.state.dropdownValue === 'Full Assessment PUF' && this.state.showElmComponent === true){
+        //     return <RootElmComponent closeElmWindow = {this.closeElmWindow} addPufFunction = {this.addAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.metaDataValue}/>
+        // }
         if (this.state.activeAssessmentType === 'Learning App Type') {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
@@ -212,7 +267,7 @@ export class AssessmentSlateData extends Component {
                 }
                 {
                     this.state.activeAssessmentType != 'Select' ?
-                        (<div className="slate_assessment_type_button" onClick={this.addAssessment(this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
+                        (<div className="slate_assessment_type_button"onClick={(e) => this.mainAddAssessment(e, this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
                 }
                 <div className="clr"></div>
             </div>

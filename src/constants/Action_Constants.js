@@ -1,5 +1,7 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
 export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
+export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
+
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
