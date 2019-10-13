@@ -31,6 +31,7 @@ export class ListElement extends Component {
         //***************************************************************
         return (
             <TinyMceEditor
+                openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
                 elementId={this.props.elementId}

@@ -11,6 +11,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
 import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -23,6 +24,7 @@ import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -147,11 +149,11 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.FIGURE:
@@ -207,7 +209,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement openAssetPopoverPopUp = {this.openAssetPopoverPopUp}  openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
 
@@ -304,6 +306,11 @@ class ElementContainer extends Component {
     openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
     }
+    openAssetPopoverPopUp = (toggleApoPopup) => {
+        authorAssetPopOver(toggleApoPopup)
+        // this.props.assetPopoverPopup(toggleApoPopup)
+    }
+
     render = () => {
         const { element } = this.props;
         return this.renderElement(element);
