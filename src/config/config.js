@@ -5,7 +5,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "ft56IdPy3j03qqCCq7GJERTSW7Y.*AAJTSQACMDIAAlNLABw5TFF1dlNXS0hxQWMrMTYrTnExVU81TnZ3c2s9AAJTMQACMDE.*",
+    ssoToken: "tWswDEeurzt8vFa8AVIH_AGAIMw.*AAJTSQACMDIAAlNLABwvQktmZ3JnRFptUDNoR3pFa1RZLzFGUjYxejg9AAJTMQACMDQ.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
     userEmail : 'c5test01@mctest.local',
@@ -48,6 +48,7 @@ let config = {
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
     WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
+    IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
