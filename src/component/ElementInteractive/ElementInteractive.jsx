@@ -479,9 +479,12 @@ class Interactive extends React.Component {
         const { model, itemId, index, slateLockInfo } = this.props;
         try {
             return (
-                <div className="interactive-element">
-                    {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                </div>
+               
+                    <div className="interactive-element">
+                        {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
+                        {this.state.showAssesmentpopup? <PopUp handleC2Click ={this.handleC2InteractiveClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                    </div>
+                
             )
         } catch (error) {
             return (
