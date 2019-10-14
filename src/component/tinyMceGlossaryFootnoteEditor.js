@@ -1,5 +1,6 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import tinymce from 'tinymce/tinymce';
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,
@@ -26,9 +27,26 @@ export class ReactEditor extends React.Component {
         this.setMathmlFormulaIcon(editor);
         this.addChemistryFormulaButton(editor);
         this.addMathmlFormulaButton(editor);
+        editor.on('keyup', (e) => {
+          let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+          if (activeElement) {
+              if (activeElement.innerText.trim().length) {
+                  activeElement.classList.remove('place-holder')
+              }
+              else {
+                  activeElement.classList.add('place-holder')
+              }
+          }
+      });
       },
       init_instance_callback: function (editor) {
         editor.fire('focus');
+        let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+          if (activeElement) {
+              if (!activeElement.innerText.trim().length) {
+                activeElement.classList.add('place-holder')
+              }
+          }
       },
     }
   }

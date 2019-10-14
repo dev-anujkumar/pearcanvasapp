@@ -43,3 +43,8 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 /*--------------- Refresh Slate -------------------*/
 export const REFRESH_SLATE = 'REFRESH_SLATE'
 export const UPDATE_STATUS_REFRESH_SLATE = 'UPDATE_STATUS_REFRESH_SLATE'
+/*--------------- Asset Popover -------------------*/
+export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
+export const APO_BUTTON = 'APO_BUTTON'
+
+

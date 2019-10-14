@@ -6,6 +6,7 @@ import CommentsPanel from '../CommentsPanel'
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
     fetchSlateData,fetchAuthUser
 } from './CanvasWrapper_Actions';
@@ -40,9 +41,12 @@ class CanvasWrapper extends Component {
             // showBlocker : false,
             editorToolbarRef: null,
             showReleasePopup : false,
+            toggleApo : false,
             isPageNumberEnabled : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
+
+        
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
@@ -78,6 +82,7 @@ class CanvasWrapper extends Component {
         }
 
     componentDidUpdate(prevProps, prevState){
+        
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -108,6 +113,7 @@ class CanvasWrapper extends Component {
             'type': TocToggle,
             'message': {"open":false}
         });
+        
     }
 
     navigate = (nav) => {
@@ -244,6 +250,7 @@ class CanvasWrapper extends Component {
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
+                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
                                     <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
@@ -279,12 +286,12 @@ const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         slateRefreshStatus : state.slateRefreshReducer.statusOfRefreshSlate,
         slateContentRefresh : state.slateRefreshReducer.slateContentRefresh,
-        showRealTimeStatus : state.slateRefreshReducer.showRealTimeStatus
+        showRealTimeStatus : state.slateRefreshReducer.showRealTimeStatus,
+        showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
 

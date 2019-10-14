@@ -103,6 +103,13 @@ h1, h2, h3, h4, h5, p {
     position : absolute;
     margin-top : 7px;
 }
+.definition-editor.place-holder::before{
+    content: attr(placeholder);
+    color: #ADADAD; 
+    display: block;
+    position : absolute;
+    margin-top : 1px;
+}
 /* .cypress-editable:empty::before {
     content: attr(placeholder);
     color: #ADADAD; 
