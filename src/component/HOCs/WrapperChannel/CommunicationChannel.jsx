@@ -160,6 +160,15 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'permissionsDetails' :                    
                     this.handlePermissioning(message);
                     break;
+                case 'slatePreview':
+                    this.props.publishContent('slatePreview');
+                    break;
+                case 'projectPreview':
+                    this.props.publishContent('projectPreview');
+                    break;
+                case 'logout':
+                    this.props.logout();
+                    break;
             }
         }
 

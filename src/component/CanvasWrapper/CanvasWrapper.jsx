@@ -24,6 +24,7 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
+import {publishContent,logout} from '../../js/header'
 
 // import { c2MediaModule } from './../../js/c2_media_module';
 // const c2AssessmentModule = require('../js/c2_assessment_module.js');
@@ -279,6 +280,10 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setLockPeriodFlag,
-        handleSplitSlate
+        handleSplitSlate,
+        setUpdatedSlateTitle,
+        publishContent,
+        fetchAuthUser,
+        logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
