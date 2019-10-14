@@ -6,6 +6,7 @@ import CommentsPanel from '../CommentsPanel'
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
     fetchSlateData,fetchAuthUser
 } from './CanvasWrapper_Actions';
@@ -24,7 +25,7 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent,} from '../../js/header'
+import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
@@ -39,6 +40,7 @@ class CanvasWrapper extends Component {
             // showBlocker : false,
             editorToolbarRef: null,
             showReleasePopup : false,
+            toggleApo : false,
             isPageNumberEnabled : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
@@ -241,6 +243,7 @@ class CanvasWrapper extends Component {
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
+                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
                                     <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
@@ -276,7 +279,8 @@ const mapStateToProps = state => {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
 
@@ -296,6 +300,7 @@ export default connect(
         handleSplitSlate,
         setUpdatedSlateTitle,
         publishContent,
-        fetchAuthUser
+        fetchAuthUser,
+        logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
