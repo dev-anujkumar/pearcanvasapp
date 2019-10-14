@@ -13,7 +13,7 @@ export class AssessmentSlateData extends Component {
         this.state = {
            
             activeAssessmentType: 'Select',
-            activeAssessmentUsageType: props.model && props.elementdata ? props.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: props.model && props.elementdata && props.elementdata.usagetype ? props.elementdata.usagetype : "Quiz",
             showElmComponent:false,
            
         }
@@ -23,40 +23,6 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
 
     }
-    componentWillMount() {
-        var model=this.props.model;
-        //  let selectedLearningType = {
-        //     "label":{"en":model.elementdata.templatelabel },
-        //     "learningsystem":model.elementdata.learningsystem,
-        //     "learningtemplateUrn":model.elementdata.assessmentid,
-        //     "templateid":model.elementdata.templateid,
-        //     "type":model.elementdata.templatetype
-        // } 
-        if(model&&model.elementdata.usagetype ){
-            this.setState({
-                activeAssessmentUsageType:model.elementdata.usagetype
-            })
-        }
-        if(model.elementdata.assessmentformat===''){
-            this.setState({
-                getAssessmentData:false
-            })
-        }
-        else{
-            this.setState({
-                getAssessmentData:true,
-              //  changeLearningData:true,
-                slateAssessmentTitle:this.props.elementDataAssessmentTitle,
-                slateAssessmentId:model.elementdata.assessmentid,
-                assessmentformat:model.elementdata.assessmentformat,
-               // templatelabel:model.elementdata.templatelabel,
-               // selectedResultFormApi:selectedLearningType
-            })
-        }
-    }
-
-
-
     changeLearningApp=()=>{
         console.log("Learning App Type>>>>>>")
         // this.setState({
@@ -217,7 +183,7 @@ export class AssessmentSlateData extends Component {
         } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup ==  true ) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
-                <div className="slate_popup_get_title">{"'" + this.props.assessmentSlateElement.assessmentItemTitle + "'"}</div>
+                <div className="slate_popup_get_title">{"'" + this.props.assessmentItemTitle + "'"}</div>
                 <div className="slate_popup_get_added">Successfully added</div>
                 <div className="clr"></div>
             </div>

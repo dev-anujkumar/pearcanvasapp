@@ -24,15 +24,10 @@ export class AssessmentSlateCanvas extends Component {
             showAssessmentPopup:false,
             getAssessmentDataPopup:false,
             getAssessmentData:false,
-            assessmentId:"",
-            assessmentItemId:"",
-            assessmentItemTitle:"",
-            assessmentSlateElement:{
-                assessmentId:"",
-                assessmentItemId:"",
-                assessmentItemTitle:"",
-                assessmentFormat:""
-            }
+            assessmentId: props.model && props.model.elementdata && props.model.elementdata.assessmentid ?props.model.elementdata.assessmentid :"",
+            assessmentItemId: props.model && props.model.elementdata && props.model.elementdata.assessmentItemId ?props.model.elementdata.assessmentItemId :"",
+            assessmentItemTitle: props.model && props.model.elementdata && props.model.elementdata.assessmenttitle ?props.model.elementdata.assessmenttitle :"",
+            assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
     }
     toggleAssessmentPopup = (value) => {
@@ -42,7 +37,7 @@ export class AssessmentSlateCanvas extends Component {
     }
     selectAssessmentType=(type)=>{
         var assessmentType;
-        if(type==="Full Assessment CITE"){
+        if(type==="Full Assessment CITE" || this.props.model.elementdata.assessmentformat === "CITE" ){
             assessmentType="CITE"
         }else{
             assessmentType="TDX"
@@ -115,16 +110,7 @@ export class AssessmentSlateCanvas extends Component {
             assessmentItemId : itemID,
             assessmentItemTitle:title,
             getAssessmentData:true,})                    
-        this.setState(prevState=>({
-                assessmentSlateElement:{
-                    ...prevState.assessmentSlateElement,
-                    assessmentId: id,
-                    assessmentItemId : itemID,
-                    assessmentItemTitle:title,
-                    assessmentFormat:format
-                }
-            })
-            )
+
     }
     handleAssessmentFocus = () => {
         this.props.handleFocus();
@@ -133,9 +119,10 @@ export class AssessmentSlateCanvas extends Component {
         this.props.handleBlur();
     }
     render() {
+        console.log("this.props.model",this.props.model);
         return(
             <div onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>                              
-            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} assessmentSlateElement={this.state.assessmentSlateElement} model={this.props.model}/>
+            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} model={this.props.model}/>
             {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
             </div>
         );
