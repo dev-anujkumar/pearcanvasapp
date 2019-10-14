@@ -47,7 +47,7 @@
 // Some global variables
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
-//import { releaseSlateLock } from "../actions/slateLockAction";
+import { releaseSlateLockWithCallback } from "../component/CanvasWrapper/SlateLock_Actions";
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const WRAPPER_URL = config_object.WRAPPER_URL;
@@ -1186,69 +1186,70 @@ openamConfig.prototype.getAttributesFromLegacyOpenAM = function (tokenId, attrib
  */
 openamConfig.prototype.logout = function (options) {
 
-    console.log("release lock and logout")
-    //let manifest_object = configModule.GET_MANIFEST_OBJECT();
-    //let projectUrn = manifest_object['PROJECT_URN'];
-    //let slateId = $('.composite-artboard').attr('data-id');
-    // let urlToBeRedirected = '';
-    // if (projectUrn && slateId && slateId != "undefined") {
-    //     releaseSlateLock(projectUrn, slateId, (response) => {
-    //         if (options) {
-    //             var gotoURL = options.gotoURL || getMyURL();
-    //             var gotoOnFail = options.gotoOnFail || getMyURL();
-    //         } else {
-    //             var gotoURL = getMyURL();
-    //             var gotoOnFail = getMyURL();
-    //         }
-    //         if (!this.legacyEnabled) {
-    //             if (this.logoutWithModernOpenAM()) {
-    //                 // window.location = gotoURL;
-    //                 urlToBeRedirected = gotoURL;
-    //             } else {
-    //                 // window.location = gotoOnFail;
-    //                 urlToBeRedirected = gotoOnFail;
-    //             }
+    //console.log("release lock and logout")
+    /* let manifest_object = configModule.GET_MANIFEST_OBJECT();
+    let projectUrn = manifest_object['PROJECT_URN'];
+    let slateId = $('.composite-artboard').attr('data-id'); */
+    let { projectUrn, slateManifestURN } = config_object
+    let urlToBeRedirected = '';
+    if (projectUrn && slateManifestURN && slateManifestURN != "undefined") {
+        releaseSlateLockWithCallback(projectUrn, slateManifestURN, (response) => {
+            if (options) {
+                var gotoURL = options.gotoURL || getMyURL();
+                var gotoOnFail = options.gotoOnFail || getMyURL();
+            } else {
+                var gotoURL = getMyURL();
+                var gotoOnFail = getMyURL();
+            }
+            if (!this.legacyEnabled) {
+                if (this.logoutWithModernOpenAM()) {
+                    // window.location = gotoURL;
+                    urlToBeRedirected = gotoURL;
+                } else {
+                    // window.location = gotoOnFail;
+                    urlToBeRedirected = gotoOnFail;
+                }
 
-    //         } else {
-    //             if (this.logoutWithLegacyOpenAM()) {
-    //                 // window.location = gotoURL;
-    //                 urlToBeRedirected = gotoURL;
-    //             } else {
-    //                 // window.location = gotoOnFail;
-    //                 urlToBeRedirected = gotoOnFail;
-    //             }
-    //         }
-    //         redirectParent(urlToBeRedirected);
-    //     });
-    // }
-    // else {
-    //     if (options) {
-    //         var gotoURL = options.gotoURL || getMyURL();
-    //         var gotoOnFail = options.gotoOnFail || getMyURL();
-    //     } else {
-    //         var gotoURL = getMyURL();
-    //         var gotoOnFail = getMyURL();
-    //     }
-    //     if (!this.legacyEnabled) {
-    //         if (this.logoutWithModernOpenAM()) {
-    //             // window.location = gotoURL;
-    //             urlToBeRedirected = gotoURL;
-    //         } else {
-    //             // window.location = gotoOnFail;
-    //             urlToBeRedirected = gotoOnFail;
-    //         }
+            } else {
+                if (this.logoutWithLegacyOpenAM()) {
+                    // window.location = gotoURL;
+                    urlToBeRedirected = gotoURL;
+                } else {
+                    // window.location = gotoOnFail;
+                    urlToBeRedirected = gotoOnFail;
+                }
+            }
+            redirectParent(urlToBeRedirected);
+        });
+    }
+    else {
+        if (options) {
+            var gotoURL = options.gotoURL || getMyURL();
+            var gotoOnFail = options.gotoOnFail || getMyURL();
+        } else {
+            var gotoURL = getMyURL();
+            var gotoOnFail = getMyURL();
+        }
+        if (!this.legacyEnabled) {
+            if (this.logoutWithModernOpenAM()) {
+                // window.location = gotoURL;
+                urlToBeRedirected = gotoURL;
+            } else {
+                // window.location = gotoOnFail;
+                urlToBeRedirected = gotoOnFail;
+            }
 
-    //     } else {
-    //         if (this.logoutWithLegacyOpenAM()) {
-    //             // window.location = gotoURL;
-    //             urlToBeRedirected = gotoURL;
-    //         } else {
-    //             // window.location = gotoOnFail;
-    //             urlToBeRedirected = gotoOnFail;
-    //         }
-    //     }
-    //     redirectParent(urlToBeRedirected);
-    // }
+        } else {
+            if (this.logoutWithLegacyOpenAM()) {
+                // window.location = gotoURL;
+                urlToBeRedirected = gotoURL;
+            } else {
+                // window.location = gotoOnFail;
+                urlToBeRedirected = gotoOnFail;
+            }
+        }
+        redirectParent(urlToBeRedirected);
+    }
 };
 /**
  * Redirect the user to login page
