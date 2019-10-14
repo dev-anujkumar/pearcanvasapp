@@ -16,7 +16,7 @@ const headers = {
     "PearsonSSOSession": ssoToken
 }
 
-const convertElement = (oldElementData, newElementData, oldElementInfo, store, index) => dispatch => {
+const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
     
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
@@ -48,12 +48,24 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     const url = `${REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { headers })
     .then(res =>{
-        // let storeElement = store[config.slateManifestURN];
-        // let bodymatter = storeElement.contents.bodymatter;
-        store[config.slateManifestURN].contents.bodymatter[index] = res.data;
+        let storeElement = store[config.slateManifestURN];
+        let bodymatter = storeElement.contents.bodymatter;
+        let focusedElement = bodymatter;
+        indexes.forEach(index => {
+            focusedElement = focusedElement[index];
+            if(newElementData.elementId === focusedElement.id) {
+                focusedElement = res.data;
+            } else {
+                if('elementdata' in focusedElement && 'bodymatter' in focusedElement.elementdata) {
+                    focusedElement = focusedElement.elementdata.bodymatter;
+                }
+            }
+        });
+        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
+
         let activeElementObject = {
             elementId: newElementData.elementId,
-            index: index,
+            index: indexes,
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,
@@ -80,10 +92,21 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
-        let index = activeElement.index;
-        if(elementData.elementId === bodymatter[index].id) {
-            dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index));
-        }
+        let indexes = activeElement.index;
+        indexes = indexes.toString().split("-");
+        indexes.forEach(index => {
+            if(elementData.elementId === bodymatter[index].id) {
+                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes));
+            } else {
+                if('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) {
+                    bodymatter = bodymatter[index].elementdata.bodymatter;
+                }
+                
+            }
+        });
+        // if(elementData.elementId === bodymatter[index].id) {
+        //     dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index));
+        // }
     }
     
     return store;
