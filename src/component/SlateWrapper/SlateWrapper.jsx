@@ -364,7 +364,7 @@ class SlateWrapper extends Component {
                 break;
             case 'image-elem':
                 // this.props.createFigureElement(IMAGE, indexToinsert);
-                this.props.createElement("element-assessment", indexToinsert, parentUrn, asideData);
+                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData);
                 break;
             case 'audio-elem':
                 // this.props.createVideoElement(elevideo, indexToinsert)
