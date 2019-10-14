@@ -42,11 +42,11 @@ class ElementContainer extends Component {
     }
     componentDidMount(){
         if( this.props.index == 0 ){
-            this.setState({
-                borderToggle : 'active',
-                btnClassName : 'activeTagBgColor'
+            // this.setState({
+            //     borderToggle : 'active',
+            //     btnClassName : 'activeTagBgColor'
               
-            })
+            // })
         }
         this.setState({
             ElementId: this.props.element.id

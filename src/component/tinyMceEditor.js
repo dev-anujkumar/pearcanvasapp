@@ -304,7 +304,7 @@ export class TinyMceEditor extends Component {
          * case -  initialize first tinymce instance on very first editor element by default
          */
         console.log('tinymce didmount')
-        if (!tinymce.editors.length && true) {
+        if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             this.editorRef.current.focus(); // element must be focused before
             this.editorConfig.selector = '#' + this.editorRef.current.id;
             tinymce.init(this.editorConfig).then((d) => { this.editorRef.current.blur() })
@@ -318,7 +318,10 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    handleFocus = (e) => {
+    /**
+     * handleClick | gets triggered when any editor element is clicked
+     */
+    handleClick = (e) => {
         this.props.handleEditorFocus();
         /**
          * case - if active editor and editor currently being focused is same
@@ -343,6 +346,9 @@ export class TinyMceEditor extends Component {
                 document.getElementById(activeEditorId).contentEditable = true;
         }
         this.editorConfig.selector = '#' + e.currentTarget.id;
+        /**
+         * Using timeout - inti tinymce instance only when default events stack becomes empty
+         */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d)=>{console.log('tiny resolved 2',d)})
@@ -399,19 +405,19 @@ export class TinyMceEditor extends Component {
                 switch (this.props.tagName) {
                     case 'p':
                         return (
-                            <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
+                            <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
                         );
                     case 'h4':
                         return (
-                            <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
+                            <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
                         )
                     case 'code':
                         return (
-                            <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
+                            <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
                         )
                     default:
                         return (
-                            <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleFocus} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                            <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: ""}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                         )
                 }
             }
