@@ -42,7 +42,7 @@ const _Toolbar = props => {
                 </div>
                 {_elemToggleBtnJsx('pageNumber')}
             </div>
-            {config.PERMISSIONS.includes('toggle_element_borders') &&
+            {/* {config.PERMISSIONS.includes('toggle_element_borders') && */}
                 <div className='element-borders'>
 
                     <div className='elemBorderText'>
@@ -50,7 +50,7 @@ const _Toolbar = props => {
                 </div>
                     {_elemToggleBtnJsx('border')}
                 </div>
-            }
+            {/* } */}
         </div>
     )
 }
