@@ -5,7 +5,7 @@ import {c4PublishObj} from '../js/c4_module.js';
 import store from '../appstore/store';
 import utils from './utils'
 //import { releaseSlateLock } from "../actions/slateLockAction";
-//import { OPEN_AM } from './auth_module.js';
+import { OPEN_AM } from '../auth/openam';
 //import {launchTrackChanges} from '../jsx/tcm/launchTrackChanges';
 //import icontains from "./jquery.icontains";
 /*VEX*/
@@ -165,7 +165,7 @@ export const toggleCommentsPanel = function () {
 * @description - Logout user's session.
 */
 export const logout = function () {
-    //OPEN_AM.logout();
+    OPEN_AM.logout();
 }
 /**
 * @description - Redirects to track changes.
