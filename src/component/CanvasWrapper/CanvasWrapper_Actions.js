@@ -10,8 +10,12 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 
+const axiosApiInstance = axios.create({
+	baseURL: config.C4_API_URL,
+	withCredentials: true
+})
 
-const findElementType = (element) => {
+const findElementType = (element, index) => {
 	let elementType = {};
 
 	switch (element.type) {
@@ -43,12 +47,14 @@ const findElementType = (element) => {
 			break;
 
 		case 'figure':
-			
 			if (element.figuretype) {
 				if (element.figuretype == 'image') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-figure';
 					switch (element.subtype) {
+						case 'image50Text':
+							elementType['secondaryOption'] = 'secondary-image-figure-half';
+							break;
 						case 'imageTextWidth':
 							elementType['secondaryOption'] = 'secondary-image-figure-width';
 							break;
@@ -58,16 +64,18 @@ const findElementType = (element) => {
 						case 'imageFullscreen':
 							elementType['secondaryOption'] = 'secondary-image-figure-full';
 							break;
-						case 'image50Text':
+						case 'image25Text':
 						default:
-							elementType['secondaryOption'] = 'secondary-image-figure-half';
+							elementType['secondaryOption'] = 'secondary-image-figure-quarter';
 							break;
-
 					}
-				} else if (element.figuretype == 'table') {
+				} else if(element.figuretype == 'table') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-table';
-					switch (element.subtype) {
+					switch(element.subtype) {
+						case 'image50TextTableImage':
+							elementType['secondaryOption'] = 'secondary-image-table-half';
+							break;
 						case 'imageTextWidthTableImage':
 							elementType['secondaryOption'] = 'secondary-image-table-width';
 							break;
@@ -77,16 +85,14 @@ const findElementType = (element) => {
 						case 'imageFullscreenTableImage':
 							elementType['secondaryOption'] = 'secondary-image-table-full';
 							break;
-						case 'image50TextTableImage':
-						default:
-							elementType['secondaryOption'] = 'secondary-image-table-half';
-							break;
-
 					}
-				} else if (element.figuretype == 'mathImage') {
+				} else if(element.figuretype == 'mathImage') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-equation';
-					switch (element.subtype) {
+					switch(element.subtype) {
+						case 'image50TextMathImage':
+							elementType['secondaryOption'] = 'secondary-image-equation-half';
+							break;
 						case 'imageTextWidthMathImage':
 							elementType['secondaryOption'] = 'secondary-image-equation-width';
 							break;
@@ -96,37 +102,16 @@ const findElementType = (element) => {
 						case 'imageFullscreenMathImage':
 							elementType['secondaryOption'] = 'secondary-image-equation-full';
 							break;
-						case 'image50TextMathImage':
-						default:
-							elementType['secondaryOption'] = 'secondary-image-equation-half';
-							break;
-
 					}
-				} 
-				else if (element.figuretype == 'tableasmarkup') {
-					elementType['elementType'] = 'figure';
-					elementType['primaryOption'] = 'primary-editor-table-equation';
-					switch (element.subtype) {
-						case 'imageTextWidthTableEditor':
-							elementType['secondaryOption'] = 'secondary-editor-table-width';
-							break;
-						case 'imageWiderThanTextEditorTable':
-							elementType['secondaryOption'] = 'secondary-editor-table-wider';
-							break;
-						case 'imageFullscreenTableEditor':
-							elementType['secondaryOption'] = 'secondary-editor-table-full';
-							break;
-						case 'image50TextEditorTable':
-						default:
-							elementType['secondaryOption'] = 'secondary-editor-table-half';
-							break;
-
-					}
-				}else if (element.figuretype == 'authoredtext') {
+				} else if(element.figuretype == 'authoredtext') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-mathml-equation';
-				
-				 } else if (element.figuretype == 'codelisting') {
+					switch(element.subtype) {
+						case 'mathml':
+							elementType['secondaryOption'] = 'secondary-mathml-equation';
+							break;
+					}
+				} else if (element.figuretype == 'codelisting') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-blockcode-equation';
 					switch (element.figuretype.programlanguage) {
@@ -216,6 +201,25 @@ const findElementType = (element) => {
 							break;
 
 					}
+				} else if (element.figuretype == 'tableasmarkup') {
+					elementType['elementType'] = 'figure';
+					elementType['primaryOption'] = 'primary-editor-table-equation';
+					switch (element.subtype) {
+						case 'imageTextWidthTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-width';
+							break;
+						case 'imageWiderThanTextEditorTable':
+							elementType['secondaryOption'] = 'secondary-editor-table-wider';
+							break;
+						case 'imageFullscreenTableEditor':
+							elementType['secondaryOption'] = 'secondary-editor-table-full';
+							break;
+						case 'image50TextEditorTable':
+						default:
+							elementType['secondaryOption'] = 'secondary-editor-table-half';
+							break;
+
+					}
 				} else if (element.figuretype == 'video') {
 					elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
@@ -281,22 +285,23 @@ const findElementType = (element) => {
 							break;
 					}
 				} else if (element.figuretype == 'assessment') {
-					/* elementType['elementType'] = 'element-assessment';
+					elementType['elementType'] = 'element-assessment';
 					elementType['primaryOption'] = 'primary-single-assessment';
 					switch (element.figuredata.elementdata.assessmentformat) {
 						case 'tdx':
-							elementType['secondaryOption'] = 'secondary-single-assessment-TDX';
+							elementType['secondaryOption'] = 'secondary-single-assessment-tdx';
 							break;
 						case 'cite':
 						default:
-							elementType['secondaryOption'] = 'secondary-single-assessment-CITE';
+							elementType['secondaryOption'] = 'secondary-single-assessment-cite';
 							break;
-				} */
+					}
+				}
 			}
 			break;
-		}
+
 		case 'element-aside':
-			if(element.subtype === '' || element.subtype === 'sidebar') {
+			if (element.subtype === '' || element.subtype === 'sidebar') {
 				elementType['elementType'] = 'element-aside';
 				switch(element.designtype) {
 					case 'asideTacticBox':
@@ -336,7 +341,7 @@ const findElementType = (element) => {
 						elementType['secondaryOption'] = 'secondary-aside-lol';
 						break;
 				}
-			} else if(element.subtype === 'workedexample') {
+			} else if (element.subtype === 'workedexample') {
 				elementType['elementType'] = 'element-workedexample';
 				switch(element.designtype) {
 					case 'workedexample1':
@@ -353,7 +358,6 @@ const findElementType = (element) => {
 
 		case 'element-list':
 			elementType['elementType'] = 'element-authoredtext';
-			elementType['elementWipType'] = 'element-list';
 			elementType['primaryOption'] = 'primary-list';
 			switch (element.subtype) {
 				case "upper-alpha":
@@ -372,10 +376,11 @@ const findElementType = (element) => {
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
 			elementType['secondaryOption'] = 'secondary-paragraph';
-			break;
 	}
 
 	elementType['elementId'] = element.id;
+	elementType['index'] = index;
+	elementType['elementWipType'] = element.type;
 	if(elementType.elementType)
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	else
@@ -383,9 +388,9 @@ const findElementType = (element) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element) => {
+export const fetchElementTag = (element, index = 0) => {
 	if (Object.keys(element).length > 0) {
-		return findElementType(element).tag;
+		return findElementType(element, index).tag;
 	}
 }
 
@@ -398,22 +403,51 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 	}).then(slateData => {
 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
 		let contentUrn = slateData.data[manifestURN].contentUrn;
-		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '' 
-		//let title = slateData.data[manifestURN].contents.title && slateData.data[manifestURN].contents.title.text;
+		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
 		
 		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {
 				[manifestURN]: slateData.data[manifestURN]
-			}//slateData.data
+			}
 		});
 	});
 };
 
-export const setActiveElement = (activeElement = {}) => dispatch => {
+export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
-		payload: findElementType(activeElement)
+		payload: findElementType(activeElement, index)
 	});
+}
+
+export const fetchAuthUser = () => dispatch=> {
+    let userDataURL;
+	let axiosInstance;
+
+    if (process.env.NODE_ENV === 'development') {
+        userDataURL = 'dev-user'
+        axiosInstance = axiosApiInstance
+
+    } else {
+        if (!sessionStorage.validSession) return Promise.reject(new Error('No session'))
+        const sessionData = JSON.parse(JSON.parse(sessionStorage.validSession).data)
+        if (!sessionData.valid) return Promise.reject(new Error('No valid session'))
+        userDataURL = `users/${sessionData.uid}`
+        axiosInstance = axiosPearsonInstance
+    }
+    return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
+		headers: {
+            "Content-Type": "application/json",
+			"PearsonSSOSession":  config.ssoToken
+		}
+	}).then((response) => {
+            let userInfo = response.data;
+            config.userEmail = userInfo.email;
+        })
+        .catch(err => {
+            console.log('axios Error', err);
+            //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
+        })
 }

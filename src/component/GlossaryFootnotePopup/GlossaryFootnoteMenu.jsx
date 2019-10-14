@@ -53,7 +53,7 @@ GlossaryFootnoteMenu.propTypes = {
     /** Handler to save content of popup on save button click */
     saveContent: PropTypes.func
 }
-const mapStateToProps = state => {console.log('state:::', state);
+const mapStateToProps = state => {
     return {
       
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue

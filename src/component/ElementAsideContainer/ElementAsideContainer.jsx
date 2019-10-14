@@ -9,6 +9,7 @@ import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
+import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
@@ -36,7 +37,6 @@ class ElementAsideContainer extends Component {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
     handleFocus = () => {
-        console.log("handle focus==========>")
         this.props.setActiveElement(this.props.element);
         this.props.handleFocus()
     }
@@ -53,10 +53,10 @@ class ElementAsideContainer extends Component {
                     let { id: _containerId, type: _containerType, contents: _contents, elementdata: _elementData } = _containerData;
                     let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
                     let { index } = this.props
-                    let parentEntityUrn = _containerData.contentUrn;
                     let parentUrn = {
                         manifestUrn:_containerId,
-                        contentUrn :_containerData.contentUrn
+                        contentUrn :_containerData.contentUrn,
+                        elementType:_containerType
                     }
                     let filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
@@ -84,15 +84,17 @@ class ElementAsideContainer extends Component {
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
             manifestUrn:_elementId,
-            contentUrn :element.contentUrn
+            contentUrn :element.contentUrn,
+            elementType:_elementType
         }
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
-        this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+       // this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-                <Sortable
+               { this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
+               {/*  <Sortable
                                 options={{
                                     // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
                                     sort: true,  // sorting inside list
@@ -112,14 +114,14 @@ class ElementAsideContainer extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".elementSapratorContainer",
                                     draggable: ".editor",
-                                    forceFallback: true,
-                                    onStart: function (/**Event*/evt) {
+                                    forceFallback: true, */}
+                                {/* </div> onStart: function (/**Event*/
                                         // same properties as onEnd
-                                    },
+                                  //  },
                                    
                                     // Element dragging ended
-                                    onEnd:  (/**Event*/evt) => {
-                                        let swappedElementData;
+                                  //  onEnd:  (/**Event*/evt) => {
+                                       /*  let swappedElementData;
                                         swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex : evt.oldDraggableIndex,
@@ -132,27 +134,24 @@ class ElementAsideContainer extends Component {
 
                                         this.props.swapElement(dataObj,(bodyObj)=>{})
                                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                                    },
+                                    }, */
                                    
-                                }}
+                               // }}
                                
                                 // [Optional] Use ref to get the sortable instance
                                 // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
-                                ref={(c) => {
+                               /*  ref={(c) => {
                                     if (c) {
                                         let sortable = c.sortable;
                                     }
                                 }}
-                    
-                                // [Optional] A tag to specify the wrapping element. Defaults to "div".
                                 tag="div"
-    
                             >
                                 {this['cloneCOSlateControlledSource__' + random]}
 
                                {/*   {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)} */}
 
-                            </Sortable>
+                            {/* /*</Sortable> */ }
             </div>
         )
     }
@@ -168,7 +167,8 @@ class ElementAsideContainer extends Component {
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
             manifestUrn:_elementId,
-            contentUrn :_element.contentUrn
+            contentUrn :_element.contentUrn,
+            elementType:_elementType
         }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
@@ -180,13 +180,12 @@ class ElementAsideContainer extends Component {
                     borderToggle={borderToggle}
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
+                    showDeleteElemPopup = {this.props.showDeleteElemPopup}
                 />
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
 
             </div>
         )
-
-    
 }
 
     /**
@@ -198,6 +197,11 @@ class ElementAsideContainer extends Component {
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
         let showSectionBreak ; 
+        let asideData = {
+             type:"element-aside",
+             id:this.props.element.id,
+             contentUrn:this.props.element.contentUrn
+        };
         try {
             if (_elements !== null && _elements !== undefined) {
                 return _elements.map((element, index) => {
@@ -211,11 +215,11 @@ class ElementAsideContainer extends Component {
                         showSectionBreak = (elementLength == index + 1)? true:false
                         return (
                             <React.Fragment>
-                                {index === 0 && ( !this.props.element.hasOwnProperty() || this.props.element.subtype == "sidebar") && <ElementSaprator
+                                {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
                                     upperOne={true}
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
-                                    esProps={this.props.elementSepratorProps(index, false, parentUrn)}
+                                    esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
                                     elementType={this.props.element.type}
                                 />
                                 }
@@ -223,13 +227,22 @@ class ElementAsideContainer extends Component {
                                     element={element}
                                     key={element.id}
                                     index={`${parentIndex}-${index}`}
+                                    parentUrn ={parentUrn}
+                                    showBlocker={this.props.showBlocker}
+                                    asideData = {asideData}
 
                                 // handleCommentspanel={this.props.handleCommentspanel}
-                                />
+                                >
+                                    {
+                                        (isHovered, isPageNumberEnabled, activeElement) => (
+                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                        )
+                                    }
+                                </ElementContainer>
                                 <ElementSaprator
                                     index={index}
                                     key={`elem-separtor-${element.id}`}
-                                    esProps={this.props.elementSepratorProps(index, false, parentUrn)}
+                                    esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
                                 />

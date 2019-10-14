@@ -72,7 +72,7 @@ const DecimalListIconBox = (props) => {
             <span className="list-option-row">2.</span>
             <span className="list-option-row">3.</span>
             <span className="list-option-row">4.</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
             {
                 /* 
                 <button onClick={() => { this.onListOptionSelect('decimal') }} id="decimal-1" type="button" tabIndex="-1" role="button" className="fr-command fr-btn fr-btn-font_awesome custom-button decimal-button lazyloaded active" data-cmd="decimal">
@@ -96,7 +96,7 @@ const UpperAlphaListIconBox = (props) => {
             <span className="list-option-row">B.</span>
             <span className="list-option-row">C.</span>
             <span className="list-option-row">D.</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
 }
@@ -112,7 +112,7 @@ const LowerAlphaListIconBox = (props) => {
             <span className="list-option-row">b.</span>
             <span className="list-option-row">c.</span>
             <span className="list-option-row">d.</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
 }
@@ -128,7 +128,7 @@ const UpperRomanListIconBox = (props) => {
             <span className="list-option-row">II.</span>
             <span className="list-option-row">III.</span>
             <span className="list-option-row">IV.</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
 }
@@ -144,7 +144,7 @@ const LowerRomanListIconBox = (props) => {
             <span className="list-option-row">ii.</span>
             <span className="list-option-row">iii.</span>
             <span className="list-option-row">iv.</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
 }
@@ -157,7 +157,7 @@ const NoStyleListIconBox = (props) => {
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <span className="list-option-row no-style">None</span>
-            <span class="list-opt-tooltip">{_listFor}</span>
+            <span className="list-opt-tooltip">{_listFor}</span>
         </div>
     )
 }

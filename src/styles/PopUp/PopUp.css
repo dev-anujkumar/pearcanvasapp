@@ -1,4 +1,4 @@
-.modal { 
+.model-popup { 
     position: fixed; 
     z-index: 999999; 
     left: 0;
@@ -29,7 +29,7 @@
     animation-name: animatetop;
     animation-duration: 0.8s;
   }
-  .modal.single_assessment{
+  .model-popup.single_assessment{
      background-color: rgba(0,0,0, 0.5) !important;
     
   }
@@ -82,8 +82,10 @@
     font-size: inherit;
     min-height: 2.5em;
     margin: 0 0 .25em;
-    
     border: 1px solid;
+  }
+  .dialog-input-textarea.assessmentAndInteractive {
+    margin: .30em 0 .25em;
   }
   .dialog-input-textarea.single_assessment{
     width: 100%;
@@ -149,6 +151,11 @@
   border-color: #719ECE;
   box-shadow: inset 0 0 0 1px #3288e6;
 }
+.dialog-input input:focus {
+  outline: none !important;
+  border-color: #719ECE;
+  box-shadow: inset 0 0 0 1px #3288e6;
+}
 .dialog-window.lock-message{
   font-size: 1.2em;
     line-height: 2.0em;
@@ -173,4 +180,17 @@
 .save-button.split-slate,
 .cancel-button.split-slate{
   font-family: "Helvetica Neue", sans-serif;
+}
+.tocDeleteHeader {
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  line-height: 2.0em;
+  margin-bottom: .5em;
+  font-size: 1.5em;
+  color: #007fa3;
+  font-weight: bold;
+}
+.tocDeleteClass {
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
 }

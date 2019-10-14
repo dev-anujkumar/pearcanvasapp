@@ -1,6 +1,7 @@
 .editor {
     margin-bottom: 5px;
     display: flex;
+    position: relative;
 }
 
 .element-container {
@@ -31,6 +32,7 @@ a.paragraphNumeroUnoFootnote {
     text-decoration: none !important;
     cursor: pointer;
 }
+<<<<<<< HEAD
 .color-palette-list .color-palette-item:nth-child(1) {
     background-color: #000000 !important;
 }
@@ -74,3 +76,17 @@ a.paragraphNumeroUnoFootnote {
     height: 15px;
     width: 13px;
 }
+=======
+
+/* Asset popover link */
+abbr.AssetPopoverTerm{
+    color: #007FA3;
+    font-family: inherit;
+    font-style: normal;
+  }
+  abbr.AssetPopoverTerm:hover {
+    color: #9E007E;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+>>>>>>> b0282d8a9ea6a31197e02f270e7767ddc9ec2622

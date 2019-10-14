@@ -6,8 +6,9 @@ import CommentsPanel from '../CommentsPanel'
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
-    fetchSlateData
+    fetchSlateData,fetchAuthUser
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
@@ -24,8 +25,10 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
+import {publishContent,logout} from '../../js/header'
 
-import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
+import { PageNumberContext } from './CanvasContexts.js';
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -36,9 +39,13 @@ class CanvasWrapper extends Component {
             // activeSlate: config.slateList[0],
             // showBlocker : false,
             editorToolbarRef: null,
-            showReleasePopup : false
+            showReleasePopup : false,
+            toggleApo : false,
+            isPageNumberEnabled : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
+
+        
     }
 
     componentDidMount() {        
@@ -68,6 +75,7 @@ class CanvasWrapper extends Component {
         }
 
     componentDidUpdate(prevProps, prevState){
+        
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -76,11 +84,11 @@ class CanvasWrapper extends Component {
         //     this.state.navigation = false;
         // } else {
         const { slateLockInfo: { isLocked, userId } } = this.props
-        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
-            document.getElementById(window.tinymce.activeEditor.id).focus();
-        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
-            tinymce.$('.cypress-editable').eq(0).trigger('focus');
-        }     
+        // if (window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && true) {
+        //     document.getElementById(window.tinymce.activeEditor.id).focus();
+        // } else if (tinymce.$('.cypress-editable').length && true) {
+        //     tinymce.$('.cypress-editable').eq(0).trigger('focus');
+        // }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
@@ -98,6 +106,7 @@ class CanvasWrapper extends Component {
             'type': TocToggle,
             'message': {"open":false}
         });
+        
     }
 
     navigate = (nav) => {
@@ -222,7 +231,7 @@ class CanvasWrapper extends Component {
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
                     {/* editor tool goes here */}
-                    <Toolbar />
+                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
                     {/* custom list editor component */}
                 </div>
 
@@ -234,8 +243,11 @@ class CanvasWrapper extends Component {
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
+                                {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} />
+                                <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
+                                </PageNumberContext.Provider>                                
                             </div>
                         </div>
                     </div>
@@ -254,6 +266,11 @@ class CanvasWrapper extends Component {
         );
     }
     
+    togglePageNumbering = () => {
+        this.setState((state) => ({
+            isPageNumberEnabled: !state.isPageNumberEnabled
+        }));
+    }
 }
 
 CanvasWrapper.displayName = "CanvasWrapper"
@@ -261,9 +278,9 @@ const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
 
@@ -280,6 +297,10 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setLockPeriodFlag,
-        handleSplitSlate
+        handleSplitSlate,
+        setUpdatedSlateTitle,
+        publishContent,
+        fetchAuthUser,
+        logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

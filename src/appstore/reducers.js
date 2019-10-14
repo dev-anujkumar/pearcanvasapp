@@ -9,13 +9,16 @@ import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
+    ASSESSMENT_ELEMENT_CREATED,
     ADD_COMMENT,
     VIDEO_ELEMENT_CREATED,
     FIGURE_ELEMENT_CREATED,
     INTERACTIVE_ELEMENT_CREATED,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
-    SET_SPLIT_INDEX
+    SET_SPLIT_INDEX,
+    GET_PAGE_NUMBER,
+    SET_UPDATED_SLATE_TITLE
 } from '../constants/Action_Constants';
 
 /**
@@ -27,7 +30,8 @@ const initialState = {
     slateLevelData: {},
     // elementsTag: {},
     activeElement: {},
-    splittedElementIndex : 0
+    splittedElementIndex: 0,
+    pageNumberData: {}
 };
 
 /**
@@ -52,6 +56,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
+        case ASSESSMENT_ELEMENT_CREATED:
+                    return {
+                        ...state,
+                        slateLevelData: action.payload.slateLevelData
+                    };
         case FIGURE_ELEMENT_CREATED:
             return {
                 ...state,
@@ -87,6 +96,16 @@ export default function (state = initialState, action) {
                 ...state,
                 splittedElementIndex : action.payload
             }
+        case GET_PAGE_NUMBER:
+            return {
+                ...state,
+                pageNumberData: action.payload
+            }
+         case SET_UPDATED_SLATE_TITLE:
+                    return {
+                        ...state,
+                        slateTitleUpdated : action.payload.title
+                    }
         default:
             return state;
     }

@@ -23,6 +23,7 @@ export default {
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
+
+/****************Assessment Slate Element************************ */  
+    ASSESSMENT_SLATE : "element-assessment"
 }
-
-
