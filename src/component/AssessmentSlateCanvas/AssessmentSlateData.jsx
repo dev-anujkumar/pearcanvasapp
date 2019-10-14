@@ -58,6 +58,7 @@ export class AssessmentSlateData extends Component {
         }
     }
 
+    
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(prevState.slateAssessmentTitle !== nextProps.assessmentSlateElement.assessmentItemTitle){
             return{

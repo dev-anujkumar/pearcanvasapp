@@ -120,6 +120,14 @@ export class ElementSingleAssessment extends Component {
         });
     }
 
+    handleAssessmentFocus = () => {
+        this.props.handleFocus();
+    }
+
+    handleAssessmentBlur = () =>{
+        this.props.handleBlur();
+    }
+
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element*/
     renderAssessmentType = (model = {}, index) => {
@@ -185,20 +193,12 @@ export class ElementSingleAssessment extends Component {
     }
     render() {
         const { model, index, elementId } = this.props;
-        try {
-            return (
-                <div className="figureElement">
-                    {this.renderAssessmentType(model, index)}
-                </div>
-            );
-        } catch (error) {
-            return (
-                <div className="figureElement">
-                    {this.renderAssessmentType(model, index)}
-                </div>
-            );
-        }
-        
+        return (
+            <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
+                {this.renderAssessmentType(model, index)}
+                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+            </div>
+        );
     }
 }
 

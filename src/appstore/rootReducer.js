@@ -6,6 +6,8 @@ import glossaryFootnoteReducer from './glossaryFootnoteReducer';
 import slateLockReducer from './slateLockReducer';
 // import learningToolReducer from './learningToolReducer';
 // import elmReducer from './elmReducer';
+import assetPopOverSearch from './assetPopoverReducer';
+
 export default combineReducers({
     appStore: appReducer,
     commentsPanelReducer:commentsPanelReducer,
@@ -14,4 +16,5 @@ export default combineReducers({
     slateLockReducer,
     // learningToolReducer,
     // elmReducer
+    assetPopOverSearch
 });
