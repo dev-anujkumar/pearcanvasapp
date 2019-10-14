@@ -12,6 +12,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
 import {addComment,deleteElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -23,6 +24,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -33,13 +36,12 @@ class ElementContainer extends Component {
             borderToggle : 'showBorder',
             btnClassName : '',
             showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:''
+            ElementId: this.props.index==0?this.props.element.id:'',
+            isHovered: false
         };
         
     }
     componentDidMount(){
-        
-
         if( this.props.index == 0 ){
             this.setState({
                 borderToggle : 'active',
@@ -55,7 +57,7 @@ class ElementContainer extends Component {
   
     // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps){      
-        if( this.state.ElementId != newProps.activeElement || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
+        if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
              if(newProps.elemBorderToggle){
                 this.setState({
                     borderToggle : 'showBorder',
@@ -80,7 +82,7 @@ class ElementContainer extends Component {
             borderToggle: 'active',
             btnClassName: 'activeTagBgColor'
         })
-        this.props.setActiveElement(this.props.element);
+        this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
@@ -159,30 +161,32 @@ class ElementContainer extends Component {
 
     deleteElement = () => {
         const {id, type}=this.props.element;
+        const {parentUrn,asideData} = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         // api needs to run from here
-        this.props.deleteElement(id, type);
+        this.props.deleteElement(id, type,parentUrn,asideData);
     }
 
     renderElement = (element = {}) => {
         let editor = '';
-        let labelText = fetchElementTag(element) || 'P';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
+        let labelText = fetchElementTag(element, index) || 'P';
         switch(element.type) {
             case elementTypeConstant.OPENER:
                 editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
-                break
+                break;
+
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
-            case elementTypeConstant.FIGURE:
 
+            case elementTypeConstant.FIGURE:
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
                         editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
@@ -216,9 +220,7 @@ class ElementContainer extends Component {
                         editor = <ElementSingleAssessment currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
                         labelText = 'Qu';
                         break;
-
                     case elementTypeConstant.INTERACTIVE:
-
                         switch (element.figuredata.interactiveformat) {
                             case elementTypeConstant.INTERACTIVE_MMI:
                                 editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
@@ -232,25 +234,23 @@ class ElementContainer extends Component {
                                 editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'Pop';
                                 break;
-                                
                         }
-
                 }
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
+
             case elementTypeConstant.ELEMENT_ASIDE:
                 switch (element.subtype) {
-
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
             case elementTypeConstant.METADATA_ANCHOR:
@@ -258,8 +258,9 @@ class ElementContainer extends Component {
                 labelText = 'LO'
                 break;
         }
+
         return(
-            <div className = "editor" >
+            <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
                 { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
@@ -281,10 +282,16 @@ class ElementContainer extends Component {
                 saveContent={this.saveNewComment}
                 rows={COMMENTS_POPUP_ROWS}
                 dialogText={COMMENTS_POPUP_DIALOG_TEXT}
-                showDeleteElemPopup = {this.state.showDeleteElemPopup}
-                deleteElement = {this.deleteElement}
-                
+                showDeleteElemPopup={this.state.showDeleteElemPopup}
+                deleteElement={this.deleteElement}
                 />}
+                {
+                    <PageNumberContext.Consumer>
+                        {
+                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement)
+                        }
+                    </PageNumberContext.Consumer>                    
+                }
             </div >
         );
     }
@@ -333,9 +340,20 @@ class ElementContainer extends Component {
     openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
     }
+    openAssetPopoverPopUp = (toggleApoPopup) => {
+        authorAssetPopOver(toggleApoPopup)
+        // this.props.assetPopoverPopup(toggleApoPopup)
+    }
+
     render = () => {
         const { element } = this.props;
         return this.renderElement(element);
+    }
+    handleOnMouseOver = () => {
+        this.setState({ isHovered: true })
+    }
+    handleOnMouseOut = () => {
+        this.setState({ isHovered: false })
     }
 }
 
@@ -357,14 +375,11 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement:(elementId)=>{
           dispatch(fetchCommentByElement(elementId))
         },
-        setActiveElement: (element) => {
-            dispatch(setActiveElement(element))
+        setActiveElement: (element, index) => {
+            dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id , type)=>{
-            dispatch(deleteElement(id, type))
-        },
-        setActiveElement:(element) => {
-            dispatch(setActiveElement(element))
+        deleteElement: (id , type,parentUrn,asideData)=>{
+            dispatch(deleteElement(id, type,parentUrn,asideData))
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
@@ -372,14 +387,11 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-
- 
-
 const mapStateToProps = (state) => {
 
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
-        activeElement: state.appStore.activeElement.elementId,
+        activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         currentSlateLOData: state.metadataReducer.currentSlateLOData
     }

@@ -21,6 +21,7 @@ WIDER,
 FULL,
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
+import config from '../../config/config';
 
 //import './../../styles/ElementFigure/Book.css';
 
@@ -41,48 +42,83 @@ export class ElementFigure extends Component {
     onClick = () => {
         console.log("onClick")
     }
+    dataFromAlfresco = (data) => {
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+        //console.log("SMART LINK PATH: " + '',smartLinkPath);
+        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        //console.log("SMART LINK STRING: " + '',smartLinkString);
+        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        //console.log("SMART LINK DESC: " + '',smartLinkDesc);
+        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        //console.log("SMART LINK TYPE: " + '',smartLinkType);
+
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+
+            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            this.setState({ imgSrc: epsURL })
+            document.querySelector("[name='alt_text']").innerHTML = altText;
+            document.querySelector("[name='long_description']").innerHTML = longDesc;
+
+        }
+    }
+    handleC2ExtendedClick = (data) => {
+        let data_1 = data;
+        let that = this;
+        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                that.dataFromAlfresco(data);
+            })
+        })
+
+    }
     handleC2MediaClick = (e) => {
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;
         }
-        ////console.log("LAUNCHING C2 MEDIA MODAL");
         let that = this;
-        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                    //let imageData = data['data'];
-                    let imageData = data;
-                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-                    let width = imageData['width'] ? imageData['width'] : "";
-                    let height = imageData['height'] ? imageData['height'] : "";
-                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
-                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-                    //console.log("SMART LINK STRING: " + '',smartLinkString);
-                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
-                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
+        ////console.log("LAUNCHING C2 MEDIA MODAL");
+        let alfrescoPath = config.alfrescoMetaData;
+        var data_1 = false;
 
-                    if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+        if (alfrescoPath && alfrescoPath.nodeRef) {
+            data_1 = alfrescoPath;
+            /*
+                data according to new project api 
+            */
+            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-                        that.setState({ imgSrc: epsURL })
-                        document.querySelector("[name='alt_text']").innerHTML = altText;
-                        document.querySelector("[name='long_description']").innerHTML = longDesc;
+            /*
+                data according to old core api and c2media
+            */
+            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-                    }
+            this.handleC2ExtendedClick(data_1)
+
+        } else {
+            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                        that.dataFromAlfresco(data);
+                    })
                 })
-            })
-        });
-        hideTocBlocker();
-        disableHeader(false);
+            });
+        }
 
     }
     /*** @description - This function is for handling the different types of figure-element.
@@ -100,134 +136,134 @@ export class ElementFigure extends Component {
                 var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
                 switch (model.subtype) {
                     case "image25Text":
-                        divClass = 'divImage25Text',
-                            figureClass = 'figureImage25Text',
-                            figLabelClass = 'heading4Image25TextNumberLabel',
-                            figTitleClass = 'heading4Image25TextTitle',
-                            dataType = 'image',
-                            imageDimension = 'image25Text',
-                            figCaptionClass = 'figcaptionImage25Text',
-                            figCreditClass = 'paragraphImage25TextCredit';
+                        divClass = 'divImage25Text';
+                        figureClass = 'figureImage25Text';
+                        figLabelClass = 'heading4Image25TextNumberLabel';
+                        figTitleClass = 'heading4Image25TextTitle';
+                        dataType = 'image';
+                        imageDimension = 'image25Text';
+                        figCaptionClass = 'figcaptionImage25Text';
+                        figCreditClass = 'paragraphImage25TextCredit';
                         break;
                     case "image50Text":
-                        divClass = 'divImage50Text',
-                            figureClass = 'figureImage50Text',
-                            figLabelClass = 'heading4Image50TextNumberLabel',
-                            figTitleClass = 'heading4Image50TextTitle',
-                            dataType = 'image',
-                            imageDimension = 'image50Text',
-                            figCaptionClass = 'figcaptionImage50Text',
-                            figCreditClass = 'paragraphImage50TextCredit';
+                        divClass = 'divImage50Text';
+                        figureClass = 'figureImage50Text';
+                        figLabelClass = 'heading4Image50TextNumberLabel';
+                        figTitleClass = 'heading4Image50TextTitle';
+                        dataType = 'image';
+                        imageDimension = 'image50Text';
+                        figCaptionClass = 'figcaptionImage50Text';
+                        figCreditClass = 'paragraphImage50TextCredit';
                         break;
                     case 'image50TextTableImage':
-                        divClass = 'divImage50TextTableImage',
-                            figureClass = 'figureImage50TextTableImage',
-                            figLabelClass = 'heading4Image50TextTableImageNumberLabel',
-                            figTitleClass = 'heading4Image50TextTableImageTitle',
-                            dataType = 'table',
-                            imageDimension = 'image50TextTableImage',
-                            figCaptionClass = 'figcaptionImage50TextTableImage',
-                            figCreditClass = 'paragraphImage50TextTableImageCredit';
+                        divClass = 'divImage50TextTableImage';
+                        figureClass = 'figureImage50TextTableImage';
+                        figLabelClass = 'heading4Image50TextTableImageNumberLabel';
+                        figTitleClass = 'heading4Image50TextTableImageTitle';
+                        dataType = 'table';
+                        imageDimension = 'image50TextTableImage';
+                        figCaptionClass = 'figcaptionImage50TextTableImage';
+                        figCreditClass = 'paragraphImage50TextTableImageCredit';
                         break;
                     case 'image50TextMathImage':
-                            figureClass = 'figureImage50TextMathImage',
-                            figLabelClass = 'heading4Image50TextMathImageNumberLabel',
-                            figTitleClass = 'heading4Image50TextMathImageTitle',
-                            dataType = 'mathImage',
-                            imageDimension = 'image50TextMathImage',
-                            figCaptionClass = 'figcaptionImage50TextMathImage',
-                            figCreditClass = 'paragraphImage50TextMathImageCredit';
+                        figureClass = 'figureImage50TextMathImage';
+                        figLabelClass = 'heading4Image50TextMathImageNumberLabel';
+                        figTitleClass = 'heading4Image50TextMathImageTitle';
+                        dataType = 'mathImage';
+                        imageDimension = 'image50TextMathImage';
+                        figCaptionClass = 'figcaptionImage50TextMathImage';
+                        figCreditClass = 'paragraphImage50TextMathImageCredit';
                         break;
                     case 'imageTextWidth':
-                        divClass = 'divImageTextWidth',
-                            figureClass = 'figureImageTextWidth',
-                            figLabelClass = 'heading4ImageTextWidthNumberLabel',
-                            figTitleClass = 'heading4ImageTextWidthTitle',
-                            dataType = 'image',
-                            imageDimension = 'imageTextWidth',
-                            figCaptionClass = 'figcaptionImageTextWidth',
-                            figCreditClass = 'paragraphImageTextWidthCredit';
+                        divClass = 'divImageTextWidth';
+                        figureClass = 'figureImageTextWidth';
+                        figLabelClass = 'heading4ImageTextWidthNumberLabel';
+                        figTitleClass = 'heading4ImageTextWidthTitle';
+                        dataType = 'image';
+                        imageDimension = 'imageTextWidth';
+                        figCaptionClass = 'figcaptionImageTextWidth';
+                        figCreditClass = 'paragraphImageTextWidthCredit';
                         break;
                     case 'imageTextWidthTableImage':
-                        divClass = 'divImageTextWidthTableImage',
-                            figureClass = 'figureImageTextWidthTableImage',
-                            figLabelClass = 'heading4ImageTextWidthTableImageNumberLabel',
-                            figTitleClass = 'heading4ImageTextWidthTableImageTitle',
-                            dataType = 'table',
-                            imageDimension = 'imageTextWidthTableImage',
-                            figCaptionClass = 'figcaptionImageTextWidthTableImage',
-                            figCreditClass = 'paragraphImageTextWidthTableImageCredit';
+                        divClass = 'divImageTextWidthTableImage';
+                        figureClass = 'figureImageTextWidthTableImage';
+                        figLabelClass = 'heading4ImageTextWidthTableImageNumberLabel';
+                        figTitleClass = 'heading4ImageTextWidthTableImageTitle';
+                        dataType = 'table';
+                        imageDimension = 'imageTextWidthTableImage';
+                        figCaptionClass = 'figcaptionImageTextWidthTableImage';
+                        figCreditClass = 'paragraphImageTextWidthTableImageCredit';
                         break;
                     case 'imageTextWidthMathImage':
-                        divClass = 'divImageTextWidthMathImage',
-                            figureClass = 'figureImageTextWidthMathImage',
-                            figLabelClass = 'heading4ImageTextWidthMathImageNumberLabel',
-                            figTitleClass = 'heading4ImageTextWidthMathImageTitle',
-                            dataType = 'mathImage',
-                            imageDimension = 'imageTextWidthMathImage',
-                            figCaptionClass = 'figcaptionImageTextWidthMathImage',
-                            figCreditClass = 'paragraphImageTextWidthMathImageCredit';
+                        divClass = 'divImageTextWidthMathImage';
+                        figureClass = 'figureImageTextWidthMathImage';
+                        figLabelClass = 'heading4ImageTextWidthMathImageNumberLabel';
+                        figTitleClass = 'heading4ImageTextWidthMathImageTitle';
+                        dataType = 'mathImage';
+                        imageDimension = 'imageTextWidthMathImage';
+                        figCaptionClass = 'figcaptionImageTextWidthMathImage';
+                        figCreditClass = 'paragraphImageTextWidthMathImageCredit';
                         break;
 
                     case 'imageWiderThanText':
-                        divClass = 'divImageWiderThanText',
-                            figureClass = 'figureImageWiderThanText',
-                            figLabelClass = 'heading4ImageWiderThanTextNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextTitle',
-                            dataType = 'image',
-                            imageDimension = 'imageWiderThanText',
-                            figCaptionClass = 'figcaptionImageWiderThanText',
-                            figCreditClass = 'paragraphImageWiderThanTextCredit';
+                        divClass = 'divImageWiderThanText';
+                        figureClass = 'figureImageWiderThanText';
+                        figLabelClass = 'heading4ImageWiderThanTextNumberLabel';
+                        figTitleClass = 'heading4ImageWiderThanTextTitle';
+                        dataType = 'image';
+                        imageDimension = 'imageWiderThanText';
+                        figCaptionClass = 'figcaptionImageWiderThanText';
+                        figCreditClass = 'paragraphImageWiderThanTextCredit';
                         break;
                     case 'imageWiderThanTextTableImage':
-                        divClass = 'divImageWiderThanTextTableImage',
-                            figureClass = 'figureImageWiderThanTextTableImage',
-                            figLabelClass = 'heading4ImageWiderThanTextTableImageNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextTableImageTitle',
-                            dataType = 'table',
-                            imageDimension = 'imageWiderThanTextTableImage',
-                            figCaptionClass = 'figcaptionImageWiderThanTextTableImage',
-                            figCreditClass = 'paragraphImageWiderThanTextTableImageCredit';
+                        divClass = 'divImageWiderThanTextTableImage';
+                        figureClass = 'figureImageWiderThanTextTableImage';
+                        figLabelClass = 'heading4ImageWiderThanTextTableImageNumberLabel';
+                        figTitleClass = 'heading4ImageWiderThanTextTableImageTitle';
+                        dataType = 'table';
+                        imageDimension = 'imageWiderThanTextTableImage';
+                        figCaptionClass = 'figcaptionImageWiderThanTextTableImage';
+                        figCreditClass = 'paragraphImageWiderThanTextTableImageCredit';
                         break;
                     case 'imageWiderThanTextMathImage':
-                        divClass = 'divImageWiderThanTextMathImage',
-                            figureClass = 'figureImageWiderThanTextMathImage',
-                            figLabelClass = 'heading4ImageWiderThanTextMathImageNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextMathImageTitle',
-                            dataType = 'mathImage',
-                            imageDimension = 'imageWiderThanTextMathImage',
-                            figCaptionClass = 'figcaptionImageWiderThanTextMathImage',
-                            figCreditClass = 'paragraphImageWiderThanTextMathImageCredit';
+                        divClass = 'divImageWiderThanTextMathImage';
+                        figureClass = 'figureImageWiderThanTextMathImage';
+                        figLabelClass = 'heading4ImageWiderThanTextMathImageNumberLabel';
+                        figTitleClass = 'heading4ImageWiderThanTextMathImageTitle';
+                        dataType = 'mathImage';
+                        imageDimension = 'imageWiderThanTextMathImage';
+                        figCaptionClass = 'figcaptionImageWiderThanTextMathImage';
+                        figCreditClass = 'paragraphImageWiderThanTextMathImageCredit';
                         break;
                     case 'imageFullscreen':
-                        divClass = 'divImageFullscreenImage',
-                            figureClass = 'figureImageFullscreen',
-                            figLabelClass = 'heading4ImageFullscreenNumberLabel',
-                            figTitleClass = 'heading4ImageFullscreenTitle',
-                            dataType = 'image',
-                            imageDimension = 'imageFullscreen',
-                            figCaptionClass = 'figcaptionImageFullscreen',
-                            figCreditClass = 'paragraphImageFullscreen';
+                        divClass = 'divImageFullscreenImage';
+                        figureClass = 'figureImageFullscreen';
+                        figLabelClass = 'heading4ImageFullscreenNumberLabel';
+                        figTitleClass = 'heading4ImageFullscreenTitle';
+                        dataType = 'image';
+                        imageDimension = 'imageFullscreen';
+                        figCaptionClass = 'figcaptionImageFullscreen';
+                        figCreditClass = 'paragraphImageFullscreen';
                         break;
                     case 'imageFullscreenTableImage':
-                        divClass = 'divImageFullscreenTableImage',
-                            figureClass = 'figureImageFullscreenTableImage',
-                            figLabelClass = 'heading4ImageFullscreenTableImageNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextTableImageTitle',
-                            dataType = 'table',
-                            imageDimension = 'imageFullscreenTableImage',
-                            figCaptionClass = 'figcaptionImageFullscreenTableImage',
-                            figCreditClass = 'paragraphImageFullscreenTableImageCredit';
+                        divClass = 'divImageFullscreenTableImage';
+                        figureClass = 'figureImageFullscreenTableImage';
+                        figLabelClass = 'heading4ImageFullscreenTableImageNumberLabel';
+                        figTitleClass = 'heading4ImageWiderThanTextTableImageTitle';
+                        dataType = 'table';
+                        imageDimension = 'imageFullscreenTableImage';
+                        figCaptionClass = 'figcaptionImageFullscreenTableImage';
+                        figCreditClass = 'paragraphImageFullscreenTableImageCredit';
                         break;
                     case 'imageFullscreenMathImage':
-                        divClass = 'divImageFullscreenMathImage',
-                            figureClass = 'figureImageFullscreenMathImage',
-                            figLabelClass = 'heading4ImageFullscreenMathImageNumberLabel',
-                            figTitleClass = 'heading4ImageFullscreenMathImageTitle',
-                            dataType = 'mathImage',
-                            imageDimension = 'imageFullscreenMathImage',
-                            figCaptionClass = 'figcaptionImageFullscreenMathImage',
-                            figCreditClass = 'paragraphImageFullscreenMathImageCredit';
+                        divClass = 'divImageFullscreenMathImage';
+                        figureClass = 'figureImageFullscreenMathImage';
+                        figLabelClass = 'heading4ImageFullscreenMathImageNumberLabel';
+                        figTitleClass = 'heading4ImageFullscreenMathImageTitle';
+                        dataType = 'mathImage';
+                        imageDimension = 'imageFullscreenMathImage';
+                        figCaptionClass = 'figcaptionImageFullscreenMathImage';
+                        figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
                         case 'image50TextEditorTable':
                             divClass = 'divImage50TextTableEditor',

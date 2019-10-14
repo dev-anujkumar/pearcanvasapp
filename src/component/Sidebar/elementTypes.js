@@ -516,10 +516,6 @@ export default {
             }
         }
     },
-    'element-learningobjectivemapping':{
-    'primary-metadataAnchor': {
-        text: 'Learning Objective',
-    }},
     'others': {
         'primary-single-assessment': {
             text: 'Single Assessment',
@@ -534,5 +530,6 @@ export default {
                 },
             }
         }
-    }
+    },
+        enumType: 'interactive'
 };

@@ -21,11 +21,12 @@ import config from '../config/config';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
 import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
-
+import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
-    metadataanchor
+    metadataanchor,
+    assetPopoverIcon
   } from "./../svgIcons.jsx";
 
 export class TinyMceEditor extends Component {
@@ -35,6 +36,7 @@ export class TinyMceEditor extends Component {
         let viewLoEnable = true;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
+        this.assetPopoverButton = null;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -56,8 +58,10 @@ export class TinyMceEditor extends Component {
                 this.setChemistryFormulaIcon(editor);
                 this.setMetaDataAnchorIcon(editor);
                 this.setMathmlFormulaIcon(editor);
+                this.setAssetPopoverIcon(editor);
                 this.addChemistryFormulaButton(editor);
                 this.addMathmlFormulaButton(editor);
+                this.addAssetPopoverIcon(editor);
                 editor.on('keydown', function (e) {
                     /* if (e.keyCode == 13) {
                         e.preventDefault();
@@ -81,10 +85,19 @@ export class TinyMceEditor extends Component {
                     }
                     else if (e.target.nodeName == "DFN") {
                         this.props.openGlossaryFootnotePopUp(true, "Glossary");
-                    } else {
+                    }else if (e.target.nodeName == 'ABBR'){
+                        let assetId = e.target.attributes['asset-id'].nodeValue;
+                        let dataUrn = e.target.attributes['data-uri'].nodeValue;
+                        let apoObject = {
+                            'assetId' : assetId,
+                            'dataUrn' : dataUrn
+                        }
+                        authorAssetPopOver(true, apoObject);
+                    }else {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
+
                 editor.on('keyup', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
@@ -173,6 +186,14 @@ export class TinyMceEditor extends Component {
             }
         }
     };
+
+    setAssetPopoverIcon = editor => {
+        editor.ui.registry.addIcon(
+            "assetPopoverIcon",
+            assetPopoverIcon
+          );
+    }
+
     setChemistryFormulaIcon = editor => {
         /*
           Adding custom icon for wiris chemistry editor
@@ -239,6 +260,28 @@ export class TinyMceEditor extends Component {
           }
         });
       };
+    addAssetPopoverIcon = editor => {
+        editor.ui.registry.addButton("assetPopoverIcon", {
+            text: "",
+            icon: "assetpopovericon",
+            tooltip: "Asset Popover",
+            onAction:  () =>{
+            //console.log('asset poppover clicked');
+            let selectedText = window.getSelection().toString();
+            if(selectedText.length){
+                this.addAssetPopover(editor, selectedText)
+            }
+            
+            },
+            onSetup: (buttonApi) => {
+            /*
+            make merge menu button apis available globally among compnenet
+            */
+            this.assetPopoverButton = buttonApi;
+            // this.assetPopoverButton.setDisabled(true);           
+            }
+        });
+    }
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
@@ -293,9 +336,12 @@ export class TinyMceEditor extends Component {
             editor.insertContent(insertionText);
             this.props.openGlossaryFootnotePopUp(true, "Glossary");
         }
-        
+    }
 
-
+    addAssetPopover = (editor, selectedText) => {
+        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>'
+        editor.insertContent(insertionText); 
+        this.props.openAssetPopoverPopUp(true);
     }
 
     componentDidMount() {

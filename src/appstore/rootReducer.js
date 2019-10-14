@@ -6,6 +6,7 @@ import glossaryFootnoteReducer from './glossaryFootnoteReducer';
 import slateLockReducer from './slateLockReducer';
 import metadataReducer from './metadataReducer';
 
+import assetPopOverSearch from './assetPopoverReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     toolbarReducer : toolbarReducer,
     glossaryFootnoteReducer:glossaryFootnoteReducer,
     metadataReducer:metadataReducer,
-    slateLockReducer
+    slateLockReducer,
+    assetPopOverSearch
 });

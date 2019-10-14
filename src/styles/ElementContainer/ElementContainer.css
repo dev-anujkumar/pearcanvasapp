@@ -1,6 +1,7 @@
 .editor {
     margin-bottom: 5px;
     display: flex;
+    position: relative;
 }
 
 .element-container {
@@ -31,3 +32,15 @@ a.paragraphNumeroUnoFootnote {
     text-decoration: none !important;
     cursor: pointer;
 }
+
+/* Asset popover link */
+abbr.AssetPopoverTerm{
+    color: #007FA3;
+    font-family: inherit;
+    font-style: normal;
+  }
+  abbr.AssetPopoverTerm:hover {
+    color: #9E007E;
+    text-decoration: underline;
+    cursor: pointer;
+  }

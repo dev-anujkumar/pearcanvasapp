@@ -33,6 +33,7 @@ export class ListElement extends Component {
             <TinyMceEditor
                 currentSlateLOData={this.props.currentSlateLOData} 
                 learningObjectiveOperations={this.props.learningObjectiveOperations}
+                openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
                 elementId={this.props.elementId}
