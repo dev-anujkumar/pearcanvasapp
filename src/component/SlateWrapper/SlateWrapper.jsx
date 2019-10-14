@@ -166,8 +166,10 @@ class SlateWrapper extends Component {
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
-                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
-                    this.props.updateRefreshStatus('Refreshed a moment ago');              
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)   
+                    if(typeof this.props.updateTimer !== "undefined"){
+                        this.props.updateTimer();
+                    }          
                     let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>

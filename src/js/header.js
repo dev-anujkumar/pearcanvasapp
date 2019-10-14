@@ -175,8 +175,17 @@ export const trackChanges = function () {
     // launchTrackChanges(slateLockSatus, SlatelockUserInfo);
 }
 export const refreshSlate = function() {
+    let clicked_time = new Date();
     store.dispatch({ 
         type: 'UPDATE_STATUS_REFRESH_SLATE', 
         payload: 'Refreshing'
+    })
+    store.dispatch({ 
+        type: 'UPDATE_REAL_TIME', 
+        payload: clicked_time,
+    })
+    store.dispatch({ 
+        type: 'REFRESH_SLATE', 
+        payload: true
     })
 }

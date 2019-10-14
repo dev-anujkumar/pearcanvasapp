@@ -28,7 +28,7 @@ import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent, refreshSlate} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
-import { slateUpdateContent, updateRefreshStatus,handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { slateUpdateContent, updateRefreshStatus,handleSlateRefresh,showRealTime } from '../CanvasWrapper/SlateRefresh_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -115,6 +115,37 @@ class CanvasWrapper extends Component {
         });
         
     }
+
+    timeSince(date) {
+        let count;
+        const intervals = [
+            { label: 'year', seconds: 31536000 },
+            { label: 'month', seconds: 2592000 },
+            { label: 'day', seconds: 86400 },
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 0 }
+        ];
+        let seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        let interval = intervals.find(i => i.seconds <= seconds);
+        if (interval && interval.label != 'second') {
+            count = Math.floor(seconds / interval.seconds);
+            this.props.updateRefreshStatus(`Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`)
+        }
+        
+     
+    }
+
+    refreshStatus = () => {
+        this.timeSince("'" + this.props.showRealTimeStatus + "'");
+    }
+
+    updateTimer = () => {
+        setInterval(() => {
+            this.refreshStatus()
+        }, 60000)
+    }
+
 
     navigate = (nav) => {
         // let activeSlateIndex = this.state.activeSlateIndex;
@@ -253,7 +284,7 @@ class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} />
                                 </PageNumberContext.Provider>                                
                             </div>
                         </div>
@@ -315,6 +346,7 @@ export default connect(
         refreshSlate,
         slateUpdateContent,
         updateRefreshStatus,
-        handleSlateRefresh
+        handleSlateRefresh,
+        showRealTime
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
