@@ -50,23 +50,7 @@ export class AssessmentSlateData extends Component {
         this.props.selectAssessmentType(activeAssessmentType);         
       
     }
-    
-    // closePopUp(){
-    //     window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
-    //    this.setState({
-    //     changeLearningData:false
-    //    },() =>{
-    //        disableHeader(false);
-    //    })       
-    //  }
-
-    // closeElmWindow(){
-    //     this.setState({
-    //         showElmComponent:false
-    //        });
-    //        hideTocBlocker();
-    //        disableHeader(false);
-    //  }
+   
     mainAddAssessment = (e, activeAssessmentType) => {
         switch(activeAssessmentType){
             case 'Learning App Type':

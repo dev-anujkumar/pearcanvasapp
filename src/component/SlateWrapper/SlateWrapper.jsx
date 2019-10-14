@@ -11,7 +11,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement, swapElement,createAssessmentSlateElement,
+    createElement, swapElement,
     setSplittedElementIndex
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
@@ -107,7 +107,6 @@ class SlateWrapper extends Component {
                 }
             }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                 console.log("assessment in renderDefaultElement >>");
                  this.props.createElement(ASSESSMENT_SLATE, "0");
              }
         }
@@ -163,8 +162,7 @@ class SlateWrapper extends Component {
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
-                // console.log('slate data',_slateData)
-                if (Object.values(_slateData).length > 0) {
+                    if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;

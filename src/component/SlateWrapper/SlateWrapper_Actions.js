@@ -101,8 +101,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         const createdElementData = assessmentSlateData
         newParentData[config.slateManifestURN].contents.bodymatter.splice(0, 0, createdElementData);
-        console.log("newParentData ", newParentData)
-        dispatch({
+         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
@@ -111,76 +110,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
      
 }
 };
-const assessmentSlate = {
-    "id": "urn:pearson:manifest:08392f2d-81df-4d70-bc7e-7da84fa87d4a",
-    "type": "manifest",
-    "contents": {
-        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-        "title": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "LT1"
-        },
-        "frontmatter": [],
-        "bodymatter": [
-            {
-                "type": "element-assessment",
-                "id": "urn:pearson:work:5fda0bdf-6eec-4397-823b-305f2227e489",
-                "contentUrn": "urn:pearson:entity:cb9f9467-42a7-4a67-9217-2f40fd2db77a"
-            }
-        ],
-        "backmatter": []
-    },
-    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-    "contentUrn": "urn:pearson:entity:6db16986-b397-48b8-b256-b007692524ee",
-    "versionUrn": "urn:pearson:manifest:08392f2d-81df-4d70-bc7e-7da84fa87d4a"
-}
-export const createAssessmentSlateElement = (type,index) => (dispatch, getState) => {
-    config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": config.slateEntityURN,
-        "slateUrn": config.slateManifestURN,
-        "index": index,
-        "type": type
-    };
-   
-    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
-        JSON.stringify(_requestData),
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        }
-    ).then(createdElemData => {
 
-        console.log("createdElemData", createdElemData)
-
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-
-    }).catch(error => {
-               
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const newParentData = assessmentSlateData
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        console.log("newParentData ", newParentData)
-        dispatch({
-            type: ASSESSMENT_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-     
-
-        console.log("create Api fail", error);
-    }) 
-}
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId } = dataObj;
     const slateId = config.slateManifestURN;
