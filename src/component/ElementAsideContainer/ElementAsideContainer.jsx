@@ -8,7 +8,7 @@ import Sortable from 'react-sortablejs';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
-import { guid } from '../../constants/utility.js';
+import { guid, sortableProps } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
@@ -89,69 +89,25 @@ class ElementAsideContainer extends Component {
         }
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
-       // this['cloneCOSlateControlledSource__' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+        this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+        let paramObj = {
+            filterClass : '.elementSapratorContainer',
+            draggableElem : '.editor',
+            handleClass : '.element-label',
+            bodyMatter : _containerBodyMatter,
+            swapElement : this.props.swapElement,
+            workedExample: false,
+        }
+
+        let sortableElemProps = sortableProps(paramObj)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-               { this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
-               {/*  <Sortable
-                                options={{
-                                    // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
-                                    sort: true,  // sorting inside list
-                                    preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
-                                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-                                    dragoverBubble: false,
-	                                removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-                                    
-
-                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-                                    
-
-                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                    scrollSpeed: 10,
-                                    handle : '.element-label', //Drag only by element tag name button
-                                    dataIdAttr: 'data-id',
-                                    scroll: true, // or HTMLElement
-                                    filter: ".elementSapratorContainer",
-                                    draggable: ".editor",
-                                    forceFallback: true, */}
-                                {/* </div> onStart: function (/**Event*/
-                                        // same properties as onEnd
-                                  //  },
-                                   
-                                    // Element dragging ended
-                                  //  onEnd:  (/**Event*/evt) => {
-                                       /*  let swappedElementData;
-                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
-                                        let dataObj = {
-                                            oldIndex : evt.oldDraggableIndex,
-                                            newIndex : evt.newDraggableIndex,
-                                            swappedElementData : swappedElementData,
-                                            currentSlateEntityUrn: parentUrn.contentUrn,
-                                            // slateId:_slateId,
-                                            workedExample : true   
-                                        }
-
-                                        this.props.swapElement(dataObj,(bodyObj)=>{})
-                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                                    }, */
-                                   
-                               // }}
-                               
-                                // [Optional] Use ref to get the sortable instance
-                                // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
-                               /*  ref={(c) => {
-                                    if (c) {
-                                        let sortable = c.sortable;
-                                    }
-                                }}
-                                tag="div"
-                            >
-                                {this['cloneCOSlateControlledSource__' + random]}
-
-                               {/*   {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)} */}
-
-                            {/* /*</Sortable> */ }
+                <Sortable {...sortableElemProps} 
+                                    ref={(c) => {if (c) {let sortable = c.sortable;}}}
+                                    onChange={(items, sortable, evt) => { }}>
+                                        { this['cloneCOSlateControlledSource_1' + random]}
+                                </Sortable>
             </div>
         )
     }

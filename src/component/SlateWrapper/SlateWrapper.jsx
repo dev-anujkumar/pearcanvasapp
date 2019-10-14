@@ -27,7 +27,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
-import { guid } from '../../constants/utility.js';
+import { guid, sortableProps} from '../../constants/utility.js';
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -167,83 +167,23 @@ class SlateWrapper extends Component {
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this
+                    let paramObj = {
+                        filterClass : '.elementSapratorContainer',
+                        draggableElem : '.editor',
+                        handleClass : '.element-label',
+                        bodyMatter : _slateBodyMatter,
+                        swapElement : this.props.swapElement,
+                        workedExample: false,
+                    }
+
+                    let sortableElemProps = sortableProps(paramObj)
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
-                                <Sortable
-                                    options={{
-                                        // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
-                                        sort: true,  // sorting inside list
-                                        preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
-                                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-                                        dragoverBubble: false,
-                                        removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-
-
-                                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-
-
-                                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                        scrollSpeed: 10,
-                                        handle: '.element-label', //Drag only by element tag name button
-                                        dataIdAttr: 'data-id',
-                                        scroll: true, // or HTMLElement
-                                        filter: ".elementSapratorContainer",
-                                        draggable: ".editor",
-                                        forceFallback: true,
-                                        onStart: function (/**Event*/evt) {
-                                            // same properties as onEnd
-                                            _context.checkSlateLockStatus(evt)
-                                        },
-
-                                        // Element dragging ended
-                                        onUpdate: (/**Event*/evt) => {
-                                            let swappedElementData, swappedElementId;
-                                            swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                            // swappedElementId =tinymce.$(evt.item).find('.cypress-editable').attr('id');
-                                            // console.log('this is active editor id', swappedElementId)
-                                            //  tinymce.remove('#'+swappedElementId);
-                                            let dataObj = {
-                                                oldIndex: evt.oldDraggableIndex,
-                                                newIndex: evt.newDraggableIndex,
-                                                swappedElementData: swappedElementData,
-                                                // slateId:_slateId,
-                                                workedExample: false,
-                                                swappedElementId: swappedElementId
-                                            }
-                                            // if(tinymce.activeEditor.id==swappedElementId){
-                                            //     tinymce.remove('#'+swappedElementId);
-                                            // }
-                                            this.props.swapElement(dataObj, () => {
-                                                // if(tinymce.activeEditor.id==swappedElementId){
-                                                //     document.getElementById(tinymce.activeEditor.id).contentEditable = true;
-                                                //     document.getElementById(tinymce.activeEditor.id).focus();
-                                                // }
-                                                // if(swappedElementType === "element-authoredtext")
-
-                                            })
-                                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                                        },
-
-                                    }}
-
-                                    // [Optional] Use ref to get the sortable instance
-                                    // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
-                                    ref={(c) => {
-                                        if (c) {
-                                            let sortable = c.sortable;
-                                        }
-                                    }}
-
-                                    // [Optional] A tag to specify the wrapping element. Defaults to "div".
-                                    tag="div"
-
-                                    onChange={(items, sortable, evt) => { }}
-                                >
-                                    {
-                                        this['cloneCOSlateControlledSource_' + random]
-                                        //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
-                                    }
+                                <Sortable {...sortableElemProps} 
+                                    ref={(c) => {if (c) {let sortable = c.sortable;}}}
+                                    onChange={(items, sortable, evt) => { }}>
+                                        {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
                             <SlateFooter />

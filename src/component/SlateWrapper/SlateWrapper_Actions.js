@@ -118,18 +118,18 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
-                console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
 
-                // let newBodymatter = newParentData[slateId].contents.bodymatter;
+                let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (workedExample) {
                     //swap WE element
-                    // for(let i in newBodymatter){
-                    //     if(newBodymatter[i].type == 'element-aside' && newBodymatter[i].id == currentSlateEntityUrn){
-                    //         //Swap inside WE
-                    //         // let weArr = newArr[i].elementdata.bodymatter
-                    //         [newArr[i].elementdata.bodymatter[newIndex], newArr[i].elementdata.bodymatter[oldIndex]] = [newArr[i].elementdata.bodymatter[oldIndex], newArr[i].elementdata.bodymatter[newIndex]];
-                    //     }
-                    // }
+                    for(let i in newBodymatter){
+
+                        if( newBodymatter[i].id == currentSlateEntityUrn){
+                            //Swap inside WE
+                            // let weArr = newArr[i].elementdata.bodymatter
+                            [newBodymatter[i].elementdata.bodymatter[newIndex], newBodymatter[i][i].elementdata.bodymatter[oldIndex]] = [newBodymatter[i][i].elementdata.bodymatter[oldIndex], newBodymatter[i][i].elementdata.bodymatter[newIndex]];
+                        }
+                    }
                 }
 
 
