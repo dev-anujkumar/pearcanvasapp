@@ -11,10 +11,7 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            slateAssessmentTitle:"",
-            slateAssessmentId:"",
-            assessmentItemId:"",
-            assessmentformat:"",
+           
             activeAssessmentType: 'Select',
             activeAssessmentUsageType: props.model && props.elementdata ? props.elementdata.usagetype : "Quiz",
             showElmComponent:false,
@@ -58,20 +55,8 @@ export class AssessmentSlateData extends Component {
         }
     }
 
-    
-    static getDerivedStateFromProps = (nextProps, prevState) => {
-        if(prevState.slateAssessmentTitle !== nextProps.assessmentSlateElement.assessmentItemTitle){
-            return{
-                slateAssessmentTitle : nextProps.assessmentSlateElement.assessmentItemTitle,
-                assessmentItemId : nextProps.assessmentSlateElement.assessmentItemId,
-                slateAssessmentId : nextProps.assessmentSlateElement.assessmentId,               
-            }
-            
-        }
-        return null;
-    }
-    
- 
+
+
     changeLearningApp=()=>{
         console.log("Learning App Type>>>>>>")
         // this.setState({
@@ -199,8 +184,8 @@ export class AssessmentSlateData extends Component {
                     <div className="slate_assessment_data_content">
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
-                        <div className="slate_assessment_data_title">{this.state.slateAssessmentTitle}</div>
-                                <div className="slate_assessment_data_id">{'ID: '+ this.state.slateAssessmentId}</div>
+                        <div className="slate_assessment_data_title">{this.props.assessmentItemTitle}</div>
+                                <div className="slate_assessment_data_id">{'ID: '+ this.props.assessmentId}</div>
                             <div className="slate_assessment_change_button" onClick={this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
@@ -232,7 +217,7 @@ export class AssessmentSlateData extends Component {
         } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup ==  true ) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
-                <div className="slate_popup_get_title">{"'" + this.props.assessmentItemTitle + "'"}</div>
+                <div className="slate_popup_get_title">{"'" + this.props.assessmentSlateElement.assessmentItemTitle + "'"}</div>
                 <div className="slate_popup_get_added">Successfully added</div>
                 <div className="clr"></div>
             </div>
@@ -251,7 +236,7 @@ export class AssessmentSlateData extends Component {
                 }
                 {
                     this.state.activeAssessmentType != 'Select' ?
-                        (<div className="slate_assessment_type_button"onClick={(e) => this.mainAddAssessment(e, this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
+                        (<div className="slate_assessment_type_button" onClick={(e) => this.mainAddAssessment(e, this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
                 }
                 <div className="clr"></div>
             </div>
