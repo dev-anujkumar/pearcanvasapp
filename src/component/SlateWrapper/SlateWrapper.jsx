@@ -717,6 +717,6 @@ export default connect(
         createElementMetaList,
         swapElement,
         setSplittedElementIndex,
-        createAssessmentSlateElement
+       // createAssessmentSlateElement
     }
 )(SlateWrapper);

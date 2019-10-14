@@ -105,6 +105,9 @@ class Sidebar extends Component {
     
             return primaryOptions;
         } 
+        // else if( this.props.elementWipType == element-learningobjectivemapping){
+        //    <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
+        // }
     }
 
     handleSecondaryOptionChange = e => {
