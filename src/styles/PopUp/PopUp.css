@@ -1,4 +1,4 @@
-.modal { 
+.model-popup { 
     position: fixed; 
     z-index: 999999; 
     left: 0;
@@ -29,7 +29,7 @@
     animation-name: animatetop;
     animation-duration: 0.8s;
   }
-  .modal.single_assessment{
+  .model-popup.single_assessment{
      background-color: rgba(0,0,0, 0.5) !important;
     
   }
