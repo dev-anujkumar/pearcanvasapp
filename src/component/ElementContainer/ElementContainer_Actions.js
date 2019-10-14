@@ -80,7 +80,22 @@ export const deleteElement = (elmId, type) => (dispatch, getState) => {
         }
 
     }).catch(error => {
-        
         console.log("delete Api fail", error);
+    }) 
+}
+
+export const updateElement = (updatedData) => {
+    axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+        JSON.stringify(updatedData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(response =>{
+        console.log("response from update API",response)
+    }).catch(error => {
+        console.log("updateElement Api fail", error);
     }) 
 }

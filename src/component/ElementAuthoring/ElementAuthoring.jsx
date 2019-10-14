@@ -38,6 +38,8 @@ export class ElementAuthoring extends Component {
   }
   onBlur() {
 
+    console.log("on Blur")
+
   }
   onKeyup() {
 

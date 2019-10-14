@@ -11,7 +11,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {addComment,deleteElement} from './ElementContainer_Actions';
+import {addComment,deleteElement,updateElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -84,6 +84,26 @@ class ElementContainer extends Component {
     }
 
     handleBlur =() =>{
+        let node = document.getElementById(tinyMCE.activeEditor.id);
+        let html = node.innerHTML;
+        let text = node.innerText;
+        let dataToSend = {
+            "id": this.props.element.id,
+            "type": this.props.element.type,
+            "schema": this.props.element.schema,
+            "versionUrn": this.props.element.versionUrn,
+            "contentUrn": this.props.element.contentUrn,
+            "elementdata": {
+                "schema": this.props.element.elementdata.schema,
+                "text": text,
+                "groupby": null
+            },
+            "html": {
+                "text": html
+            }
+        }
+        console.log("prepared Data",JSON.stringify(dataToSend));
+        updateElement(dataToSend);
   
     }
 
