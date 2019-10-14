@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { assessmentUsageType, assessmentType } from './AssessmentSlateConstants.js';
-import LearningTool from './learningTool/learningTool.jsx';
+//import LearningTool from './learningTool/learningTool.jsx';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
