@@ -11,13 +11,11 @@ import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
 const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
-import axios from 'axios'
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 const header = require('../../../js/header');
-import {slateUpdateContent} from '../../CanvasWrapper/SlateRefresh_Actions'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
