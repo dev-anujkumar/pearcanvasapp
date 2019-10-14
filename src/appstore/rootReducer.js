@@ -4,7 +4,6 @@ import commentsPanelReducer from './commentsPanelReducer.js'
 import toolbarReducer from './toolbarReducer.js';
 import glossaryFootnoteReducer from './glossaryFootnoteReducer';
 import slateLockReducer from './slateLockReducer';
-import slateRefreshReducer from './slateRefreshReducers'
 
 import assetPopOverSearch from './assetPopoverReducer';
 
@@ -14,6 +13,5 @@ export default combineReducers({
     toolbarReducer : toolbarReducer,
     glossaryFootnoteReducer:glossaryFootnoteReducer,
     slateLockReducer,
-    slateRefreshReducer,
     assetPopOverSearch
 });

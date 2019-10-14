@@ -15,7 +15,6 @@ import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
-const header = require('../../../js/header');
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -167,8 +166,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
                     break;
-                case 'refreshSlate' :  
-                    header.refreshSlate();  
+                case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
                 case 'slatePreview':
@@ -191,6 +189,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
             this.props.handleSlateRefresh(id)
         }
 

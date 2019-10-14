@@ -654,8 +654,7 @@ SlateWrapper.propTypes = {
 const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateTitleUpdated:state.appStore.slateTitleUpdated,
-        slateRefreshStatus : state.slateRefreshReducer.statusOfRefreshSlate,
+        slateTitleUpdated:state.appStore.slateTitleUpdated
     };
 };
 
@@ -665,7 +664,6 @@ export default connect(
     {
         createElement,
         swapElement,
-        setSplittedElementIndex,
-        updateRefreshStatus
+        setSplittedElementIndex
     }
 )(SlateWrapper);

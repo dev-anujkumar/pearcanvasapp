@@ -28,8 +28,8 @@ import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout,refreshSlate} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
-import { slateUpdateContent, updateRefreshStatus,handleSlateRefresh,showRealTime } from '../CanvasWrapper/SlateRefresh_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
+import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -58,7 +58,7 @@ class CanvasWrapper extends Component {
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
         // this.props.fetchSlateData(this.state.activeSlate);
-        
+        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -82,7 +82,7 @@ class CanvasWrapper extends Component {
         }
 
     componentDidUpdate(prevProps, prevState){
-        
+        this.countTimer =  Date.now();
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -116,7 +116,7 @@ class CanvasWrapper extends Component {
         
     }
 
-    timeSince(date) {
+    timeSince() {
         let count;
         const intervals = [
             { label: 'year', seconds: 31536000 },
@@ -126,24 +126,21 @@ class CanvasWrapper extends Component {
             { label: 'minute', seconds: 60 },
             { label: 'second', seconds: 0 }
         ];
-        let seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        let seconds = Math.floor((new Date().getTime() - this.countTimer) / 1000);
         let interval = intervals.find(i => i.seconds <= seconds);
         if (interval && interval.label != 'second') {
             count = Math.floor(seconds / interval.seconds);
-            this.props.updateRefreshStatus(`Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`)
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
         }
         
      
     }
 
-    refreshStatus = () => {
-        this.timeSince("'" + this.props.showRealTimeStatus + "'");
-    }
 
     updateTimer = () => {
         setInterval(() => {
-            this.refreshStatus()
-        }, 60000)
+            this.timeSince("'")
+        }, 6000)
     }
 
 
@@ -319,9 +316,6 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateRefreshStatus : state.slateRefreshReducer.statusOfRefreshSlate,
-        slateContentRefresh : state.slateRefreshReducer.slateContentRefresh,
-        showRealTimeStatus : state.slateRefreshReducer.showRealTimeStatus,
         showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
@@ -343,11 +337,7 @@ export default connect(
         setUpdatedSlateTitle,
         publishContent,
         fetchAuthUser,
-        refreshSlate,
-        slateUpdateContent,
-        updateRefreshStatus,
         handleSlateRefresh,
-        showRealTime,
         logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
