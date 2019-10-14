@@ -1,6 +1,8 @@
 export const FETCH_SLATE_DATA = 'FETCH_SLATE_DATA'
 export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
+export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 
+export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
 /*---------------Comments Panel ----------------------*/ 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -12,6 +14,7 @@ export const UPDATE_COMMENT = "UPDATE_COMMENT"
 export const GET_PROJECT_USER = "GET_PROJECT_USER"
 export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
+export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
 /*---------------Element Creation ----------------------*/ 
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
@@ -36,3 +39,9 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
+
+/*--------------- Asset Popover -------------------*/
+export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
+export const APO_BUTTON = 'APO_BUTTON'
+
+

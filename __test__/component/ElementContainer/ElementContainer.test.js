@@ -10,7 +10,10 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     commentsPanelReducer: {
-        allComments: comments,
+        allComments: comments
+    },
+    toolbarReducer: {
+        elemBorderToggle: true
     }
 });
 xdescribe('Test for element container component', () => {

@@ -6,6 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+import slateLevelData from './slateData';
 
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
@@ -21,7 +22,8 @@ describe('Test for Sidebar component', () => {
     const sidebarWithData = mockStore({
         appStore: {
             activeElement,
-            updateElement
+            updateElement,
+            slateLevelData
         }
     });
     let props = {
@@ -84,7 +86,7 @@ describe('Test for Sidebar component', () => {
         sidebarInstance.setState({
             activeElementType: 'figure',
             activePrimaryOption: 'primary-image-figure',
-            activeSecondaryOption: 'secondary-image-figure-quarter'
+            activeSecondaryOption: 'secondary-image-figure-half'
         });
 
         sidebarInstance.attributions();

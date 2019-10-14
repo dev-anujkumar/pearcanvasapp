@@ -16,7 +16,7 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, placeholder, model, element } = this.props
+        const { className, placeholder, model, element, slateLockInfo } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;
@@ -31,6 +31,7 @@ export class ListElement extends Component {
         //***************************************************************
         return (
             <TinyMceEditor
+                openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
                 elementId={this.props.elementId}

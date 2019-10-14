@@ -51,7 +51,7 @@ class GlossaryFootnotePopup extends Component {
                     <div className="glossary-word-header">
                         <div className="glossary-word-title">Term:</div>
                         <div className="glossary-word-name glossary-word-description" id='glossary-editor'>
-                            <ReactEditor className='definition-editor' placeholder="Type Something" id='glossary-0'/>
+                            <ReactEditor glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup} className='definition-editor' placeholder="Type Something" id='glossary-0'/>
                         </div>
 
                     </div>
@@ -59,7 +59,7 @@ class GlossaryFootnotePopup extends Component {
                     <div className="glossary-definition-header">
                         <div className="glossary-definition-label">{glossaryFootnote === 'Glossary'?'Definition:':'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher">
-                            <ReactEditor className='definition-editor' placeholder="Type Something" id={id}/>
+                            <ReactEditor glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup} className='definition-editor' placeholder="Type Something" id={id}/>
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">

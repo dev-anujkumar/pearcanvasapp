@@ -7,7 +7,7 @@ import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
 import config from '../../config/config'
-import { HideLoader, NextSlate, PreviousSlate} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, NextSlate, PreviousSlate, ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
