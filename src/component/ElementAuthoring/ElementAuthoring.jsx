@@ -35,6 +35,8 @@ export class ElementAuthoring extends Component {
           slateLockInfo={slateLockInfo}
         />
     )
+
+    
   }
   onClick() {
 

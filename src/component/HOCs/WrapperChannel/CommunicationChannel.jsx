@@ -179,6 +179,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
                     break;
+                case 'logout':
+                    this.props.logout();
+                    break;
             }
         }
 
