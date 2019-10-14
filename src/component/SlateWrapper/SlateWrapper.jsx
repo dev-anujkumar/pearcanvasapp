@@ -112,6 +112,10 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        /**
+         * First chunk of block manages previous rendered slateId and changes only when new slate renders in canvas
+         * and in case of new slate being rendered it removes all previous tinymce instances
+         */
         let stateChanged = false;
         let _state = state;
         //**************************************************** */
@@ -131,6 +135,9 @@ class SlateWrapper extends Component {
             }
         }
         //**************************************************** */
+        /**
+         * This chunk manages slatelock info
+         */
         const { slateLockInfo: { isLocked } } = props
         if (!isLocked) {
             _state = {
