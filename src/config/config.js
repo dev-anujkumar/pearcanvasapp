@@ -4,7 +4,9 @@ let config = {
     JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    ssoToken: "TKX0ZJgNk2EC-e1ykarN6Akp92g.*AAJTSQACMDIAAlNLABx6Tm1oVzhwQjkwbk1ybFg0LzM3aXJwbHRrTm89AAJTMQACMDQ.*",
+    MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
+    ssoToken: "JDnHSNqzo3RL1G_oUbTmCyoyUpU.*AAJTSQACMDIAAlNLABwxYkVmVlUxR3dqY3YzM3FiSEdYcjJmK3h3UTQ9AAJTMQACMDE.*",
+    alfrescoMetaData : {},
     userId: 'c5test01',
     assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
@@ -37,7 +39,9 @@ let config = {
         PATTERN_PRODUCT_LINK: process.env.PATTERN_PRODUCT_LINK || 'https://component-lib-stg.pearson.com/c2/4e6724b9-b65e-41ac-a132-de949cec3948/PatternProductLink.js',
         PATTERN_VENDOR: process.env.PATTERN_VENDOR || 'https://component-lib-stg.pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js',
         PATTERN_SEARCH_SELECT: process.env.PATTERN_SEARCH_SELECT || 'https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js',
-    }
+    },
+    colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
+    isCO : false
 };
 
 export default config;

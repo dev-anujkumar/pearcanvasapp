@@ -499,6 +499,12 @@ class SlateWrapper extends Component {
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
             if (_elements !== null && _elements !== undefined) {
+                    if(_elements.filter(element => element.type == "chapterintro").length){
+                        config.isCO = true
+                    }
+                    else{
+                        config.isCO = false
+                    }
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>

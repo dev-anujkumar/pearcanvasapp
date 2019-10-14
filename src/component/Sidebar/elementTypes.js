@@ -516,6 +516,25 @@ export default {
             }
         }
     },
+    'primary-opener': {
+        text: 'Opener Element',
+        subtype: {
+            'secondary-opener': {
+                text: 'Opener Element',
+                labelText: 'OE'
+            }
+        },
+        attributes: {
+            alt_text: {
+                text: 'Alt Text',
+                isEditable: false
+            },
+            long_description: {
+                text: 'Long Description',
+                isEditable: false
+            }
+        }
+    },
     'others': {
         'primary-single-assessment': {
             text: 'Single Assessment',

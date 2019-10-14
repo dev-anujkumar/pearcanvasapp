@@ -22,7 +22,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
-
+import arrowButton from '../../images/OpenerElement/arrow.png'
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -35,9 +35,7 @@ class ElementContainer extends Component {
             ElementId: this.props.index==0?this.props.element.id:'',
             showColorPalette : false,
             activeColorIndex: 0
-        };
-        this.colors = ["#000000", "#003057", "#505759", "#005A70", "#006128"]
-        
+        }; 
     }
     componentDidMount(){
         
@@ -112,19 +110,17 @@ class ElementContainer extends Component {
     }
     selectColor = (event) => {
         const selectedColor = event.target.getAttribute('data-value')
-        console.log("color>>>",selectedColor)
         this.setState({
-            activeColorIndex : this.colors.indexOf(selectedColor)
+            activeColorIndex : config.colors.indexOf(selectedColor)
         })
     }
     
     renderPaletteList = () =>{
         const { showColorPaletteList, activeColorIndex } = this.state
         if(showColorPaletteList){
-            return this.colors.map( (color, index) => {
-                    return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
-                }
-            )
+            return config.colors.map( (color, index) => {
+                        return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
+                    })           
         }
         else {
             return null
@@ -176,7 +172,7 @@ class ElementContainer extends Component {
         switch(element.type) {
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement backgroundColor={this.colors[activeColorIndex]} index={index} elementId={element.id} type={element.type} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:

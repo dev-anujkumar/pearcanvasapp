@@ -81,6 +81,7 @@ export const createElement = (type, index,parentUrn) => (dispatch, getState) => 
         })
 
     }).catch(error => {
+        // Opener Element mock creation
         if(type == "OPENER"){
             sendDataToIframe({'type': HideLoader,'message': { status: false }})
             const parentData = getState().appStore.slateLevelData;

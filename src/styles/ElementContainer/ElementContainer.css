@@ -58,9 +58,19 @@ a.paragraphNumeroUnoFootnote {
 .color-palette-list{
     position: absolute;
     left: 25px;
-    top: 12.5%;
+    top: 6.2%;
     z-index: 1;
 }
 .color-palette-item.selected {
     border: 2.5px solid #1fd595 !important;
+}
+.arrow{
+    position: absolute;
+    top: 85px;
+    margin-left: 0px;
+    z-index: 2;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 15px;
+    width: 13px;
 }
