@@ -25,7 +25,7 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent,logout,refreshSlate} from '../../js/header'
+import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
@@ -310,7 +310,6 @@ class CanvasWrapper extends Component {
 
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {
-
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
