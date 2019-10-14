@@ -106,13 +106,15 @@ export class ElementAudioVideo extends Component {
             this.handleC2ExtendedClick(data_1)
 
         } else {
-            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+           if(config.PERMISSIONS.includes('alfresco_crud_access')){ 
+               c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                         that.dataFromAlfresco(data);
                     })
                 })
-            });
+            })
+        }
         }
 
     }
