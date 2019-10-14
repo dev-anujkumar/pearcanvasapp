@@ -25,7 +25,7 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent, refreshSlate} from '../../js/header'
+import {publishContent,logout,refreshSlate} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { slateUpdateContent, updateRefreshStatus,handleSlateRefresh,showRealTime } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -347,6 +347,7 @@ export default connect(
         slateUpdateContent,
         updateRefreshStatus,
         handleSlateRefresh,
-        showRealTime
+        showRealTime,
+        logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
