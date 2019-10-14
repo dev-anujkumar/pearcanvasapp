@@ -1186,10 +1186,6 @@ openamConfig.prototype.getAttributesFromLegacyOpenAM = function (tokenId, attrib
  */
 openamConfig.prototype.logout = function (options) {
 
-    //console.log("release lock and logout")
-    /* let manifest_object = configModule.GET_MANIFEST_OBJECT();
-    let projectUrn = manifest_object['PROJECT_URN'];
-    let slateId = $('.composite-artboard').attr('data-id'); */
     let { projectUrn, slateManifestURN } = config_object
     let urlToBeRedirected = '';
     if (projectUrn && slateManifestURN && slateManifestURN != "undefined") {
@@ -1339,4 +1335,4 @@ const redirectParent = (urlToBeRedirected) => {
     }
 }
 
-module.exports = openamConfig;
+export default openamConfig;
