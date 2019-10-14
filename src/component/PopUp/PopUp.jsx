@@ -132,15 +132,16 @@ class PopUp extends React.Component {
             )
         }
     }
-
+ 
     
     render() {
         const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue } = this.props;
+        console.log("showDeleteElemPopup >> ", showDeleteElemPopup)
         return (
-            <div>
+            <div className="">
                 {
                     active ? 
-                    <div className={`modal ${assessmentClass}`}>
+                    <div className={`model-popup ${assessmentClass}`}>
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}
