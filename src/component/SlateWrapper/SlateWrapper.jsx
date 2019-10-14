@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement ,createVideoElement
     , createFigureElement , createInteractiveElement, swapElement,
-    setSplittedElementIndex
+    setSplittedElementIndex, createElementMeta
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -21,7 +21,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,METADATA_ANCHOR}from './SlateWrapperConstants';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
@@ -40,7 +40,8 @@ class SlateWrapper extends Component {
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
-            splittedSlateIndex : 0
+            splittedSlateIndex : 0,
+            isLOExists : false,
         }
     }
 
@@ -379,6 +380,9 @@ class SlateWrapper extends Component {
             case 'section-break-elem':
                     this.props.createElement(SECTION_BREAK, indexToinsert,parentUrn)
                 break;
+                case 'metadata-anchor':
+                    this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
+                break;
             default:
         }   
     }
@@ -592,6 +596,7 @@ export default connect(
     mapStateToProps,
     {
         createElement,
+        createElementMeta,
         swapElement,
         setSplittedElementIndex
     }

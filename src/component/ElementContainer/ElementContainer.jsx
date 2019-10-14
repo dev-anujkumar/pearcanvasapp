@@ -7,6 +7,7 @@ import ElementAudioVideo from './../ElementAudioVideo';
 import ElementFigure from './../ElementFigure';
 import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
+import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -101,6 +102,35 @@ class ElementContainer extends Component {
             })
         } 
     }
+    learningObjectiveOperations = (text) =>{
+        let currentSlateLOData = this.props.currentSlateLOData;
+        // let isLOExist= this.state.isLOExists;
+        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.COREAPI_ENDPOINT];
+        if(text =="View Learning Objective" && config.slateType !== 'assessment'){
+            window.parent.postMessage({'type': 'openLoPopup','message':{'text':'VIEW LEARNING OBJECTIVE','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
+        }
+        if(text =="View Learning Objective" && config.slateType === 'assessment'){
+           window.parent.postMessage({'type': 'openLoPopup','message':{'text':'VIEW ASSESSMENT ITEM LO TAGGING','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
+        }
+        // else if( !this.state.slateLockSatus){
+            if(text =="Add a New Learning Objective" &&  config.PERMISSIONS.includes('lo_edit_metadata')){
+                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'LEARNING OBJECTIVE','data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
+            }
+      
+            else if(text =="Add From Existing or Edit" && config.PERMISSIONS.includes('lo_edit_metadata')){
+                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'CHOOSE FROM EXISTING LEARNING OBJECTIVE','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+            }
+
+            else if(text =="Add From Existing" && config.PERMISSIONS.includes('lo_edit_metadata')){
+                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'ASSESSMENT ITEM LO TAGGING','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+            }
+        //  }
+        //  else(
+        //      this.slateLockAlert(this.state.SlatelockUserInfo)
+        //  )
+        //this.setState({lodropdown : false})
+        //$(".learningobjectiveicon svg").replaceWith('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>')
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
@@ -145,45 +175,45 @@ class ElementContainer extends Component {
                 labelText = 'OE'
                 break
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.FIGURE:
 
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
+                        editor = <ElementSingleAssessment currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
                         labelText = 'Qu';
                         break;
 
@@ -191,15 +221,15 @@ class ElementContainer extends Component {
 
                         switch (element.figuredata.interactiveformat) {
                             case elementTypeConstant.INTERACTIVE_MMI:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'Pop';
                                 break;
                                 
@@ -209,20 +239,24 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
             case elementTypeConstant.ELEMENT_ASIDE:
                 switch (element.subtype) {
 
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer   setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'WE';
                         break;
                     default:
                         editor = <ElementAsideContainer setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
+            case elementTypeConstant.METADATA_ANCHOR:
+                editor = <ElementMetaDataAnchor showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                labelText = 'LO'
+                break;
         }
         return(
             <div className = "editor" >
@@ -346,7 +380,8 @@ const mapStateToProps = (state) => {
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         activeElement: state.appStore.activeElement.elementId,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        currentSlateLOData: state.metadataReducer.currentSlateLOData
     }
 }
 

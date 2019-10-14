@@ -37,3 +37,6 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
+
+/*--------------- Slate Tag -------------------*/
+export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'

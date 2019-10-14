@@ -26,6 +26,7 @@ import PopUp from '../PopUp';
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 
 import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
+import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -280,6 +281,7 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setLockPeriodFlag,
-        handleSplitSlate
+        handleSplitSlate,
+        currentSlateLO
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

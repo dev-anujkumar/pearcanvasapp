@@ -24,13 +24,15 @@ import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.j
 
 import {
     tinymceFormulaIcon,
-    tinymceFormulaChemistryIcon
+    tinymceFormulaChemistryIcon,
+    metadataanchor
   } from "./../svgIcons.jsx";
 
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         let context = this;
+        let viewLoEnable = true;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.editorConfig = {
@@ -52,6 +54,7 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
+                this.setMetaDataAnchorIcon(editor);
                 this.setMathmlFormulaIcon(editor);
                 this.addChemistryFormulaButton(editor);
                 this.addMathmlFormulaButton(editor);
@@ -99,8 +102,43 @@ export class TinyMceEditor extends Component {
 
                 });
                 editor.ui.registry.addButton('Glossary', {
+                    id: 'buttonId',
+		classes: 'buttonClas',
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => this.addGlossary(editor)
+                });
+               
+                   /* example, adding a toolbar menu button */
+                editor.ui.registry.addMenuButton('slateTag', {
+                    icon: 'metadataanchor',
+                    tooltip: "Slate Tag",
+                    fetch: function (callback) {
+                    if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
+                        viewLoEnable=false;
+                    }
+                    var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
+                    var items = [
+                        {
+                            
+                            type: 'menuitem',
+                            text: dropdownItemArray[0],
+                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
+                        },
+                        {
+                            type: 'menuitem',
+                            text: dropdownItemArray[1],
+                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
+                        },
+                        {
+                            type: 'menuitem',
+                            text: dropdownItemArray[2],
+                            disabled:viewLoEnable,
+                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                        }
+                        
+                    ];
+                    callback(items);
+                    }
                 });
 
                 editor.on('BeforeExecCommand', (e) => {
@@ -141,7 +179,7 @@ export class TinyMceEditor extends Component {
         */
         editor.ui.registry.addIcon(
           "tinymceFormulaChemistryIcon",
-          tinymceFormulaChemistryIcon
+          tinymceFormulaChemistryIcon,
         );
       };
       setMathmlFormulaIcon = editor => {
@@ -149,6 +187,12 @@ export class TinyMceEditor extends Component {
           Adding custom icon for wiris Mathml editor
         */
         editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
+      };
+      setMetaDataAnchorIcon = editor => {
+        /*
+          Adding custom icon for wiris Mathml editor
+        */
+        editor.ui.registry.addIcon("metadataanchor", metadataanchor);
       };
       addChemistryFormulaButton = editor => {
         /*
@@ -238,6 +282,9 @@ export class TinyMceEditor extends Component {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
         this.props.openGlossaryFootnotePopUp(true, "Footnote");
 
+    }
+    learningObjectiveDropdown(text){
+        this.props.learningObjectiveOperations(text);
     }
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();

@@ -23,6 +23,9 @@ export default {
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
+
+/****************Metadata Anchor************************ */  
+METADATA_ANCHOR : "element-learningobjectivemapping",
 }
 
 

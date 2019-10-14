@@ -59,6 +59,52 @@ export const createElement = (type, index,parentUrn) => (dispatch, getState) => 
         console.log("create Api fail", error);
     }) 
 };
+export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
+    config.currentInsertedIndex = index;
+    config.currentInsertedType = type;
+    let createdElemData = {contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
+    elementdata:{
+        loref: " "
+    },
+    html: {
+        "text": "<p class=\"paragraphNumeroUno\"></p>"
+    },
+    id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
+    schema: "http://schemas.pearson.com/wip-authoring/element/1",
+    type: "element-learningobjectivemapping",
+    versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"}
+    
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
+        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
+        "index": index,
+        "type": type
+    };
+    
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(createdElementData.type == 'manifest'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
+                if(item.id == parentUrn.manifestUrn){
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })   
+        }else{
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        }
+       
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+
+   
+};
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
