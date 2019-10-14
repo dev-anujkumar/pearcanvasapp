@@ -38,6 +38,7 @@ class SlateWrapper extends Component {
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
+            previousSlateId : null,
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
@@ -111,13 +112,42 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-
+        /**
+         * First chunk of block manages previous rendered slateId and changes only when new slate renders in canvas
+         * and in case of new slate being rendered it removes all previous tinymce instances
+         */
+        let stateChanged = false;
+        let _state = state;
+        //**************************************************** */
+        let _slateObject = Object.values(props.slateData)[0];
+        if (_slateObject) {
+            let { id: _slateId } = _slateObject;
+            if (_slateId !== state.previousSlateId) {
+                _state = {
+                    ..._state,
+                    previousSlateId: _slateId
+                };
+                for (let i = tinymce.editors.length - 1 ; i > -1 ; i--) {
+                    let ed_id = tinymce.editors[i].id;
+                    tinymce.remove(`#${ed_id}`)
+                }
+                stateChanged = true;
+            }
+        }
+        //**************************************************** */
+        /**
+         * This chunk manages slatelock info
+         */
         const { slateLockInfo: { isLocked } } = props
         if (!isLocked) {
-            return {
-                ...state,
+            _state = {
+                ..._state,
                 showLockPopup: false
             }
+            stateChanged = true;
+        }
+        if (stateChanged) {
+            return _state;
         }
         else {
             return null
