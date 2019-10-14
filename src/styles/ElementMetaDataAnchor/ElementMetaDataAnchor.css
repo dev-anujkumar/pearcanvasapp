@@ -27,4 +27,14 @@ width:230px;
 .slateTagClass svg{
    fill : #42a316;
 }
+.learningObjectiveContainer .heading2LearningObjectiveListHeaderLabel p {
+    color: grey;
+    font-style: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.learningObjectiveContainer h2.heading2LearningObjectiveListHeaderLabel {
+    line-height: 0.75em;
+    margin: 0;
+}
  

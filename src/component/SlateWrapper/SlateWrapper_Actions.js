@@ -120,6 +120,49 @@ export const createElementMeta = (type, index,parentUrn) => (dispatch, getState)
 
    
 };
+export const createElementMetaList = (type, index,parentUrn) => (dispatch, getState) => {
+    config.currentInsertedIndex = index;
+    config.currentInsertedType = type;
+    let createdElemData = {
+        id: -1, // A temporary id. The server decides the real id.
+        type: "element-generateLOlist",
+        schema: "http://schemas.pearson.com/wip-authoring/element/1",
+        elementdata: {
+            level:  "chapter",
+            groupby: "module"
+        },
+        mgmtinfo: {
+            lock: {
+                owner: "",
+                lockdate: ""
+            },
+            comments: [],
+            trackingdocumentid: ""
+        }}
+    
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(createdElementData.type == 'manifest'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
+                if(item.id == parentUrn.manifestUrn){
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })   
+        }else{
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        }
+       
+        dispatch({
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+
+   
+};
 
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {

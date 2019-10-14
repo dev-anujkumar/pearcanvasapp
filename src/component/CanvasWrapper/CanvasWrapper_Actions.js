@@ -372,6 +372,20 @@ const findElementType = (element, index) => {
 			}
 			break;
 
+		case 'element-learningobjectivemapping':
+			elementType['elementType'] = '';
+			elementType['primaryOption'] = '';
+			elementType['secondaryOption'] = '';
+			elementType['tag'] = 'LO';
+			break;
+
+		case 'element-generateLOlist':
+			elementType['elementType'] = '';
+			elementType['primaryOption'] = '';
+			elementType['secondaryOption'] = '';
+			elementType['tag'] = 'MA';
+			break;
+		
 		default: 
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
@@ -381,10 +395,10 @@ const findElementType = (element, index) => {
 	elementType['elementId'] = element.id;
 	elementType['index'] = index;
 	elementType['elementWipType'] = element.type;
-	if(elementType.elementType)
+
+	if(elementType.elementType && elementType.elementType !== '' && elementType['tag'] === '')
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-	else
-	elementType['tag'] = 'LO';
+	
 	return elementType;
 }
 

@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
-import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
-import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, HideLoader} from '../../constants/IFrameMessageTypes.js';
-import config from '../../config/config';
-import axios from 'axios';
 import { connect } from 'react-redux';
-export class ElementMetaDataAnchor extends Component {
+export class ElementMetaLOList extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -16,7 +11,7 @@ export class ElementMetaDataAnchor extends Component {
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
     //this.onLOClickHandle = this.onLOClickHandle.bind(this);
-    this.prepareLOData = this.prepareLOData.bind(this);
+    this.prepareLOLData = this.prepareLOLData.bind(this);
     
   }
 
@@ -24,6 +19,9 @@ export class ElementMetaDataAnchor extends Component {
    let  wipmodel = {
       "text": `<p>Metadata Anchor</p>`
   }
+  let  LOListmodel = {
+    "text": `<p>Learning Objectives</p>`
+}
  
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,learningObjectiveOperations,currentSlateLOData,openAssetPopoverPopUp} = this.props
      return (
@@ -51,25 +49,50 @@ export class ElementMetaDataAnchor extends Component {
                   />
           </div>
           <div className="Container">
+                        <div className="divLearningObjectives">
+                            <div className="divLearningObjectiveListHeaderLabel">
+                                <h2 className="heading2LearningObjectiveListHeaderLabel" resource=""><TinyMceEditor
+                                    learningObjectiveOperations={learningObjectiveOperations}
+                                    currentSlateLOData={currentSlateLOData}
+                                    openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+                                    index={this.props.index}
+                                    elementId={this.props.elementId}
+                                    element={this.props.element}
+                                    placeholder=""
+                                    className="learningObjectiveinner"
+                                    model={LOListmodel}
+                                    handleEditorFocus={this.props.handleFocus}
+                                    onFocus={this.onFocus}
+                                    handleBlur = {this.props.handleBlur}
+                                    onKeyup={this.onKeyup}
+                                    onBlur={this.onBlur}
+                                    onClick={this.onClick}
+                                    slateLockInfo={slateLockInfo}
+                                /></h2>
+                                   <TinyMceEditor
+                                        learningObjectiveOperations={learningObjectiveOperations}
+                                        currentSlateLOData={currentSlateLOData}
+                                        openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+                                        index={this.props.index}
+                                        elementId={this.props.elementId}
+                                        element={this.props.element}
+                                        placeholder="Please add learning objective by tagging a slate"
+                                        className="learningObjectiveinnerText"
+                                        model={this.prepareLOLData(this.props.currentSlateLOData)}
+                                        handleEditorFocus={this.props.handleFocus}
+                                        onFocus={this.onFocus}
+                                        handleBlur = {this.props.handleBlur}
+                                        onKeyup={this.onKeyup}
+                                        onBlur={this.onBlur}
+                                        onClick={this.onClick}
+                                        slateLockInfo={slateLockInfo}
+                                        />
+                            </div>
+                        </div>
+                    </div>
+          <div className="Container">
               <div>
-                <TinyMceEditor
-                  learningObjectiveOperations={learningObjectiveOperations}
-                  currentSlateLOData={currentSlateLOData}
-                  openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-                  index={this.props.index}
-                  elementId={this.props.elementId}
-                  element={this.props.element}
-                  placeholder="Please add learning objective by tagging a slate"
-                  className="learningObjectiveinnerText"
-                  model={this.prepareLOData(this.props.currentSlateLOData)}
-                  handleEditorFocus={this.props.handleFocus}
-                  onFocus={this.onFocus}
-                  handleBlur = {this.props.handleBlur}
-                  onKeyup={this.onKeyup}
-                  onBlur={this.onBlur}
-                  onClick={this.onClick}
-                  slateLockInfo={slateLockInfo}
-                />
+                
               </div>
           </div>
       </div>
@@ -77,15 +100,21 @@ export class ElementMetaDataAnchor extends Component {
         
     )
   }
- prepareLOData = (loData) => {
-    let jsx;
-    if(loData && loData!="" && loData.label && loData.label.en){
-        jsx = loData.label.en;
-    }
-     let  currentLOData = {
+  prepareLOLData = (lolData) => {
+      let jsx,finalloldata = "";
+        if(lolData!== ""){
+         lolData.forEach((value, index) => {
+               // if(value.learningObjectives.length > 0) {
+               // console.log(value.learningObjectives[0].label.en)
+                finalloldata +=value;
+                
+            })
+            jsx =  "<div>"+finalloldata+"</div>";
+        }
+     let  currentLOLData = {
       "text": jsx ? jsx : "<p></p>"
   }
-    return currentLOData;
+    return currentLOLData;
 } 
  
   // onLOClickHandle() {
@@ -137,11 +166,11 @@ export class ElementMetaDataAnchor extends Component {
 
   }
 }
-ElementMetaDataAnchor.defaultProps = {
-  type: "element-learningobjectivemapping"
+ElementMetaLOList.defaultProps = {
+  type: "element-generateLOlist"
 }
 
-ElementMetaDataAnchor.propTypes = {
+ElementMetaLOList.propTypes = {
   /** Type of element to be rendered */
   type: PropTypes.string.isRequired,
   /** Handler to attach on element click */
@@ -160,4 +189,4 @@ const mapStateToProps = (state) => {
     currentSlateLOData: state.metadataReducer.currentSlateLOData
   }
 }
-export default connect(mapStateToProps)(ElementMetaDataAnchor);
+export default connect(mapStateToProps)(ElementMetaLOList);

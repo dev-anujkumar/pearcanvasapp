@@ -26,6 +26,9 @@ export default {
 
 /****************Metadata Anchor************************ */  
 METADATA_ANCHOR : "element-learningobjectivemapping",
+
+/****************Metadata Anchor LO List************************ */  
+METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
 }
 
 

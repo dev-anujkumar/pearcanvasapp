@@ -8,6 +8,7 @@ import ElementFigure from './../ElementFigure';
 import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
+import ElementMetaLOList from '../ElementMetaLOList';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -254,8 +255,12 @@ class ElementContainer extends Component {
                         labelText = 'AS';
                 }
             case elementTypeConstant.METADATA_ANCHOR:
-                editor = <ElementMetaDataAnchor showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaDataAnchor  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'LO'
+                break;
+            case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
+                editor = <ElementMetaLOList  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                labelText = 'MA'
                 break;
         }
 
