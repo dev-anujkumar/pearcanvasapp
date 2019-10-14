@@ -5,7 +5,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "yAyJPUI0vzoBzEDvMXRSA94ebTQ.*AAJTSQACMDIAAlNLABxLMW5tTi9iWk9MOXJIeEh4cEZNdDZCTEUyR3c9AAJTMQACMDE.*",
+    ssoToken: "ft56IdPy3j03qqCCq7GJERTSW7Y.*AAJTSQACMDIAAlNLABw5TFF1dlNXS0hxQWMrMTYrTnExVU81TnZ3c2s9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
     userEmail : 'c5test01@mctest.local',

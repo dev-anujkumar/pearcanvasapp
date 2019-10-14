@@ -146,7 +146,7 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor =<AssessmentSlateCanvas model={element} elementId={element.id}/>
+                editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:

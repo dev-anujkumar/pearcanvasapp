@@ -4,12 +4,14 @@
   .clr{
     clear: both;
   }
-  .slateAssessmentNewContainer{
-    width: 96% !important;
-    overflow: auto !important;
-    overflow-y: auto !important;
-    margin-left: -30px !important;
+  .AssessmentSlateCanvas{
+    height: 500px;
+    margin: 0;
   }
+  div.element-container .AssessmentSlateCanvas,  div.element-container.active .AssessmentSlateCanvas{
+    background-color: #f5f5f5;
+  }
+
   .slate_assessment_container{
     background-color: #f5f5f5;
     padding: 5px;
@@ -20,7 +22,8 @@
     height: 500px;
   }
   .slate_initial_selection{
-    margin: 100px 180px;
+    margin: 0px 150px!important;
+    padding: 100px 0;
     width: 344px;
   }
   .slate_assessment_type_label{
@@ -53,18 +56,27 @@
     right: 8px;
   }
   .slate_assessment_type_dropdown_options{
-    background-color: white;
+    /* background-color: white; */
     position: absolute;
     width: 340px;
   }
   .slate_assessment_type_dropdown_options.notselect{
     display: none;
   }
-  .slate_assessment_dropdown_name, .slate_assessment_metadata_dropdown_name{
+  li.slate_assessment_dropdown_name{
       list-style: none;
       padding:10px;
       background-color: #fff;
       cursor: pointer;
+      margin: 0px !important;
+  }
+  li.slate_assessment_metadata_dropdown_name{
+    list-style: none;
+    padding:10px;
+    background-color: #fff;
+    cursor: pointer;
+    margin: 0px !important;
+
   }
   .slate_assessment_dropdown_name:hover, .slate_assessment_metadata_dropdown_name:hover { 
     background-color: #1565c0;
@@ -91,7 +103,8 @@
     color: gray !important;
   }
   .slate_fetch_canvas{
-    margin: 100px 10px 100px 100px;
+    margin: 0px 10px 0px 100px;
+    padding: 100px 0 0 0;
   }
   .slate_assessment_data_container{
     margin-bottom: 30px;
@@ -166,7 +179,8 @@
   }
 .slate_assessment_metadata_type_dropdown_options{
   position: absolute;
-  margin-left:95px;
+
+  margin-left:136px;
   width: 202px;
   margin-top: 10px;
   max-height:220px;
@@ -174,6 +188,7 @@
 }
 .slate_assessment_metadata_type_dropdown_options.notselect{
   position: absolute;
+
   margin-left:136px;
   width: 202px;
   margin-top: 10px;
@@ -200,7 +215,8 @@
   color: #424242;
 }
 .slate_popup_get_selection {
-  margin: 100px 170px;
+  margin: 0px 170px 100px 170px;
+  padding: 100px 0 0 0;
   width: 344px;
   text-align: center;
 }

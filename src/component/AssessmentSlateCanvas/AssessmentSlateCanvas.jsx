@@ -11,6 +11,8 @@ import {AssessmentSlateData} from './AssessmentSlateData.jsx';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
+import PopUp from './../PopUp';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 //import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
 
 
@@ -20,6 +22,17 @@ export class AssessmentSlateCanvas extends Component {
         super(props);
         this.state={
             showAssessmentPopup:false,
+            getAssessmentDataPopup:false,
+            getAssessmentData:false,
+            assessmentId:"",
+            assessmentItemId:"",
+            assessmentItemTitle:"",
+            assessmentSlateElement:{
+                assessmentId:"",
+                assessmentItemId:"",
+                assessmentItemTitle:"",
+                assessmentFormat:""
+            }
         }
     }
     toggleAssessmentPopup = (value) => {
@@ -27,16 +40,19 @@ export class AssessmentSlateCanvas extends Component {
             showAssessmentPopup : value
         });
     }
-    handleC2AssessmentClick=(assessmentType)=> {
-        var value;
-        if(assessmentType==="Full Assessment CITE"){
-            value="CITE"
+    selectAssessmentType=(type)=>{
+        var assessmentType;
+        if(type==="Full Assessment CITE"){
+            assessmentType="CITE"
         }else{
-            value="TDX"
+            assessmentType="TDX"
         }
-        let that = this;
+        return assessmentType
+    }
+    handleC2AssessmentClick=(value)=> {
+        let assessmentType=this.selectAssessmentType();
         let fileName = "";
-        let filterType = [value.toUpperCase()] || ['CITE'];
+        let filterType = [assessmentType.toUpperCase()] || ['CITE'];
         //let searchMode = $('.editor-instance[data-id="' + this.state.elementid + '"]').attr("data-elementdataassessmentstyle") || "partial";//"partial";
         let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "partial";//"partial";
@@ -57,7 +73,7 @@ export class AssessmentSlateCanvas extends Component {
         //window.parent.postMessage({ 'type': 'blockerTOC', 'message': { status: true } }, WRAPPER_URL);
     
         productId = (value && value !== "") ? value : "Unspecified";
-        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, function (assessmentData) {
+        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{
     
             let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
             let itemID = assessmentData['itemID'];
@@ -71,24 +87,56 @@ export class AssessmentSlateCanvas extends Component {
                 assessmentFormat = "";
                 alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
             }
-            that.setState({assessmentId: id,assessmentItemId : itemID,})
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentitemid", "");
-            // if (searchMode == "partial") {
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentid", id);
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentitemid", itemID);
-            // } else {
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentid", id);
-            // }
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmenttitle", title);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", assessmentFormat);
-    
+            this.updateAssessment(id,itemID,title,assessmentFormat,"","insert");
+   
         });
-        //hideTocBlocker();
+
+  
+    }
+    updateAssessment=(id,itemID,title,format,usageType,change)=>{       
+        if(change==='insert'){
+            this.setState({
+                getAssessmentDataPopup:true
+            },()=>{
+                setTimeout(()=>{ 
+                    this.setState({
+                        getAssessmentDataPopup:false
+                    }) 
+                }, 3000)
+            })
+        }
+        else{
+            this.setState({
+                getAssessmentData:false
+                
+            })
+        }
+        this.setState({assessmentId: id,
+            assessmentItemId : itemID,
+            assessmentItemTitle:title,
+            getAssessmentData:true,})                    
+        this.setState(prevState=>({
+                assessmentSlateElement:{
+                    ...prevState.assessmentSlateElement,
+                    assessmentId: id,
+                    assessmentItemId : itemID,
+                    assessmentItemTitle:title,
+                    assessmentFormat:format
+                }
+            })
+            )
+    }
+    handleAssessmentFocus = () => {
+        this.props.handleFocus();
+    }
+    handleAssessmentBlur = () =>{
+        this.props.handleBlur();
     }
     render() {
         return(
-            <div >
-            <AssessmentSlateData type={this.props.type} handleC2AssessmentClick={this.handleC2AssessmentClick}/>
+            <div onFocus={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>                              
+            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} assessmentSlateElement={this.state.assessmentSlateElement} model={this.props.model}/>
+            {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
             </div>
         );
     }
