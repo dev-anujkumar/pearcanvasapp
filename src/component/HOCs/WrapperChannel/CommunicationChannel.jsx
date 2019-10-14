@@ -14,10 +14,10 @@ import config from '../../../config/config';
 import axios from 'axios'
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-
-import PopUp from '../../PopUp';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
+const header = require('../../../js/header');
+import {slateUpdateContent} from '../../CanvasWrapper/SlateRefresh_Actions'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -62,7 +62,6 @@ function WithWrapperCommunication(WrappedComponent) {
         handleIncommingMessages = (e) => {
             let messageType = e.data.type;
             let message = e.data.message;
-console.log("messageType",message)
             switch (messageType) {
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -170,8 +169,10 @@ console.log("messageType",message)
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
                     break;
-                case 'refreshSlate' :                    
-                    this.handleRefreshSlate(message);
+                case 'refreshSlate' :  
+                    header.refreshSlate();  
+                    this.handleRefreshSlate();
+                    break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;
@@ -187,19 +188,9 @@ console.log("messageType",message)
             }
         }
 
-        handleRefreshSlate = (message) => {
-            let id = config.slateManifestURN;
-            //config.slateManifestURN;
-            axios.get('https://contentapis-qa.pearsoncms.net/structure-api/container/v2/' + id, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
-                }
-            }).then(response => {
-                this.props.fetchSlateData(id);
-            }).catch((err) => {
-                sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false });              
-            })
+        handleRefreshSlate = () => {
+            let id = config.slateManifestURN; 
+            this.props.handleSlateRefresh(id)
         }
 
         sendDataToIframe = (messageObj) => {

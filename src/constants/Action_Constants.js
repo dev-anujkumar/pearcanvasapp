@@ -42,3 +42,4 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
 /*--------------- Refresh Slate -------------------*/
 export const REFRESH_SLATE = 'REFRESH_SLATE'
+export const UPDATE_STATUS_REFRESH_SLATE = 'UPDATE_STATUS_REFRESH_SLATE'

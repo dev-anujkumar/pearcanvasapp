@@ -24,10 +24,10 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent,} from '../../js/header'
+import {publishContent, refreshSlate} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
-import { slateUpdateContent } from '../CanvasWrapper/SlateRefresh_Actions'
+import { slateUpdateContent, updateRefreshStatus,handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { PageNumberContext } from './CanvasContexts.js';
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -44,6 +44,12 @@ class CanvasWrapper extends Component {
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
     }
+
+    static getDerivedStateFromProps(nextProps, prevState){
+            if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+            }       
+     }
 
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
@@ -269,12 +275,16 @@ class CanvasWrapper extends Component {
 
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {
+
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         elementsTag: state.appStore.elementsTag,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        slateLockInfo: state.slateLockReducer.slateLockInfo
+        slateLockInfo: state.slateLockReducer.slateLockInfo,
+        slateRefreshStatus : state.slateRefreshReducer.statusOfRefreshSlate,
+        slateContentRefresh : state.slateRefreshReducer.slateContentRefresh,
+        showRealTimeStatus : state.slateRefreshReducer.showRealTimeStatus
     };
 };
 
@@ -293,8 +303,11 @@ export default connect(
         setLockPeriodFlag,
         handleSplitSlate,
         setUpdatedSlateTitle,
-        slateUpdateContent,
         publishContent,
-        fetchAuthUser
+        fetchAuthUser,
+        refreshSlate,
+        slateUpdateContent,
+        updateRefreshStatus,
+        handleSlateRefresh
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

@@ -28,6 +28,7 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
+import {updateRefreshStatus} from '../CanvasWrapper/SlateRefresh_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -166,6 +167,7 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    this.props.updateRefreshStatus('Refreshed a moment ago');              
                     let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
@@ -650,7 +652,8 @@ SlateWrapper.propTypes = {
 const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateTitleUpdated:state.appStore.slateTitleUpdated
+        slateTitleUpdated:state.appStore.slateTitleUpdated,
+        slateRefreshStatus : state.slateRefreshReducer.statusOfRefreshSlate,
     };
 };
 
@@ -660,6 +663,7 @@ export default connect(
     {
         createElement,
         swapElement,
-        setSplittedElementIndex
+        setSplittedElementIndex,
+        updateRefreshStatus
     }
 )(SlateWrapper);
