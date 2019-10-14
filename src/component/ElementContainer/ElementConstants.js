@@ -1,5 +1,5 @@
 export default {
-    OPENER : "opener",
+    OPENER : "chapterintro",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",

@@ -25,6 +25,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import arrowButton from '../../images/OpenerElement/arrow.png'
 import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
@@ -40,9 +41,10 @@ class ElementContainer extends Component {
             btnClassName : '',
             showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:'',
+            showColorPalette : false,
+            activeColorIndex: 0,
             isHovered: false
         };
-        
     }
     componentDidMount(){
         if( this.props.index == 0 ){
@@ -135,14 +137,42 @@ class ElementContainer extends Component {
         //  )
         //this.setState({lodropdown : false})
         //$(".learningobjectiveicon svg").replaceWith('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>')
+    toggleColorPaletteList = () => {
+        const { showColorPaletteList } = this.state
+        this.setState({
+            showColorPaletteList : !showColorPaletteList
+        })
+    }
+    selectColor = (event) => {
+        const selectedColor = event.target.getAttribute('data-value')
+        this.setState({
+            activeColorIndex : config.colors.indexOf(selectedColor)
+        })
+    }
+    
+    renderPaletteList = () =>{
+        const { showColorPaletteList, activeColorIndex } = this.state
+        if(showColorPaletteList){
+            return config.colors.map( (color, index) => {
+                        return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
+                    })           
+        }
+        else {
+            return null
+        }
     }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
      */
     renderColorPaletteButton = (element) => {
-        if (element.type === "opener") {
-            return <Button type="color-palette" />
+        if (element.type === elementTypeConstant.OPENER) {
+            return (
+                <>
+                    <Button onClick={this.toggleColorPaletteList} type="color-palette" />
+                    <ul className="color-palette-list">{this.renderPaletteList()}</ul>  
+                </>
+            )
         }
         else {
             return null
@@ -181,7 +211,8 @@ class ElementContainer extends Component {
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:
-                editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
+                const { activeColorIndex } = this.state
+                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
 

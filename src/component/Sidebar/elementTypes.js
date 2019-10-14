@@ -514,7 +514,8 @@ export default {
                     labelText: 'Pop'
                 }
             }
-        }
+        },
+        enumType: 'interactive'
     },
     'others': {
         'primary-single-assessment': {
@@ -529,7 +530,28 @@ export default {
                     labelText: 'Qu'
                 },
             }
-        }
+        },
+        
     },
-        enumType: 'interactive'
+    'primary-opener': {
+        text: 'Opener Element',
+        subtype: {
+            'secondary-opener': {
+                text: 'Opener Element',
+                labelText: 'OE',
+                enum: "NA"
+            }
+        },
+        attributes: {
+            alt_text: {
+                text: 'Alt Text',
+                isEditable: false
+            },
+            long_description: {
+                text: 'Long Description',
+                isEditable: false
+            }
+        },
+        enumType: 'NA'
+    }
 };

@@ -381,7 +381,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if (firstOne) {
+        if(firstOne || type == "opener-elem"){
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -415,6 +415,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn)
                 break;
             case 'opener-elem':
+                    this.props.createElement(OPENER, indexToinsert, parentUrn)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -498,7 +499,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', 0, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
@@ -585,6 +586,12 @@ class SlateWrapper extends Component {
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
+                    if(_elements.filter(element => element.type == "chapterintro").length){
+                        config.isCO = true
+                    }
+                    else{
+                        config.isCO = false
+                    }
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>

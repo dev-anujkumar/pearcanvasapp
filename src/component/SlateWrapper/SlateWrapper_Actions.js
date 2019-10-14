@@ -15,6 +15,32 @@ import {ASSESSMENT_SLATE} from '../../constants/Element_Constants';
 
 // import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
 
+const openerData = {
+    "type": "chapterintro",
+    "subtype": "chapteropener",
+    "id": "urn:pearson:manifest:0fd35c2b-d70c-40c4-8c46-d283203fce09",
+    "schema": "http://schemas.pearson.com/wip-authoring/intro/1",
+    "contents": {
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "Chapter X: Opening Element Title",
+            "textsemantics": [
+                {
+                    "type": "label",
+                    "charStart": 0,
+                    "charEnd": 7
+                },
+                {
+                    "type": "number",
+                    "charStart": 8,
+                    "charEnd": 10
+                }
+            ]
+        }
+    }
+}
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -91,7 +117,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
 
     }).catch(error => {
-       
+        // Opener Element mock creation
+        if(type == "OPENER"){
+            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            const createdElementData = openerData
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            dispatch({
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        } 
         console.log("create Api fail", error);
     }) 
 }else {
