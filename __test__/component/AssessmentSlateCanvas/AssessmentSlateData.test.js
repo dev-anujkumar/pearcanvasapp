@@ -8,12 +8,12 @@ import {assessmentSlateDefault,assessmentSlateWithData} from "./../../../fixture
 describe('Testing Assessment Slate Data component', () => {
     const assessmentSlate = mount( <AssessmentSlateData   />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
-    xit('render Assessment Slate Data component ', () => {
+    it('render Assessment Slate Data component ', () => {
         const component = mount(<AssessmentSlateData />);
         expect(component).toMatchSnapshot();
     })
     
-    xit('onClick Assessment Type Event', () => {
+    it('onClick Assessment Type Event', () => {
         assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
         assessmentSlateDataInstance.setState({
         activeAssessmentType: 'Select'
@@ -30,7 +30,7 @@ describe('Testing Assessment Slate Data component', () => {
         assessmentSlate.find('div.slate_assessment_type_dropdown.activeDropdown').simulate('click');
         assessmentSlate.find('ul.slate_assessment_type_dropdown_options>li:first-child').simulate('click');
    });   
-it('onClick UsageType Event', () => {
+xit('onClick UsageType Event', () => {
     let props={
         getAssessmentDataPopup :false,
         assessmentId:"urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
