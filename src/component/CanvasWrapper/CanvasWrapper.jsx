@@ -27,13 +27,9 @@ import PopUp from '../PopUp';
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,} from '../../js/header'
 
-<<<<<<< HEAD
-import { handleSplitSlate } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
-=======
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
+import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
->>>>>>> 4550315a925012138f27ce0699fdc735d9ad5b7c
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -303,12 +299,9 @@ export default connect(
         releaseSlateLock,
         setLockPeriodFlag,
         handleSplitSlate,
-<<<<<<< HEAD
-        currentSlateLO
-=======
+        currentSlateLO,
         setUpdatedSlateTitle,
         publishContent,
         fetchAuthUser
->>>>>>> 4550315a925012138f27ce0699fdc735d9ad5b7c
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
