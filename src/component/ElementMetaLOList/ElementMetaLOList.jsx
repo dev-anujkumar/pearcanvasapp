@@ -10,7 +10,7 @@ export class ElementMetaLOList extends Component {
     this.onBlur = this.onBlur.bind(this);
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
-    this.onLOLClickHandle = this.onLOLClickHandle.bind(this);
+    // this.onLOLClickHandle = this.onLOLClickHandle.bind(this);
     this.prepareLOLData = this.prepareLOLData.bind(this);
     
   }
@@ -25,7 +25,7 @@ export class ElementMetaLOList extends Component {
  
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,learningObjectiveOperations,currentSlateLOData,openAssetPopoverPopUp} = this.props
      return (
-      <div   className="learningObjectiveContainer" onClick={this.onLOLClickHandle("")} >
+      <div   className="learningObjectiveContainer" >
         <div className="container">
           <div className="matadata_anchor" >
               <TinyMceEditor  
@@ -112,11 +112,11 @@ export class ElementMetaLOList extends Component {
     return currentLOLData;
 } 
  
-onLOLClickHandle(lolData){
-  if(lolData ==""){
-      window.parent.postMessage({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},WRAPPER_URL)
-   }
-}
+// onLOLClickHandle(lolData){
+//   if(lolData ==""){
+//       window.parent.postMessage({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},WRAPPER_URL)
+//    }
+// }
   onClick() {
 
   }
