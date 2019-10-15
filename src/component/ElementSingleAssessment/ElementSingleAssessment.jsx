@@ -150,7 +150,6 @@ export class ElementSingleAssessment extends Component {
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={this.toggleUsageTypeDropdown} >
                         <span className="singleAssessment_Dropdown_currentLabel">{model.figuredata.elementdata ? this.state.activeAsseessmentUsageType : "Quiz"}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
-
                     </div>
 
                 </div>

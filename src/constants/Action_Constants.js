@@ -18,6 +18,7 @@ export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
 /*---------------Element Creation ----------------------*/ 
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
+export const ASSESSMENT_ELEMENT_CREATED = "ASSESSMENT_ELEMENT_CREATED"
 export const VIDEO_ELEMENT_CREATED = 'VIDEO_ELEMENT_CREATED'
 export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
 export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
@@ -40,6 +41,10 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
+/*--------------- Refresh Slate -------------------*/
+export const REFRESH_SLATE = 'REFRESH_SLATE'
+export const UPDATE_STATUS_REFRESH_SLATE = 'UPDATE_STATUS_REFRESH_SLATE'
+export const UPDATE_REAL_TIME = 'UPDATE_REAL_TIME'
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'

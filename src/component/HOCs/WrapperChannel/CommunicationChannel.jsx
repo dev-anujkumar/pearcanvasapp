@@ -13,8 +13,6 @@ const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-
-import PopUp from '../../PopUp';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 
@@ -61,7 +59,6 @@ function WithWrapperCommunication(WrappedComponent) {
         handleIncommingMessages = (e) => {
             let messageType = e.data.type;
             let message = e.data.message;
-
             switch (messageType) {
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -169,11 +166,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
                     break;
+                case 'refreshSlate' :    
+                    this.handleRefreshSlate();
+                    break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
+                    break;
+                case 'logout':
+                    this.props.logout();
                     break;
             }
         }
@@ -182,6 +185,12 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message && message.permissions) {
                 config.PERMISSIONS = message.permissions;
             }
+        }
+
+        handleRefreshSlate = () => {
+            let id = config.slateManifestURN; 
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
+            this.props.handleSlateRefresh(id)
         }
 
         sendDataToIframe = (messageObj) => {

@@ -110,7 +110,7 @@ export function addMediaClickHandler() {
 export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps;
 
-    if(config.slateType == 'container-introduction'){
+    if(config.slateType == 'container-introduction' && !config.isCO){
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem';
         })

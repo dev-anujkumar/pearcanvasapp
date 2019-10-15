@@ -11,8 +11,7 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement, createVideoElement
-    , createFigureElement, createInteractiveElement, swapElement,
+    createElement, swapElement,
     setSplittedElementIndex
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
@@ -21,7 +20,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK, OPENER, ASSESSMENT_SLATE}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -38,6 +37,7 @@ class SlateWrapper extends Component {
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
+            previousSlateId : null,
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
@@ -94,30 +94,69 @@ class SlateWrapper extends Component {
         this.renderDefaultElement();
     }
 
-    renderDefaultElement = () => {
-        let _slateData = this.props.slateData
+    renderDefaultElement = () =>{
+        let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
-            if (Object.values(_slateData).length > 0) {
+            if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
                 let _slateObject = Object.values(_slateData)[0];
                 let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent;
-                if (_slateBodyMatter.length == 0) {
+                if (_slateBodyMatter.length == 0 ) {
                     /* For showing the spinning loader send HideLoader message to Wrapper component */
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     this.props.createElement(TEXT, "0");
                 }
-            }
+            }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
+                 sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                 this.props.createElement(ASSESSMENT_SLATE, "0");
+             }
         }
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        /**
+         * updateTimer is for updating Time for slate refresh
+         */
 
+        if(typeof props.updateTimer !== "undefined"){
+            props.updateTimer();
+        }
+        /**
+         * First chunk of block manages previous rendered slateId and changes only when new slate renders in canvas
+         * and in case of new slate being rendered it removes all previous tinymce instances
+         */
+        let stateChanged = false;
+        let _state = state;
+        //**************************************************** */
+        let _slateObject = Object.values(props.slateData)[0];
+        if (_slateObject) {
+            let { id: _slateId } = _slateObject;
+            if (_slateId !== state.previousSlateId) {
+                _state = {
+                    ..._state,
+                    previousSlateId: _slateId
+                };
+                for (let i = tinymce.editors.length - 1 ; i > -1 ; i--) {
+                    let ed_id = tinymce.editors[i].id;
+                    tinymce.remove(`#${ed_id}`)
+                }
+                stateChanged = true;
+            }
+        }
+        //**************************************************** */
+        /**
+         * This chunk manages slatelock info
+         */
         const { slateLockInfo: { isLocked } } = props
         if (!isLocked) {
-            return {
-                ...state,
+            _state = {
+                ..._state,
                 showLockPopup: false
             }
+            stateChanged = true;
+        }
+        if (stateChanged) {
+            return _state;
         }
         else {
             return null
@@ -160,12 +199,12 @@ class SlateWrapper extends Component {
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
-                if (Object.values(_slateData).length > 0) {
+                    if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
-                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
                     let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
@@ -348,7 +387,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if (firstOne) {
+        if(firstOne || type == "opener-elem"){
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -382,6 +421,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn)
                 break;
             case 'opener-elem':
+                    this.props.createElement(OPENER, indexToinsert, parentUrn)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -456,7 +496,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', 0, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
@@ -541,12 +581,19 @@ class SlateWrapper extends Component {
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
+            console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
+                    if(_elements.filter(element => element.type == "chapterintro").length){
+                        config.isCO = true
+                    }
+                    else{
+                        config.isCO = false
+                    }
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
                             {
-                            index === 0 ? 
+                            index === 0 &&  _slateType !== 'assessment'? 
                             <ElementSaprator
                                 firstOne={index === 0}
                                 index={index}
@@ -555,19 +602,21 @@ class SlateWrapper extends Component {
                             />
                             : null
                              }
-                            <ElementContainer
+                            <ElementContainer  
+                                slateType={_slateType}                          
                                 element={element}
                                 index={index}
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
                             >
-                                {
-                                    (isHovered, isPageNumberEnabled, activeElement) => (
-                                        <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-                                    )
-                                }
-                            </ElementContainer>
+                            {
+                                   (isHovered, isPageNumberEnabled, activeElement) => (
+                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                   )
+                               }
+                           </ElementContainer>
+                            { _slateType !== 'assessment'? 
                             <ElementSaprator
                                 index={index}
                                 esProps={this.elementSepratorProps(index, false)}
@@ -575,6 +624,8 @@ class SlateWrapper extends Component {
                                 slateType={_slateType}
                                 toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                             />
+                            : null
+                            }
                         </React.Fragment>
                     )
                 })
