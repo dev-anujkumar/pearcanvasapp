@@ -15,7 +15,7 @@ export class ElementMetaDataAnchor extends Component {
     this.onBlur = this.onBlur.bind(this);
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
-    //this.onLOClickHandle = this.onLOClickHandle.bind(this);
+    this.onLOClickHandle = this.onLOClickHandle.bind(this);
     this.prepareLOData = this.prepareLOData.bind(this);
     
   }
@@ -88,42 +88,42 @@ export class ElementMetaDataAnchor extends Component {
     return currentLOData;
 } 
  
-  // onLOClickHandle() {
-  //   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-  //   const API_URL = config.API_URL;
-  //   const axiosTrackingInstance = axios.create({
-  //       baseURL: API_URL,
-  //       withCredentials: true  
-  //   })
-  //   let body={
-  //       projectUrn:config.projectUrn,
-  //       slateUrn:config.slateManifestURN
-  //   }
-  //   axiosTrackingInstance.post(`/getChapterId`, body).then(response => {
-  //       let ancestorData=response.data;
-  //       let getChapterUrn='';
-  //       let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.CORE_API_KEY, config.COREAPI_ENDPOINT];
-  //       if(ancestorData.ancestor.label=='chapter'){
-  //           getChapterUrn=ancestorData.ancestor.versionUrn
-  //       }
-  //       else if(ancestorData.ancestor.label=='module'){
-  //           getChapterUrn=ancestorData.ancestor.ancestor.versionUrn
-  //       }
-  //       if(!currentSlateLOData){
-  //         sendDataToIframe({'type': HideLoader,'message': { status: true }});
-  //         window.parent.postMessage({'type': 'openLoPopup','message':{'text':'SLATE TAG NOT FOUND','data':'','chapterContainerUrn':getChapterUrn,'isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-  //       }
-  //       else{
-  //         sendDataToIframe({'type': HideLoader,'message': { status: true }});
-  //           if(config.PERMISSIONS.includes('lo_edit_metadata')){
-  //           window.parent.postMessage({'type': 'openLoPopup','message':{'text':'CONFIRM EDIT LO','data' : lodata,'chapterContainerUrn':getChapterUrn,'isLOExist':true,'editAction':false,'typeValue':'elementSelected','apiConstants':apiKeys}},config.WRAPPER_URL)
-  //           }
-  //       }
-  //   })
-  //   .catch(err => {
-  //       console.log("err while updated data", err)
-  //   })
-  // }
+  onLOClickHandle() {
+    sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+    const API_URL = config.API_URL;
+    const axiosTrackingInstance = axios.create({
+        baseURL: API_URL,
+        withCredentials: true  
+    })
+    let body={
+        projectUrn:config.projectUrn,
+        slateUrn:config.slateManifestURN
+    }
+    axiosTrackingInstance.post(`/getChapterId`, body).then(response => {
+        let ancestorData=response.data;
+        let getChapterUrn='';
+        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.CORE_API_KEY, config.COREAPI_ENDPOINT];
+        if(ancestorData.ancestor.label=='chapter'){
+            getChapterUrn=ancestorData.ancestor.versionUrn
+        }
+        else if(ancestorData.ancestor.label=='module'){
+            getChapterUrn=ancestorData.ancestor.ancestor.versionUrn
+        }
+        if(!currentSlateLOData){
+          sendDataToIframe({'type': HideLoader,'message': { status: true }});
+          window.parent.postMessage({'type': 'openLoPopup','message':{'text':'SLATE TAG NOT FOUND','data':'','chapterContainerUrn':getChapterUrn,'isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+        }
+        else{
+          sendDataToIframe({'type': HideLoader,'message': { status: true }});
+            if(config.PERMISSIONS.includes('lo_edit_metadata')){
+            window.parent.postMessage({'type': 'openLoPopup','message':{'text':'CONFIRM EDIT LO','data' : lodata,'chapterContainerUrn':getChapterUrn,'isLOExist':true,'editAction':false,'typeValue':'elementSelected','apiConstants':apiKeys}},config.WRAPPER_URL)
+            }
+        }
+    })
+    .catch(err => {
+        console.log("err while updated data", err)
+    })
+  }
   onClick() {
 
   }

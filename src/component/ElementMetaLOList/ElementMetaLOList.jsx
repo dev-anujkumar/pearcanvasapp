@@ -10,7 +10,7 @@ export class ElementMetaLOList extends Component {
     this.onBlur = this.onBlur.bind(this);
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
-    //this.onLOClickHandle = this.onLOClickHandle.bind(this);
+    this.onLOLClickHandle = this.onLOLClickHandle.bind(this);
     this.prepareLOLData = this.prepareLOLData.bind(this);
     
   }
@@ -25,7 +25,7 @@ export class ElementMetaLOList extends Component {
  
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,learningObjectiveOperations,currentSlateLOData,openAssetPopoverPopUp} = this.props
      return (
-      <div   className="learningObjectiveContainer" >
+      <div   className="learningObjectiveContainer" onClick={this.onLOLClickHandle("")} >
         <div className="container">
           <div className="matadata_anchor" >
               <TinyMceEditor  
@@ -90,11 +90,6 @@ export class ElementMetaLOList extends Component {
                             </div>
                         </div>
                     </div>
-          <div className="Container">
-              <div>
-                
-              </div>
-          </div>
       </div>
     </div>
         
@@ -117,42 +112,11 @@ export class ElementMetaLOList extends Component {
     return currentLOLData;
 } 
  
-  // onLOClickHandle() {
-  //   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-  //   const API_URL = config.API_URL;
-  //   const axiosTrackingInstance = axios.create({
-  //       baseURL: API_URL,
-  //       withCredentials: true  
-  //   })
-  //   let body={
-  //       projectUrn:config.projectUrn,
-  //       slateUrn:config.slateManifestURN
-  //   }
-  //   axiosTrackingInstance.post(`/getChapterId`, body).then(response => {
-  //       let ancestorData=response.data;
-  //       let getChapterUrn='';
-  //       let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.CORE_API_KEY, config.COREAPI_ENDPOINT];
-  //       if(ancestorData.ancestor.label=='chapter'){
-  //           getChapterUrn=ancestorData.ancestor.versionUrn
-  //       }
-  //       else if(ancestorData.ancestor.label=='module'){
-  //           getChapterUrn=ancestorData.ancestor.ancestor.versionUrn
-  //       }
-  //       if(!currentSlateLOData){
-  //         sendDataToIframe({'type': HideLoader,'message': { status: true }});
-  //         window.parent.postMessage({'type': 'openLoPopup','message':{'text':'SLATE TAG NOT FOUND','data':'','chapterContainerUrn':getChapterUrn,'isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-  //       }
-  //       else{
-  //         sendDataToIframe({'type': HideLoader,'message': { status: true }});
-  //           if(config.PERMISSIONS.includes('lo_edit_metadata')){
-  //           window.parent.postMessage({'type': 'openLoPopup','message':{'text':'CONFIRM EDIT LO','data' : lodata,'chapterContainerUrn':getChapterUrn,'isLOExist':true,'editAction':false,'typeValue':'elementSelected','apiConstants':apiKeys}},config.WRAPPER_URL)
-  //           }
-  //       }
-  //   })
-  //   .catch(err => {
-  //       console.log("err while updated data", err)
-  //   })
-  // }
+onLOLClickHandle(lolData){
+  if(lolData ==""){
+      window.parent.postMessage({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},WRAPPER_URL)
+   }
+}
   onClick() {
 
   }

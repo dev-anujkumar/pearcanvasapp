@@ -37,4 +37,23 @@ width:230px;
     line-height: 0.75em;
     margin: 0;
 }
+.learning-obejective-text .element-dropdown-title{
+    pointer-events: auto;
+    cursor: pointer;
+    display: block;
+    color: lightgrey;
+}
+.panel_show_module p {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+}
+.panel_show_module .learning-obejective-text {
+    padding-bottom: 20px;
+}
+.panel_show_module .switch{
+    float: right;
+    margin-top:0;
+}
+
  

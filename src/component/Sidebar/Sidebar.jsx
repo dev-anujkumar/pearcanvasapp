@@ -105,9 +105,25 @@ class Sidebar extends Component {
     
             return primaryOptions;
         } 
-        // else if( this.props.elementWipType == element-learningobjectivemapping){
-        //    <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
-        // }
+        else if( this.props.activeElement.elementWipType == "element-learningobjectivemapping"){
+           primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
+            <div class="element-dropdown">
+                <div class="element-dropdown-title" data-element="primary">Learning Objective<svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+                </div>
+            </div>
+          
+           return primaryOptions;
+        }
+        else if(this.props.activeElement.elementWipType == "element-generateLOlist"){
+            primaryOptions = <div className="panel_show_module">
+                    <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
+                        <p>Show Module Name</p>
+                        <label className="switch"><input type="checkbox" checked=""/><span class="slider round"></span></label>
+                       
+                         </div>;
+            return primaryOptions;
+        }
+        
     }
 
     handleSecondaryOptionChange = e => {
