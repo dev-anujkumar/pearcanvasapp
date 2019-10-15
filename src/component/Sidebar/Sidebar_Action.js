@@ -52,12 +52,11 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         indexes.forEach(index => {
-            focusedElement = focusedElement[index];
-            if(newElementData.elementId === focusedElement.id) {
-                focusedElement = res.data;
+            if(newElementData.elementId === focusedElement[index].id) {
+                focusedElement[index] = res.data;
             } else {
-                if('elementdata' in focusedElement && 'bodymatter' in focusedElement.elementdata) {
-                    focusedElement = focusedElement.elementdata.bodymatter;
+                if('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) {
+                    focusedElement = focusedElement[index].elementdata.bodymatter;
                 }
             }
         });
@@ -94,6 +93,7 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
         indexes = indexes.toString().split("-");
+        
         indexes.forEach(index => {
             if(elementData.elementId === bodymatter[index].id) {
                 dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes));
@@ -104,9 +104,6 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
                 
             }
         });
-        // if(elementData.elementId === bodymatter[index].id) {
-        //     dispatch(convertElement(bodymatter[index], elementData, activeElement, store, index));
-        // }
     }
     
     return store;
