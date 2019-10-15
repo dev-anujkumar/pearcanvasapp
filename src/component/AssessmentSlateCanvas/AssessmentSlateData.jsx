@@ -1,8 +1,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-
+import { openLTFunction } from './learningTool/openLTFunction.js';
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { assessmentUsageType, assessmentType } from './AssessmentSlateConstants.js';
@@ -18,6 +17,7 @@ export class AssessmentSlateData extends Component {
             activeAssessmentType: 'Select',
             activeAssessmentUsageType: props.model && props.elementdata ? props.elementdata.usagetype : "Quiz",
             showElmComponent:false,
+            changeLearningData:false
            
         }
 
@@ -26,7 +26,7 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
 
     }
-    componentWillMount() {
+ /*    componentWillMount() {
         var model=this.props.model;
         //  let selectedLearningType = {
         //     "label":{"en":model.elementdata.templatelabel },
@@ -57,7 +57,7 @@ export class AssessmentSlateData extends Component {
             })
         }
     }
-
+ */
     
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(prevState.slateAssessmentTitle !== nextProps.assessmentSlateElement.assessmentItemTitle){
@@ -72,12 +72,15 @@ export class AssessmentSlateData extends Component {
     }
     
  
-    changeLearningApp=()=>{
-        console.log("Learning App Type>>>>>>")
-        // this.setState({
-        //     getAssessmentData:true
-        //    })
+    changeLearningApp() {
+        openLTFunction(this.props.getDiscipline); //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component
+        this.props.openLtAction();
+        this.setState({
+            dropdownValue: "Learning App Type",
+            changeLearningData: true
+        });
     }
+
     changeAssessment =(e)=> {
         let assessmentFormat = this.state.activeAssessmentType;
         if(assessmentFormat == 'puf') {
@@ -100,15 +103,15 @@ export class AssessmentSlateData extends Component {
         this.props.selectAssessmentType(activeAssessmentType);         
       
     }
-    
-    // closePopUp(){
-    //     window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
-    //    this.setState({
-    //     changeLearningData:false
-    //    },() =>{
-    //        disableHeader(false);
-    //    })       
-    //  }
+
+     closePopUp = () =>{
+      //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
+       this.setState({
+        changeLearningData:false
+     },() =>{
+         // disableHeader(false);
+     })       
+     }
 
     // closeElmWindow(){
     //     this.setState({
@@ -147,8 +150,9 @@ export class AssessmentSlateData extends Component {
         this.typeDropdownRef.current.classList.add('notselect')
     }
     selectAssessmentType = () => {
+        let assessmentTypeValue;
         if (assessmentType.length > 0) {
-            var assessmentTypeValue = assessmentType.map((type, i) =>
+            assessmentTypeValue = assessmentType.map((type, i) =>
                 <li key={i} className="slate_assessment_dropdown_name" onClick={(e) => this.handleAssessmentTypeChange(type, e)}>{type}</li>
             )
         }
@@ -223,10 +227,10 @@ export class AssessmentSlateData extends Component {
                 <div className="clr"></div>
             </div>
         } 
-          else if (this.state.activeAssessmentType=== 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
+          else if ( this.state.changeLearningData && this.state.activeAssessmentType === 'Learning App Type') {
             return (
                 <div>
-                    {/* <LearningTool /> */}
+                    <LearningTool closePopUp = {this.closePopUp} linkLearningApp = {this.props.linkLearningApp} />
                 </div>
             )
         } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup ==  true ) {

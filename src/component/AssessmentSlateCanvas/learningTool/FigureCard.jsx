@@ -65,7 +65,7 @@ class FigureCard extends React.Component {
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.dateModified}</p>
                 </td>
                 <td >
-                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.keywords ? this.props.apiResultObject.keywords.en.join(", ") : "-"}</p>
+                    <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.keywords && this.props.apiResultObject.keywords.en ? this.props.apiResultObject.keywords.en.join(", ") : "-"}</p>
                 </td>
             </tr>
         );

@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import {removeSelectedData,toolTypeFilterSelectedAction, closeLtAction, selectedFigureAction, learningToolDisFilterAction, learningToolSearchAction, paginationFunctionAction } from './learningToolActions.js';
 import ApiResults from './ApiResults.jsx';
 import { disableHeader } from '../../../js/toggleLoader.js';
+import error_icon from '../../../images/AssessmentSlateCanvas/error_icon.svg'
+import './../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 /**
 * @description - LearningTool is a class based component. It is defined simply
 * to make a skelten of the Learning Tool UI
@@ -20,6 +22,7 @@ class LearningTool extends React.Component {
             totalPage: 0,
             selectedDisFilterValue:"",
             selectedTypeValue:"",
+            showError:false,
             learningSystem :{
                 "accounting-sims":"knowdl",
                 "criminal-justice-sims":"knowdl",
@@ -52,7 +55,7 @@ class LearningTool extends React.Component {
     }
 
     componentDidMount() {
-        $("#errorIcon").attr("hidden", true);
+       // $("#errorIcon").attr("hidden", true);
     }
     componentWillReceiveProps(nextProps){
         if(this.props.apiResponse != nextProps.apiResponse){
@@ -111,15 +114,15 @@ class LearningTool extends React.Component {
 
         let learningToolSearchValue = this.state.searchValue;
         let learningSystem = this.state.learningSystem[tempLearningToolTypeValue]
-        let search = $('#learningToolSearchBar').hasClass('error')
-        if(!search){
+        let search //= $('#learningToolSearchBar').hasClass('error')
+       // if(!search){
             if (learningToolSearchValue) {
                 this.props.learningToolSearch(learningToolSearchValue, tempLearningToolTypeValue,learningSystem);
             } else {
                 this.props.learningAppType(this.state.selectedTypeValue,learningSystem);
                 this.props.learningToolDisFilter(this.state.selectedDisFilterValue);
             }
-        }
+       // }
     }
 
     /**
@@ -188,6 +191,7 @@ class LearningTool extends React.Component {
     * @return {String} - returns the jsx code of the body part of learning tool popup
     */
     ltBodyJsx = (tempFiguresForResults, selectedResult, learningToolDisValue) => {
+        console.log("api result====>",tempFiguresForResults);
         /**
         * If value of discipline selected
         */
@@ -250,17 +254,24 @@ class LearningTool extends React.Component {
         let searchValue = e.target.value
         let regex = /^[A-Za-z0-9 " "]{0,100}$/
         if (!regex.test(searchValue)) {
-            $('#learningToolSearchBar').addClass("error");
-            $('.errorSpan').css("color", "red");
-            $("#errorIcon").attr("hidden", false);
+          //  $('#learningToolSearchBar').addClass("error");
+          //  $('.errorSpan').css("color", "red");
+         //   $("#errorIcon").attr("hidden", false);
+          this.setState({showError:true})
         } else {
-            $('#learningToolSearchBar').removeClass("error");
-            $('.errorSpan').css("color", "#424242");
-            $("#errorIcon").attr("hidden", true);
+        //    $('#learningToolSearchBar').removeClass("error");
+          //  $('.errorSpan').css("color", "#424242");
+         //   $("#errorIcon").attr("hidden", true);
+            this.setState({showError:false})
         } 
+   }
+   linkLearningApp=() =>{
+    this.props.linkLearningApp(this.props.selectedResultFormApi);
+    this.props.closePopUp();
    }
     render() {
         disableHeader(true);
+        console.log("api===>",this.props.showLTBody)
         return (
             <div>
                 <div className="learningToolContainer">
@@ -306,13 +317,14 @@ class LearningTool extends React.Component {
                         {/* Search Bar for searching */}
                         <div className="learningToolHeaderSearchBar">
                             <br />
-                            <input className="learningToolSearchBar" id="learningToolSearchBar" type="text" placeholder="Enter Keyword to search" onChange={this.validateSearch} name="search2" />
-                            <svg  id="errorIcon"  className="exclamation-icon">
+                            <input className={`learningToolSearchBar ${this.state.showError ? "error":""}`} id="learningToolSearchBar" type="text" placeholder="Enter Keyword to search" onChange={this.validateSearch} name="search2" />
+                          {/*   <svg  id="errorIcon"  className="exclamation-icon">
                                 <use xlinkHref="#exlamation-error"/>
-                             </svg> 
+                             </svg>  */}
+                             {this.state.showError ? <img  className="exclamation-icon" src = {error_icon}></img> :""}
 
                             <button disabled={!this.state.selectedTypeValue} className="learningToolSearchButton" onClick={(e) => this.learningToolSearch(e, this.state.selectedTypeValue)}>Search</button>
-                            <div className="learning-search-text errorSpan">Max. 100 characters of A-Z, a-z, 0-9, space allowed</div>
+                            <div className={`learning-search-text ${this.state.showError ? "errorSpan":""}`}>Max. 100 characters of A-Z, a-z, 0-9, space allowed</div>
                         </div>
                     </div>
                     <hr />
@@ -321,7 +333,7 @@ class LearningTool extends React.Component {
 
                     {/* Footer for the popUp */}
                     <div className="learningToolFooter">
-                        <button disabled={this.props.linkButtonDisable == false?this.props.linkButtonDisable:true} className="learningToolFooterButtonLink" onClick={() => this.props.linkLearningApp(this.props.selectedResultFormApi)}>Link</button>
+                        <button disabled={this.props.linkButtonDisable == false?this.props.linkButtonDisable:true} className="learningToolFooterButtonLink" onClick={this.linkLearningApp}>Link</button>
                         <button className="learningToolFooterButtonCancel" onClick={this.hideLTOnOuterClick}>Cancel</button>
                     </div>
                 </div>

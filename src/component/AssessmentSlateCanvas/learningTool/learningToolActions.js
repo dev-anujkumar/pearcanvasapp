@@ -1,16 +1,52 @@
 import config from '../../../config/config';
 const API_URL = config.API_URL
+import axios from 'axios';
 
-export const toolTypeFilterSelectedAction = (toolType,learningSystem) => {
-  return dispatch => fetch(API_URL + '/learningApi/toolTypeFilterSelected', {
-    method: 'POST',
+
+export const toolTypeFilterSelectedAction = (toolType, learningSystem) =>  dispatch =>{
+
+  let url = config.STRUCTURE_API_URL + `core/learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType}`
+  return axios.get(url,
+      { headers:  {
+        'X-Roles': 'ContentPlanningAdmin',
+        'Content-Type': 'application/json',
+        'apikey': config.STRUCTURE_APIKEY,
+        'pearsonssosession': config.ssoToken
+      } }
+  )
+      .then(res => {
+        dispatch({
+          type: 'LT_API_RESULT', payload: {
+            apiResponse: res.data,
+            learningTypeSelected: true,
+            showDisFilterValues: true,
+            showLTBody: true,
+            learningToolTypeValue: toolType
+          }
+        }),
+        err => dispatch({
+          type: 'LT_API_RESULT_FAIL', payload: {
+            error: err,
+            showDisFilterValues: false
+          }
+        })
+
+      }).catch(error => console.log('this is error while fetching from LT_LA api', error))
+};
+
+
+/* export const toolTypeFilterSelectedAction = (toolType, learningSystem) => {
+  return dispatch => fetch(config.STRUCTURE_API_URL + `core/learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType}`, {
+    method: 'GET',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'X-Roles': 'ContentPlanningAdmin',
+      'Content-Type': 'application/json',
+      'apikey': config.STRUCTURE_APIKEY,
+      'pearsonssosession': config.ssoToken
     },
     body: JSON.stringify({
-      toolType : toolType,
-      learningSystem:learningSystem
+      toolType: toolType,
+      learningSystem: learningSystem
     })
   }).then(res => res.json())
     .then(
@@ -21,7 +57,6 @@ export const toolTypeFilterSelectedAction = (toolType,learningSystem) => {
           showDisFilterValues: true,
           showLTBody: true,
           learningToolTypeValue: toolType
-
         }
       }),
       err => dispatch({
@@ -31,19 +66,21 @@ export const toolTypeFilterSelectedAction = (toolType,learningSystem) => {
         }
       })
     ).catch(error => console.log('this is error while fetching from LT_LA api', error))
-}
-export const learningToolSearchAction = (learningToolSearchValue, toolType1,learningSystem) => {
+} */
+/* export const learningToolSearchAction = (learningToolSearchValue, toolType1, learningSystem) => {
   if (learningToolSearchValue) {
-    return dispatch => fetch(API_URL + '/learningApi/learningToolSearch', {
-      method: 'POST',
+    return dispatch => fetch(config.STRUCTURE_API_URL + `core/learningtemplate/v2/learningsystem= ${learningSystem}&&type=${toolType1}&&keyword=${learningToolSearchValue}`, {
+      method: 'GET',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'X-Roles': 'ContentPlanningAdmin',
+        'Content-Type': 'application/json',
+        'apikey': config.STRUCTURE_APIKEY,
+        'pearsonssosession': config.ssoToken
       },
       body: JSON.stringify({
-        learningToolSearchValue : learningToolSearchValue.toLowerCase(),
-        toolType1 : toolType1,
-        learningSystem:learningSystem
+        learningToolSearchValue: learningToolSearchValue.toLowerCase(),
+        toolType1: toolType1,
+        learningSystem: learningSystem
       })
     }).then(res => res.json())
       .then(
@@ -65,7 +102,41 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1,lear
       ).catch(error => console.log('this is error while fetching from LT_LA api', error))
   }
 
-}
+} */
+
+export const learningToolSearchAction = (learningToolSearchValue, toolType1, learningSystem) => dispatch => {
+
+  let url = config.STRUCTURE_API_URL + `core/learningtemplate/v2/?learningsystem= ${learningSystem}&&type=${toolType1}&&keyword=${learningToolSearchValue}`
+  if (learningToolSearchValue) {
+  return axios.get(url,
+      { headers:  {
+        'X-Roles': 'ContentPlanningAdmin',
+        'Content-Type': 'application/json',
+        'apikey': config.STRUCTURE_APIKEY,
+        'pearsonssosession': config.ssoToken
+      } }
+  )
+      .then(res => {
+        dispatch({
+          type: 'LT_API_RESULT', payload: {
+            apiResponse: res.data,
+            learningTypeSelected: true,
+            showDisFilterValues: true,
+            showLTBody: true,
+            learningToolTypeValue: toolType1
+          }
+        }),
+        err => dispatch({
+          type: 'LT_API_RESULT_FAIL', payload: {
+            error: err,
+            showDisFilterValues: false
+          }
+        })
+
+      }).catch(error => console.log('this is error while fetching from LT_LA api', error))
+  }
+};
+
 export const selectedFigureAction = (selectedFigure) => {
   return {
     type: 'SELECTED_FIGURE',
@@ -109,12 +180,12 @@ export const openLtAction = () => {
     }
   }
 }
-export const getDiscipline = (data)=>{
-  return{
+export const getDiscipline = (data) => {
+  return {
     type: 'GET_DISCIPLINE', payload: {
       showDisFilterValues: true,
       apiResponseForDis: data
-  }
+    }
   }
 }
 export const removeSelectedData = () => {
