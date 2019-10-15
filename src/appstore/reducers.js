@@ -9,6 +9,7 @@ import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
+    ASSESSMENT_ELEMENT_CREATED,
     ADD_COMMENT,
     VIDEO_ELEMENT_CREATED,
     FIGURE_ELEMENT_CREATED,
@@ -55,6 +56,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
+        case ASSESSMENT_ELEMENT_CREATED:
+                    return {
+                        ...state,
+                        slateLevelData: action.payload.slateLevelData
+                    };
         case FIGURE_ELEMENT_CREATED:
             return {
                 ...state,

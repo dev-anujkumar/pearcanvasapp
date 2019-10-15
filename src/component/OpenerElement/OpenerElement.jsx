@@ -7,6 +7,11 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import '../../styles/OpenerElement/OpenerElement.css'
 
 import noImage from '../../images/OpenerElement/no-image.png'
+import { c2MediaModule } from './../../js/c2_media_module';
+
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import config from '../../config/config';
+
 class OpenerElement extends Component {
 
     constructor(props){
@@ -16,8 +21,62 @@ class OpenerElement extends Component {
             label: props.model ? props.model.label : "Chapter",
             number: props.model ? props.model.number : "",
             title: props.model ? props.model.title : "",
-            showLabelDropdown: false
+            showLabelDropdown: false,
+            imgSrc: null
         }
+    }
+
+    /**
+     * Responsible for opening C2 media popup
+     * @param {e} event
+     */
+    handleC2MediaClick = (e) => {
+        const { slateLockInfo } = this.props
+        if(slateLockInfo.isLocked && config.userId != slateLockInfo.userId)
+            return false
+
+        if (e.target.tagName.toLowerCase() === "p") {
+            e.stopPropagation();
+            return;
+        }
+        ////console.log("LAUNCHING C2 MEDIA MODAL");
+        let that = this;
+        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                    //let imageData = data['data'];
+                    let imageData = data;
+                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+                    let width = imageData['width'] ? imageData['width'] : "";
+                    let height = imageData['height'] ? imageData['height'] : "";
+                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
+                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+                    //console.log("SMART LINK STRING: " + '',smartLinkString);
+                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
+                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
+
+                    if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+
+                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+                        that.setState({ imgSrc: epsURL })
+                        document.querySelector("[name='alt_text']").innerHTML = altText;
+                        document.querySelector("[name='long_description']").innerHTML = longDesc;
+
+                    }
+                })
+            })
+        });
+        hideTocBlocker();
+        disableHeader(false);
+
     }
 
     /**
@@ -95,6 +154,7 @@ class OpenerElement extends Component {
     }
     
     render() {
+        const { element, backgroundColor, slateLockInfo } = this.props
         return (
             <div className = "opener-element-container">
                 <div className = "input-box-container">
@@ -114,8 +174,8 @@ class OpenerElement extends Component {
                         <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
                     </div>
                 </div>
-                <figure className="pearson-component opener-image figureData">
-                    <img src={noImage}
+                <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
+                    <img src={this.state.imgSrc ? this.state.imgSrc : noImage}
                         draggable="false" 
                     />
                 </figure>

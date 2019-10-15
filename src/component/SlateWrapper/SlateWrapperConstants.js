@@ -6,3 +6,5 @@ export const INTERACTIVE="INTERACTIVE";
 export const CONTAINER="CONTAINER";
 export const WORKED_EXAMPLE = "WORKED_EXAMPLE";
 export const SECTION_BREAK = "SECTION_BREAK";
+export const OPENER = "OPENER";
+export const ASSESSMENT_SLATE = "element-assessment";

@@ -95,6 +95,26 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
             })
         })
 }
+export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) => {
+    let url = `locks/typ/releaselock`
+    let data = {
+       projectUrn,
+       slateId
+    }
+    return axiosInstance.post(url, data)
+       .then((res) => {
+            console.log("Slate release API success>>Slalte release status", res.data)
+            if(callback){
+                callback(res.data)
+            }
+        })
+        .catch((err) => {
+            console.log("API error from release slate>>>>",err)
+            if(callback){
+                callback(err)
+            }
+        })
+}
 export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
     dispatch({
         type : SET_LOCK_FLAG,
