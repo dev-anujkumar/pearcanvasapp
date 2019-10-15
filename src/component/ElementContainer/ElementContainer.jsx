@@ -114,22 +114,22 @@ class ElementContainer extends Component {
         // let isLOExist= this.state.isLOExists;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.COREAPI_ENDPOINT];
         if(text =="View Learning Objective" && config.slateType !== 'assessment'){
-            window.parent.postMessage({'type': 'openLoPopup','message':{'text':'VIEW LEARNING OBJECTIVE','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': 'openLoPopup','message':{'text':'VIEW LEARNING OBJECTIVE','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         if(text =="View Learning Objective" && config.slateType === 'assessment'){
-           window.parent.postMessage({'type': 'openLoPopup','message':{'text':'VIEW ASSESSMENT ITEM LO TAGGING','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': 'openLoPopup','message':{'text':'VIEW ASSESSMENT ITEM LO TAGGING','data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
         }
         // else if( !this.state.slateLockSatus){
             if(text =="Add a New Learning Objective" &&  config.PERMISSIONS.includes('lo_edit_metadata')){
-                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'LEARNING OBJECTIVE','data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': 'openLoPopup','message':{'text':'LEARNING OBJECTIVE','data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
             }
       
             else if(text =="Add From Existing or Edit" && config.PERMISSIONS.includes('lo_edit_metadata')){
-                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'CHOOSE FROM EXISTING LEARNING OBJECTIVE','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': 'openLoPopup','message':{'text':'CHOOSE FROM EXISTING LEARNING OBJECTIVE','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
 
             else if(text =="Add From Existing" && config.PERMISSIONS.includes('lo_edit_metadata')){
-                window.parent.postMessage({'type': 'openLoPopup','message':{'text':'ASSESSMENT ITEM LO TAGGING','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': 'openLoPopup','message':{'text':'ASSESSMENT ITEM LO TAGGING','data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
         //  }
         //  else(
