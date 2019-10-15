@@ -23,6 +23,9 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import arrowButton from '../../images/OpenerElement/arrow.png'
+import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
+import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
@@ -36,17 +39,18 @@ class ElementContainer extends Component {
             btnClassName : '',
             showDeleteElemPopup : false,
             ElementId: this.props.index==0?this.props.element.id:'',
+            showColorPalette : false,
+            activeColorIndex: 0,
             isHovered: false
         };
-        
     }
     componentDidMount(){
         if( this.props.index == 0 ){
-            this.setState({
-                borderToggle : 'active',
-                btnClassName : 'activeTagBgColor'
+            // this.setState({
+            //     borderToggle : 'active',
+            //     btnClassName : 'activeTagBgColor'
               
-            })
+            // })
         }
         this.setState({
             ElementId: this.props.element.id
@@ -103,13 +107,42 @@ class ElementContainer extends Component {
             })
         } 
     }
+    toggleColorPaletteList = () => {
+        const { showColorPaletteList } = this.state
+        this.setState({
+            showColorPaletteList : !showColorPaletteList
+        })
+    }
+    selectColor = (event) => {
+        const selectedColor = event.target.getAttribute('data-value')
+        this.setState({
+            activeColorIndex : config.colors.indexOf(selectedColor)
+        })
+    }
+    
+    renderPaletteList = () =>{
+        const { showColorPaletteList, activeColorIndex } = this.state
+        if(showColorPaletteList){
+            return config.colors.map( (color, index) => {
+                        return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
+                    })           
+        }
+        else {
+            return null
+        }
+    }
     /**
      * Renders color-palette button for opener element 
      * @param {e} event
      */
     renderColorPaletteButton = (element) => {
-        if (element.type === "opener") {
-            return <Button type="color-palette" />
+        if (element.type === elementTypeConstant.OPENER) {
+            return (
+                <>
+                    <Button onClick={this.toggleColorPaletteList} type="color-palette" />
+                    <ul className="color-palette-list">{this.renderPaletteList()}</ul>  
+                </>
+            )
         }
         else {
             return null
@@ -143,8 +176,13 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         let labelText = fetchElementTag(element, index) || 'P';
         switch(element.type) {
+            case elementTypeConstant.ASSESSMENT_SLATE:
+                editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
+                labelText = 'AS'
+                break;
             case elementTypeConstant.OPENER:
-                editor = <OpenerElement index={index} elementId={element.id} type={element.type} model={element.html} slateLockInfo={slateLockInfo} />
+                const { activeColorIndex } = this.state
+                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
 
@@ -229,7 +267,8 @@ class ElementContainer extends Component {
             <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> }
+                { config.slateType !=='assessment'? ( config.PERMISSIONS.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
+                : null }
                 {this.renderColorPaletteButton(element)}
             </div>
             : ''}

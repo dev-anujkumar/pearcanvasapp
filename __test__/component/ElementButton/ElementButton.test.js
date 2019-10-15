@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../../src/component/ElementButtons/ElementButton';
 import buttonTypes from '../../../src/component/ElementButtons/ButtonTypes';
 
-describe('Testing Button component with props', () => {
+xdescribe('Testing Button component with props', () => {
 
     it('render split Button component ', () => {
         const component = mount(<Button type={buttonTypes.SPLIT_SLATE} labelText="UL" />);
