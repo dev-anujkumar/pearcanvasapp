@@ -27,7 +27,6 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
-import {updateRefreshStatus} from '../CanvasWrapper/SlateRefresh_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
