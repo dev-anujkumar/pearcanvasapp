@@ -140,7 +140,7 @@ class CanvasWrapper extends Component {
     updateTimer = () => {
         setInterval(() => {
             this.timeSince("'")
-        }, 6000)
+        }, 60000)
     }
 
 
