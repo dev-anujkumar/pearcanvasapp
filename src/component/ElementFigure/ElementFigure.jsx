@@ -397,11 +397,19 @@ export class ElementFigure extends Component {
     }
     render() {
         const { model, index, slateLockInfo } = this.props;
-        return (
-            <div className="figureElement">
-                {this.renderFigureType(model,index, slateLockInfo)}
-            </div>
-        );
+        try {
+            return (
+                <div className="figureElement">
+                    {this.renderFigureType(model, index, slateLockInfo)}
+                </div>
+            );
+        } catch (error) {
+            return (
+                <div className="figureElement">
+                </div>
+            );
+        }
+        
     }
 }
 

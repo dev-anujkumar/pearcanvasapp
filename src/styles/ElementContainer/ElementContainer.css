@@ -32,6 +32,51 @@ a.paragraphNumeroUnoFootnote {
     text-decoration: none !important;
     cursor: pointer;
 }
+<<<<<<< HEAD
+.color-palette-list .color-palette-item:nth-child(1) {
+    background-color: #000000 !important;
+}
+.color-palette-list .color-palette-item:nth-child(2) {
+    background-color: #003057 !important;
+}
+.color-palette-list .color-palette-item:nth-child(3) {
+    background-color: #505759 !important;
+}
+.color-palette-list .color-palette-item:nth-child(4) {
+    background-color: #005A70 !important;
+}
+.color-palette-list .color-palette-item:nth-child(5) {
+    background-color: #006128 !important;
+}
+.color-palette-list .color-palette-item{
+    margin: 0;
+    width: 27px;
+    height: 27px;
+    float: left;
+    cursor: pointer;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+.color-palette-list{
+    position: absolute;
+    left: 25px;
+    top: 6.2%;
+    z-index: 1;
+}
+.color-palette-item.selected {
+    border: 2.5px solid #1fd595 !important;
+}
+.arrow{
+    position: absolute;
+    top: 85px;
+    margin-left: 0px;
+    z-index: 2;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 15px;
+    width: 13px;
+}
+=======
 
 /* Asset popover link */
 abbr.AssetPopoverTerm{
@@ -44,3 +89,4 @@ abbr.AssetPopoverTerm{
     text-decoration: underline;
     cursor: pointer;
   }
+>>>>>>> b0282d8a9ea6a31197e02f270e7767ddc9ec2622
