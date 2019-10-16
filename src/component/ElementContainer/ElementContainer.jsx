@@ -213,7 +213,7 @@ class ElementContainer extends Component {
                 break;
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
 

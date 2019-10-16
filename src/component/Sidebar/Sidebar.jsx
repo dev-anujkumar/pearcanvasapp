@@ -65,6 +65,10 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
+        if(this.state.activePrimaryOption == "primary-chapterintro"){
+            e.stopPropagation()
+            return false
+        }
         let elementDropdown = e.target.getAttribute('data-element');
         if(this.state.elementDropdown === elementDropdown) {
             elementDropdown = '';
