@@ -387,6 +387,13 @@ const findElementType = (element, index) => {
 			elementType['tag'] = 'MA';
 			break;
 		
+		case 'chapterintro':
+			elementType['elementType'] = 'chapterintro';
+			elementType['primaryOption'] = 'primary-chapterintro';
+			elementType['secondaryOption'] = 'secondary-chapterintro';
+			elementType['tag'] = 'OE';
+			break;
+		
 		default: 
 			elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
