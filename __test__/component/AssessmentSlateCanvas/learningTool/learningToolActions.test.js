@@ -147,7 +147,6 @@ it('testing------- selectedFigureAction   action',()=>{
      store.dispatch(actions.paginationFunctionAction(5))
     const { type, payload } = store.getActions()[0];
     expect(type).toBe(PAGINATION);
-   // expect(store.getActions()).toEqual(expectedActions);
  })
 
  it('testing------- learningToolDisFilterAction   action',()=>{
@@ -162,6 +161,64 @@ it('testing------- selectedFigureAction   action',()=>{
      store.dispatch(actions.paginationFunctionAction(5))
     const { type, payload } = store.getActions()[0];
     expect(type).toBe(PAGINATION);
-   // expect(store.getActions()).toEqual(expectedActions);
+ })
+
+ it('testing------- closeLtAction   action',()=>{
+    store = mockStore(() => initialState);
+     let toggleLT = false
+    const expectedActions = [{
+        type: TOGGLE_LT_POPUP,
+        payload: toggleLT
+    
+    }];
+
+     store.dispatch(actions.closeLtAction())
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(TOGGLE_LT_POPUP);
+ })
+
+ it('testing------- openLtAction   action',()=>{
+    store = mockStore(() => initialState);
+     let toggleLT = false
+    const expectedActions = [{
+        type: TOGGLE_LT_POPUP,
+        payload: toggleLT
+    
+    }];
+
+     store.dispatch(actions.openLtAction())
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(TOGGLE_LT_POPUP);
+ })
+
+ it('testing------- getDiscipline   action',()=>{
+    store = mockStore(() => initialState);
+     let showDisFilterValues = false;
+     let apiResponseForDis = disciplines;
+    const expectedActions = [{
+        type: GET_DISCIPLINE,
+        payload: {
+            showDisFilterValues,
+            apiResponseForDis
+        }
+    
+    }];
+
+     store.dispatch(actions.getDiscipline())
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(GET_DISCIPLINE);
+ })
+
+ it('testing------- removeSelectedData   action',()=>{
+    store = mockStore(() => initialState);
+     store.dispatch(actions.removeSelectedData())
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(REMOVE_SELECTED_DATA);
+ })
+ it('testing------- linkDisable   action',()=>{
+    store = mockStore(() => initialState);
+     store.dispatch(actions.linkDisable())
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(LINK_BUTTON_DISABLE);
  })
 })
