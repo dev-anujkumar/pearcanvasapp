@@ -154,6 +154,17 @@ export class TinyMceEditor extends Component {
                     }
                 });
 
+                /* Inline Code Formatting Button */
+                editor.ui.registry.addToggleButton('code', {
+                    text: '<i class="fa fa-code" aria-hidden="true"></i>',
+                    onAction: () => {
+                        this.addInlineCode(editor)
+                    },
+                    onSetup: (api) => {
+                        this.handleFocussingInlineCode(api, editor)
+                    }
+                });
+
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
@@ -188,6 +199,29 @@ export class TinyMceEditor extends Component {
         this.editorRef  = React.createRef();
     };
 
+    /*
+    *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
+    */
+    addInlineCode = (editor) => {
+        editor.execCommand('mceToggleFormat', false, 'code');
+        let selectedText = window.getSelection().toString();
+        if (selectedText != "") {
+            editor.execCommand('mceToggleFormat', false, 'code');
+            let insertionText = '<code>' + selectedText + '</code>'
+            editor.insertContent(insertionText);
+        }
+    }
+
+    /*
+    *  handleFocussingInlineCode function is responsible for focussing inline Code Formatting button
+    */
+    handleFocussingInlineCode = (api,editor) => {
+        api.setActive(editor.formatter.match('code'));
+        var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
+        return function () {
+            if (unbind) unbind();
+        };
+    }
     setAssetPopoverIcon = editor => {
         editor.ui.registry.addIcon(
             "assetPopoverIcon",
@@ -350,7 +384,6 @@ export class TinyMceEditor extends Component {
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
-        console.log('tinymce didmount')
         if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             this.editorRef.current.focus(); // element must be focused before
             this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -358,7 +391,6 @@ export class TinyMceEditor extends Component {
         }
     }
     componentDidUpdate() {
-        console.log('TINY UPDATE')
         if (!tinymce.editors.length) {
             console.log('tiny update')
             //tinymce.init(this.editorConfig)
@@ -406,8 +438,7 @@ export class TinyMceEditor extends Component {
         this.props.handleBlur()
     }
     render() {
-        const { slateLockInfo: { isLocked, userId } } = this.props
-        console.log("locked------>", isLocked)
+        const { slateLockInfo: { isLocked, userId } } = this.props;
         const lockCondition = isLocked && config.userId !== userId
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
@@ -424,26 +455,26 @@ export class TinyMceEditor extends Component {
         if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            if (!testElem.innerText.length)
+            if (testElem.innerText && !testElem.innerText.length)
                 placeHolderClass = 'place-holder';
         }
         else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.text;
-            if (!testElem.innerText.length) {
+            if (testElem.innerText && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.preformattedtext;
-            if (!testElem.innerText.length) {
+            if (testElem.innerText && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         }
             else {
                 let testElem = document.createElement('div');
                 testElem.innerHTML = this.props.model;
-                if (!testElem.innerText.length) {
+                if (testElem.innerText && !testElem.innerText.length) {
                     placeHolderClass = 'place-holder';
                 }
             }
