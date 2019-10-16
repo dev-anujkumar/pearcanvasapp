@@ -104,7 +104,7 @@ class ElementContainer extends Component {
             dataToSend.html.text = html;
             dataToSend.html.footnotes = this.props.element.html.footnotes || {};
             dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-            console.log("prepared Data", JSON.stringify(dataToSend));
+            //console.log("prepared Data", JSON.stringify(dataToSend));
 
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
             this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
