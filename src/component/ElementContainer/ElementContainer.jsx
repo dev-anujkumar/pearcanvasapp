@@ -95,23 +95,31 @@ class ElementContainer extends Component {
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
-        let dataToSend = {
-            "id": this.props.element.id,
-            "type": this.props.element.type,
-            "schema": this.props.element.schema,
-            "versionUrn": this.props.element.versionUrn,
-            "contentUrn": this.props.element.contentUrn,
-            "elementdata": {
-                "schema": this.props.element.elementdata.schema,
-                "text": text,
-                "groupby": null
-            },
-            "html": {
-                "text": html
+        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if(html!==this.props.element.html.text && !assetPopoverPopupIsVisible){  //checking if current dom ids equal to previous
+            let dataToSend = {                                                   // prepare data to update
+                "id": this.props.element.id,
+                "type": this.props.element.type,
+                "schema": this.props.element.schema,
+                "versionUrn": this.props.element.versionUrn,
+                "contentUrn": this.props.element.contentUrn,
+                "elementdata": {
+                    "schema": this.props.element.elementdata.schema,
+                    "text": text,
+                    "groupby": null
+                },
+                "html": {
+                    "text": html,
+                    "footnotes" : this.props.element.html.footnotes || {},
+                    "glossaryentries": this.props.element.html.glossaryentries || {}
+                }
             }
+            //console.log("prepared Data",JSON.stringify(dataToSend));
+
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
+            this.props.updateElement(dataToSend,this.props.index);                         //update Current element data
+            //console.log("current Index",this.props.index);
         }
-        console.log("prepared Data",JSON.stringify(dataToSend));
-        updateElement(dataToSend);
   
     }
 
@@ -450,6 +458,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
+        },
+        updateElement:(updatedData,elementIndex)=>{
+            dispatch(updateElement(updatedData,elementIndex))
         }
     }
 }
