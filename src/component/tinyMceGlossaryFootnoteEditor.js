@@ -37,7 +37,16 @@ export class ReactEditor extends React.Component {
                   activeElement.classList.add('place-holder')
               }
           }
-      });
+        });
+        editor.ui.registry.addToggleButton('code', {
+          text: '<i class="fa fa-code" aria-hidden="true"></i>',
+          onAction: () => {
+            this.addInlineCode(editor)
+          },
+          onSetup: (api) => {
+            this.handleFocussingInlineCode(api, editor)
+          }
+        });
       },
       init_instance_callback: function (editor) {
         editor.fire('focus');
@@ -49,6 +58,30 @@ export class ReactEditor extends React.Component {
           }
       },
     }
+  }
+
+  /*
+    *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
+    */
+  addInlineCode = (editor) => {
+    editor.execCommand('mceToggleFormat', false, 'code');
+    let selectedText = window.getSelection().toString();
+    if (selectedText != "") {
+      editor.execCommand('mceToggleFormat', false, 'code');
+      let insertionText = '<code>' + selectedText + '</code>'
+      editor.insertContent(insertionText);
+    }
+  }
+
+  /*
+  *  handleFocussingInlineCode function is responsible for focussing inline Code Formatting button
+  */
+  handleFocussingInlineCode = (api, editor) => {
+    api.setActive(editor.formatter.match('code'));
+    var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
+    return function () {
+      if (unbind) unbind();
+    };
   }
 
   onEditorBlur = (editor) => {
