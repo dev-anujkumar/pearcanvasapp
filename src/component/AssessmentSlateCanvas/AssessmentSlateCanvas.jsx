@@ -14,27 +14,18 @@ import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { openLTFunction } from './learningTool/openLTFunction.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
-
-
-
-class AssessmentSlateCanvas extends Component {
+export class AssessmentSlateCanvas extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            showAssessmentPopup: false,
-            getAssessmentDataPopup: false,
-            getAssessmentData: false,
-            assessmentId: "",
+        this.state={
+            showAssessmentPopup:false,
+            getAssessmentDataPopup:false,
+            getAssessmentData:false,
+            assessmentId: props.model && props.model.elementdata && props.model.elementdata.assessmentid ?props.model.elementdata.assessmentid :"",
             assessmentItemId: "",
-            assessmentItemTitle: "",
-            assessmentSlateElement: {
-                assessmentId: "",
-                assessmentItemId: "",
-                assessmentItemTitle: "",
-                assessmentFormat: ""
-            }
+            assessmentItemTitle: props.model && props.model.elementdata && props.model.elementdata.assessmenttitle ?props.model.elementdata.assessmenttitle :"",
+            assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
     }
     toggleAssessmentPopup = (value) => {
@@ -45,10 +36,10 @@ class AssessmentSlateCanvas extends Component {
 
     selectAssessmentType = (type) => {
         var assessmentType;
-        if (type === "Full Assessment CITE") {
-            assessmentType = "CITE"
-        } else {
-            assessmentType = "TDX"
+        if(type==="Full Assessment CITE" || this.props.model.elementdata.assessmentformat === "CITE" ){
+            assessmentType="CITE"
+        }else{
+            assessmentType="TDX"
         }
         return assessmentType
     }
@@ -94,7 +85,6 @@ class AssessmentSlateCanvas extends Component {
 
         });
 
-
     }
     updateAssessment = (id, itemID, title, format, usageType, change) => {
         if (change === 'insert') {
@@ -114,20 +104,11 @@ class AssessmentSlateCanvas extends Component {
 
             })
         }
-        /*    this.setState({assessmentId: id,
-               assessmentItemId : itemID,
-               assessmentItemTitle:title,
-               getAssessmentData:true,})   */
-        this.setState(prevState => ({
-            assessmentSlateElement: {
-                ...prevState.assessmentSlateElement,
-                assessmentId: id,
-                assessmentItemId: itemID,
-                assessmentItemTitle: title,
-                assessmentFormat: format
-            }
-        })
-        )
+        this.setState({assessmentId: id,
+            assessmentItemId : itemID,
+            assessmentItemTitle:title,
+            getAssessmentData:true,})                    
+
     }
     linkLearningApp = (selectedLearningType, usagetype, change) =>{
         console.log(selectedLearningType);

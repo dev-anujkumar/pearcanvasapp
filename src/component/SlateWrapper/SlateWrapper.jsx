@@ -11,8 +11,9 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement, swapElement,createAssessmentSlateElement,
-    setSplittedElementIndex
+    createElement , swapElement,
+    setSplittedElementIndex, createElementMeta,
+    createElementMetaList
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -20,7 +21,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,ASSESSMENT_SLATE}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,METADATA_ANCHOR,LO_LIST,ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -37,6 +38,7 @@ class SlateWrapper extends Component {
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
+            previousSlateId : null,
             showLockPopup: false,
             lockOwner: "",
             showSplitSlatePopup: false,
@@ -107,20 +109,55 @@ class SlateWrapper extends Component {
                 }
             }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                 console.log("assessment in renderDefaultElement >>");
                  this.props.createElement(ASSESSMENT_SLATE, "0");
              }
         }
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        /**
+         * updateTimer is for updating Time for slate refresh
+         */
 
+        if(typeof props.updateTimer !== "undefined"){
+            props.updateTimer();
+        }
+        /**
+         * First chunk of block manages previous rendered slateId and changes only when new slate renders in canvas
+         * and in case of new slate being rendered it removes all previous tinymce instances
+         */
+        let stateChanged = false;
+        let _state = state;
+        //**************************************************** */
+        let _slateObject = Object.values(props.slateData)[0];
+        if (_slateObject) {
+            let { id: _slateId } = _slateObject;
+            if (_slateId !== state.previousSlateId) {
+                _state = {
+                    ..._state,
+                    previousSlateId: _slateId
+                };
+                for (let i = tinymce.editors.length - 1 ; i > -1 ; i--) {
+                    let ed_id = tinymce.editors[i].id;
+                    tinymce.remove(`#${ed_id}`)
+                }
+                stateChanged = true;
+            }
+        }
+        //**************************************************** */
+        /**
+         * This chunk manages slatelock info
+         */
         const { slateLockInfo: { isLocked } } = props
         if (!isLocked) {
-            return {
-                ...state,
+            _state = {
+                ..._state,
                 showLockPopup: false
             }
+            stateChanged = true;
+        }
+        if (stateChanged) {
+            return _state;
         }
         else {
             return null
@@ -163,13 +200,12 @@ class SlateWrapper extends Component {
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
-                // console.log('slate data',_slateData)
-                if (Object.values(_slateData).length > 0) {
+                    if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
-                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
                     let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
@@ -352,7 +388,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if (firstOne) {
+        if(firstOne || type == "opener-elem"){
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -366,7 +402,7 @@ class SlateWrapper extends Component {
                 break;
             case 'image-elem':
                 // this.props.createFigureElement(IMAGE, indexToinsert);
-                this.props.createElement("element-assessment", indexToinsert, parentUrn, asideData);
+                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData);
                 break;
             case 'audio-elem':
                 // this.props.createVideoElement(elevideo, indexToinsert)
@@ -386,6 +422,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn)
                 break;
             case 'opener-elem':
+                    this.props.createElement(OPENER, indexToinsert, parentUrn)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -397,6 +434,15 @@ class SlateWrapper extends Component {
                     }
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
+                break;
+                case 'metadata-anchor':
+                    if(config.slateType == "container-introduction"){
+                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn)
+                    }
+                    else{
+                        this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
+                    }
+                   
                 break;
             default:
         }
@@ -460,7 +506,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'opener-elem',
-                buttonHandler: () => this.splithandlerfunction('opener-elem', index, firstOne),
+                buttonHandler: () => this.splithandlerfunction('opener-elem', 0, firstOne),
                 tooltipText: 'Opener Element',
                 tooltipDirection: 'left'
             },
@@ -547,6 +593,12 @@ class SlateWrapper extends Component {
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
+                    if(_elements.filter(element => element.type == "chapterintro").length){
+                        config.isCO = true
+                    }
+                    else{
+                        config.isCO = false
+                    }
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
@@ -668,8 +720,9 @@ export default connect(
     mapStateToProps,
     {
         createElement,
+        createElementMeta,
+        createElementMetaList,
         swapElement,
-        setSplittedElementIndex,
-        createAssessmentSlateElement
+        setSplittedElementIndex
     }
 )(SlateWrapper);

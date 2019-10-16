@@ -13,8 +13,6 @@ const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-
-import PopUp from '../../PopUp';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 
@@ -61,7 +59,6 @@ function WithWrapperCommunication(WrappedComponent) {
         handleIncommingMessages = (e) => {
             let messageType = e.data.type;
             let message = e.data.message;
-
             switch (messageType) {
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -169,19 +166,47 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
                     break;
+                case 'statusForSave':
+                    this.handleLOData(message);
+                    
+                break;
+                case 'refreshSlate' :    
+                    this.handleRefreshSlate();
+                    break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
                     break;
+                case 'logout':
+                    this.props.logout();
+                    break;
             }
         }
 
+        handleLOData=(message) =>{
+            if(message.statusForSave){
+                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>"); 
+               this.props.currentSlateLO(message.loObj);
+               var slateTagClass = document.getElementsByClassName("tox-tbtn");
+               slateTagClass[slateTagClass.length-1].className +=" slateTagClass";
+               var slateTagDesign = document.getElementsByClassName("slateTagClass");
+               slateTagDesign.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>';
+           }
+           
+            
+        }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
                 config.PERMISSIONS = message.permissions;
             }
+        }
+
+        handleRefreshSlate = () => {
+            let id = config.slateManifestURN; 
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
+            this.props.handleSlateRefresh(id)
         }
 
         sendDataToIframe = (messageObj) => {
@@ -233,6 +258,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.disablePrev = message.disablePrev;
                 config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
+                config.parentContainerUrn = message.node.ParentContainerUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 this.props.fetchSlateData(message.node.containerUrn);
             }

@@ -10,12 +10,9 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            slateAssessmentTitle:"",
-            slateAssessmentId:"",
-            assessmentItemId:"",
-            assessmentformat:"",
+           
             activeAssessmentType: 'Select',
-            activeAssessmentUsageType: props.model && props.elementdata ? props.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: props.model && props.elementdata && props.elementdata.usagetype ? props.elementdata.usagetype : "Quiz",
             showElmComponent:false,
             changeLearningData:false
            
@@ -26,52 +23,6 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
 
     }
- /*    componentWillMount() {
-        var model=this.props.model;
-        //  let selectedLearningType = {
-        //     "label":{"en":model.elementdata.templatelabel },
-        //     "learningsystem":model.elementdata.learningsystem,
-        //     "learningtemplateUrn":model.elementdata.assessmentid,
-        //     "templateid":model.elementdata.templateid,
-        //     "type":model.elementdata.templatetype
-        // } 
-        if(model&&model.elementdata.usagetype ){
-            this.setState({
-                activeAssessmentUsageType:model.elementdata.usagetype
-            })
-        }
-        if(model.elementdata.assessmentformat===''){
-            this.setState({
-                getAssessmentData:false
-            })
-        }
-        else{
-            this.setState({
-                getAssessmentData:true,
-              //  changeLearningData:true,
-                slateAssessmentTitle:this.props.elementDataAssessmentTitle,
-                slateAssessmentId:model.elementdata.assessmentid,
-                assessmentformat:model.elementdata.assessmentformat,
-               // templatelabel:model.elementdata.templatelabel,
-               // selectedResultFormApi:selectedLearningType
-            })
-        }
-    }
- */
-    
-    static getDerivedStateFromProps = (nextProps, prevState) => {
-        if(prevState.slateAssessmentTitle !== nextProps.assessmentSlateElement.assessmentItemTitle){
-            return{
-                slateAssessmentTitle : nextProps.assessmentSlateElement.assessmentItemTitle,
-                assessmentItemId : nextProps.assessmentSlateElement.assessmentItemId,
-                slateAssessmentId : nextProps.assessmentSlateElement.assessmentId,               
-            }
-            
-        }
-        return null;
-    }
-    
- 
     changeLearningApp() {
         openLTFunction(this.props.getDiscipline); //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component
         this.props.openLtAction();
@@ -80,7 +31,6 @@ export class AssessmentSlateData extends Component {
             changeLearningData: true
         });
     }
-
     changeAssessment =(e)=> {
         let assessmentFormat = this.state.activeAssessmentType;
         if(assessmentFormat == 'puf') {
@@ -103,23 +53,14 @@ export class AssessmentSlateData extends Component {
         this.props.selectAssessmentType(activeAssessmentType);         
       
     }
-
-     closePopUp = () =>{
-      //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
-       this.setState({
-        changeLearningData:false
-     },() =>{
-         // disableHeader(false);
-     })       
-     }
-
-    // closeElmWindow(){
-    //     this.setState({
-    //         showElmComponent:false
-    //        });
-    //        hideTocBlocker();
-    //        disableHeader(false);
-    //  }
+    closePopUp = () =>{
+        //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
+         this.setState({
+          changeLearningData:false
+       },() =>{
+           // disableHeader(false);
+       })       
+       }
     mainAddAssessment = (e, activeAssessmentType) => {
         switch(activeAssessmentType){
             case 'Learning App Type':
@@ -203,8 +144,8 @@ export class AssessmentSlateData extends Component {
                     <div className="slate_assessment_data_content">
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
-                        <div className="slate_assessment_data_title">{this.state.slateAssessmentTitle}</div>
-                                <div className="slate_assessment_data_id">{'ID: '+ this.state.slateAssessmentId}</div>
+                        <div className="slate_assessment_data_title">{this.props.assessmentItemTitle}</div>
+                                <div className="slate_assessment_data_id">{'ID: '+ this.props.assessmentId}</div>
                             <div className="slate_assessment_change_button" onClick={this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
@@ -255,7 +196,7 @@ export class AssessmentSlateData extends Component {
                 }
                 {
                     this.state.activeAssessmentType != 'Select' ?
-                        (<div className="slate_assessment_type_button"onClick={(e) => this.mainAddAssessment(e, this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
+                        (<div className="slate_assessment_type_button" onClick={(e) => this.mainAddAssessment(e, this.state.activeAssessmentType)}>Add assessment</div>) : (<div className="slate_assessment_disabled_button" >Add assessment</div>)
                 }
                 <div className="clr"></div>
             </div>

@@ -25,10 +25,12 @@ import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import {publishContent,} from '../../js/header'
+import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
+import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
+import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -48,10 +50,16 @@ class CanvasWrapper extends Component {
         
     }
 
+    static getDerivedStateFromProps(nextProps, prevState){
+            if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+            }       
+     }
+
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
         // this.props.fetchSlateData(this.state.activeSlate);
-        
+        sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -75,7 +83,7 @@ class CanvasWrapper extends Component {
         }
 
     componentDidUpdate(prevProps, prevState){
-        
+        this.countTimer =  Date.now();
         // if(this.state.navigation) {
             // if(document.getElementById("cypress-0")){
             //     document.getElementById("cypress-0").focus();
@@ -84,11 +92,11 @@ class CanvasWrapper extends Component {
         //     this.state.navigation = false;
         // } else {
         const { slateLockInfo: { isLocked, userId } } = this.props
-        if(window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && !(isLocked && config.userId !== userId)) {
-            document.getElementById(window.tinymce.activeEditor.id).focus();
-        }else if(tinymce.$('.cypress-editable').length && !(isLocked && config.userId !== userId)){
-            tinymce.$('.cypress-editable').eq(0).trigger('focus');
-        }     
+        // if (window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && true) {
+        //     document.getElementById(window.tinymce.activeEditor.id).focus();
+        // } else if (tinymce.$('.cypress-editable').length && true) {
+        //     tinymce.$('.cypress-editable').eq(0).trigger('focus');
+        // }     
 
         /* let { projectUrn } = config,
             slateId = Object.keys(prevProps.slateLevelData)[0],
@@ -108,6 +116,34 @@ class CanvasWrapper extends Component {
         });
         
     }
+
+    timeSince() {
+        let count;
+        const intervals = [
+            { label: 'year', seconds: 31536000 },
+            { label: 'month', seconds: 2592000 },
+            { label: 'day', seconds: 86400 },
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 0 }
+        ];
+        let seconds = Math.floor((new Date().getTime() - this.countTimer) / 1000);
+        let interval = intervals.find(i => i.seconds <= seconds);
+        if (interval && interval.label != 'second') {
+            count = Math.floor(seconds / interval.seconds);
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
+        }
+        
+     
+    }
+
+
+    updateTimer = () => {
+        setInterval(() => {
+            this.timeSince("'")
+        }, 60000)
+    }
+
 
     navigate = (nav) => {
         // let activeSlateIndex = this.state.activeSlateIndex;
@@ -246,7 +282,7 @@ class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}/>
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} />
                                 </PageNumberContext.Provider>                                
                             </div>
                         </div>
@@ -298,8 +334,11 @@ export default connect(
         releaseSlateLock,
         setLockPeriodFlag,
         handleSplitSlate,
+        currentSlateLO,
         setUpdatedSlateTitle,
         publishContent,
-        fetchAuthUser
+        fetchAuthUser,
+        handleSlateRefresh,
+        logout
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

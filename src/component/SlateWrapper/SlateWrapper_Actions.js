@@ -15,6 +15,32 @@ import {ASSESSMENT_SLATE} from '../../constants/Element_Constants';
 
 // import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
 
+const openerData = {
+    "type": "chapterintro",
+    "subtype": "chapteropener",
+    "id": "urn:pearson:manifest:0fd35c2b-d70c-40c4-8c46-d283203fce09",
+    "schema": "http://schemas.pearson.com/wip-authoring/intro/1",
+    "contents": {
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "Chapter X: Opening Element Title",
+            "textsemantics": [
+                {
+                    "type": "label",
+                    "charStart": 0,
+                    "charEnd": 7
+                },
+                {
+                    "type": "number",
+                    "charStart": 8,
+                    "charEnd": 10
+                }
+            ]
+        }
+    }
+}
+
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -91,7 +117,20 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
 
     }).catch(error => {
-       
+        // Opener Element mock creation
+        if(type == "OPENER"){
+            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            const createdElementData = openerData
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            dispatch({
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        } 
         console.log("create Api fail", error);
     }) 
 }else {
@@ -101,8 +140,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         const createdElementData = assessmentSlateData
         newParentData[config.slateManifestURN].contents.bodymatter.splice(0, 0, createdElementData);
-        console.log("newParentData ", newParentData)
-        dispatch({
+         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
@@ -111,52 +149,43 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
      
 }
 };
-const assessmentSlate = {
-    "id": "urn:pearson:manifest:08392f2d-81df-4d70-bc7e-7da84fa87d4a",
-    "type": "manifest",
-    "contents": {
-        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-        "title": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "LT1"
-        },
-        "frontmatter": [],
-        "bodymatter": [
-            {
-                "type": "element-assessment",
-                "id": "urn:pearson:work:5fda0bdf-6eec-4397-823b-305f2227e489",
-                "contentUrn": "urn:pearson:entity:cb9f9467-42a7-4a67-9217-2f40fd2db77a"
-            }
-        ],
-        "backmatter": []
-    },
-    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
-    "contentUrn": "urn:pearson:entity:6db16986-b397-48b8-b256-b007692524ee",
-    "versionUrn": "urn:pearson:manifest:08392f2d-81df-4d70-bc7e-7da84fa87d4a"
-}
-export const createAssessmentSlateElement = (type,index) => (dispatch, getState) => {
+export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
+    let createdElemData = {contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
+    elementdata:{
+        loref: " "
+    },
+    html: {
+        "text": "<p class=\"paragraphNumeroUno\"></p>"
+    },
+    id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
+    schema: "http://schemas.pearson.com/wip-authoring/element/1",
+    type: "element-learningobjectivemapping",
+    versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"}
+    
     let _requestData = {
         "projectUrn": config.projectUrn,
-        "slateEntityUrn": config.slateEntityURN,
-        "slateUrn": config.slateManifestURN,
+        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
+        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
         "index": index,
         "type": type
     };
-   
-    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
-        JSON.stringify(_requestData),
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
+    
+        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(createdElementData.type == 'manifest'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
+                if(item.id == parentUrn.manifestUrn){
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })   
+        }else{
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
-    ).then(createdElemData => {
-
-        console.log("createdElemData", createdElemData)
-
+       
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -164,23 +193,52 @@ export const createAssessmentSlateElement = (type,index) => (dispatch, getState)
             }
         })
 
-    }).catch(error => {
-               
+   
+};
+export const createElementMetaList = (type, index,parentUrn) => (dispatch, getState) => {
+    config.currentInsertedIndex = index;
+    config.currentInsertedType = type;
+    let createdElemData = {
+        id: -1, // A temporary id. The server decides the real id.
+        type: "element-generateLOlist",
+        schema: "http://schemas.pearson.com/wip-authoring/element/1",
+        elementdata: {
+            level:  "chapter",
+            groupby: "module"
+        },
+        mgmtinfo: {
+            lock: {
+                owner: "",
+                lockdate: ""
+            },
+            comments: [],
+            trackingdocumentid: ""
+        }}
+    
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const newParentData = assessmentSlateData
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        console.log("newParentData ", newParentData)
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let createdElementData = createdElemData;
+        if(createdElementData.type == 'manifest'){
+            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
+                if(item.id == parentUrn.manifestUrn){
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            })   
+        }else{
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        }
+       
         dispatch({
-            type: ASSESSMENT_ELEMENT_CREATED,
+            type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-     
 
-        console.log("create Api fail", error);
-    }) 
-}
+   
+};
+
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId } = dataObj;
     const slateId = config.slateManifestURN;
