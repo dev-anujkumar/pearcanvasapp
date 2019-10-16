@@ -122,7 +122,7 @@ export class TinyMceEditor extends Component {
                 });
                
                    /* example, adding a toolbar menu button */
-                   if(config.slateType == "section"){
+                   if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
                     editor.ui.registry.addMenuButton('slateTag', {
                         icon: 'metadataanchor',
                         tooltip: "Slate Tag",

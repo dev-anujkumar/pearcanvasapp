@@ -110,24 +110,34 @@ export function addMediaClickHandler() {
 export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps;
 
-    if(config.slateType == 'container-introduction' && !config.isCO){
-        updatedEsProps = esProps.filter((btnObj) => {
-            return btnObj.buttonType !== 'section-break-elem';
-        })
-    }
-    if(config.slateType == 'container-introduction' && config.isLOL){
-       let elements= document.getElementsByClassName("metadata-anchor");
-       var i;
-       for(var key in elements){
-           if(elements[key].className){  elements[key].className += " disabled";}
-      
+    if(config.slateType == 'container-introduction' && (!config.isCO || config.isLOL)){
+        if(config.isLOL){
+            let elements= document.getElementsByClassName("metadata-anchor");
+            var i;
+            for(var key in elements){
+                if(elements[key].className){  elements[key].className += " disabled";}
+             } 
         }
-       
-    }
-    else{
+
+        if(!config.isCO) {
+            updatedEsProps = esProps.filter((btnObj) => {
+                return btnObj.buttonType !== 'section-break-elem';
+            })
+        } else {
+            updatedEsProps = esProps.filter((btnObj) => {
+                return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            })
+        }
+        
+    } else {
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
         })
+    }
+    if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
+        updatedEsProps = esProps.filter((btnObj) => {
+        return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+    })
     }
 
     if(elementType == 'element-aside'){
