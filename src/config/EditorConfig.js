@@ -25,5 +25,5 @@ export const GlossaryFootnoteEditorConfig = {
     formats: {
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
     },
-    toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry'
+    toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }
