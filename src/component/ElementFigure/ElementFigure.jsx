@@ -81,6 +81,7 @@ export class ElementFigure extends Component {
 
     }
     handleC2MediaClick = (e) => {
+        this.props.handleFocus();
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;

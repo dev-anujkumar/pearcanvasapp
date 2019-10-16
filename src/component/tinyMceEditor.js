@@ -455,26 +455,26 @@ export class TinyMceEditor extends Component {
         if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            if (testElem.innerText && !testElem.innerText.length)
+            if (testElem.innerText == "" && !testElem.innerText.length)
                 placeHolderClass = 'place-holder';
         }
         else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.text;
-            if (testElem.innerText && !testElem.innerText.length) {
+            if (testElem.innerText == "" && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.preformattedtext;
-            if (testElem.innerText && !testElem.innerText.length) {
+            if (testElem.innerText == "" && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         }
             else {
                 let testElem = document.createElement('div');
                 testElem.innerHTML = this.props.model;
-                if (testElem.innerText && !testElem.innerText.length) {
+                if (testElem.innerText == "" && !testElem.innerText.length) {
                     placeHolderClass = 'place-holder';
                 }
             }
