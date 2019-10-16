@@ -205,7 +205,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
-        let labelText = fetchElementTag(element, index) || 'P';
+        let labelText = fetchElementTag(element, index);
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
                 editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
@@ -292,10 +292,13 @@ class ElementContainer extends Component {
                         editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
+                break;
+                
             case elementTypeConstant.METADATA_ANCHOR:
                 editor = <ElementMetaDataAnchor  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'LO'
                 break;
+                
             case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
                 editor = <ElementMetaLOList  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'MA'

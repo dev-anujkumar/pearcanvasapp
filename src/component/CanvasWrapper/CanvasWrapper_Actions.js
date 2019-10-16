@@ -17,6 +17,7 @@ const axiosApiInstance = axios.create({
 
 const findElementType = (element, index) => {
 	let elementType = {};
+	elementType['tag'] = '';
 
 	switch (element.type) {
 		case 'element-authoredtext':
@@ -396,7 +397,7 @@ const findElementType = (element, index) => {
 	elementType['index'] = index;
 	elementType['elementWipType'] = element.type;
 
-	if(elementType.elementType && elementType.elementType !== '' && elementType['tag'] === '')
+	if(elementType.elementType && elementType.elementType !== '')
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 	
 	return elementType;
