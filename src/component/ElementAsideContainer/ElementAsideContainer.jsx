@@ -10,6 +10,7 @@ import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 import { guid, sortableProps } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
+import { sendDataToIframe } from '../../constants/utility.js';
 
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
@@ -60,11 +61,53 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
+                    this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index,elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
-                            {
-                                this.renderElement(_bodyMatter, parentUrn, index,elementLength)
-                            }
+                            <Sortable 
+                               options={{
+                                   sort: true,  // sorting inside list
+                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                   dragoverBubble: false,
+                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                   scrollSpeed: 10,
+                                   handle : '.element-label', //Drag only by element tag name button
+                                   dataIdAttr: 'data-id',
+                                   scroll: true, // or HTMLElement
+                                   filter: ".elementSapratorContainer",
+                                   draggable: ".editor",
+                                   forceFallback: true, 
+                                   onStart: function (/**Event*/){
+                                       // same properties as onEnd
+                                   },
+                                   // Element dragging ended
+                                   onUpdate:  (/**Event*/evt) => {
+                                       let swappedElementData;
+                                        swappedElementData = _bodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            containerTypeElem: 'we',
+                                        }
+                                       this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                   },
+                               }}
+                                ref={(c) => {
+                                   if (c) {
+                                       let sortable = c.sortable;
+                                   }
+                               }}
+                               tag="div"
+                               onChange = {function(items, sortable, evt) { }}
+                           >
+                                    { this['cloneCOSlateControlledSource_2' + random]}
+                           </Sortable>
                         </div>
                     )
                 }
@@ -90,24 +133,67 @@ class ElementAsideContainer extends Component {
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
         this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
-        let paramObj = {
-            filterClass : '.elementSapratorContainer',
-            draggableElem : '.editor',
-            handleClass : '.element-label',
-            bodyMatter : _containerBodyMatter,
-            swapElement : this.props.swapElement,
-            workedExample: false,
-        }
+        // let paramObj = {
+        //     filterClass : '.elementSapratorContainer',
+        //     draggableElem : '.editor',
+        //     handleClass : '.element-label',
+        //     bodyMatter : _containerBodyMatter,
+        //     swapElement : this.props.swapElement,
+        //     containerTypeElem: 'section',
+        //     currentSlateEntityUrn : parentUrn.contentUrn,
+        //     asideId : this.props.element.id,
+        // }
 
-        let sortableElemProps = sortableProps(paramObj)
+        // let sortableElemProps = sortableProps(paramObj)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-                <Sortable {...sortableElemProps} 
-                                    ref={(c) => {if (c) {let sortable = c.sortable;}}}
-                                    onChange={(items, sortable, evt) => { }}>
-                                        { this['cloneCOSlateControlledSource_1' + random]}
-                                </Sortable>
+                <Sortable 
+                               options={{
+                                   sort: true,  // sorting inside list
+                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                   dragoverBubble: false,
+                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                   scrollSpeed: 10,
+                                   handle : '.element-label', //Drag only by element tag name button
+                                   dataIdAttr: 'data-id',
+                                   scroll: true, // or HTMLElement
+                                   filter: ".elementSapratorContainer",
+                                   draggable: ".editor",
+                                   forceFallback: true, 
+                                   onStart: function (/**Event*/){
+                                       // same properties as onEnd
+                                   },
+                                   // Element dragging ended
+                                   onUpdate:  (/**Event*/evt) => {
+                                       let swappedElementData;
+                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            containerTypeElem: 'section',
+                                            asideId : this.props.element.id
+                                        }
+                                       this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                   },
+                               }}
+                                ref={(c) => {
+                                   if (c) {
+                                       let sortable = c.sortable;
+                                   }
+                               }}
+                               tag="div"
+                               onChange = {function(items, sortable, evt) { }}
+
+                           >
+                                    { this['cloneCOSlateControlledSource_1' + random]}
+                           </Sortable>
             </div>
         )
     }
@@ -129,6 +215,8 @@ class ElementAsideContainer extends Component {
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
+        this['cloneCOSlateControlledSource_3' + random]= this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+
         return (
             <div className="aside-section-break" data-id={_elementId}>
                 <SectionSeperator
@@ -138,8 +226,51 @@ class ElementAsideContainer extends Component {
                     element={_element}
                     showDeleteElemPopup = {this.props.showDeleteElemPopup}
                 />
-                {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
-
+                <Sortable 
+                               options={{
+                                   sort: true,  // sorting inside list
+                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                   dragoverBubble: false,
+                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                   scrollSpeed: 10,
+                                   handle : '.element-label', //Drag only by element tag name button
+                                   dataIdAttr: 'data-id',
+                                   scroll: true, // or HTMLElement
+                                   filter: ".elementSapratorContainer",
+                                   draggable: ".editor",
+                                   forceFallback: true, 
+                                   onStart: function (/**Event*/){
+                                       // same properties as onEnd
+                                   },
+                                   // Element dragging ended
+                                   onUpdate:  (/**Event*/evt) => {
+                                       let swappedElementData;
+                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                            currentSlateEntityUrn: parentUrn.contentUrn,
+                                            containerTypeElem: 'section',
+                                            asideId : this.props.element.id, 
+                                        }
+                                       this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                   },
+                               }}
+                                ref={(c) => {
+                                   if (c) {
+                                       let sortable = c.sortable;
+                                   }
+                               }}
+                               tag="div"
+                               onChange = {function(items, sortable, evt) { }}
+                           >
+                                { this['cloneCOSlateControlledSource_3' + random]}
+                           </Sortable>
             </div>
         )
 }
@@ -292,7 +423,7 @@ class ElementAsideContainer extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        const { element } = this.props
+        const { element } = this.props;
         let designtype = element.hasOwnProperty("designtype") ?  element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ?  element.subtype : "";
         return (
@@ -310,7 +441,6 @@ ElementAsideContainer.propTypes = {
 
 const mapStateToProps = state => {
     return {
-
     };
 };
 

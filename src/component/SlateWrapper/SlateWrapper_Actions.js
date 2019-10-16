@@ -148,16 +148,16 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
      
 }
-};
+};       
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
         "projectUrn": config.projectUrn,
         "currentSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
-        "destSlateEntityUrn": config.slateEntityURN,
+        "destSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn:config.slateEntityURN,
         "workUrn": swappedElementData.id,
         "entityUrn": swappedElementData.contentUrn,
         "type": swappedElementData.type,
@@ -191,27 +191,39 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
-                newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
 
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (workedExample) {
+                if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
                     for(let i in newBodymatter){
-
-                        if( newBodymatter[i].id == currentSlateEntityUrn){
-                            //Swap inside WE
-                            // let weArr = newArr[i].elementdata.bodymatter
-                            [newBodymatter[i].elementdata.bodymatter[newIndex], newBodymatter[i][i].elementdata.bodymatter[oldIndex]] = [newBodymatter[i][i].elementdata.bodymatter[oldIndex], newBodymatter[i][i].elementdata.bodymatter[newIndex]];
+                        if( newBodymatter[i].contentUrn== currentSlateEntityUrn){
+                            newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
                         }
                     }
+                }else if(containerTypeElem && containerTypeElem == 'section'){
+                    newBodymatter.forEach(element => {
+                        if(element.id == asideId){
+                            element.elementdata.bodymatter.forEach((nestedElem) => {
+                                if(nestedElem.contentUrn == currentSlateEntityUrn){
+                                    nestedElem.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            })
+                        }
+                    });
+                }else{
+                    newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
-
                 newParentData = JSON.parse(JSON.stringify(newParentData));
+                let thisIsWE;
+                if(containerTypeElem == 'section' || containerTypeElem == 'we'){
+                    thisIsWE = true
+                }
                 dispatch({
                     type: SWAP_ELEMENT,
                     payload: {
-                        slateLevelData: newParentData
+                        slateLevelData: newParentData,
+                        thisIsWE : thisIsWE
                     }
                 })
 

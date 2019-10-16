@@ -219,9 +219,46 @@ class SlateWrapper extends Component {
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
-                                <Sortable {...sortableElemProps} 
-                                    ref={(c) => {if (c) {let sortable = c.sortable;}}}
-                                    onChange={(items, sortable, evt) => { }}>
+                            <Sortable 
+                               options={{
+                                   sort: true,  // sorting inside list
+                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                   dragoverBubble: false,
+                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                   scrollSpeed: 10,
+                                   handle : '.element-label', //Drag only by element tag name button
+                                   dataIdAttr: 'data-id',
+                                   scroll: true, // or HTMLElement
+                                   filter: ".elementSapratorContainer",
+                                   draggable: ".editor",
+                                   forceFallback: true, 
+                                   onStart: function (/**Event*/){
+                                       // same properties as onEnd
+                                   },
+                                   // Element dragging ended
+                                   onUpdate:  (/**Event*/evt) => {
+                                       let swappedElementData;
+                                        swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
+                                        let dataObj = {
+                                            oldIndex : evt.oldDraggableIndex,
+                                            newIndex : evt.newDraggableIndex,
+                                            swappedElementData : swappedElementData,
+                                        }
+                                       this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                                   },
+                               }}
+                                ref={(c) => {
+                                   if (c) {
+                                       let sortable = c.sortable;
+                                   }
+                               }}
+                               tag="div"
+                               onChange = {function(items, sortable, evt) { }}
+                           >
                                         {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
