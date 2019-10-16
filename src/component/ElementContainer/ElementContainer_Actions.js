@@ -128,7 +128,11 @@ export const deleteElement = (elmId, type, parentUrn,asideData) => (dispatch, ge
         console.log("delete Api fail", error);
     })
 }
-
+/**
+ * API to update the element data
+ * @param {*} updatedData the updated content
+ * @param {*} elementIndex index of the element on the slate
+ */
 export const updateElement = (updatedData,elementIndex) => (dispatch, getState) => {
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
@@ -150,10 +154,10 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
                 slateLevelData: newParentData
             }
         })
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     }) 
 }

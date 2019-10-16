@@ -90,7 +90,9 @@ class ElementContainer extends Component {
         this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
-
+    /**
+     * function will be called on element blur and a saving call will be made
+     */
     handleBlur =() =>{
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
