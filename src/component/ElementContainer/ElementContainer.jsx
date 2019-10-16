@@ -93,36 +93,24 @@ class ElementContainer extends Component {
     /**
      * function will be called on element blur and a saving call will be made
      */
-    handleBlur =() =>{
+    handleBlur = () => {
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-        if(html!==this.props.element.html.text && !assetPopoverPopupIsVisible){  //checking if current dom ids equal to previous
-            let dataToSend = {                                                   // prepare data to update
-                "id": this.props.element.id,
-                "type": this.props.element.type,
-                "schema": this.props.element.schema,
-                "versionUrn": this.props.element.versionUrn,
-                "contentUrn": this.props.element.contentUrn,
-                "elementdata": {
-                    "schema": this.props.element.elementdata.schema,
-                    "text": text,
-                    "groupby": null
-                },
-                "html": {
-                    "text": html,
-                    "footnotes" : this.props.element.html.footnotes || {},
-                    "glossaryentries": this.props.element.html.glossaryentries || {}
-                }
-            }
-            //console.log("prepared Data",JSON.stringify(dataToSend));
+        if (html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
+            const dataToSend = this.props.element;                              // prepare data to update
+            dataToSend.elementdata.text = text;
+            dataToSend.html.text = html;
+            dataToSend.html.footnotes = this.props.element.html.footnotes || {};
+            dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+            console.log("prepared Data", JSON.stringify(dataToSend));
 
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
-            this.props.updateElement(dataToSend,this.props.index);                         //update Current element data
+            this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
             //console.log("current Index",this.props.index);
         }
-  
+
     }
 
     
