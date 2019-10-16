@@ -14,7 +14,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
-import {addComment,deleteElement} from './ElementContainer_Actions';
+import {addComment,deleteElement,updateElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -90,9 +90,27 @@ class ElementContainer extends Component {
         this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
+    /**
+     * function will be called on element blur and a saving call will be made
+     */
+    handleBlur = () => {
+        let node = document.getElementById(tinyMCE.activeEditor.id);
+        let html = node.innerHTML;
+        let text = node.innerText;
+        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if (html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
+            const dataToSend = this.props.element;                              // prepare data to update
+            dataToSend.elementdata.text = text;
+            dataToSend.html.text = html;
+            dataToSend.html.footnotes = this.props.element.html.footnotes || {};
+            dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+            //console.log("prepared Data", JSON.stringify(dataToSend));
 
-    handleBlur =() =>{
-  
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
+            this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+            //console.log("current Index",this.props.index);
+        }
+
     }
 
     
@@ -430,6 +448,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
+        },
+        updateElement:(updatedData,elementIndex)=>{
+            dispatch(updateElement(updatedData,elementIndex))
         }
     }
 }
