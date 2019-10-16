@@ -223,9 +223,15 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
           text: "",
           icon: "tinymceformulachemistryicon",
-          tooltip: "Wiris editor chemistry",
+          tooltip: "WIRIS EDITOR chemistry",
           onAction: function (_) {
-            editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+            /*
+                Enabling chemistry ML
+            */
+            let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+            wirisChemistryInstance.enable('chemistry');
+            window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
+            //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
           },
           onSetup: (buttonApi) => {
             /*
@@ -245,7 +251,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
           text: "",
           icon: "tinymceformulaicon",
-          tooltip: "Wiris editor math",
+          tooltip: "WIRIS EDITOR math",
           onAction: function (_) {
             var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
             wirisPluginInstance.core.getCustomEditors().disable();
