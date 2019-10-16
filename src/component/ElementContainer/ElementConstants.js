@@ -1,5 +1,5 @@
 export default {
-    OPENER : "opener",
+    OPENER : "chapterintro",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",
@@ -23,6 +23,14 @@ export default {
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
-}
 
+/****************Metadata Anchor************************ */  
+METADATA_ANCHOR : "element-learningobjectivemapping",
+
+/****************Metadata Anchor LO List************************ */  
+METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
+
+/****************Assessment Slate Element************************ */  
+ASSESSMENT_SLATE : "element-assessment"
+}
 

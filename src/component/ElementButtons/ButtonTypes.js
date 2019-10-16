@@ -22,5 +22,7 @@ export default {
     OPENER_ELEMENT : "opener-elem",
     SECTION_BREAK_ELEMENT : "section-break-elem",
     LOCK : "lock-icon",
-    METADATA_ANCHOR : "metadata-anchor"
+    METADATA_ANCHOR : "metadata-anchor",
+    METADATA_LOList:"metadata-lo-list",
+    
 }

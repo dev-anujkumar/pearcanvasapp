@@ -104,7 +104,7 @@ exports[`Testing Element Single Assessment component Render Single Assessment de
             <span
               className="singleAssessment_Dropdown_currentLabel"
             >
-              Diagnostic
+              Quiz
             </span>
             <span
               className="singleAssessment_Dropdown_arrow"

@@ -28,6 +28,20 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
         })
 } 
 
+export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+    let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
+    
+    return axiosInstance.get(url)
+        .then((res) => {
+            console.log("Slate lock info fetch success:", res)
+            if(callback)
+                callback(res.data)
+        })
+        .catch((err) => {
+            console.log("Slate lock info fetch failed:", err)
+        })
+} 
+
 export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
     let url =`locks/typ/setlock`
 
@@ -50,10 +64,10 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
                 type : SET_LOCK_FLAG,
                 payload : true
             }) */
-            window.parent.postMessage({
+            /* window.parent.postMessage({
                 'type': 'headerDisable',
                 'message': false 
-            }, WRAPPER_URL)
+            }, WRAPPER_URL) */
             // stopLoader()
             console.log("error from set slate>>>>",err)
         })
@@ -79,6 +93,26 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
                 type : SET_LOCK_FLAG,
                 payload : false
             })
+        })
+}
+export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) => {
+    let url = `locks/typ/releaselock`
+    let data = {
+       projectUrn,
+       slateId
+    }
+    return axiosInstance.post(url, data)
+       .then((res) => {
+            console.log("Slate release API success>>Slalte release status", res.data)
+            if(callback){
+                callback(res.data)
+            }
+        })
+        .catch((err) => {
+            console.log("API error from release slate>>>>",err)
+            if(callback){
+                callback(err)
+            }
         })
 }
 export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {

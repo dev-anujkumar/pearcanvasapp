@@ -32,14 +32,14 @@ class App extends Component {
     }
 
     componentDidMount () {
-        if(Object.keys(config.PATTERNS).length > 0) {
-            Object.values(config.PATTERNS).forEach(pattern => {
-                const script = document.createElement("script");
-                script.type = "text/javascript";
-                script.src = pattern;
-                document.body.appendChild(script);
-            });
-        }
+        // if(Object.keys(config.PATTERNS).length > 0) {
+        //     Object.values(config.PATTERNS).forEach(pattern => {
+        //         const script = document.createElement("script");
+        //         script.type = "text/javascript";
+        //         script.src = pattern;
+        //         document.body.appendChild(script);
+        //     });
+        // }
     }
 }
 export default App;

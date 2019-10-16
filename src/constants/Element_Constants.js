@@ -27,6 +27,7 @@ export const ESA_POPUP_COLUMNS='50'
 export const ESA_POPUP_BUTTON_TEXT='OK'
 export const ESA_POPUP_MAXLENGTH='200'
 export const ESA_POPUP_CLASSNAME="single_assessment"
+export const ASSESSMENT_SLATE = "element-assessment"
 export const DEFAULT_ASSESSMENT_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 
