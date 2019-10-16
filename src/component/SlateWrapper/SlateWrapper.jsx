@@ -28,6 +28,7 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
+import { findLOElementExist } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -437,7 +438,9 @@ class SlateWrapper extends Component {
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn)
+                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn);
+                        this.props.findLOElementExist(true);
+                        
                     }
                     else{
                         this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
@@ -596,7 +599,11 @@ class SlateWrapper extends Component {
                     if(_elements.filter(element => element.type == "chapterintro").length){
                         config.isCO = true
                     }
+                    else if(_elements.filter(element => element.type == "element-generateLOlist").length){
+                        config.isLOL = true
+                    }
                     else{
+                        config.isLOL = false;
                         config.isCO = false
                     }
                 return _elements.map((element, index) => {
@@ -723,6 +730,7 @@ export default connect(
         createElementMeta,
         createElementMetaList,
         swapElement,
-        setSplittedElementIndex
+        setSplittedElementIndex,
+        findLOElementExist
     }
 )(SlateWrapper);

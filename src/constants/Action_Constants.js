@@ -43,6 +43,8 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
 /*--------------- Slate Tag -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
+export const IS_LOELEMENT_EXIST = 'IS_LOELEMENT_EXIST'
+
 /*--------------- Refresh Slate -------------------*/
 export const REFRESH_SLATE = 'REFRESH_SLATE'
 export const UPDATE_STATUS_REFRESH_SLATE = 'UPDATE_STATUS_REFRESH_SLATE'

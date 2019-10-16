@@ -114,7 +114,17 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem';
         })
-    }else{
+    }
+    if(config.slateType == 'container-introduction' && config.isLOL){
+       let elements= document.getElementsByClassName("metadata-anchor");
+       var i;
+       for(var key in elements){
+           if(elements[key].className){  elements[key].className += " disabled";}
+      
+        }
+       
+    }
+    else{
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
         })
