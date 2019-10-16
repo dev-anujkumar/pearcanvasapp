@@ -50,5 +50,15 @@ export const UPDATE_REAL_TIME = 'UPDATE_REAL_TIME'
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'
+/*--------------- Learning Tool -------------------*/
+export const LT_API_RESULT = "LT_API_RESULT"
+export const LT_API_RESULT_FAIL = "LT_API_RESULT_FAIL"
+export const SELECTED_FIGURE = "SELECTED_FIGURE"
+export const PAGINATION = "PAGINATION"
+export const LEARNING_TOOL_DIS_VALUE = "LEARNING_TOOL_DIS_VALUE"
+export const TOGGLE_LT_POPUP = "TOGGLE_LT_POPUP"
+export const GET_DISCIPLINE = "GET_DISCIPLINE"
+export const REMOVE_SELECTED_DATA = "REMOVE_SELECTED_DATA"
 
+export const LINK_BUTTON_DISABLE = "LINK_BUTTON_DISABLE"
 

@@ -49,7 +49,6 @@ class LearningTool extends React.Component {
         * @function prevPage handles the button for prev in pagination
         * @function nextPage handles the button for next in pagination
         */
-        this.validateSearch = this.validateSearch.bind(this);
         this.prevPage = this.prevPage.bind(this);
         this.nextPage = this.nextPage.bind(this);
     }
@@ -191,7 +190,6 @@ class LearningTool extends React.Component {
     * @return {String} - returns the jsx code of the body part of learning tool popup
     */
     ltBodyJsx = (tempFiguresForResults, selectedResult, learningToolDisValue) => {
-        console.log("api result====>",tempFiguresForResults);
         /**
         * If value of discipline selected
         */
@@ -249,19 +247,13 @@ class LearningTool extends React.Component {
     /**
      * @discription - This function is for validating the format of input in search bar
      */
-   validateSearch(e) {
+   validateSearch =(e) => {
        this.setState({ searchValue: e.target.value })
         let searchValue = e.target.value
         let regex = /^[A-Za-z0-9 " "]{0,100}$/
         if (!regex.test(searchValue)) {
-          //  $('#learningToolSearchBar').addClass("error");
-          //  $('.errorSpan').css("color", "red");
-         //   $("#errorIcon").attr("hidden", false);
           this.setState({showError:true})
         } else {
-        //    $('#learningToolSearchBar').removeClass("error");
-          //  $('.errorSpan').css("color", "#424242");
-         //   $("#errorIcon").attr("hidden", true);
             this.setState({showError:false})
         } 
    }
@@ -271,7 +263,6 @@ class LearningTool extends React.Component {
    }
     render() {
         disableHeader(true);
-        console.log("api===>",this.props.showLTBody)
         return (
             <div>
                 <div className="learningToolContainer">
