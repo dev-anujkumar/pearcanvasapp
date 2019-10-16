@@ -11,8 +11,9 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement, swapElement,
-    setSplittedElementIndex
+    createElement , swapElement,
+    setSplittedElementIndex, createElementMeta,
+    createElementMetaList
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -20,7 +21,7 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK, OPENER, ASSESSMENT_SLATE}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,METADATA_ANCHOR,LO_LIST,ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -434,6 +435,15 @@ class SlateWrapper extends Component {
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
+                case 'metadata-anchor':
+                    if(config.slateType == "container-introduction"){
+                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn)
+                    }
+                    else{
+                        this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
+                    }
+                   
+                break;
             default:
         }
     }
@@ -710,6 +720,8 @@ export default connect(
     mapStateToProps,
     {
         createElement,
+        createElementMeta,
+        createElementMetaList,
         swapElement,
         setSplittedElementIndex
     }

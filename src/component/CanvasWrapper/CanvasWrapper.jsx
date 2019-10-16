@@ -28,6 +28,7 @@ import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
+import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 class CanvasWrapper extends Component {
@@ -333,6 +334,7 @@ export default connect(
         releaseSlateLock,
         setLockPeriodFlag,
         handleSplitSlate,
+        currentSlateLO,
         setUpdatedSlateTitle,
         publishContent,
         fetchAuthUser,
