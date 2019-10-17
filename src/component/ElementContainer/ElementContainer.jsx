@@ -28,7 +28,7 @@ import config from '../../config/config';
 import arrowButton from '../../images/OpenerElement/arrow.png'
 import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
-import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {

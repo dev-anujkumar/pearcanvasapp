@@ -13,6 +13,7 @@ import {
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
 import config from './../../config/config';
+import GlobalSearchPanel from '../GlobalSearchAndReplace';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -29,7 +30,7 @@ import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { PageNumberContext } from './CanvasContexts.js';
+import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 class CanvasWrapper extends Component {
     constructor(props) {
@@ -281,19 +282,29 @@ class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
                                     <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} />
-                                </PageNumberContext.Provider>                                
+                                </RootContext.Provider>                                
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            {/* <span className='--rm-place'>Settings</span> */}
-                           
-                            {this.props.glossaryFootnoteValue.popUpStatus ?  <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />: <Sidebar showPopUp={this.showPopUp}/> }
-                            {/*  <Sidebar showPopUp={this.showPopUp}/> */}
-                            {/* put side setting */}
+                            <RootContext.Consumer>
+                                {
+                                    ({ searchQuery, showGlobalSearchPanel }) => {
+                                        if (showGlobalSearchPanel) {
+                                            return (<GlobalSearchPanel/>)
+                                        }
+                                        else if (this.props.glossaryFootnoteValue.popUpStatus) {
+                                            return (<GlossaryFootnoteMenu activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />)
+                                        }
+                                        else {
+                                            return (<Sidebar showPopUp={this.showPopUp} />)
+                                        }
+                                    }
+                                }
+                            </RootContext.Consumer>
                         </div>
                     </div>
                 </div>
