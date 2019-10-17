@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { connect } from 'react-redux';
+import config from '../../config/config';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { OPEN_LO_POPUP, NO_SLATE_TAG_IS } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +13,7 @@ export class ElementMetaLOList extends Component {
     this.onBlur = this.onBlur.bind(this);
     this.onKeyup = this.onKeyup.bind(this);
     this.onFocus = this.onFocus.bind(this);
-    // this.onLOLClickHandle = this.onLOLClickHandle.bind(this);
+    this.onLOLClickHandle = this.onLOLClickHandle.bind(this);
     this.prepareLOLData = this.prepareLOLData.bind(this);
     
   }
@@ -25,7 +28,8 @@ export class ElementMetaLOList extends Component {
  
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,learningObjectiveOperations,currentSlateLOData,openAssetPopoverPopUp} = this.props
      return (
-      <div   className="learningObjectiveContainer" >
+
+      <div   className="learningObjectiveContainer" onClick = { () => this.onLOLClickHandle("")} >
         <div className="container">
           <div className="matadata_anchor" >
               <TinyMceEditor  
@@ -95,12 +99,15 @@ export class ElementMetaLOList extends Component {
         
     )
   }
+
+/**
+   * @description - prepare MA HTML data
+   * @param {object} loldata | object of data and lourn 
+*/
   prepareLOLData = (lolData) => {
       let jsx,finalloldata = "";
         if(lolData!== ""){
          lolData.forEach((value, index) => {
-               // if(value.learningObjectives.length > 0) {
-               // console.log(value.learningObjectives[0].label.en)
                 finalloldata +=value;
                 
             })
@@ -111,24 +118,32 @@ export class ElementMetaLOList extends Component {
   }
     return currentLOLData;
 } 
- 
-// onLOLClickHandle(lolData){
-//   if(lolData ==""){
-//       window.parent.postMessage({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},WRAPPER_URL)
-//    }
-// }
-  onClick() {
 
-  }
-  onBlur() {
+/**
+   * @description - show popup on click on element that no data is present 
+   * @param {object} loldata
+*/
+onLOLClickHandle(lolData){
+  if(lolData ==""){
+    sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+   }
+}
+//Click function when element gets clicked
+onClick() {
 
-  }
-  onKeyup() {
+}
+ //blur function when element gets blurred
+onBlur() {
 
-  }
-  onFocus() {
+}
+ //key function when we write something in element
+onKeyup() {
 
-  }
+}
+//focus function when element gets focused
+onFocus() {
+
+}
 }
 ElementMetaLOList.defaultProps = {
   type: "element-generateLOlist"
@@ -147,7 +162,7 @@ ElementMetaLOList.propTypes = {
   onFocus: PropTypes.func
 
 }
-
+ElementMetaLOList.displayName = "ElementMetaLOList"
 const mapStateToProps = (state) => {
   return {
     currentSlateLOData: state.metadataReducer.currentSlateLOData
