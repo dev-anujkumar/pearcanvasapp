@@ -78,7 +78,10 @@ export class ElementMetaDataAnchor extends Component {
     )
   }
 
-  //Prepare HTML for LO item on slate
+/**
+   * @description - Prepare HTML for LO item on slate
+   * @param {object} lodata
+*/
  prepareLOData = (loData) => {
     let jsx;
     if(loData && loData!="" && loData.label && loData.label.en){

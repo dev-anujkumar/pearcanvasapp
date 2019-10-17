@@ -22,7 +22,7 @@ import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrap
 import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader,OPEN_LO_POPUP, View_LEARNING_OBJECTIVE_SLATE,View_LEARNING_OBJECTIVE_ASSESSMENT,Add_LEARNING_OBJECTIVE_SLATE, Add_LEARNING_OBJECTIVE_ASSESSMENT,Add_Edit_LEARNING_OBJECTIVE} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import arrowButton from '../../images/OpenerElement/arrow.png'
@@ -133,22 +133,22 @@ class ElementContainer extends Component {
         // let isLOExist= this.state.isLOExists;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.COREAPI_ENDPOINT];
         if(text =="View Learning Objective" && config.slateType !== 'assessment'){
-            sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':View_LEARNING_OBJECTIVE_SLATE,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveSlate,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         if(text =="View Learning Objective" && config.slateType === 'assessment'){
-            sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':View_LEARNING_OBJECTIVE_ASSESSMENT,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
         }
         // else if( !this.state.slateLockSatus){
             if(text =="Add a New Learning Objective" &&  config.PERMISSIONS.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':Add_LEARNING_OBJECTIVE_SLATE,'data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveSlate,'data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
             }
       
             else if(text =="Add From Existing or Edit" && config.PERMISSIONS.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':Add_Edit_LEARNING_OBJECTIVE,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddEditLearningObjective,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
 
             else if(text =="Add From Existing" && config.PERMISSIONS.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':Add_LEARNING_OBJECTIVE_ASSESSMENT,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
+                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveAssessment,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
         //  }
         //  else(

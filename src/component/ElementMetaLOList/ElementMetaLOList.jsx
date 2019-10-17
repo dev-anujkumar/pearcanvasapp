@@ -100,7 +100,10 @@ export class ElementMetaLOList extends Component {
     )
   }
 
-//prepare MA HTML data
+/**
+   * @description - prepare MA HTML data
+   * @param {object} loldata
+*/
   prepareLOLData = (lolData) => {
       let jsx,finalloldata = "";
         if(lolData!== ""){
@@ -116,10 +119,13 @@ export class ElementMetaLOList extends Component {
     return currentLOLData;
 } 
 
-//show popup on click on element that no data is present 
+/**
+   * @description - show popup on click on element that no data is present 
+   * @param {object} loldata
+*/
 onLOLClickHandle(lolData){
   if(lolData ==""){
-    sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':NO_SLATE_TAG_IS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+    sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
    }
 }
 //Click function when element gets clicked
