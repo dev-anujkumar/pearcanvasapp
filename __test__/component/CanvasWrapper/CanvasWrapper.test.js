@@ -46,7 +46,12 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
                 payload: null
             }
         },
-        setSlateLock: jest.fn(),
+        setSlateLock: function () {
+            return {
+                type: 'SET_LOCK_FLAG',
+                payload: null
+            }
+        },
         releaseSlateLock: function () {
             return {
                 type: 'SET_LOCK_FLAG',
@@ -55,6 +60,28 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
         }, setLockPeriodFlag: function () {
             return {
                 type: 'SET_LOCK_FLAG',
+                payload: null
+            }
+        }
+    }
+})
+jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
+    return {
+        toggleCommentsPanel: function () {
+            return {
+                type: 'TOGGLE_COMMENTS_PANEL',
+                payload: null
+            }
+        },
+        fetchComments: function () {
+            return {
+                type: 'FETCH_COMMENTS',
+                payload: null
+            }
+        },
+        fetchCommentByElement: function () {
+            return {
+                type: 'FETCH_COMMENT_BY_ELEMENT',
                 payload: null
             }
         }
@@ -105,7 +132,37 @@ describe('Testing <CanvasWrapper> Component', () => {
         canvasWrapperInstance.toggleLockReleasePopup(true, event)
         canvasWrapperInstance.forceUpdate();
         wrapper.update();
-        expect(canvasWrapperInstance.state('showReleasePopup')).toBe(true);
-        expect(canvasWrapperInstance.find('PopUp').length).toBe(true);
+        canvasWrapperInstance.setSlateLock()
+        expect(canvasWrapperInstance.state.showReleasePopup).toBe(true);
+        expect(wrapper.find('CanvasWrapper').find('PopUp').length).toBe(1);
     })
+    describe('With slate locked', () => {
+        let store = mockStore({
+            ...initialState, slateLockReducer: {
+                slateLockInfo: {
+                    isLocked: true,
+                    timestamp: "",
+                    userId: "c5Test01"
+                },
+                withinLockPeriod: true
+            }
+        });
+        let wrapper = mount(<Provider store={store}>
+            <CanvasWrapper {...props} />
+        </Provider>)
+        let canvasWrapperInstance = wrapper.find('CanvasWrapper').instance();
+        test('should call setSlateLock', () => {
+            let cb = jest.fn();
+            canvasWrapperInstance.debounceReleaseHandler(cb, canvasWrapperInstance)
+            expect(canvasWrapperInstance.state.showReleasePopup).toBe(true);
+        })
+        test('should call updateTimer without crashing', () => {
+            canvasWrapperInstance.updateTimer()
+            canvasWrapperInstance.timeSince()
+        })
+        test('should call handleCommentspanel without crashing', () => {
+            canvasWrapperInstance.handleCommentspanel()
+        })
+    })
+
 })

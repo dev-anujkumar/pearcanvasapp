@@ -145,7 +145,8 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             if(sectionBreak){
                 return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
             }else{
-                return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+                // return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+                return btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
             }
         })
     }
