@@ -111,6 +111,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
     let updatedEsProps;
 
     if(config.slateType == 'container-introduction' && (!config.isCO || config.isLOL)){
+        // hide the metadata anchor on IS when its once created
         if(config.isLOL){
             let elements= document.getElementsByClassName("metadata-anchor");
             var i;
@@ -118,7 +119,6 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
                 if(elements[key].className){  elements[key].className += " disabled";}
              } 
         }
-        // hide the metadata anchor on IS when its once created
         if(!config.isCO) {
             updatedEsProps = esProps.filter((btnObj) => {
                 return btnObj.buttonType !== 'section-break-elem';

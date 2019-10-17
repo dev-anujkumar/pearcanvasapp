@@ -121,7 +121,7 @@ export class TinyMceEditor extends Component {
                     onAction: () => this.addGlossary(editor)
                 });
                
-                   /* example, adding a toolbar menu button */
+                   /* adding a slate tag button in toolbar */
                    if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
                     editor.ui.registry.addMenuButton('slateTag', {
                         icon: 'metadataanchor',
@@ -130,6 +130,7 @@ export class TinyMceEditor extends Component {
                         if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
                             viewLoEnable=false;
                         }
+                        //show dropdown options in slate tag 
                         var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
                         var items = [
                             {

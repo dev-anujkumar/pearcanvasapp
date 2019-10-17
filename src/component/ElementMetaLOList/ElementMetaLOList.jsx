@@ -4,6 +4,7 @@ import TinyMceEditor from "../tinyMceEditor"
 import { connect } from 'react-redux';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { OPEN_LO_POPUP, NO_SLATE_TAG_IS } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
   constructor(props) {
     super(props);
@@ -104,8 +105,6 @@ export class ElementMetaLOList extends Component {
       let jsx,finalloldata = "";
         if(lolData!== ""){
          lolData.forEach((value, index) => {
-               // if(value.learningObjectives.length > 0) {
-               // console.log(value.learningObjectives[0].label.en)
                 finalloldata +=value;
                 
             })
@@ -116,24 +115,29 @@ export class ElementMetaLOList extends Component {
   }
     return currentLOLData;
 } 
+
 //show popup on click on element that no data is present 
 onLOLClickHandle(lolData){
   if(lolData ==""){
-    sendDataToIframe({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+    sendDataToIframe({'type': OPEN_LO_POPUP,'message':{'text':NO_SLATE_TAG_IS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
    }
 }
-  onClick() {
+//Click function when element gets clicked
+onClick() {
 
-  }
-  onBlur() {
+}
+ //blur function when element gets blurred
+onBlur() {
 
-  }
-  onKeyup() {
+}
+ //key function when we write something in element
+onKeyup() {
 
-  }
-  onFocus() {
+}
+//focus function when element gets focused
+onFocus() {
 
-  }
+}
 }
 ElementMetaLOList.defaultProps = {
   type: "element-generateLOlist"
@@ -152,7 +156,7 @@ ElementMetaLOList.propTypes = {
   onFocus: PropTypes.func
 
 }
-
+ElementMetaLOList.displayName = "ElementMetaLOList"
 const mapStateToProps = (state) => {
   return {
     currentSlateLOData: state.metadataReducer.currentSlateLOData

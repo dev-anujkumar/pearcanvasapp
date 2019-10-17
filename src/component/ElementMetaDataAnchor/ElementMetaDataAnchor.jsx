@@ -77,6 +77,8 @@ export class ElementMetaDataAnchor extends Component {
         
     )
   }
+
+  //Prepare HTML for LO item on slate
  prepareLOData = (loData) => {
     let jsx;
     if(loData && loData!="" && loData.label && loData.label.en){
@@ -87,16 +89,20 @@ export class ElementMetaDataAnchor extends Component {
   }
     return currentLOData;
 } 
- 
+
+ //Click function when element gets clicked
   onClick() {
 
   }
+   //blur function when element gets blurred
   onBlur() {
 
   }
+   //key function when we write something in element
   onKeyup() {
 
   }
+  //focus function when element gets focused
   onFocus() {
 
   }
@@ -119,6 +125,7 @@ ElementMetaDataAnchor.propTypes = {
 
 }
 
+ElementMetaDataAnchor.displayName = "ElementMetaDataAnchor"
 const mapStateToProps = (state) => {
   return {
     currentSlateLOData: state.metadataReducer.currentSlateLOData
