@@ -10,7 +10,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "gl127p08nl0LIYWvzg6r5xarbVU.*AAJTSQACMDIAAlNLABxwWHliTkhiSzI0QXZYeDlUdnpJcy8xOWZvdGM9AAJTMQACMDQ.*",
+    ssoToken: "S4Zd9jSYfcIlwGDKkmDkXgfD6FM.*AAJTSQACMDIAAlNLABxDb2l5Q2FZcWpoVk5IeG14Yk1FaUREZExkajQ9AAJTMQACMDM.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
     userEmail : 'c5test01@mctest.local',
@@ -18,6 +18,7 @@ let config = {
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     parentContainerUrn:"",
+    parentEntityUrn:"",
     slateType : 'section',
     currentInsertedIndex : 0,
     currentInsertedType : "",
@@ -65,7 +66,8 @@ let config = {
         PATTERN_SEARCH_SELECT: process.env.PATTERN_SEARCH_SELECT || 'https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js',
     },
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
-    isCO : false
+    isCO : false,
+    isLOL:false
 };
 
 export default config;
