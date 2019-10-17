@@ -597,6 +597,7 @@ class SlateWrapper extends Component {
                     if(_elements.filter(element => element.type == "chapterintro").length){
                         config.isCO = true
                     }
+                    //set the value in slate when once metadata anchor is created on IS
                     else if(_elements.filter(element => element.type == "element-generateLOlist").length){
                         config.isLOL = true
                     }

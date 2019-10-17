@@ -98,6 +98,8 @@ export class ElementMetaLOList extends Component {
         
     )
   }
+
+//prepare MA HTML data
   prepareLOLData = (lolData) => {
       let jsx,finalloldata = "";
         if(lolData!== ""){
@@ -114,7 +116,7 @@ export class ElementMetaLOList extends Component {
   }
     return currentLOLData;
 } 
- 
+//show popup on click on element that no data is present 
 onLOLClickHandle(lolData){
   if(lolData ==""){
     sendDataToIframe({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)

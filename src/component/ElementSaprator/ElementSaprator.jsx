@@ -118,7 +118,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
                 if(elements[key].className){  elements[key].className += " disabled";}
              } 
         }
-
+        // hide the metadata anchor on IS when its once created
         if(!config.isCO) {
             updatedEsProps = esProps.filter((btnObj) => {
                 return btnObj.buttonType !== 'section-break-elem';
@@ -134,6 +134,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
         })
     }
+    //hide the metadata anchor from frontmatter and backmatter
     if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
         updatedEsProps = esProps.filter((btnObj) => {
         return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
