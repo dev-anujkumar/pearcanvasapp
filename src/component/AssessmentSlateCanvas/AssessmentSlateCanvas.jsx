@@ -141,7 +141,7 @@ export class AssessmentSlateCanvas extends Component {
     }
 }
 
-
+AssessmentSlateCanvas.displayName = "AssessmentSlateCanvas"
 AssessmentSlateCanvas.defaultProps = {
     /** Detail of element in JSON object */
     type: ''

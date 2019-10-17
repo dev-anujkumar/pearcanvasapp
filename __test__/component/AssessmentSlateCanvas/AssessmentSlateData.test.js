@@ -6,11 +6,13 @@ import {assessmentSlateDefault,assessmentSlateWithData} from "./../../../fixture
 
 
 describe('Testing Assessment Slate Data component', () => {
+    const div = document.createElement('div');
     const assessmentSlate = mount( <AssessmentSlateData   />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
     it('render Assessment Slate Data component ', () => {
-        const component = mount(<AssessmentSlateData />);
-        expect(component).toMatchSnapshot();
+        
+            ReactDOM.render(<AssessmentSlateData />, div);
+            ReactDOM.unmountComponentAtNode(div);
     })
     
     it('onClick Assessment Type Event', () => {
@@ -46,22 +48,21 @@ it('onClick UsageType Event', () => {
     });
     assessmentSlateDataInstance.forceUpdate();
     
-
     assessmentSlate.find('div.singleAssessment_Dropdown_activeDropdown').simulate('click');
     assessmentSlate.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
 
 
         
 });
-    it('Select PUF assessment', () => {
-        const component = mount(<AssessmentSlateData {...props} />);
-        assessmentSlateDataInstance.setState({
-            activeAssessmentType: 'Full Assessment PUF',
-            showElmComponent: true,
-        });
-        assessmentSlateDataInstance.forceUpdate();
+    // it('Select PUF assessment', () => {
+    //     const component = mount(<AssessmentSlateData {...props} />);
+    //     assessmentSlateDataInstance.setState({
+    //         activeAssessmentType: 'Full Assessment PUF',
+    //         showElmComponent: true,
+    //     });
+    //     assessmentSlateDataInstance.forceUpdate();
 
-    });
+    // });
     it('Render succcessfully addedd screen', () => {
         let props = {
             getAssessmentDataPopup: true,
