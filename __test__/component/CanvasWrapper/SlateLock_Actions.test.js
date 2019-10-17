@@ -19,7 +19,6 @@ let initialState = {
 
 describe('Tests slateLock  action', () => {
     let store = mockStore(() => initialState);
-
     beforeEach(() => {
         initialState = {
             slateLockInfo: {
@@ -38,15 +37,6 @@ describe('Tests slateLock  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
             slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
-        /*     const expectedActions = [{
-                type: SET_SLATE_LOCK_STATUS,
-                payload: {
-                    isLocked: false,
-                    timestamp: "",
-                    userId: ""
-                }
-            
-            }]; */
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
@@ -63,9 +53,7 @@ describe('Tests slateLock  action', () => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(SET_SLATE_LOCK_STATUS);
 
-        }).catch(()=>{
-            //expect(type).toBe(SET_SLATE_LOCK_STATUS);
-        });
+        })
     })
     it('testing-- getSlateLockStatusWithCallback  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
@@ -83,11 +71,7 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        return store.dispatch(actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback)).then(() => {
-            //const { type, payload } = store.getActions()[0];
-            //expect(type).toBe(SET_SLATE_LOCK_STATUS);
-
-        });
+        store.dispatch(actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback))
     })
 
     it('testing-- setSlateLock  action', () => {
@@ -106,11 +90,7 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        return store.dispatch(actions.setSlateLock(projectUrn, slateId)).then(() => {
-            //const { type, payload } = store.getActions()[0];
-            // expect(type).toBe(SET_SLATE_LOCK_STATUS);
-
-        });
+        store.dispatch(actions.setSlateLock(projectUrn, slateId))
     })
     it('testing-- releaseSlateLock  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
@@ -149,11 +129,7 @@ describe('Tests slateLock  action', () => {
                 }
             });
         });
-        return store.dispatch(actions.releaseSlateLockWithCallback(projectUrn, slateId, callback)).then(() => {
-            //const { type, payload } = store.getActions()[0];
-            //expect(type).toBe(SET_SLATE_LOCK_STATUS);
-
-        });
+        store.dispatch(actions.releaseSlateLockWithCallback(projectUrn, slateId, callback))
     })
 
     it('testing-- setLockPeriodFlag  action', () => {
