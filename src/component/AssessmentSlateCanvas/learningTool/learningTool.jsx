@@ -43,19 +43,8 @@ class LearningTool extends React.Component {
                 "writingsolutions":"writingsolutions"
             }
         }
-
-        /**
-        * @function ValidateSearch handles the correct format of input in search bar
-        * @function prevPage handles the button for prev in pagination
-        * @function nextPage handles the button for next in pagination
-        */
-        this.prevPage = this.prevPage.bind(this);
-        this.nextPage = this.nextPage.bind(this);
     }
 
-    componentDidMount() {
-       // $("#errorIcon").attr("hidden", true);
-    }
     componentWillReceiveProps(nextProps){
         if(this.props.apiResponse != nextProps.apiResponse){
                 this.setState({
@@ -63,8 +52,7 @@ class LearningTool extends React.Component {
                 })
         } 
         }
-
-
+        
     /**
     * @description - Take the value of selected filter in learning App type and dispatch an action
     * @param {event} - event 
@@ -161,7 +149,7 @@ class LearningTool extends React.Component {
     /**
     * @discription - prevPage handles the button for prev in pagination
     */
-    prevPage() {
+    prevPage=() =>{
         let currentPage = this.state.currentPage
         if (currentPage > 1) {
             this.setState({ currentPage: currentPage - 1 });
@@ -171,7 +159,7 @@ class LearningTool extends React.Component {
     /**
     *@discription - nextPage handles the button for next in pagination
     */
-    nextPage() {
+    nextPage =() =>{
         let currentPage = this.state.currentPage
         const totalPage = Math.ceil(this.props.apiResponse.length / this.state.resultsPerPage)
         if (currentPage < totalPage) {
@@ -194,19 +182,6 @@ class LearningTool extends React.Component {
         * If value of discipline selected
         */
         let apiResponseForBody;
-     /*    if (learningToolDisValue) {
-            apiResponseForBody = tempFiguresForResults.filter((value) => {
-                let tempDisToMatchArray = value.disciplines.en;
-                let temp1 = tempDisToMatchArray.indexOf(learningToolDisValue.toLowerCase());
-                if (temp1 >= 0) {
-                    return true
-                } else {
-                    return false
-                }
-            });
-        } else {
-            apiResponseForBody = tempFiguresForResults;
-        } */
         apiResponseForBody = tempFiguresForResults;
         const { currentPage, resultsPerPage } = this.state;
         const indexOfLastData = currentPage * resultsPerPage;
@@ -356,6 +331,15 @@ const mapStateToProps = (state) => {
         learningToolDisValue: state.learningToolReducer.learningToolDisValue,
         numberOfRows: state.learningToolReducer.numberOfRows
     }
+}
+
+LearningTool.displayName = "LearningTool"
+
+LearningTool.propTypes = {
+    /** This function is called when saving of data */
+    linkLearningApp: PropTypes.func,
+     /** This function is called to close the popup */
+     closePopUp: PropTypes.func
 }
 
 /** 

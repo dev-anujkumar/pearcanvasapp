@@ -9,30 +9,29 @@ class FigureCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            learningType : {
-                "accounting-sims":"Accounting Sims",
-                "criminal-justice-sims":"Criminal Justice Sims",
-                "digital-interactives":"Video Library",
-                "economics-sims":"Economic Sims",
-                "helpdesk":"HelpDesk",
-                "hospitality-sims":"Hospitality Sims",
-                "information-technology-sims":"Information Technology Sims",
-                "qual-sims":"Qualitative Business Sims",
-                "soundbites":"Sound Bytes",
-                "Personal Finance":"Personal Finance",
-                "Psychology Sims":"Psychology Sims",
-                "video-submission":"Shared Media",
-                "video-quiz":"Media Quiz",
-                "myvirtual-child":"MyVirtualChild",
-                "myvirtual-life":"MyVirtualLife",
-                "survey":"Surveys and Inventories",
-                "writingsolutions":"Writing Solutions"
+            learningType: {
+                "accounting-sims": "Accounting Sims",
+                "criminal-justice-sims": "Criminal Justice Sims",
+                "digital-interactives": "Video Library",
+                "economics-sims": "Economic Sims",
+                "helpdesk": "HelpDesk",
+                "hospitality-sims": "Hospitality Sims",
+                "information-technology-sims": "Information Technology Sims",
+                "qual-sims": "Qualitative Business Sims",
+                "soundbites": "Sound Bytes",
+                "Personal Finance": "Personal Finance",
+                "Psychology Sims": "Psychology Sims",
+                "video-submission": "Shared Media",
+                "video-quiz": "Media Quiz",
+                "myvirtual-child": "MyVirtualChild",
+                "myvirtual-life": "MyVirtualLife",
+                "survey": "Surveys and Inventories",
+                "writingsolutions": "Writing Solutions"
             }
         }
-        this.figureCardFunction = this.figureCardFunction.bind(this);
     }
 
-    figureCardFunction() {
+    figureCardFunction =() =>{
         this.props.selectedFigure(this.props.apiResultObject)
     }
 
@@ -53,7 +52,7 @@ class FigureCard extends React.Component {
                     />
                 </td>
                 <td className="tableRow">
-                  {this.state.learningType[this.props.apiResultObject.type]}
+                    {this.state.learningType[this.props.apiResultObject.type]}
                 </td>
                 <td >
                     <p className="tableRow" htmlFor={this.props.forInputKey}>{this.props.apiResultObject.disciplines.en.join(", ")}</p>
@@ -71,5 +70,18 @@ class FigureCard extends React.Component {
         );
     }
 }
+FigureCard.displayName = "FigureCard"
 
+FigureCard.propTypes = {
+    /** Unique key for each input field */
+    forInputKey: PropTypes.number,
+    /** Unique key for each  field */
+    key: PropTypes.number,
+    /** this objects holds the value of all Learning tool to show */
+    apiResultObject: PropTypes.array,
+    /** this objects holds the value of selected Learning tempelate to show */
+    selectedResult: PropTypes.object,
+    /**selected entery from table of body */
+    selectedFigure: PropTypes.object
+}
 export default FigureCard;

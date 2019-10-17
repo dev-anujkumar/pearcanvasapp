@@ -346,6 +346,7 @@ class ElementAsideContainer extends Component {
         );
     }
 }
+ElementAsideContainer.displayName = "ElementAsideContainer"
 
 ElementAsideContainer.propTypes = {
     /** slate data attached to store and contains complete slate object */

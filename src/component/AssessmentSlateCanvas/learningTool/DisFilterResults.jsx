@@ -37,4 +37,10 @@ class DisFilterResults extends React.Component {
     }
 }
 
+DisFilterResults.displayName = "DisFilterResults"
+
+DisFilterResults.propTypes = {
+    /** this array holds the add the descpline value */
+    apiResponseForDis: PropTypes.array,
+}
 export default DisFilterResults;

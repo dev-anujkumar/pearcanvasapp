@@ -24,7 +24,12 @@ class ApiResults extends React.Component {
     apiResultsJsx = (apiResponseForBody, selectedFigure, selectedResult) => {
         if (apiResponseForBody.length >= 1) {
             let cardForApiResults = apiResponseForBody.map((value, index) => {
-                return <FigureCard forInputKey={index} key={index} apiResultObject={value} selectedResult={selectedResult} selectedFigure={selectedFigure}/>
+                return <FigureCard 
+                forInputKey={index} 
+                key={index} 
+                apiResultObject={value} 
+                selectedResult={selectedResult} 
+                selectedFigure={selectedFigure}/>
             });
             return cardForApiResults;
         } else {
@@ -44,4 +49,14 @@ class ApiResults extends React.Component {
     }
 }
 
+ApiResults.displayName = "ApiResults"
+
+ApiResults.propTypes = {
+    /** this objects holds the value of all Learning tool to show */
+    apiResponseData: PropTypes.array,
+    /** this objects holds the value of selected Learning tempelate to show */
+    selectedResult: PropTypes.object,
+    /**selected entery from table of body */
+    selectedFigure: PropTypes.object
+}
 export default ApiResults;
