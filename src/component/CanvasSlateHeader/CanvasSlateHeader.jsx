@@ -138,6 +138,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
     }
 }
 
+SlateHeader.displayName = "SlateHeader";
+
 SlateHeader.defaultProps = {
     slateType: "section",
     slateTitle: {}

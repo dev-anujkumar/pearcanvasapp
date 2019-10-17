@@ -89,15 +89,34 @@ describe('Testing Element Audio-Video component', () => {
     });
     describe('Testing Element  component with props', () => {
         let type = "figure";
+  
         const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-        
-        // it('onClick', () => {
-        //     elementAudioVideoInstance.onClick();
+        const mockLoginfn = jest.fn();
+        it('onClick', () => {
+            elementAudioVideoInstance.handleC2MediaClick(e);
+        }) 
+       
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+        })
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            config.alfrescoMetaData = {nodeRef : {}}
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+        })
+        it('Alfresco Data Handling', () => {
+            const elementAudioVideo = mount(<ElementAudioVideo {...props} />, { attachTo: document.body })
+            elementAudioVideo.find('ElementAudioVideo').instance().dataFromAlfresco({ assetType: "video" })
+        })   
+        // it('onFocus', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} />)
         // })
-        // it('onKeyup', () => {
-        //     elementAudioVideoInstance.onKeyup();
+        // it('onBlur', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} handleBlur={mockLoginfn}/>)
         // })
-
     })
 });

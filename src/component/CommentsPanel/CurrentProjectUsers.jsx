@@ -1,33 +1,28 @@
 import React from 'react'
 //const configModule = require('../../js/config_module.js');
 import PropTypes from 'prop-types';
- class CurrentProjectUsers extends React.Component {
+class CurrentProjectUsers extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            
-        }
-        this.getUser = this.getUser.bind(this);
     }
 
-/**
-  * 
-  *@discription - This function is to get the user of project
-    @param {String} user - get user name
- 
-  */
-    getUser(user, e) {
-         const previousSelectedItems = document.getElementsByClassName("assign-user-list-items")
+    /**
+     * 
+     *@discription - This function is to get the user of project
+      @param {String} user - get user name
+    */
+    getUser = (user, e) => {
+        const previousSelectedItems = document.getElementsByClassName("assign-user-list-items")
         for (let i = 0; i < previousSelectedItems.length; i++) {
             let className = previousSelectedItems[i]
             className.classList.remove("asignee-selected")
         }
-        e.target.className = "assign-user-list-items asignee-selected" 
-       this.props.newAssigneeUser(user)
+        e.target.className = "assign-user-list-items asignee-selected"
+        this.props.newAssigneeUser(user)
     }
 
     render() {
-        const { currentAssingnee,users } = this.props
+        const { currentAssingnee, users } = this.props
         return (
             <ul className="assign-user-list-popup-container">
                 {
@@ -47,9 +42,9 @@ import PropTypes from 'prop-types';
 CurrentProjectUsers.propTypes = {
     /** current assignee of the comment */
     currentAssingnee: PropTypes.string.isRequired,
-      /** new  assignee of the comment */
-    newAssigneeUser:PropTypes.func,
-       /** users of project */
-    users:PropTypes.array
+    /** new  assignee of the comment */
+    newAssigneeUser: PropTypes.func,
+    /** users of project */
+    users: PropTypes.array
 }
 export default CurrentProjectUsers;

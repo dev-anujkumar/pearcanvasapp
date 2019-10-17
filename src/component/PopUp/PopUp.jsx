@@ -16,6 +16,11 @@ class PopUp extends React.Component {
         this.state ={ }
     }
 
+
+    /**
+    * @description - This function is to handle the buttons (save ,cancel, ok).
+    * @param {event} 
+    */
     renderButtons = (props) => {
         if(props.isLockPopup || props.isLockReleasePopup){ //Slate lock popup
             return(
@@ -64,7 +69,11 @@ class PopUp extends React.Component {
             )
         } 
     }
-    
+
+    /**
+    * @description - This function is responsible for handling the Input box of the popup.
+    * @param {event} 
+    */
     renderInputBox = (props) => {
         if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete){
             return null
@@ -97,6 +106,11 @@ class PopUp extends React.Component {
             )
         }
     }
+
+    /**
+    * @description - This function is responsible for rendering the Dialog text in the popup.
+    * @param {event} 
+    */
     
     renderDialogText = (props) => {
         if(props.showDeleteElemPopup){
@@ -135,8 +149,7 @@ class PopUp extends React.Component {
  
     
     render() {
-        const { dialogText, placeholder, rows, active, saveContent, togglePopup, saveButtonText, cols, maxLength, assessmentClass, handleChange, showDeleteElemPopup, yesButton, cancelBtnText, deleteInstruction, deleteElement, isLockPopup, inputValue } = this.props;
-        console.log("showDeleteElemPopup >> ", showDeleteElemPopup)
+        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, } = this.props;
         return (
             <div className="">
                 {
@@ -158,6 +171,7 @@ class PopUp extends React.Component {
         );
     }
 }
+PopUp.displayName = "PopUp";
 
 PopUp.defaultProps = {
     dialogText: "",
