@@ -37,6 +37,7 @@ export class TinyMceEditor extends Component {
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.assetPopoverButton = null;
+        this.lastContent = '';
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -97,10 +98,44 @@ export class TinyMceEditor extends Component {
                         this.props.openGlossaryFootnotePopUp(false);
                     }
                 });
+                editor.on('keydown', (e) => {
+                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                    if (activeElement) {
+                        if (!activeElement.children.length) {
+                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                            let div = document.createElement('div');
+                            div.innerHTML = this.lastContent;
+                            div.children[0].innerHTML = '<br/>';
+                            activeElement.innerHTML = div.children[0].outerHTML;
+                        }
+                        else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                            let div = document.createElement('div');
+                            div.innerHTML = this.lastContent;
+                            div.children[0].innerHTML = '<br/>';
+                            activeElement.innerHTML = div.children[0].outerHTML;
+                        }
+                        this.lastContent = activeElement.innerHTML;
+                    }
+                });
 
                 editor.on('keyup', (e) => {
                     let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
                     if (activeElement) {
+                        if (!activeElement.children.length) {
+                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                            let div = document.createElement('div');
+                            div.innerHTML = this.lastContent;
+                            div.children[0].innerHTML = '<br/>';
+                            activeElement.innerHTML = div.children[0].outerHTML;
+                        }
+                        else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                            let div = document.createElement('div');
+                            div.innerHTML = this.lastContent;
+                            div.children[0].innerHTML = '<br/>';
+                            activeElement.innerHTML = div.children[0].outerHTML;
+                        }
+                        this.lastContent = activeElement.innerHTML;                       
                         if (activeElement.innerText.trim().length) {
                             activeElement.classList.remove('place-holder')
                         }
