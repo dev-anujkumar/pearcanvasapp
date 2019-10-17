@@ -15,8 +15,6 @@ beforeEach(() => {
 //Rendering test cases
 describe('Test Rendering of ErrorComp', () => {
     it('Have 1 ErrorComp class ', () => {
-        // const instance = wrapper.find('ErrorComp').instance();
-
         expect(wrapper.find('.ErrorComp')).toHaveLength(1);
     })
 });
