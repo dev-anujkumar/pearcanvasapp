@@ -1,10 +1,9 @@
 import {
-    CURRENT_SLATE_LO_DATA, IS_LOELEMENT_EXIST
+    CURRENT_SLATE_LO_DATA
 } from '../constants/Action_Constants';
 
 const INIT_STATE = {
-    currentSlateLOData : "",
-    isLO:false
+    currentSlateLOData : ""
 }
 
 export default function (state = INIT_STATE, action){
@@ -14,12 +13,7 @@ export default function (state = INIT_STATE, action){
                 ...state,
                 currentSlateLOData : action.payload.currentSlateLOData
             }
-        case IS_LOELEMENT_EXIST: {
-            return {
-                    ...state,
-                    isLO:action.payload
-                }
-        }
+      
         default:
             return state; 
     }

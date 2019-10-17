@@ -23,6 +23,9 @@ export const VIDEO_ELEMENT_CREATED = 'VIDEO_ELEMENT_CREATED'
 export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
 export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
+/*---------------Element Updation ----------------------*/ 
+export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
+
 /*---------------Element Container ----------------------*/ 
 export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
@@ -43,7 +46,6 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
 /*--------------- Slate Tag -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
-export const IS_LOELEMENT_EXIST = 'IS_LOELEMENT_EXIST'
 
 /*--------------- Refresh Slate -------------------*/
 export const REFRESH_SLATE = 'REFRESH_SLATE'

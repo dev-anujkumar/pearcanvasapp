@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { connect } from 'react-redux';
 import config from '../../config/config';
+import { sendDataToIframe } from '../../constants/utility.js';
 export class ElementMetaLOList extends Component {
   constructor(props) {
     super(props);
@@ -116,7 +117,7 @@ export class ElementMetaLOList extends Component {
  
 onLOLClickHandle(lolData){
   if(lolData ==""){
-      window.parent.postMessage({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+    sendDataToIframe({'type': 'openLoPopup','message':{'text':'NO SLATE TAG AVAILABLE','data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
    }
 }
   onClick() {

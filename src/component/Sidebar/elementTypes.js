@@ -649,5 +649,29 @@ export default {
             }
         },
         enumType: 'interactive'
+    },
+    "chapterintro": {
+        "primary-chapterintro": {
+            text: 'Opener Element',
+            enum: 'NA',
+            dropdownDisabled: true,
+            subtype: {
+                'secondary-chapterintro': {
+                    text: 'Opener Element',
+                    labelText: 'OE',
+                    enum: 'NA',
+                }
+            },
+            attributes: {
+                alt_text: {
+                    text: 'Alt Text',
+                    isEditable: false
+                },
+                long_description: {
+                    text: 'Long Description',
+                    isEditable: false
+                }
+            }
+        } 
     }
 };

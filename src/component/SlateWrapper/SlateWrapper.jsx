@@ -21,14 +21,13 @@ import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTy
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK,METADATA_ANCHOR,LO_LIST,ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
-import { findLOElementExist } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -439,7 +438,6 @@ class SlateWrapper extends Component {
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
                         this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn);
-                        this.props.findLOElementExist(true);
                         
                     }
                     else{
@@ -730,7 +728,6 @@ export default connect(
         createElementMeta,
         createElementMetaList,
         swapElement,
-        setSplittedElementIndex,
-        findLOElementExist
+        setSplittedElementIndex
     }
 )(SlateWrapper);

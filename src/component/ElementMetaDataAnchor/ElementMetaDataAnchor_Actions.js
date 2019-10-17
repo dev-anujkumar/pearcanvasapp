@@ -16,9 +16,3 @@ export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
         }
     })
 }
-export const findLOElementExist = (value) => (dispatch, getState) => {
-    dispatch({
-        type: 'IS_LOELEMENT_EXIST',
-        payload: value
-    })
-}
