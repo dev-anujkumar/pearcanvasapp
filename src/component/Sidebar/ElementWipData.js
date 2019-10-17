@@ -223,27 +223,5 @@ export default {
         },
         "versionUrn": "urn:pearson:work:9c2d0567-c24d-44f5-8e8e-5b7d9859a26d",
         "contentUrn": "urn:pearson:entity:06f51645-ecd8-456f-bc60-0e7ad8fcd950"
-    },
-    // "list-1": {},
-    // "list-2": {},
-    // "list-3": {},
-    // "list-4": {},
-    // "list-5": {},
-    // "list-6": {},
-    // "list-7": {},
-    /* "image-figure-half": {},
-    "image-figure-width": {},
-    "image-figure-wider": {},
-    "image-figure-full": {},
-    "image-table-half": {},
-    "image-table-width": {},
-    "image-table-wider": {},
-    "image-table-full": {},
-    //other image types
-    "video-smartlink": {},
-    "video-alfresco": {},
-    "audio-smartlink": {},
-    "audio-alfresco": {},
-    "mathml-equation":{} */
-    //interactive types and others
+    }
 }

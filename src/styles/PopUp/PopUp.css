@@ -83,6 +83,10 @@
     min-height: 2.5em;
     margin: 0 0 .25em;
     border: 1px solid;
+    font: 400 13.3333px Arial;
+  }
+  .dialog-input-textarea::placeholder{
+    font: 400 13.3333px Arial;
   }
   .dialog-input-textarea.assessmentAndInteractive {
     margin: .30em 0 .25em;
@@ -131,7 +135,7 @@
 }
 
 .dialog-buttons{
-    padding: 17px 8px 40px;
+    padding: 17px 8px 28px;
 }
 .dialog-buttons.single_assessment{
   width:100%;
@@ -148,7 +152,7 @@
 }
 .dialog-input textarea:focus {
   outline: none !important;
-  border-color: #719ECE;
+  border-color: #000080;
   box-shadow: inset 0 0 0 1px #3288e6;
 }
 .dialog-input input:focus {

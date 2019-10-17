@@ -15,3 +15,35 @@ global.shallow = shallow;
 global.render = render;
 global.mount = mount;
 global.sinon = sinon;
+global.alfrescoMetaData = {},
+global.PatternBroker = {
+    default: {
+        create: function () {
+            return {
+                corsId : "corsId",
+                setup: function() { },
+                run: function() { },
+                on: function() { }
+            }
+         },
+        extract: function () { },
+        getOwnChildProperty: function () { },
+        getOwnChildPropertyValue: function () { },
+        items: { MetaData: {}, ProductLink: {}, AddAnAsset: {}, AddAnAssetLucene: {}, SearchSelect: {} },
+        setup: function () { },
+    }
+}
+global.PatternSearchSelect = {
+    default: function () { }
+}
+global.PatternAddAnAsset = {
+    default: function () { }
+}
+global.PatternProductLink = {
+    default: function () { },
+}
+global.MutationObserver = function () {
+    return {
+        observe: function () { }
+    }
+}

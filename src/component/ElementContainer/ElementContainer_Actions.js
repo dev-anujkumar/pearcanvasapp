@@ -3,7 +3,7 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
 let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
@@ -125,7 +125,39 @@ export const deleteElement = (elmId, type, parentUrn,asideData) => (dispatch, ge
         }
 
     }).catch(error => {
-
         console.log("delete Api fail", error);
     })
+}
+/**
+ * API to update the element data
+ * @param {*} updatedData the updated content
+ * @param {*} elementIndex index of the element on the slate
+ */
+export const updateElement = (updatedData,elementIndex) => (dispatch, getState) => {
+    axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+        updatedData,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(response =>{
+        //console.log("response from update API",response.data)
+        let parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        //console.log("parentData",parentData[config.slateManifestURN]);
+        newParentData[config.slateManifestURN].contents.bodymatter[elementIndex]=response.data;
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+
+    }).catch(error => {
+        console.log("updateElement Api fail", error);
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+    }) 
 }

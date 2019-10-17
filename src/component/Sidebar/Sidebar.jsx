@@ -65,6 +65,10 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
+        if(this.state.activePrimaryOption == "primary-chapterintro"){
+            e.stopPropagation()
+            return false
+        }
         let elementDropdown = e.target.getAttribute('data-element');
         if(this.state.elementDropdown === elementDropdown) {
             elementDropdown = '';
@@ -105,6 +109,25 @@ class Sidebar extends Component {
     
             return primaryOptions;
         } 
+        else if( this.props.activeElement.elementWipType == "element-learningobjectivemapping"){
+           primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
+            <div className="element-dropdown">
+                <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+                </div>
+            </div>
+          
+           return primaryOptions;
+        }
+        else if(this.props.activeElement.elementWipType == "element-generateLOlist"){
+            primaryOptions = <div className="panel_show_module">
+                    <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
+                        <p>Show Module Name</p>
+                        <label className="switch"><input type="checkbox" checked="" /><span className="slider round"></span></label>
+                       
+                         </div>;
+            return primaryOptions;
+        }
+        
     }
 
     handleSecondaryOptionChange = e => {

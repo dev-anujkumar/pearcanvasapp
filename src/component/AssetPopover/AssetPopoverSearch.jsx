@@ -10,10 +10,7 @@ import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apo
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import FigureCard from './FigureCard.jsx';
-// import { saveAssetLinkedMedia } from '../editor_tools_module.jsx';
-// import { hasReviewerRole } from '../../js/utility_module'
-// const configModule = require('../../js/config_module.js');
-// const configObject = configModule.GET_CONFIG();
+
 import { saveAssetLinkedMedia, clearAssetPopoverLink} from './openApoFunction.js';
 const config = require('../../config/config.js')
 const WRAPPER_URL = config.WRAPPER_URL;
@@ -30,7 +27,7 @@ class AssetPopoverSearch extends React.Component {
 
         if(assetPopoverSpan){
             let originalText = assetPopoverSpan.innerHTML;
-            assetPopoverSpan.outerHTML = originalText;
+            document.getElementById('asset-popover-attacher').outerHTML = originalText;
         }
         this.props.apoSearchClose();
         window.parent.postMessage({ 'type': 'enableToc', 'message': {} }, WRAPPER_URL);
@@ -38,26 +35,14 @@ class AssetPopoverSearch extends React.Component {
 
     //Take text to be searched 
     searchForFigures = (e, stateImageData) => {
-       // if(e.charCode == 13){
-           // let hittingApi = true
+      
             let searchTermName = e.target.value;
            
             this.props.searchForFigures(searchTermName, stateImageData)
-       // }
     }
 
     //Fn for return selectedfigure after save on selected figure 
     apoSearchSave = (apoObject, imageObj) =>{
-        //set id and args in state and after that trigger the function "saveAssetLinkedMedia" in editor_tools_modules
-        // this.props.apoSearchSave(apoObject, args);
-        // //Check if nothing selected
-
-        // if(args ==='undefiined' || args === ''){   
-        //     //Handle if nothing selected eg. show errors
-        // }else{
-        //     //Now close the popup
-        //     this.apoSearchClose();
-        // }
         saveAssetLinkedMedia(apoObject, imageObj)
         this.apoSearchClose(); 
     }
