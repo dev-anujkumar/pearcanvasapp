@@ -6,21 +6,12 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import PopUp from './../PopUp';
-
-// IMPORT - Constants //
-import { ESA_DIALOG_TEXT } from './../../constants/Element_Constants';
-import { ESA_POPUP_PLACEHOLDER } from './../../constants/Element_Constants';
-import { ESA_POPUP_ROWS } from './../../constants/Element_Constants';
-import { ESA_POPUP_COLUMNS } from './../../constants/Element_Constants';
-import { ESA_POPUP_BUTTON_TEXT } from './../../constants/Element_Constants';
-import { ESA_POPUP_MAXLENGTH } from './../../constants/Element_Constants';
-import { ESA_POPUP_CLASSNAME } from './../../constants/Element_Constants';
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { showTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 
-/*** @description - ElementSingleAssessment is a class based component. It is defined simply
-* to make a skeleton of the assessment-type element .*/
+/*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 export class ElementSingleAssessment extends Component {
     constructor(props) {
@@ -40,10 +31,8 @@ export class ElementSingleAssessment extends Component {
         let that = this;
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
-        //let searchMode = $('.editor-instance[data-id="' + this.state.elementid + '"]').attr("data-elementdataassessmentstyle") || "partial";//"partial";
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "partial";//"partial";
-        //let existingURN = "";//urn:pearson:work:
         let prefix = 'urn:pearson:work:';
         let startIndex = prefix.length;
         let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
@@ -57,8 +46,6 @@ export class ElementSingleAssessment extends Component {
         showTocBlocker();
         disableHeader(true);
         this.toggleAssessmentPopup(false);
-        //window.parent.postMessage({ 'type': 'blockerTOC', 'message': { status: true } }, WRAPPER_URL);
-
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, function (assessmentData) {
 
@@ -75,18 +62,8 @@ export class ElementSingleAssessment extends Component {
                 alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
             }
             that.setState({assessmentId: id,assessmentItemId : itemID,})
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentitemid", "");
-            // if (searchMode == "partial") {
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentid", id);
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentitemid", itemID);
-            // } else {
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmentid", id);
-            // }
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-elementdataassessmenttitle", title);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", assessmentFormat);
-
         });
-        //hideTocBlocker();
+        hideTocBlocker();
     }
 
     /**Assessment PopUp Functions */
@@ -96,14 +73,6 @@ export class ElementSingleAssessment extends Component {
             showAssessmentPopup : value
         });
     }
-    /*** @description - This function is to select the assesssment from another PopUp*/
-    // selectAssessmentPopup = () => {
-    //     console.log("select type of assessment!!!!!")
-    // }
-    /*** @description - This function is to open the assesssment based on UUID*/
-    // openAssessment=(assessmentUUID)=>{
-    //     console.log("assessmentUUID:::",assessmentUUID);
-    // }
 
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
@@ -120,17 +89,19 @@ export class ElementSingleAssessment extends Component {
         });
     }
 
+    /*** @description - This function is to handle Focus on the Assessment element on click*/
     handleAssessmentFocus = () => {
         this.props.handleFocus();
     }
-
+    /*** @description - This function is to handle Blur on the Assessment element on blur*/       
     handleAssessmentBlur = () =>{
         this.props.handleBlur();
     }
 
     /*** @description - This function is for handling the different types of figure-element.
-    * @param model object that defined the type of element*/
-    renderAssessmentType = (model = {}, index) => {
+    * @param model object that defined the type of element
+    */
+    renderAssessmentType = (model = {}) => {
         var assessmentJSX;
         var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
         if (assessmentUsageType.length > 0) {
@@ -138,6 +109,7 @@ export class ElementSingleAssessment extends Component {
                 <li key={i} className="singleAssessment_Dropdown_item" onClick={(e) => this.handleAssessmentTypeChange(usageType, e)}>{usageType}</li>
             )
         }
+        /*JSX for the Single Assessment Element */
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
@@ -165,30 +137,10 @@ export class ElementSingleAssessment extends Component {
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" class="imageTextWidth lazyloaded imageeee"></img>
-
-{/** Assessment PopUp*/}
-
-                    {/* {this.state.showAssessmentPopup && <PopUp
-                        dialogText={ESA_DIALOG_TEXT}
-                        placeholder={ESA_POPUP_PLACEHOLDER}
-                        rows={ESA_POPUP_ROWS}
-                        active={this.state.showAssessmentPopup}
-                        // cancelPopUp={e => this.toggleAssessmentPopup(e, this)}
-                        togglePopup={(e) => this.toggleAssessmentPopup(e, this)}
-                        // saveContent={this.openAssessment}
-                        // cancelPopUp={() => this.selectAssessmentPopup}
-                        saveButtonText={ESA_POPUP_BUTTON_TEXT}
-                        cols={ESA_POPUP_COLUMNS}
-                        maxLength={ESA_POPUP_MAXLENGTH}
-                        assessmentClass={ESA_POPUP_CLASSNAME}
-                    />} */}
-
                 </div>
             </figure>
 
         </div>
-
-
         return assessmentJSX;
     }
     render() {
@@ -220,10 +172,14 @@ ElementSingleAssessment.propTypes = {
     toggleUsageTypeDropdown: PropTypes.func,
     /** Handler to toggle the assessment pop-up */
     toggleAssessmentPopup: PropTypes.func,
-    /** Handler to select the assessment from second pop-up */
-    selectAssessmentPopup: PropTypes.func,
-    /** Handler to open the assessment based on UUID */
-    openAssessment: PropTypes.func,
+     /** Handler to Add C2 -Media to the assessment*/
+    handleC2AssessmentClick : PropTypes.func,
+    /** Detail of element in JSON object */
+    model: PropTypes.object,
+    /** index of element  */
+    index: PropTypes.number,
+    /** element id of the element */
+    elementId: PropTypes.number
 }
 
 
