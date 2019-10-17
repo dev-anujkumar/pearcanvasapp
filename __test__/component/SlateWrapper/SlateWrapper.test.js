@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { stub } from 'sinon';
 import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
-import { exportAllDeclaration } from '@babel/types';
 
 xdescribe('Testing <SlateWrapper> Component', () => {
     test('renders without crashing', () => {

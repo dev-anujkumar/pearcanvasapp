@@ -31,7 +31,7 @@ import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrap
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-class CanvasWrapper extends Component {
+export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
 
@@ -53,7 +53,8 @@ class CanvasWrapper extends Component {
     static getDerivedStateFromProps(nextProps, prevState){
             if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
-            }       
+            }
+            return null;    
      }
 
     componentDidMount() {        
