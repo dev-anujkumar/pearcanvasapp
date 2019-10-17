@@ -1,12 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from '../../../src/Appstore/rootReducer.js';
 import moxios from 'moxios';
-
 import * as actions from '../../../src/component/CommentsPanel/CommentsPanel_Action';
-import { comments,comment, filters, users } from '../../../fixtures/commentPanelData.js'
-import axios from 'axios';
+import { comments, users } from '../../../fixtures/commentPanelData.js'
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
