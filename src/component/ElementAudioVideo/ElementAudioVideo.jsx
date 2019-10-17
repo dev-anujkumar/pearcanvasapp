@@ -67,10 +67,10 @@ export class ElementAudioVideo extends Component {
     }
     /**
      * @description Open C2 module with predefined Alfresco location
-     * @param {*} data alfresco locationData
+     * @param {*} locationData alfresco locationData
      */
-    handleC2ExtendedClick = (data) => {
-        let data_1 = data;
+    handleC2ExtendedClick = (locationData) => {
+        let data_1 = locationData;
         let that = this;
         c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {

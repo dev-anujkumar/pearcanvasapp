@@ -72,7 +72,7 @@ export class ElementFigure extends Component {
     }
     /**
      * @description Open C2 module with predefined Alfresco location
-     * @param {*} data alfresco locationData
+     * @param {*} locationData alfresco locationData
      */
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
