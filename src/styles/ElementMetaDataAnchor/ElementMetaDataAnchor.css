@@ -55,5 +55,9 @@ width:230px;
     float: right;
     margin-top:0;
 }
-
+.metadata-anchor.disabled{
+    pointer-events: none;
+    cursor: none;
+    opacity: 0.3;
+}
  

@@ -2,16 +2,24 @@ import React from 'react';
 import { mount } from 'enzyme';
 import OpenerElement from '../../../src/component/OpenerElement';
 import { openerElementData } from '../../../fixtures/OpenerElementData'
+import config from '../../../src/config/config';
 
 describe('Testing Opener component with props', () => {
-    
+    const props = {
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        model : openerElementData.html,
+        onClick : ()=>{}
+    }
     it('Simulating click event to open label dropdown', () => {
-        const openerComponent = mount( <OpenerElement model={openerElementData.html} /> )
+        const openerComponent = mount( <OpenerElement {...props} /> )
         openerComponent.find('div.element-dropdown-title.label-content').simulate('click');
         openerComponent.find('ul.element-dropdown-content>li:first-child').simulate('click');
     })
     it('Changing input number', () => {
-        const openerComponent = mount( <OpenerElement model={openerElementData.html} /> )
+        const openerComponent = mount( <OpenerElement {...props} /> )
         openerComponent.find('input.element-dropdown-title.opener-number').simulate('change', { target: { value: '1234567890!!!' } });
     })
     describe('Simulating keyPress event on input number', () => {
@@ -24,7 +32,20 @@ describe('Testing Opener component with props', () => {
         })
     })
     it('Changing input title', () => {
-        const openerComponent = mount( <OpenerElement model={openerElementData.html} /> )
+        const openerComponent = mount( <OpenerElement {...props} /> )
         openerComponent.find('input.element-dropdown-title.opener-title').simulate('change', { target: { value: '1234567890!!!' } });
+    })
+    it('Simulating alfresco click without alfresco location', () =>{
+        const openerComponent = mount( <OpenerElement {...props} /> )
+        openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+    })
+    it('Simulating alfresco click with alfresco location', () =>{
+        const openerComponent = mount( <OpenerElement {...props} /> )
+        config.alfrescoMetaData = {nodeRef : {}}
+        openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+    })
+    it('Alfresco Data Handling', () => {
+        const openerComponent = mount(<OpenerElement {...props} />, { attachTo: document.body })
+        openerComponent.find('OpenerElement').instance().dataFromAlfresco({ assetType: "image" })
     })
 })

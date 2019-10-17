@@ -45,8 +45,10 @@ class OpenerElement extends Component {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             this.setState({ imgSrc: epsURL, width })
-            document.querySelector("[name='alt_text']").innerHTML = altText;
-            document.querySelector("[name='long_description']").innerHTML = longDesc;
+            if (document.querySelector("[name='alt_text']"))
+                document.querySelector("[name='alt_text']").innerHTML = altText;
+            if (document.querySelector("[name='long_description']"))
+                document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
     }
     handleC2ExtendedClick = (data) => {

@@ -31,15 +31,11 @@ import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrap
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-class CanvasWrapper extends Component {
+export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            // navigation: false,
-            // activeSlateIndex: 0,
-            // activeSlate: config.slateList[0],
-            // showBlocker : false,
             editorToolbarRef: null,
             showReleasePopup : false,
             toggleApo : false,
@@ -53,7 +49,8 @@ class CanvasWrapper extends Component {
     static getDerivedStateFromProps(nextProps, prevState){
             if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
-            }       
+            }
+            return null;    
      }
 
     componentDidMount() {        
@@ -78,7 +75,6 @@ class CanvasWrapper extends Component {
         // *************************************************
         // commenting below setState() to test alternative
         // *************************************************
-        // this.setState({ editorToolbarRef: this.refs.editorToolbarRef })
         this.props.getSlateLockStatus(projectUrn ,slateId)     
         }
 
@@ -145,29 +141,6 @@ class CanvasWrapper extends Component {
     }
 
 
-    navigate = (nav) => {
-        // let activeSlateIndex = this.state.activeSlateIndex;
-        // if(nav === 'next') {
-        //     if(activeSlateIndex < (config.slateList.length -1)) {
-        //         activeSlateIndex++;
-        //     }
-        // } else if(nav === 'back') {
-        //     if(activeSlateIndex > 0 ) {
-        //         activeSlateIndex--;
-        //     }
-        // }
-
-        // this.setState({
-        //     navigation: true,
-        //     activeSlateIndex,
-        //     activeSlate:config.slateList[activeSlateIndex]
-        // });
-        // this.props.fetchSlateData(config.slateList[activeSlateIndex]);
-        // sendDataToIframe({
-        //     'type': HideWrapperLoader,
-        //     'message': { status: true }
-        // })
-    }
 
     releaseSlateLock = (projectUrn, slateId) => {
         this.props.releaseSlateLock(projectUrn, slateId)
@@ -180,15 +153,18 @@ class CanvasWrapper extends Component {
         return function (){ 
             clearTimeout(timer)
             timer = setTimeout(()=>{
-                if(_context.props.withinLockPeriod){
-                    callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
-                    _context.props.setLockPeriodFlag(false)
-                    // alert("Lock has been released")
-                    _context.setState({
-                        showReleasePopup: true
-                    })
-                }  
+                 this.debounceReleaseHandler(callback, _context)
             },900000)
+        }
+    }
+    debounceReleaseHandler = (callback, context) => {
+        if (context.props.withinLockPeriod) {
+            callback(config.projectUrn, Object.keys(context.props.slateLevelData)[0])
+            context.props.setLockPeriodFlag(false)
+            // alert("Lock has been released")
+            context.setState({
+                showReleasePopup: true
+            })
         }
     }
 
@@ -206,6 +182,7 @@ class CanvasWrapper extends Component {
             this.debounceReleaseTimeout()  
         }
     }
+
     toggleLockReleasePopup = (toggleValue, event) => {
         this.setState({
             showReleasePopup: toggleValue
@@ -255,13 +232,6 @@ class CanvasWrapper extends Component {
     }
     
     render() {
-        
-        // let navDisabled = '';
-        // if(this.state.activeSlateIndex === 0) {
-        //     navDisabled = 'back';
-        // } else if(this.state.activeSlateIndex === (config.slateList.length -1)) {
-        //     navDisabled = 'next';
-        // }
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
