@@ -165,6 +165,7 @@ export class TinyMceEditor extends Component {
                     }
                 });
 
+                
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){

@@ -99,21 +99,20 @@ class ElementContainer extends Component {
         let text = node.innerText;
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
         if (html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-            const dataToSend = this.props.element;                              // prepare data to update
+            const dataToSend = this.props.element;  // prepare data to update
             dataToSend.elementdata.text = text;
             dataToSend.html.text = html;
             dataToSend.html.footnotes = this.props.element.html.footnotes || {};
             dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-            //console.log("prepared Data", JSON.stringify(dataToSend));
-
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
             this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
-            //console.log("current Index",this.props.index);
         }
 
     }
 
-    
+    /**
+     * Checks mouse event out side of canvas area and handdling element border state
+     */
     handleBlurAside = () => {
         if(this.props.elemBorderToggle){
             this.setState({
@@ -127,6 +126,8 @@ class ElementContainer extends Component {
             })
         } 
     }
+
+
     learningObjectiveOperations = (text) =>{
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
@@ -162,6 +163,8 @@ class ElementContainer extends Component {
             showColorPaletteList : !showColorPaletteList
         })
     }
+
+
     selectColor = (event) => {
         const selectedColor = event.target.getAttribute('data-value')
         this.setState({
@@ -169,6 +172,9 @@ class ElementContainer extends Component {
         })
     }
     
+    /**
+     * Rendering Opener element color palette
+     */
     renderPaletteList = () =>{
         const { showColorPaletteList, activeColorIndex } = this.state
         if(showColorPaletteList){
@@ -211,6 +217,9 @@ class ElementContainer extends Component {
         });
     }
 
+    /**
+     * For deleting slate level element
+     */
     deleteElement = () => {
         const {id, type}=this.props.element;
         const {parentUrn,asideData} = this.props;
@@ -220,10 +229,16 @@ class ElementContainer extends Component {
         this.props.deleteElement(id, type,parentUrn,asideData);
     }
 
+    /**
+     * Render Element function takes current element from bodymatter and render it into currnet slate 
+     * @param {element} 
+    */
+
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
         let labelText = fetchElementTag(element, index);
+        /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
                 editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
@@ -242,7 +257,6 @@ class ElementContainer extends Component {
             case elementTypeConstant.BLOCKFEATURE:
                 editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
-
             case elementTypeConstant.FIGURE:
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
