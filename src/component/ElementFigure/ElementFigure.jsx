@@ -25,21 +25,26 @@ export class ElementFigure extends Component {
         }
     }
 
+    /**
+     * @description data after selecting an asset from alfresco c2 module
+     * @param {*} data selected asset data
+     */
     dataFromAlfresco = (data) => {
         let imageData = data;
-        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        // let width = imageData['width'] ? imageData['width'] : "";
+        // let height = imageData['height'] ? imageData['height'] : "";
+        // let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+        // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            // let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            // let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+            // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             this.setState({ imgSrc: epsURL })
@@ -48,8 +53,12 @@ export class ElementFigure extends Component {
 
         }
     }
-    handleC2ExtendedClick = (data) => {
-        let data_1 = data;
+    /**
+     * @description Open C2 module with predefined Alfresco location
+     * @param {*} locationData alfresco locationData
+     */
+    handleC2ExtendedClick = (locationData) => {
+        let data_1 = locationData;
         let that = this;
         c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -58,6 +67,9 @@ export class ElementFigure extends Component {
         })
 
     }
+    /**
+     * @description function will be called on image src add and fetch resources from Alfresco
+     */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
         if (e.target.tagName.toLowerCase() === "p") {
@@ -68,7 +80,7 @@ export class ElementFigure extends Component {
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
 
-        if (alfrescoPath && alfrescoPath.nodeRef) {
+        if (alfrescoPath && alfrescoPath.nodeRef) {         //if alfresco location is available
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -88,7 +100,7 @@ export class ElementFigure extends Component {
 
             this.handleC2ExtendedClick(data_1)
 
-        } else {
+        } else {                                                                            // alfresco location is not assigned to project
             c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
