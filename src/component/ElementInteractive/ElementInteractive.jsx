@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { showTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
@@ -46,17 +46,8 @@ class Interactive extends React.Component {
         showTocBlocker();
         disableHeader(true);
         this.togglePopup(false);
-
-        //  vex.dialog.prompt({
-        //     message: 'PLEASE ENTER A PRODUCT UUID',
-        //     placeholder: 'UUID',
-        //     callback: function (value) {
         productId = (value && value !== "") ? value : "Unspecified";
-
-        
-        //productId = "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
-            console.log(interactiveData)
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
             if (tempInteractiveType === 'video-mcq') {
@@ -71,90 +62,24 @@ class Interactive extends React.Component {
                 interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
             }
             let posterImage = {};
-            let itemsData = interactiveData['itemsData'];
-            let id = interactiveData['id'] ? interactiveData['id'] : "";
-            let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
-            let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
+
+            /* To be used in update API integration */ 
+
+            // let itemsData = interactiveData['itemsData'];
+            // let id = interactiveData['id'] ? interactiveData['id'] : "";
+            // let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
+            // let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
+
+
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
-            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
+            // let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';          // To be used in update API integration
             let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
-            let imageId = "";
+            // let imageId = "";                //  To be used in update API integration
             let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
-            var interactiveFormat;
+            // var interactiveFormat;           //  To be used in update API integration
             that.setState({itemID : workExample})
-
-
-            // if (interactiveData['itemsData'] && interactiveData['itemsData']['taxonomicType'] && interactiveData['itemsData']['taxonomicType'][0] && typeof interactiveData['itemsData']['taxonomicType'][0] === 'string') {
-            //     interactiveFormat = editor_utils.getTaxonomicFormat(interactiveData['itemsData']['taxonomicType'][0]);
-            // } else {
-            //     if (interactiveData.type === 'MMI') {
-            //         interactiveFormat = 'mmi';
-            //     }
-            //     else {
-            //         interactiveFormat = "";
-            //         vex.dialog.alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-            //     }
-            // }
-
-            // var interactiveTaxonomicType;
-            // if (interactiveData['itemsData'] && interactiveData['itemsData']['taxonomicType'] && interactiveData['itemsData']['taxonomicType'][1] && typeof interactiveData['itemsData']['taxonomicType'][1] === 'string') {
-            //     interactiveTaxonomicType = editor_utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
-            // } else {
-            //     vex.dialog.alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-            // }
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveid", workExample);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractivetype", interactiveTaxonomicType);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatainteractiveformat", interactiveFormat);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimageid", imageId);
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterpath", epsURL);
-
-            // if (interactiveTaxonomicType === 'video-mcq') {
-            //     if (totalduration) {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredatatotalduration", totalduration);
-            //     }
-            //     else {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredatatotalduration");
-            //     }
-            //     if (posterImage['imageId'] || posterImage['path']) {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterimage", JSON.stringify(posterImage));
-            //     }
-            //     else {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterimage");
-            //     }
-            //     if (posterImage['path']) {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataposterpath", posterImage['path']);
-            //     }
-            //     else {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterpath");
-            //     }
-
-            //     if (alttext) {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').attr("data-figuredataalttext", alttext);
-            //     }
-            //     else {
-            //         $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataalttext");
-            //     }
-            // }
-            // else {
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredatatotalduration");
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterimage");
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataalttext");
-            //     $('.editor-instance[data-id="' + that.state.elementid + '"]').removeAttr("data-figuredataposterpath");
-
-            // }
-            // that.state.editorContext = interactiveTaxonomicType;
-            // /* that.setState({
-            //     editorContext : interactiveTaxonomicType
-            // }) */
-
-            // /*
-            //     opening alt text sidebar when asset is added by clicking on the title part of the element
-            // */
-            // $('.editor-instance[data-id="' + that.state.elementid + '"]').find('header .fr-element').eq(0).click()
         }); 
-        //     }
-        // })
 
     }
      
@@ -409,11 +334,11 @@ class Interactive extends React.Component {
                             <div className="sh-container">
                                 <div>
                                     <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className="paragraphShowHideWidgetQuestionText" placeholder="Enter shown text" tagName={'p'} 
-                                     model={element.html.title} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                     model={element.html.title} id={this.props.id} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                     <p className="paragraphNumeroUno revealAns" resource="" aria-label="Reveal Answer">
                                     <a className="paragraphNumeroUno">
                                         <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} placeholder="Enter hidden text" 
-                                        onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} id={this.props.id} tagName={'p'}
+                                        id={this.props.id} tagName={'p'}
                                         model={element.html.subtitle}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} /></a>
                                     </p>
                                 </div>
@@ -430,9 +355,9 @@ class Interactive extends React.Component {
                 <figure className={figureImage} resource="">
                     <header>
                             <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
-                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                             <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
-                             onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </header>
                     <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
                     <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(true)}} >
@@ -450,25 +375,31 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.figuredata.postertext.text} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
                     <figcaption>
                         <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                         model={element.html.caption} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.caption} onFocus={this.onFocus} onKeyup={this.onKeyup} onBlur={this.onBlur} onClick={this.onClick} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                     model={element.html.caption} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                 </div>
             </div>
         }
         return jsx;
     }
 
+    /**
+     * @description - This function is for toggling the c2 media uuid popup.
+     * @param {event} value
+     */
+
     togglePopup = (value)=>{
+        this.props.handleFocus();
         this.setState({showAssesmentpopup:value})
     }
 
@@ -493,25 +424,11 @@ class Interactive extends React.Component {
             )
         } 
     }
-
-    onFocus = () => {
-
-    }
-    onKeyup = () => {
-
-    }
-    onBlur = () => {
-
-    }
-    onClick = () => {
-
-    }
 }
 
 Interactive.defaultProps = {
     /** Detail of element in JSON object */
-    model: PropTypes.object,
-    itemId: "urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+    itemId: ""
 }
 
 Interactive.propTypes = {
@@ -524,7 +441,7 @@ Interactive.propTypes = {
     onKeyup: PropTypes.func,
     /** Handler to attach on element focus */
     onFocus: PropTypes.func,
-    itemId: PropTypes.string,
-    model: PropTypes.object.isRequired
+    /** itemId coming from c2module */
+    itemId: PropTypes.string
 }
 export default Interactive;
