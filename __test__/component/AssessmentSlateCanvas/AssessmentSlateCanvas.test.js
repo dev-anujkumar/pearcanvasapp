@@ -3,17 +3,146 @@ import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { AssessmentSlateCanvas } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateCanvas';
 import {assessmentSlateDefault} from "./../../../fixtures/AssessmentSlateCanvasTestingData";
+import config from '../../../src/config/config';
+import { c2AssessmentModule } from '../../../src/js/c2_assessment_module'
 describe('Testing Assessment Slate Canvas component', () => {
-    xtest('renders without crashing', () => {
+    test('renders without crashing', () => {
         const div = document.createElement('div');
         ReactDOM.render(<AssessmentSlateCanvas model={assessmentSlateDefault}/>, div);
         ReactDOM.unmountComponentAtNode(div);
     })
-    let assessmentSlate = mount(<AssessmentSlateCanvas model={assessmentSlateDefault}/>);  
-    const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
-    xit('onClick Event', () => {
-    singleAssessment.find('div.AssessmentSlateMenu').simulate('click');
-    assessmentSlateInstance.onClick();
+    // let assessmentSlate = mount(<AssessmentSlateCanvas model={assessmentSlateDefault}/>);  
+    // const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+    // xit('onClick Event', () => {
+    // singleAssessment.find('div.AssessmentSlateMenu').simulate('click');
+    // assessmentSlateInstance.onClick();
+    // })
+    let wrapper;
+   
+    it('onClick', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault
+        }
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlateInstance.handleC2AssessmentClick("");
+        c2AssessmentModule.launchAssetBrowser('','','','','','',()=>{});
+
+    }) 
+    it ('Set getAssessmentDataPopup', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault
+        }
+
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlateInstance.setState({
+            getAssessmentDataPopup:true,
+        })
+        assessmentSlateInstance.forceUpdate();
     })
+
+    it ('Set getAssessmentDataPopup', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+  
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+      
+            assessmentSlateInstance.setState({assessmentId: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+            assessmentItemId : "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            assessmentItemTitle:"Open response question updated",
+            getAssessmentData:true,})    
+           
+            assessmentSlateInstance.forceUpdate();
+            assessmentSlate.update();
+    })
+   
+    it('onClick', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+        let assessmentData={
+            id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+            itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
+            title: "Open response question updated",
+            itemsData: {taxonomicType:["cite"]}
+
+        }
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlate.find('div.AssessmentSlateMenu').simulate('click');
+        assessmentSlateInstance.handleAssessmentFocus();
+        assessmentSlateInstance.launchAssetBrowserCallBack(assessmentData);
+
+    })
+    it('onBlur', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlateInstance.handleAssessmentBlur();
     
+    })
+    it('AddAssessment', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlateInstance.updateAssessment("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5","","Open response question updated","puf","","insert");
+        assessmentSlateInstance.forceUpdate();
+            assessmentSlate.update();
+            expect(assessmentSlateInstance.state.assessmentId).toEqual("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5")
+        
+    });
+    it('UpdateAssessment ', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        assessmentSlateInstance.updateAssessment("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5","","Open response question updated","puf","","update");
+        assessmentSlateInstance.forceUpdate();
+            assessmentSlate.update();
+            expect(assessmentSlateInstance.state.assessmentId).toEqual("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5")
+        
+    });
+    it('UpdateAssessment ', () => {
+        let props = {
+            handleFocus: function(){},
+            handleBlur : function(){},
+            model : assessmentSlateDefault,
+            onClick : ()=>{},
+        }
+        const expectedValue = { assessmentType : "CITE"}
+        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+       const returnvalue = assessmentSlateInstance.selectAssessmentType("Full Assessment CITE");
+        assessmentSlateInstance.forceUpdate();
+            assessmentSlate.update();
+            expect(returnvalue).toEqual(expectedValue.assessmentType)
+        
+    });
 });

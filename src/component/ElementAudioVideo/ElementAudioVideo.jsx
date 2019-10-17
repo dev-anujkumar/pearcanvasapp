@@ -196,6 +196,7 @@ export class ElementAudioVideo extends Component {
 }
 
 
+ElementAudioVideo.displayName = "ElementAudioVideo"
 
 ElementAudioVideo.defaultProps = {
     /** Detail of element in JSON object */

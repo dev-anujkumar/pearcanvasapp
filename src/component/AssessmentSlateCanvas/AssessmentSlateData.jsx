@@ -214,3 +214,4 @@ export class AssessmentSlateData extends Component {
         );
     }
 }
+AssessmentSlateData.displayName = "AssessmentSlateData"
