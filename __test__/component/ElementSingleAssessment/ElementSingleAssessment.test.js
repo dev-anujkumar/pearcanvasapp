@@ -21,8 +21,10 @@ describe('Testing Element Single Assessment component', () => {
     };
 
     let singleAssessment = mount(<ElementSingleAssessment {...props}  />);
+    const div = document.createElement('div');
     it('Render Single Assessment default ', () => {
-        expect(singleAssessment).toMatchSnapshot();
+            ReactDOM.render(<ElementSingleAssessment {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
     });
 
     it('onClick Event', () => {
@@ -48,5 +50,15 @@ describe('Testing Element Single Assessment component', () => {
 
             
     });
-      
+
+    it('Simulating alfresco click without alfresco location', () =>{
+        const singleAssessment = mount( <ElementSingleAssessment {...props} /> )
+        singleAssessment.find('ElementSingleAssessment').instance().handleC2AssessmentClick({target : {tagName : 'b'}}) 
+    })
+    it('Simulating alfresco click with alfresco location', () =>{
+        const singleAssessment = mount( <ElementSingleAssessment {...props} /> )
+        config.alfrescoMetaData = {nodeRef : {}}
+        singleAssessment.find('ElementSingleAssessment').instance().handleC2AssessmentClick({target : {tagName : 'b'}}) 
+    })
+
 });

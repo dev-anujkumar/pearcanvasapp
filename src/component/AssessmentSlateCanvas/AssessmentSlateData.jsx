@@ -26,19 +26,19 @@ export class AssessmentSlateData extends Component {
     /*** @description - This function is to handle change in assessment/LT-LA
      * @param e- event triggered
     */
-    changeAssessment =(e)=> {
+    changeAssessment = (e) => {
         let assessmentFormat = this.state.activeAssessmentType;
-        if(assessmentFormat == 'puf') {
+        if (assessmentFormat == 'puf') {
             this.setState({
-                activeAssessmentType : 'Full Assessment PUF',
-               showElmComponent:true,
-            },() => {
+                activeAssessmentType: 'Full Assessment PUF',
+                showElmComponent: true,
+            }, () => {
                 this.mainAddAssessment(e, 'Full Assessment PUF');
             })
-        }else if (this.state.assessmentformat === "learningtemplate") {
-           this.changeLearningApp();
-        }else {
-           this.addC2MediaAssessment();
+        } else if (assessmentFormat === "learningtemplate") {
+            // this.changeLearningApp(); //will be used later
+        } else {
+            this.addC2MediaAssessment();
         }
     }
 
@@ -168,13 +168,15 @@ export class AssessmentSlateData extends Component {
                 <div className="clr"></div>
             </div>
         } 
-          else if (this.state.activeAssessmentType=== 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
-            return (
-                <div>
-                    {/* <LearningTool /> */}
-                </div>
-            )
-        } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup ==  true ) {
+        //WILL BE USED LATER FOR LT-LA INTEGRATION
+        //   else if (this.state.activeAssessmentType=== 'learning_tool'&& this.state.activeAssessmentType === 'Learning App Type') {
+        //     return (
+        //         <div>
+        //             {/* <LearningTool /> */}
+        //         </div>
+        //     )
+        // } 
+        else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup ==  true ) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
                 <div className="slate_popup_get_title">{"'" + this.props.assessmentItemTitle + "'"}</div>

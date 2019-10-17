@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementAudioVideo } from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
+import config from '../../../src/config/config';
 import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
 describe('Testing Element Audio-Video component', () => {
 
@@ -62,6 +63,7 @@ describe('Testing Element Audio-Video component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+
             handleFocus: function(){}
         };
         let component = mount(<ElementAudioVideo {...props} />);
@@ -89,15 +91,43 @@ describe('Testing Element Audio-Video component', () => {
     });
     describe('Testing Element  component with props', () => {
         let type = "figure";
-        const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
+        let props = {
+            model: videoElementTypeSLDefault,
+            index: 5,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick : ()=>{},
+            handleFocus: function(){}
+        };
+        const elementAudioVideo = mount(<ElementAudioVideo type={type} {...props} />);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-        
-        // it('onClick', () => {
-        //     elementAudioVideoInstance.onClick();
+        const mockLoginfn = jest.fn();
+        it('onClick', () => {
+            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'g'}});
+        }) 
+       
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+        })
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            config.alfrescoMetaData = {nodeRef : {}}
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+        })
+        it('Alfresco Data Handling', () => {
+            const elementAudioVideo = mount(<ElementAudioVideo {...props} />, { attachTo: document.body })
+            elementAudioVideo.find('ElementAudioVideo').instance().dataFromAlfresco({ assetType: "video" })
+        })   
+        // it('onFocus', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} />)
         // })
-        // it('onKeyup', () => {
-        //     elementAudioVideoInstance.onKeyup();
+        // it('onBlur', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} handleBlur={mockLoginfn}/>)
         // })
-
     })
 });

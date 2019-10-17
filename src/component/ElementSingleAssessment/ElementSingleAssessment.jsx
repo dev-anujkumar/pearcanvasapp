@@ -135,7 +135,7 @@ export class ElementSingleAssessment extends Component {
                 <div className="pearson-component image" data-uri="" data-type="image" onClick={()=>{this.toggleAssessmentPopup(true)}}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-                        title="View Image" alt="" class="imageTextWidth lazyloaded imageeee"></img>
+                        title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
                 </div>
             </figure>
 
@@ -157,9 +157,9 @@ ElementSingleAssessment.defaultProps = {
     /** Detail of element in JSON object */
     model: PropTypes.object,
     /** index of element  */
-    index: PropTypes.number,
+    index: PropTypes.string,
     /** element id of the element */
-    elementId: PropTypes.number
+    elementId: PropTypes.string
 }
 
 ElementSingleAssessment.propTypes = {
