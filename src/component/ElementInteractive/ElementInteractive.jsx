@@ -425,6 +425,7 @@ class Interactive extends React.Component {
         } 
     }
 }
+Interactive.displayName = "Interactive";
 
 Interactive.defaultProps = {
     /** Detail of element in JSON object */
