@@ -19,6 +19,7 @@ let initialState = {
 
 describe('Tests slateLock  action', () => {
     let store = mockStore(() => initialState);
+
     beforeEach(() => {
         initialState = {
             slateLockInfo: {
@@ -71,7 +72,9 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        store.dispatch(actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback))
+        return store.dispatch(actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback)).then(() => {
+
+        });
     })
 
     it('testing-- setSlateLock  action', () => {
@@ -90,7 +93,9 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        store.dispatch(actions.setSlateLock(projectUrn, slateId))
+        return store.dispatch(actions.setSlateLock(projectUrn, slateId)).then(() => {
+
+        });
     })
     it('testing-- releaseSlateLock  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
@@ -129,7 +134,9 @@ describe('Tests slateLock  action', () => {
                 }
             });
         });
-        store.dispatch(actions.releaseSlateLockWithCallback(projectUrn, slateId, callback))
+        return store.dispatch(actions.releaseSlateLockWithCallback(projectUrn, slateId, callback)).then(() => {
+
+        });
     })
 
     it('testing-- setLockPeriodFlag  action', () => {
