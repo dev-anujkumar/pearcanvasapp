@@ -1,3 +1,16 @@
+import {LT_API_RESULT,
+    LT_API_RESULT_FAIL,
+    SELECTED_FIGURE,
+    PAGINATION,
+    LEARNING_TOOL_DIS_VALUE,
+    TOGGLE_LT_POPUP,
+    GET_DISCIPLINE,
+    REMOVE_SELECTED_DATA,
+    LINK_BUTTON_DISABLE,
+    GET_DISCIPLINE_FAIL,
+    LT_TYPE_FILTER_SELECTED
+  } from '../constants/Action_Constants';
+
 const INITIAL_STATE = {
     shouldHitApi : false,
     learningToolTypeValue : '',
@@ -17,13 +30,13 @@ const INITIAL_STATE = {
 
 export default function reducer (state = INITIAL_STATE, action) {
     switch (action.type) {
-        case 'LT_TYPE_FILTER_SELECTED' :
+        case LT_TYPE_FILTER_SELECTED :
             return {
                 ...state,
                 shouldHitApi : action.payload.shouldHitApi,
                 learningToolTypeValue : action.payload.learningToolTypeValue,
         }
-        case 'LT_API_RESULT' :
+        case LT_API_RESULT :
             return {
                 ...state,
                 selectedResultFormApi : '',
@@ -47,13 +60,13 @@ export default function reducer (state = INITIAL_STATE, action) {
                 linkButtonDisable : true,
                 learningToolTypeValue : action.payload.learningToolTypeValue
         }
-        case 'LT_API_RESULT_FAIL' :
+        case LT_API_RESULT_FAIL :
             return {
                 ...state,
                 showErrorMsg : true,
                 showDisFilterValues : action.payload.showDisFilterValues
         }
-        case 'SELECTED_FIGURE': {                 //Selected Figure name
+        case SELECTED_FIGURE: {                 //Selected Figure name
             return {
                 ...state,
                 selectedResultFormApi : action.payload.selectedFigure,
@@ -61,7 +74,7 @@ export default function reducer (state = INITIAL_STATE, action) {
                 linkButtonDisable : false
             }
         }
-        case 'TOGGLE_LT_POPUP': {               
+        case TOGGLE_LT_POPUP: {               
             return {
                 ...state,
                 toggleLT : action.payload.toggleLT,
@@ -71,33 +84,33 @@ export default function reducer (state = INITIAL_STATE, action) {
                 learningToolDisValue : ''
             }
         }
-        case 'LEARNING_TOOL_DIS_VALUE': {               
+        case LEARNING_TOOL_DIS_VALUE: {               
             return {
                 ...state,
                 learningToolDisValue : action.payload.learningToolDisValue
             }
         }
-        case 'GET_DISCIPLINE': {                 
+        case GET_DISCIPLINE: {                 
             return {
                 ...state,
                 showDisFilterValues : action.payload.showDisFilterValues,
                 apiResponseForDis : action.payload.apiResponseForDis
             }
         }
-        case 'GET_DISCIPLINE_FAIL': {                
+        case GET_DISCIPLINE_FAIL: {                
             return {
                 ...state,
                 showDisFilterValues : action.payload.showDisFilterValues,
 
             }
         }
-        case 'PAGINATION': {                
+        case PAGINATION: {                
             return {
                 ...state,
                 numberOfRows : action.payload.numberOfRows,
             }
         }
-        case 'REMOVE_SELECTED_DATA': {                 //Selected Figure name
+        case REMOVE_SELECTED_DATA: {                 //Selected Figure name
             return {
                 ...state,
                 selectedResultFormApi : "",
