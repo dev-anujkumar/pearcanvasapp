@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import OpenerElement from '../../../src/component/OpenerElement';
 import { openerElementData } from '../../../fixtures/OpenerElementData'
+import config from '../../../src/config/config';
 
 describe('Testing Opener component with props', () => {
     const props = {
@@ -9,7 +10,8 @@ describe('Testing Opener component with props', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
-        model : openerElementData.html
+        model : openerElementData.html,
+        onClick : ()=>{}
     }
     it('Simulating click event to open label dropdown', () => {
         const openerComponent = mount( <OpenerElement {...props} /> )
@@ -32,5 +34,18 @@ describe('Testing Opener component with props', () => {
     it('Changing input title', () => {
         const openerComponent = mount( <OpenerElement {...props} /> )
         openerComponent.find('input.element-dropdown-title.opener-title').simulate('change', { target: { value: '1234567890!!!' } });
+    })
+    it('Simulating alfresco click without alfresco location', () =>{
+        const openerComponent = mount( <OpenerElement {...props} /> )
+        openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+    })
+    it('Simulating alfresco click with alfresco location', () =>{
+        const openerComponent = mount( <OpenerElement {...props} /> )
+        config.alfrescoMetaData = {nodeRef : {}}
+        openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
+    })
+    it('Alfresco Data Handling', () => {
+        const openerComponent = mount(<OpenerElement {...props} />, { attachTo: document.body })
+        openerComponent.find('OpenerElement').instance().dataFromAlfresco({ assetType: "image" })
     })
 })
