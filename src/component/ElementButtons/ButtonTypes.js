@@ -24,5 +24,4 @@ export default {
     LOCK : "lock-icon",
     METADATA_ANCHOR : "metadata-anchor",
     METADATA_LOList:"metadata-lo-list",
-    
 }

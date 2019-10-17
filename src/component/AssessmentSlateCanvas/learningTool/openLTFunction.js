@@ -1,5 +1,5 @@
 import config from '../../../config/config';
-
+import PropTypes from 'prop-types'
 /**
  * @description - Download discipline data from the URL.
  *

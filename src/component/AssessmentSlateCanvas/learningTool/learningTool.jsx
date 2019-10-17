@@ -8,6 +8,9 @@ import ApiResults from './ApiResults.jsx';
 import { disableHeader } from '../../../js/toggleLoader.js';
 import error_icon from '../../../images/AssessmentSlateCanvas/error_icon.svg'
 import './../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
+import PropTypes from 'prop-types'
+
+
 /**
 * @description - LearningTool is a class based component. It is defined simply
 * to make a skelten of the Learning Tool UI
@@ -52,7 +55,7 @@ class LearningTool extends React.Component {
                 })
         } 
         }
-        
+
     /**
     * @description - Take the value of selected filter in learning App type and dispatch an action
     * @param {event} - event 

@@ -4,7 +4,7 @@
 * for each search result given to it
 */
 import React from 'react';
-
+import PropTypes from 'prop-types'
 class FigureCard extends React.Component {
     constructor(props) {
         super(props);

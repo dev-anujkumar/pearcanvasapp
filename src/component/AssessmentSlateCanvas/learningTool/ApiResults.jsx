@@ -8,6 +8,7 @@
 import React from 'react';
 import FigureCard from './FigureCard.jsx';
 import ErrorComp from './ErrorComp.jsx';
+import PropTypes from 'prop-types'
 
 class ApiResults extends React.Component {
     constructor(props) {

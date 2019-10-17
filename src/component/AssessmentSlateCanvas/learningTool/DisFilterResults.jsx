@@ -5,6 +5,7 @@
 */
 import React from 'react';
 import ErrorComp from './ErrorComp.jsx';
+import PropTypes from 'prop-types'
 
 class DisFilterResults extends React.Component {
     constructor(props) {
