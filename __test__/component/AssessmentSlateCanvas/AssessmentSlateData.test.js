@@ -27,8 +27,7 @@ describe('Testing Assessment Slate Data component', () => {
                 return 'Full Assessment CITE';
             }
         }
-    }
-       
+    }       
         assessmentSlate.find('div.slate_assessment_type_dropdown.activeDropdown').simulate('click');
         assessmentSlate.find('ul.slate_assessment_type_dropdown_options>li:first-child').simulate('click');
    });   
@@ -41,28 +40,22 @@ it('onClick UsageType Event', () => {
         getAssessmentData:true,
         
     }
-    const component = mount(<AssessmentSlateData {...props} />);
+    const component = mount(<AssessmentSlateData {...props} />);   
+    const assessmentSlateDataInstance= component.instance(); 
     assessmentSlateDataInstance.setState({
         activeAssessmentType:"Full Assessment CITE",
         activeAssessmentUsageType: 'Quiz'
     });
     assessmentSlateDataInstance.forceUpdate();
-    
-    assessmentSlate.find('div.singleAssessment_Dropdown_activeDropdown').simulate('click');
-    assessmentSlate.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
+    component.update();
+    console.log(component.debug())
+    component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
+    component.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
 
 
         
 });
-    // it('Select PUF assessment', () => {
-    //     const component = mount(<AssessmentSlateData {...props} />);
-    //     assessmentSlateDataInstance.setState({
-    //         activeAssessmentType: 'Full Assessment PUF',
-    //         showElmComponent: true,
-    //     });
-    //     assessmentSlateDataInstance.forceUpdate();
-
-    // });
+  
     it('Render succcessfully addedd screen', () => {
         let props = {
             getAssessmentDataPopup: true,
@@ -91,4 +84,5 @@ it('onClick UsageType Event', () => {
 
         assessmentSlateDataInstance.forceUpdate();
     });
+
 })
