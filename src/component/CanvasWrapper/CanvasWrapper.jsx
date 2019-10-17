@@ -153,15 +153,18 @@ export class CanvasWrapper extends Component {
         return function (){ 
             clearTimeout(timer)
             timer = setTimeout(()=>{
-                if(_context.props.withinLockPeriod){
-                    callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
-                    _context.props.setLockPeriodFlag(false)
-                    // alert("Lock has been released")
-                    _context.setState({
-                        showReleasePopup: true
-                    })
-                }  
+                 this.debounceReleaseHandler(callback, _context)
             },900000)
+        }
+    }
+    debounceReleaseHandler = (callback, context) => {
+        if (context.props.withinLockPeriod) {
+            callback(config.projectUrn, Object.keys(context.props.slateLevelData)[0])
+            context.props.setLockPeriodFlag(false)
+            // alert("Lock has been released")
+            context.setState({
+                showReleasePopup: true
+            })
         }
     }
 
