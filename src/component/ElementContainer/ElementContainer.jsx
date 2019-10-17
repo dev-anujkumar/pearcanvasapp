@@ -174,6 +174,7 @@ class ElementContainer extends Component {
     
     /**
      * Rendering Opener element color palette
+     * @param {e} event
      */
     renderPaletteList = () =>{
         const { showColorPaletteList, activeColorIndex } = this.state
