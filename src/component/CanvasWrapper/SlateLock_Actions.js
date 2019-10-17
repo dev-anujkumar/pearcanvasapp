@@ -19,7 +19,7 @@ const axiosInstance = axios.create({
 export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) => { 
     let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axiosInstance.get(url)
+    return axios.get(url)
         .then((res) => {
             console.log("Slate lock info fetch success:", res)
             dispatch({
@@ -39,10 +39,10 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
  * @param {*} slateId Slate manifest URN
  * @param {*} callback Callback method to be executed
  */
-export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+ export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => (dispatch, getState) =>{ 
     let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axiosInstance.get(url)
+    return axios.get(url)
         .then((res) => {
             console.log("Slate lock info fetch success:", res)
             if(callback)
@@ -51,7 +51,7 @@ export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) =>
         .catch((err) => {
             console.log("Slate lock info fetch failed:", err)
         })
-} 
+}  
 
 /**
  * Action Creator
@@ -68,7 +68,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
         slateId,
         lockDuration
     }
-    return axiosInstance.post(url, data)
+    return axios.post(url, data)
         .then((res) => {
             console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             /* dispatch({
@@ -103,7 +103,7 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
        projectUrn,
        slateId
     }
-    return axiosInstance.post(url, data)
+    return axios.post(url, data)
        .then((res) => {
             console.log("Slate release API success>>Slalte release status", res.data)
             dispatch({
@@ -126,13 +126,13 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
  * @param {*} slateId Slate manifest URN
  * @param {*} callback Callback method to be executed
  */
-export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) => {
+export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) => (dispatch, getState) =>{
     let url = `locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId
     }
-    return axiosInstance.post(url, data)
+    return axios.post(url, data)
        .then((res) => {
             console.log("Slate release API success>>Slalte release status", res.data)
             if(callback){
