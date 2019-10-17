@@ -74,14 +74,14 @@ const mockUseEffect = () => {
 
 beforeEach(() => {
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( < ElementSaprator esProps={esProps}/ > )
+    wrapper = shallow( < ElementSaprator esProps={esProps} /> )
     mockUseEffect()
 })
 
 describe('Testing ElementSaprator component', () => {
 
     describe('UseEffect function', () => {
-        let tempWrapper = mount( < ElementSaprator esProps={esProps}/ > )
+        let tempWrapper = mount( < ElementSaprator esProps={esProps}/> )
     }),
 
     describe('<ElementSaprator/> Rendering', () => {
@@ -96,7 +96,7 @@ describe('Testing ElementSaprator component', () => {
                 it('Should render ', () => {
                     config.slateType = 'container-introduction';
                     config.isCO = false;
-                    let tempWrapper = shallow( < ElementSaprator esProps={esProps}/ > )
+                    let tempWrapper = shallow( < ElementSaprator esProps={esProps}/> )
                 })
         }),
 
@@ -152,12 +152,12 @@ describe('Testing functions', () => {
         samplediv.innerHTML = "test";
         document.body.appendChild(samplediv);
 
-        let tempWrapper = mount( <ElementSaprator esProps={esProps}/ > )
+        let tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
         tempWrapper.find('.dropbtn').simulate('click');
     }),
     it('simulate splitSlateClickHandler ', () => {
         config.PERMISSIONS = ['elements_add_remove']
-        let tempWrapper = mount( <ElementSaprator esProps={esProps}/ > )
+        let tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
         tempWrapper.find(Button).at(0).simulate('click');
     })
 })
