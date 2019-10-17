@@ -14,171 +14,166 @@ describe('Testing Interactive element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            model: {}
+            model: {},
+            handleFocus: function () { }
         }
         const div = document.createElement('div');
         ReactDOM.render(<Interactive {...props} />, div);
         ReactDOM.unmountComponentAtNode(div);
     })
-    xdescribe('With figure image element', () => {
+    describe('With figure image element', () => {
         let props = {
             slateLockInfo: {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            model: Interactivefpo,
             index: 1
         };
         let component = mount(<Interactive {...props} />);
-        test('renders properly with default fpo ', () => {
-
-            expect(component).toMatchSnapshot();
-        })
+        const div = document.createElement('div');
         test('renders  properly with default fpo', () => {
-         
-            component.setProps({ model: Interactivefpo ,index: 3});
-
-            expect(component).toMatchSnapshot();
+            component.setProps({ model: Interactivefpo, index: 3 });
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractiveFlashcards', () => {
           
             component.setProps({ model: InteractiveFlashcards,index: 5 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactive3party ', () => {
            
             component.setProps({ model: Interactive3party ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivepdf ', () => {
            
             component.setProps({ model: Interactivepdf ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractiveWeblink ', () => {
            
             component.setProps({ model: InteractiveWeblink ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractivePopupWeblink ', () => {
            
             component.setProps({ model: InteractivePopupWeblink ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractiveTable ', () => {
            
             component.setProps({ model: InteractiveTable ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractiveShowHide ', () => {
            
             component.setProps({ model: InteractiveShowHide ,index: 7});
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default InteractivePopWindow', () => {
            
             component.setProps({ model: InteractivePopWindow,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
-
-
         test('renders  properly with default Interactivegraph', () => {
            
             component.setProps({ model: Interactivegraph,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivesimulation', () => {
            
             component.setProps({ model: Interactivesimulation,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivesurvey', () => {
            
             component.setProps({ model: Interactivesurvey,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivetimeline', () => {
            
             component.setProps({ model: Interactivetimeline,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivehotspot', () => {
            
             component.setProps({ model: Interactivehotspot,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactiveaccountingtable', () => {
            
             component.setProps({ model: Interactiveaccountingtable,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivefillinblank', () => {
            
             component.setProps({ model: Interactivefillinblank,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivegalleryimage', () => {
            
             component.setProps({ model: Interactivegalleryimage,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivegalleryvideo', () => {
            
             component.setProps({ model: Interactivegalleryvideo,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivevideomcq', () => {
            
             component.setProps({ model: Interactivevideomcq,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default Interactivemcq', () => {
            
             component.setProps({ model: Interactivemcq,index: 8 });
-
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<Interactive {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
     });
-    xdescribe('Testing Element interactive component with props', () => {
+    describe('Testing Element interactive component with props', () => {
         let type = "interactive";
         let props = {
             slateLockInfo: {
                 isLocked: false,
                 userId: 'c5Test01'
-            }
+            },
+            handleFocus: function () { }
         };
+        let wrapper;
         const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+        const mockLoginfn = jest.fn();
         it('onClick', () => {
-            elementInteractiveInstance.onClick();
-        })
-        it('onBlur', () => {
-            elementInteractiveInstance.onBlur();
-        })
-        it('onKeyup', () => {
-            elementInteractiveInstance.onKeyup();
-        })
-    
+            elementInteractiveInstance.togglePopup(true);
+        })    
         it('onFocus', () => {
-            elementInteractiveInstance.onFocus();
+            wrapper = shallow(<Interactive {...props} handleEditorFocus={mockLoginfn}/>)
+        })
+        it('setstate', () => {
+            elementInteractiveInstance.setState({
+                showAssesmentpopup: true
+            });
         })
     })
 });
