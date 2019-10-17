@@ -14,8 +14,10 @@ describe('Test for Sidebar component', () => {
     const activeElement = {
         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
         elementType: "element-authoredtext",
+        elementWipType: "element-authoredtext",
         primaryOption: "primary-heading",
         secondaryOption: "secondary-heading-1",
+        index: "1-0",
         tag: "H1"
     };
     
@@ -33,9 +35,6 @@ describe('Test for Sidebar component', () => {
     let sidebar = mount(<Provider store={sidebarWithData}>
         <Sidebar />
     </Provider>);
-    it('Render element container ', () => {
-        expect(sidebar).toMatchSnapshot();
-    });
 
     it('onClick Event', () => {
         const sidebarInstance = sidebar.find('Sidebar').instance();
@@ -76,6 +75,7 @@ describe('Test for Sidebar component', () => {
 
         // Attribution for secondary element type
         sidebarInstance.setState({
+            elementDropdown: 'primary',
             activePrimaryOption: 'primary-blockquote',
             activeSecondaryOption: 'secondary-marginalia-attribution'
         });
@@ -90,5 +90,53 @@ describe('Test for Sidebar component', () => {
         });
 
         sidebarInstance.attributions();
+    });
+
+    it('Test Case for Metadata Anchor LO', () => {
+        const activeElement = {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementType: "",
+            elementWipType: "element-learningobjectivemapping",
+            primaryOption: "",
+            secondaryOption: "",
+            index: 2,
+            tag: "LO"
+        };
+
+        const sidebarWithData = mockStore({
+            appStore: {
+                activeElement,
+                updateElement,
+                slateLevelData
+            }
+        });
+
+        let sidebar = mount(<Provider store={sidebarWithData}>
+            <Sidebar />
+        </Provider>);
+    });
+
+    it('Test Case for Metadata Anchor MA', () => {
+        const activeElement = {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementType: "",
+            elementWipType: "element-generateLOlist",
+            primaryOption: "",
+            secondaryOption: "",
+            index: 1,
+            tag: "LO"
+        };
+
+        const sidebarWithData = mockStore({
+            appStore: {
+                activeElement,
+                updateElement,
+                slateLevelData
+            }
+        });
+
+        let sidebar = mount(<Provider store={sidebarWithData}>
+            <Sidebar />
+        </Provider>);
     });
 });

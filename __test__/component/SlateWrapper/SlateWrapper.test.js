@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { stub } from 'sinon';
 import { Provider } from 'react-redux';
 import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
-import { exportAllDeclaration } from '@babel/types';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];

@@ -70,6 +70,6 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapper.setProps({ isPageNumberEnabled: true });
         wrapperInstance.forceUpdate();
         wrapper.update();
-        expect(wrapper.find('div.pageNumberCover').classList.contains('hoverNumberCover')).toBe(true)
+        expect(wrapper.find('div.pageNumberCover').hasClass('hoverNumberCover')).toBe(true)
     })
 })

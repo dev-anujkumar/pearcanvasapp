@@ -9,7 +9,7 @@ const mockUseEffect = () => {
 
 beforeEach(() => {
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( <Tooltip / > )
+    wrapper = shallow( <Tooltip /> )
     mockUseEffect()
 })
 
