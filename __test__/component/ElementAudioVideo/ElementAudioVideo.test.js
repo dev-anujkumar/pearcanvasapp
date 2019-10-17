@@ -14,6 +14,7 @@ describe('Testing Element Audio-Video component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            handleFocus: function(){}
         }
         ReactDOM.render(<ElementAudioVideo {...props}/>, div);
         ReactDOM.unmountComponentAtNode(div);
@@ -27,6 +28,7 @@ describe('Testing Element Audio-Video component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            handleFocus: function(){}
         };
         const div = document.createElement('div');
         let component = mount(<ElementAudioVideo {...props} />);
@@ -60,6 +62,7 @@ describe('Testing Element Audio-Video component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            handleFocus: function(){}
         };
         let component = mount(<ElementAudioVideo {...props} />);
         const div = document.createElement('div');
@@ -89,12 +92,12 @@ describe('Testing Element Audio-Video component', () => {
         const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         
-        it('onClick', () => {
-            elementAudioVideoInstance.onClick();
-        })
-        it('onKeyup', () => {
-            elementAudioVideoInstance.onKeyup();
-        })
+        // it('onClick', () => {
+        //     elementAudioVideoInstance.onClick();
+        // })
+        // it('onKeyup', () => {
+        //     elementAudioVideoInstance.onKeyup();
+        // })
 
     })
 });

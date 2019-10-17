@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import PopUp from './../PopUp';
-import { showTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';

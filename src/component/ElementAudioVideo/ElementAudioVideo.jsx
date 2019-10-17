@@ -185,18 +185,14 @@ export class ElementAudioVideo extends Component {
     }
     render() {
         const { model, index, slateLockInfo } = this.props;
-        try {
+      
             return (
                 <div className="figureElement">
                     {this.renderAudioVideoType(model, index, slateLockInfo)}
-                </div>
+                </div>         
             );
-        } catch (error) {
-            return (
-                <div className="figureElement"></div>
-            )
         }
-    }
+    
 }
 
 
