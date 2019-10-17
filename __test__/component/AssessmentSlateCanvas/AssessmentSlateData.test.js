@@ -48,8 +48,7 @@ it('onClick UsageType Event', () => {
     });
     assessmentSlateDataInstance.forceUpdate();
     component.update();
-    console.log(component.debug())
-    component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
+     component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
     component.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
 
 
