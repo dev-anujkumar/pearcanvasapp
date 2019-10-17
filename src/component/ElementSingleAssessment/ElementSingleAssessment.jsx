@@ -153,6 +153,7 @@ export class ElementSingleAssessment extends Component {
     }
 }
 
+ElementSingleAssessment.displayName = "ElementSingleAssessment"
 ElementSingleAssessment.defaultProps = {
     /** Detail of element in JSON object */
     model: PropTypes.object,
