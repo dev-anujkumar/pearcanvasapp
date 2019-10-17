@@ -107,8 +107,8 @@ class Sidebar extends Component {
         } 
         else if( this.props.activeElement.elementWipType == "element-learningobjectivemapping"){
            primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
-            <div class="element-dropdown">
-                <div class="element-dropdown-title" data-element="primary">Learning Objective<svg class="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+            <div className="element-dropdown">
+                <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
                 </div>
             </div>
           
@@ -118,7 +118,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" checked=""/><span class="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" checked="" /><span className="slider round"></span></label>
                        
                          </div>;
             return primaryOptions;
@@ -199,7 +199,7 @@ class Sidebar extends Component {
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
-        let attributionsList = [];
+        let attributionsList = [];console.log("state:::", this.state);
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
