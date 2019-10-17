@@ -1,4 +1,29 @@
 export default {
+    "opener":{
+        "type": "chapterintro",
+        "subtype": "chapteropener",
+        "id": "urn:pearson:manifest:0fd35c2b-d70c-40c4-8c46-d283203fce09",
+        "schema": "http://schemas.pearson.com/wip-authoring/intro/1",
+        "contents": {
+            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "Chapter X: Opening Element Title",
+                "textsemantics": [
+                    {
+                        "type": "label",
+                        "charStart": 0,
+                        "charEnd": 7
+                    },
+                    {
+                        "type": "number",
+                        "charStart": 8,
+                        "charEnd": 10
+                    }
+                ]
+            }
+        }
+    },
     "paragraph" : {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
         "type": "element-authoredtext",
@@ -223,6 +248,36 @@ export default {
         },
         "versionUrn": "urn:pearson:work:9c2d0567-c24d-44f5-8e8e-5b7d9859a26d",
         "contentUrn": "urn:pearson:entity:06f51645-ecd8-456f-bc60-0e7ad8fcd950"
+    },
+    "list":{
+        "id": "urn:pearson:work:e40d7dbd-9fa0-445d-b8a9-735741803678",
+        "type": "element-list",
+        "subtype": "disc",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+            "type": "list",
+            "listtype": "unordered",
+            "designtype": "list",
+            "subtype": "disc",
+            "startNumber": "",
+            "listitems": [
+                {
+                    "type": "paragraph",
+                    "authoredtext": {
+                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        "text": ""
+                    }
+                }
+            ]
+        },
+        "html": {
+            "schema": "http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+            "text": "<ul class=\"\" treelevel=\"1\"><li class=\"listItemNumeroUnoBullet\" \"=\"\"><br></li></ul>",
+            "trackersemantic": []
+        },
+        "versionUrn": "urn:pearson:work:e40d7dbd-9fa0-445d-b8a9-735741803678",
+        "contentUrn": "urn:pearson:entity:5a26081f-1da9-4cc6-b141-677d99fd561d"
     },
     "figure":{
         "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
@@ -953,5 +1008,55 @@ export default {
         },
         "contentUrn": "urn:pearson:entity:cecd4361-d86d-45a8-9754-82fedb9f6d6b",
         "versionUrn": "urn:pearson:manifest:e420fcb8-8963-4237-823c-9e1e85c95ec0"
+    },
+    "assessmentSlate":{
+        "id": "urn:pearson:work:8af3b6ff-92eb-4d06-acd0-5d0ce10c8242",
+        "type": "element-assessment",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+            "assessmentid": "urn:pearson:work:086988ff-d82f-487f-b146-55de9f650b77",
+            "assessmenttitle": "CITE Assessment/Register:10001#01",
+            "assessmentformat": "tdx,show hide",
+            "usagetype": "Quiz"
+        },
+        "html": {
+            "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+            "assessmentid": "urn:pearson:work:086988ff-d82f-487f-b146-55de9f650b77",
+            "title": "CITE Assessment/Register:10001#01",
+            "assessmentformat": "tdx,show hide",
+            "usagetype": "Quiz"
+        },
+        "versionUrn": "urn:pearson:work:8af3b6ff-92eb-4d06-acd0-5d0ce10c8242",
+        "contentUrn": "urn:pearson:entity:ce2dbc74-ad0e-4825-bcf5-218d2daaa877"
+    },
+    "lo":{
+        "id": "urn:pearson:work:feac3b3c-df3b-4917-9bad-305c56260fc2",
+        "type": "element-learningobjectivemapping",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+            "loref": "urn:pearson:educationalgoal:69143a66-d347-4aa7-8b34-2118b6e661ca"
+        },
+        "html": {
+            "text": "<p class=\"paragraph-learning-objectives-list\"></p>",
+            "loref": "urn:pearson:educationalgoal:69143a66-d347-4aa7-8b34-2118b6e661ca"
+        },
+        "contentUrn": "urn:pearson:entity:d68ea40a-bfa1-4a16-8cc6-48eefe26d31e",
+        "versionUrn": "urn:pearson:work:feac3b3c-df3b-4917-9bad-305c56260fc2"
+    },
+    "ma":{
+        "id": "urn:pearson:work:00b85f90-0ee8-4898-b3b3-d55102873512",
+        "type": "element-generateLOlist",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+            "level": "chapter",
+            "groupby": ""
+        },
+        "html": {
+            "text": "<p class=\"paragraph-learning-objectives-list\"></p>",
+            "trackersemantic": []
+        },
+        "contentUrn": "urn:pearson:entity:ae197a50-0c0f-4ef6-918e-2973b42e4afb",
+        "versionUrn": "urn:pearson:work:00b85f90-0ee8-4898-b3b3-d55102873512"
     }
 }
