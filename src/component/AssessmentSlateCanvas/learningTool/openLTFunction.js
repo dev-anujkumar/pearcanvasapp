@@ -26,13 +26,11 @@ async function getDisAsync() {
     let data = await response.json()
     return data;
 }
-
 /**
  * @description - Responsable for opening the LT popup and dispatching the actions for conditional rendering of LT/LA
  * @function openLTFunction
  * 
  */
-
 export const openLTFunction = (getDiscipline) => {
     getDisAsync().then(
         (data) => {

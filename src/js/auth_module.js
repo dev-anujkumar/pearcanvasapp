@@ -1,10 +1,8 @@
-const configModule = require('./config_module.js');
-import { utility_modules } from './utility_module.js';
-const cookieParser = require('cookie-parser');
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const WRAPPER_URL = config_object.WRAPPER_URL;
 const IDENTITY_URL = config_object.IDENTITY_URL;
+let environment = config_object.NODE_ENV;
 
 /* auth */
 require('../auth/openam.js');
@@ -31,8 +29,6 @@ import openamConfig from '../auth/openam.js';
 
 /* Session Variables */
 let session_token = "";
-let config_object = configModule.GET_CONFIG();
-let environment = config_object['NODE_ENV'];
 //let token;
 
 var BASE_URL;
@@ -60,7 +56,7 @@ if ( environment !== 'development' ) {
 
         ////console.log("USER IS AUTHENTICATED");
         ////console.log("session_token: " + utility_modules.getDocumentCookies().PearsonSSOSession);
-        session_token = utility_modules.getDocumentCookies().PearsonSSOSession;
+        session_token = config_object.ssoToken;
         //configModule.SET_CONFIG('SSO_TOKEN', session_token);
 
     } else {
@@ -82,7 +78,7 @@ if ( environment !== 'development' ) {
 }
 if (environment === 'development') {
    // token = require('../../token');
-   session_token = utility_modules.getDocumentCookies().PearsonSSOSession;
+   session_token = config_object.ssoToken;
 
     myOpenam = {
         handleSessionExpire : function(){
@@ -101,12 +97,12 @@ if (environment === 'development') {
 
 //console.log("SERVER SIDE sso_token: " + '', session_token);
 
-module.exports = {
+// module.exports = {
 
-    GET_SSO_TOKEN: function(){
-        return session_token;
-    }
-};
+//     GET_SSO_TOKEN: function(){
+//         return session_token;
+//     }
+// };
 
-module.exports.OPEN_AM = myOpenam || {};
+export const OPEN_AM = myOpenam || {};
 //module.exports.OPEN_AM = {};

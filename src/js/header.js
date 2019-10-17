@@ -5,7 +5,7 @@ import {c4PublishObj} from '../js/c4_module.js';
 import store from '../appstore/store';
 import utils from './utils'
 //import { releaseSlateLock } from "../actions/slateLockAction";
-import { OPEN_AM } from '../auth/openam';
+import { OPEN_AM } from './auth_module';
 //import {launchTrackChanges} from '../jsx/tcm/launchTrackChanges';
 //import icontains from "./jquery.icontains";
 /*VEX*/

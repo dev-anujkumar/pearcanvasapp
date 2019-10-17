@@ -30,7 +30,7 @@ class AssetPopoverSearch extends React.Component {
 
         if(assetPopoverSpan){
             let originalText = assetPopoverSpan.innerHTML;
-            assetPopoverSpan.outerHTML = originalText;
+            document.getElementById('asset-popover-attacher').outerHTML = originalText;
         }
         this.props.apoSearchClose();
         window.parent.postMessage({ 'type': 'enableToc', 'message': {} }, WRAPPER_URL);

@@ -469,6 +469,7 @@ class Interactive extends React.Component {
     }
 
     togglePopup = (value)=>{
+        this.props.handleFocus();
         this.setState({showAssesmentpopup:value})
     }
 
@@ -511,7 +512,7 @@ class Interactive extends React.Component {
 Interactive.defaultProps = {
     /** Detail of element in JSON object */
     model: PropTypes.object,
-    itemId: "urn:pearson:work:9f54762e-6b4f-4538-aca3-c94b98888b93"
+    itemId: ""
 }
 
 Interactive.propTypes = {
