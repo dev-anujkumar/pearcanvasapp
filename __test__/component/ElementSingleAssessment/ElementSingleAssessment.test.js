@@ -15,10 +15,12 @@ describe('Testing Element Single Assessment component', () => {
     let props = {
         model: singleAssessmentCITEDefault,
         index:"1",
-        usagetype:"Practice"
+        usagetype:"Practice",
+        handleFocus: function(){}
+
     };
 
-    let singleAssessment = mount(<ElementSingleAssessment model = {singleAssessmentCITEDefault}  />);
+    let singleAssessment = mount(<ElementSingleAssessment {...props}  />);
     it('Render Single Assessment default ', () => {
         expect(singleAssessment).toMatchSnapshot();
     });
@@ -37,10 +39,11 @@ describe('Testing Element Single Assessment component', () => {
                 }
             }
         }
-
+      
         singleAssessment.find('div.singleAssessment_Dropdown_Container .singleAssessment_Dropdown_activeDropdown').simulate('click');
         singleAssessment.find('ul.singleAssessment_Dropdown_options>li:first-child').simulate('click');
         singleAssessment.find('div.pearson-component.image').simulate('click');
+        singleAssessment.find('div.figureElement').simulate('click');
         singleAssessmentInstance.handleAssessmentTypeChange('Diagnostic');
 
             
