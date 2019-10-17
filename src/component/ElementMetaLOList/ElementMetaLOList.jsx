@@ -102,7 +102,7 @@ export class ElementMetaLOList extends Component {
 
 /**
    * @description - prepare MA HTML data
-   * @param {object} loldata
+   * @param {object} loldata | object of data and lourn 
 */
   prepareLOLData = (lolData) => {
       let jsx,finalloldata = "";

@@ -44,8 +44,7 @@ describe('Test Rendering of AssetPopover', () => {
 describe('Interaction functions test cases', () => {
     it('Testing currentlyLinkedJsx function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
-        // tempWrapper.setProps({ showApoCurrentlyLinked: true });
-        // expect(tempWrapper.find('.currentlyLinkedRadio')).toHaveLength(1)
+      
         instance.currentlyLinkedJsx()
     }),
     it('Testing apoBodyJsx function', () => {
@@ -56,11 +55,6 @@ describe('Interaction functions test cases', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.selectedFigure()
     }), 
-    // it('Testing removeLink function', () => {
-    //     const instance = wrapper.find('AssetPopoverSearch').instance();
-    //     window.parent.postMessage = jest.fn()
-    //     instance.removeLink()
-    // }),
     it('Testing apoSearchClose props function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         wrapper.setProps({
@@ -80,22 +74,4 @@ describe('Interaction functions test cases', () => {
         let stateImageData = [{}]
         instance.searchForFigures(mockEvent, stateImageData)
     })
-    // it('Testing apoSearchClose function', () => {
-    //     const instance = wrapper.find('AssetPopoverSearch').instance();
-    //     const parent = jest.fn(() => {
-    //         return {
-    //             postMessage : jest.fn((a,b) => {})
-    //         }
-    //     })
-    //     Object.defineProperty(window, 'parent', parent); 
-    //     instance.apoSearchClose()
-    // })
-    // it('Testing apoFooterJsx function', () => {
-    //     const instance = wrapper.find('AssetPopoverSearch').instance();
-    //     let isFigureSelected = false
-    //     let shouldOpenCurrentlyLinked = true; 
-    //     let shouldShowApoBody = true 
-    //     let isSearchResultFound = false
-    //     expect(instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound)).toHaveBeenCalledTimes(1)
-    // }) 
 })

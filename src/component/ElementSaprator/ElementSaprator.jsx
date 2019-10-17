@@ -100,7 +100,6 @@ ElementSaprator.propTypes = {
  * @description: OnClick handler for add Element button
  */
 export function addMediaClickHandler() {
-    // alert('add media button clicked')
     console.log('add media button clicked')
 }
 

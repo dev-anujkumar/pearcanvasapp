@@ -80,7 +80,7 @@ export class ElementMetaDataAnchor extends Component {
 
 /**
    * @description - Prepare HTML for LO item on slate
-   * @param {object} lodata
+   * @param {object} lodata | object of lo data 
 */
  prepareLOData = (loData) => {
     let jsx;

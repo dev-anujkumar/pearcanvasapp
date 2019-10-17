@@ -169,6 +169,7 @@ export class TinyMceEditor extends Component {
                     }
                 });
 
+                
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
@@ -513,9 +514,7 @@ export class TinyMceEditor extends Component {
 
         TinyMceEditor.propTypes = {
             /** class name of the element type to be rendered */
-            className: PropTypes.string,
-            /** Detail of element in JSON object */
-            model: PropTypes.object,
+            className: PropTypes.string
 
         };
 
