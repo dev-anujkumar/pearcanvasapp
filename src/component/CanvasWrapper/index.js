@@ -1,2 +1,2 @@
-import CanvasWrapper from './CanvasWrapper.jsx'
+import CanvasWrapper from './CanvasWrapper'
 export default CanvasWrapper

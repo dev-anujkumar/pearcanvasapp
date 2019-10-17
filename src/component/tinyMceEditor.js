@@ -116,43 +116,47 @@ export class TinyMceEditor extends Component {
                 });
                 editor.ui.registry.addButton('Glossary', {
                     id: 'buttonId',
-		classes: 'buttonClas',
+		            classes: 'buttonClas',
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => this.addGlossary(editor)
                 });
                
-                   /* example, adding a toolbar menu button */
-                editor.ui.registry.addMenuButton('slateTag', {
-                    icon: 'metadataanchor',
-                    tooltip: "Slate Tag",
-                    fetch: function (callback) {
-                    if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
-                        viewLoEnable=false;
-                    }
-                    var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
-                    var items = [
-                        {
-                            
-                            type: 'menuitem',
-                            text: dropdownItemArray[0],
-                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
-                        },
-                        {
-                            type: 'menuitem',
-                            text: dropdownItemArray[1],
-                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
-                        },
-                        {
-                            type: 'menuitem',
-                            text: dropdownItemArray[2],
-                            disabled:viewLoEnable,
-                            onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                   /* adding a slate tag button in toolbar */
+                   if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
+                    editor.ui.registry.addMenuButton('slateTag', {
+                        icon: 'metadataanchor',
+                        tooltip: "Slate Tag",
+                        fetch: function (callback) {
+                        if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
+                            viewLoEnable=false;
                         }
-                        
-                    ];
-                    callback(items);
-                    }
-                });
+                        //show dropdown options in slate tag 
+                        var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
+                        var items = [
+                            {
+                                
+                                type: 'menuitem',
+                                text: dropdownItemArray[0],
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
+                            },
+                            {
+                                type: 'menuitem',
+                                text: dropdownItemArray[1],
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
+                            },
+                            {
+                                type: 'menuitem',
+                                text: dropdownItemArray[2],
+                                disabled:viewLoEnable,
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                            }
+                            
+                        ];
+                        callback(items);
+                        }
+                    });
+                   }
+                
 
                 /* Inline Code Formatting Button */
                 editor.ui.registry.addToggleButton('code', {
