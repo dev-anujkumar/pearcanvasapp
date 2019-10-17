@@ -33,7 +33,7 @@ const store = mockStore({
         allComments: comments
     },
     toolbarReducer: {
-        elemBorderToggle: "true"
+        elemBorderToggle: false
     },
     metadataReducer: {
         currentSlateLOData: ""
@@ -65,155 +65,187 @@ describe('Test for element container component', () => {
         return <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />;
     }
 
-    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+    let seprator = (index, firstOne, parentUrn, asideData, outerAsideIndex) => {
+        return []
+    }
+
+    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
             {/* (isHovered, isPageNumberEnabled, activeElement) => (
                 <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
             ) */}
         </ElementContainer></Provider>);
     it('Render element container ', () => {
 
-        elementContainer.setProps({
-            element: {
-                ...props.element,
-                type: 'chapterintro'
-            }
-        });
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        props = {
+            element: wipData.opener
+        };
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.pullquote
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
+        </ElementContainer></Provider>);
+
+        props = {
+            element: wipData.list
+        };
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.figure
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.table
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.mathImage
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.equation
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.codeEditor
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.video
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
-        props = {
-            element: wipData.audio
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
-        </ElementContainer></Provider>);
+        // props = {
+        //     element: wipData.audio
+        // };
+        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        // </ElementContainer></Provider>);
 
         props = {
             element: wipData.assessment
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.interactive
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.smartLink
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.showHide
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.popUp
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
+        </ElementContainer></Provider>);
+
+        props = {
+            element: wipData.assessmentSlate
+        };
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.aside
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
 
         props = {
             element: wipData.workedExample
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
+        </ElementContainer></Provider>);
+
+        props = {
+            element: wipData.lo
+        };
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
+        </ElementContainer></Provider>);
+
+        props = {
+            element: wipData.ma
+        };
+        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
         </ElementContainer></Provider>);
     })
 
-    elementContainer.setState({
-        popup: true
+    // elementContainer.setState({
+    //     popup: true
+    // });
+
+    const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+
+    it('delete element', () => {
+        elementContainerInstance.deleteElement();
     });
 
-    // it('onClick Event', () => {
-    //     elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
-    //         (isHovered, isPageNumberEnabled, activeElement) => (
-    //             <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-    //         )
-    //     </ElementContainer></Provider>);
-    //     elementContainer.find('span.add-comment').simulate('click');
-    //     elementContainer.find('span#close-container').simulate('click');
-    // })
+    it('onClick Event', () => {
+        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
+        //     (isHovered, isPageNumberEnabled, activeElement) => (
+        //         <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+        //     )
+        // </ElementContainer></Provider>);
+        elementContainerInstance.find('span.add-comment').simulate('click');
+        elementContainerInstance.handleFocus();
+        elementContainerInstance.find('span#close-container').simulate('click');
+    })
 
-    // describe('Testing action function with props', () => {
-    //     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
-    //         (isHovered, isPageNumberEnabled, activeElement) => (
-    //             <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-    //         )
-    //     </ElementContainer></Provider>);
-    //     const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-    //     it('renders saveNewComment ', () => {
-    //         elementContainerInstance.saveNewComment();
-    //     });
-    //     it('renders handleCommentPanel ', () => {
-    //         elementContainerInstance.handleCommentPanel();
-    //     });
+    describe('Testing action function with props', () => {
+        // let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
+        //     (isHovered, isPageNumberEnabled, activeElement) => (
+        //         <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+        //     )
+        // </ElementContainer></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        it('renders saveNewComment ', () => {
+            elementContainerInstance.saveNewComment();
+        });
+        it('renders handleCommentPanel ', () => {
+            elementContainerInstance.handleCommentPanel();
+        });
 
-    //     it('renders handle popup toggle ', () => {
-    //         elementContainer.setState({
-    //             popup: true
-    //         });
+        it('renders handle popup toggle ', () => {
+            elementContainer.setState({
+                popup: true
+            });
             
-    //     let target = {
-    //         target: {
-    //             getAttribute: function(dataValue) {
-    //                 return true;
-    //             }
-    //         }
-    //     }
-    //         elementContainerInstance.handleCommentPopup(target);
-    //     });
+        let target = {
+            // target: {
+                getAttribute: function(dataValue) {
+                    return true;
+                }
+            // }
+        }
+            elementContainerInstance.handleCommentPopup(true);
+        });
 
-    // })
+    })
 });
