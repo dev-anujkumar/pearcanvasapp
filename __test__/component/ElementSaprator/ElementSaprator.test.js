@@ -157,7 +157,12 @@ describe('Testing functions', () => {
     }),
     it('simulate splitSlateClickHandler ', () => {
         config.PERMISSIONS = ['elements_add_remove']
-        let tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        let tempWrapper;
+        
+        tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        tempWrapper.setProps({
+            toggleSplitSlatePopup : jest.fn()
+        })
         tempWrapper.find(Button).at(0).simulate('click');
     })
 })
