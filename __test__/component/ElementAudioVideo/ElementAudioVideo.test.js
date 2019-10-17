@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementAudioVideo } from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
+import config from '../../../src/config/config';
 import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
 describe('Testing Element Audio-Video component', () => {
 
@@ -62,6 +63,7 @@ describe('Testing Element Audio-Video component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+
             handleFocus: function(){}
         };
         let component = mount(<ElementAudioVideo {...props} />);
@@ -89,12 +91,21 @@ describe('Testing Element Audio-Video component', () => {
     });
     describe('Testing Element  component with props', () => {
         let type = "figure";
-  
-        const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
+        let props = {
+            model: videoElementTypeSLDefault,
+            index: 5,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick : ()=>{},
+            handleFocus: function(){}
+        };
+        const elementAudioVideo = mount(<ElementAudioVideo type={type} {...props} />);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         const mockLoginfn = jest.fn();
         it('onClick', () => {
-            elementAudioVideoInstance.handleC2MediaClick(e);
+            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'g'}});
         }) 
        
         it('Simulating alfresco click without alfresco location', () =>{
