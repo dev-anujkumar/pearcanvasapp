@@ -16,7 +16,7 @@ export const EditorConfig = {
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
     },
-    toolbar: 'undo redo| bold italic underline strikethrough removeformat| alignleft aligncenter alignright alignjustify outdent indent  Glossary Footnote customListButton bullist | superscript subscript charmap | tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry assetPopoverIcon',
+    toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton bullist alignleft aligncenter alignright alignjustify tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo assetPopoverIcon slateTag ',
     contentStyle: CONTENT_STYLE,
     plugins: "lists advlist placeholder charmap paste tiny_mce_wiris"
 }
@@ -25,5 +25,5 @@ export const GlossaryFootnoteEditorConfig = {
     formats: {
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
     },
-    toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry assetPopoverIcon'
+    toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }

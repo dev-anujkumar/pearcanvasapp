@@ -32,7 +32,6 @@ a.paragraphNumeroUnoFootnote {
     text-decoration: none !important;
     cursor: pointer;
 }
-<<<<<<< HEAD
 .color-palette-list .color-palette-item:nth-child(1) {
     background-color: #000000 !important;
 }
@@ -60,7 +59,7 @@ a.paragraphNumeroUnoFootnote {
 .color-palette-list{
     position: absolute;
     left: 25px;
-    top: 6.2%;
+    top: 12%;;
     z-index: 1;
 }
 .color-palette-item.selected {
@@ -76,7 +75,6 @@ a.paragraphNumeroUnoFootnote {
     height: 15px;
     width: 13px;
 }
-=======
 
 /* Asset popover link */
 abbr.AssetPopoverTerm{
@@ -89,4 +87,11 @@ abbr.AssetPopoverTerm{
     text-decoration: underline;
     cursor: pointer;
   }
->>>>>>> b0282d8a9ea6a31197e02f270e7767ddc9ec2622
+
+  /* Alfresco Buttons */
+  button#assetSelectBtn{
+      font-size: 14px
+  }
+  button.SearchLibraryStyles__btnCancel___1G1qN{
+    font-size: 14px
+  }

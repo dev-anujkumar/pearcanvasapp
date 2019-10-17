@@ -11,6 +11,7 @@ import { c2MediaModule } from './../../js/c2_media_module';
 
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
+import { checkSlateLock } from "../../js/slateLockUtility.js"
 
 class OpenerElement extends Component {
 
@@ -22,11 +23,45 @@ class OpenerElement extends Component {
             number: props.model ? props.model.number : "",
             title: props.model ? props.model.title : "",
             showLabelDropdown: false,
-            imgSrc: null
+            imgSrc: null,
+            width: null
         }
     }
 
-    /**
+    dataFromAlfresco = (data) => {
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
+            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            this.setState({ imgSrc: epsURL, width })
+            if (document.querySelector("[name='alt_text']"))
+                document.querySelector("[name='alt_text']").innerHTML = altText;
+            if (document.querySelector("[name='long_description']"))
+                document.querySelector("[name='long_description']").innerHTML = longDesc;
+        }
+    }
+    handleC2ExtendedClick = (data) => {
+        let data_1 = data;
+        let that = this;
+        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                that.dataFromAlfresco(data);
+            })
+        })
+    }
+
+     /**
      * Responsible for opening C2 media popup
      * @param {e} event
      */
@@ -39,44 +74,35 @@ class OpenerElement extends Component {
             e.stopPropagation();
             return;
         }
-        ////console.log("LAUNCHING C2 MEDIA MODAL");
         let that = this;
-        c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-            c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                    //let imageData = data['data'];
-                    let imageData = data;
-                    let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-                    let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-                    let width = imageData['width'] ? imageData['width'] : "";
-                    let height = imageData['height'] ? imageData['height'] : "";
-                    let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-                    //console.log("SMART LINK PATH: " + '',smartLinkPath);
-                    let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-                    //console.log("SMART LINK STRING: " + '',smartLinkString);
-                    let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-                    //console.log("SMART LINK DESC: " + '',smartLinkDesc);
-                    let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-                    //console.log("SMART LINK TYPE: " + '',smartLinkType);
-
-                    if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-
-                        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-                        let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-                        let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-                        let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-                        let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-                        that.setState({ imgSrc: epsURL })
-                        document.querySelector("[name='alt_text']").innerHTML = altText;
-                        document.querySelector("[name='long_description']").innerHTML = longDesc;
-
-                    }
+        let alfrescoPath = config.alfrescoMetaData;
+        var data_1 = false;
+        if (alfrescoPath && alfrescoPath.nodeRef) {
+            data_1 = alfrescoPath;
+            /*
+                data according to new project api 
+            */
+            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+            /*
+                data according to old core api and c2media
+            */
+            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+            this.handleC2ExtendedClick(data_1)
+        } else {
+            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                        that.dataFromAlfresco(data);
+                    })
                 })
-            })
-        });
-        hideTocBlocker();
-        disableHeader(false);
-
+            });
+        }
     }
 
     /**
@@ -152,11 +178,39 @@ class OpenerElement extends Component {
             return false
         }
     }
+    /**
+     * Handles background image style
+     *  @param {imgSrc} image source
+     */
+    getBGStyle = (imgSrc, width) => {
+        let styleObj = {
+            "width" : "24%"
+        }
+        if(imgSrc){
+            styleObj["width"] = width ? width : "100%"
+        }
+
+        return styleObj
+    }
+    
+    /**
+     * Handles Focus on opener element
+     * @param {slateLockInfo} Slate lock data
+     */
+    handleOpenerClick = (slateLockInfo) => {
+        if(checkSlateLock(slateLockInfo)){
+            return false
+        }
+        this.props.onClick()
+
+    }
     
     render() {
+        const { imgSrc, width } = this.state
         const { element, backgroundColor, slateLockInfo } = this.props
+        const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container">
+            <div className = "opener-element-container" onClick={() => this.handleOpenerClick(slateLockInfo)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
@@ -175,7 +229,7 @@ class OpenerElement extends Component {
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
-                    <img src={this.state.imgSrc ? this.state.imgSrc : noImage}
+                    <img style={styleObj} src={imgSrc ? imgSrc : noImage}
                         draggable="false" 
                     />
                 </figure>

@@ -25,6 +25,7 @@ import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
+    metadataanchor,
     assetPopoverIcon
   } from "./../svgIcons.jsx";
 
@@ -32,6 +33,7 @@ export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
         let context = this;
+        let viewLoEnable = true;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.assetPopoverButton = null;
@@ -54,6 +56,7 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
+                this.setMetaDataAnchorIcon(editor);
                 this.setMathmlFormulaIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addChemistryFormulaButton(editor);
@@ -112,10 +115,61 @@ export class TinyMceEditor extends Component {
 
                 });
                 editor.ui.registry.addButton('Glossary', {
+                    id: 'buttonId',
+		            classes: 'buttonClas',
                     text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
                     onAction: () => this.addGlossary(editor)
                 });
+               
+                   /* adding a slate tag button in toolbar */
+                   if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
+                    editor.ui.registry.addMenuButton('slateTag', {
+                        icon: 'metadataanchor',
+                        tooltip: "Slate Tag",
+                        fetch: function (callback) {
+                        if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
+                            viewLoEnable=false;
+                        }
+                        //show dropdown options in slate tag 
+                        var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
+                        var items = [
+                            {
+                                
+                                type: 'menuitem',
+                                text: dropdownItemArray[0],
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
+                            },
+                            {
+                                type: 'menuitem',
+                                text: dropdownItemArray[1],
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
+                            },
+                            {
+                                type: 'menuitem',
+                                text: dropdownItemArray[2],
+                                disabled:viewLoEnable,
+                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                            }
+                            
+                        ];
+                        callback(items);
+                        }
+                    });
+                   }
+                
 
+                /* Inline Code Formatting Button */
+                editor.ui.registry.addToggleButton('code', {
+                    text: '<i class="fa fa-code" aria-hidden="true"></i>',
+                    onAction: () => {
+                        this.addInlineCode(editor)
+                    },
+                    onSetup: (api) => {
+                        this.handleFocussingInlineCode(api, editor)
+                    }
+                });
+
+                
                 editor.on('BeforeExecCommand', (e) => {
                     let content = e.target.getContent()
                     switch(e.command){
@@ -150,6 +204,29 @@ export class TinyMceEditor extends Component {
         this.editorRef  = React.createRef();
     };
 
+    /*
+    *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
+    */
+    addInlineCode = (editor) => {
+        editor.execCommand('mceToggleFormat', false, 'code');
+        let selectedText = window.getSelection().toString();
+        if (selectedText != "") {
+            editor.execCommand('mceToggleFormat', false, 'code');
+            let insertionText = '<code>' + selectedText + '</code>'
+            editor.insertContent(insertionText);
+        }
+    }
+
+    /*
+    *  handleFocussingInlineCode function is responsible for focussing inline Code Formatting button
+    */
+    handleFocussingInlineCode = (api,editor) => {
+        api.setActive(editor.formatter.match('code'));
+        var unbind = editor.formatter.formatChanged('code', api.setActive).unbind;
+        return function () {
+            if (unbind) unbind();
+        };
+    }
     setAssetPopoverIcon = editor => {
         editor.ui.registry.addIcon(
             "assetPopoverIcon",
@@ -163,7 +240,7 @@ export class TinyMceEditor extends Component {
         */
         editor.ui.registry.addIcon(
           "tinymceFormulaChemistryIcon",
-          tinymceFormulaChemistryIcon
+          tinymceFormulaChemistryIcon,
         );
       };
       setMathmlFormulaIcon = editor => {
@@ -172,6 +249,12 @@ export class TinyMceEditor extends Component {
         */
         editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
       };
+      setMetaDataAnchorIcon = editor => {
+        /*
+          Adding custom icon for wiris Mathml editor
+        */
+        editor.ui.registry.addIcon("metadataanchor", metadataanchor);
+      };
       addChemistryFormulaButton = editor => {
         /*
           Adding button and bind exec command on clicking the button to open the chemistry editor
@@ -179,9 +262,15 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
           text: "",
           icon: "tinymceformulachemistryicon",
-          tooltip: "Wiris editor chemistry",
+          tooltip: "WIRIS EDITOR chemistry",
           onAction: function (_) {
-            editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+            /*
+                Enabling chemistry ML
+            */
+            let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+            wirisChemistryInstance.enable('chemistry');
+            window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
+            //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
           },
           onSetup: (buttonApi) => {
             /*
@@ -201,7 +290,7 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
           text: "",
           icon: "tinymceformulaicon",
-          tooltip: "Wiris editor math",
+          tooltip: "WIRIS EDITOR math",
           onAction: function (_) {
             var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
             wirisPluginInstance.core.getCustomEditors().disable();
@@ -283,6 +372,9 @@ export class TinyMceEditor extends Component {
         this.props.openGlossaryFootnotePopUp(true, "Footnote");
 
     }
+    learningObjectiveDropdown(text){
+        this.props.learningObjectiveOperations(text);
+    }
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
         let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
@@ -303,7 +395,6 @@ export class TinyMceEditor extends Component {
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
-        console.log('tinymce didmount')
         if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             this.editorRef.current.focus(); // element must be focused before
             this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -311,7 +402,6 @@ export class TinyMceEditor extends Component {
         }
     }
     componentDidUpdate() {
-        console.log('TINY UPDATE')
         if (!tinymce.editors.length) {
             console.log('tiny update')
             //tinymce.init(this.editorConfig)
@@ -359,8 +449,7 @@ export class TinyMceEditor extends Component {
         this.props.handleBlur()
     }
     render() {
-        const { slateLockInfo: { isLocked, userId } } = this.props
-        console.log("locked------>", isLocked)
+        const { slateLockInfo: { isLocked, userId } } = this.props;
         const lockCondition = isLocked && config.userId !== userId
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
@@ -377,26 +466,26 @@ export class TinyMceEditor extends Component {
         if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            if (!testElem.innerText.length)
+            if (testElem.innerText == "" && !testElem.innerText.length)
                 placeHolderClass = 'place-holder';
         }
         else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.text;
-            if (!testElem.innerText.length) {
+            if (testElem.innerText == "" && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.figuredata.preformattedtext;
-            if (!testElem.innerText.length) {
+            if (testElem.innerText == "" && !testElem.innerText.length) {
                 placeHolderClass = 'place-holder';
             }
         }
             else {
                 let testElem = document.createElement('div');
                 testElem.innerHTML = this.props.model;
-                if (!testElem.innerText.length) {
+                if (testElem.innerText == "" && !testElem.innerText.length) {
                     placeHolderClass = 'place-holder';
                 }
             }
@@ -425,9 +514,7 @@ export class TinyMceEditor extends Component {
 
         TinyMceEditor.propTypes = {
             /** class name of the element type to be rendered */
-            className: PropTypes.string,
-            /** Detail of element in JSON object */
-            model: PropTypes.object,
+            className: PropTypes.string
 
         };
 

@@ -11,16 +11,17 @@ import ElementSaprator from '../ElementSaprator';
 import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
-    createElement, swapElement,
-    setSplittedElementIndex
+    createElement , swapElement,
+    setSplittedElementIndex, createElementMeta,
+    createElementMetaList
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER,WORKED_EXAMPLE,SECTION_BREAK, OPENER, ASSESSMENT_SLATE}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -115,6 +116,13 @@ class SlateWrapper extends Component {
 
     static getDerivedStateFromProps = (props, state) => {
         /**
+         * updateTimer is for updating Time for slate refresh
+         */
+
+        if(typeof props.updateTimer !== "undefined"){
+            props.updateTimer();
+        }
+        /**
          * First chunk of block manages previous rendered slateId and changes only when new slate renders in canvas
          * and in case of new slate being rendered it removes all previous tinymce instances
          */
@@ -197,7 +205,7 @@ class SlateWrapper extends Component {
                     // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
-                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
+                    this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
                     let _context = this
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
@@ -427,6 +435,16 @@ class SlateWrapper extends Component {
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
+                case 'metadata-anchor':
+                    if(config.slateType == "container-introduction"){
+                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn);
+                        
+                    }
+                    else{
+                        this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
+                    }
+                   
+                break;
             default:
         }
     }
@@ -535,7 +553,7 @@ class SlateWrapper extends Component {
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
         sendDataToIframe({ 'type': ShowLoader, 'message':{status: true}});
-        sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
+        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
@@ -570,18 +588,30 @@ class SlateWrapper extends Component {
     }
 
     /**
+     * @description - hide opener elment and disable MA option once created in IS
+     * @param {object} _elements
+     */
+    renderButtonsonCondition(_elements){
+        if(_elements.filter(element => element.type == "chapterintro").length){
+            config.isCO = true
+        }
+        //set the value in slate when once metadata anchor is created on IS
+        else if(_elements.filter(element => element.type == "element-generateLOlist").length){
+            config.isLOL = true
+        }
+        else{
+            config.isLOL = false;
+            config.isCO = false
+        }
+    }
+    /**
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
-                    if(_elements.filter(element => element.type == "chapterintro").length){
-                        config.isCO = true
-                    }
-                    else{
-                        config.isCO = false
-                    }
+                this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
@@ -703,8 +733,9 @@ export default connect(
     mapStateToProps,
     {
         createElement,
+        createElementMeta,
+        createElementMetaList,
         swapElement,
-        setSplittedElementIndex,
-        createAssessmentSlateElement
+        setSplittedElementIndex
     }
 )(SlateWrapper);

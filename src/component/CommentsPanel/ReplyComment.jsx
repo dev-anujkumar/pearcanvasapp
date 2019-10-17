@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-
- class ReplyComment extends React.Component {
+import { utils } from '../../js/utils'
+class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -11,53 +11,53 @@ import PropTypes from 'prop-types';
         this.updateCommentText = this.updateCommentText.bind(this);
         this.replyComment = this.replyComment.bind(this);
     }
-    /**
-* 
-*@discription - This function is to update the text of comment
 
-*/
-    updateCommentText(e) {
+    /**
+    * 
+    *@discription - This function is to update the text of comment
+    */
+    updateCommentText = (e) => {
         this.setState({
             text: e.target.value,
         })
     }
-    /**
-* 
-*@discription - This function is to reply comment
 
-*/
-    replyComment(e) {
-        const {comment, elementId,toggleReplyForm} = this.props;
+    /**
+    * 
+    *@discription - This function is to reply comment
+    */
+    replyComment = (e) => {
+        const { comment, elementId, toggleReplyForm } = this.props;
         const { text } = this.state;
         const date = new Date()
         const commentUrn = comment.commentUrn;
         const reply = {
             commentType: "commentReply",
             commentDateTime: date.toISOString(),
-            commentCreator:  "c5test01",//auth.user.userId,
+            commentCreator: "c5test01",//auth.user.userId,
             commentString: text,
             commentOnEntity: elementId
         }
-        this.props.updateReplyComment(commentUrn,reply,elementId);
-        //this.props.close();
+        this.props.updateReplyComment(commentUrn, reply, elementId);
     }
+
     /**
     * 
     *@discription - This function is to return jsx of reply menu
-      @param {String} index - index of comments
-      @param {Array} reply - Array of reply  comments
+    @param {String} index - index of comments
+    @param {Array} reply - Array of reply  comments
     @return {String} - returns the jsx code of the reply menu
     */
     reply = (index, reply) => {
         return (
-            <div  key = {index} className="reply">
+            <div key={index} className="reply">
                 <div className="selected-corner"></div>
                 <h4>Reply #{index + 1}</h4>
                 <div className="comment-header">
                     <div className="comment-info no-padding">
                         <div className="text-medium-semibold mt-4"> {reply.commentCreator} </div>
                         <div className="text-medium color-gray-71 mb-4">
-                            { /* Utils.buildCommentDate(reply.createddate) */}
+                            {utils.buildCommentDate(reply.createddate)}
                         </div>
                     </div>
                 </div>
@@ -71,12 +71,13 @@ import PropTypes from 'prop-types';
             </div>
         )
     }
+
     /**
-* 
-*@discription - This function is to return jsx of reply form
-  @param {Array} props - Array of reply  comments
-@return {String} - returns the jsx code of the reply form
-*/
+    * 
+    *@discription - This function is to return jsx of reply form
+    @param {Array} props - Array of reply  comments
+    @return {String} - returns the jsx code of the reply form
+    */
 
     replyCommentForm = (props) => {
         if (props.showReplyForm && props.toggleReplyForm) {

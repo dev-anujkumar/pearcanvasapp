@@ -15,12 +15,16 @@ describe('Testing Element Single Assessment component', () => {
     let props = {
         model: singleAssessmentCITEDefault,
         index:"1",
-        usagetype:"Practice"
+        usagetype:"Practice",
+        handleFocus: function(){}
+
     };
 
-    let singleAssessment = mount(<ElementSingleAssessment model = {singleAssessmentCITEDefault}  />);
+    let singleAssessment = mount(<ElementSingleAssessment {...props}  />);
+    const div = document.createElement('div');
     it('Render Single Assessment default ', () => {
-        expect(singleAssessment).toMatchSnapshot();
+            ReactDOM.render(<ElementSingleAssessment {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
     });
 
     it('onClick Event', () => {
@@ -37,13 +41,24 @@ describe('Testing Element Single Assessment component', () => {
                 }
             }
         }
-
+      
         singleAssessment.find('div.singleAssessment_Dropdown_Container .singleAssessment_Dropdown_activeDropdown').simulate('click');
         singleAssessment.find('ul.singleAssessment_Dropdown_options>li:first-child').simulate('click');
         singleAssessment.find('div.pearson-component.image').simulate('click');
+        singleAssessment.find('div.figureElement').simulate('click');
         singleAssessmentInstance.handleAssessmentTypeChange('Diagnostic');
 
             
     });
-      
+
+    it('Simulating alfresco click without alfresco location', () =>{
+        const singleAssessment = mount( <ElementSingleAssessment {...props} /> )
+        singleAssessment.find('ElementSingleAssessment').instance().handleC2AssessmentClick({target : {tagName : 'b'}}) 
+    })
+    it('Simulating alfresco click with alfresco location', () =>{
+        const singleAssessment = mount( <ElementSingleAssessment {...props} /> )
+        config.alfrescoMetaData = {nodeRef : {}}
+        singleAssessment.find('ElementSingleAssessment').instance().handleC2AssessmentClick({target : {tagName : 'b'}}) 
+    })
+
 });

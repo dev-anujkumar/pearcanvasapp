@@ -5,7 +5,7 @@ import {c4PublishObj} from '../js/c4_module.js';
 import store from '../appstore/store';
 import utils from './utils'
 //import { releaseSlateLock } from "../actions/slateLockAction";
-import { OPEN_AM } from '../auth/openam';
+import { OPEN_AM } from './auth_module';
 //import {launchTrackChanges} from '../jsx/tcm/launchTrackChanges';
 //import icontains from "./jquery.icontains";
 /*VEX*/
@@ -173,19 +173,4 @@ export const logout = function () {
 export const trackChanges = function () {
     // let slateLockSatus, SlatelockUserInfo;
     // launchTrackChanges(slateLockSatus, SlatelockUserInfo);
-}
-export const refreshSlate = function() {
-    store.dispatch({ 
-        type: 'UPDATE_STATUS_REFRESH_SLATE', 
-        payload: 'Refreshing'
-    })
-    let clicked_time = new Date();
-    store.dispatch({ 
-        type: 'UPDATE_REAL_TIME', 
-        payload: clicked_time,
-    })
-    store.dispatch({ 
-        type: 'REFRESH_SLATE', 
-        payload: true
-    })
 }

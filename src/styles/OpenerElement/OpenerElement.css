@@ -19,6 +19,7 @@
 .opener-element-container .opener-title-text{
     font-size: 14px;
     color: #6a7070;
+    font-weight: bold;
 }
 .opener-element-container .pearson-component.opener-image.figureData{
     cursor: copy;
