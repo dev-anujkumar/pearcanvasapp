@@ -509,9 +509,7 @@ export class TinyMceEditor extends Component {
 
         TinyMceEditor.propTypes = {
             /** class name of the element type to be rendered */
-            className: PropTypes.string,
-            /** Detail of element in JSON object */
-            model: PropTypes.object,
+            className: PropTypes.string
 
         };
 
