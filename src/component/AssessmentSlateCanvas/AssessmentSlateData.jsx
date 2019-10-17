@@ -10,14 +10,12 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
             activeAssessmentType: 'Select',
             activeAssessmentUsageType: props.model && props.elementdata && props.elementdata.usagetype ? props.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false
 
         }
-
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
@@ -63,7 +61,8 @@ export class AssessmentSlateData extends Component {
 
     }
 
-    /*** @description - This function is to close the popup 
+    /* 
+    * @description - This function is to close the popup 
     */
 
     closePopUp = () => {

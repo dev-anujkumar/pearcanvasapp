@@ -28,7 +28,7 @@ let headers = {
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-    return axios.get(url, {
+    return axios.get(url, "",{
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -223,7 +223,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-    return axios.delete(url, { headers, headers })
+    return axios.delete(url,{ headers: headers })
         .then(response => {
             dispatch({
                 type: DELETE_COMMENT,
