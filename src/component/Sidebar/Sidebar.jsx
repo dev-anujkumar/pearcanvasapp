@@ -203,7 +203,7 @@ class Sidebar extends Component {
     attributions = () => {
         let attributions = '';
         let attributionsObject = {};
-        let attributionsList = [];console.log("state:::", this.state);
+        let attributionsList = [];
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
