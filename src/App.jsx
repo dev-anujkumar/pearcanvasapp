@@ -1,3 +1,4 @@
+
 /*
 * This is main App component which provides access
 * to Application level state and give it to all its predecesors.
@@ -13,6 +14,8 @@ import CanvasWrapper from './component/CanvasWrapper';
 
 // IMPORT - Assets //
 import './styles/style.css';
+
+console.log('!!!!! ---- canvas-0.0.1 ---- !!!!!!');
 
 class App extends Component {
     constructor(props) {

@@ -1,0 +1,63 @@
+.matadata_anchor p{
+    color: white;
+    display: inline;
+    padding: 3px 10px!important;
+    background-color: #737373;
+}
+.element-container .learningObjectiveContainer .learningObjectiveinner{
+    padding: 10px 0px 0px 10px!important;
+}
+.element-container .learningObjectiveContainer .learningObjectiveinnerText.cypress-editable.place-holder::before
+{ content: attr(placeholder);
+    position: inherit;
+
+}
+.learningObjectiveinnerText.cypress-editable.place-holder{
+    font-style:italic;
+}
+.element-container.active .matadata_anchor p{
+    background-color: green;
+}
+.tox-tbtn--active .tox-collection--list{
+width:230px;
+}
+.tox-toolbar button:last-child .tox-tbtn__select-chevron{
+    display:none
+}
+.slateTagClass svg{
+   fill : #42a316;
+}
+.learningObjectiveContainer .heading2LearningObjectiveListHeaderLabel p {
+    color: grey;
+    font-style: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.learningObjectiveContainer h2.heading2LearningObjectiveListHeaderLabel {
+    line-height: 0.75em;
+    margin: 0;
+}
+.learning-obejective-text .element-dropdown-title{
+    pointer-events: auto;
+    cursor: pointer;
+    display: block;
+    color: lightgrey;
+}
+.panel_show_module p {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+}
+.panel_show_module .learning-obejective-text {
+    padding-bottom: 20px;
+}
+.panel_show_module .switch{
+    float: right;
+    margin-top:0;
+}
+.metadata-anchor.disabled{
+    pointer-events: none;
+    cursor: none;
+    opacity: 0.3;
+}
+ 

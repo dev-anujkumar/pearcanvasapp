@@ -41,7 +41,7 @@ class ElementAsideContainer extends Component {
         this.props.setActiveElement(this.props.element);
         this.props.handleFocus()
     }
-    /**
+/**
  * 
  * @discription - renderSlate | renders slate editor area with all elements it contain
  * @param {string} element -object of element
@@ -116,11 +116,12 @@ class ElementAsideContainer extends Component {
             // handle error
         }
     }
+
     /**
-* 
-* @discription - This function is section break
-* @param {string} element -object of element
-*/
+    * 
+    * @discription - This function is section break
+    * @param {string} element -object of element
+    */
     section(element, index) {
 
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
@@ -445,9 +446,11 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(
+/* export default connect(
     mapStateToProps,
     {
         swapElement
     }
-)(ElementAsideContainer);
+)(ElementAsideContainer); */
+
+export default ElementAsideContainer;

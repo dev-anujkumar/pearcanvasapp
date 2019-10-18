@@ -1,6 +1,9 @@
 import React from 'react'
 import Button from '../../../src/component/ElementButtons/ElementButton.jsx'
 import ElementSaprator from '../../../src/component/ElementSaprator/'
+import {renderDropdownButtons, addMediaClickHandler} from '../../../src/component/ElementSaprator/ElementSaprator.jsx'
+import config from '../../../src/config/config.js';
+import {shallow, mount} from 'enzyme';
 
 let wrapper, useEffect, esProps
 
@@ -60,25 +63,28 @@ esProps = [
 ]
 
 const mockUseEffect = () => {
-    useEffect.mockImplementationOnce(cb => cb())
+    let document = {
+        addEventListener : jest.fn()
+    }
+    let getParents = jest.fn();
+    useEffect.mockImplementationOnce(cb => {
+        return jest.fn()
+    })
 }
 
 beforeEach(() => {
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( < ElementSaprator esProps={esProps}/ > )
+    wrapper = shallow( < ElementSaprator esProps={esProps} /> )
     mockUseEffect()
 })
 
 describe('Testing ElementSaprator component', () => {
 
     describe('UseEffect function', () => {
-
+        let tempWrapper = mount( < ElementSaprator esProps={esProps}/> )
     }),
 
     describe('<ElementSaprator/> Rendering', () => {
-            it('should have 9 buttons', () => {
-                    expect(wrapper.find(Button)).toHaveLength(9)
-                }),
 
                 it('Should have 1 <hr/>', () => {
                     expect(wrapper.find('hr')).toHaveLength(1)
@@ -86,6 +92,11 @@ describe('Testing ElementSaprator component', () => {
 
                 it('Should have 1 dropdown', () => {
                     expect(wrapper.find('.dropdown')).toHaveLength(1)
+                }),
+                it('Should render ', () => {
+                    config.slateType = 'container-introduction';
+                    config.isCO = false;
+                    let tempWrapper = shallow( < ElementSaprator esProps={esProps}/> )
                 })
         }),
 
@@ -103,21 +114,55 @@ describe('Testing ElementSaprator component', () => {
                 it('On click Expend button dropdown should be render', () => {
                     wrapper.find('.dropdown').hasClass('dropdown-content show')
                 }),
-
                 it('Click on dropdown buttons', () => {
                     wrapper.find(Button).at(2).simulate('click')
                     wrapper.find(Button).at(3).simulate('click')
                     wrapper.find(Button).at(4).simulate('click')
                     wrapper.find(Button).at(5).simulate('click')
                     wrapper.find(Button).at(6).simulate('click')
-                    wrapper.find(Button).at(7).simulate('click')
-                    wrapper.find(Button).at(8).simulate('click')
                 }) 
             })
         })
-
-
-
     })
+})
 
+describe('Testing functions', () => {
+    it ('Testing renderDropdownButtons function', () => {
+        let slateType = 'container-introduction', closeDropDown;
+        let elementType = 'element-aside';
+        let sectionBreak = true;
+
+        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)
+    }),
+    it ('Testing renderDropdownButtons function else part', () => {
+        let slateType = 'container-introduction', closeDropDown;
+        let elementType = 'element-aside';
+        let sectionBreak = false;
+        
+        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)
+    }),
+    it('Testing addMediaClikHandler', () => {
+        addMediaClickHandler()
+    }),
+    it('simulate dropbtn button onclick', () => {
+        config.PERMISSIONS = ['elements_add_remove']
+
+        let samplediv = document.createElement('div');
+        samplediv.setAttribute('class', 'show' );
+        samplediv.innerHTML = "test";
+        document.body.appendChild(samplediv);
+
+        let tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        tempWrapper.find('.dropbtn').simulate('click');
+    }),
+    it('simulate splitSlateClickHandler ', () => {
+        config.PERMISSIONS = ['elements_add_remove']
+        let tempWrapper;
+        
+        tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        tempWrapper.setProps({
+            toggleSplitSlatePopup : jest.fn()
+        })
+        tempWrapper.find(Button).at(0).simulate('click');
+    })
 })
