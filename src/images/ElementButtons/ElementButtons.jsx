@@ -54,7 +54,7 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="22" x="0px" y="0px" viewBox="16 13 37 34">  
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="22" x="0px" y="0px" viewBox="14 13 37 34">  
             <g id="Artboard_5">
                 <rect width="64" height="64" fill="#fff"></rect>
                 <g id="Group_2311" transform="translate(-53 -403)">
