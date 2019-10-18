@@ -401,6 +401,8 @@ export class ElementFigure extends Component {
     }
 }
 
+ElementFigure.displayName = "ElementFigure"
+
 ElementFigure.defaultProps = {
     /** Detail of element in JSON object */
     model: PropTypes.object,
