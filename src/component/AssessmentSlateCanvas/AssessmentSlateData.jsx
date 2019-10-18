@@ -138,7 +138,7 @@ export class AssessmentSlateData extends Component {
             assessmentTypeValue="PUF";
             changeTypeValue="Change PUF";
         }
-        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.activeAssessmentType !== 'Full Assessment PUF'  ) {
+        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false ) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">

@@ -1,5 +1,5 @@
 import config from '../../../../config/config';
-var projectDetails = require('c:/Users/chavi.srivastava/Desktop/Project/c5-chaucer/appx/app/src/js/constants/projectData').projectDetails;
+import {projectDetails} from '../../AssessmentSlateConstants';
 import axios from 'axios';
 
 export const insertElmResourceAction = () => (dispatch)=> {
