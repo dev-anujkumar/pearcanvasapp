@@ -45,10 +45,10 @@ export class AssessmentSlateData extends Component {
             }, () => {
                 this.mainAddAssessment(e, 'Full Assessment PUF');
             })
-        } else if (this.state.assessmentformat === "learningtemplate") {
-            this.changeLearningApp();
+        } else if (assessmentFormat === "learningtemplate") {
+              this.changeLearningApp(); //will be used later
         } else {
-            this.addC2MediaAssessment();
+            this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
     }
 
@@ -237,5 +237,4 @@ export class AssessmentSlateData extends Component {
         );
     }
 }
-
 AssessmentSlateData.displayName = "AssessmentSlateData"

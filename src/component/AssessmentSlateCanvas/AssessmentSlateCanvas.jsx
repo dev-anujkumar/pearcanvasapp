@@ -70,24 +70,25 @@ export class AssessmentSlateCanvas extends Component {
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
-        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, (assessmentData) => {
-
-            let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
-            let itemID = assessmentData['itemID'];
-            let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
-            var assessmentFormat;
-            if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
-                assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
-            } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
-                assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
-            } else {
-                assessmentFormat = "";
-                alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-            }
-            this.updateAssessment(id, itemID, title, assessmentFormat, "", "insert");
-
+        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
+           this.launchAssetBrowserCallBack(assessmentData)   
         });
 
+    }
+    launchAssetBrowserCallBack = (assessmentData) => {
+        let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
+        let itemID = assessmentData['itemID'];
+        let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
+        var assessmentFormat;
+        if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
+            assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
+        } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
+            assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
+        } else {
+            assessmentFormat = "";
+            alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+        }
+        this.updateAssessment(id, itemID, title, assessmentFormat, "", "insert");
     }
     /*** @description - This function is to update state variables based on the parameters
        * @param id - assessment-id of the assessment

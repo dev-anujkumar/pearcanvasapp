@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementFigure } from '../../../src/component/ElementFigure/ElementFigure';
 import { figureImage50TextElementDefault,figureImage50TextElementWithData, figureImageTextWidthElementDefault,figureImageTextWidthElementWithData, figureImageWiderElementDefault,figureImageWiderElementWithData, figureImageFullElementDefault,figureImageFullElementWithData,tableImage50TextElementDefault,tableImage50TextElementWithData,tableImageTextWidthElementDefault,tableImageTextWidthElementWithData,tableImageWiderElementDefault,tableImageWiderElementWithData,tableImageFullElementDefault,tableImageFullElementWithData, mathImage50TextElementDefault,mathImage50TextElementWithData,mathImageTextWidthElementDefault,mathImageTextWidthElementWithData,mathImageWiderElementDefault,mathImageWiderElementWithData,mathImageFullElementDefault,mathImageFullElementWithData, mathmlEditorDefault,mathmlEditorWithData,blockCodeEditorDefault,blockCodeEditorWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import config from '../../../src/config/config';
 
 describe('Testing Figure element component', () => {
 
@@ -15,6 +16,8 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            onClick : ()=>{},
+            handleFocus: function(){}
         }
         ReactDOM.render(<ElementFigure  {...props} />, div);
         ReactDOM.unmountComponentAtNode(div);
@@ -27,6 +30,8 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            onClick : ()=>{},
+            handleFocus: function(){}
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -85,6 +90,8 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            onClick : ()=>{},
+            handleFocus: function(){}
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -229,17 +236,29 @@ describe('Testing Figure element component', () => {
             slateLockInfo: {
                 isLocked: false,
                 userId: 'c5Test01'
-            }
+            },
+            onClick : ()=>{},
+            handleFocus: function(){}
         };
-        const div = document.createElement('div');
         const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();
         it('onClick', () => {
-            elementFigureInstance.onClick();
+            elementFigureInstance.handleC2MediaClick({target : {tagName : 'g'}});
+        }) 
+       
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementFigure = mount( <ElementFigure {...props} /> )
+            elementFigure.find('ElementFigure').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
         })
-        it('onKeyup', () => {
-            elementFigureInstance.onKeyup();
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementFigure = mount( <ElementFigure {...props} /> )
+            config.alfrescoMetaData = {nodeRef : {}}
+            elementFigure.find('ElementFigure').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
         })
+        it('Alfresco Data Handling', () => {
+            const elementFigure = mount(<ElementFigure {...props} />, { attachTo: document.body })
+            elementFigure.find('ElementFigure').instance().dataFromAlfresco({ assetType: "figure" })
+        })   
     })
     
 });

@@ -604,4 +604,33 @@ export const listMockData = {
     }
 };
 
+export const GlossaryMockState = {
+    "type": "Glossary",
+    "popUpStatus": false
+}
+
+export const SlateLockMockState = {
+    slateLockInfo: {
+        isLocked: false,
+        timestamp: "",
+        userId: "c5Test01"
+    },
+    withinLockPeriod: false
+}
+
+export const AssetPopOverMockState = {
+    showApoSearch: false,                 // Weather show or not the popover window
+    showApoCurrentlyLinked: false,        // Show or not currently linked part of the window
+    showApoBody: false,                   // Show or not APO Body
+    showApoFooter: true,                  // Show or not APO footer
+    figures: [],                          // Array of search Results from API
+    selectedFigureValue: {},              // Name of Selected Figure
+    noSearchResultFound: false,           // If Error or No search results found from API
+    figureIsSelected: false,              // Figure is selected or not
+    apoObject: {},
+    imageData: [],
+    searchTerm: '',                        //Figure name to be find
+    currentlyLinkedImageData: {}
+}
+
 

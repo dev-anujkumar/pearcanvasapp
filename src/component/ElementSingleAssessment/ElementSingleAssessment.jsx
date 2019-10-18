@@ -46,25 +46,26 @@ export class ElementSingleAssessment extends Component {
         disableHeader(true);
         this.toggleAssessmentPopup(false);
         productId = (value && value !== "") ? value : "Unspecified";
-        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, function (assessmentData) {
-
-            let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
-            let itemID = assessmentData['itemID'];
-            let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
-            var assessmentFormat;
-            if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
-                assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
-            } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
-                assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
-            } else {
-                assessmentFormat = "";
-                alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
-            }
-            that.setState({assessmentId: id,assessmentItemId : itemID,})
+        c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData)=> {
+            this.launchAssetBrowserCallBack(assessmentData) 
         });
         hideTocBlocker();
     }
-
+    launchAssetBrowserCallBack = (assessmentData) => {
+        let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
+        let itemID = assessmentData['itemID'];
+        let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
+        var assessmentFormat;
+        if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
+            assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
+        } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
+            assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
+        } else {
+            assessmentFormat = "";
+            alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+        }
+        this.setState({assessmentId: id,assessmentItemId : itemID,})
+    }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (value) => {
@@ -135,7 +136,7 @@ export class ElementSingleAssessment extends Component {
                 <div className="pearson-component image" data-uri="" data-type="image" onClick={()=>{this.toggleAssessmentPopup(true)}}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
-                        title="View Image" alt="" class="imageTextWidth lazyloaded imageeee"></img>
+                        title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
                 </div>
             </figure>
 
@@ -153,13 +154,14 @@ export class ElementSingleAssessment extends Component {
     }
 }
 
+ElementSingleAssessment.displayName = "ElementSingleAssessment"
 ElementSingleAssessment.defaultProps = {
     /** Detail of element in JSON object */
     model: PropTypes.object,
     /** index of element  */
-    index: PropTypes.number,
+    index: PropTypes.string,
     /** element id of the element */
-    elementId: PropTypes.number
+    elementId: PropTypes.string
 }
 
 ElementSingleAssessment.propTypes = {

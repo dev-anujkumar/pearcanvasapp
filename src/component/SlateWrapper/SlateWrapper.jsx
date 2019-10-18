@@ -17,7 +17,7 @@ import {
 } from './SlateWrapper_Actions';
 import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, SPLIT_CURRENT_SLATE } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -437,7 +437,8 @@ class SlateWrapper extends Component {
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn)
+                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn);
+                        
                     }
                     else{
                         this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
@@ -552,7 +553,7 @@ class SlateWrapper extends Component {
     handleSplitSlate = () => {
         this.toggleSplitSlatePopup(false)
         sendDataToIframe({ 'type': ShowLoader, 'message':{status: true}});
-        sendDataToIframe({ 'type': SPLIT_CURRENT_SLATE, 'message': {} });
+        sendDataToIframe({ 'type': SplitCurrentSlate, 'message': {} });
         this.props.setSplittedElementIndex(this.state.splittedSlateIndex)
     }
     
@@ -587,18 +588,30 @@ class SlateWrapper extends Component {
     }
 
     /**
+     * @description - hide opener elment and disable MA option once created in IS
+     * @param {object} _elements
+     */
+    renderButtonsonCondition(_elements){
+        if(_elements.filter(element => element.type == "chapterintro").length){
+            config.isCO = true
+        }
+        //set the value in slate when once metadata anchor is created on IS
+        else if(_elements.filter(element => element.type == "element-generateLOlist").length){
+            config.isLOL = true
+        }
+        else{
+            config.isLOL = false;
+            config.isCO = false
+        }
+    }
+    /**
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
-                    if(_elements.filter(element => element.type == "chapterintro").length){
-                        config.isCO = true
-                    }
-                    else{
-                        config.isCO = false
-                    }
+                this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
