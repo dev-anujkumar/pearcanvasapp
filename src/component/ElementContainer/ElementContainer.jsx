@@ -389,12 +389,6 @@ class ElementContainer extends Component {
         hideBlocker();
     }
 
-    // handleCommentPopup(popup){
-    //     this.setState({
-    //         popup
-    //     });
-    // }
-
 
     /**
      * @description - This function is for handleChange of popup.
@@ -417,9 +411,19 @@ class ElementContainer extends Component {
         this.props.addComment(comment, id);
         this.handleCommentPopup(false);
     }
+
+    /**
+     * @description - This function is for Open Glossarypopup.
+     * @param {} 
+     * @param 
+     */
     openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
     }
+
+    /**
+     * @description - This function is for open assest popover.
+     */
     openAssetPopoverPopUp = (toggleApoPopup) => {
         authorAssetPopOver(toggleApoPopup)
         // this.props.assetPopoverPopup(toggleApoPopup)
@@ -429,9 +433,16 @@ class ElementContainer extends Component {
         const { element } = this.props;
         return this.renderElement(element);
     }
+    /**
+     * @description - This function is for handling hover on element and showing page numbering box.
+     */
     handleOnMouseOver = () => {
         this.setState({ isHovered: true })
     }
+
+    /**
+     * @description - This function is for handling mouse out on element and hiding page numbering box.
+     */
     handleOnMouseOut = () => {
         this.setState({ isHovered: false })
     }

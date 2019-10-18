@@ -3,12 +3,12 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { storeMock,storeWithFigure,slateLevelData, createFigureElementDefault,defaultSlateData,defaultSlateDataFigure } from "../../../fixtures/slateTestingData"
-import { FIGURE_ELEMENT_CREATED, SWAP_ELEMENT } from '../../../src/constants/Action_Constants';
+import { FIGURE_ELEMENT_CREATED, SWAP_ELEMENT, AUTHORING_ELEMENT_CREATED } from '../../../src/constants/Action_Constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('Tests Slate Wrapper Actions', () => {
+xdescribe('Tests Slate Wrapper Actions', () => {
     let store = mockStore(() => initialState);
     let initialState = {
         appStore: storeMock.slateLevelData
@@ -43,9 +43,9 @@ describe('Tests Slate Wrapper Actions', () => {
                 response: ""
             });
         });
-        return store.dispatch(actions.createFigureElement(typee, index)).then(() => {
+        return store.dispatch(actions.createElement(typee, index)).then(() => {
             const { type, payload } = store.getActions()[0];
-            expect(type).toBe(FIGURE_ELEMENT_CREATED);
+            expect(type).toBe(AUTHORING_ELEMENT_CREATED);
 
 
         });

@@ -38,7 +38,7 @@ export class AssessmentSlateData extends Component {
         } else if (assessmentFormat === "learningtemplate") {
             // this.changeLearningApp(); //will be used later
         } else {
-            this.addC2MediaAssessment();
+            this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
     }
 
