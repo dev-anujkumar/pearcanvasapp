@@ -30,7 +30,8 @@ import {publishContent,logout} from '../../js/header'
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { PageNumberContext } from './CanvasContexts.js';
-import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions';
+import { handleUserRole } from './UserRole_Actions'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -309,6 +310,7 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
-        logout
+        logout,
+        handleUserRole
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

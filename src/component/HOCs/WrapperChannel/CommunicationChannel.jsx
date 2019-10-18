@@ -199,7 +199,8 @@ function WithWrapperCommunication(WrappedComponent) {
         }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
-                config.PERMISSIONS = message.permissions;
+               // config.PERMISSIONS = message.permissions;
+                this.props.handleUserRole(message.permissions)
             }
         }
 
