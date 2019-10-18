@@ -45,7 +45,7 @@ export const audioIcon = (function () {
 
 export const containerIcon = (function () {
     return (
-        <svg id="containerIcon" viewBox="1 0 12 13" width="22" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg id="containerIcon" viewBox="1 0.5 12 13" width="22" height="15" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <rect width="20" height="20" fill="none" />
             <path d="M7.5,1,0,4v7l7.5,4L15,11V4ZM7,13.6,1,10.4V5.53l6,3.2Zm-5.7-9L7.5,2.08l6.2,2.48L7.5,7.87ZM14,10.4,8,13.6V8.73l6-3.2Z" transform="translate(0 -1)"></path>
         </svg>
@@ -54,13 +54,14 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 64 64">
-        <g>
-            <rect width="64" height="64" fill="#fff"></rect>
-            <g id="Group_2311" data-name="Group 2311" transform="translate(-53 -403)">
-              <g id="Rectangle_1349" data-name="Rectangle 1349" transform="translate(69 427)" fill="#fff" stroke="#707070" stroke-width="2"><rect width="49" height="40" fill="none"></rect>
-            </g>
-            <rect id="Rectangle_1350" data-name="Rectangle 1350" width="49" height="10" transform="translate(69 419)" fill="#434343"></rect>
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="22" x="0px" y="0px" viewBox="14 13 37 34">  
+            <g id="Artboard_5">
+                <rect width="64" height="64" fill="#fff"></rect>
+                <g id="Group_2311" transform="translate(-53 -403)">
+                <g id="Rectangle_1349" transform="translate(69 427)" stroke="rgb(67, 67, 67)" stroke-width="2">
+                    <rect x="1" y="1" width="30" height="22" fill="none"></rect>
+                </g>
+                <rect id="Rectangle_1350" data-name="Rectangle 1350" width="32" height="6" transform="translate(69 419)" fill="#434343"></rect>
                 </g>
             </g>
         </svg>

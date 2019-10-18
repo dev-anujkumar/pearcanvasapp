@@ -26,7 +26,8 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
-        replyComments: []
+        replyComments: [],
+        commentUrn:""
     }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
@@ -41,6 +42,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             let { contents: _slateContent } = _slateObject;
             // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
+            Comment.commentUrn = response.data.commentUrn
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['comments'] = true
