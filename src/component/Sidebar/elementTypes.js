@@ -47,15 +47,15 @@ export default {
                 }
             }
         },
-        // 'primary-learning-objective': {
-        //     text: 'Learning Objective Item',
-        //     subtype: {
-        //         'secondary-learning-objective': {
-        //             text: 'Learning Objective',
-        //             labelText: 'LO'
-        //         }
-        //     }
-        // },
+        'primary-learning-objective': {
+            text: 'Learning Objective Item',
+            subtype: {
+                'secondary-learning-objective': {
+                    text: 'Learning Objective',
+                    labelText: 'LO'
+                }
+            }
+        },
         'primary-blockquote': {
             text: 'Blockquotes',
             enum: 'BLOCKFEATURE',
