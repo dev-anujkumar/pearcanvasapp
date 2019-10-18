@@ -90,7 +90,7 @@ export const sectionBreakElement = (function () {
     return (
         <svg id="sectionBreakElement" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <g>
-                <rect x="1" y="8.818" className="st0" width="22" height="22" fill="none" />
+                <rect x="1" y="8.818" className="st0" width="18" height="2.365" fill="rgb(67, 67, 67)" />
                 <path className="st1" style={{ fill: "none", stroke: "#434343", strokeWidth: "2.1612", strokeMiterlimit: "10" }} d="M3.188,7.144V3.567c0-0.915,0.679-1.656,1.515-1.656h10.348c0.838,0,1.515,0.741,1.515,1.656v3.577" />
                 <path className="st1" style={{ fill: "none", stroke: "#434343", strokeWidth: "2.1612", strokeMiterlimit: "10" }} d="M3.188,12.856v3.576c0,0.915,0.679,1.656,1.515,1.656h10.348c0.838,0,1.515-0.741,1.515-1.656v-3.576" />
             </g>

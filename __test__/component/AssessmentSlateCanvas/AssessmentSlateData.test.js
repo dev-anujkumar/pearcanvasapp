@@ -6,11 +6,13 @@ import {assessmentSlateDefault,assessmentSlateWithData} from "./../../../fixture
 
 
 describe('Testing Assessment Slate Data component', () => {
+    const div = document.createElement('div');
     const assessmentSlate = mount( <AssessmentSlateData   />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
     it('render Assessment Slate Data component ', () => {
-        const component = mount(<AssessmentSlateData />);
-        expect(component).toMatchSnapshot();
+        
+            ReactDOM.render(<AssessmentSlateData />, div);
+            ReactDOM.unmountComponentAtNode(div);
     })
     
     it('onClick Assessment Type Event', () => {
@@ -25,8 +27,7 @@ describe('Testing Assessment Slate Data component', () => {
                 return 'Full Assessment CITE';
             }
         }
-    }
-       
+    }       
         assessmentSlate.find('div.slate_assessment_type_dropdown.activeDropdown').simulate('click');
         assessmentSlate.find('ul.slate_assessment_type_dropdown_options>li:first-child').simulate('click');
    });   
@@ -39,29 +40,21 @@ it('onClick UsageType Event', () => {
         getAssessmentData:true,
         
     }
-    const component = mount(<AssessmentSlateData {...props} />);
+    const component = mount(<AssessmentSlateData {...props} />);   
+    const assessmentSlateDataInstance= component.instance(); 
     assessmentSlateDataInstance.setState({
         activeAssessmentType:"Full Assessment CITE",
         activeAssessmentUsageType: 'Quiz'
     });
     assessmentSlateDataInstance.forceUpdate();
-    
-
-    assessmentSlate.find('div.singleAssessment_Dropdown_activeDropdown').simulate('click');
-    assessmentSlate.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
+    component.update();
+     component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
+    component.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
 
 
         
 });
-    it('Select PUF assessment', () => {
-        const component = mount(<AssessmentSlateData {...props} />);
-        assessmentSlateDataInstance.setState({
-            activeAssessmentType: 'Full Assessment PUF',
-            showElmComponent: true,
-        });
-        assessmentSlateDataInstance.forceUpdate();
-
-    });
+  
     it('Render succcessfully addedd screen', () => {
         let props = {
             getAssessmentDataPopup: true,
@@ -90,4 +83,61 @@ it('onClick UsageType Event', () => {
 
         assessmentSlateDataInstance.forceUpdate();
     });
+    it('change assessment', () => {
+        const mockLoginfn = jest.fn();
+        let props = {
+            getAssessmentDataPopup: false,
+            assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+            assessmentItemTitle: "1.1 Homework",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup : function(){},
+            selectAssessmentType :mockLoginfn
+        }
+     
+        const component = mount(<AssessmentSlateData {...props} />);
+        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType : "Full Assessment CITE"   
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        // let assessmentFormat = "puf";
+        assessmentSlateDataInstance.changeAssessment();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType: 'Full Assessment CITE',
+            showElmComponent: true,
+        })
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+    })
+    it('main assessment', () => {
+        const mockLoginfn = jest.fn();
+        let props = {
+            getAssessmentDataPopup: true,
+            assessmentId: "",
+            assessmentItemTitle: "",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup : function(){},
+            selectAssessmentType :mockLoginfn
+        }
+     
+        const component = mount(<AssessmentSlateData {...props} />);
+        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType : "Full Assessment PUF"   
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+      
+        assessmentSlateDataInstance.mainAddAssessment('',"Full Assessment CITE");
+        assessmentSlateDataInstance.setState({
+            showElmComponent: true,
+        })
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+       
+    })
 })
