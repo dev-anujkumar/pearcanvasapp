@@ -54,7 +54,7 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="22" x="0px" y="0px" viewBox="14 13 37 34">  
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="20" x="0px" y="0px" viewBox="14 13 37 34">  
             <g id="Artboard_5">
                 <rect width="64" height="64" fill="#fff"></rect>
                 <g id="Group_2311" transform="translate(-53 -403)">
@@ -115,7 +115,7 @@ export const lockIcon = (() => {
 })();
 export const metaDataAnchor = (function(){
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 50 50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="10 10 50 50">
         <defs>
           <clipPath id="clip-Anchor">
             <rect width="64" height="64"/>
