@@ -87,3 +87,11 @@ abbr.AssetPopoverTerm{
     text-decoration: underline;
     cursor: pointer;
   }
+
+  /* Alfresco Buttons */
+  button#assetSelectBtn{
+      font-size: 14px
+  }
+  button.SearchLibraryStyles__btnCancel___1G1qN{
+    font-size: 14px
+  }

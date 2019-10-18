@@ -100,7 +100,6 @@ ElementSaprator.propTypes = {
  * @description: OnClick handler for add Element button
  */
 export function addMediaClickHandler() {
-    // alert('add media button clicked')
     console.log('add media button clicked')
 }
 
@@ -110,14 +109,35 @@ export function addMediaClickHandler() {
 export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps;
 
-    if(config.slateType == 'container-introduction' && !config.isCO){
-        updatedEsProps = esProps.filter((btnObj) => {
-            return btnObj.buttonType !== 'section-break-elem';
-        })
-    }else{
+    if(config.slateType == 'container-introduction' && (!config.isCO || config.isLOL)){
+        // hide the metadata anchor on IS when its once created
+        if(config.isLOL){
+            let elements= document.getElementsByClassName("metadata-anchor");
+            var i;
+            for(var key in elements){
+                if(elements[key].className){  elements[key].className += " disabled";}
+             } 
+        }
+        if(!config.isCO) {
+            updatedEsProps = esProps.filter((btnObj) => {
+                return btnObj.buttonType !== 'section-break-elem';
+            })
+        } else {
+            updatedEsProps = esProps.filter((btnObj) => {
+                return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            })
+        }
+        
+    } else {
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
         })
+    }
+    //hide the metadata anchor from frontmatter and backmatter
+    if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
+        updatedEsProps = esProps.filter((btnObj) => {
+        return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+    })
     }
 
     if(elementType == 'element-aside'){
@@ -125,7 +145,8 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             if(sectionBreak){
                 return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
             }else{
-                return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+                // return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+                return btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
             }
         })
     }

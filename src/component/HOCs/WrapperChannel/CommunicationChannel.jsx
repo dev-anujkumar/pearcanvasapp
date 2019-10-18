@@ -278,6 +278,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.disableNext = message.disableNext;
                 config.slateType = message.node.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
+                config.parentEntityUrn=message.node.ParentEntityUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 this.props.fetchSlateData(message.node.containerUrn);
             }

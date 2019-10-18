@@ -51,7 +51,7 @@ describe('Tests ElementContainer Actions', () => {
                 response: data
             });
         });
-        console.log("store.getActions()", store.getState())
+        
         return store.dispatch(actions.addComment(newComment.comment, elementId)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(ADD_COMMENT);

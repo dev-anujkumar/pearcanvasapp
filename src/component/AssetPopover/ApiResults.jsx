@@ -39,16 +39,6 @@ class ApiResults extends React.Component {
         //No result found for this search term
         if(tempFiguresForResults.length >= 1){
             let cardForApiResults = tempFiguresForResults.map((value, index) => {
-                //IfImage name or path is empty
-                // if(value.title ==='' || value.path===''){
-                //     return false;
-                // }
-                // if(ValueToBeSearch !== '' && value.title === ValueToBeSearch){
-                //     return <FigureCard forInputKey= {index} key = {index} title = {value.title} path = {value.path} selectedFigure={selectedFigure}/>
-                // }
-                //if(ValueToBeSearch === ''){
-                 //   return <FigureCard forInputKey= {index} key = {index} title = {value.title} path = {value.path} selectedFigure={selectedFigure}/>
-               // }
                 return <FigureCard forInputKey= {index} key = {index} figureDetails = {value} title = {value.title} path = {value.path} selectedFigure={selectedFigure}/>
 
             });

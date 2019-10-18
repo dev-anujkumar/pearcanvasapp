@@ -2,76 +2,132 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementAudioVideo } from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
+import config from '../../../src/config/config';
 import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
 describe('Testing Element Audio-Video component', () => {
 
     test('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(<ElementAudioVideo model={{}}  index="" />, div);
+        let props = {
+            model:{},
+            index:"" ,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            handleFocus: function(){}
+        }
+        ReactDOM.render(<ElementAudioVideo {...props}/>, div);
         ReactDOM.unmountComponentAtNode(div);
     })
 
     describe('With Audio element', () => {
         let props = {
             model: audioElementTypeSLDefault,
-            index: 1
+            index: 1,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            handleFocus: function(){}
         };
+        const div = document.createElement('div');
         let component = mount(<ElementAudioVideo {...props} />);
-        test('renders properly with default audio SL-type element', () => {
-        
-            expect(component).toMatchSnapshot();
+        test('renders properly with default audio SL-type element', () => {        
+            
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
+           
         })
         test('renders  properly with given audio SL-type  element', () => {
             component.setProps({ model: audioElementTypeSLWithData,index: 2 });
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default audio Alfresco-type element', () => {
             component.setProps({ model: audioElementTypeAlfrescoDefault,index: 3 });
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with given audio Alfresco-type element', () => {
             component.setProps({ model: audioElementTypeAlfrescoWithData ,index:4 });
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
     });
     describe('With Video element', () => {
         let props = {
-            model: videoElementTypeSLDefault
-            ,index: 5
+            model: videoElementTypeSLDefault,
+            index: 5,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+
+            handleFocus: function(){}
         };
         let component = mount(<ElementAudioVideo {...props} />);
+        const div = document.createElement('div');
         test('renders properly with default video SL-type element', () => {
-           
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with given video SL-type element', () => {
             component.setProps({ model: videoElementTypeSLWithData,index: 6 });
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with default video Alfresco-type element', () => {
             component.setProps({ model: videoElementTypeAlfrescoDefault ,index: 7});
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
         test('renders  properly with given video Alfresco-type element', () => {
             component.setProps({ model: videoElementTypeAlfrescoWithData,index: 8 });
-            expect(component).toMatchSnapshot();
+            ReactDOM.render(<ElementAudioVideo {...props} />, div);
+            ReactDOM.unmountComponentAtNode(div);
         })
 
     });
     describe('Testing Element  component with props', () => {
         let type = "figure";
-        const elementAudioVideo = mount(<ElementAudioVideo type={type} />);
+        let props = {
+            model: videoElementTypeSLDefault,
+            index: 5,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick : ()=>{},
+            handleFocus: function(){}
+        };
+        const elementAudioVideo = mount(<ElementAudioVideo type={type} {...props} />);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-        it('render Element component ', () => {  
-            console.log(elementAudioVideo.debug());
-            expect(elementAudioVideo).toMatchSnapshot();
-        })   
+        const mockLoginfn = jest.fn();
         it('onClick', () => {
-            elementAudioVideoInstance.onClick();
+            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'g'}});
+        }) 
+       
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
         })
-        it('onKeyup', () => {
-            elementAudioVideoInstance.onKeyup();
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            config.alfrescoMetaData = {nodeRef : {}}
+            elementAudioVideo.find('ElementAudioVideo').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
         })
-
+        it('Alfresco Data Handling', () => {
+            const elementAudioVideo = mount(<ElementAudioVideo {...props} />, { attachTo: document.body })
+            elementAudioVideo.find('ElementAudioVideo').instance().dataFromAlfresco({ assetType: "video" })
+        })   
+        // it('onFocus', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} />)
+        // })
+        // it('onBlur', () => {
+        //     let wrapper;
+        //     wrapper = shallow(<ElementAudioVideo {...props} handleBlur={mockLoginfn}/>)
+        // })
     })
 });

@@ -19,18 +19,6 @@ class Comments extends React.Component {
             isSelectAssignee: false,
             showReplyForm: false
         }
-        this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
-        this.editComment = this.editComment.bind(this);
-        this.setMode = this.setMode.bind(this);
-        this.newAssigneeUser = this.newAssigneeUser.bind(this);
-        this.changeAssignee = this.changeAssignee.bind(this);
-        this.removeAssigneePopup = this.removeAssigneePopup.bind(this);
-        this.resolveComment = this.resolveComment.bind(this);
-        this.updateComment = this.updateComment.bind(this);
-        this.toggleReplyForm = this.toggleReplyForm.bind(this);
-        this.updateCommentText = this.updateCommentText.bind(this);
-        this.updateAssignee = this.updateAssignee.bind(this);
-        this.deleteComment = this.deleteComment.bind(this);
     }
     componentDidMount() {
 
@@ -47,24 +35,24 @@ class Comments extends React.Component {
             }
         });
     }
+
     /**
     * 
     *@discription - This function is to toggle the Action menu
     @param {String} show - true false value to tgoggle the action menu
-   
     */
-    toggleActionsMenu(show) {
+    toggleActionsMenu= (show) =>{
         if (show === undefined) show = !this.state.showActionsMenu
         this.setState({ showActionsMenu: show })
     }
 
-    /**
+
+   /**
    * 
    *@discription - This function is to update the comment
    @param {String} property - property to be updated in comment
-   
    */
-    updateComment() {
+    updateComment =() =>{
         const { elementId, comment } = this.props
         let commentId = comment.commentUrn
         let updatedComment = {
@@ -76,30 +64,32 @@ class Comments extends React.Component {
         const updatedText = this.state.updatedFields.text
         this.props.updateElementComment(commentId, updatedComment, elementId)
     }
-    /**
+
+   /**
    * 
    *@discription - This function is to edit the comment
    */
-    editComment(e) {
+    editComment =(e) =>{
         this.toggleActionsMenu(false)
         this.setMode('edit')
     }
+
     /**
- * 
- *@discription - This function is to set mode of the comment
- @param {String} mode - mode to be set to show comment like resolve,edit
- */
-    setMode(mode) {
+     * 
+     *@discription - This function is to set mode of the comment
+    @param {String} mode - mode to be set to show comment like resolve,edit
+    */
+    setMode =(mode) =>{
         this.setState({ mode })
     }
 
-    /**
+
+   /**
    * 
    *@discription - This function is to assign new user
    @param {String} user - assign new user in the comment
    */
-
-    newAssigneeUser(user) {
+    newAssigneeUser =(user)=> {
         if (this.state.newAssignee != user) {
             this.setState({
                 newAssignee: user,
@@ -107,13 +97,12 @@ class Comments extends React.Component {
             })
         }
     }
-    /**
-* 
-*@discription - This function is to change the assignee
- 
-*/
 
-    changeAssignee() {
+    /**
+    * 
+    *@discription - This function is to change the assignee
+    */
+    changeAssignee =()=> {
         this.toggleActionsMenu(false)
         this.setMode('assign')
         this.setState({
@@ -123,35 +112,34 @@ class Comments extends React.Component {
     }
 
     /**
-* 
-*@discription - This function is to toggle replay form
-@param {String} show - true or false value to toggle form
-*/
-
-    toggleReplyForm(show) {
+    * 
+    *@discription - This function is to toggle replay form
+    @param {String} show - true or false value to toggle form
+    */
+    toggleReplyForm = (show) =>{
         this.toggleActionsMenu(false)
         if (show === undefined) show = !this.state.showReplyForm
         this.props.toggleReply(true);
         this.setState({ showReplyForm: show })
     }
+
     /**
     * 
     *@discription - This function is to resolve comment
     */
 
-    resolveComment(e) {
+    resolveComment =(e)=> {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         this.toggleActionsMenu(false)
         this.props.updateResolveComment(commentUrn, "RESOLVED", elementId)
     }
 
-    /**
+  /**
   * 
   *@discription - This function is to update comment
   */
-
-    updateCommentText(e) {
+    updateCommentText=(e) =>{
         this.setState({
             updatedFields: {
                 ...this.state.updatedFields,
@@ -159,24 +147,24 @@ class Comments extends React.Component {
             }
         })
     }
-    /**
-  * 
-  *@discription - This function is to delete comment
-  */
 
-    deleteComment(e) {
+    /**
+     * 
+     *@discription - This function is to delete comment
+    */
+    deleteComment=(e)=> {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         this.toggleActionsMenu(false)
         this.props.deleteComment(commentUrn, elementId)
     }
 
+
     /**
     * 
     *@discription - This function is to return jsx of action menu
     @return {String} - returns the jsx code of the action menu
     */
-
     actionsMenu = () => {
         return (
             <ul className="comment-action-menu action-menu">
@@ -188,7 +176,8 @@ class Comments extends React.Component {
             </ul>
         )
     }
-        /**
+
+    /**
     * 
     *@discription - This function is to return jsx of edit menu
     @return {String} - returns the jsx code of the edit menu
@@ -222,25 +211,23 @@ class Comments extends React.Component {
         )
 
     }
-    /**
-* 
-*@discription - This function is to remove the popup of assigne
- 
-*/
 
-    removeAssigneePopup() {
+    /**
+    * 
+    *@discription - This function is to remove the popup of assigne
+    */
+    removeAssigneePopup =() =>{
         this.setMode('view')
         this.setState({
             newAssignee: this.props.comment.assignto
         })
     }
-    /**
-* 
-*@discription - This function is to update the assignee
- 
-*/
 
-    updateAssignee() {
+    /**
+    * 
+    *@discription - This function is to update the assignee
+    */
+    updateAssignee = () => {
         const { commentUrn } = this.props.comment
         const { elementId } = this.props
         const { newAssignee } = this.state
