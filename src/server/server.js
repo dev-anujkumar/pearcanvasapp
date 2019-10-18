@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
         app.get('*.js', (req, res, next) => {
             if (req.header('Accept-Encoding').includes('br')) {
                 req.url = req.url + '.br';
-                console.log(`Requesting ${req.url} with Header ${req.header('Accept-Encoding')}`);
+                // console.log(`Requesting ${req.url} with Header ${req.header('Accept-Encoding')}`);
                 res.set('Content-Encoding', 'br');
                 res.set('Content-Type', 'application/javascript; charset=UTF-8');
             }
