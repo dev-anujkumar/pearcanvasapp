@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { assessmentUsageType, assessmentType } from './AssessmentSlateConstants.js';
-
+import RootElmComponent from './elm/RootElmComponent.jsx';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -22,13 +22,19 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
 
     }
-
+    closeElmWindow(){
+        this.setState({
+            showElmComponent:false
+           });
+           hideTocBlocker();
+           disableHeader(false);
+     }
     /*** @description - This function is to handle change in assessment/LT-LA
      * @param e- event triggered
     */
     changeAssessment = (e) => {
         let assessmentFormat = this.state.activeAssessmentType;
-        if (assessmentFormat == 'puf') {
+        if (assessmentFormat == 'Full Assessment PUF') {
             this.setState({
                 activeAssessmentType: 'Full Assessment PUF',
                 showElmComponent: true,
@@ -50,7 +56,9 @@ export class AssessmentSlateData extends Component {
         this.props.selectAssessmentType(activeAssessmentType);         
       
     }
-    
+    addPufAssessment = (pufObj) =>{
+        this.props.addPufAssessment(pufObj);
+    }
     /*** @description - This is the root function to add Assessment 
      * @param activeAssessmentType - assessment -type 
     */
@@ -131,12 +139,12 @@ export class AssessmentSlateData extends Component {
         if(this.state.activeAssessmentType === 'Learning App Type'){
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
-        }else if(this.state.activeAssessmentType === 'Full Assessment CITE' || this.state.activeAssessmentType === 'Full Assessment TDX'){
+        }else {
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
-        }else{
-            assessmentTypeValue="PUF";
-            changeTypeValue="Change PUF";
+        }
+        if(this.state.activeAssessmentType === 'Full Assessment PUF' && this.state.showElmComponent === true){
+            return <RootElmComponent closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType}/>
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false ) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">

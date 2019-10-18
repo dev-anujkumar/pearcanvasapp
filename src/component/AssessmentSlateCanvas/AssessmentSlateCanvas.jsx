@@ -45,6 +45,13 @@ export class AssessmentSlateCanvas extends Component {
         }
         return assessmentType
     }
+    
+    addPufAssessment=(pufObj)=>{
+        this.updateAssessment(pufObj.id,"",pufObj.title,pufObj.assessmentFormat,pufObj.usagetype,'insert');
+        showTocBlocker();
+        disableHeader(true);
+        hideTocBlocker();
+    }
     /***
      * @description Open C2 module with predefined Alfresco location
      * @param  value alfresco locationData
@@ -135,7 +142,7 @@ export class AssessmentSlateCanvas extends Component {
       
         return(
             <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>                              
-            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} model={this.props.model}/>
+            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} addPufAssessment={this.addPufAssessment} model={this.props.model}/>
             {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
             </div>
         );
