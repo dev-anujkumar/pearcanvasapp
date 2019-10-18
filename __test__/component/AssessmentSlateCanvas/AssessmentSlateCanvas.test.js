@@ -11,12 +11,6 @@ describe('Testing Assessment Slate Canvas component', () => {
         ReactDOM.render(<AssessmentSlateCanvas model={assessmentSlateDefault}/>, div);
         ReactDOM.unmountComponentAtNode(div);
     })
-    // let assessmentSlate = mount(<AssessmentSlateCanvas model={assessmentSlateDefault}/>);  
-    // const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
-    // xit('onClick Event', () => {
-    // singleAssessment.find('div.AssessmentSlateMenu').simulate('click');
-    // assessmentSlateInstance.onClick();
-    // })
     let wrapper;
    
     it('onClick', () => {
@@ -129,7 +123,7 @@ describe('Testing Assessment Slate Canvas component', () => {
             expect(assessmentSlateInstance.state.assessmentId).toEqual("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5")
         
     });
-    it('UpdateAssessment ', () => {
+    it('UpdateAssessment  slate canvas', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},

@@ -62,7 +62,7 @@ describe('Interaction functions test cases', () => {
         })
         instance.props.apoSearchClose()
     }), 
-    it('Testing searchForFigures function', () => {
+    xit('Testing searchForFigures function', () => {
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures}/> </Provider>)
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         let mockEvent = {
