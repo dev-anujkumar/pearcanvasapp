@@ -1,7 +1,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
+import { connect } from 'react-redux';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';
@@ -10,6 +10,7 @@ import config from '../../config/config';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
+import { getPermissions } from '../../js/UserPermissions.js'
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
@@ -104,7 +105,7 @@ export class ElementAudioVideo extends Component {
             this.handleC2ExtendedClick(data_1)
 
         } else {
-           if(config.PERMISSIONS.includes('alfresco_crud_access')){ 
+           if(this.props.getPermissions('alfresco_crud_access')){ 
                c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -216,3 +217,10 @@ ElementAudioVideo.propTypes = {
     onFocus: PropTypes.func
 
 }
+
+export default connect(
+    null, 
+    {
+        getPermissions
+    }
+)(ElementAudioVideo);

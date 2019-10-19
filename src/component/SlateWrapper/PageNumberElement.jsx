@@ -8,6 +8,8 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {getPermissions} from '../../js/UserPermissions.js'
 
 class PageNumber extends React.Component {
     constructor(props) {
@@ -57,13 +59,14 @@ class PageNumber extends React.Component {
     }
 
     render() {
-        let { element, isHovered, isPageNumberEnabled, activeElement } = this.props;
+        
+        let { element, isHovered, isPageNumberEnabled, activeElement, getPermissions } = this.props;
         let loader = this.state.loader;
         let content = null;
         if (loader)
             content = <div className='pageNumberBoxLoader'><div className='loaderPage'></div></div>
         else {
-            content = <div className='pageNumberBox' id={"pageNumberBox-" + element.id}>
+            content = <div className={'pageNumberBox' + (getPermissions('edit_print_page_no') ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>
                 Page #
             <input className="textBox" readOnly={false} onBlur={(e) => { this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={this.state.inputValue} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
                 {
@@ -86,7 +89,7 @@ class PageNumber extends React.Component {
         else if (isHovered && isPageNumberEnabled) {
             return (
                 <div className='pageNumberCover hoverNumberCover'>
-                    <div className='pageNumberBox' id={"pageNumberBox-" + element.id}>
+                    <div className={'pageNumberBox' + (getPermissions('edit_print_page_no') ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>
                         Page #
                     <input className="textBox" defaultValue={this.state.inputValue} type="text" />
                     </div>
@@ -104,4 +107,10 @@ class PageNumber extends React.Component {
 
 PageNumber.displayName = "PageNumberElement"
 
-export default PageNumber;
+
+export default connect(
+    null, 
+    {
+        getPermissions
+    }
+)(PageNumber);

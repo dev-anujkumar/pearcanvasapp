@@ -3,12 +3,14 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
+import {connect} from 'react-redux';
+import { getPermissions } from '../../js/UserPermissions.js'
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
-export default function ElementSaprator(props) {
+export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType, slateType, sectionBreak } = props
+    const { esProps, elementType, slateType, sectionBreak , getPermissions } = props
     let buttonRef = useRef(null)
     /**
      * @description: This hook is used for handling the outer click, 
@@ -67,8 +69,8 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
                 <div className='elemDiv-split'>
-                    {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                       { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
+                    {getPermissions('split_slate') && elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                       { getPermissions('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
                 </div>
 
             <div className='elemDiv-hr'>
@@ -78,7 +80,7 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                       { config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                       { getPermissions('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
@@ -165,3 +167,11 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             </Tooltip>)
     })
 }
+  
+  export default connect(null, 
+    {
+        getPermissions
+    }
+    )(ElementSaprator)
+  
+  

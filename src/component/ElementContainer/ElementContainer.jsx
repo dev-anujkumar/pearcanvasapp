@@ -84,6 +84,9 @@ class ElementContainer extends Component {
     }
 
     handleFocus = () => {
+        if(!this.props.getPermissions('access_formatting_bar')){
+            return false;
+        }
         this.setState({
             borderToggle: 'active',
             btnClassName: 'activeTagBgColor'

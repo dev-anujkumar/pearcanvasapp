@@ -1,7 +1,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
+import { connect } from 'react-redux';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 
@@ -12,6 +12,7 @@ import {
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 import config from '../../config/config';
+import { getPermissions } from '../../js/UserPermissions.js'
 
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -101,7 +102,7 @@ export class ElementFigure extends Component {
             this.handleC2ExtendedClick(data_1)
 
         } else {
-           if(config.PERMISSIONS.includes(data_1)){ 
+           if(this.props.getPermissions('alfresco_crud_access')){ 
                c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -417,3 +418,10 @@ ElementFigure.propTypes = {
     /** Handler to attach on element focus */
     onFocus: PropTypes.func
 }
+
+export default connect(
+    null, 
+    {
+        getPermissions
+    }
+)(ElementFigure);

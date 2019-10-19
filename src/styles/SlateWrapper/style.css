@@ -127,3 +127,8 @@
     margin: 0 8px 0 4px;
     background: transparent;
 }
+
+/* disable class used in pagenumber for permissioning purpose */
+.pageNumberBox.disableClass{        
+    pointer-events:none;            
+   }
