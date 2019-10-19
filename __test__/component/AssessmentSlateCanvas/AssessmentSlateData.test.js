@@ -83,5 +83,61 @@ it('onClick UsageType Event', () => {
 
         assessmentSlateDataInstance.forceUpdate();
     });
-
+    it('change assessment', () => {
+        const mockLoginfn = jest.fn();
+        let props = {
+            getAssessmentDataPopup: false,
+            assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+            assessmentItemTitle: "1.1 Homework",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup : function(){},
+            selectAssessmentType :mockLoginfn
+        }
+     
+        const component = mount(<AssessmentSlateData {...props} />);
+        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType : "Full Assessment CITE"   
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        // let assessmentFormat = "puf";
+        assessmentSlateDataInstance.changeAssessment();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType: 'Full Assessment CITE',
+            showElmComponent: true,
+        })
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+    })
+    it('main assessment', () => {
+        const mockLoginfn = jest.fn();
+        let props = {
+            getAssessmentDataPopup: true,
+            assessmentId: "",
+            assessmentItemTitle: "",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup : function(){},
+            selectAssessmentType :mockLoginfn
+        }
+     
+        const component = mount(<AssessmentSlateData {...props} />);
+        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType : "Full Assessment PUF"   
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+      
+        assessmentSlateDataInstance.mainAddAssessment('',"Full Assessment CITE");
+        assessmentSlateDataInstance.setState({
+            showElmComponent: true,
+        })
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+       
+    })
 })
