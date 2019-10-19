@@ -202,7 +202,7 @@ export class TinyMceEditor extends Component {
                 /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
                 let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
                 revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
-                tinyMCE.$('#' + editor.id).html(revertingTempContainerHtml);
+                document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
             }
         }
         this.editorRef  = React.createRef();
@@ -441,7 +441,7 @@ export class TinyMceEditor extends Component {
             */
             let tempContainerHtml   =   tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
             tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula','temp_Wirisformula'); 
-            tinyMCE.$('#' + tinyMCE.activeEditor.id).html(tempContainerHtml);
+            document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
 
             tinymce.remove('#' + tinymce.activeEditor.id)
             if (document.getElementById(activeEditorId))
