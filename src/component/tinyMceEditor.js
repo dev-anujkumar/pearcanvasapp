@@ -92,10 +92,17 @@ export class TinyMceEditor extends Component {
         this.editorRef  = React.createRef();
     };
 
+    /**
+     * Adds custon list button to the editor toolbar
+     * @param {*} editor  editor instance
+     */
     insertListButtonIcon = (editor) => {
         insertListButton(editor);
     }
-
+    /**
+     * Adds LO item menu button to the editor toolbar
+     * @param {*} editor  editor instance
+     */
     editorSlateTagIcon = (editor) => {
         /* adding a slate tag button in toolbar */
         if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
@@ -134,7 +141,10 @@ export class TinyMceEditor extends Component {
         }
     }
 
-
+    /**
+     * This method is called when user clicks any button/executes command in the toolbar
+     * @param {*} editor  editor instance
+     */
     editorExecCommand = (editor) => {
         editor.on('ExecCommand', (e) => {
             let content = e.target.getContent()
@@ -150,6 +160,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * This method is called when user clicks any button in the toolbar and before the command is executed.
+     * @param {*} editor  editor instance
+     */
     editorBeforeExecCommand = (editor) =>{
         editor.on('BeforeExecCommand', (e) => {
             let content = e.target.getContent()
@@ -164,6 +178,10 @@ export class TinyMceEditor extends Component {
         })
     }
 
+    /**
+     * This method is called when user clicks on editor.
+     * @param {*} editor  editor instance
+     */
     editorClick = (editor) =>{
         editor.on('click', (e) => {
             if (e.target.parentElement.nodeName == "SUP") {
@@ -185,6 +203,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * This method is called on keyUp.
+     * @param {*} editor  editor instance
+     */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -214,8 +236,15 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * This method is called on keyDown.
+     * @param {*} editor  editor instance
+     */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+            if(this.isTabPressed(e)){
+                e.preventDefault()
+            }
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
@@ -237,6 +266,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * This method is called on Mouse down.
+     * @param {*} editor  editor instance
+     */
     editorMousedown = (editor) => {
         editor.on('mousedown',function(e) {
             if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
@@ -247,6 +280,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * Adds inline code formatting option to the toolbar
+     * @param {*} editor  editor instance
+     */
     addInlineCodeIcon = (editor) => {
         editor.ui.registry.addToggleButton('code', {
             text: '<i class="fa fa-code" aria-hidden="true"></i>',
@@ -260,6 +297,24 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * Detects TAB key press.
+     * @param {*} keydownEvent  keyDown event
+     */
+    isTabPressed = (keydownEvent) => {
+        const keyCode = keydownEvent.keyCode || keydownEvent.which
+        if(this.props.element != "element-list" && keyCode == 9){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
+    /**
+     * Adds glossary button to the toolbar
+     * @param {*} editor  editor instance
+     */
     addGlossaryIcon = (editor) =>{
         editor.ui.registry.addButton('Glossary', {
             id: 'buttonId',
@@ -270,6 +325,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
+    /**
+     * Adds footnote button to the toolbar
+     * @param {*} editor  editor instance
+     */
     addFootnoteIcon = (editor) =>{
         editor.ui.registry.addButton('Footnote', {
             text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
@@ -279,9 +338,10 @@ export class TinyMceEditor extends Component {
         });
     }
 
-    /*
-    *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
-    */
+    /**
+     * Adds inline code formatting.
+     * @param {*} editor  editor instance
+     */
     addInlineCode = (editor) => {
         editor.execCommand('mceToggleFormat', false, 'code');
         let selectedText = window.getSelection().toString();
@@ -302,6 +362,11 @@ export class TinyMceEditor extends Component {
             if (unbind) unbind();
         };
     }
+
+    /**
+     * Adds Asset popover icon to the toolbar.
+     * @param {*} editor  editor instance
+     */
     setAssetPopoverIcon = editor => {
         editor.ui.registry.addIcon(
             "assetPopoverIcon",
@@ -309,36 +374,43 @@ export class TinyMceEditor extends Component {
           );
     }
 
+    /**
+     * Adding custom icon for wiris chemistry editor
+     * @param {*} editor  editor instance
+     */
     setChemistryFormulaIcon = editor => {
-        /*
-          Adding custom icon for wiris chemistry editor
-        */
         editor.ui.registry.addIcon(
           "tinymceFormulaChemistryIcon",
           tinymceFormulaChemistryIcon,
         );
       };
-      setMathmlFormulaIcon = editor => {
-        /*
-          Adding custom icon for wiris Mathml editor
-        */
+
+    /**
+     * Adding custom icon for wiris Mathml editor
+     * @param {*} editor  editor instance
+     */
+    setMathmlFormulaIcon = editor => {
         editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
-      };
-      setMetaDataAnchorIcon = editor => {
-        /*
-          Adding custom icon for wiris Mathml editor
-        */
+    };
+
+    /**
+     * Adding custom icon for metadata anchor.
+     * @param {*} editor  editor instance
+     */
+    setMetaDataAnchorIcon = editor => {
         editor.ui.registry.addIcon("metadataanchor", metadataanchor);
-      };
-      addChemistryFormulaButton = editor => {
-        /*
-          Adding button and bind exec command on clicking the button to open the chemistry editor
-        */
+    };
+
+    /**
+     * Adding button and bind exec command on clicking the button to open the chemistry editor
+     * @param {*} editor  editor instance
+     */
+    addChemistryFormulaButton = editor => {
         editor.ui.registry.addButton("tinyMcewirisformulaEditorChemistry", {
-          text: "",
-          icon: "tinymceformulachemistryicon",
-          tooltip: "WIRIS EDITOR chemistry",
-          onAction: function (_) {
+            text: "",
+            icon: "tinymceformulachemistryicon",
+            tooltip: "WIRIS EDITOR chemistry",
+            onAction: function (_) {
             /*
                 Enabling chemistry ML
             */
@@ -346,41 +418,48 @@ export class TinyMceEditor extends Component {
             wirisChemistryInstance.enable('chemistry');
             window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
             //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
-          },
-          onSetup: (buttonApi) => {
+            },
+            onSetup: (buttonApi) => {
             /*
-              make merge menu button apis available globally among compnenet
+                make merge menu button apis available globally among compnenet
             */
             this.chemistryMlMenuButton = buttonApi;
             //this.chemistryMlMenuButton.setDisabled(true);
-          }
+            }
         });
-      };
-      addMathmlFormulaButton = editor => {
-        /*
-          Adding button and bind exec command on clicking the button to open the Mathml editor
-          Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
-          copying from wiris plugin file(onAction)
-        */
+    };
+
+    /**
+     * Adding button and bind exec command on clicking the button to open the Mathml editor
+     * Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
+     * copying from wiris plugin file(onAction)
+     * @param {*} editor  editor instance
+     */
+    addMathmlFormulaButton = editor => {
         editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
-          text: "",
-          icon: "tinymceformulaicon",
-          tooltip: "WIRIS EDITOR math",
-          onAction: function (_) {
+            text: "",
+            icon: "tinymceformulaicon",
+            tooltip: "WIRIS EDITOR math",
+            onAction: function (_) {
             var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
             wirisPluginInstance.core.getCustomEditors().disable();
             wirisPluginInstance.openNewFormulaEditor();
             //editor.execCommand('tiny_mce_wiris_openFormulaEditor');
-          },
-          onSetup: (buttonApi) => {
+            },
+            onSetup: (buttonApi) => {
             /*
-              make merge menu button apis available globally among compnenet
+                make merge menu button apis available globally among compnenet
             */
             this.mathMlMenuButton = buttonApi;
             //this.mathMlMenuButton.setDisabled(true);
-          }
+            }
         });
-      };
+    };
+
+    /**
+     * Adding button for asset popover
+     * @param {*} editor  editor instance
+     */
     addAssetPopoverIcon = editor => {
         editor.ui.registry.addButton("assetPopoverIcon", {
             text: "",
@@ -403,11 +482,24 @@ export class TinyMceEditor extends Component {
             }
         });
     }
+
+    /**
+     * Called before paste process
+     * @param {*} plugin
+     * @param {*} args
+     */
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         args.content = testElement.innerText;
     }
+
+    /**
+     * Handles indent behaviour for paragraph on indent command execution
+     * @param {*} e  event object
+     * @param {*} editor  editor instance
+     * @param {*} content  content inside editor
+     */
     handleIndent = (e, editor, content) => {
         if(content.match(/paragraphNumeroUno\b/)){
             content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
@@ -420,6 +512,13 @@ export class TinyMceEditor extends Component {
         }
         editor.setContent(content)
     }
+
+    /**
+     * Handles outdent behaviour for paragraph on outdent command execution
+     * @param {*} e  event object
+     * @param {*} editor  editor instance
+     * @param {*} content  content inside editor
+     */
     handleOutdent = (e, editor, content) => {
         if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
@@ -432,16 +531,33 @@ export class TinyMceEditor extends Component {
         }
         editor.setContent(content)
     }
+
+    /**
+     * Performs action before indent command is executed
+     * @param {*} e  event object
+     * @param {*} content  content inside editor
+     */
     onBeforeIndent = (e, content) => {
         if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
             e.preventDefault()
         }
     }
+
+    /**
+     * Performs action before outdent command is executed
+     * @param {*} e  event object
+     * @param {*} content  content inside editor 
+     */
     onBeforeOutdent = (e, content) => {
         if(content.match(/paragraphNumeroUno\b/)){
             e.preventDefault()
         }
     }
+
+    /**
+     * Called when footnote button is clicked. Responsible for adding footnote
+     * @param {*} editor  editor instance
+     */
     addFootnote = (editor) => {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
         this.props.openGlossaryFootnotePopUp(true, "Footnote");
@@ -450,6 +566,11 @@ export class TinyMceEditor extends Component {
     learningObjectiveDropdown(text){
         this.props.learningObjectiveOperations(text);
     }
+
+    /**
+     * Called when glossary button is clicked. Responsible for adding glossary
+     * @param {*} editor  editor instance 
+     */
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
         let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
@@ -459,12 +580,20 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    /**
+     * Called when asset popover button is clicked. Responsible for adding asset popover
+     * @param {*} editor  editor instance
+     * @param {*} selectedText  selected text
+     */
     addAssetPopover = (editor, selectedText) => {
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>'
         editor.insertContent(insertionText); 
         this.props.openAssetPopoverPopUp(true);
     }
 
+    /**
+     * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
+     */
     componentDidMount() {
         const { slateLockInfo: { isLocked, userId } } = this.props
         /**
@@ -476,6 +605,10 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then((d) => { this.editorRef.current.blur() })
         }
     }
+
+    /**
+     * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
+     */
     componentDidUpdate() {
         if (!tinymce.editors.length) {
             console.log('tiny update')
@@ -485,6 +618,7 @@ export class TinyMceEditor extends Component {
 
     /**
      * handleClick | gets triggered when any editor element is clicked
+     * @param {*} e  event object
      */
     handleClick = (e) => {
         this.props.handleEditorFocus();
@@ -520,9 +654,14 @@ export class TinyMceEditor extends Component {
         });        
     }
 
+    /**
+     * handleBlur | gets triggered when any editor element is blurred
+     * @param {*} e  event object
+     */
     handleBlur = (e) => {
         this.props.handleBlur()
     }
+    
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         const lockCondition = isLocked && config.userId !== userId
