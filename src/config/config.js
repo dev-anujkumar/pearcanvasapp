@@ -2,7 +2,7 @@ let config = {
     // https://test-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/
     // JAVA_ENDPOINT: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/app/toc-javaapp/v2' : '/cypress/toc-srvr/app/toc-javaapp/v2',
     // "https://10.11.7.24:8443/cypress-api/"
-    REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api',
+    REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-qa.pearsoncms.net/manifest-api/",
