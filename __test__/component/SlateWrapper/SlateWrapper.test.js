@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux';
 import { slateData, emptySlateData, slateDataForIntro, slateDataForAssess } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
@@ -17,6 +18,7 @@ describe('Testing <SlateWrapper> Component', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
+        toggleTocDelete: true
     };
     test('renders without crashing', () => {
         const div = document.createElement('div');
@@ -172,7 +174,13 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapper.find('SlateWrapper').instance().customListDropClickAction('','') 
         })
         it('Simulating handleClickOutside with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().handleClickOutside({target : {tagName : 'b'}}) 
+            slateWrapper.find('SlateWrapper').instance().listDropRef = document.createElement('div');
+            slateWrapper.find('SlateWrapper').instance().handleClickOutside({target : document.createElement('p')}) 
+        })
+        it('Simulating showSplitSlatePopup with slate data function', () => {
+            slateWrapper.find('SlateWrapper').instance().state = {};
+            slateWrapper.find('SlateWrapper').instance().state.showSplitSlatePopup = true;
+            slateWrapper.find('SlateWrapper').instance().showSplitSlatePopup() 
         })
 
      })
@@ -189,9 +197,12 @@ describe('Testing <SlateWrapper> Component', () => {
         };
         const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
         it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
-            slateWrapper.find('SlateWrapper').instance().checkLockStatus=()=>{return true}
-            slateWrapper.find('SlateWrapper').instance().showLockPopup = true;
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().state.showLockPopup = true;
+            slateWrapper.find('SlateWrapper').instance().checkLockStatus = ()=>{return true};
+            slateWrapper.find('SlateWrapper').instance().showLockPopup();
+            slateWrapper.find('SlateWrapper').instance().checkLockStatus();
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('','','',{},{contentUrn : ''},'');
+            slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus();
         })
 
      })

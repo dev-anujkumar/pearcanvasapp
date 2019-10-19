@@ -1,2 +1,2 @@
-import {AssessmentSlateCanvas} from './AssessmentSlate.jsx';
+import AssessmentSlateCanvas from './AssessmentSlateCanvas.jsx';
 export default AssessmentSlateCanvas;

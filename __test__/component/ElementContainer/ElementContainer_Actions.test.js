@@ -18,7 +18,23 @@ const initialState = { slateLevelData };
 describe('Tests ElementContainer Actions', () => {
     let initialState = {
         slateLevelData: slateLevelData,
-        appStore: slateLevelData
+        appStore: slateLevelData,
+        learningToolReducer: {
+            shouldHitApi: false,
+            learningToolTypeValue: '',
+            apiResponse: [],
+            showErrorMsg: true, //should be false
+            showLTBody: false,
+            learningTypeSelected: false,
+            showDisFilterValues: false,
+            selectedResultFormApi: '',
+            resultIsSelected: false,
+            toggleLT: false,
+            linkButtonDisable: true,
+            apiResponseForDis: [],
+            learningToolDisValue: '',
+            numberOfRows: 25
+        }
     };
     let store = mockStore(() => initialState);
 
@@ -51,7 +67,7 @@ describe('Tests ElementContainer Actions', () => {
                 response: data
             });
         });
-        
+
         return store.dispatch(actions.addComment(newComment.comment, elementId)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(ADD_COMMENT);

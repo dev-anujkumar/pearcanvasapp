@@ -25,8 +25,8 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import arrowButton from '../../images/OpenerElement/arrow.png'
-import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';

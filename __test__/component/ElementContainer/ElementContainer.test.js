@@ -37,6 +37,22 @@ const store = mockStore({
     },
     metadataReducer: {
         currentSlateLOData: ""
+    },
+    learningToolReducer: {
+        shouldHitApi: false,
+        learningToolTypeValue: '',
+        apiResponse: [],
+        showErrorMsg: true, //should be false
+        showLTBody: false,
+        learningTypeSelected: false,
+        showDisFilterValues: false,
+        selectedResultFormApi: '',
+        resultIsSelected: false,
+        toggleLT: false,
+        linkButtonDisable: true,
+        apiResponseForDis: [],
+        learningToolDisValue: '',
+        numberOfRows: 25
     }
 });
 describe('Test for element container component', () => {
