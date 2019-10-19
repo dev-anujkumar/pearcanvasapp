@@ -49,7 +49,9 @@ export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispat
           }
         })
 
-    }).catch(error => console.log('this is error while fetching from LT_LA api', error))
+    }).catch(error => {
+      //console.log('this is error while fetching from LT_LA api', error)
+    })
 };
 
 
@@ -91,7 +93,9 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
             }
           })
 
-      }).catch(error => console.log('this is error while fetching from LT_LA api', error))
+      }).catch(error => {
+        //console.log('this is error while fetching from LT_LA api', error)
+    })
   }
 };
 

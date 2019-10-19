@@ -108,7 +108,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             });
 
         }).catch(error => {
-            console.log("Failed to add reply", error);
+            //console.log("Failed to add reply", error);
         })
 };
 
@@ -135,7 +135,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             });
 
         }).catch(error => {
-            console.log("status update fail", error);
+            //console.log("status update fail", error);
         })
 };
 
@@ -159,7 +159,7 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
             payload: { commentUrn, updateComment: updateComment.comment }
         });
     }).catch(error => {
-        console.log("status update fail", error);
+        //console.log("status update fail", error);
     })
 };
 
@@ -184,7 +184,7 @@ export const getProjectUsers = () => dispatch => {
                 payload: response.data
             });
         }).catch(error => {
-            console.log("error while getting user", error);
+            //console.log("error while getting user", error);
         })
 }
 
@@ -209,7 +209,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
             payload: { commentUrn, newAssignee: newAssignee }
         });
     }).catch(error => {
-        console.log("error while updating user", error);
+        //console.log("error while updating user", error);
     })
 
 }
@@ -230,7 +230,7 @@ export const deleteComment = (commentUrn, elementId) => dispatch => {
                 payload: commentUrn
             });
         }).catch(error => {
-            console.log("error while updating user", error);
+            //console.log("error while updating user", error);
         })
 
 }

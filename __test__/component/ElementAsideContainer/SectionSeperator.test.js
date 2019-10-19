@@ -6,14 +6,13 @@ const setActiveElement = new stub();
 
 describe('Testing SectionSeperator component with props', () => {
     let props = {
-        elemBorderToggle: true,
+        elemBorderToggle: "true",
         borderToggle: 'active'
     }
     let wrapper = mount(< SectionSeperator setActiveElement = {setActiveElement} {...props} />)
 
     const instance = wrapper.instance();
     describe('Testing SectionSeperator component', () => {
-        console.log("wrapper", wrapper)
         it('should render handleSeperatorBlur function', () => {
             const event = {
                 preventDefault: () => { },
