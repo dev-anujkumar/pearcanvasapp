@@ -1,16 +1,27 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
-import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData'
+import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
+import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { spy, stub } from 'sinon';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import { Provider } from 'react-redux';
+
+const mockStore = configureMockStore(middlewares);
+
+const store = mockStore({});
 
 describe('Testing ElementAside component with props', () => {
     let props = {
-        element: elementAsideWorkExample
-    }
-    let wrapper = mount(< ElementAsideContainer {...props} />)
+        element: elementAsideWorkExample,
+        swapElement : swapElement
+    }  
 
-    const instance = wrapper.instance();
+    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+    const instance = wrapper.find('ElementAsideContainer').instance();
+
     describe('Testing ElementAside component', () => {
 
         it('should have element Aside', () => {
