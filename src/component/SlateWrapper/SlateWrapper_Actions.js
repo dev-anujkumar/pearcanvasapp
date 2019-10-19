@@ -255,7 +255,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
-    axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
         JSON.stringify(_requestData),
         {
             headers: {
