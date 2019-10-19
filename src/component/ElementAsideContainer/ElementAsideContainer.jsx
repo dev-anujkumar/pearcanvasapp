@@ -11,6 +11,7 @@ import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
 import { guid, sortableProps } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
 //import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
@@ -447,11 +448,11 @@ const mapStateToProps = state => {
 };
 
 
-/* export default connect(
+export default connect(
     mapStateToProps,
     {
         swapElement
     }
-)(ElementAsideContainer); */
+)(ElementAsideContainer);
 
-export default ElementAsideContainer;
+// export default ElementAsideContainer;
