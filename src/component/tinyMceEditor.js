@@ -63,172 +63,25 @@ export class TinyMceEditor extends Component {
                 this.addChemistryFormulaButton(editor);
                 this.addMathmlFormulaButton(editor);
                 this.addAssetPopoverIcon(editor);
-                editor.on('keydown', function (e) {
-                    /* if (e.keyCode == 13) {
-                        e.preventDefault();
-                        return false;
-                    } */
-                    bindKeyDownEvent(editor, e);
-                });
+                this.addFootnoteIcon(editor);
+                this.addGlossaryIcon(editor);
+                this.addInlineCodeIcon(editor);
+                this.editorMousedown(editor);
+                this.editorClick(editor);
+                this.editorKeydown(editor);
+                this.editorKeyup(editor);
+                this.editorBeforeExecCommand(editor);
+                this.editorExecCommand(editor);
+                this.editorSlateTagIcon(editor);
+                this.insertListButtonIcon(editor);
+                // editor.on('keydown', function (e) {
+                //     /* if (e.keyCode == 13) {
+                //         e.preventDefault();
+                //         return false;
+                //     } */
+                //     bindKeyDownEvent(editor, e);
+                // });
                 
-                insertListButton(editor);
-                editor.on('mousedown',function(e) {
-                    if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
-                        e.preventDefault();
-                        e.stopPropagation()
-                        return false;
-                    }
-                })
-                editor.on('click', (e) => {
-                    console.log('Editor was clicked: ', e.target.nodeName);
-                    if (e.target.parentElement.nodeName == "SUP") {
-                        this.props.openGlossaryFootnotePopUp(true, "Footnote");
-                    }
-                    else if (e.target.nodeName == "DFN") {
-                        this.props.openGlossaryFootnotePopUp(true, "Glossary");
-                    }else if (e.target.nodeName == 'ABBR'){
-                        let assetId = e.target.attributes['asset-id'].nodeValue;
-                        let dataUrn = e.target.attributes['data-uri'].nodeValue;
-                        let apoObject = {
-                            'assetId' : assetId,
-                            'dataUrn' : dataUrn
-                        }
-                        authorAssetPopOver(true, apoObject);
-                    }else {
-                        this.props.openGlossaryFootnotePopUp(false);
-                    }
-                });
-                editor.on('keydown', (e) => {
-                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                    if (activeElement) {
-                        if (!activeElement.children.length) {
-                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                            let div = document.createElement('div');
-                            div.innerHTML = this.lastContent;
-                            div.children[0].innerHTML = '<br/>';
-                            activeElement.innerHTML = div.children[0].outerHTML;
-                        }
-                        else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
-                            let div = document.createElement('div');
-                            div.innerHTML = this.lastContent;
-                            div.children[0].innerHTML = '<br/>';
-                            activeElement.innerHTML = div.children[0].outerHTML;
-                        }
-                        this.lastContent = activeElement.innerHTML;
-                    }
-                });
-
-                editor.on('keyup', (e) => {
-                    let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                    if (activeElement) {
-                        if (!activeElement.children.length) {
-                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                            let div = document.createElement('div');
-                            div.innerHTML = this.lastContent;
-                            div.children[0].innerHTML = '<br/>';
-                            activeElement.innerHTML = div.children[0].outerHTML;
-                        }
-                        else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
-                            //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                            let div = document.createElement('div');
-                            div.innerHTML = this.lastContent;
-                            div.children[0].innerHTML = '<br/>';
-                            activeElement.innerHTML = div.children[0].outerHTML;
-                        }
-                        this.lastContent = activeElement.innerHTML;                       
-                        if (activeElement.innerText.trim().length) {
-                            activeElement.classList.remove('place-holder')
-                        }
-                        else {
-                            activeElement.classList.add('place-holder')
-                        }
-                    }
-                });
-                editor.ui.registry.addButton('Footnote', {
-                    text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
-                    onAction: () => this.addFootnote(editor)
-
-                });
-                editor.ui.registry.addButton('Glossary', {
-                    id: 'buttonId',
-		            classes: 'buttonClas',
-                    text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
-                    onAction: () => this.addGlossary(editor)
-                });
-               
-                   /* adding a slate tag button in toolbar */
-                   if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
-                    editor.ui.registry.addMenuButton('slateTag', {
-                        icon: 'metadataanchor',
-                        tooltip: "Slate Tag",
-                        fetch: function (callback) {
-                        if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
-                            viewLoEnable=false;
-                        }
-                        //show dropdown options in slate tag 
-                        var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
-                        var items = [
-                            {
-                                
-                                type: 'menuitem',
-                                text: dropdownItemArray[0],
-                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
-                            },
-                            {
-                                type: 'menuitem',
-                                text: dropdownItemArray[1],
-                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
-                            },
-                            {
-                                type: 'menuitem',
-                                text: dropdownItemArray[2],
-                                disabled:viewLoEnable,
-                                onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
-                            }
-                            
-                        ];
-                        callback(items);
-                        }
-                    });
-                   }
-                
-
-                /* Inline Code Formatting Button */
-                editor.ui.registry.addToggleButton('code', {
-                    text: '<i class="fa fa-code" aria-hidden="true"></i>',
-                    onAction: () => {
-                        this.addInlineCode(editor)
-                    },
-                    onSetup: (api) => {
-                        this.handleFocussingInlineCode(api, editor)
-                    }
-                });
-
-                
-                editor.on('BeforeExecCommand', (e) => {
-                    let content = e.target.getContent()
-                    switch(e.command){
-                        case "indent":
-                            this.onBeforeIndent(e, content)
-                            break;
-                        case "outdent":
-                            this.onBeforeOutdent(e, content)
-                            break;
-                    }
-                })
-
-                editor.on('ExecCommand', (e) => {
-                    let content = e.target.getContent()
-                    switch(e.command){
-                        case "indent":
-                            this.handleIndent(e, editor, content)
-                            break;
-
-                        case "outdent":
-                            this.handleOutdent(e, editor, content)
-                            break;
-                    }
-                })
             },
 
             init_instance_callback: (editor) => {
@@ -238,6 +91,193 @@ export class TinyMceEditor extends Component {
         }
         this.editorRef  = React.createRef();
     };
+
+    insertListButtonIcon = (editor) => {
+        insertListButton(editor);
+    }
+
+    editorSlateTagIcon = (editor) => {
+        /* adding a slate tag button in toolbar */
+        if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
+            editor.ui.registry.addMenuButton('slateTag', {
+                icon: 'metadataanchor',
+                tooltip: "Slate Tag",
+                fetch: function (callback) {
+                if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
+                    viewLoEnable=false;
+                }
+                //show dropdown options in slate tag 
+                var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
+                var items = [
+                    {
+                        
+                        type: 'menuitem',
+                        text: dropdownItemArray[0],
+                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
+                    },
+                    {
+                        type: 'menuitem',
+                        text: dropdownItemArray[1],
+                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
+                    },
+                    {
+                        type: 'menuitem',
+                        text: dropdownItemArray[2],
+                        disabled:viewLoEnable,
+                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                    }
+                    
+                ];
+                callback(items);
+                }
+            });
+        }
+    }
+
+
+    editorExecCommand = (editor) => {
+        editor.on('ExecCommand', (e) => {
+            let content = e.target.getContent()
+            switch(e.command){
+                case "indent":
+                    this.handleIndent(e, editor, content)
+                    break;
+
+                case "outdent":
+                    this.handleOutdent(e, editor, content)
+                    break;
+            }
+        });
+    }
+
+    editorBeforeExecCommand = (editor) =>{
+        editor.on('BeforeExecCommand', (e) => {
+            let content = e.target.getContent()
+            switch(e.command){
+                case "indent":
+                    this.onBeforeIndent(e, content)
+                    break;
+                case "outdent":
+                    this.onBeforeOutdent(e, content)
+                    break;
+            }
+        })
+    }
+
+    editorClick = (editor) =>{
+        editor.on('click', (e) => {
+            if (e.target.parentElement.nodeName == "SUP") {
+                this.props.openGlossaryFootnotePopUp(true, "Footnote");
+            }
+            else if (e.target.nodeName == "DFN") {
+                this.props.openGlossaryFootnotePopUp(true, "Glossary");
+            }else if (e.target.nodeName == 'ABBR'){
+                let assetId = e.target.attributes['asset-id'].nodeValue;
+                let dataUrn = e.target.attributes['data-uri'].nodeValue;
+                let apoObject = {
+                    'assetId' : assetId,
+                    'dataUrn' : dataUrn
+                }
+                authorAssetPopOver(true, apoObject);
+            }else {
+                this.props.openGlossaryFootnotePopUp(false);
+            }
+        });
+    }
+
+    editorKeyup = (editor) => {
+        editor.on('keyup', (e) => {
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement) {
+                if (!activeElement.children.length) {
+                    //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                    let div = document.createElement('div');
+                    div.innerHTML = this.lastContent;
+                    div.children[0].innerHTML = '<br/>';
+                    activeElement.innerHTML = div.children[0].outerHTML;
+                }
+                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                    //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                    let div = document.createElement('div');
+                    div.innerHTML = this.lastContent;
+                    div.children[0].innerHTML = '<br/>';
+                    activeElement.innerHTML = div.children[0].outerHTML;
+                }
+                this.lastContent = activeElement.innerHTML;                       
+                if (activeElement.innerText.trim().length) {
+                    activeElement.classList.remove('place-holder')
+                }
+                else {
+                    activeElement.classList.add('place-holder')
+                }
+            }
+        });
+    }
+
+    editorKeydown = (editor) => {
+        editor.on('keydown', (e) => {
+            bindKeyDownEvent(editor, e);
+            let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            if (activeElement) {
+                if (!activeElement.children.length) {
+                    //code to avoid deletion of editor first child(like p,h1,blockquote etc)
+                    let div = document.createElement('div');
+                    div.innerHTML = this.lastContent;
+                    div.children[0].innerHTML = '<br/>';
+                    activeElement.innerHTML = div.children[0].outerHTML;
+                }
+                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                    let div = document.createElement('div');
+                    div.innerHTML = this.lastContent;
+                    div.children[0].innerHTML = '<br/>';
+                    activeElement.innerHTML = div.children[0].outerHTML;
+                }
+                this.lastContent = activeElement.innerHTML;
+            }
+        });
+    }
+
+    editorMousedown = (editor) => {
+        editor.on('mousedown',function(e) {
+            if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
+                e.preventDefault();
+                e.stopPropagation()
+                return false;
+            }
+        });
+    }
+
+    addInlineCodeIcon = (editor) => {
+        editor.ui.registry.addToggleButton('code', {
+            text: '<i class="fa fa-code" aria-hidden="true"></i>',
+            tooltip: "Inline code",
+            onAction: () => {
+                this.addInlineCode(editor)
+            },
+            onSetup: (api) => {
+                this.handleFocussingInlineCode(api, editor)
+            }
+        });
+    }
+
+    addGlossaryIcon = (editor) =>{
+        editor.ui.registry.addButton('Glossary', {
+            id: 'buttonId',
+            classes: 'buttonClas',
+            text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
+            tooltip: "Glossary",
+            onAction: () => this.addGlossary(editor)
+        });
+    }
+
+    addFootnoteIcon = (editor) =>{
+        editor.ui.registry.addButton('Footnote', {
+            text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
+            tooltip: "Footnote",
+            onAction: () => this.addFootnote(editor)
+
+        });
+    }
 
     /*
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
