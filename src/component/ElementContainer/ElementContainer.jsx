@@ -94,7 +94,6 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        return false
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
@@ -224,7 +223,7 @@ class ElementContainer extends Component {
      */
     deleteElement = () => {
         const {id, type}=this.props.element;
-        console.log("ASIDE element delete>>>>",this.props.element)
+        // console.log("ASIDE element delete>>>>",this.props.element)
         const {parentUrn,asideData} = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
