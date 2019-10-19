@@ -433,12 +433,16 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
             this.editorRef.current.focus(); // element must be focused before
             this.editorConfig.selector = '#' + this.editorRef.current.id;
-            tinymce.init(this.editorConfig).then((d) => { this.editorRef.current.blur() })
+            tinymce.init(this.editorConfig).then((d) => { 
+                if (this.editorRef.current) {
+                    this.editorRef.current.blur();
+                }
+            })
         }
     }
     componentDidUpdate() {
         if (!tinymce.editors.length) {
-            console.log('tiny update')
+            //console.log('tiny update')
             //tinymce.init(this.editorConfig)
         }
     }

@@ -58,7 +58,7 @@ export const workedExampleIcon = (function () {
             <g id="Artboard_5">
                 <rect width="64" height="64" fill="#fff"></rect>
                 <g id="Group_2311" transform="translate(-53 -403)">
-                <g id="Rectangle_1349" transform="translate(69 427)" stroke="rgb(67, 67, 67)" stroke-width="2">
+                <g id="Rectangle_1349" transform="translate(69 427)" stroke="rgb(67, 67, 67)" strokeWidth="2">
                     <rect x="1" y="1" width="30" height="22" fill="none"></rect>
                 </g>
                 <rect id="Rectangle_1350" data-name="Rectangle 1350" width="32" height="6" transform="translate(69 419)" fill="#434343"></rect>
@@ -121,7 +121,7 @@ export const metaDataAnchor = (function(){
             <rect width="64" height="64"/>
           </clipPath>
         </defs>
-        <g id="Anchor" clip-path="url(#clip-Anchor)">
+        <g id="Anchor" clipPath="url(#clip-Anchor)">
           <rect width="64" height="64" fill="#fff"/>
           <g id="sailor-anchor" transform="translate(12 11)">
             <g id="Group_2299" data-name="Group 2299" transform="translate(0)">

@@ -6,62 +6,50 @@ describe('Testing Button component with props', () => {
 
     it('render split Button component ', () => {
         const component = mount(<Button type={buttonTypes.SPLIT_SLATE} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render add-comment Button component ', () => {
         const component = mount(<Button type={buttonTypes.ADD_COMMENT} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAG} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render element-label Button component  ', () => {
         const component = mount(<Button type={buttonTypes.ELEMENT_BLOCK_LABEL} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render delete-element Button component  ', () => {
         const component = mount(<Button type={buttonTypes.DELETE_ELEMENT} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render tcm Button component  ', () => {
         const component = mount(<Button type={buttonTypes.TCM} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render forward-nav-active Button component  ', () => {
         const component = mount(<Button type={buttonTypes.FORWARD_NAVIGATION} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render backward-nav-active Button component  ', () => {
         const component = mount(<Button type={buttonTypes.BACKWARD_NAVIGATION} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render backward-nav-disable Button component  ', () => {
         const component = mount(<Button type={buttonTypes.BACKWARD_NAVIGATION_DISABLE} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render forward-nav-disable Button component  ', () => {
         const component = mount(<Button type={buttonTypes.FORWARD_NAVIGATION_DISABLE} />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render expand Button component  ', () => {
         const component = mount(<Button type={buttonTypes.EXPAND} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render color-palette Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COLOR_PALETTE} labelText="UL" />);
-        console.log(component.debug());
         // expect(component).toMatchSnapshot();
     })
     it('render close-container Button component  ', () => {

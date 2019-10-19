@@ -18,7 +18,6 @@ describe('Testing CommentsPanel component with props', () => {
     it('tests the function  replyCommentForm with if condition', () => {
         let replyForm = instance.replyCommentForm(props);
         expect(replyForm.props.className).toEqual('reply');
-        console.log("replyForm====>", replyForm.props.children);
     })
     it('tests the function replyCommentForm with else condition', () => {
         let props = {

@@ -143,9 +143,6 @@ describe('Tests Slate Wrapper Actions', () => {
             workedExample : false   
         }
 
-        function cb () {
-            console.log('cb called!!')
-        }
 
         const expectedActions = {
             type: SWAP_ELEMENT

@@ -21,7 +21,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
-            console.log("Slate lock info fetch success:", res)
+            //console.log("Slate lock info fetch success:", res)
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: res.data
@@ -29,7 +29,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
             })
         })
         .catch((err) => {
-            console.log("Slate lock info fetch failed:", err)
+            //console.log("Slate lock info fetch failed:", err)
         })
 } 
 
@@ -44,12 +44,12 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
-            console.log("Slate lock info fetch success:", res)
+            //console.log("Slate lock info fetch success:", res)
             if(callback)
                 callback(res.data)
         })
         .catch((err) => {
-            console.log("Slate lock info fetch failed:", err)
+            //console.log("Slate lock info fetch failed:", err)
         })
 }  
 
@@ -70,7 +70,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
     }
     return axios.post(url, data)
         .then((res) => {
-            console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
+            //console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             /* dispatch({
                 type : SET_LOCK_FLAG,
                 payload : true
@@ -87,7 +87,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
                 'message': false 
             }, WRAPPER_URL) */
             // stopLoader()
-            console.log("error from set slate>>>>",err)
+            //console.log("error from set slate>>>>",err)
         })
  }
 
@@ -105,14 +105,14 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
     }
     return axios.post(url, data)
        .then((res) => {
-            console.log("Slate release API success>>Slalte release status", res.data)
+            //console.log("Slate release API success>>Slalte release status", res.data)
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
             })
         })
         .catch((err) => {
-            console.log("API error from release slate>>>>",err)
+            //console.log("API error from release slate>>>>",err)
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
@@ -134,13 +134,13 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) => (
     }
     return axios.post(url, data)
        .then((res) => {
-            console.log("Slate release API success>>Slalte release status", res.data)
+            //console.log("Slate release API success>>Slalte release status", res.data)
             if(callback){
                 callback(res.data)
             }
         })
         .catch((err) => {
-            console.log("API error from release slate>>>>",err)
+            //console.log("API error from release slate>>>>",err)
             if(callback){
                 callback(err)
             }
