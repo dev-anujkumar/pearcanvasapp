@@ -135,18 +135,6 @@ class ElementAsideContainer extends Component {
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
         this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
-        // let paramObj = {
-        //     filterClass : '.elementSapratorContainer',
-        //     draggableElem : '.editor',
-        //     handleClass : '.element-label',
-        //     bodyMatter : _containerBodyMatter,
-        //     swapElement : this.props.swapElement,
-        //     containerTypeElem: 'section',
-        //     currentSlateEntityUrn : parentUrn.contentUrn,
-        //     asideId : this.props.element.id,
-        // }
-
-        // let sortableElemProps = sortableProps(paramObj)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
@@ -303,18 +291,16 @@ class ElementAsideContainer extends Component {
                     else {
                         showSectionBreak = (elementLength == index + 1)? true:false
                         return (
-                            <React.Fragment>
-                                {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+                            <React.Fragment key={`elem-aside-${element.id}`}>
+                                {index === 0 && this.state.weOrAside && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
                                     upperOne={true}
                                     index={index}
-                                    key={`elem-separtor-${element.id}`}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
                                     elementType={this.props.element.type}
                                 />
                                 }
                                 <ElementContainer
                                     element={element}
-                                    key={element.id}
                                     index={`${parentIndex}-${index}`}
                                     parentUrn ={parentUrn}
                                     showBlocker={this.props.showBlocker}
@@ -330,7 +316,6 @@ class ElementAsideContainer extends Component {
                                 </ElementContainer>
                                 <ElementSaprator
                                     index={index}
-                                    key={`elem-separtor-${element.id}`}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
@@ -454,5 +439,3 @@ export default connect(
         swapElement
     }
 )(ElementAsideContainer);
-
-// export default ElementAsideContainer;
