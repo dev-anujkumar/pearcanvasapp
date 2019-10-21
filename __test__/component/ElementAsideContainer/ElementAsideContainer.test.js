@@ -16,7 +16,13 @@ const store = mockStore({});
 describe('Testing ElementAside component with props', () => {
     let props = {
         element: elementAsideWorkExample,
-        swapElement : swapElement
+        swapElement : swapElement,
+        onUpdate : jest.fn(),
+        onStart : jest.fn(),
+        setActiveElement : jest.fn(),
+        handleFocus : jest.fn(),
+        swapElement : jest.fn()
+
     }  
 
     const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
@@ -64,8 +70,12 @@ describe('Testing ElementAside component with props', () => {
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
 
-      
+        it('should render  renderWorkExample  function correctly', () => {
 
+            let designType = "workedexample2"
+            let renderWorkExample = instance.renderWorkExample(designType)
+            expect(renderWorkExample.props.children[0].props.className).toEqual('aside-horizotal-break aside-horizotal-break-green');
+        })
     })
     describe('Testing functions with props', () => {
     it('should render  borderTop  function correctly', () => {
@@ -114,6 +124,62 @@ describe('Testing ElementAside component with props', () => {
         let borderTop = instance.borderTop(designType)
         expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
     })  
+
+    it(' handleFocus function testing', () => {
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+        const instance = wrapper.find('ElementAsideContainer').instance();
+        instance.handleFocus();
+    })
+
+    it(' componentWillMount  testing', () => {
+        const tempWrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+
+        const componentWillUnmount = jest.spyOn(tempWrapper.instance(), 'componentWillUnmount');
+        tempWrapper.unmount();
+        expect(componentWillUnmount).toHaveBeenCalled();
+    })
+
+    it(' Sortable onChange function testing', () => {
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+        const instance = wrapper.find('Sortable').instance();
+
+        let onChange = jest.fn()
+        expect(instance.props.onChange).toHaveLength(3);
+    })
+
+    it(' Sortable onStart function testing', () => {
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+        const instance = wrapper.find('Sortable').instance();
+
+        instance.props.options.onStart()
+        instance.props.onChange()
+    })
+
+    it(' Sortable onUpdate function testing', () => {
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+        const instance = wrapper.find('Sortable').instance();
+
+        let evt = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1
+        }
+
+        let _bodymatter = [
+            {
+				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"type": "element-authoredtext",
+				"subtype": "",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1"
+            },
+            {
+				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"type": "element-authoredtext",
+				"subtype": "",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1"
+            }]
+        
+        instance.props.options.onUpdate(evt)
+    })
 
     })
 })
