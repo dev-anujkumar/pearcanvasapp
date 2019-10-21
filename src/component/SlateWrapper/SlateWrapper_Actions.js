@@ -266,15 +266,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         .then((responseData) => {
             if (responseData && responseData.status == '200') {
 
-                //Remove old tinymce instance to hide multiple toolbar
-
-
-                // document.getElementById(activeEditorIdTiny).focus();
-
-                // else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
-                //     document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
-                // }
-
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 
