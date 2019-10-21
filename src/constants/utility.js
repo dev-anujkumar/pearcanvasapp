@@ -10,7 +10,6 @@ import config from '../config/config';
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
-import { ShowLoader } from '../constants/IFrameMessageTypes.js';
 
 export const sendDataToIframe = (messageObj) => {
     window.parent.postMessage(messageObj, WRAPPER_URL)
