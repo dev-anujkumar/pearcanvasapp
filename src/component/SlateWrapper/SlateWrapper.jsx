@@ -207,16 +207,7 @@ class SlateWrapper extends Component {
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
                     let _context = this
-                    let paramObj = {
-                        filterClass : '.elementSapratorContainer',
-                        draggableElem : '.editor',
-                        handleClass : '.element-label',
-                        bodyMatter : _slateBodyMatter,
-                        swapElement : this.props.swapElement,
-                        workedExample: false,
-                    }
-
-                    let sortableElemProps = sortableProps(paramObj)
+                    
                     return (
                         <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
