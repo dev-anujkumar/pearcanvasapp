@@ -52,7 +52,8 @@ export default {
             subtype: {
                 'secondary-learning-objective': {
                     text: 'Learning Objective',
-                    labelText: 'LO'
+                    labelText: 'LO',
+                    enum: 'H1',
                 }
             }
         },

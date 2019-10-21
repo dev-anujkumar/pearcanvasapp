@@ -22,18 +22,18 @@ const findElementType = (element, index) => {
 	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
-			if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
-				elementType['primaryOption'] = 'primary-heading';
-				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
-			} else {
+			// if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
+			// 	elementType['primaryOption'] = 'primary-heading';
+			// 	elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
+			// } else {
 				elementType['primaryOption'] = 'primary-paragraph';
 				elementType['secondaryOption'] = 'secondary-paragraph';
-			}
+			// }
 			break;
 
 		case 'element-blockfeature':
 			elementType['elementType'] = 'element-authoredtext';
-			elementType['primaryOption'] = 'primary-blockquote';
+			elementType['primaryOption'] = 'primary-learning-objective';
 			switch (element.elementdata.type) {
 				case 'pullquote':
 					elementType['secondaryOption'] = 'secondary-pullquote';
@@ -45,6 +45,12 @@ const findElementType = (element, index) => {
 					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
 			}
+			break;
+
+		case 'element-learningobjectives':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-learning-objective';
+			elementType['secondaryOption'] = 'secondary-learning-objective';
 			break;
 
 		case 'figure':

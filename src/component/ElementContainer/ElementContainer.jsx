@@ -9,6 +9,7 @@ import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
 import ElementMetaLOList from '../ElementMetaLOList';
+import ElementLearningObjectiveItem from '../ElementLearningObjectiveItem';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -61,7 +62,9 @@ class ElementContainer extends Component {
 
   
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(newProps){      
+    componentWillReceiveProps(newProps){   
+        console.log("state element id",this.state.ElementId)   
+        console.log("active element id",newProps.activeElement.elementId)   
         if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
              if(newProps.elemBorderToggle){
                 this.setState({
@@ -94,6 +97,7 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
+        return false;
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
@@ -114,17 +118,17 @@ class ElementContainer extends Component {
      * Checks mouse event out side of canvas area and handdling element border state
      */
     handleBlurAside = () => {
-        if(this.props.elemBorderToggle){
-            this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
-            })
-        } else {
-            this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
-            })
-        } 
+        // if(this.props.elemBorderToggle){
+        //     this.setState({
+        //         borderToggle : 'showBorder',
+        //         btnClassName : ''
+        //     })
+        // } else {
+        //     this.setState({
+        //         borderToggle : 'hideBorder',
+        //         btnClassName : ''
+        //     })
+        // } 
     }
     /**
    * @description - slate tag dropdown opeartions
@@ -254,6 +258,9 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
                 editor = <ElementAuthoring  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
+            case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
+                editor = <ElementLearningObjectiveItem  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                break;
 
             case elementTypeConstant.BLOCKFEATURE:
                 editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
@@ -322,7 +329,7 @@ class ElementContainer extends Component {
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
                 break;
