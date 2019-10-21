@@ -142,7 +142,7 @@ export class AssessmentSlateCanvas extends Component {
         const { } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
-            <div onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>
+            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>
                 <AssessmentSlateData
                     type={this.props.type}
                     getAssessmentDataPopup={getAssessmentDataPopup}
