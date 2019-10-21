@@ -50,7 +50,6 @@ describe('action file test', () => {
                 response: data
             });
         });
-        console.log(store)
         return store.dispatch(selectActions.fetchSlateData(manifestURN)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(FETCH_SLATE_DATA);

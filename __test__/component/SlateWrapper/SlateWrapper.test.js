@@ -8,7 +8,12 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({slateLockReducer : {slateLockInfo: {}},appStore : {slateTitleUpdated : {}}})
+const store = mockStore({
+    slateLockReducer : {slateLockInfo: {}},
+    appStore : {slateTitleUpdated : {},activeElement : {}},
+    toolbarReducer: { elemBorderToggle: true },
+    metadataReducer:{ currentSlateLOData: {} }
+})
 import config from '../../../src/config/config';
 
 describe('Testing <SlateWrapper> Component', () => {

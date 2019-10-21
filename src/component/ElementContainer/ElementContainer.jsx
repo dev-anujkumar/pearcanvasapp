@@ -385,10 +385,11 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup : false
         });
-        this.props.showBlocker(false);
-        hideBlocker();
+        if(this.props.isBlockerActive){
+            this.props.showBlocker(false)
+            hideBlocker();
+        }
     }
-
 
     /**
      * @description - This function is for handleChange of popup.
