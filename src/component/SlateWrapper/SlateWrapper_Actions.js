@@ -131,7 +131,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         } 
-        console.log("create Api fail", error);
+        //console.log("create Api fail", error);
     }) 
 }else {
               
@@ -255,7 +255,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
-    axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/swap`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -281,7 +281,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
-                console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
+                //console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
 
                 // let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (workedExample) {
@@ -310,7 +310,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
         })
         .catch((err) => {
-            console.log('Error occured while swaping element', err)
+            //console.log('Error occured while swaping element', err)
         })
 }
 
@@ -376,7 +376,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     ).then(res => {
         sendDataToIframe({ 'type': NextSlate, 'message': {} })
     }).catch(error => {
-        console.log("SPLIT SLATE API ERROR : ", error)
+        //console.log("SPLIT SLATE API ERROR : ", error)
     })
 }
 

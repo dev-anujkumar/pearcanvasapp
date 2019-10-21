@@ -8,7 +8,7 @@ import {shallow, mount} from 'enzyme';
 let wrapper, useEffect, esProps
 
 function splithandlerfunction(type) {
-    console.log(type);
+    return ;
 }
 
 esProps = [
