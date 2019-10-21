@@ -222,12 +222,12 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = () => {
-        const {id, type}=this.props.element;
-        const {parentUrn,asideData} = this.props;
+        const { id, type, contentUrn } = this.props.element;
+        const { parentUrn, asideData } = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         // api needs to run from here
-        this.props.deleteElement(id, type,parentUrn,asideData);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
     }
 
     /**
@@ -469,8 +469,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index) => {
             dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id , type,parentUrn,asideData)=>{
-            dispatch(deleteElement(id, type,parentUrn,asideData))
+        deleteElement: (id , type, parentUrn, asideData, contentUrn)=>{
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
