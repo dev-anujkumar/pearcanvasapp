@@ -90,7 +90,7 @@ class ListButtonDropPortal extends Component {
                 this.selectedOption = listElement.subtype || null;
             }
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             this.startValue = null;
             this.selectedOption = null;
         }

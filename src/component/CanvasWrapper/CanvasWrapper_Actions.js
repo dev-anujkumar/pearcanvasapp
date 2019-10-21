@@ -18,22 +18,21 @@ const axiosApiInstance = axios.create({
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-
 	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
-			// if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
-			// 	elementType['primaryOption'] = 'primary-heading';
-			// 	elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
-			// } else {
+			if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
+				elementType['primaryOption'] = 'primary-heading';
+				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
+			} else {
 				elementType['primaryOption'] = 'primary-paragraph';
 				elementType['secondaryOption'] = 'secondary-paragraph';
-			// }
+			 }
 			break;
 
 		case 'element-blockfeature':
 			elementType['elementType'] = 'element-authoredtext';
-			elementType['primaryOption'] = 'primary-learning-objective';
+			elementType['primaryOption'] = 'primary-blockquote';
 			switch (element.elementdata.type) {
 				case 'pullquote':
 					elementType['secondaryOption'] = 'secondary-pullquote';
@@ -121,7 +120,7 @@ const findElementType = (element, index) => {
 				} else if (element.figuretype == 'codelisting') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-blockcode-equation';
-					switch (element.figuretype.programlanguage) {
+					switch (element.figuredata.programlanguage) {
 						case 'C++':
 							elementType['secondaryOption'] = 'secondary-blockcode-language-C++';
 							break;
@@ -423,7 +422,7 @@ export const fetchElementTag = (element, index = 0) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
+	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken

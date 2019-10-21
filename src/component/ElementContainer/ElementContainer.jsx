@@ -62,9 +62,7 @@ class ElementContainer extends Component {
 
   
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(newProps){   
-        console.log("state element id",this.state.ElementId)   
-        console.log("active element id",newProps.activeElement.elementId)   
+    componentWillReceiveProps(newProps){     
         if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
              if(newProps.elemBorderToggle){
                 this.setState({
@@ -97,7 +95,6 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        return false;
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
@@ -118,17 +115,17 @@ class ElementContainer extends Component {
      * Checks mouse event out side of canvas area and handdling element border state
      */
     handleBlurAside = () => {
-        // if(this.props.elemBorderToggle){
-        //     this.setState({
-        //         borderToggle : 'showBorder',
-        //         btnClassName : ''
-        //     })
-        // } else {
-        //     this.setState({
-        //         borderToggle : 'hideBorder',
-        //         btnClassName : ''
-        //     })
-        // } 
+        if(this.props.elemBorderToggle){
+            this.setState({
+                borderToggle : 'showBorder',
+                btnClassName : ''
+            })
+        } else {
+            this.setState({
+                borderToggle : 'hideBorder',
+                btnClassName : ''
+            })
+        } 
     }
     /**
    * @description - slate tag dropdown opeartions
@@ -227,6 +224,7 @@ class ElementContainer extends Component {
      */
     deleteElement = () => {
         const {id, type}=this.props.element;
+        // console.log("ASIDE element delete>>>>",this.props.element)
         const {parentUrn,asideData} = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
@@ -392,10 +390,11 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup : false
         });
-        this.props.showBlocker(false);
-        hideBlocker();
+        if(this.props.isBlockerActive){
+            this.props.showBlocker(false)
+            hideBlocker();
+        }
     }
-
 
     /**
      * @description - This function is for handleChange of popup.

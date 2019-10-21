@@ -32,6 +32,7 @@ class ElementAsideContainer extends Component {
         this.asideRef.current.addEventListener("focus", this.handleFocus);
 
     }
+
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
@@ -264,8 +265,6 @@ class ElementAsideContainer extends Component {
    */
 
     renderWorkExample = (designtype) => {
-        console.log('WE >>>>>>', this.props)
-
         return (
             <React.Fragment>
                 <hr className={`aside-horizotal-break ${designtype == "workedexample2" ? 'aside-horizotal-break-green' : ""}`} />
@@ -322,7 +321,7 @@ class ElementAsideContainer extends Component {
    */
 
     renderAside = (designtype) => {
-        console.log('aside >>>>>>', this.props)
+        
             return (
                 <React.Fragment>
                     {this.borderTop(designtype)}
