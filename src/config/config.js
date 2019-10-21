@@ -13,7 +13,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "ubhpFL9fA7AlXDjTvT6eOVGDOXs.*AAJTSQACMDIAAlNLABx6bTZmNURqSmZWZUE5UE5pcVZuVmJFRk5yWmc9AAJTMQACMDM.*",
+    ssoToken: "S4Zd9jSYfcIlwGDKkmDkXgfD6FM.*AAJTSQACMDIAAlNLABxDb2l5Q2FZcWpoVk5IeG14Yk1FaUREZExkajQ9AAJTMQACMDM.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
