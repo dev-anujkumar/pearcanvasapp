@@ -82,7 +82,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         });
     })
     .catch(err =>{
-        console.log(err) 
+        //console.log(err) 
     })
 }
 

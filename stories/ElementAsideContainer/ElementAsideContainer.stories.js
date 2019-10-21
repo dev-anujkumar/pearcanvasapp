@@ -13,7 +13,7 @@ const mockStore = configureMockStore(middlewares);
 
 const store = mockStore({
     toolbarReducer: {
-        elemBorderToggle: true
+        elemBorderToggle: "true"
     }
   });
 

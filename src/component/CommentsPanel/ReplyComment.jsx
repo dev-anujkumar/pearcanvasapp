@@ -57,7 +57,6 @@ class ReplyComment extends React.Component {
                     <div className="comment-info no-padding">
                         <div className="text-medium-semibold mt-4"> {reply.commentCreator} </div>
                         <div className="text-medium color-gray-71 mb-4">
-                            {utils.buildCommentDate(reply.createddate)}
                         </div>
                     </div>
                 </div>

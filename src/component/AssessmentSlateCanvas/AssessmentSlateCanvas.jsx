@@ -5,13 +5,13 @@
 
 // IMPORT - Plugins //
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import {AssessmentSlateData} from './AssessmentSlateData.jsx';
+import { AssessmentSlateData } from './AssessmentSlateData.jsx';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
+import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
 
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -30,7 +30,7 @@ export class AssessmentSlateCanvas extends Component {
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
     toggleAssessmentPopup = (value) => {
         this.setState({
-            showAssessmentPopup : value
+            showAssessmentPopup: value
         });
     }
     /*** @description - This function is to select the Assessment type
@@ -62,7 +62,7 @@ export class AssessmentSlateCanvas extends Component {
         if (searchMode == "partial") {
             searchSelectAssessmentURN = UUID || "";
         }
-    
+
         let productId = "";
         let searchTypeOptVal = "";
         showTocBlocker();
@@ -101,19 +101,19 @@ export class AssessmentSlateCanvas extends Component {
     updateAssessment=(id,itemID,title,format,usageType,change)=>{       
         if(change==='insert'){
             this.setState({
-                getAssessmentDataPopup:true
-            },()=>{
-                setTimeout(()=>{ 
+                getAssessmentDataPopup: true
+            }, () => {
+                setTimeout(() => {
                     this.setState({
-                        getAssessmentDataPopup:false
-                    }) 
+                        getAssessmentDataPopup: false
+                    })
                 }, 3000)
             })
         }
-        else{
+        else {
             this.setState({
-                getAssessmentData:false
-                
+                getAssessmentData: false
+
             })
         }
         this.setState({assessmentId: id,
@@ -122,7 +122,14 @@ export class AssessmentSlateCanvas extends Component {
             getAssessmentData:true,})                    
 
     }
-    
+
+    /*** @description - This function is to link learning app*/
+    linkLearningApp = (selectedLearningType, usagetype, change) =>{
+        console.log(selectedLearningType);
+        this.updateAssessment();
+        this.props.closeLtAction();
+    }
+
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     handleAssessmentFocus = () => {
         this.props.handleFocus();
@@ -132,18 +139,48 @@ export class AssessmentSlateCanvas extends Component {
         this.props.handleBlur();
     }
     render() {
-      
-        return(
-            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>                              
-            <AssessmentSlateData type={this.props.type} getAssessmentDataPopup={this.state.getAssessmentDataPopup} getAssessmentData={this.state.getAssessmentData} assessmentId={this.state.assessmentId} assessmentItemId={this.state.assessmentItemId} assessmentItemTitle={this.state.assessmentItemTitle} handleC2AssessmentClick={this.handleC2AssessmentClick} toggleAssessmentPopup={this.toggleAssessmentPopup} selectAssessmentType={this.selectAssessmentType} model={this.props.model}/>
-            {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+        const { } = this.props;
+        const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
+        return (
+            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>
+                <AssessmentSlateData
+                    type={this.props.type}
+                    getAssessmentDataPopup={getAssessmentDataPopup}
+                    getAssessmentData={getAssessmentData}
+                    assessmentId={assessmentId}
+                    assessmentItemId={assessmentItemId}
+                    assessmentItemTitle={assessmentItemTitle}
+                    handleC2AssessmentClick={this.handleC2AssessmentClick}
+                    toggleAssessmentPopup={this.toggleAssessmentPopup}
+                    selectAssessmentType={this.selectAssessmentType}
+                    assessmentSlateElement={assessmentSlateElement}
+                    model={this.props.model} 
+                    openLtAction ={this.props.openLtAction}
+                    closeLtAction = {this.props.closeLtAction}
+                    getDiscipline = {this.props.getDiscipline}
+                    linkLearningApp ={this.linkLearningApp}
+                    />
+                    
+                {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
             </div>
         );
     }
 }
 
 AssessmentSlateCanvas.displayName = "AssessmentSlateCanvas"
-AssessmentSlateCanvas.defaultProps = {
-    /** Detail of element in JSON object */
-    type: ''
+
+const mapStateToProps = (state, props) => {
+    return {
+        toggleLT: state.learningToolReducer.toggleLT,
+        selectedResultFormApi: state.learningToolReducer.selectedResultFormApi
+    }
 }
+const mapActionToProps = {
+    openLtAction: openLtAction,
+    closeLtAction: closeLtAction,
+    getDiscipline: getDiscipline
+}
+
+
+
+export default connect(mapStateToProps, mapActionToProps)(AssessmentSlateCanvas)

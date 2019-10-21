@@ -255,7 +255,7 @@ class ElementAsideContainer extends Component {
             }
 
         } catch (error) {
-            console.log("error", error)
+            //console.log("error", error)
         }
     }
      /**
@@ -347,6 +347,7 @@ class ElementAsideContainer extends Component {
         );
     }
 }
+ElementAsideContainer.displayName = "ElementAsideContainer"
 
 ElementAsideContainer.propTypes = {
     /** slate data attached to store and contains complete slate object */

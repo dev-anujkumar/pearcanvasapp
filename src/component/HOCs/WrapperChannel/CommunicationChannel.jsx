@@ -161,6 +161,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'projectDetails' :
                      this.props.fetchAuthUser()
+                     config.ssoToken = message.ssoToken;
                      config.projectUrn = message.id;
                      config.citeUrn = message.citeUrn;
                      config.projectEntityUrn = message.entityUrn;
