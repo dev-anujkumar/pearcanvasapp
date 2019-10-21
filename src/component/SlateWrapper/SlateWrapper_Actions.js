@@ -312,7 +312,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     type: SWAP_ELEMENT,
                     payload: {
                         slateLevelData: newParentData,
-                        thisIsWE : thisIsWE
                     }
                 })
 

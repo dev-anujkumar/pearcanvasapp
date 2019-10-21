@@ -8,7 +8,7 @@ import Sortable from 'react-sortablejs';
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
-import { guid, sortableProps } from '../../constants/utility.js';
+import { guid } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
