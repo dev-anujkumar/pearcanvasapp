@@ -6,10 +6,6 @@ export class ElementLearningObjectiveItem extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onClick = this.onClick.bind(this);
-    this.onBlur = this.onBlur.bind(this);
-    this.onKeyup = this.onKeyup.bind(this);
-    this.onFocus = this.onFocus.bind(this);
   }
   
 
@@ -45,16 +41,16 @@ export class ElementLearningObjectiveItem extends Component {
 
     
   }
-  onClick() {
+  onClick = () => {
 
   }
-  onBlur() {
+  onBlur = () =>  {
 
   }
-  onKeyup() {
+  onKeyup = () =>  {
 
   }
-  onFocus() {
+  onFocus = () =>  {
 
   }
 }
