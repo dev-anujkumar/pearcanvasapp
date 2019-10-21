@@ -162,6 +162,7 @@ function WithWrapperCommunication(WrappedComponent) {
                      config.citeUrn = message.citeUrn;
                      config.projectEntityUrn = message.entityUrn;
                      config.alfrescoMetaData = message.alfresco;
+                     config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);

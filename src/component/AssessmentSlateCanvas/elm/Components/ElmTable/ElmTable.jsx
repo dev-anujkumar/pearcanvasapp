@@ -119,7 +119,7 @@ class ElmTable extends Component {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
                     resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": assesments.type, "urn": assesments.urn })
+                        this.preparedData.push({ "type": assesments.type||"assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
@@ -136,7 +136,7 @@ class ElmTable extends Component {
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
         let PROJECT_URN = config.projectUrn;
-        let book_title = "ELMTEST_StgEnv_Krajewski Test"
+        let book_title = config.book_title;
         return book_title
         // return config.book_title
     }

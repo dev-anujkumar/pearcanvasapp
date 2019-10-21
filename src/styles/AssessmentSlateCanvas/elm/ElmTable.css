@@ -81,7 +81,8 @@
     font-family: Arial;
     left: 64%;
     padding: 10px 24px;
-    margin-top: 1.5%;
+    margin-top: 2%;
+    border: none;
   }
   .cancel{
     float: left;

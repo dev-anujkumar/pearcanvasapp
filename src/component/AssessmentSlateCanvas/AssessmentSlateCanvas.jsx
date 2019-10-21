@@ -11,7 +11,7 @@ import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
-
+import { sendDataToIframe } from '../../constants/utility.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -51,10 +51,10 @@ export class AssessmentSlateCanvas extends Component {
     * @param pufObj - The object contains data about PUF Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
         showTocBlocker();
         disableHeader(true);
-        hideTocBlocker();
+        sendDataToIframe({'type': "blockerTOC",'message': {status: true}});     
+        this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
     /***
      * @description Open C2 module with predefined Alfresco location
