@@ -304,10 +304,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 }
 
                 newParentData = JSON.parse(JSON.stringify(newParentData));
-                let thisIsWE;
-                if(containerTypeElem == 'section' || containerTypeElem == 'we'){
-                    thisIsWE = true
-                }
+
                 dispatch({
                     type: SWAP_ELEMENT,
                     payload: {
