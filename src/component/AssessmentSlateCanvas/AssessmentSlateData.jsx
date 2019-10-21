@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 import { openLTFunction } from './learningTool/openLTFunction.js';
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentUsageType, assessmentType } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
+import { sendDataToIframe } from '../../../src/constants/utility.js';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);

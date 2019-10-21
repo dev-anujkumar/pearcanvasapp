@@ -1,11 +1,15 @@
+/*** 
+ * @description - The Body comoinent of ELM Assessment
+*/
 import React, { Component } from 'react';
-import './ElmTable.css';
 import { connect } from 'react-redux';
-
+import config from './../../../../../config/config';
+import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
+import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 var sortFlag = true;
-var projectDetails = require('c:/Users/chavi.srivastava/Desktop/Project/c5-chaucer/appx/app/src/js/constants/projectData').projectDetails;
-var svg;
+var sortIcon;
 
+/*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTable extends Component {
     constructor(props) {
         super(props);
@@ -14,81 +18,102 @@ class ElmTable extends Component {
             isActive: null,
             addFlag: false,
             noDataFound: false,
-            currentUrn : this.props.apiData.versionUrn,
-            parentUrn : null
+            currentUrn: this.props.apiData.versionUrn,
+            parentUrn: null,
+            apiData: props.apiData,
+            firstName: this.getProjectTitle() || "",
+            parentTitle: "",
+            currentAssessmentSelected: {}
         },
-        this.preparedData = [];
+            this.preparedData = [];
         this.setSort();
-    }
-    componentWillMount() {
-        this.firstName = this.getCookie('BOOK_TITLE');
-        this.renderTableData(this.props)
+        this.renderTableData(this.props);
     }
 
-    renderTableData = (currentProps)=>{
+    componentDidMount() {
+        let fName = this.getProjectTitle();
+        this.setState({
+            firstName: fName
+        })
+        this.renderTableData(this.props)
+
+    }
+    /*** @description - This function is to render elm table data
+     * @param currentProps- props
+    */
+    renderTableData = (currentProps) => {
+        console.log("currentProps.apiData", currentProps.apiData);
         if (!currentProps.errFlag && currentProps.apiData) {
             this.filterData(currentProps.getParentId, currentProps.apiData);
         }
 
         setTimeout(() => {
-            if(!this.state.tableValue.length){
+            if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
             }
-        },0) 
+        }, 0)
     }
 
-    componentWillReceiveProps(nextProps){
-        if(JSON.stringify(nextProps.apiData) !== JSON.stringify(this.props.apiData)){
-            this.renderTableData(nextProps);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (JSON.stringify(nextProps.apiData) !== JSON.stringify(prevState.apiData)) {
+            prevState.renderTableData(nextProps);
+            return {
+                apiData: nextProps.apiData
+            };
         }
     }
-
+    /*** @description - This function is to filter table data based on parameters
+         * @param data- api data
+         * @param urn- assessment id
+         * @param parentUrn- parent-Urn
+        */
     filterData = (urn, apiData, parentUrn = this.state.currentUrn) => {
         this.preparedData = [];
-        this.setState({addFlag: false, isActive : null});
-        if(urn === parentUrn){
+        this.setState({ addFlag: false, isActive: null });
+        if (urn === parentUrn) {
             this.getResourcefromFilterData(apiData)
         }
-        else if(apiData.contents){
+        else if (apiData.contents) {
             apiData = apiData.contents;
 
             apiData.frontMatter && apiData.frontMatter.forEach((data) => {
                 this.filterSubData(data, urn, parentUrn)
             })
-    
+
             apiData.bodyMatter && apiData.bodyMatter.forEach((data) => {
                 this.filterSubData(data, urn, parentUrn)
             })
-    
+
             apiData.backMatter && apiData.backMatter.forEach((data) => {
                 this.filterSubData(data, urn, parentUrn)
             })
         }
-        else if(!(apiData.contents || this.preparedData.length)){
+        else if (!(apiData.contents || this.preparedData.length)) {
             this.getResourcefromFilterData(apiData)
         }
-
-
-        // if(!this.preparedData.length){
-        //     this.getResourcefromFilterData();
-        // }
-
     }
-
+     /*** @description - Function to check if api data's versionUrn is same as current urn
+         * @param data- api data
+         * @param urn- assessment id
+         * @param parentUrn- parent-Urn
+        */
     filterSubData = (data, urn, parentUrn) => {
 
         if (data.versionUrn === urn) {
-            return this.getResourcefromFilterData(data,parentUrn)
+            return this.getResourcefromFilterData(data, parentUrn)
         }
         else {
             if (data.contents)
                 this.filterData(urn, data, data.versionUrn)
             else
-                return ;
+                return;
         }
     }
-
-    getResourcefromFilterData = (data,parentUrn) => {
+    /*** @description - This function is to get elm resource from the table based on parameters
+         * @param data- api data
+         * @param parentUrn- parent-Urn
+        */
+    getResourcefromFilterData = (data, parentUrn) => {
 
         if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
             data.alignments.resourceCollections.forEach((resource) => {
@@ -101,70 +126,59 @@ class ElmTable extends Component {
         }
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((data) => {
-                this.preparedData.push({ "type": data.label, "urn": data.versionUrn, "title": data.unformattedTitle ? data.unformattedTitle.en : data.versionUrn})
+                this.preparedData.push({ "type": data.label, "urn": data.versionUrn, "title": data.unformattedTitle ? data.unformattedTitle.en : data.versionUrn })
             })
         }
 
-        return this.setState({ tableValue: this.preparedData, parentUrn : parentUrn, parentTitle : (data.unformattedTitle && data.unformattedTitle.en) ? data.unformattedTitle.en : this.firstName })
+        return this.setState({ tableValue: this.preparedData, parentUrn: parentUrn, parentTitle: (data.unformattedTitle && data.unformattedTitle.en) ? data.unformattedTitle.en : this.state.firstName })
 
     }
-
-    getCookie = (name) => {
-        let { PROJECT_URN } = projectDetails;
-        let cookieArray = document.cookie.split(';')
-        let matchedCookie = '';
-        for(var i=0; i<cookieArray.length; i++) {
-            let isExist = cookieArray[i].includes(PROJECT_URN);
-            if(isExist) {
-                matchedCookie = cookieArray[i];
-                break;
-            }
-        }
-        let cookieArray1 = matchedCookie.split('=')[1].split(',');
-        let matchedCookie1 = '';
-        for(var i=0; i<cookieArray1.length; i++) {
-            let isExist = cookieArray1[i].includes(name);
-            if(isExist) {
-                matchedCookie1 = cookieArray1[i];
-                break;
-            }
-        }
-        return matchedCookie1.split(":'")[1] ? matchedCookie1.split(":'")[1].replace(/\'/gi, ''): '';
+    /*** @description - This function is to fetch project title*/
+    getProjectTitle = () => {
+        let PROJECT_URN = config.projectUrn;
+        let book_title = "ELMTEST_StgEnv_Krajewski Test"
+        return book_title
+        // return config.book_title
     }
-
+    /*** @description - This function is to show table data based on parameters
+         * @param e- event triggered
+         * @param versionUrn- version urn of current item selected
+        */
     showNewValueList = (e, versionUrn) => {
-        this.filterData(versionUrn,this.props.apiData);
+        this.filterData(versionUrn, this.props.apiData);
     }
+    /*** @description - This function is to set puf assessment data in state variables 
+     * @param addedValue- object containing puf assessment data
+    */
     addAssessment = (addedValue) => {
-        this.setState({addFlag: true});
-        this.currentAssessmentSelected = {...addedValue};
+        this.setState({
+            addFlag: true,
+            currentAssessmentSelected: { ...addedValue }
+        });
     }
+    /*** @description - This function is to navigate back to parent hierarchy
+    */
     navigateBack = () => {
-        this.filterData(this.state.parentUrn,this.props.apiData);
+        this.filterData(this.state.parentUrn, this.props.apiData);
     }
-
+    /*** @description - This function is to set the sort icon and call dynamicSort function
+         * @param e- event triggered
+        */
     setSort = () => {
-            if(sortFlag){
-                svg = <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                viewBox="0 0 31.49 31.49" style={{backgroundColor:'white'}} xmlSpace="preserve" width="15" height="10" transform="rotate(90)">
-            <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111
-                C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587
-                c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
-            </svg>
-            }
-            else{
-                svg = <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                viewBox="0 0 31.49 31.49" style={{backgroundColor:'white'}} xmlSpace="preserve" width="15" height="10" transform="rotate(-90)">
-            <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111
-                C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587
-                c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
-            </svg>
-            }
-        this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse() ,addFlag: false, isActive : null });
-        // }
+        if (sortFlag) {
+            sortIcon = elmSortUp
+        }
+        else {
+            sortIcon = elmSortDown
+        }
+        this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null });
+
         sortFlag = !sortFlag;
     }
-
+    /*** @description - This function is to sort table data based on parameters
+         * @param property- sorting criteria
+         * @param event- event triggered
+        */
     dynamicSort = (property, event) => {
         var sortOrder = 1;
         if (property[0] === "-") {
@@ -173,8 +187,8 @@ class ElmTable extends Component {
         }
         return function (a, b) {
             var result;
-            var first = (a[property]?a[property]:a.urn).toLowerCase();
-            var second = (b[property]?b[property]:b.urn).toLowerCase();
+            var first = (a[property] ? a[property] : a.urn).toLowerCase();
+            var second = (b[property] ? b[property] : b.urn).toLowerCase();
             if (sortFlag) {
                 result = (first < second) ? -1 : (first > second) ? 1 : 0;
             }
@@ -184,101 +198,81 @@ class ElmTable extends Component {
             return result * sortOrder;
         }
     }
+    /*** @description - This function is to send puf assessment data to RootELMComponent
+    */
     sendPufAssessment = () => {
         let obj = {
-            id : this.currentAssessmentSelected.urn,
-            title : "dummy",
-            assessmentFormat : "puf",
-            usagetype : this.props.usageTypeMetadata
+            id: this.state.currentAssessmentSelected.urn,
+            title: "dummy",
+            assessmentFormat: "puf",
+            usagetype: this.props.usageTypeMetadata
         }
         this.props.addPufFunction(obj);
         this.props.closeElmWindow();
     }
-
+    /*** @description - This function is to toggle the current row selected
+         * @param i- index of the row
+        */
     toggleActive = i => {
-          this.setState({
+        this.setState({
             isActive: i
-          });
-      }
-
-    getFolderLabel = label =>{
-        switch(label){
-            case 'chapter' : return 'C'
-            case 'module' : return 'M'  
-            case 'part' : return 'P'  
-            case 'section' : return 'S'  
-            case 'assessment' : return 'AS'
-            case 'container-introduction':return 'IS';
+        });
+    }
+    /*** @description - This function is to set the folder name in folder-icon based on type of container
+         * @param label- label of container
+        */
+    getFolderLabel = label => {
+        switch (label) {
+            case 'chapter': return 'C'
+            case 'module': return 'M'
+            case 'part': return 'P'
+            case 'section': return 'S'
+            case 'assessment': return 'AS'
+            case 'container-introduction': return 'IS';
             case 'introductry-slate': return 'IS';
-            default : return 'NA'       
+            default: return 'NA'
         }
     }
 
     render() {
-        if(this.props.errFlag){
-            return(
+        if (this.props.errFlag) {
+            return (
                 <div>
                     <div className='table-header'>
                         {(this.state.parentUrn > 1) ?
-                            <svg onClick={this.navigateBack} style={{verticalAlign: 'middle', cursor: 'pointer'}} fill='rgb(86, 83, 83)' transform="rotate(-90)" width="15" height="15" viewBox="0 0 24 24">
-                                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path>
-                                <path d="M0 0h24v24H0z" fill="none"></path>
-                            </svg> : null}
+                            <div className="elm-navigateBck-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                         <p className="title-header">{this.state.parentTitle}</p>
                     </div>
-                    <div style={{textAlign: 'center', marginTop: '5%'}}>
-                        <p style={{marginTop: '2%'}}>
-                            {this.props.errorStatus==404 ? <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>**Error occured, Please try again!!!</i>}
+                    <div className="elm-errorDiv">
+                        <p className="elm-error-line">
+                            {this.props.errorStatus == 404 ? <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>**Error occured, Please try again!!!</i>}
                         </p>
                     </div>
                 </div>
             );
         }
-        else if(!this.props.errFlag){
-            return(
+        else if (!this.props.errFlag) {
+            return (
                 <div>
                     <div className='table-header'>
                         {(this.state.parentUrn) ?
-                            <svg onClick={this.navigateBack} style={{verticalAlign: 'middle', cursor: 'pointer'}} fill='rgb(86, 83, 83)' transform="rotate(-90)" width="15" height="15" viewBox="0 0 24 24">
-                                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path>
-                                <path d="M0 0h24v24H0z" fill="none"></path>
-                            </svg> : null}
+                            <div className="elm-navigateBck-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                         <p className="title-header">{this.state.parentTitle}</p>
                     </div>
                     <div className='mainDiv'>
                         <table className='tableClass'>
                             <thead>
                                 <th className='rowClass'>
-                                    <td className='tdClass' style={{display:'inline-block', width: '6.5%', color: 'black'}}>Title</td>
-                                    <button style={{height:'10px', width: '0px'}} onClick={() => this.setSort()}>
-                                        {svg}
-                                    </button>
+                                    <td className='tdClass sortIcon'>Title</td>
+                                    <div className="sort-icon" onClick={() => this.setSort()}>{sortIcon}</div>
                                 </th>
-                                {/* <th className='rowClass'>
-                                    <td className='tdClass'>ID</td>
-                                </th> */}
                             </thead>
                             {this.state.tableValue.map((item, index) => {
                                 if (item.type == "assessment" && item.urn.includes("work")) {
                                     return (
-                                        <tr className='rowClass' style={this.state.isActive === index ? { backgroundColor: '#dbf2e0' } : { backgroundColor: 'white' }} key={index} onClick={() => this.toggleActive(index)}>
+                                        <tr className={`rowClass ${this.state.isActive === index ? 'select' : 'notSelect'}`} key={index} onClick={() => this.toggleActive(index)}>
                                             <td className='tdClass' key={index} onClick={() => this.addAssessment(item)}>
-
-                                                <svg style={{marginRight : "6px"}} width="20" height="17" viewBox="0 0 24 24" version="1.1">
-                                                    <g id="surface1">
-                                                        <path className=" cls-3" d="M 2.390625 0 L 21.609375 0 C 22.929688 0 24 1.070312 24 2.390625 L 24 21.609375 C 24 22.929688 22.929688 24 21.609375 24 L 2.390625 24 C 1.070312 24 0 22.929688 0 21.609375 L 0 2.390625 C 0 1.070312 1.070312 0 2.390625 0 Z M 2.390625 0 " />
-                                                        <path className=" cls-2" d="M 2.390625 0 L 21.609375 0 C 22.929688 0 24 1.070312 24 2.390625 L 24 21.609375 C 24 22.929688 22.929688 24 21.609375 24 L 2.390625 24 C 1.070312 24 0 22.929688 0 21.609375 L 0 2.390625 C 0 1.070312 1.070312 0 2.390625 0 Z M 2.390625 0 " />
-                                                        <path className=" cls-1" d="M 7.929688 3.855469 L 19.929688 3.855469 L 19.929688 5.570312 L 7.929688 5.570312 L 7.929688 3.855469 " />
-                                                        <path className=" cls-1" d="M 7.929688 10.429688 L 7.929688 8.71875 L 19.929688 8.71875 L 19.929688 10.429688 L 7.929688 10.429688 " />
-                                                        <path className=" cls-1" d="M 5.355469 3.429688 C 6.066406 3.429688 6.644531 4.003906 6.644531 4.714844 C 6.644531 5.425781 6.066406 6 5.355469 6 C 4.648438 6 4.070312 5.425781 4.070312 4.714844 C 4.070312 4.003906 4.648438 3.429688 5.355469 3.429688 " />
-                                                        <path className=" cls-1" d="M 5.355469 8.289062 C 6.066406 8.289062 6.644531 8.863281 6.644531 9.574219 C 6.644531 10.285156 6.066406 10.859375 5.355469 10.859375 C 4.648438 10.859375 4.070312 10.285156 4.070312 9.574219 C 4.070312 8.863281 4.648438 8.289062 5.355469 8.289062 " />
-                                                        <path className=" cls-1" d="M 7.929688 15.28125 L 7.929688 13.570312 L 19.929688 13.570312 L 19.929688 15.28125 L 7.929688 15.28125 " />
-                                                        <path className=" cls-1" d="M 6.644531 14.425781 C 6.644531 15.136719 6.066406 15.710938 5.355469 15.710938 C 4.648438 15.710938 4.070312 15.136719 4.070312 14.425781 C 4.070312 13.714844 4.648438 13.140625 5.355469 13.140625 C 6.066406 13.140625 6.644531 13.714844 6.644531 14.425781 Z M 6.644531 14.425781 " />
-                                                        <path className=" cls-1" d="M 7.929688 20.144531 L 7.929688 18.429688 L 19.929688 18.429688 L 19.929688 20.144531 L 7.929688 20.144531 " />
-                                                        <path className=" cls-1" d="M 6.644531 19.285156 C 6.644531 19.996094 6.066406 20.570312 5.355469 20.570312 C 4.648438 20.570312 4.070312 19.996094 4.070312 19.285156 C 4.070312 18.574219 4.648438 18 5.355469 18 C 6.066406 18 6.644531 18.574219 6.644531 19.285156 Z M 6.644531 19.285156 " />
-                                                    </g>
-                                                </svg>
-
+                                                <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                 <b className="elm-text-assesment">{item.urn}</b></td>
                                         </tr>
                                     );
@@ -288,8 +282,8 @@ class ElmTable extends Component {
                                         <tbody>
                                             {(this.props.openedFrom == 'slateAssessment') && (item.type !== 'figure') && <tr className='rowClass'>
                                                 <td className='tdClass' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
-                                                <div className="descBox">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
-                                                <b className="elm-text-folder">{item.title}</b></td>
+                                                    <div className="descBox">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
+                                                    <b className="elm-text-folder">{item.title}</b></td>
                                             </tr>}
                                         </tbody>
                                     )
@@ -298,8 +292,8 @@ class ElmTable extends Component {
                         </table>
                     </div>
                     <div className="puf-footer">
-                        <button className="puf-button" onClick={this.props.closeElmWindow}>CANCEL</button>
-                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick ={this.sendPufAssessment}>ADD</button>
+                        <button className="puf-button cancel" onClick={this.props.closeElmWindow}>CANCEL</button>
+                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>ADD</button>
                     </div>
                 </div>
             );
@@ -308,8 +302,8 @@ class ElmTable extends Component {
 }
 
 
-export default connect((state)=>{
-console.log("elm state>>>>>",state.appStore.slateLevelData)
+export default connect((state) => {
+    console.log("appStore", state.appStore)
     return {
         getParentId: state.appStore.slateLevelData[0]
     }

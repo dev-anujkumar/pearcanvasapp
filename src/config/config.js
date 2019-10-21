@@ -10,7 +10,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "9BrZqdSW6lP4ZAivKRlIjsLXQvM.*AAJTSQACMDIAAlNLABxjYVZmeWl4b25NYzMwVGRUYi8xRWVrSktpUm89AAJTMQACMDE.*",
+    ssoToken: "VnOFcGDMa3UIkltsS6tKd-2viXA.*AAJTSQACMDIAAlNLABxobGhGMmN3dkVCaFhxc0g2eDQ5UE1zczdhZGc9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     userId: 'c5test01',
     userEmail : 'c5test01@mctest.local',
@@ -54,6 +54,7 @@ let config = {
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
+    book_title:"ELMTEST_StgEnv_Krajewski Test",
     WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin

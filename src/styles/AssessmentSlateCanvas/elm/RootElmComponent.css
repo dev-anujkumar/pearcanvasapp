@@ -42,3 +42,28 @@
 .elmWrapper {
   z-index: 1000;
 }
+
+.Header-close-button{
+  float: 'right';
+  margin-top: '14px';
+  margin-right: '15px';
+  margin-left: 360px;
+  cursor: pointer;
+}
+.headerBlock{
+  background-color: #d3d3d369;
+  border-bottom: solid 0.1px rgb(86, 83, 83);
+}
+.headerTitle{
+  font-family: 'Open Sans, sans-serif';
+  font-size: 12.5px;
+  color: #565353;
+  padding: 10px;
+  display: inline-block;
+}
+.headerContainer{
+  height: 35px;
+  background-color: White;
+  border-bottom: ridge darkgray;
+  border-width: 2px;    
+}

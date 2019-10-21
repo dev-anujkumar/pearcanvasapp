@@ -2,7 +2,6 @@
 * Root Component of Assessment Slate Canvas
 */
 
-
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import { connect } from 'react-redux';

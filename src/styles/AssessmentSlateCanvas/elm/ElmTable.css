@@ -5,6 +5,12 @@
     color: grey;
     height: 15px;
   }
+  .rowClass.select{
+    background-color: #dbf2e0;
+  }
+  .rowClass.notSelect{
+   background-color: white;
+  }
   .mainDiv {
     min-height: 325px;
     max-height: 325px;
@@ -26,7 +32,7 @@
     overflow: hidden;
     display:inline-block;
     max-width: 97%;
-    vertical-align: bottom;
+    /* vertical-align: bottom; */
   }
   .tableClass {
     border-collapse: collapse;
@@ -46,6 +52,21 @@
   .thClass, .tdClass {
     padding:8px 10px !important;
     cursor: pointer;
+    border:none;
+  }
+  th.rowClass{
+    border: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  .tdClass.sortIcon{
+     display:inline-block;
+     width: 6.5%;
+     color: black;
+     float: left;
+     margin-left: -3px;
+     border:none !important;
   }
   .puf-footer {
     min-height: 57px;
@@ -60,10 +81,15 @@
     font-family: Arial;
     left: 64%;
     padding: 10px 24px;
-    margin-top: 2%;
+    margin-top: 1.5%;
+  }
+  .cancel{
+    float: left;
+    margin-left: 378px;
   }
   .add-button {
-      margin-left: 20px;
+    float: left;
+    margin-left: 18px;
   }
 
  .add-button-enabled {
@@ -112,4 +138,29 @@
  .tdClass .cls-3{
   fill:rgb(0%,0%,0%);
   fill-opacity:1;
+ }
+ .elmAssessmentItem-icon{
+  margin-right : 6px;
+ }
+ .sort-icon{
+  background-color:white;
+  height:10px;
+   width: 0px;
+   float: left;
+    margin-left: 5px;
+    margin-top: 8px;
+    cursor: pointer;
+ }
+ .elm-navigateBck-icon{
+  /* vertical-align: middle; */
+   cursor: pointer;
+   display: flex;
+   float:left;
+ }
+ .elm-errorDiv{
+  text-align: center;
+  margin-top: 5%;
+ }
+ .elm-error-line{
+  margin-top: 2%;
  }

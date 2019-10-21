@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { AssessmentSlateCanvas } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateCanvas';
 import {assessmentSlateDefault} from "./../../../fixtures/AssessmentSlateCanvasTestingData";
-import config from '../../../src/config/config';
 import { c2AssessmentModule } from '../../../src/js/c2_assessment_module'
 describe('Testing Assessment Slate Canvas component', () => {
     test('renders without crashing', () => {
@@ -13,7 +12,7 @@ describe('Testing Assessment Slate Canvas component', () => {
     })
     let wrapper;
    
-    it('onClick', () => {
+    it('onClick - launch c2AssessmentModule function', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -39,7 +38,6 @@ describe('Testing Assessment Slate Canvas component', () => {
         })
         assessmentSlateInstance.forceUpdate();
     })
-
     it ('Set getAssessmentDataPopup', () => {
         let props = {
             handleFocus: function(){},
@@ -58,9 +56,8 @@ describe('Testing Assessment Slate Canvas component', () => {
            
             assessmentSlateInstance.forceUpdate();
             assessmentSlate.update();
-    })
-   
-    it('onClick', () => {
+    })   
+    it('Test- launchAssetBrowserCallBack function ', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -81,7 +78,7 @@ describe('Testing Assessment Slate Canvas component', () => {
         assessmentSlateInstance.launchAssetBrowserCallBack(assessmentData);
 
     })
-    it('onBlur', () => {
+    it('Test- onBlur', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -93,7 +90,7 @@ describe('Testing Assessment Slate Canvas component', () => {
         assessmentSlateInstance.handleAssessmentBlur();
     
     })
-    it('AddAssessment', () => {
+    it('Test- Add Assessment', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -108,12 +105,18 @@ describe('Testing Assessment Slate Canvas component', () => {
             expect(assessmentSlateInstance.state.assessmentId).toEqual("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5")
         
     });
-    it('UpdateAssessment ', () => {
+    it('Test- Update Assessment', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+        }
+        let pufObj={
+            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+            title:"Open response question updated",
+            assessmentFormat:"puf",
+            usagetype:"Quiz"
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -121,9 +124,9 @@ describe('Testing Assessment Slate Canvas component', () => {
         assessmentSlateInstance.forceUpdate();
             assessmentSlate.update();
             expect(assessmentSlateInstance.state.assessmentId).toEqual("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5")
-        
+            assessmentSlateInstance.addPufAssessment(pufObj);
     });
-    it('UpdateAssessment  slate canvas', () => {
+    it('Test- Select assessment type ', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
