@@ -94,7 +94,6 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        return false
         let node = document.getElementById(tinyMCE.activeEditor.id);
         let html = node.innerHTML;
         let text = node.innerText;
