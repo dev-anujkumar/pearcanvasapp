@@ -25,6 +25,7 @@ class RootElmComponent extends Component {
     })
     this.props.elmResource();
   }
+
   /*** @description - This function is to navigate back to parent hierarchy
    * @param- val - number of values in table
 */
@@ -33,6 +34,7 @@ class RootElmComponent extends Component {
       previousTableLength: val,
     })
   }
+
   /*** @description - This function is to close ELM-PUF PopUp
 */
   hidePufPopup = () => {
@@ -40,6 +42,7 @@ class RootElmComponent extends Component {
       hidePopup: true,
     })
   }
+
   /*** @description - This function is to pass props to elm-Header component
 */
   elmHeaderProps = {
