@@ -29,7 +29,7 @@ import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import arrowButton from '../../images/OpenerElement/arrow.png'
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
-import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {
