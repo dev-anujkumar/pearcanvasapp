@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 
 import '../../styles/Toolbar/Toolbar.css';
 import {toggleElemBordersAction} from './Toolbar_Actions.js';
-import {getPermissions} from '../../js/UserPermissions.js'
 
 const _Toolbar = props => {
     function _handleElemBorders () {
@@ -35,15 +34,15 @@ const _Toolbar = props => {
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
             <span className="spacer"></span>
-            {/* {props.getPermissions('toggle_element_page_no') && */}
+            {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
                 <div className='elemPageText'>
                     Element <br />Page Number
                 </div>
                 {_elemToggleBtnJsx('pageNumber')}
             </div>
-            {/* } */}
-            {/* {props.getPermissions('toggle_element_borders') && */}
+            }
+            {props.permissions.includes('toggle_element_borders') &&
                 <div className='element-borders'>
 
                     <div className='elemBorderText'>
@@ -51,7 +50,7 @@ const _Toolbar = props => {
                 </div>
                     {_elemToggleBtnJsx('border')}
                 </div>
-            {/* }   */}
+            }   
         </div>
     )
 }
@@ -59,13 +58,13 @@ const _Toolbar = props => {
 const mapStateToProps = (state) => {
     const {elemBorderToggle} = state.toolbarReducer.elemBorderToggle
     return {
-        elemBorderToggle
+        elemBorderToggle,
+        permissions : state.appStore.permissions,
     }
 }
 
 const mapActionToProps = {
-    toggleElemBorders : toggleElemBordersAction,
-    getPermissions : getPermissions
+    toggleElemBorders : toggleElemBordersAction
 }
 
 const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)
