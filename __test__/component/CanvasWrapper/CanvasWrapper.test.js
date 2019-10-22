@@ -100,7 +100,8 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = {
     appStore: {
-        slateLevelData: listMockData
+        slateLevelData: listMockData,
+        permissions: []
     },
     glossaryFootnoteReducer: {
         glossaryFootnoteValue: GlossaryMockState
