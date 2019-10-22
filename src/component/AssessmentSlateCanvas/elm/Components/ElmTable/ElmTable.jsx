@@ -23,11 +23,11 @@ class ElmTable extends Component {
             firstName: this.getProjectTitle() || "",
             parentTitle: "",
             currentAssessmentSelected: {},
-            sortFlag:true,
-            sortIcon:elmSortUp,
+            sortIcon:elmSortDown,
+            sortFlag:true
         },
             this.preparedData = [];
-
+        // this.sortFlag=true;
         this.renderTableData(this.props);
         this.timer = null;
 
@@ -167,17 +167,23 @@ class ElmTable extends Component {
     navigateBack = () => {
         this.filterData(this.state.parentUrn, this.props.apiData);
     }
+
     /*** @description - This function is to set the sort icon and call dynamicSort function
          * @param e- event triggered
         */
     setSort = () => {
+        // this.setState({
+        //     sortFlag :!this.state.sortFlag
+        // })
         if (this.state.sortFlag) {
             this.setState({sortIcon : elmSortUp}) 
+            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag});
         }
         else {
             this.setState({sortIcon : elmSortDown}) 
+            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag});
         }
-        this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag:!this.state.sortFlag});
+      //  this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: this.state.sortFlag});
 
         //sortFlag = !sortFlag;
     }
@@ -191,7 +197,7 @@ class ElmTable extends Component {
             sortOrder = -1;
             property = property.substr(1);
         }
-        return function (a, b) {
+        return  (a, b)=> {
             var result;
             var first = (a[property] ? a[property] : a.urn).toLowerCase();
             var second = (b[property] ? b[property] : b.urn).toLowerCase();
