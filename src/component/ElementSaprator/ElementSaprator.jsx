@@ -166,7 +166,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             </Tooltip>)
     })
 }
-   
+
 const mapStateToProps = state => {
     return {
         permissions : state.appStore.permissions

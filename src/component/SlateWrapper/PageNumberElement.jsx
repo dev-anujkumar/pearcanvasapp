@@ -8,7 +8,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 class PageNumber extends React.Component {
     constructor(props) {
@@ -105,6 +105,7 @@ class PageNumber extends React.Component {
 }
 
 PageNumber.displayName = "PageNumberElement"
+// export default PageNumber;
 
 const mapStateToProps = state => {
     return {

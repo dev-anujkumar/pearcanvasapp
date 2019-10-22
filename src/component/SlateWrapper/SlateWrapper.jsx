@@ -608,6 +608,7 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
+        console.log("permissions",this.props.permissions)
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
@@ -622,6 +623,7 @@ class SlateWrapper extends Component {
                                 index={index}
                                 esProps={this.elementSepratorProps(index, true)}
                                 elementType={element.type}
+                                permissions = {this.props.permissions}
                             />
                             : null
                              }
@@ -634,8 +636,8 @@ class SlateWrapper extends Component {
                                 showBlocker={this.props.showBlocker}
                             >
                             {
-                                   (isHovered, isPageNumberEnabled, activeElement) => (
-                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                   (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
+                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
                                    )
                                }
                            </ElementContainer>
@@ -646,6 +648,7 @@ class SlateWrapper extends Component {
                                 elementType=""
                                 slateType={_slateType}
                                 toggleSplitSlatePopup={this.toggleSplitSlatePopup}
+                                permissions = {this.props.permissions}
                             />
                             : null
                             }
@@ -724,7 +727,8 @@ SlateWrapper.propTypes = {
 const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateTitleUpdated:state.appStore.slateTitleUpdated
+        slateTitleUpdated:state.appStore.slateTitleUpdated,
+        permissions: state.appStore.permissions
     };
 };
 

@@ -66,7 +66,7 @@ class OpenerElement extends Component {
      * @param {e} event
      */
     handleC2MediaClick = (e) => {
-        const { slateLockInfo } = this.props
+        const { slateLockInfo , permissions } = this.props
         if(slateLockInfo.isLocked && config.userId != slateLockInfo.userId)
             return false
 
@@ -95,7 +95,7 @@ class OpenerElement extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
         } else {
-            if (this.props.permissions.includes('alfresco_crud_access')) {
+            if (permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                     c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                         c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -247,11 +247,5 @@ OpenerElement.propTypes = {
 
 OpenerElement.displayName = 'OpenerElement'
 
-const mapStateToProps = state => {
-    return {
-        permissions : state.appStore.permissions
-    }
-};
-
-export default connect(mapStateToProps, null)(OpenerElement);
+export default OpenerElement;
   

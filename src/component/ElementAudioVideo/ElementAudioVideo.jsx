@@ -217,10 +217,4 @@ ElementAudioVideo.propTypes = {
 
 }
 
-const mapStateToProps = state => {
-    return {
-        permissions : state.appStore.permissions
-    }
-};
-
-export default connect(mapStateToProps, null)(ElementAudioVideo);
+export default ElementAudioVideo;

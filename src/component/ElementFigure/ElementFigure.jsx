@@ -418,10 +418,4 @@ ElementFigure.propTypes = {
     onFocus: PropTypes.func
 }
 
-const mapStateToProps = state => {
-    return {
-        permissions : state.appStore.permissions
-    }
-};
-
-export default connect(mapStateToProps, null)(ElementFigure);
+export default ElementFigure;

@@ -238,76 +238,76 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo,permissions } = this.props;
         let labelText = fetchElementTag(element, index);
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
+                editor =<AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
 
             case elementTypeConstant.AUTHORED_TEXT:
-                editor = <ElementAuthoring  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                editor = <ElementLearningObjectiveItem  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.FIGURE:
                 switch (element.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Fg';
                         break;
                     case elementTypeConstant.FIGURE_TABLE:
-                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Tb';
                         break;
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}   handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'Eq';
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'MML';
                         break;
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'BCE';
                         break;
                     case elementTypeConstant.FIGURE_AUDIO:
-                        editor = <ElementAudioVideo currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'AUD';
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                         labelText = 'VID';
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
+                        editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
                         labelText = 'Qu';
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         switch (element.figuredata.interactiveformat) {
                             case elementTypeConstant.INTERACTIVE_MMI:
-                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlur}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                 break;
                             case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'SL';
                                 break;
                             case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}  handleFocus={this.handleFocus} handleBlur={this.handleBlurAside}  index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                 labelText = 'Pop';
                                 break;
                         }
@@ -315,29 +315,29 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
 
             case elementTypeConstant.ELEMENT_ASIDE:
                 switch (element.subtype) {
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}  setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}  btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
                 break;
                 
             case elementTypeConstant.METADATA_ANCHOR:
-                editor = <ElementMetaDataAnchor  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaDataAnchor permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'LO'
                 break;
                 
             case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                editor = <ElementMetaLOList  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'MA'
                 break;
         }
@@ -372,7 +372,7 @@ class ElementContainer extends Component {
                 {
                     <PageNumberContext.Consumer>
                         {
-                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement)
+                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement , this.props.permissions)
                         }
                     </PageNumberContext.Consumer>                    
                 }
