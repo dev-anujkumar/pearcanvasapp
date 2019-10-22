@@ -48,12 +48,11 @@ class RootElmComponent extends Component {
   };
 
   render() {
-    console.log("this.props.apiData", this.props)
     return (
-      <div className="vex-overlay elmWrapper">
-        <div className="rootContainer">
+      <div className="vex-overlay elm-wrapper">
+        <div className="root-container">
           <ElmHeader elmHeaderProps={this.elmHeaderProps} />
-          {this.props.errFlag == null ? <div className="elmLoader"></div> : <ElmTable errFlag={this.props.errFlag} errorStatus={this.props.errorStatus} apiData={this.props.apiData} {...this.props} navigateBack={this.navigateBack} hidePufPopup={this.hidePufPopup} usageTypeMetadata={this.props.usageTypeMetadata} />}
+          {this.props.errFlag == null ? <div className="elm-loader"></div> : <ElmTable errFlag={this.props.errFlag} errorStatus={this.props.errorStatus} apiData={this.props.apiData} {...this.props} navigateBack={this.navigateBack} hidePufPopup={this.hidePufPopup} usageTypeMetadata={this.props.usageTypeMetadata} />}
         </div>
       </div>
     );

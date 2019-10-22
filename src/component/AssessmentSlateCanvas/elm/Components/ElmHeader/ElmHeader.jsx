@@ -10,12 +10,12 @@ class ElmHeader extends Component {
         const { title } = this.props.elmHeaderProps;
 
         return (
-            <div className="headerContainer">
-                <div className="headerBlock">
-                    <h4 className="headerTitle">
+            <div className="header-container">
+                <div className="header-block">
+                    <h4 className="header-title">
                         {title}
                     </h4>
-                    <span className="Header-close-button"> <Button type="elmCloseWindowIcon" onClick={this.props.elmHeaderProps.closeElmWindow} />
+                    <span className="header-close-button"> <Button type="elmCloseWindowIcon" onClick={this.props.elmHeaderProps.closeElmWindow} />
                     </span>
                 </div>
             </div>

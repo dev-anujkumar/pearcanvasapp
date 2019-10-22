@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-var sortFlag = true;
-var sortIcon;
+ var sortIcon;
 
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTable extends Component {
@@ -23,7 +22,8 @@ class ElmTable extends Component {
             apiData: props.apiData,
             firstName: this.getProjectTitle() || "",
             parentTitle: "",
-            currentAssessmentSelected: {}
+            currentAssessmentSelected: {},
+            sortFlag:true,
         },
             this.preparedData = [];
         this.setSort();
@@ -42,8 +42,7 @@ class ElmTable extends Component {
      * @param currentProps- props
     */
     renderTableData = (currentProps) => {
-        console.log("currentProps.apiData", currentProps.apiData);
-        if (!currentProps.errFlag && currentProps.apiData) {
+            if (!currentProps.errFlag && currentProps.apiData) {
             this.filterData(currentProps.getParentId, currentProps.apiData);
         }
 
@@ -135,7 +134,6 @@ class ElmTable extends Component {
     }
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
-        let PROJECT_URN = config.projectUrn;
         let book_title = config.book_title;
         return book_title
         // return config.book_title
@@ -165,15 +163,18 @@ class ElmTable extends Component {
          * @param e- event triggered
         */
     setSort = () => {
-        if (sortFlag) {
+        // var sortIcon;
+        if (this.state.sortFlag) {
+            // this.setState({sortIcon : {elmSortUp}})  
             sortIcon = elmSortUp
         }
         else {
+            // this.setState({sortIcon : {elmSortUp}}) 
             sortIcon = elmSortDown
         }
-        this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null });
+        this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag:!this.state.sortFlag});
 
-        sortFlag = !sortFlag;
+        //sortFlag = !sortFlag;
     }
     /*** @description - This function is to sort table data based on parameters
          * @param property- sorting criteria
@@ -189,7 +190,7 @@ class ElmTable extends Component {
             var result;
             var first = (a[property] ? a[property] : a.urn).toLowerCase();
             var second = (b[property] ? b[property] : b.urn).toLowerCase();
-            if (sortFlag) {
+            if (this.state.sortFlag) {
                 result = (first < second) ? -1 : (first > second) ? 1 : 0;
             }
             else {
@@ -240,10 +241,10 @@ class ElmTable extends Component {
                 <div>
                     <div className='table-header'>
                         {(this.state.parentUrn > 1) ?
-                            <div className="elm-navigateBck-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
+                            <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                         <p className="title-header">{this.state.parentTitle}</p>
                     </div>
-                    <div className="elm-errorDiv">
+                    <div className="elm-error-div">
                         <p className="elm-error-line">
                             {this.props.errorStatus == 404 ? <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>**Error occured, Please try again!!!</i>}
                         </p>
@@ -256,22 +257,22 @@ class ElmTable extends Component {
                 <div>
                     <div className='table-header'>
                         {(this.state.parentUrn) ?
-                            <div className="elm-navigateBck-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
+                            <div className="elm-navigate-back-icon" onClick={this.navigateBack} >{elmNavigateBack}</div> : null}
                         <p className="title-header">{this.state.parentTitle}</p>
                     </div>
-                    <div className='mainDiv'>
-                        <table className='tableClass'>
+                    <div className='main-div'>
+                        <table className='table-class'>
                             <thead>
-                                <th className='rowClass'>
-                                    <td className='tdClass sortIcon'>Title</td>
+                                <th className='row-class'>
+                                    <td className='td-class sort-icon'>Title</td>
                                     <div className="sort-icon" onClick={() => this.setSort()}>{sortIcon}</div>
                                 </th>
                             </thead>
                             {this.state.tableValue.map((item, index) => {
                                 if (item.type == "assessment" && item.urn.includes("work")) {
                                     return (
-                                        <tr className={`rowClass ${this.state.isActive === index ? 'select' : 'notSelect'}`} key={index} onClick={() => this.toggleActive(index)}>
-                                            <td className='tdClass' key={index} onClick={() => this.addAssessment(item)}>
+                                        <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} key={index} onClick={() => this.toggleActive(index)}>
+                                            <td className='td-class' key={index} onClick={() => this.addAssessment(item)}>
                                                 <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                 <b className="elm-text-assesment">{item.urn}</b></td>
                                         </tr>
@@ -280,9 +281,9 @@ class ElmTable extends Component {
                                 else {
                                     return (
                                         <tbody>
-                                            {(this.props.openedFrom == 'slateAssessment') && (item.type !== 'figure') && <tr className='rowClass'>
-                                                <td className='tdClass' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
-                                                    <div className="descBox">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
+                                            {(this.props.openedFrom == 'slateAssessment') && (item.type !== 'figure') && <tr className='row-class'>
+                                                <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
+                                                    <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                                                     <b className="elm-text-folder">{item.title}</b></td>
                                             </tr>}
                                         </tbody>
@@ -303,7 +304,6 @@ class ElmTable extends Component {
 
 
 export default connect((state) => {
-    console.log("appStore", state.appStore)
     return {
         getParentId: state.appStore.slateLevelData[0]
     }

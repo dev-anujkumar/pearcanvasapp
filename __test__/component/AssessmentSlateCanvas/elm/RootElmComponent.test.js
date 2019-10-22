@@ -32,13 +32,8 @@ describe('ELM root component test', () => {
             closeElmWindow: function(){},
             addPufFunction: function(){},
             elmResource: function(){},
-            // apiData:{   
-            //     "numberOfResources": 88,
-            //     "contentUrn": "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e0",
-            //     "versionUrn": "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",}
-        }
+       }
         Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
-        console.log("store",store.getState());
         const div = document.createElement('div');
         ReactDOM.render(<Provider store={store}><RootElmComponent {...props}/></Provider>, div);
         ReactDOM.unmountComponentAtNode(div);

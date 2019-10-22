@@ -16,7 +16,7 @@ export const insertElmResourceAction = () => (dispatch) => {
      */
     // return function (dispatch) {
     //     return axios.get(`${config.ELM_END_POINT}v2/${project_urn}/alignments/resources`, {
-    return axios.get("https://contentapis-qa.pearsoncms.net/manifest-api/v2/urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef/alignments/resources", {
+    return axios.get(config.ELM_URL, {
         headers: headers
     }).then((res) => {
         dispatch({
