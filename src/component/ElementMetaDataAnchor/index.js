@@ -1,2 +1,2 @@
-import ElementMetaDataAnchor from './ElementMetaDataAnchor.jsx';
+import {ElementMetaDataAnchor} from './ElementMetaDataAnchor.jsx';
 export default ElementMetaDataAnchor;

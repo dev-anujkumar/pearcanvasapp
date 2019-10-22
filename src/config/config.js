@@ -13,7 +13,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "S4Zd9jSYfcIlwGDKkmDkXgfD6FM.*AAJTSQACMDIAAlNLABxDb2l5Q2FZcWpoVk5IeG14Yk1FaUREZExkajQ9AAJTMQACMDM.*",
+    ssoToken: "a6bOuDQkyhp8mNZTifpHh5Xfha0.*AAJTSQACMDIAAlNLABxzSEhrZFI0cXNtUnJIbnEzaTMzRXZZaEJrRlk9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -55,6 +55,9 @@ let config = {
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
+    book_title:"ELMTEST_StgEnv_Krajewski Test",
+    ELM_URL:"https://contentapis-qa.pearsoncms.net/manifest-api/v2/urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef/alignments/resources",
+    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
