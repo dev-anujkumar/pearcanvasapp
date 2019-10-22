@@ -28,6 +28,7 @@ class ElmTable extends Component {
             this.preparedData = [];
         this.setSort();
         this.renderTableData(this.props);
+        this.timer = null;
     }
 
     componentDidMount() {
@@ -46,7 +47,7 @@ class ElmTable extends Component {
             this.filterData(currentProps.getParentId, currentProps.apiData);
         }
 
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
             if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
             }
@@ -59,6 +60,11 @@ class ElmTable extends Component {
             return {
                 apiData: nextProps.apiData
             };
+        }
+    }
+    componentWillUnmount(){
+        if(this.timer){
+            clearTimeout(this.timer);
         }
     }
     /*** @description - This function is to filter table data based on parameters
