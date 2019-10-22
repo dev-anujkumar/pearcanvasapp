@@ -10,6 +10,7 @@ import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
 import ElementMetaLOList from '../ElementMetaLOList';
+import ElementLearningObjectiveItem from '../ElementLearningObjectiveItem';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
@@ -26,10 +27,10 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
+import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import arrowButton from '../../images/OpenerElement/arrow.png'
-import {AssessmentSlateCanvas} from './../AssessmentSlateCanvas/AssessmentSlateCanvas.jsx';
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
-import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
+import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
 
 class ElementContainer extends Component {
@@ -62,7 +63,7 @@ class ElementContainer extends Component {
 
   
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(newProps){      
+    componentWillReceiveProps(newProps){     
         if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
              if(newProps.elemBorderToggle){
                 this.setState({
@@ -224,12 +225,12 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = () => {
-        const {id, type}=this.props.element;
-        const {parentUrn,asideData} = this.props;
+        const { id, type, contentUrn } = this.props.element;
+        const { parentUrn, asideData } = this.props;
         this.handleCommentPopup(false);
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         // api needs to run from here
-        this.props.deleteElement(id, type,parentUrn,asideData);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
     }
 
     /**
@@ -255,6 +256,9 @@ class ElementContainer extends Component {
 
             case elementTypeConstant.AUTHORED_TEXT:
                 editor = <ElementAuthoring  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                break;
+            case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
+                editor = <ElementLearningObjectiveItem  openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
 
             case elementTypeConstant.BLOCKFEATURE:
@@ -324,7 +328,7 @@ class ElementContainer extends Component {
                         labelText = 'WE';
                         break;
                     default:
-                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker}setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        editor = <ElementAsideContainer   showDeleteElemPopup = {this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement = {this.props.setActiveElement} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} btnClassName = {this.state.btnClassName} borderToggle = {this.state.borderToggle} elemBorderToggle = {this.props.elemBorderToggle} elementSepratorProps = {elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = 'AS';
                 }
                 break;
@@ -387,10 +391,11 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup : false
         });
-        this.props.showBlocker(false);
-        hideBlocker();
+        if(this.props.isBlockerActive){
+            this.props.showBlocker(false)
+            hideBlocker();
+        }
     }
-
 
     /**
      * @description - This function is for handleChange of popup.
@@ -471,8 +476,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index) => {
             dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id , type,parentUrn,asideData)=>{
-            dispatch(deleteElement(id, type,parentUrn,asideData))
+        deleteElement: (id , type, parentUrn, asideData, contentUrn)=>{
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
         glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
             dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))

@@ -4,11 +4,15 @@ import tinymce from 'tinymce/tinymce';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
 
 xdescribe('Testing tinyMce  component with  props', () => {
-    const tinyMceEditor = mount( <TinyMceEditor   /> )
+    let props={
+        slateLockInfo:{
+            isLocked:false
+        },
+    }
+    const tinyMceEditor = mount( <TinyMceEditor {...props}  /> )
     let tinyMceEditorInstance = tinyMceEditor.find('TinyMceEditor').instance();
     it('render tinyMce Editor component ', () => {
         
-        console.log(tinyMceEditor.debug());
         expect(tinyMceEditor).toMatchSnapshot();
     })
 

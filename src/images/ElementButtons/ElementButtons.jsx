@@ -54,11 +54,11 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="22" x="0px" y="0px" viewBox="14 13 37 34">  
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="20" x="0px" y="0px" viewBox="14 13 37 34">  
             <g id="Artboard_5">
                 <rect width="64" height="64" fill="#fff"></rect>
                 <g id="Group_2311" transform="translate(-53 -403)">
-                <g id="Rectangle_1349" transform="translate(69 427)" stroke="rgb(67, 67, 67)" stroke-width="2">
+                <g id="Rectangle_1349" transform="translate(69 427)" stroke="rgb(67, 67, 67)" strokeWidth="2">
                     <rect x="1" y="1" width="30" height="22" fill="none"></rect>
                 </g>
                 <rect id="Rectangle_1350" data-name="Rectangle 1350" width="32" height="6" transform="translate(69 419)" fill="#434343"></rect>
@@ -115,13 +115,13 @@ export const lockIcon = (() => {
 })();
 export const metaDataAnchor = (function(){
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 50 50" class="test">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="10 10 50 50">
         <defs>
           <clipPath id="clip-Anchor">
             <rect width="64" height="64"/>
           </clipPath>
         </defs>
-        <g id="Anchor" clip-path="url(#clip-Anchor)">
+        <g id="Anchor" clipPath="url(#clip-Anchor)">
           <rect width="64" height="64" fill="#fff"/>
           <g id="sailor-anchor" transform="translate(12 11)">
             <g id="Group_2299" data-name="Group 2299" transform="translate(0)">
@@ -132,3 +132,68 @@ export const metaDataAnchor = (function(){
       </svg>
     )
 })()
+
+/***********************************************************ASSESSMENT SLATE -ELM SVGS ****************************************************/
+
+export const elmCloseWindowIcon = (()=>{
+    return (
+        <svg version="1.1" id="elm_CloseWindow" x="0px" y="0px" width="10px" height="10px" viewBox="0 0 357 357" xmlSpace="preserve">
+            <g>
+                <g id="close">
+                    <polygon points="357,35.7 321.3,0 178.5,142.8 35.7,0 0,35.7 142.8,178.5 0,321.3 35.7,357 178.5,214.2 321.3,357 357,321.3 
+                                    214.2,178.5"/>
+                </g>
+            </g>
+        </svg>
+    )
+})();
+
+export const elmAssessmentItem = (()=>{
+    return (
+        <svg id="assessmentSlate-item-icon" width="20" height="17" viewBox="0 0 24 24" version="1.1">
+        <g id="surface1">
+            <path className=" cls-3" d="M 2.390625 0 L 21.609375 0 C 22.929688 0 24 1.070312 24 2.390625 L 24 21.609375 C 24 22.929688 22.929688 24 21.609375 24 L 2.390625 24 C 1.070312 24 0 22.929688 0 21.609375 L 0 2.390625 C 0 1.070312 1.070312 0 2.390625 0 Z M 2.390625 0 " />
+            <path className=" cls-2" d="M 2.390625 0 L 21.609375 0 C 22.929688 0 24 1.070312 24 2.390625 L 24 21.609375 C 24 22.929688 22.929688 24 21.609375 24 L 2.390625 24 C 1.070312 24 0 22.929688 0 21.609375 L 0 2.390625 C 0 1.070312 1.070312 0 2.390625 0 Z M 2.390625 0 " />
+            <path className=" cls-1" d="M 7.929688 3.855469 L 19.929688 3.855469 L 19.929688 5.570312 L 7.929688 5.570312 L 7.929688 3.855469 " />
+            <path className=" cls-1" d="M 7.929688 10.429688 L 7.929688 8.71875 L 19.929688 8.71875 L 19.929688 10.429688 L 7.929688 10.429688 " />
+            <path className=" cls-1" d="M 5.355469 3.429688 C 6.066406 3.429688 6.644531 4.003906 6.644531 4.714844 C 6.644531 5.425781 6.066406 6 5.355469 6 C 4.648438 6 4.070312 5.425781 4.070312 4.714844 C 4.070312 4.003906 4.648438 3.429688 5.355469 3.429688 " />
+            <path className=" cls-1" d="M 5.355469 8.289062 C 6.066406 8.289062 6.644531 8.863281 6.644531 9.574219 C 6.644531 10.285156 6.066406 10.859375 5.355469 10.859375 C 4.648438 10.859375 4.070312 10.285156 4.070312 9.574219 C 4.070312 8.863281 4.648438 8.289062 5.355469 8.289062 " />
+            <path className=" cls-1" d="M 7.929688 15.28125 L 7.929688 13.570312 L 19.929688 13.570312 L 19.929688 15.28125 L 7.929688 15.28125 " />
+            <path className=" cls-1" d="M 6.644531 14.425781 C 6.644531 15.136719 6.066406 15.710938 5.355469 15.710938 C 4.648438 15.710938 4.070312 15.136719 4.070312 14.425781 C 4.070312 13.714844 4.648438 13.140625 5.355469 13.140625 C 6.066406 13.140625 6.644531 13.714844 6.644531 14.425781 Z M 6.644531 14.425781 " />
+            <path className=" cls-1" d="M 7.929688 20.144531 L 7.929688 18.429688 L 19.929688 18.429688 L 19.929688 20.144531 L 7.929688 20.144531 " />
+            <path className=" cls-1" d="M 6.644531 19.285156 C 6.644531 19.996094 6.066406 20.570312 5.355469 20.570312 C 4.648438 20.570312 4.070312 19.996094 4.070312 19.285156 C 4.070312 18.574219 4.648438 18 5.355469 18 C 6.066406 18 6.644531 18.574219 6.644531 19.285156 Z M 6.644531 19.285156 " />
+        </g>
+    </svg>
+        )
+    })();
+
+export const elmSortUp = (()=>{
+        return (      
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 31.49 31.49" xmlSpace="preserve" width="15" height="10" transform="rotate(90)">
+        <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111
+            C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587
+            c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
+        </svg>
+        )
+    })();
+
+export const elmSortDown = (()=>{
+        return (      
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 31.49 31.49" xmlSpace="preserve" width="15" height="10" transform="rotate(-90)">
+        <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111
+            C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587
+            c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
+        </svg>
+        )
+    })();
+
+export const elmNavigateBack = (()=>{
+        return ( 
+            <svg fill='rgb(86, 83, 83)' transform="rotate(-90)" width="15" height="15" viewBox="0 0 24 24">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>     
+            )
+        })();

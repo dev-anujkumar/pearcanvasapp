@@ -1,5 +1,8 @@
 let config = {
-    REACT_APP_API_URL : "https://10.11.7.24:8443/cypress-api/",
+    // https://test-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/
+    // JAVA_ENDPOINT: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/app/toc-javaapp/v2' : '/cypress/toc-srvr/app/toc-javaapp/v2',
+    // "https://10.11.7.24:8443/cypress-api/"
+    REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-qa.pearsoncms.net/manifest-api/",
@@ -10,11 +13,8 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "mlWJMwMBB1f3ATPFQrRwdL3vUus.*AAJTSQACMDIAAlNLABxBeURTYStzN0Zub0JGNUZSaGdpNDRuWXZsbXM9AAJTMQACMDQ.*",
+    ssoToken: "a6bOuDQkyhp8mNZTifpHh5Xfha0.*AAJTSQACMDIAAlNLABxzSEhrZFI0cXNtUnJIbnEzaTMzRXZZaEJrRlk9AAJTMQACMDE.*",
     alfrescoMetaData : {},
-    userId: 'c5test01',
-    userEmail : 'c5test01@mctest.local',
-    assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     parentContainerUrn:"",
@@ -54,7 +54,10 @@ let config = {
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
+    book_title:"ELMTEST_StgEnv_Krajewski Test",
+    ELM_URL:"https://contentapis-qa.pearsoncms.net/manifest-api/v2/urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef/alignments/resources",
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
@@ -69,5 +72,11 @@ let config = {
     isCO : false,
     isLOL:false
 };
+if (process.env.NODE_ENV === "development") {
+    config.userName = 'c5test01';
+    config.userId= 'c5test01';
+    config.userEmail = 'c5test01@mctest.local';
+    config.assignee='c5test01';
+}
 
 export default config;

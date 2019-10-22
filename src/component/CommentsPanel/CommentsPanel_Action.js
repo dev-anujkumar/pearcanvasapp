@@ -28,7 +28,7 @@ let headers = {
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-    return axios.get(url, {
+    return axios.get(url, "",{
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -108,7 +108,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             });
 
         }).catch(error => {
-            console.log("Failed to add reply", error);
+            //console.log("Failed to add reply", error);
         })
 };
 
@@ -135,7 +135,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             });
 
         }).catch(error => {
-            console.log("status update fail", error);
+            //console.log("status update fail", error);
         })
 };
 
@@ -159,7 +159,7 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
             payload: { commentUrn, updateComment: updateComment.comment }
         });
     }).catch(error => {
-        console.log("status update fail", error);
+        //console.log("status update fail", error);
     })
 };
 
@@ -184,7 +184,7 @@ export const getProjectUsers = () => dispatch => {
                 payload: response.data
             });
         }).catch(error => {
-            console.log("error while getting user", error);
+            //console.log("error while getting user", error);
         })
 }
 
@@ -209,7 +209,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
             payload: { commentUrn, newAssignee: newAssignee }
         });
     }).catch(error => {
-        console.log("error while updating user", error);
+        //console.log("error while updating user", error);
     })
 
 }
@@ -223,14 +223,14 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-    return axios.delete(url, { headers, headers })
+    return axios.delete(url,{ headers: headers })
         .then(response => {
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
         }).catch(error => {
-            console.log("error while updating user", error);
+            //console.log("error while updating user", error);
         })
 
 }
