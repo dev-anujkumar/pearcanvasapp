@@ -300,9 +300,6 @@ class SlateWrapper extends Component {
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
-                            <LargeLoader />
-                            <LargeLoader />
-                            <LargeLoader />
                         </React.Fragment>
                     )
                 }
