@@ -55,7 +55,6 @@ let config = {
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     book_title:"ELMTEST_StgEnv_Krajewski Test",
-    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
@@ -66,7 +65,6 @@ let config = {
         PATTERN_VENDOR: process.env.PATTERN_VENDOR || 'https://component-lib-stg.pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js',
         PATTERN_SEARCH_SELECT: process.env.PATTERN_SEARCH_SELECT || 'https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js',
     },
-    
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
     isCO : false,
     isLOL:false
