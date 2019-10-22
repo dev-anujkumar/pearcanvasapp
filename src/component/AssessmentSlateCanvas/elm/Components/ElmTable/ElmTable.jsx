@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
- var sortIcon;
+
 
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTable extends Component {
@@ -24,11 +24,13 @@ class ElmTable extends Component {
             parentTitle: "",
             currentAssessmentSelected: {},
             sortFlag:true,
+            sortIcon:elmSortUp,
         },
             this.preparedData = [];
-        this.setSort();
+
         this.renderTableData(this.props);
         this.timer = null;
+
     }
 
     componentDidMount() {
@@ -169,14 +171,11 @@ class ElmTable extends Component {
          * @param e- event triggered
         */
     setSort = () => {
-        // var sortIcon;
         if (this.state.sortFlag) {
-            // this.setState({sortIcon : {elmSortUp}})  
-            sortIcon = elmSortUp
+            this.setState({sortIcon : elmSortUp}) 
         }
         else {
-            // this.setState({sortIcon : {elmSortUp}}) 
-            sortIcon = elmSortDown
+            this.setState({sortIcon : elmSortDown}) 
         }
         this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag:!this.state.sortFlag});
 
@@ -271,7 +270,7 @@ class ElmTable extends Component {
                             <thead>
                                 <th className='row-class'>
                                     <td className='td-class sort-icon'>Title</td>
-                                    <div className="sort-icon" onClick={() => this.setSort()}>{sortIcon}</div>
+                                    <div className="sort-icon" onClick={() => this.setSort()}>{this.state.sortIcon}</div>
                                 </th>
                             </thead>
                             {this.state.tableValue.map((item, index) => {
