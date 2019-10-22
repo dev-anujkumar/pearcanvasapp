@@ -66,6 +66,7 @@ let config = {
         PATTERN_VENDOR: process.env.PATTERN_VENDOR || 'https://component-lib-stg.pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js',
         PATTERN_SEARCH_SELECT: process.env.PATTERN_SEARCH_SELECT || 'https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js',
     },
+    
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
     isCO : false,
     isLOL:false
