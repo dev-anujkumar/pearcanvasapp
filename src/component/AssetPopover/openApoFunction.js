@@ -31,9 +31,9 @@ export const authorAssetPopOver = (toggleApoPopup, apoObject={}) => {
     let showApoCurrentlyLinked, currentlyLinkedImageData;
     if (Object.keys(apoObject).length) {
         //api call
-        getCurrentlyLinkedImage(apoObject.dataUrn, (currentlyLinkedImageData) => {
+        getCurrentlyLinkedImage(apoObject.dataUrn, (resCurrentlyLinkedImageData) => {
             showApoCurrentlyLinked = true
-            currentlyLinkedImageData = currentlyLinkedImageData[0]
+            currentlyLinkedImageData = resCurrentlyLinkedImageData[0]
         })
     } else {
         //No data associated
