@@ -1,6 +1,8 @@
-//This component generate a card for each search result given to it
+/**
+ * This component generate a card for each search result given to it
+ */
 
-import React, { Component } from 'react';
+import React from 'react';
 
 const FigureCard= (props) => {
     return (
@@ -14,7 +16,6 @@ const FigureCard= (props) => {
                     onChange={(e) => props.selectedFigure(props.figureDetails)}
                     id = {props.forInputKey}
                     />{props.title}
-                    
             </section>    
     );
 }

@@ -1,3 +1,6 @@
+/**
+ * Root Component for Element Picker
+ */
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
@@ -10,12 +13,11 @@ export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
     const { esProps, elementType, slateType, sectionBreak } = props
     let buttonRef = useRef(null)
+
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
      */
-
-
     useEffect(() => {
         document.addEventListener('mousedown', (event) => {
             let elems = getParents(event.target)
@@ -42,17 +44,21 @@ export default function ElementSaprator(props) {
         setShowClass(!showClass)
     }
 
+    /**
+     * Get parent nodes of a dom node
+     * @param {Element node} elem 
+     */
     function getParents(elem) {
-        // Set up a parent array
         var parents = [];
-        // Push each parent element to the array
         for (; elem && elem !== document; elem = elem.parentNode) {
             parents.push(elem.className);
         }
-        // Return our parent array
         return parents;
     };
 
+    /**
+     * Close dropdown
+     */
     function closeDropDown () {
         setShowClass(false);
     }
@@ -66,15 +72,13 @@ export default function ElementSaprator(props) {
     
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
-                <div className='elemDiv-split'>
-                    {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                       { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
-                </div>
-
+            <div className='elemDiv-split'>
+                {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
+            </div>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
@@ -91,6 +95,9 @@ export default function ElementSaprator(props) {
     )
 }
 
+/**
+ * Default props for Element Saprator
+ */
 ElementSaprator.propTypes = {
     esProps: PropTypes.array.isRequired,
     elementType: PropTypes.string
@@ -113,31 +120,32 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
         // hide the metadata anchor on IS when its once created
         if(config.isLOL){
             let elements= document.getElementsByClassName("metadata-anchor");
-            var i;
             for(var key in elements){
                 if(elements[key].className){  elements[key].className += " disabled";}
              } 
         }
+
         if(!config.isCO) {
             updatedEsProps = esProps.filter((btnObj) => {
                 return btnObj.buttonType !== 'section-break-elem';
             })
-        } else {
+        }else{
             updatedEsProps = esProps.filter((btnObj) => {
                 return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
             })
         }
-        
-    } else {
+
+    }else{
         updatedEsProps = esProps.filter((btnObj) => {
             return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
         })
     }
+
     //hide the metadata anchor from frontmatter and backmatter
     if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
         updatedEsProps = esProps.filter((btnObj) => {
         return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
-    })
+        })
     }
 
     if(elementType == 'element-aside'){
@@ -145,7 +153,6 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             if(sectionBreak){
                 return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
             }else{
-                // return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
                 return btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
             }
         })
@@ -162,6 +169,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
                 <li key={key}>
                     <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                 </li>
-            </Tooltip>)
+            </Tooltip>
+        )
     })
 }
