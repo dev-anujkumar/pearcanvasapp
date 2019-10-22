@@ -7,6 +7,6 @@ import {
  */
 export const toggleElemBordersAction = () => {
     return {
-        type : TOGGLE_BORDERS
+        type: TOGGLE_BORDERS
     }
 }

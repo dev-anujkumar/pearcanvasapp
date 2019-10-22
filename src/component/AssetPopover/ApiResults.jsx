@@ -40,12 +40,11 @@ class ApiResults extends React.Component {
             cardForApiResults = tempFiguresForResults.map((value, index) => {
                 return <FigureCard forInputKey={index} key={index} figureDetails={value} title={value.title} path={value.path} selectedFigure={selectedFigure} />
             });
-            return cardForApiResults;
         } else {
             let errorMsg = "No Match found! ";
             cardForApiResults = <ErrorComp errorMsg={errorMsg} />
-            return cardForApiResults;
         }
+        return cardForApiResults;
     }
 
     render() {

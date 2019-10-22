@@ -2,7 +2,12 @@ import Axios from "axios";
 import store from '../../appstore/store.js';
 import {
   APO_SEARCH_SAVE,
-  APO_BUTTON
+  APO_BUTTON,
+  TOGGLE_APO_SEARCH,
+  REMOVE_ASSET_LINK,
+  SELECTED_FIGURE,
+  USE_STATE_IMAGE_DATA,
+  IMAGES_FROM_API
 } from '../../constants/Action_Constants';
 const config = require('../../config/config.js');
 const API_URL = config.API_URL
@@ -123,7 +128,7 @@ let mockData = {
 //Action for render currently linked figure data
 export const apoSearchCloseAction = () => {
   return {
-    type: 'TOGGLE_APO_SEARCH',
+    type: TOGGLE_APO_SEARCH,
     payload: {
       apoObject: {},
       toggleApo: false,
@@ -133,7 +138,7 @@ export const apoSearchCloseAction = () => {
 
 export const removeAssetLinkAction = () => {
   return {
-    type: 'REMOVE_ASSET_LINK',
+    type: REMOVE_ASSET_LINK,
     payload: {
       removeAssetLink: true
     }
@@ -143,7 +148,7 @@ export const removeAssetLinkAction = () => {
 //Action for selected figure
 export const selectedFigureAction = (selectedFigure) => {
   return {
-    type: 'SELECTED_FIGURE',
+    type: SELECTED_FIGURE,
     payload: {
       selectedFigure: selectedFigure
     }
@@ -197,7 +202,7 @@ export const getCurrentlyLinkedImage = (id, cb) => {
 //       })
 //     }).then(res => res.json()).then(
 //       data => dispatch({
-//         type: 'IMAGES_FROM_API',
+//         type: IMAGES_FROM_API,
 //         payload: {
 //           images: data.images,
 //           searchTerm: searchTerm,
@@ -205,7 +210,7 @@ export const getCurrentlyLinkedImage = (id, cb) => {
 //         }
 //       }),
 //       err => dispatch({
-//         type: 'IMAGES_FROM_API_FAIL',
+//         type: IMAGES_FROM_API_FAIL,
 //         payload: err
 //       })
 //     ).catch(error => console.log('this is error while fetching from api', error))
@@ -214,7 +219,7 @@ export const getCurrentlyLinkedImage = (id, cb) => {
 
 export const assetPopoverPopup = (args) => {
   return {
-    type: 'TOGGLE_APO_SEARCH',
+    type: TOGGLE_APO_SEARCH,
     payload: {
       apoObject: {},
       toggleApo: args,
@@ -225,6 +230,7 @@ export const assetPopoverPopup = (args) => {
 
 /**
  * Callback for asset popover ID
+ * hardcoded 'xyz' due to API
  */
 export const getAssetPopoverId = (cb) => {
   return cb("xyz")
@@ -236,14 +242,14 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
   if (stateImageData.length > 0) { // hit api and store data in imageData
     //We have image data now dispatch an action for render filter data 
     return store.dispatch({
-      type: 'USE_STATE_IMAGE_DATA',
+      type: USE_STATE_IMAGE_DATA,
       payload: {
         searchTerm: searchTerm
       }
     }).catch(error => console.log("this is error while dispatching", error))
   } else {
     return store.dispatch({
-      type: 'IMAGES_FROM_API',
+      type: IMAGES_FROM_API,
       payload: {
         images: mockData.images,
         searchTerm: searchTerm,

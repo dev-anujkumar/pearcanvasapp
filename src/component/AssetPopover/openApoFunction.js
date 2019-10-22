@@ -3,7 +3,11 @@
  */
 
 import store from '../../appstore/store.js';
-import { getAssetPopoverId, getCurrentlyLinkedImage } from './AssetPopover_Actions.js'
+import {
+    getAssetPopoverId,
+    getCurrentlyLinkedImage
+} from './AssetPopover_Actions.js'
+import {TOGGLE_APO_SEARCH} from '../../constants/Action_Constants';
 
 /**
  * Responsable for opening assetpopover
@@ -14,7 +18,7 @@ export const openApoSearchFunction = (apoObject) => {
         showApoCurrentlyLinked = true;
     }
     store.dispatch({
-        type: 'TOGGLE_APO_SEARCH',
+        type: TOGGLE_APO_SEARCH,
         payload: {
             apoObject: apoObject,
             toggleApo: true,
@@ -26,23 +30,18 @@ export const openApoSearchFunction = (apoObject) => {
 /**
  * Middleware function b/w assetpopover and parent component
  */
-export const authorAssetPopOver = (toggleApoPopup, apoObject={}) => {
+export const authorAssetPopOver = (toggleApoPopup, apoObject = {}) => {
     // Get currently linked data
-    let showApoCurrentlyLinked, currentlyLinkedImageData;
+    let showApoCurrentlyLinked = false, currentlyLinkedImageData = {};
     if (Object.keys(apoObject).length) {
         //api call
         getCurrentlyLinkedImage(apoObject.dataUrn, (resCurrentlyLinkedImageData) => {
             showApoCurrentlyLinked = true
             currentlyLinkedImageData = resCurrentlyLinkedImageData[0]
         })
-    } else {
-        //No data associated
-        showApoCurrentlyLinked = false
-        currentlyLinkedImageData = {},
-        apoObject = {}
     }
     store.dispatch({
-        type: 'TOGGLE_APO_SEARCH',
+        type: TOGGLE_APO_SEARCH,
         payload: {
             apoObject: apoObject,
             toggleApo: toggleApoPopup,
@@ -78,7 +77,7 @@ export const saveAssetLinkedMedia = (apoObject, imageObj) => {
  * Handler for clear assetpopover link
  * @param {Id of assetpopover} assetPopoverID 
  */
-export const clearAssetPopoverLink =(assetPopoverID) => {
+export const clearAssetPopoverLink = (assetPopoverID) => {
     let domNode = document.querySelector('abbr[asset-id="' + assetPopoverID + '"');
     let originalText = domNode.innerHTML;
     domNode.outerHTML = originalText;
