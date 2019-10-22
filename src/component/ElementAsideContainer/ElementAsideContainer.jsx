@@ -292,7 +292,7 @@ class ElementAsideContainer extends Component {
                         showSectionBreak = (elementLength == index + 1)? true:false
                         return (
                             <React.Fragment key={`elem-aside-${element.id}`}>
-                                {index === 0 && this.state.weOrAside && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+                                {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
                                     upperOne={true}
                                     index={index}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}

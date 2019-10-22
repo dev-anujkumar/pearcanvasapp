@@ -55,7 +55,7 @@ export class CanvasWrapper extends Component {
 
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
-        // this.props.fetchSlateData(this.state.activeSlate);
+        this.props.fetchSlateData(this.state.activeSlate);
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
         sendDataToIframe({
             'type': CanvasIframeLoaded,
