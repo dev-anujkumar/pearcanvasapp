@@ -64,12 +64,28 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
 }
 
 
-export const deleteElement = (elmId, type, parentUrn,asideData) => (dispatch, getState) => {
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "entityUrn": parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
-        "workUrn": elmId
-    };
+
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
+
+    const prepareDeleteRequestData = (type) => {
+        switch (type){
+            case "element-workedexample":
+            case "element-aside":
+                return {
+                    "projectUrn": config.projectUrn,
+                    "entityUrn": contentUrn
+                }
+            default:
+                return {
+                    "projectUrn": config.projectUrn,
+                    "entityUrn": parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
+                    "workUrn": elmId
+                }
+        }
+    }
+
+    let _requestData = prepareDeleteRequestData(type)
+
     axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
