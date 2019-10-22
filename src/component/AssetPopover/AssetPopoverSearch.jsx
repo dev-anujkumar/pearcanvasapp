@@ -7,10 +7,9 @@
 import  React from 'react';
 import { connect } from 'react-redux';
 
-import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction,removeAssetLinkAction } from './AssetPopover_Actions.js';
+import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction } from './AssetPopover_Actions.js';
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
-
 import { saveAssetLinkedMedia, clearAssetPopoverLink} from './openApoFunction.js';
 const config = require('../../config/config.js')
 const WRAPPER_URL = config.WRAPPER_URL;
@@ -54,15 +53,16 @@ class AssetPopoverSearch extends React.Component {
      *Function for setting state when any figure selected and store that id for future implementation 
      *Args comming from figurecard onChange
      */
-    selectedFigure = (args) => {
-        this.props.selectedFigure(args);
+    selectedFigure = (figureData) => {
+        this.props.selectedFigure(figureData);
     }
 
     /**
      * Remove link 
     */
     removeLink = () => {
-        clearAssetPopoverLink(this.props.apoObject.assetId)
+        let assetId = this.props.apoObject && this.props.apoObject.assetId;
+        clearAssetPopoverLink(assetId)
         this.apoSearchClose(); 
     }
 
@@ -126,6 +126,7 @@ class AssetPopoverSearch extends React.Component {
 
     render() {
         const stateImageData = this.props.figures;
+        const {showApoFooter, showApoBody, figureIsSelected, showApoCurrentlyLinked, noSearchResultFound, searchTerm} = this.props;
         return (
             <div>
                <div className= "containerApo">
@@ -137,13 +138,13 @@ class AssetPopoverSearch extends React.Component {
                         <label className= "modal__close" onClick= { this.apoSearchClose}></label>
                     </section>
 
-                    {this.props.showApoCurrentlyLinked ? this.currentlyLinkedJsx(): ''} 
+                    {showApoCurrentlyLinked ? this.currentlyLinkedJsx(): ''} 
 
                     {/* If showApoBody is true then -
                                             if noSearchResultFound is true show error else results */}
-                    {this.props.showApoBody  ? this.apoBodyJsx(this.props.searchTerm) :''} 
+                    {showApoBody  ? this.apoBodyJsx(searchTerm) :''} 
 
-                    {this.props.showApoFooter ? this.apoFooterJsx(this.props.figureIsSelected, this.props.showApoCurrentlyLinked, this.props.showApoBody, this.props.noSearchResultFound) : ''}
+                    {showApoFooter ? this.apoFooterJsx(figureIsSelected, showApoCurrentlyLinked, showApoBody, noSearchResultFound) : ''}
 
                </div>
                     <div className = 'blockerBgDiv' tabIndex="0" onClick = {this.hideAPOOnOuterClick}></div>
@@ -168,19 +169,20 @@ const mapActionToProps = {
  * Get State as a props here in this component
  */
 const mapStateToProps = (state, props) => {
+    const {figures, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData} = state.assetPopOverSearch;
     return {
-        figures : state.assetPopOverSearch.figures,
-        showApoCurrentlyLinked : state.assetPopOverSearch.showApoCurrentlyLinked,
-        showApoBody : state.assetPopOverSearch.showApoBody,
-        showApoFooter : state.assetPopOverSearch.showApoFooter,
-        selectedFigureValue : state.assetPopOverSearch.selectedFigureValue,
-        noSearchResultFound : state.assetPopOverSearch.noSearchResultFound,
-        figureIsSelected : state.assetPopOverSearch.figureIsSelected,
-        apoObject : state.assetPopOverSearch.apoObject,
-        searchTerm : state.assetPopOverSearch.searchTerm,
-        figureDetails : state.assetPopOverSearch.figureDetails,
-        timeByAPI : state.assetPopOverSearch.timeByAPI,
-        currentlyLinkedImageData : state.assetPopOverSearch.currentlyLinkedImageData
+        figures,
+        showApoCurrentlyLinked,
+        showApoBody,
+        showApoFooter,
+        selectedFigureValue,
+        noSearchResultFound,
+        figureIsSelected,
+        apoObject,
+        searchTerm,
+        figureDetails,
+        timeByAPI,
+        currentlyLinkedImageData
     }
 }
  

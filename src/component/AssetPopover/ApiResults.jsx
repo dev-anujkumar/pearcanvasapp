@@ -17,7 +17,7 @@ class ApiResults extends React.Component {
     //component with some props
     apiResultsJsx = (figuresForResults, selectedFigure, ValueToBeSearch) => {
         let cardForApiResults
-        var tempFiguresForResults, figureDataLength
+        var tempFiguresForResults = [], figureDataLength
 
         if (ValueToBeSearch && figuresForResults) {
             tempFiguresForResults = figuresForResults.filter((value, index, array) => {
@@ -25,8 +25,6 @@ class ApiResults extends React.Component {
                     return value.title.toUpperCase().includes(ValueToBeSearch.toUpperCase());
                 }
             });
-        } else {
-            tempFiguresForResults = [];
         }
 
         figureDataLength = tempFiguresForResults.length;
@@ -38,7 +36,7 @@ class ApiResults extends React.Component {
         }
         //If number figureforresults has 1> elements then muild cards otherwise 
         //No result found for this search term
-        if (tempFiguresForResults.length >= 1) {
+        if (figureDataLength >= 1) {
             cardForApiResults = tempFiguresForResults.map((value, index) => {
                 return <FigureCard forInputKey={index} key={index} figureDetails={value} title={value.title} path={value.path} selectedFigure={selectedFigure} />
             });
@@ -52,10 +50,12 @@ class ApiResults extends React.Component {
 
     render() {
         let noOfFigures = this.state.figureDataLength ? this.state.figureDataLength : '0';
+        const {figures, selectedFigure, ValueToBeSearch} = this.props;
+
         return (
             <div>
                 <h3 className="figureCount">Figures ({noOfFigures})</h3>
-                {this.apiResultsJsx(this.props.figures, this.props.selectedFigure, this.props.ValueToBeSearch)}
+                {this.apiResultsJsx(figures, selectedFigure, ValueToBeSearch)}
                 <hr />
             </div>
         )

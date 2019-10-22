@@ -20,8 +20,9 @@ export default function ElementSaprator(props) {
      */
     useEffect(() => {
         document.addEventListener('mousedown', (event) => {
-            let elems = getParents(event.target)
-            let dropdown = 'dropdown'
+            let elems, dropdown
+            elems = getParents(event.target)
+            dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
             }
@@ -114,15 +115,15 @@ export function addMediaClickHandler() {
  * @description: rendering the dropdown
  */
 export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
-    let updatedEsProps;
+    let updatedEsProps, buttonType;
 
     if(config.slateType == 'container-introduction' && (!config.isCO || config.isLOL)){
         // hide the metadata anchor on IS when its once created
         if(config.isLOL){
             let elements= document.getElementsByClassName("metadata-anchor");
-            for(var key in elements){
+            for(let key in elements){
                 if(elements[key].className){  elements[key].className += " disabled";}
-             } 
+            } 
         }
 
         if(!config.isCO) {
@@ -131,29 +132,33 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
             })
         }else{
             updatedEsProps = esProps.filter((btnObj) => {
-                return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+                buttonType = btnObj.buttonType;
+                return buttonType !== 'section-break-elem' && buttonType !== 'opener-elem';
             })
         }
 
     }else{
         updatedEsProps = esProps.filter((btnObj) => {
-            return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            buttonType = btnObj.buttonType;
+            return buttonType !== 'section-break-elem' && buttonType !== 'opener-elem';
         })
     }
 
     //hide the metadata anchor from frontmatter and backmatter
     if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
         updatedEsProps = esProps.filter((btnObj) => {
-        return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            buttonType = btnObj.buttonType;
+            return  buttonType !=='metadata-anchor' && buttonType !== 'section-break-elem' && buttonType !== 'opener-elem';
         })
     }
 
     if(elementType == 'element-aside'){
         updatedEsProps = esProps.filter((btnObj) => {
+            buttonType = btnObj.buttonType;
             if(sectionBreak){
-                return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
+                return  buttonType !=='worked-exp-elem' && buttonType !== 'container-elem' && buttonType !== 'opener-elem';
             }else{
-                return btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+                return buttonType !== 'opener-elem' && buttonType !== 'section-break-elem';
             }
         })
     }
