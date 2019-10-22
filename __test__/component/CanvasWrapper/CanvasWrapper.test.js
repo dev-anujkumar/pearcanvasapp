@@ -164,5 +164,10 @@ describe('Testing <CanvasWrapper> Component', () => {
             canvasWrapperInstance.handleCommentspanel()
         })
     })
-
+    describe('Testing communication channel', () => {
+        let channelInstance = wrapper.find('CommunicationWrapper').instance();
+        test('get channel ins',()=>{
+            
+        })
+    })
 })
