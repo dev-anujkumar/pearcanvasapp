@@ -4,10 +4,14 @@ import ElementAuthoring from '../../../src/component/ElementAuthoring/ElementAut
 
 xdescribe('Testing Element  component with props', () => {
     let type = "element-authoredtext";
-    const elementAuthoring = mount(<ElementAuthoring type={type} />);
+    let props={
+        slateLockInfo:{
+            isLocked:false
+        }
+    }
+    const elementAuthoring = mount(<ElementAuthoring {...props} type={type} />);
     let elementAuthoringInstance = elementAuthoring.find('ElementAuthoring').instance();
     it('render Element component ', () => {  
-        console.log(elementAuthoring.debug());
         expect(elementAuthoring).toMatchSnapshot();
     })
 

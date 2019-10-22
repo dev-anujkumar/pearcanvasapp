@@ -2,7 +2,6 @@
 * Root Component of Assessment Slate Canvas
 */
 
-
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
@@ -12,7 +11,7 @@ import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
-
+import { sendDataToIframe } from '../../constants/utility.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -33,7 +32,8 @@ export class AssessmentSlateCanvas extends Component {
             showAssessmentPopup: value
         });
     }
-    /*** @description - This function is to select the Assessment type
+    /*** 
+     * @description - This function is to select the Assessment type
      * @param type - type of assessment
     */
     selectAssessmentType=(type)=>{
@@ -44,6 +44,17 @@ export class AssessmentSlateCanvas extends Component {
             assessmentType="TDX"
         }
         return assessmentType
+    }
+
+    /*** 
+    * @description - This is the function to add C2-Media to Assessment Slate 
+    * @param pufObj - The object contains data about PUF Assessment 
+    */
+    addPufAssessment = (pufObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        sendDataToIframe({'type': "blockerTOC",'message': {status: true}});     
+        this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
     /***
      * @description Open C2 module with predefined Alfresco location
@@ -75,6 +86,10 @@ export class AssessmentSlateCanvas extends Component {
         });
 
     }
+    /*** 
+     * @description  Callback function to launch C2 mdeia browser
+     * @param  assessmentData - the object contains assessment data
+     */
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
@@ -142,7 +157,7 @@ export class AssessmentSlateCanvas extends Component {
         const { } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
-            <div onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>
+            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>  
                 <AssessmentSlateData
                     type={this.props.type}
                     getAssessmentDataPopup={getAssessmentDataPopup}
@@ -154,6 +169,7 @@ export class AssessmentSlateCanvas extends Component {
                     toggleAssessmentPopup={this.toggleAssessmentPopup}
                     selectAssessmentType={this.selectAssessmentType}
                     assessmentSlateElement={assessmentSlateElement}
+                    addPufAssessment={this.addPufAssessment}
                     model={this.props.model} 
                     openLtAction ={this.props.openLtAction}
                     closeLtAction = {this.props.closeLtAction}

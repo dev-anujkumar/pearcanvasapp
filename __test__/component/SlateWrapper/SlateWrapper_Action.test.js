@@ -28,9 +28,9 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    it('testing------- ADD FIGURE ------action', () => {
-        //let store = mockStore(() => initialState);
-        const type = "OPENER";
+    it('testing------- ADD ELEMENT ------action', () => {
+        store = mockStore(() => initialState);
+        const typee = "OPENER";
         const index = 3;
         const _requestData = {
             "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
@@ -143,9 +143,6 @@ describe('Tests Slate Wrapper Actions', () => {
             workedExample : false   
         }
 
-        function cb () {
-            console.log('cb called!!')
-        }
 
         const expectedActions = {
             type: SWAP_ELEMENT

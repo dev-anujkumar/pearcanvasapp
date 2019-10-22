@@ -19,7 +19,9 @@ import {
     audioIcon, 
     containerIcon, 
     lockIcon,
-    metaDataAnchor
+    metaDataAnchor,
+    elmCloseWindowIcon,
+    elmAssessmentItem
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -30,6 +32,7 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import closeContainer from '../../images/ElementButtons/container_close.png';
+import ButtonTypes from './ButtonTypes.js';
 
 class Button extends Component {
    
@@ -144,6 +147,17 @@ class Button extends Component {
                     {metaDataAnchor}
                     </span>
                 break;
+            case ButtonTypes.ELM_CLOSE_WINDOW:
+                buttonJSX = <span className="" onClick={clickHandlerFn}>
+                    {elmCloseWindowIcon}
+                </span>
+                break;
+            case ButtonTypes.ELM_ASSESSMENT_ITEM:
+                buttonJSX = <span className="" onClick={clickHandlerFn}>
+                    {elmAssessmentItem}
+                </span>
+                break;
+                
         }
         return buttonJSX
     }

@@ -14,7 +14,7 @@ require('./polyfills.js')
 export const insertListButton = (editor) => {
     editor.ui.registry.addButton('customListButton', {
         text: '<i class="fa fa-list-ol" aria-hidden="true"></i>',
-        tooltip: 'Insert Ordered List',
+        tooltip: 'Ordered List',
         onAction: () => {
             positionListDrop(event);
         }

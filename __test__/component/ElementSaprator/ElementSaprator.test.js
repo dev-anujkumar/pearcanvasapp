@@ -22,7 +22,7 @@ const store = mockStore({
 let wrapper, useEffect, esProps
 
 function splithandlerfunction(type) {
-    console.log(type);
+    return ;
 }
 
 esProps = [
