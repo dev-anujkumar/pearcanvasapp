@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import tinymce from 'tinymce/tinymce';
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
@@ -95,19 +96,20 @@ class ElementContainer extends Component {
      */
     handleBlur = () => {
         let node = document.getElementById(tinyMCE.activeEditor.id);
-        let html = node.innerHTML;
-        let text = node.innerText;
-        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-        if (html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-            const dataToSend = this.props.element;  // prepare data to update
-            dataToSend.elementdata.text = text;
-            dataToSend.html.text = html;
-            dataToSend.html.footnotes = this.props.element.html.footnotes || {};
-            dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
-            this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+        if(node) {
+            let html = node.innerHTML;
+            let text = node.innerText;
+            let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+            if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
+                const dataToSend = this.props.element;  // prepare data to update
+                // dataToSend.elementdata.text = text;
+                // dataToSend.html.text = html;
+                // dataToSend.html.footnotes = this.props.element.html.footnotes || {};
+                // dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+                // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
+                // this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+            }
         }
-
     }
 
     /**
@@ -238,7 +240,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo } = this.props;
-        let labelText = fetchElementTag(element, index);
+        let labelText = fetchElementTag(element, index) || 'P';
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:

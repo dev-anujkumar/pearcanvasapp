@@ -47,15 +47,26 @@ export class ReactEditor extends React.Component {
             this.handleFocussingInlineCode(api, editor)
           }
         });
+        editor.on('BeforeExecCommand', (e) => {
+          let command = e.command;
+          if(command === "RemoveFormat") {
+            let selectedText = window.getSelection().toString();
+            if(selectedText == "") {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        });
       },
       init_instance_callback: function (editor) {
         editor.fire('focus');
-        let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-          if (activeElement) {
-              if (!activeElement.innerText.trim().length) {
-                activeElement.classList.add('place-holder')
-              }
-          }
+
+        // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+        //   if (activeElement) {
+        //       if (!activeElement.innerText.trim().length) {
+        //         activeElement.classList.add('place-holder')
+        //       }
+        //   }
       },
     }
   }
@@ -64,11 +75,14 @@ export class ReactEditor extends React.Component {
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
     */
   addInlineCode = (editor) => {
-    editor.execCommand('mceToggleFormat', false, 'code');
+    // editor.execCommand('mceToggleFormat', false, 'code');
     let selectedText = window.getSelection().toString();
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
-      let insertionText = '<code>' + selectedText + '</code>'
+      let insertionText = '<code>' + selectedText + '</code>';
+      if(editor.innerHTML.indexOf('code') > -1) {
+        insertionText = selectedText;
+      }
       editor.insertContent(insertionText);
     }
   }
@@ -164,9 +178,24 @@ export class ReactEditor extends React.Component {
       document.getElementById(activeEditorId).contentEditable = true;
     }
 
+    if(e.target.id == "footnote-0" || e.target.id == "glossary-0" || e.target.id == "glossary-1") {
+      tinymce.remove('#footnote-0');
+      tinymce.remove('#glossary-0');
+      tinymce.remove('#glossary-1');
+      document.getElementById(e.target.id).contentEditable = true;
+    }
+
     this.editorConfig.selector = '#' + e.target.id;
     tinymce.init(this.editorConfig);
   }
+
+  // componentWillUpdate() {
+  // //   if (!tinymce.editors.length) {
+  // //     tinymce.init(this.editorConfig);
+  
+  //     console.log('willmount', tinymce, tinymce.activeEditor);
+  // //   }
+  // }
 
   render() {
     // if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {

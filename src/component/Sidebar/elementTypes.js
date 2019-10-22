@@ -7,7 +7,7 @@ export default {
                 'secondary-paragraph': {
                     text: 'Paragraph',
                     labelText: 'P',
-                    enum: 'NA',
+                    enum: '',
                 }
             }
         },

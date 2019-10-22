@@ -115,7 +115,7 @@ export const lockIcon = (() => {
 })();
 export const metaDataAnchor = (function(){
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 50 50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="10 10 50 50" class="test">
         <defs>
           <clipPath id="clip-Anchor">
             <rect width="64" height="64"/>

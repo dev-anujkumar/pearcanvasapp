@@ -35,7 +35,7 @@ const _Toolbar = props => {
     return (
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
-            <span className="spacer"></span>
+            <div className="toggle-actions">
             <div className='elem-page-number'>
                 <div className='elemPageText'>
                     Element <br />Page Number
@@ -49,6 +49,7 @@ const _Toolbar = props => {
                         Element Borders
                 </div>
                     {_elemToggleBtnJsx('border')}
+                </div>
                 </div>
             {/* } */}
         </div>
