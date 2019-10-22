@@ -4,8 +4,11 @@ import PropTypes from 'prop-types'
 import { openLTFunction } from './learningTool/openLTFunction.js';
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
+import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentUsageType, assessmentType } from './AssessmentSlateConstants.js';
+import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
+import { sendDataToIframe } from '../../../src/constants/utility.js';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -20,6 +23,15 @@ export class AssessmentSlateData extends Component {
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
 
+    }
+    /*** @description - This function is to close ELM PopUp
+    */
+    closeElmWindow = () => {
+        this.setState({
+            showElmComponent: false
+        });
+        hideTocBlocker();
+        disableHeader(false);
     }
     /*** @description - This function is to change the lerning system
     */
@@ -38,7 +50,7 @@ export class AssessmentSlateData extends Component {
     */
     changeAssessment = (e) => {
         let assessmentFormat = this.state.activeAssessmentType;
-        if (assessmentFormat == 'puf') {
+        if (assessmentFormat == 'Full Assessment PUF') {
             this.setState({
                 activeAssessmentType: 'Full Assessment PUF',
                 showElmComponent: true,
@@ -62,9 +74,8 @@ export class AssessmentSlateData extends Component {
     }
 
     /* 
-    * @description - This function is to close the popup 
+    * @description - This function is to close the LT/LA popup 
     */
-
     closePopUp = () => {
         //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
         this.setState({
@@ -72,6 +83,13 @@ export class AssessmentSlateData extends Component {
         }, () => {
             // disableHeader(false);
         })
+    }
+    
+    /*** @description - This is the function to add C2-Media to Assessment Slate 
+    * @param pufObj - The object contains data about PUF Assessment 
+    */
+    addPufAssessment = (pufObj) => {
+        this.props.addPufAssessment(pufObj);
     }
 
     /*** @description - This is the root function to add Assessment 
@@ -86,8 +104,9 @@ export class AssessmentSlateData extends Component {
                 this.setState({
                     showElmComponent: true
                 })
-                // showTocBlocker();    //will be used during elm integration
-                // disableHeader(true);               
+                showTocBlocker();    
+                disableHeader(true);
+                sendDataToIframe({'type': "blockerTOC",'message': {status: true}});               
                 break;
 
             default:
@@ -148,22 +167,22 @@ export class AssessmentSlateData extends Component {
         }
         return usageTypeValue
     }
-    /*** @description - This function is render the Assessment Slate Element*/
+    /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
         var assessmentSlateJSX;
         var assessmentTypeValue;
         var changeTypeValue;
-        if (this.state.activeAssessmentType === 'Learning App Type') {
-            assessmentTypeValue = "Learning App";
-            changeTypeValue = "Change Learning App"
-        } else if (this.state.activeAssessmentType === 'Full Assessment CITE' || this.state.activeAssessmentType === 'Full Assessment TDX') {
-            assessmentTypeValue = "Assessment";
-            changeTypeValue = "Change assessment";
-        } else {
-            assessmentTypeValue = "PUF";
-            changeTypeValue = "Change PUF";
+        if(this.state.activeAssessmentType === 'Learning App Type'){
+            assessmentTypeValue="Learning App";
+            changeTypeValue="Change Learning App"
+        }else {
+            assessmentTypeValue="Assessment";
+            changeTypeValue="Change assessment";
         }
-        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup === false && this.state.activeAssessmentType !== 'Full Assessment PUF') {
+        if(this.state.activeAssessmentType === 'Full Assessment PUF' && this.state.showElmComponent === true){
+            return <RootElmComponent closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType}/>
+        }
+        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false ) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">
