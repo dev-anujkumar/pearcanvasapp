@@ -12,7 +12,6 @@ import {
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 import config from '../../config/config';
-import { getPermissions } from '../../js/UserPermissions.js'
 
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -102,7 +101,7 @@ export class ElementFigure extends Component {
             this.handleC2ExtendedClick(data_1)
 
         } else {
-           if(this.props.getPermissions('alfresco_crud_access')){ 
+           if(this.props.permissions.includes('alfresco_crud_access')){ 
                c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -419,9 +418,10 @@ ElementFigure.propTypes = {
     onFocus: PropTypes.func
 }
 
-export default connect(
-    null, 
-    {
-        getPermissions
+const mapStateToProps = state => {
+    return {
+        permissions : state.appStore.permissions
     }
-)(ElementFigure);
+};
+
+export default connect(mapStateToProps, null)(ElementFigure);

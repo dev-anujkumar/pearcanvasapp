@@ -167,11 +167,11 @@ class Comments extends React.Component {
     actionsMenu = () => {
         return (
             <ul className="comment-action-menu action-menu">
-                {this.props.getPermissions('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
-                {this.props.getPermissions('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
-                {this.props.getPermissions('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {this.props.getPermissions('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
-                {this.props.getPermissions('notes_deleting') && <li onClick={this.deleteComment}>Delete</li>}
+                {this.props.permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
+                {this.props.permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
+                {this.props.permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {this.props.permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
+                {this.props.permissions.includes('notes_deleting') && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
     }

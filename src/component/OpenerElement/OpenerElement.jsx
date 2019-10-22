@@ -12,7 +12,6 @@ import { c2MediaModule } from './../../js/c2_media_module';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
-import { getPermissions } from '../../js/UserPermissions.js'
 
 class OpenerElement extends Component {
 
@@ -96,7 +95,7 @@ class OpenerElement extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
         } else {
-            if (this.props.getPermissions('alfresco_crud_access')) {
+            if (this.props.permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                     c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                         c2MediaModule.AddanAssetCallBack(data_2, function (data) {
@@ -248,9 +247,11 @@ OpenerElement.propTypes = {
 
 OpenerElement.displayName = 'OpenerElement'
 
-export default connect(
-    null, 
-    {
-        getPermissions
+const mapStateToProps = state => {
+    return {
+        permissions : state.appStore.permissions
     }
-)(OpenerElement);
+};
+
+export default connect(mapStateToProps, null)(OpenerElement);
+  

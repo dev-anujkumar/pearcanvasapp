@@ -59,7 +59,7 @@ const mapStateToProps = (state) => {
     const {elemBorderToggle} = state.toolbarReducer.elemBorderToggle
     return {
         elemBorderToggle,
-        permissions : state.appStore.permissions,
+        permissions : state.appStore.permissions
     }
 }
 

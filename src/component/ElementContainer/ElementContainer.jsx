@@ -30,7 +30,6 @@ import arrowButton from '../../images/OpenerElement/arrow.png'
 import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
 import { PageNumberContext } from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
-import { getPermissions } from '../../js/UserPermissions.js'
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -84,9 +83,6 @@ class ElementContainer extends Component {
     }
 
     handleFocus = () => {
-        if(!this.props.getPermissions('access_formatting_bar')){
-            return false;
-        }
         this.setState({
             borderToggle: 'active',
             btnClassName: 'activeTagBgColor'
@@ -145,15 +141,15 @@ class ElementContainer extends Component {
             sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
         }
         // else if( !this.state.slateLockSatus){
-            if(text =="Add a New Learning Objective" &&  this.props.getPermissions('lo_edit_metadata')){
+            if(text =="Add a New Learning Objective" &&  this.props.permissions.includes('lo_edit_metadata')){
                 sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveSlate,'data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
             }
       
-            else if(text =="Add From Existing or Edit" && this.props.getPermissions('lo_edit_metadata')){
+            else if(text =="Add From Existing or Edit" && this.props.permissions.includes('lo_edit_metadata')){
                 sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddEditLearningObjective,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
 
-            else if(text =="Add From Existing" && this.props.getPermissions('lo_edit_metadata')){
+            else if(text =="Add From Existing" && this.props.permissions.includes('lo_edit_metadata')){
                 sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveAssessment,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
             }
         //  }
@@ -346,7 +342,7 @@ class ElementContainer extends Component {
             <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { config.slateType !=='assessment'? ( this.props.getPermissions('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
+                { config.slateType !=='assessment'? ( this.props.permissions.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
                 : null }
                 {this.renderColorPaletteButton(element)}
             </div>
@@ -355,8 +351,8 @@ class ElementContainer extends Component {
                 {editor}
             </div>
             {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
-                {this.props.getPermissions('notes_adding') && <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                {this.props.getPermissions('note_viewer') && element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
+                {this.props.permissions.includes('notes_adding') && <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                {this.props.permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
                 {element.tcm && <Button type="tcm" />}
                 </div> :''}
             { this.state.popup && <PopUp 
@@ -481,8 +477,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateElement:(updatedData,elementIndex)=>{
             dispatch(updateElement(updatedData,elementIndex))
-        },
-        getPermissions: getPermissions
+        }
     }
 }
 
@@ -492,7 +487,8 @@ const mapStateToProps = (state) => {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        currentSlateLOData: state.metadataReducer.currentSlateLOData
+        currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        permissions : state.appStore.permissions,
     }
 }
 
