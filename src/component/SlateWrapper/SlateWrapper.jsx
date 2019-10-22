@@ -608,7 +608,6 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
-        console.log("permissions",this.props.permissions)
         try {
             console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
