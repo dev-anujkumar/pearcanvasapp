@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import CommentsPanel from '../../../src/component/CommentsPanel';
-import { comments, filters } from '../../../fixtures/commentPanelData.js'
+import { comments, filters ,permissions} from '../../../fixtures/commentPanelData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -13,6 +13,9 @@ const store = mockStore({
     comments: comments,
     togglePanel: true,
     toggleReplyForm: true
+  },
+  appStore : {
+    permissions: permissions
   }
 });
 describe('Testing CommentsPanel component with props', () => {

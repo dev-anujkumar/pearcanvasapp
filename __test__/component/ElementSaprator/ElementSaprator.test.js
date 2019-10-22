@@ -88,7 +88,7 @@ const mockUseEffect = () => {
 
 beforeEach(() => {
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( <Provider store={store}>< ElementSaprator esProps={esProps} /></Provider> )
+    wrapper = mount( <Provider store={store}>< ElementSaprator esProps={esProps} /></Provider> )
     mockUseEffect()
 })
 
@@ -110,7 +110,7 @@ describe('Testing ElementSaprator component', () => {
                 it('Should render ', () => {
                     config.slateType = 'container-introduction';
                     config.isCO = false;
-                    let tempWrapper = shallow(<Provider store={store}> < ElementSaprator esProps={esProps}/></Provider> )
+                    let tempWrapper = mount(<Provider store={store}> < ElementSaprator esProps={esProps}/></Provider> )
                 })
         }),
 
@@ -159,8 +159,7 @@ describe('Testing functions', () => {
         addMediaClickHandler()
     }),
     it('simulate dropbtn button onclick', () => {
-        config.PERMISSIONS = ['elements_add_remove']
-
+       
         let samplediv = document.createElement('div');
         samplediv.setAttribute('class', 'show' );
         samplediv.innerHTML = "test";
@@ -169,13 +168,12 @@ describe('Testing functions', () => {
         let tempWrapper = mount(<Provider store={store}> <ElementSaprator esProps={esProps}/></Provider> )
         tempWrapper.find('.dropbtn').simulate('click');
     }),
-    it('simulate splitSlateClickHandler ', () => {
-        config.PERMISSIONS = ['elements_add_remove']
+    it('simulate splitSlateClickHandler ', () => {       
         let tempWrapper;
         
         tempWrapper = mount( <Provider store={store}><ElementSaprator esProps={esProps}/></Provider> )
         tempWrapper.setProps({
-            toggleSplitSlatePopup : jest.fn()
+            toggleSplitSlatePopup : true
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
