@@ -25,12 +25,13 @@ export default {
     ELEMENT_ASIDE: "element-aside",
 
 /****************Metadata Anchor************************ */  
-METADATA_ANCHOR : "element-learningobjectivemapping",
+    METADATA_ANCHOR : "element-learningobjectivemapping",
+    LEARNING_OBJECTIVE_ITEM:"element-learningobjectives",
 
 /****************Metadata Anchor LO List************************ */  
-METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
+    METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
 
 /****************Assessment Slate Element************************ */  
-ASSESSMENT_SLATE : "element-assessment"
+    ASSESSMENT_SLATE : "element-assessment"
 }
 
