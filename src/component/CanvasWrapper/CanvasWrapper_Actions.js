@@ -27,7 +27,7 @@ const findElementType = (element, index) => {
 			} else {
 				elementType['primaryOption'] = 'primary-paragraph';
 				elementType['secondaryOption'] = 'secondary-paragraph';
-			}
+			 }
 			break;
 
 		case 'element-blockfeature':
@@ -44,6 +44,12 @@ const findElementType = (element, index) => {
 					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
 			}
+			break;
+
+		case 'element-learningobjectives':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-learning-objective';
+			elementType['secondaryOption'] = 'secondary-learning-objective';
 			break;
 
 		case 'figure':
