@@ -57,7 +57,7 @@ let config = {
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     book_title:"ELMTEST_StgEnv_Krajewski Test",
     ELM_URL:"https://contentapis-qa.pearsoncms.net/manifest-api/v2/urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef/alignments/resources",
-    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
     LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
