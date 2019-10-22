@@ -23,11 +23,10 @@ class ElmTable extends Component {
             firstName: this.getProjectTitle() || "",
             parentTitle: "",
             currentAssessmentSelected: {},
-            sortIcon:elmSortDown,
-            sortFlag:true
+            sortIcon: elmSortDown,
+            sortFlag: true
         },
             this.preparedData = [];
-        // this.sortFlag=true;
         this.renderTableData(this.props);
         this.timer = null;
 
@@ -45,7 +44,7 @@ class ElmTable extends Component {
      * @param currentProps- props
     */
     renderTableData = (currentProps) => {
-            if (!currentProps.errFlag && currentProps.apiData) {
+        if (!currentProps.errFlag && currentProps.apiData) {
             this.filterData(currentProps.getParentId, currentProps.apiData);
         }
 
@@ -64,11 +63,12 @@ class ElmTable extends Component {
             };
         }
     }
-    componentWillUnmount(){
-        if(this.timer){
+    componentWillUnmount() {
+        if (this.timer) {
             clearTimeout(this.timer);
         }
     }
+
     /*** @description - This function is to filter table data based on parameters
          * @param data- api data
          * @param urn- assessment id
@@ -99,11 +99,11 @@ class ElmTable extends Component {
             this.getResourcefromFilterData(apiData)
         }
     }
-     /*** @description - Function to check if api data's versionUrn is same as current urn
-         * @param data- api data
-         * @param urn- assessment id
-         * @param parentUrn- parent-Urn
-        */
+    /*** @description - Function to check if api data's versionUrn is same as current urn
+        * @param data- api data
+        * @param urn- assessment id
+        * @param parentUrn- parent-Urn
+       */
     filterSubData = (data, urn, parentUrn) => {
 
         if (data.versionUrn === urn) {
@@ -116,6 +116,7 @@ class ElmTable extends Component {
                 return;
         }
     }
+
     /*** @description - This function is to get elm resource from the table based on parameters
          * @param data- api data
          * @param parentUrn- parent-Urn
@@ -126,7 +127,7 @@ class ElmTable extends Component {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
                     resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": assesments.type||"assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
+                        this.preparedData.push({ "type": assesments.type || "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
@@ -140,12 +141,14 @@ class ElmTable extends Component {
         return this.setState({ tableValue: this.preparedData, parentUrn: parentUrn, parentTitle: (data.unformattedTitle && data.unformattedTitle.en) ? data.unformattedTitle.en : this.state.firstName })
 
     }
+
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
         let book_title = config.book_title;
         return book_title
         // return config.book_title
     }
+
     /*** @description - This function is to show table data based on parameters
          * @param e- event triggered
          * @param versionUrn- version urn of current item selected
@@ -172,35 +175,30 @@ class ElmTable extends Component {
          * @param e- event triggered
         */
     setSort = () => {
-        // this.setState({
-        //     sortFlag :!this.state.sortFlag
-        // })
         if (this.state.sortFlag) {
-            this.setState({sortIcon : elmSortUp}) 
-            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag});
+            this.setState({ sortIcon: elmSortUp })
+            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag });
         }
         else {
-            this.setState({sortIcon : elmSortDown}) 
-            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag});
+            this.setState({ sortIcon: elmSortDown })
+            this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag });
         }
-      //  this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: this.state.sortFlag});
-
-        //sortFlag = !sortFlag;
     }
+
     /*** @description - This function is to sort table data based on parameters
          * @param property- sorting criteria
          * @param event- event triggered
         */
     dynamicSort = (property, event) => {
-        var sortOrder = 1;
+        let sortOrder = 1;
         if (property[0] === "-") {
             sortOrder = -1;
             property = property.substr(1);
         }
-        return  (a, b)=> {
-            var result;
-            var first = (a[property] ? a[property] : a.urn).toLowerCase();
-            var second = (b[property] ? b[property] : b.urn).toLowerCase();
+        return (a, b) => {
+            let result;
+            let first = (a[property] ? a[property] : a.urn).toLowerCase();
+            let second = (b[property] ? b[property] : b.urn).toLowerCase();
             if (this.state.sortFlag) {
                 result = (first < second) ? -1 : (first > second) ? 1 : 0;
             }
@@ -210,6 +208,7 @@ class ElmTable extends Component {
             return result * sortOrder;
         }
     }
+
     /*** @description - This function is to send puf assessment data to RootELMComponent
     */
     sendPufAssessment = () => {
@@ -222,6 +221,7 @@ class ElmTable extends Component {
         this.props.addPufFunction(obj);
         this.props.closeElmWindow();
     }
+
     /*** @description - This function is to toggle the current row selected
          * @param i- index of the row
         */
@@ -230,6 +230,7 @@ class ElmTable extends Component {
             isActive: i
         });
     }
+
     /*** @description - This function is to set the folder name in folder-icon based on type of container
          * @param label- label of container
         */
