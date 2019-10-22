@@ -243,7 +243,7 @@ class ElementContainer extends Component {
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
+                editor =<AssessmentSlateCanvas model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} showBlocker = {this.props.showBlocker}/>
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:

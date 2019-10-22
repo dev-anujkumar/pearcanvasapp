@@ -80,6 +80,7 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
+        this.props.showBlocker(true);
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
