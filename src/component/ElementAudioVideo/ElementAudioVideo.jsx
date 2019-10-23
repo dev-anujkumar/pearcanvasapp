@@ -1,7 +1,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';

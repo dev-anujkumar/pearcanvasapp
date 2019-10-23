@@ -30,7 +30,7 @@ describe('Tests Slate Wrapper Actions', () => {
 
     it('testing------- ADD ELEMENT ------action', () => {
         store = mockStore(() => initialState);
-        const typee = "OPENER";
+        const type = "OPENER";
         const index = 3;
         const _requestData = {
             "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
