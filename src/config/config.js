@@ -1,7 +1,4 @@
 let config = {
-    // https://test-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/
-    // JAVA_ENDPOINT: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/app/toc-javaapp/v2' : '/cypress/toc-srvr/app/toc-javaapp/v2',
-    // "https://10.11.7.24:8443/cypress-api/"
     REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
@@ -57,7 +54,7 @@ let config = {
     book_title:"ELMTEST_StgEnv_Krajewski Test",
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
-    LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.location.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.PATTERN_ADD_ASSET || 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.PATTERN_BROKER || 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
