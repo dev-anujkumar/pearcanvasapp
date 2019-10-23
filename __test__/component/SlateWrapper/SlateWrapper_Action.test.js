@@ -45,7 +45,7 @@ describe('Tests Slate Wrapper Actions', () => {
             "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
             "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
             "slateUrn": "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
-            "type": typee,
+            "type": type,
             "index": index
         };
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
@@ -62,7 +62,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 response: axiosPayload
             });
         });
-        return store.dispatch(actions.createElement(typee, index)).then(() => {
+        return store.dispatch(actions.createElement(type, index)).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(expectedActions.type);
         }).catch((err)=>{});;
