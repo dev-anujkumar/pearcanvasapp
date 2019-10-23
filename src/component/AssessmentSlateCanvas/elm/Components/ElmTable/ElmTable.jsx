@@ -29,6 +29,7 @@ class ElmTable extends Component {
             this.preparedData = [];
         this.renderTableData(this.props);
         this.timer = null;
+        this.setSort();
 
     }
 
@@ -176,11 +177,11 @@ class ElmTable extends Component {
         */
     setSort = () => {
         if (this.state.sortFlag) {
-            this.setState({ sortIcon: elmSortUp })
+            this.setState({ sortIcon: elmSortDown })
             this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag });
         }
         else {
-            this.setState({ sortIcon: elmSortDown })
+            this.setState({ sortIcon: elmSortUp })
             this.setState({ tableValue: this.state.tableValue.sort(this.dynamicSort("title")).reverse(), addFlag: false, isActive: null, sortFlag: !this.state.sortFlag });
         }
     }

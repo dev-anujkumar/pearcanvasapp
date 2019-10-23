@@ -12,6 +12,7 @@ import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
+import {ShowLoader} from '../../constants/IFrameMessageTypes';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -54,6 +55,7 @@ export class AssessmentSlateCanvas extends Component {
         showTocBlocker();
         disableHeader(true);
         sendDataToIframe({'type': "blockerTOC",'message': {status: true}});     
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
     /***
@@ -78,6 +80,7 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
+        this.props.showBlocker(true);
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
