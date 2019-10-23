@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import Comments from '../../../src/component/CommentsPanel/Comments';
-import { comment, filters, users } from '../../../fixtures/commentPanelData.js'
+import { comment, filters, users ,permissions} from '../../../fixtures/commentPanelData.js'
 import { spy, stub } from 'sinon';
 
 describe('Testing CommentsPanel component with props', () => {
@@ -12,7 +12,8 @@ describe('Testing CommentsPanel component with props', () => {
   const getProjectUsers = new stub();
   const deleteComment = new stub();
   let props = {
-    users: users
+    users: users,
+    permissions: permissions
   }
   let wrapper = mount(< Comments
     updateElementComment={updateElementComment}

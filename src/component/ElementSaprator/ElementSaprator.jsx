@@ -21,7 +21,7 @@ CONTAINER_INTRO = 'container-introduction'
 
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType, sectionBreak } = props
+    const { esProps, elementType, sectionBreak, permissions } = props
     let buttonRef = useRef(null)
 
     /**
@@ -84,8 +84,8 @@ export default function ElementSaprator(props) {
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn' : 'elementSapratorContainer'}>
             <div className='elemDiv-split'>
-                {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                    {config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
+                {permissions.includes('split_slate') && elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {permissions.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
@@ -93,7 +93,7 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        {config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                        {permissions.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
@@ -188,3 +188,5 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         )
     })
 }
+  
+  

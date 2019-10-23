@@ -1,7 +1,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 
@@ -100,14 +99,16 @@ export class ElementFigure extends Component {
 
             this.handleC2ExtendedClick(data_1)
 
-        } else {                                                                            // alfresco location is not assigned to project
-            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+        } else {
+           if(this.props.permissions.includes('alfresco_crud_access')){ 
+               c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                         that.dataFromAlfresco(data);
                     })
                 })
-            });
+            })
+            }
         }
 
     }
@@ -415,3 +416,5 @@ ElementFigure.propTypes = {
     /** Handler to attach on element focus */
     onFocus: PropTypes.func
 }
+
+export default ElementFigure;

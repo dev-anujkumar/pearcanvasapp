@@ -38,16 +38,18 @@ const _Toolbar = props => {
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
             <span className="spacer"></span>
+            {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
                 <div className='elemPageText'>Element <br />Page Number</div>
                 {_elemToggleBtnJsx('pageNumber')}
             </div>
-            {/* {config.PERMISSIONS.includes('toggle_element_borders') && */}
+            }
+            {props.permissions.includes('toggle_element_borders') &&
                 <div className='element-borders'>
                     <div className='elemBorderText'>Element Borders</div>
                         {_elemToggleBtnJsx('border')}
                 </div>
-            {/* } */}
+            }   
         </div>
     )
 }
@@ -55,7 +57,8 @@ const _Toolbar = props => {
 const mapStateToProps = (state) => {
     const {elemBorderToggle} = state.toolbarReducer.elemBorderToggle
     return {
-        elemBorderToggle
+        elemBorderToggle,
+        permissions : state.appStore.permissions
     }
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 import { labelOptions } from './LabelOptions'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
@@ -66,7 +65,7 @@ class OpenerElement extends Component {
      * @param {e} event
      */
     handleC2MediaClick = (e) => {
-        const { slateLockInfo } = this.props
+        const { slateLockInfo , permissions } = this.props
         if(slateLockInfo.isLocked && config.userId != slateLockInfo.userId)
             return false
 
@@ -95,13 +94,15 @@ class OpenerElement extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
         } else {
-            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                        that.dataFromAlfresco(data);
+            if (permissions.includes('alfresco_crud_access')) {
+                c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                    c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                        c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                            that.dataFromAlfresco(data);
+                        })
                     })
-                })
-            });
+                });
+            }
         }
     }
 
@@ -245,4 +246,5 @@ OpenerElement.propTypes = {
 
 OpenerElement.displayName = 'OpenerElement'
 
-export default OpenerElement
+export default OpenerElement;
+  

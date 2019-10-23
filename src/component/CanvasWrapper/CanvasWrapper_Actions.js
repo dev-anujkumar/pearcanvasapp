@@ -449,6 +449,7 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	});
 }
 
+
 export const fetchAuthUser = () => dispatch=> {
     
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {

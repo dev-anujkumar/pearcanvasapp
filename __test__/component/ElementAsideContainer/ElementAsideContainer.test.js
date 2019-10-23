@@ -6,7 +6,8 @@ import { spy, stub } from 'sinon';
 
 describe('Testing ElementAside component with props', () => {
     let props = {
-        element: elementAsideWorkExample
+        element: elementAsideWorkExample,
+        permissions: []
     }
     let wrapper = mount(< ElementAsideContainer {...props} />)
 
