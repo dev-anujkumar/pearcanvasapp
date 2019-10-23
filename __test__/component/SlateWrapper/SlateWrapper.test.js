@@ -23,9 +23,7 @@ describe('Testing <SlateWrapper> Component', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
-        appStore : {
-            permissions : [],
-        },
+        permissions : [],
         toggleTocDelete: true
     };
     test('renders without crashing', () => {
@@ -41,6 +39,8 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            permissions : []
+
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
  
@@ -71,6 +71,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            permissions : [],
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
         test('renders properly', () => {
@@ -91,6 +92,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            permissions : []
         };
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
         test('renders properly', () => {
@@ -107,6 +109,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: true,
                 userId: 'c5Test01'
             },
+            permissions : [],
             setSlateLock : ()=>{},
             showBlocker : ()=>{},
             modifyState : ()=>{}
@@ -199,6 +202,7 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: true,
                 userId: 'c5Test02'
             },
+            permissions : [],
             setSlateLock : ()=>{},
             showBlocker : ()=>{},
             modifyState : ()=>{}
