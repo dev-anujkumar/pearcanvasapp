@@ -8,6 +8,8 @@ import { comments } from '../../../fixtures/commentPanelData.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import wipData from './wipData';
+import config from '../../../src/config/config';
+import { fn } from 'moment';
 
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
@@ -74,7 +76,8 @@ describe('Test for element container component', () => {
     };
 
     let props = {
-        element: wipData.paragraph
+        element: wipData.paragraph,
+        showBlocker: jest.fn()
     };
 
     let pageNumber = (isHovered, isPageNumberEnabled, activeElement) => {
@@ -219,22 +222,59 @@ describe('Test for element container component', () => {
 
     const elementContainerInstance = elementContainer.find('ElementContainer').instance();
 
-    xit('delete element', () => {
+    it('delete element', () => {
         elementContainerInstance.deleteElement();
     });
 
-    xit('onClick Event', () => {
-        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
-        //     (isHovered, isPageNumberEnabled, activeElement) => (
-        //         <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-        //     )
-        // </ElementContainer></Provider>);
-        // elementContainerInstance.find('span.add-comment').simulate('click');
+    it('onClick Event', () => {
         elementContainerInstance.handleFocus();
-        elementContainerInstance.find('span#close-container').simulate('click');
+         elementContainerInstance.handleBlurAside();
     })
-
-    xdescribe('Testing action function with props', () => {
+    it('learningObjectiveOperations ', () => {
+       
+        config.slateType ="assessment";
+        config.PERMISSIONS=['lo_edit_metadata'];
+        document.cookie="tet"
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.learningObjectiveOperations("View Learning Objective");
+        config.slateType ="section";
+        config.PERMISSIONS=['lo_edit_metadata'];
+        console.log(document.cookie)
+        //let elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.learningObjectiveOperations("View Learning Objective");
+        //elementContainerInstance.learningObjectiveOperations("Add a New Learning Objective");
+        // instance.learningObjectiveOperations("Add From Existing or Edit");
+        // instance.learningObjectiveOperations("Add From Existing");
+        
+        
+       // elementContainerInstance.find('span#close-container').simulate('click');
+    })
+    it('toggleColorPaletteList ', () => {
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.toggleColorPaletteList();
+    })
+    it('selectColor  ', () => {
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        let event = {
+            target: {
+                getAttribute: function(dataValue) {
+                    return 'primary-heading';
+                }
+            }
+        }
+        elementContainerInstance.selectColor(event);
+    })
+    it('showelementpopup  ', () => {
+        let props = {
+            element: wipData.paragraph,
+            showBlocker: jest.fn()
+        };
+       let  elementContainer = mount(<Provider store={store}><ElementContainer {...props} elementSepratorProps={seprator} children={pageNumber}>
+        </ElementContainer></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+         elementContainerInstance.showDeleteElemPopup("event");
+    })
+    describe('Testing action function with props', () => {
         // let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
         //     (isHovered, isPageNumberEnabled, activeElement) => (
         //         <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
@@ -244,24 +284,33 @@ describe('Test for element container component', () => {
         it('renders saveNewComment ', () => {
             elementContainerInstance.saveNewComment();
         });
-        it('renders handleCommentPanel ', () => {
-            elementContainerInstance.handleCommentPanel();
+        it('renders handleCommentChange  ', () => {
+            elementContainerInstance.handleCommentChange("test");
+            let props={isBlockerActive:true}
+        });
+        it('handle handleOnMouseOver   ', () => {
+            elementContainerInstance.handleOnMouseOver();
+        });
+        it('handle handleOnMouseOut   ', () => {
+            elementContainerInstance.handleOnMouseOut();
+        });
+        it('handle openGlossaryFootnotePopUp', () => {
+            elementContainerInstance.openGlossaryFootnotePopUp("","");
+        });
+        it('handle openAssetPopoverPopUp ', () => {
+            elementContainerInstance.openAssetPopoverPopUp("");
         });
 
-        it('renders handle popup toggle ', () => {
-            elementContainer.setState({
-                popup: true
-            });
-            
-        let target = {
-            // target: {
-                getAttribute: function(dataValue) {
-                    return true;
-                }
-            // }
-        }
+         it('renders handle popup toggle ', () => {
+        let props = {
+            isBlockerActive: true,
+            showBlocker: jest.fn()
+        };
+        let  elementContainer = mount(<Provider store={store}><ElementContainer {...props} elementSepratorProps={seprator} children={pageNumber}>
+            </ElementContainer></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             elementContainerInstance.handleCommentPopup(true);
-        });
+         });
 
     })
 });

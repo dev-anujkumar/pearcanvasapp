@@ -94,6 +94,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+               console.log("item.type", item.type)
+               console.log("item.id", item.id)
+               console.log("asideData.id", asideData.id)
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
                 } else if (item.type == "element-aside" && item.id == asideData.id) {
@@ -176,16 +179,9 @@ export const createElementMeta = (type, index,parentUrn) => (dispatch, getState)
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-        if(createdElementData.type == 'manifest'){
-            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
-                if(item.id == parentUrn.manifestUrn){
-                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                }
-            })   
-        }else{
+      
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        }
-       
+               
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -219,16 +215,8 @@ export const createElementMetaList = (type, index,parentUrn) => (dispatch, getSt
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-        if(createdElementData.type == 'manifest'){
-            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
-                if(item.id == parentUrn.manifestUrn){
-                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                }
-            })   
-        }else{
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        }
-       
+        console.log(createdElementData.type)
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
