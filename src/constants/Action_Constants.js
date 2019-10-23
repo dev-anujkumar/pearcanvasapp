@@ -47,10 +47,6 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 /*--------------- Slate Tag -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
 
-/*--------------- Refresh Slate -------------------*/
-export const REFRESH_SLATE = 'REFRESH_SLATE'
-export const UPDATE_STATUS_REFRESH_SLATE = 'UPDATE_STATUS_REFRESH_SLATE'
-export const UPDATE_REAL_TIME = 'UPDATE_REAL_TIME'
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'
@@ -68,7 +64,10 @@ export const LEARNING_TOOL_DIS_VALUE = "LEARNING_TOOL_DIS_VALUE"
 export const TOGGLE_LT_POPUP = "TOGGLE_LT_POPUP"
 export const GET_DISCIPLINE = "GET_DISCIPLINE"
 export const REMOVE_SELECTED_DATA = "REMOVE_SELECTED_DATA"
-
 export const LINK_BUTTON_DISABLE = "LINK_BUTTON_DISABLE"
 export const GET_DISCIPLINE_FAIL = "GET_DISCIPLINE_FAIL"
 export const LT_TYPE_FILTER_SELECTED = "LT_TYPE_FILTER_SELECTED"
+
+/*--------------- User Role -------------------*/
+export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
+

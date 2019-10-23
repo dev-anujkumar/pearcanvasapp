@@ -17,7 +17,8 @@ describe('Testing Figure element component', () => {
                 userId: 'c5Test01'
             },
             onClick : ()=>{},
-            handleFocus: function(){}
+            handleFocus: function(){},
+            permissions: []
         }
         ReactDOM.render(<ElementFigure  {...props} />, div);
         ReactDOM.unmountComponentAtNode(div);
@@ -31,7 +32,8 @@ describe('Testing Figure element component', () => {
                 userId: 'c5Test01'
             },
             onClick : ()=>{},
-            handleFocus: function(){}
+            handleFocus: function(){},
+            permissions: []
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -91,7 +93,8 @@ describe('Testing Figure element component', () => {
                 userId: 'c5Test01'
             },
             onClick : ()=>{},
-            handleFocus: function(){}
+            handleFocus: function(){},
+            permissions: []
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -144,6 +147,7 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            permissions: []
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -195,7 +199,7 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            
+            permissions: []
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -217,6 +221,7 @@ describe('Testing Figure element component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            permissions: function(){}
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
@@ -238,7 +243,8 @@ describe('Testing Figure element component', () => {
                 userId: 'c5Test01'
             },
             onClick : ()=>{},
-            handleFocus: function(){}
+            handleFocus: function(){},
+            permissions: []
         };
         const elementFigure = mount(<ElementFigure type={type} model={figureImage50TextElementDefault} index="30" {...props}/>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();

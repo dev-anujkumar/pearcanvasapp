@@ -4,7 +4,6 @@ import ElementSaprator from '../../../src/component/ElementSaprator/'
 import {renderDropdownButtons, addMediaClickHandler} from '../../../src/component/ElementSaprator/ElementSaprator.jsx'
 import config from '../../../src/config/config.js';
 import {shallow, mount} from 'enzyme';
-
 let wrapper, useEffect, esProps
 
 function splithandlerfunction(type) {
@@ -73,15 +72,20 @@ const mockUseEffect = () => {
 }
 
 beforeEach(() => {
+    let props = {
+        permissions: []
+    }
     useEffect = jest.spyOn(React, "useEffect")
-    wrapper = shallow( < ElementSaprator esProps={esProps} /> )
+    wrapper = mount(< ElementSaprator esProps={esProps} {...props}/> )
     mockUseEffect()
 })
 
 describe('Testing ElementSaprator component', () => {
-
+    let props = {
+        permissions: []
+    }
     describe('UseEffect function', () => {
-        let tempWrapper = mount( < ElementSaprator esProps={esProps}/> )
+        let tempWrapper = mount( <ElementSaprator esProps={esProps} {...props}/> )
     }),
 
     describe('<ElementSaprator/> Rendering', () => {
@@ -96,7 +100,7 @@ describe('Testing ElementSaprator component', () => {
                 it('Should render ', () => {
                     config.slateType = 'container-introduction';
                     config.isCO = false;
-                    let tempWrapper = shallow( < ElementSaprator esProps={esProps}/> )
+                    let tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/> )
                 })
         }),
 
@@ -131,37 +135,42 @@ describe('Testing functions', () => {
         let slateType = 'container-introduction', closeDropDown;
         let elementType = 'element-aside';
         let sectionBreak = true;
+        let permissions = []
 
-        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)
+        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown , permissions)
     }),
     it ('Testing renderDropdownButtons function else part', () => {
         let slateType = 'container-introduction', closeDropDown;
         let elementType = 'element-aside';
         let sectionBreak = false;
+        let permissions = []
         
-        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)
+        renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown, permissions)
     }),
     it('Testing addMediaClikHandler', () => {
         addMediaClickHandler()
     }),
     it('simulate dropbtn button onclick', () => {
-        config.PERMISSIONS = ['elements_add_remove']
-
+        let props = {
+            permissions: ['elements_add_remove']
+        }
         let samplediv = document.createElement('div');
         samplediv.setAttribute('class', 'show' );
         samplediv.innerHTML = "test";
         document.body.appendChild(samplediv);
 
-        let tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        let tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/> )
         tempWrapper.find('.dropbtn').simulate('click');
     }),
-    it('simulate splitSlateClickHandler ', () => {
-        config.PERMISSIONS = ['elements_add_remove']
+    it('simulate splitSlateClickHandler ', () => {       
         let tempWrapper;
+        let props = {
+            permissions: []
+        }
         
-        tempWrapper = mount( <ElementSaprator esProps={esProps}/> )
+        tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
         tempWrapper.setProps({
-            toggleSplitSlatePopup : jest.fn()
+            toggleSplitSlatePopup : true
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })

@@ -6,8 +6,9 @@ const setActiveElement = new stub();
 
 describe('Testing SectionSeperator component with props', () => {
     let props = {
-        elemBorderToggle: "true",
-        borderToggle: 'active'
+        elemBorderToggle: true,
+        borderToggle: 'active',
+        permissions: []
     }
     let wrapper = mount(< SectionSeperator setActiveElement = {setActiveElement} {...props} />)
 

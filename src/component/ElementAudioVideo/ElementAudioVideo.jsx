@@ -1,7 +1,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';
@@ -104,13 +103,15 @@ export class ElementAudioVideo extends Component {
             this.handleC2ExtendedClick(data_1)
 
         } else {
-            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+           if(this.props.permissions.includes('alfresco_crud_access')){ 
+               c2MediaModule.onLaunchAddAnAsset(function (data_1) {
                 c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                         that.dataFromAlfresco(data);
                     })
                 })
-            });
+            })
+        }
         }
 
     }
@@ -214,3 +215,5 @@ ElementAudioVideo.propTypes = {
     onFocus: PropTypes.func
 
 }
+
+export default ElementAudioVideo;
