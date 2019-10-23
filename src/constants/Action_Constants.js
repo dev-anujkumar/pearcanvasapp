@@ -3,7 +3,7 @@ export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
 export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
-/*---------------Comments Panel ----------------------*/ 
+/*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
 export const REPLY_COMMENT = 'REPLY_COMMENT'
@@ -16,21 +16,21 @@ export const UPDATE_ASSIGNEE = "UPDATE_ASSIGNEE"
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT"
 
-/*---------------Element Creation ----------------------*/ 
+/*---------------Element Creation ----------------------*/
 export const AUTHORING_ELEMENT_CREATED = "AUTHORING_ELEMENT_CREATED"
 export const ASSESSMENT_ELEMENT_CREATED = "ASSESSMENT_ELEMENT_CREATED"
 export const VIDEO_ELEMENT_CREATED = 'VIDEO_ELEMENT_CREATED'
 export const FIGURE_ELEMENT_CREATED = "FIGURE_ELEMENT_CREATED"
 export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
-/*---------------Element Updation ----------------------*/ 
+/*---------------Element Updation ----------------------*/
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
 
-/*---------------Element Container ----------------------*/ 
+/*---------------Element Container ----------------------*/
 export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
-export const OPEN_GLOSSARY_FOOTNOTE="OPEN_GLOSSARY_FOOTNOTE"
-export const ADD_GLOSSARY_FOOTNOTE="ADD_GLOSSARY_FOOTNOTE"
+export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
+export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 
@@ -50,6 +50,11 @@ export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
 export const APO_BUTTON = 'APO_BUTTON'
+export const TOGGLE_APO_SEARCH = 'TOGGLE_APO_SEARCH'
+export const REMOVE_ASSET_LINK = 'REMOVE_ASSET_LINK'
+export const USE_STATE_IMAGE_DATA = 'USE_STATE_IMAGE_DATA'
+export const IMAGES_FROM_API = 'IMAGES_FROM_API'
+
 /*--------------- Learning Tool -------------------*/
 export const LT_API_RESULT = "LT_API_RESULT"
 export const LT_API_RESULT_FAIL = "LT_API_RESULT_FAIL"
