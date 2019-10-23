@@ -1,13 +1,15 @@
-//This component is for Show Error UI based on given message
+/**
+ * This component is for Show Error UI based on given message
+ */
 
-import React, { Component } from 'react';
+import React from "react";
 
-const ErrorComp= (props) => {
+const ErrorComp = props => {
     return (
-            <section>
-               <p className= "ErrorComp">{props.errorMsg}</p>
-            </section>    
+        <section>
+            <p className="ErrorComp">{props.errorMsg}</p>
+        </section>
     );
-}
+};
 
 export default ErrorComp;

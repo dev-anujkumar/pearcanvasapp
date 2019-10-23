@@ -1,3 +1,6 @@
+/**
+ * Root Component for Element Picker
+ */
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
@@ -6,20 +9,30 @@ import config from '../../config/config';
 
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
+const METADATA_ANCHOR = 'metadata-anchor',
+SECTION_BREAK = 'section-break-elem',
+OPENER = 'opener-elem',
+BACK_MATTER = 'Back Matter',
+FRONT_MATTER = 'Front Matter',
+ELEMENT_ASIDE = 'element-aside',
+WORKED_EXP = 'worked-exp-elem',
+CONTAINER = 'container-elem',
+CONTAINER_INTRO = 'container-introduction'
+
 export default function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false)
-    const { esProps, elementType, slateType, sectionBreak } = props
+    const { esProps, elementType, sectionBreak } = props
     let buttonRef = useRef(null)
+
     /**
      * @description: This hook is used for handling the outer click, 
      * after mounting the component or update the component state this hook will called
      */
-
-
     useEffect(() => {
         document.addEventListener('mousedown', (event) => {
-            let elems = getParents(event.target)
-            let dropdown = 'dropdown'
+            let elems, dropdown
+            elems = getParents(event.target)
+            dropdown = 'dropdown'
             if (elems.indexOf(dropdown) === -1) {
                 setShowClass(false)
             }
@@ -42,47 +55,49 @@ export default function ElementSaprator(props) {
         setShowClass(!showClass)
     }
 
+    /**
+     * Get parent nodes of a dom node
+     * @param {Element node} elem 
+     */
     function getParents(elem) {
-        // Set up a parent array
         var parents = [];
-        // Push each parent element to the array
         for (; elem && elem !== document; elem = elem.parentNode) {
             parents.push(elem.className);
         }
-        // Return our parent array
         return parents;
     };
 
-    function closeDropDown () {
+    /**
+     * Close dropdown
+     */
+    function closeDropDown() {
         setShowClass(false);
     }
-    
+
     /**
      * @description: OnClick handler for split slate button
      */
     const splitSlateClickHandler = () => {
         props.toggleSplitSlatePopup(true, props.index)
     }
-    
-    return (
-        <div className={showClass ? 'elementSapratorContainer opacityClassOn':'elementSapratorContainer'}>
-                <div className='elemDiv-split'>
-                    {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                       { config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
-                </div>
 
+    return (
+        <div className={showClass ? 'elementSapratorContainer opacityClassOn' : 'elementSapratorContainer'}>
+            <div className='elemDiv-split'>
+                {elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
+                    {config.PERMISSIONS.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
+            </div>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
             </div>
-
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                       { config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                        {config.PERMISSIONS.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)}
                         </ul>
                     </div>
                 </div>
@@ -91,6 +106,9 @@ export default function ElementSaprator(props) {
     )
 }
 
+/**
+ * Default props for Element Saprator
+ */
 ElementSaprator.propTypes = {
     esProps: PropTypes.array.isRequired,
     elementType: PropTypes.string
@@ -106,47 +124,51 @@ export function addMediaClickHandler() {
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown) {
-    let updatedEsProps;
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown) {
+    let updatedEsProps, buttonType;
 
-    if(config.slateType == 'container-introduction' && (!config.isCO || config.isLOL)){
+    if (config.slateType == CONTAINER_INTRO && (!config.isCO || config.isLOL)) {
         // hide the metadata anchor on IS when its once created
-        if(config.isLOL){
-            let elements= document.getElementsByClassName("metadata-anchor");
-            var i;
-            for(var key in elements){
-                if(elements[key].className){  elements[key].className += " disabled";}
-             } 
+        if (config.isLOL) {
+            let elements = document.getElementsByClassName(METADATA_ANCHOR);
+            for (let key in elements) {
+                if (elements[key].className) { elements[key].className += " disabled"; }
+            }
         }
-        if(!config.isCO) {
+
+        if (!config.isCO) {
             updatedEsProps = esProps.filter((btnObj) => {
-                return btnObj.buttonType !== 'section-break-elem';
+                return btnObj.buttonType !== SECTION_BREAK;
             })
         } else {
             updatedEsProps = esProps.filter((btnObj) => {
-                return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+                buttonType = btnObj.buttonType;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER;
             })
         }
-        
+
     } else {
         updatedEsProps = esProps.filter((btnObj) => {
-            return btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
+            buttonType = btnObj.buttonType;
+            return buttonType !== SECTION_BREAK && buttonType !== OPENER;
         })
     }
+
     //hide the metadata anchor from frontmatter and backmatter
-    if(config.parentEntityUrn == "Front Matter" || config.parentEntityUrn == "Back Matter"){
+    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
         updatedEsProps = esProps.filter((btnObj) => {
-        return  btnObj.buttonType !=='metadata-anchor' && btnObj.buttonType !== 'section-break-elem' && btnObj.buttonType !== 'opener-elem';
-    })
+            buttonType = btnObj.buttonType;
+            return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER;
+        })
     }
 
-    if(elementType == 'element-aside'){
+    if (elementType == ELEMENT_ASIDE) {
         updatedEsProps = esProps.filter((btnObj) => {
-            if(sectionBreak){
-                return  btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem';
-            }else{
-                // return btnObj.buttonType !=='worked-exp-elem' && btnObj.buttonType !== 'container-elem' && btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
-                return btnObj.buttonType !== 'opener-elem' && btnObj.buttonType !== 'section-break-elem';
+            buttonType = btnObj.buttonType;
+            if (sectionBreak) {
+                return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
+            } else {
+                return buttonType !== OPENER && buttonType !== SECTION_BREAK;
             }
         })
     }
@@ -162,6 +184,7 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
                 <li key={key}>
                     <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                 </li>
-            </Tooltip>)
+            </Tooltip>
+        )
     })
 }
