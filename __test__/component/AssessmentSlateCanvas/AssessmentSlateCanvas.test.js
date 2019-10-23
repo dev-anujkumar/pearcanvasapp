@@ -16,18 +16,22 @@ describe('Testing Assessment Slate Canvas component', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
+            showBlocker : jest.fn(),
             model : assessmentSlateDefault
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
         assessmentSlateInstance.handleC2AssessmentClick("");
         c2AssessmentModule.launchAssetBrowser('','','','','','',()=>{});
+        assessmentSlateInstance.toggleAssessmentPopup(false);
 
     }) 
     it ('Set getAssessmentDataPopup', () => {
+        const mockLoginfn = jest.fn();
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
+            showBlocker : jest.fn(),
             model : assessmentSlateDefault
         }
 
