@@ -10,7 +10,6 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
-import { CustomConsole } from '@jest/console';
 
 const axiosApiInstance = axios.create({
 	baseURL: config.C4_API_URL,
@@ -22,18 +21,21 @@ const findElementType = (element, index) => {
 	elementType['tag'] = '';
 	switch (element.type) {
 		case 'element-authoredtext':
-			elementType['elementType'] = 'element-authoredtext';
-			if (element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
-				elementType['primaryOption'] = 'primary-heading';
+			elementType['elementType'] = elementDataBank[element.type]["elementType"];
+			if (element.elementdata && element.elementdata.hasOwnProperty("headers") && element.elementdata.headers) {
+				elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
 				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
 			} else {
-				elementType['primaryOption'] = 'primary-paragraph';
-				elementType['secondaryOption'] = 'secondary-paragraph';
-			 }
+				elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
+				elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
+			}
 			break;
 
 		case 'element-blockfeature':
-			elementType['elementType'] = 'element-authoredtext';
+			elementType = {
+				...elementDataBank[element.type][element.elementdata.type]
+			}
+			/* elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-blockquote';
 			switch (element.elementdata.type) {
 				case 'pullquote':
@@ -45,19 +47,25 @@ const findElementType = (element, index) => {
 				case 'marginalia':
 					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
-			}
+			} */
 			break;
 
 		case 'element-learningobjectives':
-			elementType['elementType'] = 'element-authoredtext';
+			elementType = {...elementDataBank[element.type]}
+			/* elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-learning-objective';
-			elementType['secondaryOption'] = 'secondary-learning-objective';
+			elementType['secondaryOption'] = 'secondary-learning-objective'; */
 			break;
 
 		case 'figure':
 			if (element.figuretype) {
 				if (element.figuretype == 'image') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.subtype]
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-figure';
 					switch (element.subtype) {
 						case 'image50Text':
@@ -76,9 +84,14 @@ const findElementType = (element, index) => {
 						default:
 							elementType['secondaryOption'] = 'secondary-image-figure-quarter';
 							break;
-					}
+					} */
 				} else if(element.figuretype == 'table') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.subtype]
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-table';
 					switch(element.subtype) {
 						case 'image50TextTableImage':
@@ -93,9 +106,14 @@ const findElementType = (element, index) => {
 						case 'imageFullscreenTableImage':
 							elementType['secondaryOption'] = 'secondary-image-table-full';
 							break;
-					}
+					} */
 				} else if(element.figuretype == 'mathImage') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.subtype]
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-image-equation';
 					switch(element.subtype) {
 						case 'image50TextMathImage':
@@ -110,17 +128,27 @@ const findElementType = (element, index) => {
 						case 'imageFullscreenMathImage':
 							elementType['secondaryOption'] = 'secondary-image-equation-full';
 							break;
-					}
+					} */
 				} else if(element.figuretype == 'authoredtext') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.subtype]
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-mathml-equation';
 					switch(element.subtype) {
 						case 'mathml':
 							elementType['secondaryOption'] = 'secondary-mathml-equation';
 							break;
-					}
+					} */
 				} else if (element.figuretype == 'codelisting') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						secondaryOption : `secondary-blockcode-language-${element.figuredata.programlanguage}`
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-blockcode-equation';
 					switch (element.figuredata.programlanguage) {
 						case 'C++':
@@ -208,9 +236,14 @@ const findElementType = (element, index) => {
 							elementType['secondaryOption'] = 'secondary-blockcode-language-Default';
 							break;
 
-					}
+					} */
 				} else if (element.figuretype == 'tableasmarkup') {
-					elementType['elementType'] = 'figure';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.subtype]
+					}
+					/* elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-editor-table-equation';
 					switch (element.subtype) {
 						case 'imageTextWidthTableEditor':
@@ -227,9 +260,14 @@ const findElementType = (element, index) => {
 							elementType['secondaryOption'] = 'secondary-editor-table-half';
 							break;
 
-					}
+					} */
 				} else if (element.figuretype == 'video') {
-					elementType['elementType'] = 'video-audio';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+					}
+					/* elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-video';
 					switch(element.figuredata.srctype) {
 						case 'internal':
@@ -239,9 +277,14 @@ const findElementType = (element, index) => {
 						default:
 							elementType['secondaryOption'] = 'secondary-video-smartlink';
 							break;
-					}
+					} */
 				} else if (element.figuretype == 'audio') {
-					elementType['elementType'] = 'video-audio';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+					}
+					/* elementType['elementType'] = 'video-audio';
 					elementType['primaryOption'] = 'primary-audio';
 					switch(element.figuredata.srctype) {
 						case 'internal':
@@ -253,9 +296,14 @@ const findElementType = (element, index) => {
 							break;
 						
 							
-					}
+					} */
 				} else if (element.figuretype == 'interactive') {
-					elementType['elementType'] = 'element-interactive';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
+						secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"]
+					}
+					/* elementType['elementType'] = 'element-interactive';
 					switch(element.figuredata.interactivetype) {
 						case '3rd-party':
 							elementType['primaryOption'] = 'primary-smartlink';
@@ -291,9 +339,14 @@ const findElementType = (element, index) => {
 							elementType['primaryOption'] = 'primary-mmi';
 							elementType['secondaryOption'] = 'secondary-interactive-mmi';
 							break;
-					}
+					} */
 				} else if (element.figuretype == 'assessment') {
-					elementType['elementType'] = 'element-assessment';
+					elementType = {
+						elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+						primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
+					}
+					/* elementType['elementType'] = 'element-assessment';
 					elementType['primaryOption'] = 'primary-single-assessment';
 					switch (element.figuredata.elementdata.assessmentformat) {
 						case 'tdx':
@@ -303,7 +356,7 @@ const findElementType = (element, index) => {
 						default:
 							elementType['secondaryOption'] = 'secondary-single-assessment-cite';
 							break;
-					}
+					} */
 				}
 			}
 			break;
@@ -312,8 +365,8 @@ const findElementType = (element, index) => {
 				// elementType['elementType'] = elementDataBank[element.subtype]["elementType"]
 
 				elementType = {
-					elementType : elementDataBank[element.subtype]["elementType"],
-					...elementDataBank[element.subtype][element.designtype]
+					elementType : elementDataBank[element.type][element.subtype]["elementType"],
+					...elementDataBank[element.type][element.subtype][element.designtype]
 				}
 				
 			/* if (element.subtype === '' || element.subtype === 'sidebar') {
@@ -389,30 +442,29 @@ const findElementType = (element, index) => {
 			break;
 
 		case 'element-learningobjectivemapping':
-			elementType['elementType'] = '';
+			/* elementType['elementType'] = '';
 			elementType['primaryOption'] = '';
 			elementType['secondaryOption'] = '';
-			elementType['tag'] = 'LO';
-			break;
-
+			elementType['tag'] = 'LO'; */
 		case 'element-generateLOlist':
-			elementType['elementType'] = '';
+			/* elementType['elementType'] = '';
 			elementType['primaryOption'] = '';
 			elementType['secondaryOption'] = '';
 			elementType['tag'] = 'MA';
-			break;
-		
+			break; */
 		case 'chapterintro':
-			elementType['elementType'] = 'chapterintro';
+			elementType = {...elementDataBank[element.type]}
+			/* elementType['elementType'] = 'chapterintro';
 			elementType['primaryOption'] = 'primary-chapterintro';
 			elementType['secondaryOption'] = 'secondary-chapterintro';
-			elementType['tag'] = 'OE';
+			elementType['tag'] = 'OE'; */
 			break;
 		
-		default: 
-			elementType['elementType'] = 'element-authoredtext';
+		default:
+			elementType = {...elementDataBank["element-authoredtext"]}
+			/* elementType['elementType'] = 'element-authoredtext';
 			elementType['primaryOption'] = 'primary-paragraph';
-			elementType['secondaryOption'] = 'secondary-paragraph';
+			elementType['secondaryOption'] = 'secondary-paragraph'; */
 	}
 
 	elementType['elementId'] = element.id;

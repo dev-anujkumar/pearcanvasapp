@@ -36,6 +36,27 @@ const elementDataBank = {
         "secondaryOption" : "secondary-learning-objective"
     },
 
+    "element-learningobjectivemapping" : {
+        "elementType" : "",
+        "primaryOption" : "",
+        "secondaryOption" : "",
+        "tag" : "LO"
+    },
+
+    "element-generateLOlist": {
+        "elementType" : "",
+        "primaryOption" : "",
+        "secondaryOption" : "",
+        "tag" : "MA"
+    },
+
+    "chapterintro": {
+        "elementType" : "chapterintro",
+        "primaryOption" : "primary-chapterintro",
+        "secondaryOption" : "secondary-chapterintro",
+        "tag" : "OE"
+    },
+
     "element-list" : {
         "upper-alpha" : {
             "elementType" : "element-authoredtext",
@@ -53,18 +74,60 @@ const elementDataBank = {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "image50Text" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
+            "imageTextWidth" : {
+                "secondaryOption" : "secondary-image-figure-width"
+            },
+            "imageWiderThanText" : {
+                "secondaryOption" : "secondary-image-figure-wider"
+            },
+            "imageFullscreen" : {
+                "secondaryOption" : "secondary-image-figure-full"
+            },
+            "image25Text" : {
+                "secondaryOption" : "secondary-image-figure-quarter"
+            }
         },
         "table" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-table",
+            "image50TextTableImage" : {
+                "secondaryOption" : "secondary-image-table-half"
+            },
+            "imageTextWidthTableImage" : {
+                "secondaryOption" : "secondary-image-table-width"
+            },
+            "imageWiderThanTextTableImage" : {
+                "secondaryOption" : "secondary-image-table-wider"
+            },
+            "imageFullscreenTableImage" : {
+                "secondaryOption" : "secondary-image-table-full"
+            },
         },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",
+            "image50TextMathImage" : {
+                "secondaryOption" : "secondary-image-equation-half"
+            },
+            "imageTextWidthMathImage" : {
+                "secondaryOption" : "secondary-image-equation-width"
+            },
+            "imageWiderThanTextMathImage" : {
+                "secondaryOption" : "secondary-image-equation-wider"
+            },
+            "imageFullscreenMathImage" : {
+                "secondaryOption" : "secondary-image-equation-full"
+            }
         },
         "authoredtext" : {
             "elementType" : "figure",
             "primaryOption" : "primary-mathml-equation",
+            "mathml" : {
+                "secondaryOption" : "secondary-mathml-equation"
+            }
         },
         "codelisting" : {
             "elementType" : "figure",
@@ -73,22 +136,87 @@ const elementDataBank = {
         "tableasmarkup" : {
             "elementType" : "figure",
             "primaryOption" : "primary-editor-table-equation",
+            "imageTextWidthTableEditor" : {
+                "secondaryOption" : "secondary-editor-table-width"
+            },
+            "imageWiderThanTextEditorTable" : {
+                "secondaryOption" : "secondary-editor-table-wider"
+            },
+            "imageFullscreenTableEditor" : {
+                "secondaryOption" : "secondary-editor-table-full"
+            },
+            "image50TextEditorTable" : {
+                "secondaryOption" : "secondary-editor-table-half"
+            }
         },
         "video" : {
             "elementType" : "video-audio",
             "primaryOption" : "primary-video",
+            "internal" : {
+                "secondaryOption" : "secondary-video-alfresco"
+            },
+            "externallink" : {
+                "secondaryOption" : "secondary-video-smartlink"
+            },
         },
         "audio" : {
             "elementType" : "video-audio",
             "primaryOption" : "primary-audio",
+            "internal" : {
+                "secondaryOption" : "secondary-audio-alfresco"
+            },
+            "externallink" : {
+                "secondaryOption" : "secondary-audio-smartlink"
+            },
         },
         "interactive" : {
             "elementType" : "element-interactive",
-            "primaryOption" : "primary-list",
+            "3rd-party": {
+                "primaryOption" : "primary-smartlink",
+                "secondaryOption" : "secondary-interactive-smartlink-third"
+            },
+            "pdf": {
+                "primaryOption" : "primary-smartlink",
+                "secondaryOption" : "secondary-interactive-smartlink-pdf"
+            },
+            "web-link": {
+                "primaryOption" : "primary-smartlink",
+                "secondaryOption" : "secondary-interactive-smartlink-web"
+            },
+            "pop-up-web-link": {
+                "primaryOption" : "primary-smartlink",
+                "secondaryOption" : "secondary-interactive-smartlink-pop-up-web-link"
+            },
+            "table": {
+                "primaryOption" : "primary-smartlink",
+                "secondaryOption" : "secondary-interactive-smartlink-tab"
+            },
+            "showhide": {
+                "primaryOption" : "primary-showhide",
+                "secondaryOption" : "secondary-interactive-showhide"
+            },
+            "popup": {
+                "primaryOption" : "primary-popup",
+                "secondaryOption" : "secondary-interactive-popup"
+            },
+            "fpo": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "flashcards": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
         },
         "assessment" : {
             "elementType" : "element-assessment",
             "primaryOption" : "primary-single-assessment",
+            "tdx" : {
+                "secondaryOption" : "secondary-single-assessment-tdx"
+            },
+            "cite" : {
+                "secondaryOption" : "secondary-single-assessment-cite"
+            },
         }
     },
 
