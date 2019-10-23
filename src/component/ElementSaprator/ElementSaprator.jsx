@@ -167,12 +167,6 @@ export function renderDropdownButtons(esProps, slateType, elementType, sectionBr
     })
 }
 
-const mapStateToProps = state => {
-    return {
-        permissions : state.appStore.permissions
-    }
-};
-
-export default connect(mapStateToProps, null)(ElementSaprator);
+export default ElementSaprator;
   
   
