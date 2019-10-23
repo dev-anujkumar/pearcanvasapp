@@ -1487,6 +1487,59 @@ export default {
         "versionUrn": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
         "contentUrn": "urn:pearson:entity:5a79c9c5-99fd-4814-b4d3-17e8b55973b3"
     },
+    "pdf":{
+        "id": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
+        "type": "figure",
+        "figuretype": "interactive",
+        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        },
+        "subtitle": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "captions": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "credits": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "figuredata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            "interactiveid": "",
+            "interactivetype": "pdf",
+            "posterimage": {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            }
+        },
+        "html": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "title": "<p><br></p>",
+            "subtitle": "<p><br></p>",
+            "caption": "<p><br></p>",
+            "credit": "<p><br></p>",
+            "text": "",
+            "postertext": "",
+            "tableasHTML": ""
+        },
+        "versionUrn": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
+        "contentUrn": "urn:pearson:entity:5a79c9c5-99fd-4814-b4d3-17e8b55973b3"
+    },
     "aside":{
         "id": "urn:pearson:manifest:591b8d42-7966-4337-912d-0635e328dfb2",
         "schema": "http://schemas.pearson.com/wip-authoring/element/1",

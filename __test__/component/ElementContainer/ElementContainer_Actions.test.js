@@ -9,7 +9,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { slateLevelData, newslateData } from "../../../fixtures/slateTestingData"
 import axios from 'axios';
 
-import { ADD_COMMENT } from '../../../src/constants/Action_Constants';
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE} from '../../../src/constants/Action_Constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -51,10 +51,10 @@ describe('Tests ElementContainer Actions', () => {
             commentCreator: "c5test01",
             assignee: "c5test01"
         },
-            elementId = "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-            data = {
+            elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+            response={data : {
                 commentUrn: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
-            }
+            }}
 
         const expectedActions = [{
             type: ADD_COMMENT,
@@ -64,7 +64,7 @@ describe('Tests ElementContainer Actions', () => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
                 status: 201,
-                response: data
+                response: response
             });
         });
 
@@ -72,5 +72,145 @@ describe('Tests ElementContainer Actions', () => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe(ADD_COMMENT);
         });
+    })
+    it('testing------- Delete Element------action', () => {
+        store = mockStore(() => initialState);
+        let newComment = {
+            comment: "test",
+            commentCreator: "c5test01",
+            assignee: "c5test01"
+        },
+            elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            type="element-workedexample",
+            status =200
+            let asideData = {
+                type:"element-aside",
+                id:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                
+           };
+           let  parentUrn= {
+            manifestUrn:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            elementType:"element-aside"
+        }
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: slateLevelData
+        }];
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: status
+            });
+        });
+
+        return store.dispatch(actions.deleteElement(elementId,type, "",asideData,contentUrn)).then(() => {
+        });
+        let  parentUrn1= {
+            manifestUrn:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            elementType:"element-aside"
+        }
+        return store.dispatch(actions.deleteElement(elementId,type,parentUrn1,asideData,contentUrn)).then(() => {
+        });
+        
+    })
+    it('testing------- Delete Element aside type------action', () => {
+        store = mockStore(() => initialState);
+        let newComment = {
+            comment: "test",
+            commentCreator: "c5test01",
+            assignee: "c5test01"
+        },
+            elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8rre0a",
+            contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            type="element-workedexample",
+            status =200
+            let asideData = {
+                type:"element-aside",
+                id:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                
+           };
+          
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: slateLevelData
+        }];
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: status
+            });
+        });
+
+        let  parentUrn= {
+            manifestUrn:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            elementType:"element-aside"
+        }
+        return store.dispatch(actions.deleteElement(elementId,type,parentUrn,asideData,contentUrn)).then(() => {
+        });
+        
+    })
+    it('testing------- Delete Element manifest------action', () => {
+        store = mockStore(() => initialState);
+        let 
+            elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8rre0as",
+            contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            type="manifest",
+            status =200
+            let asideData = {
+                type:"element-aside",
+                id:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                
+           };
+          
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: slateLevelData
+        }];
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: status
+            });
+        });
+
+        let  parentUrn= {
+            manifestUrn:"urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            elementType:"manifest"
+        }
+        return store.dispatch(actions.deleteElement(elementId,type,parentUrn,asideData,contentUrn)).then(() => {
+        });
+        
+    })
+    it('testing------- Update Element------action', () => {
+        store = mockStore(() => initialState);
+        let
+            elementId = "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            parentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            type="element-workedexample",
+            response ={data:{}
+            }
+            
+        const expectedActions = [{
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: slateLevelData
+        }];
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 201,
+                response: response
+            });
+        });
+
+        return store.dispatch(actions.updateElement("",2)).then(() => {
+           
+           
+        });
+        
     })
 });
