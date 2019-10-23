@@ -182,6 +182,7 @@ class ElementAsideContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
                     showDeleteElemPopup = {this.props.showDeleteElemPopup}
+                    permissions = {this.props.permissions}
                 />
                 {this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)}
 
@@ -222,6 +223,7 @@ class ElementAsideContainer extends Component {
                                     key={`elem-separtor-${element.id}`}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
                                     elementType={this.props.element.type}
+                                    permissions = {this.props.permissions}
                                 />
                                 }
                                 <ElementContainer
@@ -231,12 +233,13 @@ class ElementAsideContainer extends Component {
                                     parentUrn ={parentUrn}
                                     showBlocker={this.props.showBlocker}
                                     asideData = {asideData}
+                                    permissions = {this.props.permissions}
 
                                 // handleCommentspanel={this.props.handleCommentspanel}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (
-                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions = {this.props.permissions} />
                                         )
                                     }
                                 </ElementContainer>
@@ -246,6 +249,7 @@ class ElementAsideContainer extends Component {
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
+                                    permissions = {this.props.permissions}
                                 />
                             </React.Fragment>
                         )

@@ -23,6 +23,9 @@ describe('Testing <SlateWrapper> Component', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
+        appStore : {
+            permissions : [],
+        },
         toggleTocDelete: true
     };
     test('renders without crashing', () => {
