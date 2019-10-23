@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import 'font-awesome/css/font-awesome.css';
 //IMPORT TINYMCE 
-import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/silver';
 import "tinymce/skins/ui/oxide/skin.min.css";
@@ -13,8 +12,6 @@ import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
-import { setActiveElement } from './CanvasWrapper/CanvasWrapper_Actions';
-import GlossaryFootnoteMenu from './GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 //import './../styles/Tiny.css';
 import config from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';

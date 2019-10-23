@@ -128,6 +128,22 @@
     background: transparent;
 }
 
+.slate-wrapper::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    border-radius: 14px;
+    background-color: transparent;
+}
+
+.slate-wrapper::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+.slate-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 21px;
+    -webkit-box-shadow: inset 0 0 6px transparent;
+    background-color: #4e4e4e;
+}
 /* disable class used in pagenumber for permissioning purpose */
 .pageNumberBox.disableClass{        
     pointer-events:none;            

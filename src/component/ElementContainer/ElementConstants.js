@@ -35,3 +35,18 @@ export default {
     ASSESSMENT_SLATE : "element-assessment"
 }
 
+export const LABELS = {
+    "figure": "F",
+    "image": "Fg",
+    "table": "Tb",
+    "mathImage": "Eq",
+    "authoredtext": "MML",
+    "codelisting": "BCE",
+    "audio": "AUD",
+    "video": "VID",
+    "assessment": "Qu",
+    "external-link": "SL",
+    "narrative-link": "Pop",
+    "workedexample": "WE"
+}
+

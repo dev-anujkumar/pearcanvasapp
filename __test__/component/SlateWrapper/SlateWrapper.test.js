@@ -9,12 +9,42 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
-    slateLockReducer : {slateLockInfo: {}},
-    appStore : {slateTitleUpdated : {},activeElement : {}},
+    slateLockReducer: { slateLockInfo: {} },
+    appStore: { slateTitleUpdated: {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
-    metadataReducer:{ currentSlateLOData: {} }
+    metadataReducer: { currentSlateLOData: {} }
 })
 import config from '../../../src/config/config';
+//IMPORT TINYMCE 
+import tinymce from 'tinymce/tinymce';
+import 'tinymce/themes/silver';
+import "tinymce/skins/ui/oxide/skin.min.css";
+import "tinymce/skins/ui/oxide/content.min.css";
+import "tinymce/skins/content/default/content.css";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/advlist";
+import "tinymce/plugins/paste";
+
+jest.mock('../../../src/component/ListButtonDrop/ListButtonDropPortal.jsx', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/component/ListButtonDrop/ListButtonDrop.jsx', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/component/ElementContainer', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/component/ElementSaprator', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 
 describe('Testing <SlateWrapper> Component', () => {
     let props = {
@@ -23,14 +53,16 @@ describe('Testing <SlateWrapper> Component', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
-        appStore : {
-            permissions : [],
+        appStore: {
+            permissions: [],
         },
         toggleTocDelete: true
     };
     test('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(<SlateWrapper store={store} {...props} slateData={{}} />, div);
+        ReactDOM.render(<Provider store={store}>
+            <SlateWrapper {...props} slateData={{}} />
+        </Provider>, div);
         ReactDOM.unmountComponentAtNode(div);
     })
 
@@ -43,7 +75,7 @@ describe('Testing <SlateWrapper> Component', () => {
             },
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
- 
+
         test('renders properly with default slate', () => {
             expect(wrapper.find('.element-list').length).toBe(0);
             expect(wrapper.find('ElementContainer').length).toBe(0);
@@ -100,118 +132,118 @@ describe('Testing <SlateWrapper> Component', () => {
         })
     })
 
-     describe('With elements', () => {
+    describe('With elements', () => {
         let props = {
             slateData: slateData,
             slateLockInfo: {
                 isLocked: true,
                 userId: 'c5Test01'
             },
-            setSlateLock : ()=>{},
-            showBlocker : ()=>{},
-            modifyState : ()=>{}
+            setSlateLock: () => { },
+            showBlocker: () => { },
+            modifyState: () => { }
         };
         const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
         it('Simulating checkSlateLockStatus function', () => {
-            slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus({target : {tagName : 'b'}}) 
+            slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus({ target: { tagName: 'b' } })
         })
         it('Simulating prohibitPropagation function', () => {
-            slateWrapper.find('SlateWrapper').instance().prohibitPropagation({preventDefault : ()=>{},stopPropagation : ()=>{}}) 
+            slateWrapper.find('SlateWrapper').instance().prohibitPropagation({ preventDefault: () => { }, stopPropagation: () => { } })
         })
         it('Simulating elementSepratorProps function', () => {
-            slateWrapper.find('SlateWrapper').instance().elementSepratorProps('','','','','') 
+            slateWrapper.find('SlateWrapper').instance().elementSepratorProps('', '', '', '', '')
         })
         it('Simulating renderDefaultElement with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().renderDefaultElement() 
+            slateWrapper.find('SlateWrapper').instance().renderDefaultElement()
         })
         it('Simulating renderDefaultElement with slate data function slateType not assessment', () => {
-            config.slateType="";
-            slateWrapper.find('SlateWrapper').instance().renderDefaultElement() 
+            config.slateType = "";
+            slateWrapper.find('SlateWrapper').instance().renderDefaultElement()
         })
         it('Simulating handleSplitSlate with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().handleSplitSlate() 
+            slateWrapper.find('SlateWrapper').instance().handleSplitSlate()
         })
         it('Simulating deleteRejected with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().deleteRejected() 
+            slateWrapper.find('SlateWrapper').instance().deleteRejected()
         })
         it('Simulating deleteAccepted with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().deleteAccepted() 
+            slateWrapper.find('SlateWrapper').instance().deleteAccepted()
         })
         it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('section-break-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('section-break-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for text-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('text-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('text-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('image-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('image-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('audio-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('audio-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for image-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('interactive-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('interactive-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for assessment-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('assessment-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('assessment-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for container-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('container-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('container-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for opener-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('opener-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('opener-elem', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for worked-exp-elem', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('worked-exp-elem','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('worked-exp-elem', '', '', {}, { contentUrn: '' }, '')
         })
         xit('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
-            config.slateType="container-introduction";
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor','','',{},{contentUrn : ''},'') 
+            config.slateType = "container-introduction";
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
         })
         xit('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
-            config.slateType="";
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor','','',{},{contentUrn : ''},'') 
+            config.slateType = "";
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating splithandlerfunction with slate data function for default', () => {
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('default','','',{},{contentUrn : ''},'') 
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('default', '', '', {}, { contentUrn: '' }, '')
         })
         it('Simulating togglePopup with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().togglePopup('','') 
+            slateWrapper.find('SlateWrapper').instance().togglePopup('', '')
         })
         it('Simulating customListDropClickAction with slate data function', () => {
-            slateWrapper.find('SlateWrapper').instance().customListDropClickAction('','') 
+            slateWrapper.find('SlateWrapper').instance().customListDropClickAction('', '')
         })
         it('Simulating handleClickOutside with slate data function', () => {
             slateWrapper.find('SlateWrapper').instance().listDropRef = document.createElement('div');
-            slateWrapper.find('SlateWrapper').instance().handleClickOutside({target : document.createElement('p')}) 
+            slateWrapper.find('SlateWrapper').instance().handleClickOutside({ target: document.createElement('p') })
         })
         it('Simulating showSplitSlatePopup with slate data function', () => {
             slateWrapper.find('SlateWrapper').instance().state = {};
             slateWrapper.find('SlateWrapper').instance().state.showSplitSlatePopup = true;
-            slateWrapper.find('SlateWrapper').instance().showSplitSlatePopup() 
+            slateWrapper.find('SlateWrapper').instance().showSplitSlatePopup()
         })
 
-     })
-     describe('With elements and lock status true', () => {
+    })
+    describe('With elements and lock status true', () => {
         let props = {
             slateData: slateData,
             slateLockInfo: {
                 isLocked: true,
                 userId: 'c5Test02'
             },
-            setSlateLock : ()=>{},
-            showBlocker : ()=>{},
-            modifyState : ()=>{}
+            setSlateLock: () => { },
+            showBlocker: () => { },
+            modifyState: () => { }
         };
         const slateWrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>)
         it('Simulating splithandlerfunction with slate data function for sectionbreak elm', () => {
             slateWrapper.find('SlateWrapper').instance().state.showLockPopup = true;
-            slateWrapper.find('SlateWrapper').instance().checkLockStatus = ()=>{return true};
+            slateWrapper.find('SlateWrapper').instance().checkLockStatus = () => { return true };
             slateWrapper.find('SlateWrapper').instance().showLockPopup();
             slateWrapper.find('SlateWrapper').instance().checkLockStatus();
-            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('','','',{},{contentUrn : ''},'');
+            slateWrapper.find('SlateWrapper').instance().splithandlerfunction('', '', '', {}, { contentUrn: '' }, '');
             slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus();
         })
 
-     })
+    })
 })
