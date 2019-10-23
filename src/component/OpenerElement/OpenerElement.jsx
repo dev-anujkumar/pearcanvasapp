@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
 import { labelOptions } from './LabelOptions'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 

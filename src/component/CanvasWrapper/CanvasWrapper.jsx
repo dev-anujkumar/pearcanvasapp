@@ -298,7 +298,7 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopOverSearch.showApoSearch,
+        showApoSearch : state.assetPopOverSearch.showApoSearch
     };
 };
 
