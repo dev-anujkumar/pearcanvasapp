@@ -36,7 +36,7 @@ export class TinyMceEditor extends Component {
         let viewLoEnable = true;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
-        this.assetPopoverButton = null;
+        this.assetPopoverButtonState = null;
         this.lastContent = '';
         this.editorConfig = {
             plugins: EditorConfig.plugins,
@@ -188,6 +188,10 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) =>{
         editor.on('click', (e) => {
+            let selectedText = window.getSelection().toString();
+            let elemClassList = editor.targetElm.classList;
+            let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
+
             if (e.target.parentElement.nodeName == "SUP") {
                 this.props.openGlossaryFootnotePopUp(true, "Footnote");
             }
@@ -201,6 +205,10 @@ export class TinyMceEditor extends Component {
                     'dataUrn' : dataUrn
                 }
                 authorAssetPopOver(true, apoObject);
+            }else if(!isFigureElem && selectedText.length){ //handling Asset popover show hide toolbar icon
+                this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
+            }else if(selectedText.length <= 0){ //handling Asset popover show hide toolbar icon
+                this.assetPopoverButtonState.setDisabled(true);
             }else {
                 this.props.openGlossaryFootnotePopUp(false);
             }
@@ -465,7 +473,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addAssetPopoverIcon = editor => {
-        editor.ui.registry.addButton("assetPopoverIcon", {
+
+        editor.ui.registry.addToggleButton("assetPopoverIcon", {
             text: "",
             icon: "assetpopovericon",
             tooltip: "Asset Popover",
@@ -475,14 +484,16 @@ export class TinyMceEditor extends Component {
             if(selectedText.length){
                 this.addAssetPopover(editor, selectedText)
             }
-            
             },
             onSetup: (buttonApi) => {
             /*
             make merge menu button apis available globally among compnenet
             */
-            this.assetPopoverButton = buttonApi;
-            // this.assetPopoverButton.setDisabled(true);           
+            let selectedText = window.getSelection().toString();
+            this.assetPopoverButtonState = buttonApi;        
+            if(!selectedText.length){
+                this.assetPopoverButtonState.setDisabled();           
+            }
             }
         });
     }
