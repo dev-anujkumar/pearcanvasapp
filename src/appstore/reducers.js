@@ -19,7 +19,8 @@ import {
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
-    SET_UPDATED_SLATE_TITLE
+    SET_UPDATED_SLATE_TITLE,
+    GET_PROJECT_PERMISSIONS
 } from '../constants/Action_Constants';
 
 /**
@@ -32,7 +33,8 @@ const initialState = {
     // elementsTag: {},
     activeElement: {},
     splittedElementIndex: 0,
-    pageNumberData: {}
+    pageNumberData: {},
+    permissions: []
 };
 
 /**
@@ -112,6 +114,11 @@ export default function (state = initialState, action) {
                  ...state,
                  slateLevelData: action.payload.slateLevelData
              }
+        case GET_PROJECT_PERMISSIONS:
+            return {
+                ...state,
+                permissions: action.payload
+            }
         default:
             return state;
     }

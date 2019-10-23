@@ -15,6 +15,7 @@ import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
+import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -25,7 +26,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 isTableLaunched: false,
                 showBlocker: false,
                 toggleTocDelete: false,
-                tocDeleteMessage: null
+                tocDeleteMessage: null,
+                searchQuery: null,
+                showGlobalSearchPanel: false
             };
         }
 
@@ -184,6 +187,22 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
+                case 'search':
+                    {
+                        if (message.data && message.data !== null && message.data !== "") {
+                            this.setState({
+                                'searchQuery': message.data,
+                                'showGlobalSearchPanel': true
+                            });
+                        }
+                        else {
+                            this.setState({
+                                'searchQuery': null,
+                                'showGlobalSearchPanel': false
+                            });
+                        }
+                        break;
+                    }
             }
         }
 
@@ -202,7 +221,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
-                config.PERMISSIONS = message.permissions;
+                this.props.handleUserRole(message.permissions)
             }
         }
 
@@ -396,7 +415,12 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    <RootContext.Provider value={{
+                        searchQuery: this.state.searchQuery,
+                        showGlobalSearchPanel: this.state.showGlobalSearchPanel
+                    }}>
+                        <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    </RootContext.Provider>
                 </React.Fragment>
             )
         }

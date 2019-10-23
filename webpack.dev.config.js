@@ -14,8 +14,8 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
-const COMPRESSION = process.env.COMPRESSION || false;
-
+const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
+const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 const plugin = [
     // To cleanup dis folder every time with unwanted assets
     // new CleanWebpackPlugin({ verbose: true }),
@@ -43,7 +43,10 @@ const plugin = [
     new webpack.HashedModuleIdsPlugin(),
     // This doesn't work with [contenthash] or [chunkhash] and uncomment it if HMR is needed
     new webpack.HotModuleReplacementPlugin(),
-    new WebpackMd5Hash()
+    new WebpackMd5Hash(),
+    new webpack.DefinePlugin({
+        "process.env": JSON.stringify(DOTENV.parsed)
+    })
 ];
 
 if (COMPRESSION) {
@@ -149,11 +152,11 @@ module.exports = {
         index: 'index.html',
         hot: true,
         proxy: [{
-            context:['**/configurationjs**', '/pluginwiris_engine/**'],
+            context: ['**/configurationjs**', '/pluginwiris_engine/**'],
             target: 'https://dev-structuredauthoring.pearson.com/',
             secure: false,
             pathRewrite: {
-              '^/static/js' : '/tinywiris/tinymce4/js/tinymce'
+                '^/static/js': '/tinywiris/tinymce4/js/tinymce'
             }
         }]
     },

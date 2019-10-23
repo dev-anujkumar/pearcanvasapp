@@ -449,21 +449,16 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	});
 }
 
-export const fetchAuthUser = () => dispatch=> {
-    let userDataURL;
-	let axiosInstance;
-
-    if (process.env.NODE_ENV === 'development') {
-        userDataURL = 'dev-user'
-        axiosInstance = axiosApiInstance
-
-    } else {
-        if (!sessionStorage.validSession) return Promise.reject(new Error('No session'))
-        const sessionData = JSON.parse(JSON.parse(sessionStorage.validSession).data)
-        if (!sessionData.valid) return Promise.reject(new Error('No valid session'))
-        userDataURL = `users/${sessionData.uid}`
-        axiosInstance = axiosPearsonInstance
+const axiosPearsonInstance = axios.create({
+    baseURL: IDENTITY_URL,
+    withCredentials: true,
+    headers: {
+        'PearsonSSOSession': getCookies().PearsonSSOSession
     }
+})
+
+export const fetchAuthUser = () => dispatch=> {
+    
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
 		headers: {
             "Content-Type": "application/json",

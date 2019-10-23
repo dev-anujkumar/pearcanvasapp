@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { storeMock,storeWithFigure,createstoreWithFigure,slateLevelData, createFigureElementDefault,defaultSlateData,defaultSlateDataFigure } from "../../../fixtures/slateTestingData"
+import { storeWithFigure,SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure} from "../../../fixtures/slateTestingData"
 import { FIGURE_ELEMENT_CREATED, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 
@@ -28,7 +28,16 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    it('testing------- ADD ELEMENT ------action', () => {
+    it('testing------- ADD OPENER ELEMENT ------action', () => {
+        initialState = {
+            appStore : {
+                slateLevelData: SlatetDataOpenerDefault,
+                // elementsTag: {},
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {}
+            }
+        };
         store = mockStore(() => initialState);
         const type = "OPENER";
         const index = 3;
@@ -40,7 +49,7 @@ describe('Tests Slate Wrapper Actions', () => {
             "index": index
         };
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
-        const axiosPayload = storeWithFigure.slateLevelData;
+        const axiosPayload = SlatetDataOpenerElement;
         const expectedActions = {
             type: AUTHORING_ELEMENT_CREATED,
             payload: { axiosPayload }
@@ -262,5 +271,4 @@ describe('Tests Slate Wrapper Actions', () => {
         const { type } = store.getActions()[0];
         expect(type).toBe(SET_UPDATED_SLATE_TITLE);
     });
-
 });
