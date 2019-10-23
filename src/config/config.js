@@ -3,6 +3,7 @@ let config = {
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-qa.pearsoncms.net/manifest-api/",
+    SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.COREAPI_ENDPOINT || "https://contentapis-qa.pearsoncms.net/core-api",
