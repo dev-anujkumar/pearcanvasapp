@@ -9,6 +9,8 @@ import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+import elementDataBank from './elementDataBank'
+import { CustomConsole } from '@jest/console';
 
 const axiosApiInstance = axios.create({
 	baseURL: config.C4_API_URL,
@@ -307,7 +309,14 @@ const findElementType = (element, index) => {
 			break;
 
 		case 'element-aside':
-			if (element.subtype === '' || element.subtype === 'sidebar') {
+				// elementType['elementType'] = elementDataBank[element.subtype]["elementType"]
+
+				elementType = {
+					elementType : elementDataBank[element.subtype]["elementType"],
+					...elementDataBank[element.subtype][element.designtype]
+				}
+				
+			/* if (element.subtype === '' || element.subtype === 'sidebar') {
 				elementType['elementType'] = 'element-aside';
 				switch(element.designtype) {
 					case 'asideTacticBox':
@@ -359,7 +368,8 @@ const findElementType = (element, index) => {
 						elementType['secondaryOption'] = 'secondary-workedexample-we2';
 						break;
 				}
-			}
+			} */
+			console.log("ASIDE/WORK EX ELEMENT TYPE", elementType)
 			break;
 
 		case 'element-list':
@@ -411,6 +421,7 @@ const findElementType = (element, index) => {
 
 	if(elementType.elementType && elementType.elementType !== '')
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+	console.log("ASIDE/WORK EX ELEMENT TYPE", elementType)
 	
 	return elementType;
 }
