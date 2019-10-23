@@ -415,7 +415,7 @@ const findElementType = (element, index) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element, index = 0) => {
+export const fetchElementTag = (element, index = 0) => dispatch => {
 	if (Object.keys(element).length > 0) {
 		return findElementType(element, index).tag;
 	}
@@ -449,21 +449,9 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	});
 }
 
+
 export const fetchAuthUser = () => dispatch=> {
-    let userDataURL;
-	let axiosInstance;
-
-    if (process.env.NODE_ENV === 'development') {
-        userDataURL = 'dev-user'
-        axiosInstance = axiosApiInstance
-
-    } else {
-        if (!sessionStorage.validSession) return Promise.reject(new Error('No session'))
-        const sessionData = JSON.parse(JSON.parse(sessionStorage.validSession).data)
-        if (!sessionData.valid) return Promise.reject(new Error('No valid session'))
-        userDataURL = `users/${sessionData.uid}`
-        axiosInstance = axiosPearsonInstance
-    }
+    
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
 		headers: {
             "Content-Type": "application/json",

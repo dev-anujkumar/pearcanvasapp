@@ -15,7 +15,6 @@ import {
     setSplittedElementIndex, createElementMeta,
     createElementMetaList
 } from './SlateWrapper_Actions';
-import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -88,7 +87,6 @@ class SlateWrapper extends Component {
      * @param {number} value | entered numeric value
      */
     customListDropClickAction(type, value) {
-        console.log(type, value);
     }
 
     componentDidUpdate() {
@@ -240,9 +238,6 @@ class SlateWrapper extends Component {
                                         onUpdate: (/**Event*/evt) => {
                                             let swappedElementData, swappedElementId;
                                             swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                            // swappedElementId =tinymce.$(evt.item).find('.cypress-editable').attr('id');
-                                            // console.log('this is active editor id', swappedElementId)
-                                            //  tinymce.remove('#'+swappedElementId);
                                             let dataObj = {
                                                 oldIndex: evt.oldDraggableIndex,
                                                 newIndex: evt.newDraggableIndex,
@@ -251,17 +246,7 @@ class SlateWrapper extends Component {
                                                 workedExample: false,
                                                 swappedElementId: swappedElementId
                                             }
-                                            // if(tinymce.activeEditor.id==swappedElementId){
-                                            //     tinymce.remove('#'+swappedElementId);
-                                            // }
-                                            this.props.swapElement(dataObj, () => {
-                                                // if(tinymce.activeEditor.id==swappedElementId){
-                                                //     document.getElementById(tinymce.activeEditor.id).contentEditable = true;
-                                                //     document.getElementById(tinymce.activeEditor.id).focus();
-                                                // }
-                                                // if(swappedElementType === "element-authoredtext")
-
-                                            })
+                                            this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
 
@@ -293,9 +278,6 @@ class SlateWrapper extends Component {
                 else {
                     return (
                         <React.Fragment>
-                            <LargeLoader />
-                            <LargeLoader />
-                            <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
                             <LargeLoader />
@@ -609,7 +591,6 @@ class SlateWrapper extends Component {
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
-            console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
@@ -622,6 +603,7 @@ class SlateWrapper extends Component {
                                 index={index}
                                 esProps={this.elementSepratorProps(index, true)}
                                 elementType={element.type}
+                                permissions = {this.props.permissions}
                             />
                             : null
                              }
@@ -634,8 +616,8 @@ class SlateWrapper extends Component {
                                 showBlocker={this.props.showBlocker}
                             >
                             {
-                                   (isHovered, isPageNumberEnabled, activeElement) => (
-                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                   (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
+                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
                                    )
                                }
                            </ElementContainer>
@@ -646,6 +628,7 @@ class SlateWrapper extends Component {
                                 elementType=""
                                 slateType={_slateType}
                                 toggleSplitSlatePopup={this.toggleSplitSlatePopup}
+                                permissions = {this.props.permissions}
                             />
                             : null
                             }
@@ -724,7 +707,8 @@ SlateWrapper.propTypes = {
 const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateTitleUpdated:state.appStore.slateTitleUpdated
+        slateTitleUpdated:state.appStore.slateTitleUpdated,
+        permissions: state.appStore.permissions
     };
 };
 

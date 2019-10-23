@@ -3,7 +3,7 @@
     background-color: #fafafa;
     overflow-y: auto;
     position: relative;
-    height: 100vh;
+    height: 100%;
     color: #424242;
     font-family: 'Open Sans', sans-serif;
 }

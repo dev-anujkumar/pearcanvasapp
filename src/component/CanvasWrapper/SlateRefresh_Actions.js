@@ -6,7 +6,7 @@ import {
 import { sendDataToIframe } from '../../constants/utility'; 
 
 export const handleSlateRefresh = (id) => (dispatch, getState) => { 
-    let url = `https://contentapis-qa.pearsoncms.net/structure-api/container/v2/${id}`
+    let url = config.SLATE_REFRESH_URL + id
     
      axios.get(url,{ 
         headers: {
