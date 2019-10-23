@@ -64,7 +64,7 @@ export const saveAssetLinkedMedia = (apoObject, imageObj) => {
         assetPopoverDomId = apoObject.assetId
     } else {
         //Hit api for asset popover Id
-        getAssetPopoverId((assetPopoverId) => {
+        getAssetPopoverId(imageObj.versionUrn).then((assetPopoverId) => {
             domNode = document.getElementById('asset-popover-attacher');
             originalText = domNode.innerHTML;
             assetPopoverDomId = assetPopoverId
