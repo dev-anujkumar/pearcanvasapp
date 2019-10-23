@@ -415,7 +415,7 @@ const findElementType = (element, index) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element, index = 0) => {
+export const fetchElementTag = (element, index = 0) => dispatch => {
 	if (Object.keys(element).length > 0) {
 		return findElementType(element, index).tag;
 	}
@@ -449,13 +449,6 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	});
 }
 
-const axiosPearsonInstance = axios.create({
-    baseURL: IDENTITY_URL,
-    withCredentials: true,
-    headers: {
-        'PearsonSSOSession': getCookies().PearsonSSOSession
-    }
-})
 
 export const fetchAuthUser = () => dispatch=> {
     

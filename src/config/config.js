@@ -7,7 +7,7 @@ let config = {
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.COREAPI_ENDPOINT || "https://contentapis-qa.pearsoncms.net/core-api",
-    JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
+    JAVA_API_URL: process.env.NODE_ENV || 'production' ? '/cypress/toc-srvr/app/toc-javaapp/': "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',

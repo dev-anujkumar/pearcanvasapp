@@ -176,16 +176,9 @@ export const createElementMeta = (type, index,parentUrn) => (dispatch, getState)
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-        if(createdElementData.type == 'manifest'){
-            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
-                if(item.id == parentUrn.manifestUrn){
-                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                }
-            })   
-        }else{
+      
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        }
-       
+               
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -219,16 +212,7 @@ export const createElementMetaList = (type, index,parentUrn) => (dispatch, getSt
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-        if(createdElementData.type == 'manifest'){
-            newParentData[config.slateManifestURN].contents.bodymatter.map( (item)=> {
-                if(item.id == parentUrn.manifestUrn){
-                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                }
-            })   
-        }else{
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        }
-       
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
