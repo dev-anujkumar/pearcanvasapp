@@ -144,3 +144,7 @@
     -webkit-box-shadow: inset 0 0 6px transparent;
     background-color: #4e4e4e;
 }
+/* disable class used in pagenumber for permissioning purpose */
+.pageNumberBox.disableClass{        
+    pointer-events:none;            
+   }

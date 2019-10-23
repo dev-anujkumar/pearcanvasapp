@@ -9,7 +9,6 @@ import Comments from './Comments.jsx'
 import PropTypes from 'prop-types';
 import { utils } from '../../js/utils'
 import { replyComment, resolveComment, toggleReply, toggleCommentsPanel, updateComment, getProjectUsers, updateAssignee, deleteComment } from './CommentsPanel_Action';
-import config from '../../config/config';
 
 class CommentsPanel extends React.Component {
     constructor(props) {
@@ -226,6 +225,7 @@ class CommentsPanel extends React.Component {
                     toggleReplyForm={this.props.toggleReplyForm}
                     users={this.props.users}
                     getProjectUsers={this.getProjectUsers}
+                    permissions={this.props.permissions}
                 />)
             })
             return comments;
@@ -272,7 +272,7 @@ class CommentsPanel extends React.Component {
     }
 
     render() {
-        const { toggleCommentsPanel } = this.props;
+        const { toggleCommentsPanel , permissions } = this.props;
         return (
             <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
@@ -280,8 +280,8 @@ class CommentsPanel extends React.Component {
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
                             <label onClick={() => toggleCommentsPanel(false)} className="modal__close_Panel"></label>
-                            <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />
-                            {config.PERMISSIONS.includes('notes_access_manager') &&
+                            {permissions.includes('note_search_comment') && <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />}
+                            {permissions.includes('notes_access_manager') &&
                                 <div className="add-structure">
                                     <div className="filter">
                                         <span> Sort by</span>
@@ -393,7 +393,8 @@ const mapStateToProps = state => {
         togglePanel: state.commentsPanelReducer.togglePanel,
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
         users: state.commentsPanelReducer.users,
-        slateTitle: state.commentsPanelReducer.slateTitle
+        slateTitle: state.commentsPanelReducer.slateTitle,
+        permissions : state.appStore.permissions
     }
 };
 
