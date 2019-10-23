@@ -86,7 +86,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
 
     let _requestData = prepareDeleteRequestData(type)
 
-    axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -152,7 +152,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData,elementIndex) => (dispatch, getState) => {
-    axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+    return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
             headers: {

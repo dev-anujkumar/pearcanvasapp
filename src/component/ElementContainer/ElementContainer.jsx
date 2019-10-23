@@ -140,7 +140,7 @@ class ElementContainer extends Component {
             sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveSlate,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         if(text =="View Learning Objective" && config.slateType === 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         // else if( !this.state.slateLockSatus){
             if(text =="Add a New Learning Objective" &&  this.props.permissions.includes('lo_edit_metadata')){
@@ -244,7 +244,7 @@ class ElementContainer extends Component {
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor =<AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus}/>
+                editor =<AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} showBlocker = {this.props.showBlocker}/>
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:
