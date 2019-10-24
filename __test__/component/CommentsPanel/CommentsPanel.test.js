@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import CommentsPanel from '../../../src/component/CommentsPanel';
-import { comments, filters } from '../../../fixtures/commentPanelData.js'
+import { comments, filters ,permissions} from '../../../fixtures/commentPanelData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -13,6 +13,9 @@ const store = mockStore({
     comments: comments,
     togglePanel: true,
     toggleReplyForm: true
+  },
+  appStore : {
+    permissions: permissions
   }
 });
 describe('Testing CommentsPanel component with props', () => {
@@ -22,10 +25,6 @@ describe('Testing CommentsPanel component with props', () => {
     it('should have search component', () => {
       expect(wrapper.find(".panel-navigation__header-title")).toHaveLength(1)
     }),
-
-      it('Should have 2 filter  dropdown', () => {
-        expect(wrapper.find('.filter')).toHaveLength(2)
-      }),
 
       it('Should have 1 comment canvas', () => {
         expect(wrapper.find('.comments-canvas')).toHaveLength(1)
@@ -53,7 +52,6 @@ describe('Testing CommentsPanel component with props', () => {
   describe('Testing toggle dropdown function with comments', () => {
     it('tests toogle stautus dropdown with true function correctly', () => {
       instance.toggleStatusDropdown(true)
-      console.log("status====?", wrapper.find('CommentsPanel').state().showStatusDropdown)
       const showStatusDropdown = wrapper.find('CommentsPanel').state().showStatusDropdown;
       const showSortByDropdown = wrapper.find('CommentsPanel').state().showSortByDropdown;
       expect(showStatusDropdown).toEqual(true);
@@ -62,7 +60,6 @@ describe('Testing CommentsPanel component with props', () => {
 
     it('tests toogle stautus dropdown with undefiend function correctly', () => {
       instance.toggleStatusDropdown(undefined)
-      console.log("status====?", wrapper.find('CommentsPanel').state().showStatusDropdown)
       const showStatusDropdown = wrapper.find('CommentsPanel').state().showStatusDropdown;
       const showSortByDropdown = wrapper.find('CommentsPanel').state().showSortByDropdown;
       expect(showStatusDropdown).toEqual(showStatusDropdown);
@@ -73,7 +70,6 @@ describe('Testing CommentsPanel component with props', () => {
   describe('Testing toggleOrderByDropdown dropdown function with comments', () => {
     it('tests toogle stautus dropdown with true function correctly', () => {
       instance.toggleOrderByDropdown(true)
-      console.log("status====?", wrapper.find('CommentsPanel').state().showStatusDropdown)
       const showStatusDropdown = wrapper.find('CommentsPanel').state().showStatusDropdown;
       const showSortByDropdown = wrapper.find('CommentsPanel').state().showSortByDropdown;
       expect(showStatusDropdown).toEqual(false);
@@ -82,7 +78,6 @@ describe('Testing CommentsPanel component with props', () => {
 
     it('tests toogle stautus dropdown with undefiend function correctly', () => {
       instance.toggleOrderByDropdown(undefined)
-      console.log("status====?", wrapper.find('CommentsPanel').state().showStatusDropdown)
       const showStatusDropdown = wrapper.find('CommentsPanel').state().showStatusDropdown;
       const showSortByDropdown = wrapper.find('CommentsPanel').state().showSortByDropdown;
       expect(showStatusDropdown).toEqual(false);
@@ -101,7 +96,6 @@ describe('Testing CommentsPanel component with props', () => {
 
     it('tests set status with open value', () => {
       instance.setStatus("resolved")
-      console.log("status====?", wrapper.find('CommentsPanel').state().filters.status.value)
       const status = wrapper.find('CommentsPanel').state().filters.status.value
       // const showSortByDropdown = wrapper.state().showSortByDropdown;
       expect(status).toEqual("resolved");
@@ -110,7 +104,6 @@ describe('Testing CommentsPanel component with props', () => {
 
     it('tests set status with open value', () => {
       instance.setStatus("open")
-      console.log("status====?", wrapper.find('CommentsPanel').state().filters.status.value)
       const status = wrapper.find('CommentsPanel').state().filters.status.value
       // const showSortByDropdown = wrapper.state().showSortByDropdown;
       expect(status).toEqual("open");
@@ -127,7 +120,6 @@ describe('Testing CommentsPanel component with props', () => {
     }
     it('tests set status with open value', () => {
       instance.setSort({ target })
-      console.log("status====?", wrapper.find('CommentsPanel').state().filters.sortBy.value)
       const status = wrapper.find('CommentsPanel').state().filters.sortBy.value
       // const showSortByDropdown = wrapper.state().showSortByDropdown;
       expect(status).toEqual("1");
@@ -140,7 +132,6 @@ describe('Testing CommentsPanel component with props', () => {
         textContent: "Newest to Oldest"
       }
       instance.setSort({ target })
-      console.log("status====?", wrapper.find('CommentsPanel').state().filters.sortBy.value)
       const status = wrapper.find('CommentsPanel').state().filters.sortBy.value
       // const showSortByDropdown = wrapper.state().showSortByDropdown;
       expect(status).toEqual("-1");
@@ -195,7 +186,7 @@ describe('Testing CommentsPanel component with props', () => {
     });
     it('tests update assigneee function  function ', () => {
       instance.updateAssignee();
-    }); 
+    });
   })
 
 

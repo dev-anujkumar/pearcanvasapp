@@ -501,7 +501,7 @@ const mockStore = configureMockStore(middlewares);
 
 const slateRenderData = mockStore({
     appStore: { slateLevelData: {},activeElement:{elementId:""} },
-    toolbarReducer: { elemBorderToggle: true },
+    toolbarReducer: { elemBorderToggle: "true" },
     commentsPanelReducer: {},
     slateLockReducer:{slateLockInfo:false}   
 });

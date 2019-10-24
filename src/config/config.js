@@ -1,20 +1,18 @@
 let config = {
-    REACT_APP_API_URL : "https://10.11.7.24:8443/cypress-api/",
+    REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-qa.pearsoncms.net/manifest-api/",
+    SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.COREAPI_ENDPOINT || "https://contentapis-qa.pearsoncms.net/core-api",
-    JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
+    JAVA_API_URL: process.env.NODE_ENV || 'production' ? '/cypress/toc-srvr/app/toc-javaapp/': "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "S4Zd9jSYfcIlwGDKkmDkXgfD6FM.*AAJTSQACMDIAAlNLABxDb2l5Q2FZcWpoVk5IeG14Yk1FaUREZExkajQ9AAJTMQACMDM.*",
+    ssoToken: "a6bOuDQkyhp8mNZTifpHh5Xfha0.*AAJTSQACMDIAAlNLABxzSEhrZFI0cXNtUnJIbnEzaTMzRXZZaEJrRlk9AAJTMQACMDE.*",
     alfrescoMetaData : {},
-    userId: 'c5test01',
-    userEmail : 'c5test01@mctest.local',
-    assignee:'c5test01',
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     parentContainerUrn:"",
@@ -50,14 +48,14 @@ let config = {
     C6PUB_API_KEY: process.env.C6PUB_API_KEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     C6REDIS_SERVER_UPDATE: 'api/projects/',
     C4_API_URL: "./api",
-
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-    WRAPPER_URL: process.env.WRAPPER_BASE_URL || 'https://localhost:4000',
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.location.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
+    book_title:"ELMTEST_StgEnv_Krajewski Test",
     IDENTITY_URL: process.env.IDENTITY_URL || "/auth",
     //parentUrl: window.location.origin
-    LOCK_API_BASE_URL : process.env.LOCK_API_BASE_URL || 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.location.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.PATTERN_ADD_ASSET || 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.PATTERN_BROKER || 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
@@ -69,5 +67,11 @@ let config = {
     isCO : false,
     isLOL:false
 };
+if (process.env.NODE_ENV === "development") {
+    config.userName = 'c5test01';
+    config.userId= 'c5test01';
+    config.userEmail = 'c5test01@mctest.local';
+    config.assignee='c5test01';
+}
 
 export default config;

@@ -1,19 +1,19 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import SectionSeperator from '../../../src/component/ElementAsideContainer/SectionSeperator';
-
-
+import { spy, stub } from 'sinon';
+const setActiveElement = new stub();
 
 describe('Testing SectionSeperator component with props', () => {
     let props = {
         elemBorderToggle: true,
-        borderToggle: 'active'
+        borderToggle: 'active',
+        permissions: []
     }
-    let wrapper = mount(< SectionSeperator {...props} />)
+    let wrapper = mount(< SectionSeperator setActiveElement = {setActiveElement} {...props} />)
 
     const instance = wrapper.instance();
     describe('Testing SectionSeperator component', () => {
-        console.log("wrapper", wrapper)
         it('should render handleSeperatorBlur function', () => {
             const event = {
                 preventDefault: () => { },

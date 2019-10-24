@@ -15,6 +15,7 @@ import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
+import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -25,7 +26,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 isTableLaunched: false,
                 showBlocker: false,
                 toggleTocDelete: false,
-                tocDeleteMessage: null
+                tocDeleteMessage: null,
+                searchQuery: null,
+                showGlobalSearchPanel: false
             };
         }
 
@@ -158,10 +161,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'projectDetails' :
                      this.props.fetchAuthUser()
+                     config.ssoToken = message.ssoToken;
                      config.projectUrn = message.id;
                      config.citeUrn = message.citeUrn;
                      config.projectEntityUrn = message.entityUrn;
                      config.alfrescoMetaData = message.alfresco;
+                     config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -182,24 +187,41 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
+                case 'search':
+                    {
+                        if (message.data && message.data !== null && message.data !== "") {
+                            this.setState({
+                                'searchQuery': message.data,
+                                'showGlobalSearchPanel': true
+                            });
+                        }
+                        else {
+                            this.setState({
+                                'searchQuery': null,
+                                'showGlobalSearchPanel': false
+                            });
+                        }
+                        break;
+                    }
             }
         }
 
         handleLOData=(message) =>{
             if(message.statusForSave){
-                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>"); 
-               this.props.currentSlateLO(message.loObj);
-               var slateTagClass = document.getElementsByClassName("tox-tbtn");
-               slateTagClass[slateTagClass.length-1].className +=" slateTagClass";
-               var slateTagDesign = document.getElementsByClassName("slateTagClass");
-               slateTagDesign.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>';
-           }
+               message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>"); 
+              this.props.currentSlateLO(message.loObj);
+              
+               let slateTagClass = document.getElementsByClassName("learning-objective")
+                let slateTagParent = slateTagClass[0].parentNode
+               slateTagClass[0].outerHTML='<svg class="learning-objective "xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>';
+               slateTagParent.appendChild(slateTagClass[0])
+                    }
            
             
         }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
-                config.PERMISSIONS = message.permissions;
+                this.props.handleUserRole(message.permissions)
             }
         }
 
@@ -393,7 +415,12 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    <RootContext.Provider value={{
+                        searchQuery: this.state.searchQuery,
+                        showGlobalSearchPanel: this.state.showGlobalSearchPanel
+                    }}>
+                        <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    </RootContext.Provider>
                 </React.Fragment>
             )
         }

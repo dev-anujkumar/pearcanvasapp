@@ -18,7 +18,6 @@ const axiosApiInstance = axios.create({
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-
 	switch (element.type) {
 		case 'element-authoredtext':
 			elementType['elementType'] = 'element-authoredtext';
@@ -28,7 +27,7 @@ const findElementType = (element, index) => {
 			} else {
 				elementType['primaryOption'] = 'primary-paragraph';
 				elementType['secondaryOption'] = 'secondary-paragraph';
-			}
+			 }
 			break;
 
 		case 'element-blockfeature':
@@ -45,6 +44,12 @@ const findElementType = (element, index) => {
 					elementType['secondaryOption'] = 'secondary-marginalia-attribution';
 					break;
 			}
+			break;
+
+		case 'element-learningobjectives':
+			elementType['elementType'] = 'element-authoredtext';
+			elementType['primaryOption'] = 'primary-learning-objective';
+			elementType['secondaryOption'] = 'secondary-learning-objective';
 			break;
 
 		case 'figure':
@@ -115,7 +120,7 @@ const findElementType = (element, index) => {
 				} else if (element.figuretype == 'codelisting') {
 					elementType['elementType'] = 'figure';
 					elementType['primaryOption'] = 'primary-blockcode-equation';
-					switch (element.figuretype.programlanguage) {
+					switch (element.figuredata.programlanguage) {
 						case 'C++':
 							elementType['secondaryOption'] = 'secondary-blockcode-language-C++';
 							break;
@@ -410,14 +415,14 @@ const findElementType = (element, index) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element, index = 0) => {
+export const fetchElementTag = (element, index = 0) =>  {
 	if (Object.keys(element).length > 0) {
 		return findElementType(element, index).tag;
 	}
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {	
-	axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
+	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -444,21 +449,9 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 	});
 }
 
+
 export const fetchAuthUser = () => dispatch=> {
-    let userDataURL;
-	let axiosInstance;
-
-    if (process.env.NODE_ENV === 'development') {
-        userDataURL = 'dev-user'
-        axiosInstance = axiosApiInstance
-
-    } else {
-        if (!sessionStorage.validSession) return Promise.reject(new Error('No session'))
-        const sessionData = JSON.parse(JSON.parse(sessionStorage.validSession).data)
-        if (!sessionData.valid) return Promise.reject(new Error('No valid session'))
-        userDataURL = `users/${sessionData.uid}`
-        axiosInstance = axiosPearsonInstance
-    }
+    
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
 		headers: {
             "Content-Type": "application/json",

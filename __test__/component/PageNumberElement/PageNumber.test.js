@@ -2,15 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 require('../../../src/component/ListElement/polyfills.js');
 import PageNumberElement from '../../../src/component/SlateWrapper/PageNumberElement.jsx';
-
-describe('Testing <PageNumberElement> Component', () => {
+import thunk from 'redux-thunk';
+describe('Testing <PageNumberElement> Component', () => {    
     let nodeRef = null;
     let spy = sinon.spy();
     let props = {
         element: {},
         isHovered: {},
         isPageNumberEnabled: {},
-        activeElement: {}
+        activeElement: {},
+        permissions: ['edit_print_page_no']
     }
     const wrapper = mount(<PageNumberElement {...props} />, { attachTo: document.body });
     const wrapperInstance = wrapper.instance();
@@ -70,6 +71,6 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapper.setProps({ isPageNumberEnabled: true });
         wrapperInstance.forceUpdate();
         wrapper.update();
-        expect(wrapper.find('div.pageNumberCover').classList.contains('hoverNumberCover')).toBe(true)
+        expect(wrapper.find('div.pageNumberCover').hasClass('hoverNumberCover')).toBe(true)
     })
 })

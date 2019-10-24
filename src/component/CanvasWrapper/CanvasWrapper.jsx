@@ -13,6 +13,7 @@ import {
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
 import config from './../../config/config';
+import GlobalSearchPanel from '../GlobalSearchAndReplace';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -29,7 +30,8 @@ import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { PageNumberContext } from './CanvasContexts.js';
+import { handleUserRole } from './UserRole_Actions'
+import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -153,15 +155,18 @@ export class CanvasWrapper extends Component {
         return function (){ 
             clearTimeout(timer)
             timer = setTimeout(()=>{
-                if(_context.props.withinLockPeriod){
-                    callback(config.projectUrn, Object.keys(_context.props.slateLevelData)[0])
-                    _context.props.setLockPeriodFlag(false)
-                    // alert("Lock has been released")
-                    _context.setState({
-                        showReleasePopup: true
-                    })
-                }  
+                 this.debounceReleaseHandler(callback, _context)
             },900000)
+        }
+    }
+    debounceReleaseHandler = (callback, context) => {
+        if (context.props.withinLockPeriod) {
+            callback(config.projectUrn, Object.keys(context.props.slateLevelData)[0])
+            context.props.setLockPeriodFlag(false)
+            // alert("Lock has been released")
+            context.setState({
+                showReleasePopup: true
+            })
         }
     }
 
@@ -211,7 +216,7 @@ export class CanvasWrapper extends Component {
 
     showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
-            // this.showCanvasBlocker(true)
+            // this.props.showCanvasBlocker(true)
             showTocBlocker();
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return(
@@ -248,19 +253,29 @@ export class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} />
-                                </PageNumberContext.Provider>                                
+                                <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
+                                </RootContext.Provider>                                
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            {/* <span className='--rm-place'>Settings</span> */}
-                           
-                            {this.props.glossaryFootnoteValue.popUpStatus ?  <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />: <Sidebar showPopUp={this.showPopUp}/> }
-                            {/*  <Sidebar showPopUp={this.showPopUp}/> */}
-                            {/* put side setting */}
+                            <RootContext.Consumer>
+                                {
+                                    ({ searchQuery, showGlobalSearchPanel }) => {
+                                        if (showGlobalSearchPanel) {
+                                            return (<GlobalSearchPanel/>)
+                                        }
+                                        else if (this.props.glossaryFootnoteValue.popUpStatus) {
+                                            return (<GlossaryFootnoteMenu activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />)
+                                        }
+                                        else {
+                                            return (<Sidebar showPopUp={this.showPopUp} />)
+                                        }
+                                    }
+                                }
+                            </RootContext.Consumer>
                         </div>
                     </div>
                 </div>
@@ -306,6 +321,7 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
-        logout
+        logout,
+        handleUserRole
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

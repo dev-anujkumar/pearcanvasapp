@@ -24,4 +24,6 @@ export default {
     LOCK : "lock-icon",
     METADATA_ANCHOR : "metadata-anchor",
     METADATA_LOList:"metadata-lo-list",
+    ELM_CLOSE_WINDOW:"elmCloseWindowIcon",
+    ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
 }
