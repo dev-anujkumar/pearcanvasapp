@@ -54,8 +54,6 @@ export class AssessmentSlateCanvas extends Component {
     addPufAssessment = (pufObj) => {
         showTocBlocker();
         disableHeader(true);
-        sendDataToIframe({'type': "blockerTOC",'message': {status: true}});     
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
     /***
@@ -80,7 +78,7 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.props.showBlocker(true);
+       // this.props.showBlocker(true);
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
@@ -157,7 +155,7 @@ export class AssessmentSlateCanvas extends Component {
         this.props.handleBlur();
     }
     render() {
-        const { } = this.props;
+        const { showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
             <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>  
@@ -178,6 +176,7 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     linkLearningApp ={this.linkLearningApp}
+                    showBlocker={showBlocker}
                     />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
