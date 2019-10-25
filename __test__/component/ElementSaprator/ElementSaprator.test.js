@@ -89,7 +89,9 @@ describe('Testing ElementSaprator component', () => {
     }),
 
     describe('<ElementSaprator/> Rendering', () => {
-
+        let props = {
+            permissions: []
+        }
                 it('Should have 1 <hr/>', () => {
                     expect(wrapper.find('hr')).toHaveLength(1)
                 }),
@@ -135,7 +137,7 @@ describe('Testing functions', () => {
         let slateType = 'container-introduction', closeDropDown;
         let elementType = 'element-aside';
         let sectionBreak = true;
-        let permissions = []
+        let permissions = ['split_slate']
 
         renderDropdownButtons(esProps, slateType, elementType, sectionBreak, closeDropDown , permissions)
     }),
@@ -165,7 +167,7 @@ describe('Testing functions', () => {
     it('simulate splitSlateClickHandler ', () => {       
         let tempWrapper;
         let props = {
-            permissions: []
+            permissions: ['split_slate']
         }
         
         tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
