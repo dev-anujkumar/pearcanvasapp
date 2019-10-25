@@ -204,9 +204,9 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
-                    let _context = this
+                    let _context = this;
                     return (
-                        <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${config.slateType ==='assessment'?'assessment-slate': ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 <Sortable
                                     options={{
@@ -617,7 +617,7 @@ class SlateWrapper extends Component {
                             >
                             {
                                    (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
-                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
+                                       <PageNumberElement element={element} _slateType={_slateType} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
                                    )
                                }
                            </ElementContainer>
