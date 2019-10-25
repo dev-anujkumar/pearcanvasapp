@@ -33,6 +33,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -202,19 +203,7 @@ export class CanvasWrapper extends Component {
         return false
     }
 
-
-    
- /*    openGlossaryFootnotePopUp=()=>{
-       if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
-        return (
-        <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
-        )
-        
-    }
-    
-    }     */
-
-    showLockReleasePopup = () => {
+   showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
             // this.props.showCanvasBlocker(true)
             showTocBlocker();
@@ -268,7 +257,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlobalSearchPanel/>)
                                         }
                                         else if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -322,6 +311,7 @@ export default connect(
         fetchAuthUser,
         handleSlateRefresh,
         logout,
-        handleUserRole
+        handleUserRole,
+        glossaaryFootnotePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

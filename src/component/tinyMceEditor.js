@@ -73,14 +73,6 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.editorSlateTagIcon(editor);
                 this.insertListButtonIcon(editor);
-                // editor.on('keydown', function (e) {
-                //     /* if (e.keyCode == 13) {
-                //         e.preventDefault();
-                //         return false;
-                //     } */
-                //     bindKeyDownEvent(editor, e);
-                // });
-                
             },
 
             init_instance_callback: (editor) => { 
@@ -183,25 +175,72 @@ export class TinyMceEditor extends Component {
      * This method is called when user clicks on editor.
      * @param {*} editor  editor instance
      */
-    editorClick = (editor) =>{
+    editorClick = (editor) => {
         editor.on('click', (e) => {
-            if (e.target.parentElement.nodeName == "SUP") {
-                this.props.openGlossaryFootnotePopUp(true, "Footnote");
+            let cbFunc = null;
+            let alreadyExist = false;
+            /**
+             * Case - If Glossary&Footnote is already open then first unmount existing one
+             */
+            if (document.getElementsByClassName('glossary-toolbar-wrapper').length) {
+                alreadyExist = true;
             }
+            /**
+             * Case - clicking over Footnote text
+             */
+            if (e.target.parentElement.nodeName == "SUP") {
+                this.glossaryBtnInstance.setDisabled(true)
+                if (alreadyExist) {
+                    cbFunc = () => {
+                        this.toggleGlossaryandFootnoteIcon(true);
+                        this.props.openGlossaryFootnotePopUp(true, "Footnote");
+                    }
+                    this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                }
+                else {
+                    this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                }
+            }
+            /**
+             * Case - clicking over Glossary text
+             */
             else if (e.target.nodeName == "DFN") {
-                this.props.openGlossaryFootnotePopUp(true, "Glossary");
-            }else if (e.target.nodeName == 'ABBR'){
+                this.glossaryBtnInstance.setDisabled(true)
+                if (alreadyExist) {
+                    cbFunc = () => {
+                        this.toggleGlossaryandFootnoteIcon(true);
+                        this.props.openGlossaryFootnotePopUp(true, "Glossary");
+                    }
+                    this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                }
+                else {
+                    this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                }
+            }
+            /**
+             * Case - clicking over Asset text
+             */
+            else if (e.target.nodeName == 'ABBR') {
                 let assetId = e.target.attributes['asset-id'].nodeValue;
                 let dataUrn = e.target.attributes['data-uri'].nodeValue;
                 let apoObject = {
-                    'assetId' : assetId,
-                    'dataUrn' : dataUrn
+                    'assetId': assetId,
+                    'dataUrn': dataUrn
                 }
                 authorAssetPopOver(true, apoObject);
-            }else {
-                this.props.openGlossaryFootnotePopUp(false);
+            }
+            else {
+                cbFunc = () => {
+                    this.toggleGlossaryandFootnoteIcon(false);
+                }
+                this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
             }
         });
+    }
+
+    toggleGlossaryandFootnoteIcon = (flag) => {
+        this.glossaryBtnInstance.setDisabled(flag)
+        this.footnoteBtnInstance.setDisabled(flag)
     }
 
     /**
@@ -322,7 +361,10 @@ export class TinyMceEditor extends Component {
             classes: 'buttonClas',
             text: '<i class="fa fa-bookmark" aria-hidden="true"></i>',
             tooltip: "Glossary",
-            onAction: () => this.addGlossary(editor)
+            onAction: () => this.addGlossary(editor),
+            onSetup:(btnRef)=>{
+                this.glossaryBtnInstance = btnRef;
+            }
         });
     }
 
@@ -334,8 +376,10 @@ export class TinyMceEditor extends Component {
         editor.ui.registry.addButton('Footnote', {
             text: '<i class="fa fa-asterisk" aria-hidden="true"></i>',
             tooltip: "Footnote",
-            onAction: () => this.addFootnote(editor)
-
+            onAction: () => this.addFootnote(editor),
+            onSetup:(btnRef)=>{
+                this.footnoteBtnInstance = btnRef;
+            }
         });
     }
 
@@ -561,7 +605,7 @@ export class TinyMceEditor extends Component {
      */
     addFootnote = (editor) => {
         editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-        this.props.openGlossaryFootnotePopUp(true, "Footnote");
+        this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); });
 
     }
     learningObjectiveDropdown(text){
@@ -577,7 +621,7 @@ export class TinyMceEditor extends Component {
         let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
         if(sectedText !== ""){
             editor.insertContent(insertionText);
-            this.props.openGlossaryFootnotePopUp(true, "Glossary");
+            this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
         }
     }
 
@@ -636,7 +680,7 @@ export class TinyMceEditor extends Component {
 
         // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
         let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');
-        if(toolBar){
+        if (toolBar) {
             toolBar.parentNode.removeChild(toolBar)
         }
         /**
@@ -649,8 +693,8 @@ export class TinyMceEditor extends Component {
                 Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
                 As removing tinymce instance, also updates the images made by the wiris plugin to mathml
             */
-            let tempContainerHtml   =   tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
-            tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula','temp_Wirisformula'); 
+            let tempContainerHtml = tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
+            tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula', 'temp_Wirisformula');
             document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
 
             tinymce.remove('#' + tinymce.activeEditor.id)
@@ -664,8 +708,8 @@ export class TinyMceEditor extends Component {
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
-            tinymce.init(this.editorConfig).then((d)=>{console.log('tiny resolved 2',d)})
-        });        
+            tinymce.init(this.editorConfig)
+        });
     }
 
     /**
@@ -679,14 +723,6 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         const lockCondition = isLocked && config.userId !== userId
-        // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-        //     let activeEditorId = tinymce.activeEditor.id;
-        //     let element = document.getElementById(activeEditorId);
-        //     tinymce.remove('#'+tinymce.activeEditor.id)
-        //     element.contentEditable = true;
-        //     this.editorConfig.selector='#'+activeEditorId;
-        //     tinymce.init(this.editorConfig);
-        // }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-' + this.props.index;

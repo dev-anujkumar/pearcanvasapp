@@ -13,7 +13,7 @@ import ElementLearningObjectiveItem from '../ElementLearningObjectiveItem';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
-import {glossaaryFootnotePopup} from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
 import {addComment,deleteElement,updateElement} from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -394,8 +394,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, callback);
     }
 
     /**
@@ -440,20 +440,24 @@ const mapDispatchToProps = (dispatch) => {
         addComment: (comments, elementId) => {
             dispatch(addComment(comments, elementId))
         },
-        fetchCommentByElement:(elementId)=>{
-          dispatch(fetchCommentByElement(elementId))
+        fetchCommentByElement: (elementId) => {
+            dispatch(fetchCommentByElement(elementId))
         },
         setActiveElement: (element, index) => {
             dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id , type, parentUrn, asideData, contentUrn)=>{
+        deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup:(glossaaryFootnote,popUpStatus)=>{
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote,popUpStatus))
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus)).then(() => {
+                if (callback) {
+                    callback();
+                }
+            })
         },
-        updateElement:(updatedData,elementIndex)=>{
-            dispatch(updateElement(updatedData,elementIndex))
+        updateElement: (updatedData, elementIndex) => {
+            dispatch(updateElement(updatedData, elementIndex))
         }
     }
 }
