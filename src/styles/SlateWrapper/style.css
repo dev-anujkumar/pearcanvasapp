@@ -27,6 +27,9 @@
     position: relative;
     display: block;
 }
+.assessment-slate {
+    padding: 15px 20px;
+}
 
 .slate-content .slate-footer {
     width: 100%;
