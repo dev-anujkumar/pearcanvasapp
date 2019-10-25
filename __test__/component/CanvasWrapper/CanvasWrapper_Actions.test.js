@@ -67,10 +67,10 @@ describe('action file test', () => {
         let store = mockStore();
         store.dispatch(selectActions.fetchAuthUser());
     });
-    it('fetchElementTag', () => {
-        let store = mockStore();
-        store.dispatch(selectActions.fetchElementTag(wip, 0));
-    });
+    // it('fetchElementTag', () => {
+    //     let store = mockStore();
+    //     store.dispatch(selectActions.fetchElementTag(wip, 0));
+    // });
     it('setActiveElement for paragraph', () => {
         let store = mockStore();
         store.dispatch(selectActions.setActiveElement(wip.paragraph, 1));
