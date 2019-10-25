@@ -58,6 +58,16 @@ const elementDataBank = {
     },
 
     "element-list" : {
+        "disc" : {
+            "elementType" : "element-authoredtext",
+            "primaryOption" : "primary-list",
+            "secondaryOption" : "secondary-list-1"
+        },
+        "decimal" : {
+            "elementType" : "element-authoredtext",
+            "primaryOption" : "primary-list",
+            "secondaryOption" : "secondary-list-2"
+        },
         "upper-alpha" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
@@ -67,6 +77,21 @@ const elementDataBank = {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-4"
+        },   
+        "upper-roman" : {
+            "elementType" : "element-authoredtext",
+            "primaryOption" : "primary-list",
+            "secondaryOption" : "secondary-list-5"
+        },
+        "lower-roman" : {
+            "elementType" : "element-authoredtext",
+            "primaryOption" : "primary-list",
+            "secondaryOption" : "secondary-list-6"
+        },
+        "none" : {
+            "elementType" : "element-authoredtext",
+            "primaryOption" : "primary-list",
+            "secondaryOption" : "secondary-list-7"
         }
     },
 
@@ -267,9 +292,7 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-workedexample-we2"
             }
         },
-
     },
-
 }
 
 export default elementDataBank
