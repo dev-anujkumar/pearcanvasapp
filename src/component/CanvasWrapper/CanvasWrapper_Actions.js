@@ -478,7 +478,7 @@ const findElementType = (element, index) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element, index = 0) => dispatch => {
+export const fetchElementTag = (element, index = 0) =>  {
 	if (Object.keys(element).length > 0) {
 		return findElementType(element, index).tag;
 	}

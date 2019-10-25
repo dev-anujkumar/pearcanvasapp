@@ -176,11 +176,6 @@ ElementSingleAssessment.propTypes = {
      /** Handler to Add C2 -Media to the assessment*/
     handleC2AssessmentClick : PropTypes.func,
     /** Detail of element in JSON object */
-    model: PropTypes.object,
-    /** index of element  */
-    index: PropTypes.number,
-    /** element id of the element */
-    elementId: PropTypes.number
 }
 
 
