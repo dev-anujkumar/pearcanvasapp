@@ -320,7 +320,7 @@ class ElementContainer extends Component {
             <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { config.slateType !=='assessment'? ( this.props.permissions.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
+                { this.props.permissions.includes('elements_add_remove') && config.slateType !=='assessment'? ( <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
                 : null }
                 {this.renderColorPaletteButton(element)}
             </div>

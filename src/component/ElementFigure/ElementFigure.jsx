@@ -46,7 +46,11 @@ export class ElementFigure extends Component {
             // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({ imgSrc: epsURL })
+            if (epsURL !== "") {
+                this.setState({ imgSrc: epsURL })
+            } else {
+                this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
+            }
             document.querySelector("[name='alt_text']").innerHTML = altText;
             document.querySelector("[name='long_description']").innerHTML = longDesc;
 
