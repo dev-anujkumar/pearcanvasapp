@@ -24,6 +24,7 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
 
     }
+
     /*** @description - This function is to close ELM PopUp
     */
     closeElmWindow = () => {
@@ -32,7 +33,9 @@ export class AssessmentSlateData extends Component {
         });
         hideTocBlocker();
         disableHeader(false);
+        this.props.showBlocker(false);
     }
+    
     /*** @description - This function is to change the lerning system
     */
     changeLearningApp() {
@@ -106,7 +109,7 @@ export class AssessmentSlateData extends Component {
                 })
                 showTocBlocker();    
                 disableHeader(true);
-                sendDataToIframe({'type': "blockerTOC",'message': {status: true}});               
+                this.props.showBlocker(true);             
                 break;
 
             default:
@@ -130,6 +133,7 @@ export class AssessmentSlateData extends Component {
         });
         this.typeDropdownRef.current.classList.add('notselect')
     }
+
     /*** @description - This function is to select the Assessment type from dropdown*/
     selectAssessmentType = () => {
         let assessmentTypeValue;
@@ -140,11 +144,13 @@ export class AssessmentSlateData extends Component {
         }
         return assessmentTypeValue
     }
+
     /*** @description - This function is to toggle the Assessment Usage-Type PopUp*/
     toggleUsageTypeDropdown = () => {
         this.usageTypeDropdownRef.current.classList.remove('notselect')
         this.usageTypeRef.current.classList.remove('notselect')
     }
+
     /*** @description - This function is to handle the Assessment Usage-type change
      * @param usageType - the usage-type selected from the dropdown
      * @param e - event triggered 
@@ -158,6 +164,7 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef.current.classList.add('notselect')
 
     }
+
     /*** @description - This function is to select the Assessment usage-type from dropdown*/
     selectAssessmentUsageType = () => {
         if (assessmentUsageType.length > 0) {
@@ -167,6 +174,7 @@ export class AssessmentSlateData extends Component {
         }
         return usageTypeValue
     }
+
     /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
         var assessmentSlateJSX;

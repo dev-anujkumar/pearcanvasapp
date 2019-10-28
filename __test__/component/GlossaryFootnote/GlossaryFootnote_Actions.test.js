@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from '../../../src/Appstore/rootReducer.js';
+//import rootReducer from '../../../src/Appstore/rootReducer.js';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import axios from 'axios';
