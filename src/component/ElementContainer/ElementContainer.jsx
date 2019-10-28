@@ -242,7 +242,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo,permissions } = this.props;
-        let labelText = fetchElementTag(element, index) || 'p';
+        let labelText = fetchElementTag(element, index) || 'P';
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
@@ -315,7 +315,7 @@ class ElementContainer extends Component {
                 labelText = 'MA'
                 break;
         }
-
+        
         return(
             <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>

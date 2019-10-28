@@ -26,10 +26,12 @@ import {
     assetPopoverIcon
   } from "./../svgIcons.jsx";
 
+let context = {};
+
 export class TinyMceEditor extends Component {
     constructor(props) {
         super(props);
-        let context = this;
+        context = this;
         let viewLoEnable = true;
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
@@ -272,7 +274,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorMousedown = (editor) => {
-        editor.on('mousedown',function(e) {
+        editor.on('mousedown', function(e) {
             if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
                 e.preventDefault();
                 e.stopPropagation()
@@ -626,13 +628,21 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-        this.props.handleEditorFocus();
+        this.props.handleEditorFocus();console.log('set editable', tinymce.get);
         /**
          * case - if active editor and editor currently being focused is same
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === e.currentTarget.id) {
+            if(this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+                document.getElementById(tinymce.activeEditor.id).contentEditable = false;
+            }
             return false;
         }
+        if(this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+            document.getElementById(e.currentTarget.id).contentEditable = false;
+            return false;
+        }
+        
 
         // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
         let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');
@@ -654,8 +664,9 @@ export class TinyMceEditor extends Component {
             document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
 
             tinymce.remove('#' + tinymce.activeEditor.id)
-            if (document.getElementById(activeEditorId))
+            if (document.getElementById(activeEditorId)) {
                 document.getElementById(activeEditorId).contentEditable = true;
+            }
         }
         this.editorConfig.selector = '#' + e.currentTarget.id;
 
@@ -664,8 +675,8 @@ export class TinyMceEditor extends Component {
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
-            tinymce.init(this.editorConfig).then((d)=>{console.log('tiny resolved 2',d)})
-        });        
+            tinymce.init(this.editorConfig).then((d)=>{console.log('tiny resolved 2',d);})
+        });    
     }
 
     /**
@@ -678,7 +689,11 @@ export class TinyMceEditor extends Component {
     
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
-        const lockCondition = isLocked && config.userId !== userId
+        let lockCondition = isLocked && config.userId !== userId;
+        if(this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+            lockCondition = true;
+        }
+        
         // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
         //     let activeEditorId = tinymce.activeEditor.id;
         //     let element = document.getElementById(activeEditorId);
@@ -734,7 +749,7 @@ export class TinyMceEditor extends Component {
                         )
                     default:
                         return (
-                            <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                            <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                         )
                 }
             }

@@ -415,13 +415,13 @@ const findElementType = (element, index) => {
 	return elementType;
 }
 
-export const fetchElementTag = (element, index = 0) => dispatch => {
+export const fetchElementTag = (element, index = 0) => {
 	if (Object.keys(element).length > 0) {
 		return findElementType(element, index).tag;
 	}
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {	
+export const fetchSlateData = (manifestURN) => dispatch => {
 	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
 		headers: {
 			"Content-Type": "application/json",
