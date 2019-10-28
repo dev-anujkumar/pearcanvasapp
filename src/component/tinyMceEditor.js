@@ -25,6 +25,7 @@ import {
     metadataanchor,
     assetPopoverIcon
   } from "./../svgIcons.jsx";
+import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -560,9 +561,18 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-        this.props.openGlossaryFootnotePopUp(true, "Footnote");
-
+        getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
+            console.log("FOOTNOTE RESPONSE::>>", res)
+            if(res.id){
+                editor.insertContent(`<sup><a href="#" id = "${res.id}" data-uri="${res.id}" data-footnoteelementid="${res.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                // editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                this.props.openGlossaryFootnotePopUp(true, "Footnote");
+            }
+            else {
+                editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                this.props.openGlossaryFootnotePopUp(true, "Footnote");
+            } 
+        })
     }
     learningObjectiveDropdown(text){
         this.props.learningObjectiveOperations(text);
@@ -574,11 +584,19 @@ export class TinyMceEditor extends Component {
      */
     addGlossary = (editor) => {
         let sectedText = window.getSelection().toString();
-        let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
-        if(sectedText !== ""){
-            editor.insertContent(insertionText);
-            this.props.openGlossaryFootnotePopUp(true, "Glossary");
-        }
+        console.log("Glossary footnote ADD ::>>", this.props.elementId)
+        getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
+            if(res.id){
+                let insertionText = `<dfn data-uri= ${res.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
+            }
+            else {
+                let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
+            }            
+            if(sectedText !== ""){
+                editor.insertContent(insertionText);
+                this.props.openGlossaryFootnotePopUp(true, "Glossary");
+            }
+        }) 
     }
 
     /**
