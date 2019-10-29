@@ -90,7 +90,6 @@ class SlateWrapper extends Component {
     }
 
     componentDidUpdate() {
-        console.log("tesing")
         this.renderDefaultElement();
     }
 

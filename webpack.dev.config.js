@@ -17,8 +17,6 @@ const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contentha
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 
-const exec = require('child_process').exec;
-
 const plugin = [
     // To cleanup dis folder every time with unwanted assets
     // new CleanWebpackPlugin({ verbose: true }),
@@ -52,15 +50,7 @@ const plugin = [
     }),
     {
         apply: (compiler) => {
-            compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-                // console.log('AfterEmitPlugin')
-                // var serverPath = path.join(__dirname, 'node_modules/.bin/webpack-dev-server');
-
-                // exec(serverPath + ' --https --port 443 --watch-content-base --content-base dist', (err, stdout, stderr) => {
-                //     if (stdout) process.stdout.write(stdout);
-                //     if (stderr) process.stderr.write(stderr);
-                // });
-            });
+            
         }
     }
 ];
