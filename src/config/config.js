@@ -65,7 +65,9 @@ let config = {
     },
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
     isCO : false,
-    isLOL:false
+    isLOL:false,
+    toolBarList : ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';

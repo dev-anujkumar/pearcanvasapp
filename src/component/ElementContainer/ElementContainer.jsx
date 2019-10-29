@@ -84,6 +84,9 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * function will be called on element focus of tinymce instance
+     */
     handleFocus = () => {
         this.setState({
             borderToggle: 'active',
@@ -92,6 +95,7 @@ class ElementContainer extends Component {
         this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
+
     /**
      * function will be called on element blur and a saving call will be made
      */

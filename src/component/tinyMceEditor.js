@@ -621,11 +621,39 @@ export class TinyMceEditor extends Component {
         }
     }
 
+
+    /**
+     * Set dynamic toolbar by element type
+     */
+
+    setToolbarByElementType = () => {            
+        let element = this.props.element;
+        let toolbar = [];
+        if(element){
+            if(element.elementdata.hasOwnProperty('headers')){
+                toolbar = config.headingToolbar;
+            }else if(element.elementdata){
+                toolbar = [];
+            }
+            tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
+            if(toolbar.length){
+                tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+                .each((index) => {
+                    if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) < 0){
+                        tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                    }
+                });
+            }
+        }        
+    }
+
     /**
      * handleClick | gets triggered when any editor element is clicked
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        
+        
         this.props.handleEditorFocus();
         /**
          * case - if active editor and editor currently being focused is same
@@ -664,7 +692,9 @@ export class TinyMceEditor extends Component {
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
-            tinymce.init(this.editorConfig).then((d)=>{console.log('tiny resolved 2',d)})
+            tinymce.init(this.editorConfig).then((d)=>{
+                this.setToolbarByElementType();
+            })
         });        
     }
 
@@ -678,15 +708,7 @@ export class TinyMceEditor extends Component {
     
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
-        const lockCondition = isLocked && config.userId !== userId
-        // if(tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-        //     let activeEditorId = tinymce.activeEditor.id;
-        //     let element = document.getElementById(activeEditorId);
-        //     tinymce.remove('#'+tinymce.activeEditor.id)
-        //     element.contentEditable = true;
-        //     this.editorConfig.selector='#'+activeEditorId;
-        //     tinymce.init(this.editorConfig);
-        // }
+        const lockCondition = isLocked && config.userId !== userId;
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-' + this.props.index;

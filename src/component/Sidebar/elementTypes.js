@@ -14,6 +14,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
+            toolbar: ['italic','clearformatting','footnote','mathml','chemml','subscript','superscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
