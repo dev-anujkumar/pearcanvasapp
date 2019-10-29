@@ -65,13 +65,16 @@ export const saveAssetLinkedMedia = (apoObject, imageObj) => {
         domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
     } else {
         //Hit api for asset popover Id
-        let assetPopoverId = getAssetPopoverId(imageObj.versionUrn)
-        if (assetPopoverId) {
-            domNode = document.getElementById('asset-popover-attacher');
-            originalText = domNode.innerHTML;
-            assetPopoverDomId = assetPopoverId
-            domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
-        }
+        getAssetPopoverId(imageObj.versionUrn).then((assetPopoverId) => {
+            if (assetPopoverId) {
+                console.log('>>>>>>>>>>>>>>> asset id',assetPopoverId)
+                domNode = document.getElementById('asset-popover-attacher');
+                originalText = domNode.innerHTML;
+                assetPopoverDomId = assetPopoverId
+                domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
+            }
+        })
+        
     }
 }
 
