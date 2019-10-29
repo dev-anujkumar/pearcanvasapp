@@ -140,7 +140,7 @@ class ElementContainer extends Component {
             sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveSlate,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         if(text =="View Learning Objective" && config.slateType === 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':isLOExist,'editAction':''}},config.WRAPPER_URL);
+            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
         }
         // else if( !this.state.slateLockSatus){
             if(text =="Add a New Learning Objective" &&  this.props.permissions.includes('lo_edit_metadata')){
@@ -318,7 +318,7 @@ class ElementContainer extends Component {
             <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
                 <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { config.slateType !=='assessment'? ( this.props.permissions.includes('elements_add_remove') && <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
+                { this.props.permissions.includes('elements_add_remove') && config.slateType !=='assessment'? ( <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
                 : null }
                 {this.renderColorPaletteButton(element)}
             </div>

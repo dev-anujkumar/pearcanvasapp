@@ -57,7 +57,7 @@ class PageNumber extends React.Component {
 
     render() {
         
-        let { element, isHovered, isPageNumberEnabled, activeElement, permissions } = this.props;
+        let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
         let loader = this.state.loader;
         let content = null;
         if (loader)
@@ -74,7 +74,7 @@ class PageNumber extends React.Component {
                 }
             </div>
         }
-        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId) {
+        if (isPageNumberEnabled && activeElement && element.id === activeElement.elementId && _slateType !== 'assessment') {
             return (
                 <form id="pageNumberForm">
                     <div className={'pageNumberCover focusedNumberCover'}>
@@ -83,7 +83,7 @@ class PageNumber extends React.Component {
                 </form>
             )
         }
-        else if (isHovered && isPageNumberEnabled) {
+        else if (isHovered && isPageNumberEnabled && _slateType !== 'assessment') {
             return (
                 <div className='pageNumberCover hoverNumberCover'>
                     <div className={'pageNumberBox' + (permissions.includes('edit_print_page_no') ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>

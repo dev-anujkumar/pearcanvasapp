@@ -15,7 +15,6 @@ import {
     setSplittedElementIndex, createElementMeta,
     createElementMetaList
 } from './SlateWrapper_Actions';
-import ListComponent from '../ListElement'; // In Testing Phase
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -88,7 +87,6 @@ class SlateWrapper extends Component {
      * @param {number} value | entered numeric value
      */
     customListDropClickAction(type, value) {
-        console.log(type, value);
     }
 
     componentDidUpdate() {
@@ -206,9 +204,9 @@ class SlateWrapper extends Component {
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)         
-                    let _context = this
+                    let _context = this;
                     return (
-                        <div className='slate-content' data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${config.slateType ==='assessment'?'assessment-slate': ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 <Sortable
                                     options={{
@@ -240,9 +238,6 @@ class SlateWrapper extends Component {
                                         onUpdate: (/**Event*/evt) => {
                                             let swappedElementData, swappedElementId;
                                             swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                            // swappedElementId =tinymce.$(evt.item).find('.cypress-editable').attr('id');
-                                            // console.log('this is active editor id', swappedElementId)
-                                            //  tinymce.remove('#'+swappedElementId);
                                             let dataObj = {
                                                 oldIndex: evt.oldDraggableIndex,
                                                 newIndex: evt.newDraggableIndex,
@@ -251,17 +246,7 @@ class SlateWrapper extends Component {
                                                 workedExample: false,
                                                 swappedElementId: swappedElementId
                                             }
-                                            // if(tinymce.activeEditor.id==swappedElementId){
-                                            //     tinymce.remove('#'+swappedElementId);
-                                            // }
-                                            this.props.swapElement(dataObj, () => {
-                                                // if(tinymce.activeEditor.id==swappedElementId){
-                                                //     document.getElementById(tinymce.activeEditor.id).contentEditable = true;
-                                                //     document.getElementById(tinymce.activeEditor.id).focus();
-                                                // }
-                                                // if(swappedElementType === "element-authoredtext")
-
-                                            })
+                                            this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
 
@@ -606,7 +591,6 @@ class SlateWrapper extends Component {
      */
     renderElement(_elements, _slateType, slateLockInfo) {
         try {
-            console.log("_slateType",_slateType);
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
@@ -633,7 +617,7 @@ class SlateWrapper extends Component {
                             >
                             {
                                    (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
-                                       <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
+                                       <PageNumberElement element={element} _slateType={_slateType} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
                                    )
                                }
                            </ElementContainer>
