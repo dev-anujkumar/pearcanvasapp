@@ -660,7 +660,7 @@ export class TinyMceEditor extends Component {
         this.editorConfig.selector = '#' + e.currentTarget.id;
 
         /**
-         * Using timeout - inti tinymce instance only when default events stack becomes empty
+         * Using timeout - init tinymce instance only when default events stack becomes empty
          */
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);

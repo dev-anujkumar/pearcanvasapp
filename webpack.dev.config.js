@@ -53,13 +53,13 @@ const plugin = [
     {
         apply: (compiler) => {
             compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-                console.log('AfterEmitPlugin')
-                var serverPath = path.join(__dirname, 'node_modules/.bin/webpack-dev-server');
+                // console.log('AfterEmitPlugin')
+                // var serverPath = path.join(__dirname, 'node_modules/.bin/webpack-dev-server');
 
-                exec(serverPath + ' --https --port 443 --watch-content-base --content-base dist', (err, stdout, stderr) => {
-                    if (stdout) process.stdout.write(stdout);
-                    if (stderr) process.stderr.write(stderr);
-                });
+                // exec(serverPath + ' --https --port 443 --watch-content-base --content-base dist', (err, stdout, stderr) => {
+                //     if (stdout) process.stdout.write(stdout);
+                //     if (stderr) process.stderr.write(stderr);
+                // });
             });
         }
     }
