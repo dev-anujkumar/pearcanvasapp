@@ -42,7 +42,6 @@ export class TinyMceEditor extends Component {
             formats: EditorConfig.formats,
             menubar: false,
             statusbar: false,
-            inline: true,
             valid_elements : '*[*]',
             extended_valid_elements : '*[*]',
             object_resizing: false,
