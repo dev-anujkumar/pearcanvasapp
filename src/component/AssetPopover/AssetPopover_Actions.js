@@ -232,10 +232,10 @@ export const assetPopoverPopup = (args) => {
  * Callback for asset popover ID
  */
 export async function getAssetPopoverId(workUrn) {
-  let type = 'ASSETSPOPOVER', data, response;
+  let type = 'ASSETSPOPOVER', data, response, tempProjectUrn = 'urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8', tempWorkUrn = 'urn:pearson:work:05ebbe47-017f-4531-9149-541fc12814dc';
 
   try {
-    response = await fetch(REACT_APP_API_URL + 'v1/slate/' + projectUrn + '/' + workUrn + '/createWorkId/' + type, {
+    response = await fetch(REACT_APP_API_URL + 'v1/slate/' + tempProjectUrn + '/' + tempWorkUrn + '/createWorkId/' + type, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -243,8 +243,8 @@ export async function getAssetPopoverId(workUrn) {
         'PearsonSSOSession': ssoToken
       }
     })
-    
-    // data = await response.json()
+
+    data = await response.json()
     return data.id
   } catch (err) {
     console.log('Error in Creating assetpopover id Api', err)
