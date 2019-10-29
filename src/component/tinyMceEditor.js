@@ -273,8 +273,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorMousedown = (editor) => {
-        editor.on('mousedown',function(e) {
-            if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
+        editor.on('mousedown', (e) => {
+            if(this.props.slateLockInfo.isLocked && config.userId !== this.props.slateLockInfo.userId){
                 e.preventDefault();
                 e.stopPropagation()
                 return false;
@@ -565,13 +565,11 @@ export class TinyMceEditor extends Component {
             console.log("FOOTNOTE RESPONSE::>>", res)
             if(res.id){
                 editor.insertContent(`<sup><a href="#" id = "${res.id}" data-uri="${res.id}" data-footnoteelementid="${res.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-                // editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-                this.props.openGlossaryFootnotePopUp(true, "Footnote");
             }
             else {
                 editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-                this.props.openGlossaryFootnotePopUp(true, "Footnote");
-            } 
+            }
+            this.props.openGlossaryFootnotePopUp(true, "Footnote"); 
         })
     }
     learningObjectiveDropdown(text){
@@ -669,7 +667,8 @@ export class TinyMceEditor extends Component {
             */
             let tempContainerHtml   =   tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
             tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula','temp_Wirisformula'); 
-            document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
+            if(document.getElementById(tinyMCE.activeEditor.id))
+                document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
 
             tinymce.remove('#' + tinymce.activeEditor.id)
             if (document.getElementById(activeEditorId))
