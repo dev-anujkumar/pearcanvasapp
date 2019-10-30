@@ -9,7 +9,7 @@ i.fa.fa-list-ol {
 
 .fa {
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
+    /* font: normal normal normal 14px/1 FontAwesome; */
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -188,7 +188,7 @@ i.fa.fa-list-ol:before {
 
 #listDropWrapper .fa, #tinymceToolbar .fa {
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
+    /* font: normal normal normal 14px/1 FontAwesome; */
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -248,7 +248,7 @@ i.fa.fa-list-ol:before {
     float: left;
     width: 90%;
     height: 30px;
-    font-size: 100%;
+    /* font-size: 100%; */
     border: 1px solid #ccc;
     padding: 0 5px;
     font-size: 12px;

@@ -83,10 +83,15 @@
     min-height: 2.5em;
     margin: 0 0 .25em;
     border: 1px solid;
-    font: 400 13.3333px Arial;
+    font-size: 13.3333px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
   }
   .dialog-input-textarea::placeholder{
-    font: 400 13.3333px Arial;
+    /* font: 400 13.3333px Arial; */
+    font-size: 13.3333px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
   }
   .dialog-input-textarea.assessmentAndInteractive {
     margin: .30em 0 .25em;
@@ -96,7 +101,10 @@
     max-width: 100%;
     min-width: 100%;
     max-height: 36px;
-    font: 400 13.3333px Arial ;
+    /* font: 400 13.3333px Arial ; */
+    font-size: 13.3333px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
     padding:3.6px 9.648px;
     margin:0px 0px 3.6px;
     border:none;
@@ -207,7 +215,7 @@
 }
 .tocDeleteHeader {
   font-family: "Helvetica Neue", sans-serif;
-  color: #847676;
+  /* color: #847676; */
   line-height: 2.0em;
   margin-bottom: .5em;
   font-size: 1.5em;
