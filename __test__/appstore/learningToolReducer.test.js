@@ -44,6 +44,22 @@ const INITIAL_STATE2 = {
     learningToolDisValue: "mathematics",
     numberOfRows: 25
 };
+const INITIAL_STATE3 = {
+    shouldHitApi: false,
+    learningToolTypeValue: "accounting-sims",
+    apiResponse: [],
+    showErrorMsg: true, //should be false
+    showLTBody: false,
+    learningTypeSelected: false,
+    showDisFilterValues: false,
+    selectedResultFormApi: '',
+    resultIsSelected: false,
+    toggleLT: false,
+    linkButtonDisable: true,
+    apiResponseForDis: [],
+    learningToolDisValue: "art",
+    numberOfRows: 25
+};
 const mock_GET_DISCIPLINE = {
     "taxonomyType": "disciplines",
     "options": [
@@ -434,6 +450,20 @@ describe('Testing Learning Tool Reducer cases -->', () => {
             type: LT_API_RESULT,
             payload: {
                 learningToolDisValue: "mathematics",
+                learningTypeSelected: true,
+                showDisFilterValues: true,
+                showLTBody: true,
+                apiResponse: mock_LT_API_RESULT,
+                linkButtonDisable: true,
+                selectedResultFormApi: '',
+            }
+        })
+    })
+    it('Test 12- LT_API_RESULT for if-else-case', () => {
+        reducer(INITIAL_STATE3, {
+            type: LT_API_RESULT,
+            payload: {
+                learningToolDisValue: "art",
                 learningTypeSelected: true,
                 showDisFilterValues: true,
                 showLTBody: true,
