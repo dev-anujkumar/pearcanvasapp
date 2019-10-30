@@ -41,9 +41,11 @@ import { sendDataToIframe } from '../../constants/utility.js';
     setDynamicStyle = (type,className) => {
         if(className === 'header-label'){
             if(type ===  'container-introduction'){
-                return {minWidth:'559px',fontSize:'12px',minWidth: "max-content"}
+                return {fontSize:'12px',minWidth: "max-content"}
+                // return {minWidth:'559px',fontSize:'12px',minWidth: "max-content"}
             }
-            return {minWidth: type == 'section' ? '696px' : '675px',fontSize:'12px',minWidth: "max-content"}
+            return {fontSize:'12px',minWidth: "max-content"}
+            // return {minWidth: type == 'section' ? '696px' : '675px',fontSize:'12px',minWidth: "max-content"}
         }
         if(className === 'input-text'){
             if(type ===  'container-introduction'){

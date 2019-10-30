@@ -84,6 +84,9 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * function will be called on element focus of tinymce instance
+     */
     handleFocus = () => {
         this.setState({
             borderToggle: 'active',
@@ -92,6 +95,7 @@ class ElementContainer extends Component {
         this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
+
     /**
      * function will be called on element blur and a saving call will be made
      */
@@ -240,6 +244,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo,permissions } = this.props;
+        config.elementToolbar = this.props.activeElement.toolbar || [];
         let labelText = fetchElementTag(element, index);
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {

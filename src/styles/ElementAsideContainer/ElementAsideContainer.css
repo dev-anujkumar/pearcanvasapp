@@ -59,7 +59,7 @@
 }
 .BorderTop{
     position: absolute;
-    height: 30px;
+    /* height: 30px; */
     z-index: 999;
     left: 0;
     right: 0;

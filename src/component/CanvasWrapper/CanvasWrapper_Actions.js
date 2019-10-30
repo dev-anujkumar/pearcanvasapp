@@ -55,7 +55,14 @@ const findElementType = (element, index) => {
 				elementType = {
 					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 					primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-					secondaryOption : `secondary-blockcode-language-${element.figuredata.programlanguage}`
+				}
+				switch (element.figuredata.programlanguage){
+					case "Select":
+						elementType.secondaryOption = `secondary-blockcode-language-Default`
+						break;
+
+					default:
+						elementType.secondaryOption = `secondary-blockcode-language-${element.figuredata.programlanguage}`
 				}
 				break;
 			case "video":
@@ -113,7 +120,7 @@ const findElementType = (element, index) => {
 
 	if(elementType.elementType && elementType.elementType !== '')
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-	
+	elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
 	return elementType;
 }
 
