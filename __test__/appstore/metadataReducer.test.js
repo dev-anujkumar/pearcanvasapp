@@ -6,7 +6,7 @@ const INIT_STATE = {
 
 const currentSlateLOData = {}
 
-describe('testing glossary Footnote Reducer cases --', () => {
+describe('testing meta data Reducer cases --', () => {
 
     it('should return the initial state', () => {
         expect(metadataReducer(undefined, {})).toEqual(INIT_STATE);

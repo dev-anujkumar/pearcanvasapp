@@ -5,7 +5,7 @@ const INIT_STATE = {
     elemBorderToggle: true
 }
 
-describe('testing glossary Footnote Reducer cases --', () => {
+describe('testing Toolbar Reducer cases --', () => {
 
     it('should return the initial state', () => {
         expect(toolbarReducer(undefined, {})).toEqual(INIT_STATE);
