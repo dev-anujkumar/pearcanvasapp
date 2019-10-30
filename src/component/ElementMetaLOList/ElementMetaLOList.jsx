@@ -55,7 +55,8 @@ export class ElementMetaLOList extends Component {
           <div className="Container">
                         <div className="divLearningObjectives">
                             <div className="divLearningObjectiveListHeaderLabel">
-                                <h2 className="heading2LearningObjectiveListHeaderLabel" resource=""><TinyMceEditor
+                                <h2 className="heading2LearningObjectiveListHeaderLabel" resource="">
+                                  <TinyMceEditor
                                     learningObjectiveOperations={learningObjectiveOperations}
                                     currentSlateLOData={currentSlateLOData}
                                     openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
@@ -72,25 +73,26 @@ export class ElementMetaLOList extends Component {
                                     onBlur={this.onBlur}
                                     onClick={this.onClick}
                                     slateLockInfo={slateLockInfo}
-                                /></h2>
-                                   <TinyMceEditor
-                                        learningObjectiveOperations={learningObjectiveOperations}
-                                        currentSlateLOData={currentSlateLOData}
-                                        openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-                                        index={this.props.index}
-                                        elementId={this.props.elementId}
-                                        element={this.props.element}
-                                        placeholder="Please add learning objective by tagging a slate"
-                                        className="learningObjectiveinnerText"
-                                        model={this.prepareLOLData(this.props.currentSlateLOData)}
-                                        handleEditorFocus={this.props.handleFocus}
-                                        onFocus={this.onFocus}
-                                        handleBlur = {this.props.handleBlur}
-                                        onKeyup={this.onKeyup}
-                                        onBlur={this.onBlur}
-                                        onClick={this.onClick}
-                                        slateLockInfo={slateLockInfo}
-                                        />
+                                  />
+                                </h2>
+                                <TinyMceEditor
+                                  learningObjectiveOperations={learningObjectiveOperations}
+                                  currentSlateLOData={currentSlateLOData}
+                                  openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+                                  index={this.props.index}
+                                  elementId={this.props.elementId}
+                                  element={this.props.element}
+                                  placeholder="Please add learning objective by tagging a slate"
+                                  className="learningObjectiveinnerText"
+                                  model={this.prepareLOLData(this.props.currentSlateLOData)}
+                                  handleEditorFocus={this.props.handleFocus}
+                                  onFocus={this.onFocus}
+                                  handleBlur = {this.props.handleBlur}
+                                  onKeyup={this.onKeyup}
+                                  onBlur={this.onBlur}
+                                  onClick={this.onClick}
+                                  slateLockInfo={slateLockInfo}
+                                />
                             </div>
                         </div>
                     </div>
@@ -124,9 +126,9 @@ export class ElementMetaLOList extends Component {
    * @param {object} loldata
 */
 onLOLClickHandle(lolData){
-  if(lolData ==""){
-    sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-   }
+  // if(lolData ==""){
+  //   sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+  //  }
 }
 //Click function when element gets clicked
 onClick() {
