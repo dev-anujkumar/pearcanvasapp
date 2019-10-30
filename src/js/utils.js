@@ -359,7 +359,8 @@ export const utils= {
                 replace: value,
                 portionMode: 'first',
                 preset: 'prose',
-                wrap: isReplaceAll ? 'span' : 'span',
+                // wrap: isReplaceAll ? 'span' : 'span',
+                wrap: 'span',
                 wrapClass: 'replacer-single'
             });
 

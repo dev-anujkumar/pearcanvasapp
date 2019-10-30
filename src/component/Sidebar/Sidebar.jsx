@@ -59,7 +59,8 @@ class Sidebar extends Component {
                 elementType: this.state.activeElementType,
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption,
-                labelText
+                labelText,
+                toolbar: elementList[this.state.activeElementType][value].toolbar
             });
         }
     }
@@ -146,7 +147,8 @@ class Sidebar extends Component {
                 elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value,
-                labelText
+                labelText,
+                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
             });
         }
     }

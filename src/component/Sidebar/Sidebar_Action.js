@@ -9,13 +9,6 @@ import {
 import wipElementObject from './ElementWipData';
 import elementTypes from './../Sidebar/elementTypes';
 
-const { REACT_APP_API_URL, ssoToken } = config;
-
-const headers = {
-    "Content-Type" : "application/json",
-    "PearsonSSOSession": ssoToken
-}
-
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
     
     // Input Element
@@ -45,9 +38,13 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType: outputSubTypeEnum
     }
     
-    const url = `${REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    axios.post(url, JSON.stringify(conversionDataToSend), { headers })
-    .then(res =>{
+    const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
+    axios.post(url, JSON.stringify(conversionDataToSend), { 
+        headers: {
+			"Content-Type": "application/json",
+			"PearsonSSOSession": config.ssoToken
+		}
+    }).then(res =>{
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
@@ -64,11 +61,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
         let activeElementObject = {
             elementId: newElementData.elementId,
-            index: indexes,
+            index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,
-            tag: newElementData.labelText
+            tag: newElementData.labelText,
+            toolbar: newElementData.toolbar
         };
 
         dispatch({

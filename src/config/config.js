@@ -11,7 +11,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "a6bOuDQkyhp8mNZTifpHh5Xfha0.*AAJTSQACMDIAAlNLABxzSEhrZFI0cXNtUnJIbnEzaTMzRXZZaEJrRlk9AAJTMQACMDE.*",
+    ssoToken: "Sm5ggCSEHMOQ3f1ugzc1NtE0Kmg.*AAJTSQACMDIAAlNLABxFeHhGdm5VeTUxN2V6U1BKbHhCUHU2UStiSW89AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -65,7 +65,10 @@ let config = {
     },
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
     isCO : false,
-    isLOL:false
+    isLOL:false,
+    toolBarList : ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    elementToolbar: [],
+    headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';

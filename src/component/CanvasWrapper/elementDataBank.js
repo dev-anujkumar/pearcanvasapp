@@ -287,7 +287,7 @@ const elementDataBank = {
                 "primaryOption" : "primary-workedexample-we1",
                 "secondaryOption" : "secondary-workedexample-we1"
             },
-            "workedexample1" : {
+            "workedexample2" : {
                 "primaryOption" : "primary-workedexample-we2",
                 "secondaryOption" : "secondary-workedexample-we2"
             }
