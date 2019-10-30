@@ -628,7 +628,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-        this.props.handleEditorFocus();console.log('set editable', tinymce.get);
+        this.props.handleEditorFocus();
         /**
          * case - if active editor and editor currently being focused is same
          */
@@ -642,7 +642,6 @@ export class TinyMceEditor extends Component {
             document.getElementById(e.currentTarget.id).contentEditable = false;
             return false;
         }
-        
 
         // tinymce.$('#tinymceToolbar.tox.tox-tinymce.tox-tinymce-inline').remove();
         let toolBar = document.querySelector('#tinymceToolbar .tox.tox-tinymce.tox-tinymce-inline');

@@ -178,24 +178,9 @@ export class ReactEditor extends React.Component {
       document.getElementById(activeEditorId).contentEditable = true;
     }
 
-    if(e.target.id == "footnote-0" || e.target.id == "glossary-0" || e.target.id == "glossary-1") {
-      tinymce.remove('#footnote-0');
-      tinymce.remove('#glossary-0');
-      tinymce.remove('#glossary-1');
-      document.getElementById(e.target.id).contentEditable = true;
-    }
-
     this.editorConfig.selector = '#' + e.target.id;
     tinymce.init(this.editorConfig);
   }
-
-  // componentWillUpdate() {
-  // //   if (!tinymce.editors.length) {
-  // //     tinymce.init(this.editorConfig);
-  
-  //     console.log('willmount', tinymce, tinymce.activeEditor);
-  // //   }
-  // }
 
   render() {
     // if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
