@@ -13,7 +13,8 @@ import {
     GET_PROJECT_PERMISSIONS
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
-import {createstoreWithFigure,newslateData} from '../../fixtures/slateTestingData';
+import { createstoreWithFigure, newslateData } from '../../fixtures/slateTestingData';
+
 const initialState = {
     slateLevelData: {},
     activeElement: {},
@@ -21,6 +22,7 @@ const initialState = {
     pageNumberData: {},
     permissions: []
 };
+
 const splittedElementIndexValue = "5";
 
 const newActiveElement = {
@@ -31,59 +33,62 @@ const newActiveElement = {
     secondaryOption: "secondary-list-3",
     tag: "OL"
 }
+
 const slateTitle = "1918";
-const permissionsData= [ "login",
- "logout",
-"bookshelf_access",
-"generate_epub_output",
-"demand_on_print",
-"toggle_tcm",
-"content_preview",
-"add_instructor_resource_url",
-"grid_crud_access",
-"alfresco_crud_access",
-"set_favorite_project",
-"sort_projects",
-"search_projects",
-"project_edit",
-"edit_project_title_author",
-"promote_review",
-"promote_live",
-"create_new_version",
-"project_add_delete_users",
-"create_custom_user",
-"toc_add_pages",
-"toc_delete_entry",
-"toc_rearrange_entry",
-"toc_edit_title",
-"elements_add_remove",
-"split_slate",
-"full_project_slate_preview",
-"access_formatting_bar",
-"authoring_mathml",
-"slate_traversal",
-"trackchanges_edit",
-"trackchanges_approve_reject",
-"tcm_feedback",
-"notes_access_manager",
-"quad_create_edit_ia",
-"quad_linking_assessment",
-"add_multimedia_via_alfresco",
-"toggle_element_page_no",
-"toggle_element_borders",
-"global_search",
-"global_replace",
-"edit_print_page_no",
-"notes_adding",
-"notes_deleting",
-"notes_delete_others_comment",
-"note_viewer",
-"notes_assigning",
-"notes_resolving_closing",
-"notes_relpying",
-"note_search_comment",
-"note_viewer",
-"lo_edit_metadata",]
+
+const permissionsData = ["login",
+    "logout",
+    "bookshelf_access",
+    "generate_epub_output",
+    "demand_on_print",
+    "toggle_tcm",
+    "content_preview",
+    "add_instructor_resource_url",
+    "grid_crud_access",
+    "alfresco_crud_access",
+    "set_favorite_project",
+    "sort_projects",
+    "search_projects",
+    "project_edit",
+    "edit_project_title_author",
+    "promote_review",
+    "promote_live",
+    "create_new_version",
+    "project_add_delete_users",
+    "create_custom_user",
+    "toc_add_pages",
+    "toc_delete_entry",
+    "toc_rearrange_entry",
+    "toc_edit_title",
+    "elements_add_remove",
+    "split_slate",
+    "full_project_slate_preview",
+    "access_formatting_bar",
+    "authoring_mathml",
+    "slate_traversal",
+    "trackchanges_edit",
+    "trackchanges_approve_reject",
+    "tcm_feedback",
+    "notes_access_manager",
+    "quad_create_edit_ia",
+    "quad_linking_assessment",
+    "add_multimedia_via_alfresco",
+    "toggle_element_page_no",
+    "toggle_element_borders",
+    "global_search",
+    "global_replace",
+    "edit_print_page_no",
+    "notes_adding",
+    "notes_deleting",
+    "notes_delete_others_comment",
+    "note_viewer",
+    "notes_assigning",
+    "notes_resolving_closing",
+    "notes_relpying",
+    "note_search_comment",
+    "note_viewer",
+    "lo_edit_metadata",]
+
 describe('testing SLATE LEVEL REDUCER cases -->', () => {
 
     it('should return the initial state', () => {
@@ -93,7 +98,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: FETCH_SLATE_DATA,
             payload: {
-                slateLevelData :mockData
+                slateLevelData: mockData
             }
         })
     });
@@ -101,7 +106,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: SET_ACTIVE_ELEMENT,
             payload: {
-                activeElement: newActiveElement 
+                activeElement: newActiveElement
             }
         })
     });
@@ -117,7 +122,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: ADD_COMMENT,
             payload: {
-                slateLevelData : newslateData
+                slateLevelData: newslateData
             }
         })
     });
@@ -125,7 +130,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: DELETE_ELEMENT,
             payload: {
-                slateLevelData : newslateData
+                slateLevelData: newslateData
             }
         })
     });
@@ -133,7 +138,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: SWAP_ELEMENT,
             payload: {
-                slateLevelData : newslateData
+                slateLevelData: newslateData
             }
         })
     });
@@ -141,7 +146,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: SET_SPLIT_INDEX,
             payload: {
-                splittedElementIndex :  splittedElementIndexValue
+                splittedElementIndex: splittedElementIndexValue
             }
         })
     });
@@ -149,7 +154,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: GET_PAGE_NUMBER,
             payload: {
-                pageNumberData : {}
+                pageNumberData: {}
             }
         })
     });
@@ -157,7 +162,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: SET_UPDATED_SLATE_TITLE,
             payload: {
-                slateTitleUpdated : slateTitle     
+                slateTitleUpdated: slateTitle
             }
         })
     });
@@ -165,7 +170,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: GET_PROJECT_PERMISSIONS,
             payload: {
-                permissions :   permissionsData
+                permissions: permissionsData
             }
         })
     });
@@ -173,7 +178,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         reducer(initialState, {
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
-                slateLevelData : newslateData
+                slateLevelData: newslateData
             }
         })
     });
