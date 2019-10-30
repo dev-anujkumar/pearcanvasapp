@@ -13,7 +13,7 @@ const initialState = {
     withinLockPeriod: false
 }
 
-describe('testing glossary Footnote Reducer cases --', () => {
+describe('testing slateLock Reducer cases -->', () => {
 
     it('should return the initial state', () => {
         expect(slateLockReducer(undefined, {})).toEqual(initialState);
