@@ -5,7 +5,7 @@ ol {
 }
 
 ol li {
-    font-size: 1em !important;
+    /* font-size: 1em !important; */
     list-style-type: none !important;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
     font-size: 1.080em;
@@ -61,6 +61,7 @@ span.list-opt-tooltip {
     position: absolute;
     padding: 0 8px;
     border-radius: 2px;
+    background: #222;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     -moz-background-clip: padding;
@@ -69,7 +70,6 @@ span.list-opt-tooltip {
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 2px 2px 1px rgba(0, 0, 0, .14);
     -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 2px 2px 1px rgba(0, 0, 0, .14);
     box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 2px 2px 1px rgba(0, 0, 0, .14);
-    background: #222;
     color: #fff;
     font-size: 11px;
     line-height: 22px;

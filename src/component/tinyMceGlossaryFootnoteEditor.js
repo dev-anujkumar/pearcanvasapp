@@ -17,7 +17,6 @@ export class ReactEditor extends React.Component {
       menubar: false,
       selector: '#glossary-0',
       inline: true,
-      menubar: false,
       statusbar: false,
       object_resizing: false,
       fixed_toolbar_container: '#toolbarGlossaryFootnote',

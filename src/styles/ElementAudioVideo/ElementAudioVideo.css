@@ -24,7 +24,12 @@
 }
 .figureLabel.cypress-editable{
     font-weight: 800 !important;
-}.divAudio .figureLabel.cypress-editable{
+}
+.figureLabel.cypress-editable strong{
+    font-weight: 800;
+    font-family: Helvetica, sans-serif!important;
+}
+.divAudio .figureLabel.cypress-editable{
     font-size: 10.8!important;
     font-weight: 400 !important;
  }
