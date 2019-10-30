@@ -61,7 +61,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
         let activeElementObject = {
             elementId: newElementData.elementId,
-            index: indexes,
+            index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,

@@ -3,6 +3,7 @@ export default {
         'primary-paragraph': {
             text: 'Paragraph',
             enum: 'AUTHORED_TEXT',
+            toolbar: ['undo','redo'],
             subtype: {
                 'secondary-paragraph': {
                     text: 'Paragraph',
@@ -14,7 +15,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['italic','clearformatting','footnote','mathml','chemml','subscript','superscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            toolbar: ['bold','clearformatting','footnote','mathml','chemml','subscript','superscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',

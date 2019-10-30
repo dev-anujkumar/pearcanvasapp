@@ -244,6 +244,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo,permissions } = this.props;
+        config.elementToolbar = this.props.activeElement.toolbar || [];
         let labelText = fetchElementTag(element, index);
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch(element.type) {
