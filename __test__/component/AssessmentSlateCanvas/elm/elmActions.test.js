@@ -48,4 +48,21 @@ describe('ELM Actions test', () => {
             expect(payload.apiStatus).toBe("200");
         })
     });
+    it('testing---insertElmResourceAction catch condition', () => {
+        store = mockStore(() => initialState);
+        store.dispatch(selectActions.insertElmResourceAction());
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 404,
+                response: {}
+            });
+        });
+        return store.dispatch(selectActions.insertElmResourceAction()).catch((error) => {
+            const { type, payload } = store.getActions()[0];
+            expect(type).toBe('GET_ELM_RESOURCES');
+            expect(payload.errFlag).toBe(true);
+            expect(payload.apiStatus).toBe(error.response.status);
+        })
+    });
 });
