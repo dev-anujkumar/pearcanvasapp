@@ -59,30 +59,10 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case ASSESSMENT_ELEMENT_CREATED:
-                    return {
-                        ...state,
-                        slateLevelData: action.payload.slateLevelData
-                    };
-        case FIGURE_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
-            };
         case ADD_COMMENT:
             return {
                 ...state,
                 slateLevelData: action.payload
-            };
-        case VIDEO_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
-            };
-        case INTERACTIVE_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
             };
         case DELETE_ELEMENT : 
             return {
