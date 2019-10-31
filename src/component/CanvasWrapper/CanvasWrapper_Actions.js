@@ -90,12 +90,12 @@ const findElementType = (element, index) => {
 			}
 			break;
 
-		case 'element-aside':
-				elementType = {
-					elementType : elementDataBank[element.type][element.subtype]["elementType"],
-					...elementDataBank[element.type][element.subtype][element.designtype]
-				}
-			break;
+		// case 'element-aside':
+		// 		elementType = {
+		// 			elementType : elementDataBank[element.type][element.subtype]["elementType"],
+		// 			...elementDataBank[element.type][element.subtype][element.designtype]
+		// 		}
+		// 	break;
 
 		case 'element-list':
 			elementType = {
@@ -120,7 +120,7 @@ const findElementType = (element, index) => {
 
 	if(elementType.elementType && elementType.elementType !== '')
 	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-	elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+	// elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
 	return elementType;
 }
 

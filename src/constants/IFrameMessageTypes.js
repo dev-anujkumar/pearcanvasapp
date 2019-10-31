@@ -14,5 +14,6 @@ export const AddLearningObjectiveSlate="LEARNING OBJECTIVE"
 export const AddLearningObjectiveAssessment ="ASSESSMENT ITEM LO TAGGING"
 export const AddEditLearningObjective ="CHOOSE FROM EXISTING LEARNING OBJECTIVE"
 export const NoSlateTagIS ="NO SLATE TAG AVAILABLE"
+export const UnlinkSlate ="UNLINK SLATE"
 
 

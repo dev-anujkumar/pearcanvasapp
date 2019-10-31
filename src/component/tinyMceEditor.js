@@ -112,11 +112,13 @@ export class TinyMceEditor extends Component {
                 icon: 'metadataanchor',
                 tooltip: "Slate Tag",
                 fetch: function (callback) {
-                if(context.props.currentSlateLOData && context.props.currentSlateLOData.label.en){
-                    viewLoEnable=false;
+                let viewLoEnable=true;
+                if(context.props.currentSlateLOData && (context.props.currentSlateLOData.id ?context.props.currentSlateLOData.id:context.props.currentSlateLOData.loUrn)){
+                viewLoEnable=false;
                 }
+                
                 //show dropdown options in slate tag 
-                var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective"];
+                var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective","Unlink Slate"];
                 var items = [
                     {
                         
@@ -134,6 +136,12 @@ export class TinyMceEditor extends Component {
                         text: dropdownItemArray[2],
                         disabled:viewLoEnable,
                         onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
+                    },
+                    {
+                        type: 'menuitem',
+                        text: dropdownItemArray[3],
+                        disabled:viewLoEnable,
+                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[3])
                     }
                     
                 ];
