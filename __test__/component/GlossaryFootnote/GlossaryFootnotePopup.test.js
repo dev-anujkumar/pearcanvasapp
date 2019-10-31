@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
-
+import ReactDOM from 'react-dom';
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     glossaryFootnoteReducer:{glossaryFootnoteValue:{"type":"","popUpStatus":false}
@@ -14,21 +14,22 @@ const store = mockStore({
   
 });
 describe('Testing GlossaryFootnote component with props', () => {
+    const div = document.createElement('div');
     const wrapper = mount( <GlossaryFootnotePopup   />)
     let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
     it('render Glossary Footnote component ', () => {
-        const component = mount(<GlossaryFootnotePopup />);
-        expect(component).toMatchSnapshot();
+        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup /></Provider>, div);
+        ReactDOM.unmountComponentAtNode(div);
     })
 
     it('render Glossary ', () => {
-        const component = mount(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Glossary' /></Provider>);
-        expect(component).toMatchSnapshot();
+        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Glossary' /></Provider>, div);
+        ReactDOM.unmountComponentAtNode(div);
     })
 
     it('render Footnote ', () => {
-        const component = mount(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Footnote' /></Provider>);
-        expect(component).toMatchSnapshot();
+        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Footnote' /></Provider>, div);
+        ReactDOM.unmountComponentAtNode(div);
     })
 
     it('ComponetDidMount Event', () => {

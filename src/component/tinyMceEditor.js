@@ -25,6 +25,7 @@ import {
     metadataanchor,
     assetPopoverIcon
   } from "./../svgIcons.jsx";
+import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
 
 let context = {};
 
@@ -281,8 +282,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorMousedown = (editor) => {
-        editor.on('mousedown', function(e) {
-            if(context.props.slateLockInfo.isLocked && config.userId !== context.props.slateLockInfo.userId){
+        editor.on('mousedown', (e) => {
+            if(this.props.slateLockInfo.isLocked && config.userId !== this.props.slateLockInfo.userId){
                 e.preventDefault();
                 e.stopPropagation()
                 return false;
@@ -572,9 +573,15 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-        this.props.openGlossaryFootnotePopUp(true, "Footnote");
-
+        getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
+            if(res.data && res.data.id){
+                editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+            }
+            else {
+                editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+            }
+            this.props.openGlossaryFootnotePopUp(true, "Footnote"); 
+        })
     }
     learningObjectiveDropdown(text){
         this.props.learningObjectiveOperations(text);
@@ -585,12 +592,21 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
-        let sectedText = window.getSelection().toString();
-        let insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
-        if(sectedText !== ""){
-            editor.insertContent(insertionText);
-            this.props.openGlossaryFootnotePopUp(true, "Glossary");
-        }
+        let sectedText = editor.selection.getContent({format: 'text'})
+        // let sectedText = window.getSelection().toString();
+        getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
+            let insertionText = ""
+            if(res.data && res.data.id){
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
+            }
+            else {
+                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
+            }            
+            if(sectedText !== ""){
+                editor.insertContent(insertionText);
+                this.props.openGlossaryFootnotePopUp(true, "Glossary");
+            }
+        }) 
     }
 
     /**
@@ -644,7 +660,7 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
-        if(this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")){
+        if(this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")){
             toolbar = config.labelToolbar;
         }
         else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){

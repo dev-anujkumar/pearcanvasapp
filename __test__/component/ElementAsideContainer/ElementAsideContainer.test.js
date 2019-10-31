@@ -23,8 +23,9 @@ let initialState = {
             primaryOption: "primary-heading",
             secondaryOption: "secondary-heading-1",
             index: "1-0",
-            tag: "H1"
-        },
+            tag: "H1",
+            toolbar: ['bold']
+        }
     },
     toolbarReducer: {
         elemBorderToggle: true
