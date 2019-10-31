@@ -46,15 +46,26 @@ export class ReactEditor extends React.Component {
             this.handleFocussingInlineCode(api, editor)
           }
         });
+        editor.on('BeforeExecCommand', (e) => {
+          let command = e.command;
+          if(command === "RemoveFormat") {
+            let selectedText = window.getSelection().toString();
+            if(selectedText == "") {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        });
       },
       init_instance_callback: function (editor) {
         editor.fire('focus');
-        let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-          if (activeElement) {
-              if (!activeElement.innerText.trim().length) {
-                activeElement.classList.add('place-holder')
-              }
-          }
+
+        // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+        //   if (activeElement) {
+        //       if (!activeElement.innerText.trim().length) {
+        //         activeElement.classList.add('place-holder')
+        //       }
+        //   }
       },
     }
   }
@@ -63,11 +74,14 @@ export class ReactEditor extends React.Component {
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
     */
   addInlineCode = (editor) => {
-    editor.execCommand('mceToggleFormat', false, 'code');
+    // editor.execCommand('mceToggleFormat', false, 'code');
     let selectedText = window.getSelection().toString();
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
-      let insertionText = '<code>' + selectedText + '</code>'
+      let insertionText = '<code>' + selectedText + '</code>';
+      if(editor.innerHTML.indexOf('code') > -1) {
+        insertionText = selectedText;
+      }
       editor.insertContent(insertionText);
     }
   }
