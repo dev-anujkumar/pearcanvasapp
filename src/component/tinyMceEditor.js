@@ -642,14 +642,27 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    setInstanceToolbar = () => {
+        let toolbar = [];
+        if(this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...'){
+            toolbar = ['footnote','decreaseindent'];
+        }
+        else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){
+            toolbar = ['decreaseindent'];
 
+        }else if (this.props.placeholder === "Enter the Block Code...") {
+            toolbar =  ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
+        }else{
+            toolbar = config.elementToolbar;
+        }
+        return toolbar;
+    }
     /**
      * Set dynamic toolbar by element type
      */
 
     setToolbarByElementType = () => {
-        let element = this.props.element;
-        let toolbar = config.elementToolbar;
+        let toolbar = this.setInstanceToolbar();
         tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
         if(toolbar.length){
             tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
