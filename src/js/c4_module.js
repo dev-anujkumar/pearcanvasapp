@@ -1,5 +1,6 @@
 // c4_module.js
 //const vex = require('vex-js');
+var _ = require("lodash");
 const React = require('react');
 const ReactDOM = require('react-dom');
 var response;
