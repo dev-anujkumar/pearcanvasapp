@@ -14,7 +14,17 @@ let initialState = {
     appStore: {
         pageNumberData: {},
         slateLevelData: {},
-        permissions: []
+        permissions: [],
+        activeElement: {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementType: "element-authoredtext",
+            elementWipType: "element-authoredtext",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            index: "1-0",
+            tag: "H1",
+            toolbar: ['bold']
+        }
     },
     toolbarReducer: {
         elemBorderToggle: true
