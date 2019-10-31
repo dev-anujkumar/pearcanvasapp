@@ -718,8 +718,7 @@ export class TinyMceEditor extends Component {
             */
             let tempContainerHtml   =   tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
             tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula','temp_Wirisformula'); 
-            if(document.getElementById(tinyMCE.activeEditor.id))
-                document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
+            document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
 
             tinymce.remove('#' + tinymce.activeEditor.id)
             if (document.getElementById(activeEditorId)) {
