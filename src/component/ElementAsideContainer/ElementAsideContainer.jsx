@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
-
+import tinymce from 'tinymce/tinymce';
+import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
@@ -38,6 +39,15 @@ class ElementAsideContainer extends Component {
     }
     handleFocus = () => {
         this.props.setActiveElement(this.props.element);
+        let toolbar = ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'];
+        if(toolbar.length){
+            tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+            .each((index) => {
+                if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
+                    tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                }
+            });
+        }  
         this.props.handleFocus()
     }
 /**

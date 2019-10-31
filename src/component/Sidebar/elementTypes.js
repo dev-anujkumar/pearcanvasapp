@@ -479,6 +479,7 @@ export default {
     'element-aside': {
         'primary-aside-lol': {
             text: 'Learning Objective List',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'LEARNING_OBJECTIVE_LIST',
             subtype: {
                 'secondary-aside-lol': {
@@ -490,6 +491,7 @@ export default {
         },
         'primary-aside-aside': {
             text: 'Aside',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'ASIDE',
             subtype: {
                 'secondary-aside-sb1': {
@@ -521,6 +523,7 @@ export default {
         },
         'primary-aside-feature': {
             text: 'Feature',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'FEATURE',
             subtype: {
                 'secondary-aside-feature': {
@@ -532,6 +535,7 @@ export default {
         },
         'primary-aside-activity': {
             text: 'Activity',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'ACTIVITY',
             subtype: {
                 'secondary-aside-activity': {
@@ -543,6 +547,7 @@ export default {
         },
         'primary-aside-tactic': {
             text: 'Tactic Box',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'TACTIC_BOX',
             subtype: {
                 'secondary-aside-tactic': {
@@ -557,6 +562,7 @@ export default {
     'element-workedexample': {
         'primary-workedexample-we1': {
             text: 'Worked Example 1',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we1': {
@@ -568,6 +574,7 @@ export default {
         },
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             subtype: {
                 'secondary-workedexample-we2': {
                     text: 'Worked Example 2',
@@ -581,6 +588,7 @@ export default {
 	'element-assessment': {		
         'primary-single-assessment': {		
             text: 'Single Assessment',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: '',		
             subtype: {		
                 'secondary-single-assessment-cite': {		

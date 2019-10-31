@@ -644,14 +644,14 @@ export class TinyMceEditor extends Component {
 
     setInstanceToolbar = () => {
         let toolbar = [];
-        if(this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...'){
-            toolbar = ['footnote','decreaseindent'];
+        if(this.props.placeholder === "Enter Label..." || this.props.placeholder === 'Enter call to action...' || (this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")){
+            toolbar = config.labelToolbar;
         }
         else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){
-            toolbar = ['decreaseindent'];
+            toolbar = config.captionToolbar;
 
         }else if (this.props.placeholder === "Enter the Block Code...") {
-            toolbar =  ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
+            toolbar =  config.codeListingToolbar;
         }else{
             toolbar = config.elementToolbar;
         }
