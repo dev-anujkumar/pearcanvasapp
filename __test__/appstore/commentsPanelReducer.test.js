@@ -12,7 +12,7 @@ import {
     DELETE_COMMENT,
     ADD_NEW_COMMENT
 } from '../../src/constants/Action_Constants';
-import {users} from '../../fixtures/commentPanelData';
+import { users } from '../../fixtures/commentPanelData';
 const initialState = {
     allComments: [{
         "commentType": "comment",
@@ -72,7 +72,7 @@ const initialState = {
     slateTitle: "",
     comments: []
 }
-const initialState2= {
+const initialState2 = {
     allComments: [{
         "commentType": "comment",
         "commentDateTime": "2019-08-25T04:29:55.633Z",
@@ -145,7 +145,7 @@ const initialState2= {
             "commentType": "commentReply"
         }],
         "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e36261"
-    },{
+    }, {
         "commentType": "comment",
         "commentDateTime": "2019-08-25T04:29:55.633Z",
         "commentAssignee": "c5test01",
@@ -162,7 +162,7 @@ const initialState2= {
         }],
         "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
     },
-]
+    ]
 }
 
 describe('testing slateLock Reducer cases -->', () => {
@@ -195,7 +195,7 @@ describe('testing slateLock Reducer cases -->', () => {
         reducer(initialState, {
             type: TOGGLE_REPLY,
             payload: {
-                toggleReplyForm: true   
+                toggleReplyForm: true
             }
         })
     })
@@ -205,11 +205,13 @@ describe('testing slateLock Reducer cases -->', () => {
             payload: {
                 commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
                 toggleReplyForm: false,
-                reply:{commentCreator: "c5test01",
-                commentDateTime: "2019-10-31T04:47:14.950Z",
-                commentOnEntity: "urn:pearson:work:d80809f5-1249-4429-9be3-7577fdccaa1c",
-                commentString: "reply comment added",
-                commentType: "commentReply",}
+                reply: {
+                    commentCreator: "c5test01",
+                    commentDateTime: "2019-10-31T04:47:14.950Z",
+                    commentOnEntity: "urn:pearson:work:d80809f5-1249-4429-9be3-7577fdccaa1c",
+                    commentString: "reply comment added",
+                    commentType: "commentReply",
+                }
             }
         })
     })
@@ -227,23 +229,22 @@ describe('testing slateLock Reducer cases -->', () => {
             type: UPDATE_COMMENT,
             payload: {
                 commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-updateComment: "comment updated"
+                updateComment: "comment updated"
             }
         })
     })
-    xit('Test 8- GET_PROJECT_USER', () => {
+    it('Test 8- GET_PROJECT_USER', () => {
         reducer(initialState, {
             type: GET_PROJECT_USER,
-            payload: {
-                users: users
-            }
+            payload: users
+
         })
     })
     it('Test 9- UPDATE_ASSIGNEE', () => {
         reducer(initialState2, {
             type: UPDATE_ASSIGNEE,
             payload: {
-                commentUrn :"urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
+                commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
                 newAssignee: "test"
             }
         })
@@ -251,9 +252,7 @@ updateComment: "comment updated"
     it('Test 10- DELETE_COMMENT', () => {
         reducer(initialState2, {
             type: DELETE_COMMENT,
-            payload: {
-                commentUrn :"urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-            }
+            payload: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
         })
     })
     it('Test 11- ADD_NEW_COMMENT', () => {
@@ -261,14 +260,14 @@ updateComment: "comment updated"
             type: ADD_NEW_COMMENT,
             payload: {
                 commentAssignee: "c5test01",
-commentCreator: "c5test01",
-commentDateTime: "2019-10-31T04:44:35.708Z",
-commentOnEntity: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
-commentStatus: "OPEN",
-commentString: "new comment added",
-commentType: "comment",
-commentUrn: "urn:pearson:comment:96222dd8-48a4-4678-9c84-b397b0485565",
-replyComments: [],
+                commentCreator: "c5test01",
+                commentDateTime: "2019-10-31T04:44:35.708Z",
+                commentOnEntity: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                commentStatus: "OPEN",
+                commentString: "new comment added",
+                commentType: "comment",
+                commentUrn: "urn:pearson:comment:96222dd8-48a4-4678-9c84-b397b0485565",
+                replyComments: [],
             }
         })
     })
