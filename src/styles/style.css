@@ -11,6 +11,7 @@ body {
     line-height: normal;
     margin: 0 !important;
     padding: 0 !important;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .--hr-loading {
@@ -108,7 +109,6 @@ h1, h2, h3, h4, h5, p {
     color: #ADADAD; 
     display: block;
     position : absolute;
-    margin-top : 1px;
 }
 /* .cypress-editable:empty::before {
     content: attr(placeholder);
