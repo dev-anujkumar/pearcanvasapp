@@ -1,16 +1,12 @@
+/**
+ * This file will contain all methods related to glossary and footnote functionality.
+ */
 import config from "../config/config"
 import axios from "axios"
 
 const { 
-    REACT_APP_API_URL,
-    ssoToken,
-    projectUrn
+    REACT_APP_API_URL
 } = config
-
-const headers = {
-    "Content-Type": "application/json",
-    "PearsonSSOSession":  ssoToken
-}
 
 /**
  * Generates Glossary/Footnote ID 
@@ -19,8 +15,15 @@ const headers = {
  * @param {*} callback callback method
  */
 export const getGlossaryFootnoteId = (elementId, enumType, callback) => {
-	let url = `${REACT_APP_API_URL}v1/slate/${projectUrn}/${elementId}/createWorkId/${enumType}`
-    axios.post(url, null, { headers })
+	let url = `${REACT_APP_API_URL}v1/slate/${config.projectUrn}/${elementId}/createWorkId/${enumType}`
+    axios.post(url, null, { 
+        headers : {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        } 
+    })
     .then(res => {
         console.log("create glossary footnote API success : ", res)
         callback(res)

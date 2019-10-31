@@ -2,8 +2,16 @@ import React from 'react';
 import { mount } from 'enzyme';
 import tinymce from 'tinymce/tinymce';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
+import { getGlossaryFootnoteId } from "../../../src/js/glossaryFootnote"
+import moxios from 'moxios';
 
-xdescribe('Testing tinyMce  component with  props', () => {
+
+beforeEach(() => moxios.install() )
+    
+afterEach(() => moxios.uninstall());
+
+const callback = (res) => {}
+describe('Testing tinyMce  component with  props', () => {
     let props={
         slateLockInfo:{
             isLocked:false
@@ -11,29 +19,34 @@ xdescribe('Testing tinyMce  component with  props', () => {
     }
     const tinyMceEditor = mount( <TinyMceEditor {...props}  /> )
     let tinyMceEditorInstance = tinyMceEditor.find('TinyMceEditor').instance();
-    it('render tinyMce Editor component ', () => {
-        
-        expect(tinyMceEditor).toMatchSnapshot();
+    
+    it('Add footnote', () => {
+        tinyMceEditorInstance.addFootnote()
     })
-
-    it('onEditorBlurFunc tinyMce', () => {
-        tinyMceEditorInstance.onEditorBlur()
+    it("calling API", () =>{
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: {id: "123"}
+            })
+            .then(() => {
+                let res = {data : { id: "123"} }
+                callback(res)
+            })
+            .catch(() => {
+                let errorRes = {err : "error" }
+                callback(errorRes)
+            })
+        });
+        getGlossaryFootnoteId("urn:123", "GLOSSARY", callback)
     })
-    it('onEditorEnterKeyPressFunc tinyMce', () => {
-        tinyMceEditorInstance.onEditorEnterKeyPress()
-    })
-    it('onEditorClickFunc tinyMce', () => {
-        tinyMceEditorInstance.onEditorClick()
-    })
-    it('onEditorFocusFunc tinyMce', () => {
-        tinyMceEditorInstance.onEditorFocus()
-    })
-    it('handleEditorChangeFunc of tinyMce',() => {
-        let event = {
-            target: {formatter: function(){},
-            getContent:function(){}
-          }
-         }
-        tinyMceEditorInstance.handleEditorChange(event)
+    it('Add glossary', () => {
+        let editor = {
+            selection : {
+                getContent : function(){}
+            }
+        }
+        tinyMceEditorInstance.addGlossary(editor)
     })
 })

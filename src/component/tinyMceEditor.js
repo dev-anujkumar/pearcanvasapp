@@ -592,7 +592,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
-        let sectedText = window.getSelection().toString();
+        let sectedText = editor.selection.getContent({format: 'text'})
+        // let sectedText = window.getSelection().toString();
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
