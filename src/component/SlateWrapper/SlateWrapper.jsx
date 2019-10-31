@@ -93,6 +93,7 @@ class SlateWrapper extends Component {
         this.renderDefaultElement();
     }
 
+
     renderDefaultElement = () =>{
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {

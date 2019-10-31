@@ -12,6 +12,7 @@ import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import { saveAssetLinkedMedia, clearAssetPopoverLink} from './openApoFunction.js';
 const config = require('../../config/config.js')
+import { sendDataToIframe } from '../../constants/utility.js';
 const WRAPPER_URL = config.WRAPPER_URL;
 
 class AssetPopoverSearch extends React.Component {
@@ -30,7 +31,7 @@ class AssetPopoverSearch extends React.Component {
             document.getElementById('asset-popover-attacher').outerHTML = originalText;
         }
         this.props.apoSearchClose();
-        window.parent.postMessage({ 'type': 'enableToc', 'message': {} }, WRAPPER_URL);
+        sendDataToIframe({ 'type': 'enableToc', 'message': {} });
     }
 
     /**

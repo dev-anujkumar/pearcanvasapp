@@ -6,6 +6,12 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+jest.mock('../../../src/component/AssetPopover/openApoFunction.js', () => {
+    return {
+        saveAssetLinkedMedia: jest.fn(),
+        clearAssetPopoverLink: jest.fn()
+    }
+});
 
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
@@ -27,7 +33,6 @@ const store = mockStore({
 
 let wrapper;
 const searchForFigures = new stub();
-const clearAssetPopoverLink = new stub();
 
 beforeEach(() => {
     wrapper = mount(<Provider store={store}>< AssetPopoverSearch /> </Provider>)
@@ -61,17 +66,76 @@ describe('Interaction functions test cases', () => {
             apoSearchClose : jest.fn()
         })
         instance.props.apoSearchClose()
-    }), 
-    xit('Testing searchForFigures function', () => {
+    }),  
+    it('Testing apoFooterJsx  function', () => {
+        let isFigureSelected,
+        shouldOpenCurrentlyLinked = true, 
+        shouldShowApoBody, 
+        isSearchResultFound = false;
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures}/> </Provider>)
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
-        let mockEvent = {
-            target : {
-                value : 'search term'
-            }
-        }
-     
-        let stateImageData = [{}]
-        instance.searchForFigures(mockEvent, stateImageData)
+        wrapper.setProps({
+            apoSearchClose : jest.fn(),
+            selectedFigureValue : jest.fn()
+        })
+        instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound)
+    })
+
+    it('Testing apoFooterJsx else function', () => {
+        let isFigureSelected,
+        shouldOpenCurrentlyLinked = true, 
+        shouldShowApoBody, 
+        isSearchResultFound = true;
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures}/> </Provider>)
+        const instance = tempWrapper.find('AssetPopoverSearch').instance();
+        wrapper.setProps({
+            apoSearchClose : jest.fn(),
+            selectedFigureValue : jest.fn()
+        })
+        instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound)
+    })
+
+    it('Testing apoFooterJsx else if function', () => {
+        let isFigureSelected,
+        shouldOpenCurrentlyLinked = false, 
+        shouldShowApoBody = true, 
+        isSearchResultFound = false;
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures}/> </Provider>)
+        const instance = tempWrapper.find('AssetPopoverSearch').instance();
+        wrapper.setProps({
+            apoSearchClose : jest.fn(),
+            selectedFigureValue : jest.fn()
+        })
+        instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound)
+    })
+
+    it('Testing hideAPOOnOuterClick function', () => {
+        const instance = wrapper.find('AssetPopoverSearch').instance();
+        instance.apoSearchClose = jest.fn()
+        instance.hideAPOOnOuterClick()
+    }) 
+
+    it('Testing apoSearchSave function', () => {
+        const instance = wrapper.find('AssetPopoverSearch').instance();
+        instance.apoSearchClose = jest.fn()
+        let apoObject = {}
+        let imageObj = {}
+        instance.apoSearchSave()
+    }) 
+    it('Testing removeLink function', () => {
+        const instance = wrapper.find('AssetPopoverSearch').instance();
+        instance.apoSearchClose = jest.fn()
+        let apoObject = {}
+        let imageObj = {}
+        instance.removeLink()
+    })
+
+    it('Testing apoSearchClose  function', () => {
+        const instance = wrapper.find('AssetPopoverSearch').instance();
+        let simpleDiv = document.createElement('div');
+        simpleDiv.setAttribute('id', 'asset-popover-attacher');
+        simpleDiv.innerHTML = 'test';
+        document.body.appendChild(simpleDiv);
+        instance.apoSearchClose ()
     })
 })
