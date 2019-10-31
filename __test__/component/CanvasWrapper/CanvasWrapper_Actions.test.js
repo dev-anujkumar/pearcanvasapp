@@ -84,7 +84,10 @@ describe('action file test', () => {
                 'elementId': 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a',
                 'index': 1,
                 'elementWipType': 'element-authoredtext',
-                'tag': 'P'
+                'tag': 'P',
+                'toolbar': ["undo",
+                    "redo",]
+
             }
         }]
         expect(store.getActions()).toEqual(expectedActions);
@@ -103,7 +106,21 @@ describe('action file test', () => {
                 'elementId': 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b',
                 'index': 1,
                 'elementWipType': 'element-authoredtext',
-                'tag': 'H1'
+                'tag': 'H1',
+                'toolbar': [
+                    "bold",
+                    "clearformatting",
+                    "footnote",
+                    "mathml",
+                    "chemml",
+                    "subscript",
+                    "superscript",
+                    "specialcharactor",
+                    "undo",
+                    "redo",
+                    "assetpopover",
+                    "slatetag",
+                ]
             }
         }]
         expect(store.getActions()).toEqual(expectedActions);

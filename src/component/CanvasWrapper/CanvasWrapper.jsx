@@ -13,7 +13,7 @@ import {
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
 import config from './../../config/config';
-import GlobalSearchPanel from '../GlobalSearchAndReplace';
+
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
@@ -262,12 +262,9 @@ export class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             <RootContext.Consumer>
-                                {
-                                    ({ searchQuery, showGlobalSearchPanel }) => {
-                                        if (showGlobalSearchPanel) {
-                                            return (<GlobalSearchPanel/>)
-                                        }
-                                        else if (this.props.glossaryFootnoteValue.popUpStatus) {
+                            {
+                                    () => {
+                                        if (this.props.glossaryFootnoteValue.popUpStatus) {
                                             return (<GlossaryFootnoteMenu activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />)
                                         }
                                         else {

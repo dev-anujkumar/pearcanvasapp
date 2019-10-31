@@ -664,7 +664,6 @@ export class TinyMceEditor extends Component {
      */
 
     setToolbarByElementType = () => {
-        let element = this.props.element;
         let toolbar = config.elementToolbar;
         tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
         if(toolbar.length){
