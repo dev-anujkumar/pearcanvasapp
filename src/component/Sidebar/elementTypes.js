@@ -136,7 +136,7 @@ export default {
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'IMAGE',
             subtype: {
                 'secondary-image-figure-quarter': {
@@ -178,7 +178,7 @@ export default {
         },
         'primary-image-table': {
             text: 'Table Image',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'TABLE',
             subtype: {
                 'secondary-image-table-half': {
@@ -215,7 +215,7 @@ export default {
         },
         'primary-image-equation': {
             text: 'Math Image',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'MATH',
             subtype: {
                 'secondary-image-equation-half': {
@@ -252,7 +252,7 @@ export default {
         },
         'primary-mathml-equation': {
             text: 'Math ML / Chem Editor',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'MATH_ML_CHEM_EDITOR',
             subtype: {
                 'secondary-mathml-equation': {
@@ -264,7 +264,7 @@ export default {
         },
         'primary-blockcode-equation': {
             text: 'Block Code Editor',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
                 'secondary-blockcode-language-Default': {
@@ -411,7 +411,7 @@ export default {
         },
         'primary-editor-table-equation': {
             text: 'Table Editor',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover','decreaseindent'],
             enum: 'TABLE_EDITOR',
             subtype: {
                 'secondary-editor-table-half': {
