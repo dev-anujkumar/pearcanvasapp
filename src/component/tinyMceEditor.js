@@ -575,7 +575,7 @@ export class TinyMceEditor extends Component {
     addFootnote = (editor) => {
         getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
-                editor.insertContent(`<sup><a href="#" id = "${res.id}" data-uri="${res.id}" data-footnoteelementid="${res.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
             }
             else {
                 editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
@@ -596,7 +596,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
-                insertionText = `<dfn data-uri= ${res.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
             }
             else {
                 insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
