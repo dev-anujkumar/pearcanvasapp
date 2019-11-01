@@ -88,6 +88,7 @@
         "fs": "0.0.1-security",
         "html-to-react": "^1.4.1",
         "https": "^1.0.0",
+        "jquery": "^3.4.1",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "nodemon": "^1.19.1",
