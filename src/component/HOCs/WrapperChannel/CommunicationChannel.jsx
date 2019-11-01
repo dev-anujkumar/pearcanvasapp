@@ -27,8 +27,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 showBlocker: false,
                 toggleTocDelete: false,
                 tocDeleteMessage: null,
-                searchQuery: null,
-                showGlobalSearchPanel: false
             };
         }
 
@@ -187,22 +185,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
-                case 'search':
-                    {
-                        if (message.data && message.data !== null && message.data !== "") {
-                            this.setState({
-                                'searchQuery': message.data,
-                                'showGlobalSearchPanel': true
-                            });
-                        }
-                        else {
-                            this.setState({
-                                'searchQuery': null,
-                                'showGlobalSearchPanel': false
-                            });
-                        }
-                        break;
-                    }
             }
         }
 
@@ -415,12 +397,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <RootContext.Provider value={{
-                        searchQuery: this.state.searchQuery,
-                        showGlobalSearchPanel: this.state.showGlobalSearchPanel
-                    }}>
-                        <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
-                    </RootContext.Provider>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
                 </React.Fragment>
             )
         }

@@ -4,6 +4,7 @@ import { mount } from 'enzyme';
 import { ElementSingleAssessment } from '../../../src/component/ElementSingleAssessment/ElementSingleAssessment';
 import {  singleAssessmentCITEDefault} from '../../../fixtures/ElementSingleAssessmentTestData'
 import config from '../../../src/config/config';
+import { JestEnvironment } from '@jest/environment';
 describe('Testing Element Single Assessment component', () => {
 
     test('renders without crashing', () => {
@@ -18,6 +19,7 @@ describe('Testing Element Single Assessment component', () => {
         usagetype:"Practice",
         handleFocus: function(){},
         onClick : ()=>{},
+        handleBlur: function(){},
      
     };
 
@@ -48,7 +50,7 @@ describe('Testing Element Single Assessment component', () => {
         singleAssessment.find('div.pearson-component.image').simulate('click');
         singleAssessment.find('div.figureElement').simulate('click');
         singleAssessmentInstance.handleAssessmentTypeChange('Diagnostic');
-
+        singleAssessmentInstance.handleAssessmentBlur();
             
     });
     
@@ -74,7 +76,7 @@ describe('Testing Element Single Assessment component', () => {
     it('onClick C2 media', () => {
         let props = {
             handleFocus: function(){},
-            handleBlur : function(){},
+            handleBlur : jest.fn(),
             model : singleAssessmentCITEDefault,
             onClick : ()=>{},
         }

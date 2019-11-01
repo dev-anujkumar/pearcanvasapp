@@ -10,7 +10,5 @@ import React from 'react';
 
 const PageNumberContext = React.createContext({
     isPageNumberEnabled: false,
-    searchQuery: null,
-    showGlobalSearchPanel: false
 })
 export default PageNumberContext

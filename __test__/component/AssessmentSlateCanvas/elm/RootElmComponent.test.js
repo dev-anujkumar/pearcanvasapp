@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 const middlewares = [thunk];
 import RootElmComponent from '../../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx';
-import {DefaultSaletData} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import {DefaultSlateData} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 const mockStore = configureMockStore(middlewares);
 let initialState = {
    elmReducer:{ 
@@ -20,7 +20,7 @@ let initialState = {
 },
 appStore : {
     pageNumberData:{},
-    slateLevelData: DefaultSaletData
+    slateLevelData: DefaultSlateData
 }};
 
 describe('ELM root component test', () => {

@@ -118,9 +118,11 @@ const findElementType = (element, index) => {
 	elementType['index'] = index;
 	elementType['elementWipType'] = element.type;
 
-	if(elementType.elementType && elementType.elementType !== '')
-	elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-	elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+	elementType['toolbar'] = [];
+	if(elementType.elementType && elementType.elementType !== '') {
+		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+	}
 	return elementType;
 }
 

@@ -13,6 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
+import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ export class AssessmentSlateCanvas extends Component {
     */
     selectAssessmentType=(type)=>{
         var assessmentType;
-        if(type==="Full Assessment CITE" || this.props.model.elementdata.assessmentformat === "CITE" ){
+        if(type===FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE" ){
             assessmentType="CITE"
         }else{
             assessmentType="TDX"

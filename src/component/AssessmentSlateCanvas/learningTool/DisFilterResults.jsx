@@ -42,6 +42,6 @@ DisFilterResults.displayName = "DisFilterResults"
 
 DisFilterResults.propTypes = {
     /** this array holds the add the descpline value */
-    apiResponseForDis: PropTypes.array,
+    apiResponseForDis: PropTypes.object,
 }
 export default DisFilterResults;

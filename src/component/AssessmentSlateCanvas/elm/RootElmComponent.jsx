@@ -23,7 +23,7 @@ class RootElmComponent extends Component {
     this.setState({
       apiData: {}
     })
-    this.props.elmResource();
+    this.props.elmResource(this.props.assessmentType);
   }
 
   /*** @description - This function is to navigate back to parent hierarchy

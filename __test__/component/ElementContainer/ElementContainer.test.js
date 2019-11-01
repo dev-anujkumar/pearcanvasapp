@@ -21,7 +21,8 @@ const store = mockStore({
             primaryOption: "primary-heading",
             secondaryOption: "secondary-heading-1",
             index: "1-0",
-            tag: "H1"
+            tag: "H1",
+            toolbar: ['bold']
         },
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -78,7 +79,8 @@ describe('Test for element container component', () => {
         primaryOption: "primary-heading",
         secondaryOption: "secondary-heading-1",
         index: "1",
-        tag: "H1"
+        tag: "H1",
+        toolbar: ['bold']
     };
 
     let props = {
