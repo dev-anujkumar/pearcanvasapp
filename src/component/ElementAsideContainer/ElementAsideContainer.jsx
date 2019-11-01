@@ -40,7 +40,7 @@ class ElementAsideContainer extends Component {
     handleFocus = () => {
         this.props.setActiveElement(this.props.element);
         let toolbar = config.asideToolbar
-        if(toolbar.length){
+        if(toolbar && toolbar.length){
             tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){

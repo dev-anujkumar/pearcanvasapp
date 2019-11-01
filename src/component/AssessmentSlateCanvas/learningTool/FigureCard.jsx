@@ -75,10 +75,8 @@ FigureCard.displayName = "FigureCard"
 FigureCard.propTypes = {
     /** Unique key for each input field */
     forInputKey: PropTypes.number,
-    /** Unique key for each  field */
-    key: PropTypes.number,
     /** this objects holds the value of all Learning tool to show */
-    apiResultObject: PropTypes.array,
+    apiResultObject: PropTypes.object,
     /** this objects holds the value of selected Learning tempelate to show */
     selectedResult: PropTypes.object,
     /**selected entery from table of body */
