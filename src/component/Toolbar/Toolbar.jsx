@@ -37,7 +37,7 @@ const _Toolbar = props => {
     return (
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
-            <span className="spacer"></span>
+            <div class="toggle-actions">
             {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
                 <div className='elemPageText'>Element <br />Page Number</div>
@@ -50,6 +50,7 @@ const _Toolbar = props => {
                         {_elemToggleBtnJsx('border')}
                 </div>
             }   
+            </div>
         </div>
     )
 }
