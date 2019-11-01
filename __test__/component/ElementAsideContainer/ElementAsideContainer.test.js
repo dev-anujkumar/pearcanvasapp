@@ -9,7 +9,8 @@ import { spy, stub } from 'sinon';
 import { JestEnvironment } from '@jest/environment';
 import { Provider } from 'react-redux';
 const mockStore = configureMockStore(middlewares);
-
+const setActiveElement = new stub();
+const handleFocus =new stub();
 let initialState = {
     appStore: {
         pageNumberData: {},
@@ -61,9 +62,14 @@ describe('Testing ElementAside component with props', () => {
         element: elementAsideWorkExample,
         permissions: [],
         elementSepratorProps: () => { return esProps },
+        //setActiveElement: setActiveElement(elementAsideWorkExample),
+        handleFocus:{handleFocus}
 
     }
-    let wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /></Provider>)
+    let wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} 
+        setActiveElement= {setActiveElement}
+        handleFocus = {handleFocus}
+    /></Provider>)
     const instance = wrapper.find('ElementAsideContainer').instance();
     describe('Testing ElementAside component', () => {
 
@@ -106,7 +112,11 @@ describe('Testing ElementAside component with props', () => {
             let renderAside = instance.renderAside(designType)
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
+        it('should render  handle focus function correctly', () => {
 
+            instance.handleFocus()
+         //   expect(sectiondata.props.className).toEqual('section');
+        })
 
 
     })
