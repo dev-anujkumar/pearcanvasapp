@@ -64,7 +64,10 @@ export const slateDataForIntro = {
         "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
         "type": "container-introduction",
-        "contents": {}
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": []
+        }
     }
 }
 
@@ -73,7 +76,10 @@ export const slateDataForAssess = {
         "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
         "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
         "type": "assessment",
-        "contents": {}
+        "contents": {
+            "frontmatter": [],
+            "bodymatter": []
+        }
     }
 }
 
