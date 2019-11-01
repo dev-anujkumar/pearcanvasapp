@@ -39,7 +39,7 @@ class ElementAsideContainer extends Component {
     }
     handleFocus = () => {
         this.props.setActiveElement(this.props.element);
-        let toolbar = ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'];
+        let toolbar = config.asideToolbar
         if(toolbar.length){
             tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
