@@ -5,7 +5,7 @@ const middlewares = [thunk];
 import { mockELMResponse } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 import { spy, stub } from 'sinon';
 import moxios from 'moxios';
-
+import {config} from '../../../../src/config/config';
 const mockStore = configureMockStore(middlewares);
 let initialState = {};
 describe('ELM Actions test', () => {
@@ -23,9 +23,8 @@ describe('ELM Actions test', () => {
     });
 
     afterEach(() => moxios.uninstall());
-    it('testing---insertElmResourceAction', () => {
+    it('testing---insertElmResourceAction -ELM CASE', () => {
         store = mockStore(() => initialState);
-        store.dispatch(selectActions.insertElmResourceAction());
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
@@ -41,16 +40,15 @@ describe('ELM Actions test', () => {
                 apiStatus: "200"
             }
         }]
-        return store.dispatch(selectActions.insertElmResourceAction()).then(() => {
+        return store.dispatch(selectActions.insertElmResourceAction('Full Assessment PUF')).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe('GET_ELM_RESOURCES');
             expect(payload.errFlag).toBe(false);
             expect(payload.apiStatus).toBe("200");
         })
     });
-    it('testing---insertElmResourceAction catch condition', () => {
+    it('testing---insertElmResourceAction -ELM CASE- catch condition', () => {
         store = mockStore(() => initialState);
-        store.dispatch(selectActions.insertElmResourceAction());
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
@@ -58,7 +56,47 @@ describe('ELM Actions test', () => {
                 response: {}
             });
         });
-        return store.dispatch(selectActions.insertElmResourceAction()).catch((error) => {
+        return store.dispatch(selectActions.insertElmResourceAction('Full Assessment PUF')).catch((error) => {
+            const { type, payload } = store.getActions()[0];
+            expect(type).toBe('GET_ELM_RESOURCES');
+            expect(payload.errFlag).toBe(true);
+            expect(payload.apiStatus).toBe(error.response.status);
+        })
+    });
+    it('testing---insertElmResourceAction -LEARNOSITY CASE', () => {
+        store = mockStore(() => initialState);
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: mockELMResponse
+            });
+        });
+        let expectedActions = [{
+            type: 'GET_ELM_RESOURCES',
+            payload: {
+                data: [],
+                errFlag: false,
+                apiStatus: "200"
+            }
+        }]
+        return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).then(() => {
+            const { type, payload } = store.getActions()[0];
+            expect(type).toBe('GET_ELM_RESOURCES');
+            expect(payload.errFlag).toBe(false);
+            expect(payload.apiStatus).toBe("200");
+        })
+    });
+    it('testing---insertElmResourceAction -LEARNOSITY CASE- catch condition', () => {
+        store = mockStore(() => initialState);
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 404,
+                response: {}
+            });
+        });
+        return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).catch((error) => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe('GET_ELM_RESOURCES');
             expect(payload.errFlag).toBe(true);
