@@ -23,11 +23,7 @@ import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrap
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
-<<<<<<< HEAD
-import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective,UnlinkSlate} from '../../constants/IFrameMessageTypes.js';
-=======
-import { ShowLoader, OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective } from '../../constants/IFrameMessageTypes.js';
->>>>>>> 014eff24e73aedfd6d07f4e76dd5d014487dbe93
+import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective,UnlinkSlate,AddLearningObjectiveSlateDropdown,AddEditLearningObjectiveDropdown,ViewLearningObjectiveSlateDropdown,UnlinkSlateDropdown,AddLearningObjectiveAssessmentDropdown} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -144,28 +140,28 @@ class ElementContainer extends Component {
     learningObjectiveOperations = (text) => {
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
-        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.COREAPI_ENDPOINT,config.PRODUCTAPI_ENDPOINT];
-        if(text =="View Learning Objective" && config.slateType !== 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveSlate,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}});
+        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
-        if(text =="View Learning Objective" && config.slateType === 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}});
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
         // else if( !this.state.slateLockSatus){
-            if(text =="Add a New Learning Objective" &&  this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveSlate,'data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}})
-            }
-      
-            else if(text =="Add From Existing or Edit" && this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddEditLearningObjective,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}})
-            }
+        if (text == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+        }
 
-            else if(text =="Add From Existing" && this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveAssessment,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}})
-            }
-            else if(text =="Unlink Slate" && this.props.permissions.includes('lo_edit_metadata') ){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text': UnlinkSlate,'data':currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','isLOExist':true,'editAction':'','apiConstants':apiKeys}})
-            }
+        else if (text == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
+        }
+
+        else if (text == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
+        }
+        else if (text == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+        }
 
         //  }
         //  else(

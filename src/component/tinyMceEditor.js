@@ -24,7 +24,13 @@ import {
     tinymceFormulaChemistryIcon,
     metadataanchor,
     assetPopoverIcon
-  } from "./../svgIcons.jsx";
+} from '../images/TinyMce/TinyMce.jsx';
+import {
+    AddLearningObjectiveSlateDropdown,
+    AddEditLearningObjectiveDropdown,
+    ViewLearningObjectiveSlateDropdown,
+    UnlinkSlateDropdown
+} from '../constants/IFrameMessageTypes';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
 
 let context = {};
@@ -108,45 +114,26 @@ export class TinyMceEditor extends Component {
      */
     editorSlateTagIcon = (editor) => {
         /* adding a slate tag button in toolbar */
-        if(config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter"){
+        if (config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter") {
             editor.ui.registry.addMenuButton('slateTag', {
                 icon: 'metadataanchor',
                 tooltip: "Slate Tag",
                 fetch: function (callback) {
-                let viewLoEnable=true;
-                if(context.props.currentSlateLOData && (context.props.currentSlateLOData.id ?context.props.currentSlateLOData.id:context.props.currentSlateLOData.loUrn)){
-                viewLoEnable=false;
-                }
-                
-                //show dropdown options in slate tag 
-                var dropdownItemArray = ["Add a New Learning Objective", "Add From Existing or Edit","View Learning Objective","Unlink Slate"];
-                var items = [
-                    {
-                        
-                        type: 'menuitem',
-                        text: dropdownItemArray[0],
-                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[0])
-                    },
-                    {
-                        type: 'menuitem',
-                        text: dropdownItemArray[1],
-                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[1])
-                    },
-                    {
-                        type: 'menuitem',
-                        text: dropdownItemArray[2],
-                        disabled:viewLoEnable,
-                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[2])
-                    },
-                    {
-                        type: 'menuitem',
-                        text: dropdownItemArray[3],
-                        disabled:viewLoEnable,
-                        onAction: () => context.learningObjectiveDropdown(dropdownItemArray[3])
+                    let viewLoEnable = true;
+                    if (context.props.currentSlateLOData && (context.props.currentSlateLOData.id ? context.props.currentSlateLOData.id : context.props.currentSlateLOData.loUrn)) {
+                        viewLoEnable = false;
                     }
-                    
-                ];
-                callback(items);
+                    //show dropdown options in slate tag 
+                    var dropdownItemArray = [AddLearningObjectiveSlateDropdown, AddEditLearningObjectiveDropdown, ViewLearningObjectiveSlateDropdown, UnlinkSlateDropdown];
+                    var items = dropdownItemArray.map((item, index) => {
+                        return {
+                            type: 'menuitem',
+                            text: item,
+                            disabled: index == 2 || index == 3 ? viewLoEnable : false,
+                            onAction: () => context.learningObjectiveDropdown(item)
+                        }
+                    })
+                    callback(items);
                 }
             });
         }

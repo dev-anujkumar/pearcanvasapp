@@ -5,7 +5,7 @@ import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
-} from "./../svgIcons.jsx";
+}  from '../images/TinyMce/TinyMce.jsx';
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
