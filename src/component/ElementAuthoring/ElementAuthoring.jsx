@@ -5,11 +5,6 @@ import './../../styles/ElementAuthoring/ElementAuthoring.css';
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.onClick = this.onClick.bind(this);
-    this.onBlur = this.onBlur.bind(this);
-    this.onKeyup = this.onKeyup.bind(this);
-    this.onFocus = this.onFocus.bind(this);
   }
 
   render() {
@@ -27,28 +22,12 @@ export class ElementAuthoring extends Component {
           className={className}
           model={model}
           handleEditorFocus={this.props.handleFocus}
-          onFocus={this.onFocus}
           handleBlur = {this.props.handleBlur}
-          onKeyup={this.onKeyup}
-          onBlur={this.onBlur}
-          onClick={this.onClick}
           slateLockInfo={slateLockInfo}
         />
     )
 
     
-  }
-  onClick() {
-
-  }
-  onBlur() {
-
-  }
-  onKeyup() {
-
-  }
-  onFocus() {
-
   }
 }
 ElementAuthoring.defaultProps = {
