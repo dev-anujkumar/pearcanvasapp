@@ -1,9 +1,6 @@
 import { c4PublishObj } from '../../src/js/c4_module.js';
 import _ from 'lodash';
-import $ from 'jquery';
 import * as sinon from 'sinon';
-
-global.$ = global.jQuery = $;
 
 var ajax = {
     get: jest.fn(),
