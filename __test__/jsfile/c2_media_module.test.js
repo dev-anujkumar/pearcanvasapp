@@ -2,7 +2,6 @@ const configOBJ = require('../../src/config/config.js');
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
-
 import { c2MediaModule } from '../../src/js/c2_media_module.js';
 
 describe('testing function', () => {

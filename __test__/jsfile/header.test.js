@@ -1,4 +1,4 @@
-import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent } from '../../src/js/header.js';
+import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent, releaseLockAndRedirect, toggleCommentsPanel } from '../../src/js/header.js';
 jest.mock("../../src/js/auth_module", () => {
     let OPEN_AM = {
         logout: jest.fn()
@@ -17,6 +17,10 @@ describe('Header module testing', () => {
     it('Testing GET_CURRENT_SLATE function', () => {
         GET_CURRENT_SLATE()
     })
+
+    it('Testing releaseLockAndRedirect function', () => {
+        releaseLockAndRedirect()
+    }) 
 
     it('Testing publishContent if function', () => {
         let type = 'slatePreview'
