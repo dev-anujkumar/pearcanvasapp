@@ -3,6 +3,7 @@ let config = {
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
     LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-qa.pearsoncms.net/manifest-api/",
+    ELM_ENDPOINT: process.env.ELM_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
@@ -11,7 +12,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "Sm5ggCSEHMOQ3f1ugzc1NtE0Kmg.*AAJTSQACMDIAAlNLABxFeHhGdm5VeTUxN2V6U1BKbHhCUHU2UStiSW89AAJTMQACMDE.*",
+    ssoToken: "l9OML10F6LZZd6hHwZ-BRk5o0RY.*AAJTSQACMDIAAlNLABxSTmtZZlJwa3JmUzlndk9uejBUT0M4QlhTck09AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -68,6 +69,11 @@ let config = {
     isLOL:false,
     toolBarList : ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     elementToolbar: [],
+    headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    codeListingToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    labelToolbar:['footnote','decreaseindent'],
+    captionToolbar:['decreaseindent']
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';

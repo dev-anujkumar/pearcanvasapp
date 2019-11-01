@@ -17,7 +17,8 @@ const store = mockStore({
             elementWipType: "element-list",
             primaryOption: "primary-list",
             secondaryOption: "secondary-list-3",
-            tag: "OL"
+            tag: "OL",
+            toolbar: ['bold']
         }
     }
 });
