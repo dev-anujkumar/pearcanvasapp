@@ -318,7 +318,7 @@ class ElmTable extends Component {
 
 export default connect((state) => {
     return {
-        getParentId: state.appStore.slateLevelData[0]
+        getParentId: state.appStore.slateLevelData[config.slateManifestURN].id
     }
 
 })(ElmTable);
