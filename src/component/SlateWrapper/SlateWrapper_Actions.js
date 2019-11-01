@@ -176,9 +176,9 @@ export const createElementMeta = (type, index,parentUrn) => (dispatch, getState)
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-      
+        if(newParentData[config.slateManifestURN])
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-               
+       
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -212,7 +212,9 @@ export const createElementMetaList = (type, index,parentUrn) => (dispatch, getSt
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let createdElementData = createdElemData;
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        if(newParentData[config.slateManifestURN])
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
