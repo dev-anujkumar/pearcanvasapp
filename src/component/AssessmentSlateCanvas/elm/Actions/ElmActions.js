@@ -9,7 +9,7 @@ let headers = {
  * This action creator is used to fetch ELM resources added to the project
  */
 export const insertElmResourceAction = () => (dispatch) => {
-        return axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/alignments/resources`, {
+        return axios.get(`${config.ELM_ENDPOINT}v2/${config.projectUrn}/alignments/resources`, {
           headers: headers
     }).then((res) => {
         dispatch({

@@ -59,6 +59,13 @@ export class AssessmentSlateData extends Component {
                 showElmComponent: true,
             }, () => {
                 this.mainAddAssessment(e, 'Full Assessment PUF');
+                })
+        } else if (assessmentFormat == 'Learnosity') {
+            this.setState({
+                activeAssessmentType: 'Learnosity',
+                showElmComponent: true,
+            }, () => {
+                this.mainAddAssessment(e, 'Learnosity');
             })
         } else if (assessmentFormat === "learningtemplate") {
               this.changeLearningApp(); //will be used later
@@ -104,6 +111,7 @@ export class AssessmentSlateData extends Component {
                 return this.changeLearningApp()
 
             case 'Full Assessment PUF':
+            case 'Learnosity':
                 this.setState({
                     showElmComponent: true
                 })
@@ -187,7 +195,7 @@ export class AssessmentSlateData extends Component {
             assessmentTypeValue="Assessment";
             changeTypeValue="Change assessment";
         }
-        if(this.state.activeAssessmentType === 'Full Assessment PUF' && this.state.showElmComponent === true){
+        if ((this.state.activeAssessmentType === 'Full Assessment PUF' || this.state.activeAssessmentType === 'Learnosity') && this.state.showElmComponent === true) {
             return <RootElmComponent closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType}/>
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false ) {
