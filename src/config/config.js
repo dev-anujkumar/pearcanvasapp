@@ -52,7 +52,7 @@ let config = {
     IDENTITY_URL: process.env.NODE_ENV === 'production' ? process.env.IDENTITY_URL : "/auth",
     //parentUrl: window.location.origin
     // https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr
-    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: process.env.NODE_ENV === 'production' ? process.env.PATTERN_ADD_ASSET : 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: process.env.NODE_ENV === 'production' ? process.env.PATTERN_BROKER : 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
