@@ -62,7 +62,7 @@ export const c2AssessmentModule = {
   },
   searchAndSelectonSave: function(data) {
     console.log("searchAndSelectonSave data: " + '',data);
-    $('body').trigger('setAssessment', {data:data});
+    //$('body').trigger('setAssessment', {data:data});
 
   },
   launchAssetBrowser: function(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,callback) {

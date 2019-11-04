@@ -5,7 +5,7 @@ import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
-} from "./../svgIcons.jsx";
+}  from '../images/TinyMce/TinyMce.jsx';
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,6 @@ export class ReactEditor extends React.Component {
       menubar: false,
       selector: '#glossary-0',
       inline: true,
-      menubar: false,
       statusbar: false,
       object_resizing: false,
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
@@ -47,6 +46,16 @@ export class ReactEditor extends React.Component {
             this.handleFocussingInlineCode(api, editor)
           }
         });
+        editor.on('BeforeExecCommand', (e) => {
+          let command = e.command;
+          if(command === "RemoveFormat") {
+            let selectedText = window.getSelection().toString();
+            if(selectedText == "") {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        });
       },
       init_instance_callback: function (editor) {
         // editor.fire('focus');
@@ -65,11 +74,14 @@ export class ReactEditor extends React.Component {
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
     */
   addInlineCode = (editor) => {
-    editor.execCommand('mceToggleFormat', false, 'code');
+    // editor.execCommand('mceToggleFormat', false, 'code');
     let selectedText = window.getSelection().toString();
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
-      let insertionText = '<code>' + selectedText + '</code>'
+      let insertionText = '<code>' + selectedText + '</code>';
+      if(editor.innerHTML.indexOf('code') > -1) {
+        insertionText = selectedText;
+      }
       editor.insertContent(insertionText);
     }
   }

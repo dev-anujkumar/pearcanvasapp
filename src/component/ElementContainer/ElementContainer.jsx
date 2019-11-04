@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
@@ -14,23 +14,23 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {assetPopoverPopup} from '../AssetPopover/AssetPopover_Actions';
-import {addComment,deleteElement,updateElement} from './ElementContainer_Actions';
+import { assetPopoverPopup } from '../AssetPopover/AssetPopover_Actions';
+import { addComment, deleteElement, updateElement } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
-import {COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS} from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective,UnlinkSlate,AddLearningObjectiveSlateDropdown,AddEditLearningObjectiveDropdown,ViewLearningObjectiveSlateDropdown,UnlinkSlateDropdown,AddLearningObjectiveAssessmentDropdown} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import arrowButton from '../../images/OpenerElement/arrow.png'
-import {ASSESSMENT_SLATE} from './../../constants/Element_Constants';
+import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
-import { authorAssetPopOver} from '../AssetPopover/openApoFunction.js';
+import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 
 class ElementContainer extends Component {
@@ -38,52 +38,55 @@ class ElementContainer extends Component {
         super(props);
         this.state = {
             popup: false,
-            comment:"",
-            borderToggle : 'showBorder',
-            btnClassName : '',
-            showDeleteElemPopup : false,
-            ElementId: this.props.index==0?this.props.element.id:'',
-            showColorPalette : false,
+            comment: "",
+            borderToggle: 'showBorder',
+            btnClassName: '',
+            showDeleteElemPopup: false,
+            ElementId: this.props.index == 0 ? this.props.element.id : '',
+            showColorPalette: false,
             activeColorIndex: 0,
             isHovered: false
         };
     }
-    componentDidMount(){
-        if( this.props.index == 0 ){
+    componentDidMount() {
+        if (this.props.index == 0) {
             // this.setState({
             //     borderToggle : 'active',
             //     btnClassName : 'activeTagBgColor'
-              
+
             // })
         }
         this.setState({
             ElementId: this.props.element.id
-        })             
+        })
     }
 
-  
+
     // static getDerivedStateFromProps(nextProps, prevState) {
-    componentWillReceiveProps(newProps){     
-        if( this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle ){           
-             if(newProps.elemBorderToggle){
+    componentWillReceiveProps(newProps) {
+        if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
+            if (newProps.elemBorderToggle) {
                 this.setState({
-                    borderToggle : 'showBorder',
-                    btnClassName : ''
+                    borderToggle: 'showBorder',
+                    btnClassName: ''
                 })
             } else {
                 this.setState({
-                    borderToggle : 'hideBorder',
-                    btnClassName : ''
+                    borderToggle: 'hideBorder',
+                    btnClassName: ''
                 })
-            } 
-        }else{
+            }
+        } else {
             this.setState({
-                borderToggle : 'active',
-                btnClassName : 'activeTagBgColor'
+                borderToggle: 'active',
+                btnClassName: 'activeTagBgColor'
             })
         }
     }
 
+    /**
+     * function will be called on element focus of tinymce instance
+     */
     handleFocus = () => {
         this.setState({
             borderToggle: 'active',
@@ -92,77 +95,83 @@ class ElementContainer extends Component {
         this.props.setActiveElement(this.props.element, this.props.index);
         this.props.fetchCommentByElement(this.props.element.id);
     }
+
     /**
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
         let node = document.getElementById(tinyMCE.activeEditor.id);
-        let html = node.innerHTML;
-        let text = node.innerText;
-        let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-        if (html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-            const dataToSend = this.props.element;  // prepare data to update
-            dataToSend.elementdata.text = text;
-            dataToSend.html.text = html;
-            dataToSend.html.footnotes = this.props.element.html.footnotes || {};
-            dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
-            this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+        if (node) {
+            let html = node.innerHTML;
+            let text = node.innerText;
+            let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+            if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
+                const dataToSend = this.props.element;  // prepare data to update
+                dataToSend.elementdata.text = text;
+                dataToSend.html.text = html;
+                dataToSend.html.footnotes = this.props.element.html.footnotes || {};
+                dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
+                this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+            }
         }
-
     }
 
     /**
      * Checks mouse event out side of canvas area and handdling element border state
      */
     handleBlurAside = () => {
-        if(this.props.elemBorderToggle){
+        if (this.props.elemBorderToggle) {
             this.setState({
-                borderToggle : 'showBorder',
-                btnClassName : ''
+                borderToggle: 'showBorder',
+                btnClassName: ''
             })
         } else {
             this.setState({
-                borderToggle : 'hideBorder',
-                btnClassName : ''
+                borderToggle: 'hideBorder',
+                btnClassName: ''
             })
-        } 
+        }
     }
     /**
    * @description - slate tag dropdown opeartions
    * @param {string} text | text of the option selected from dropdown
-    */  
-    learningObjectiveOperations = (text) =>{
+    */
+    learningObjectiveOperations = (text) => {
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
-        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.COREAPI_ENDPOINT];
-        if(text =="View Learning Objective" && config.slateType !== 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveSlate,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
+        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
-        if(text =="View Learning Objective" && config.slateType === 'assessment'){
-            sendDataToIframe({'type': OpenLOPopup,'message':{'text':ViewLearningObjectiveAssessment,'data':currentSlateLOData,'chapterContainerUrn':config.parentContainerUrn,'isLOExist':true,'editAction':''}},config.WRAPPER_URL);
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
         // else if( !this.state.slateLockSatus){
-            if(text =="Add a New Learning Objective" &&  this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveSlate,'data':'','currentSlateId':config.slateManifestURN,'chapterContainerUrn':'','projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':'','apiConstants':apiKeys}},config.WRAPPER_URL)
-            }
-      
-            else if(text =="Add From Existing or Edit" && this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddEditLearningObjective,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
-            }
+        if (text == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+        }
 
-            else if(text =="Add From Existing" && this.props.permissions.includes('lo_edit_metadata')){
-                sendDataToIframe({'type': OpenLOPopup,'message':{'text':AddLearningObjectiveAssessment,'data' : currentSlateLOData,'currentSlateId':config.slateManifestURN,'chapterContainerUrn':config.parentContainerUrn,'projectTitle':document.cookie.split(',')[3].split(':')[1],'isLOExist':true,'editAction':true,'apiConstants':apiKeys}},config.WRAPPER_URL)
-            }
+        else if (text == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
+        }
+
+        else if (text == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
+        }
+        else if (text == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+        }
+
         //  }
         //  else(
         //      this.slateLockAlert(this.state.SlatelockUserInfo)
         //  )
-         }
-        toggleColorPaletteList = () => {
+    }
+    toggleColorPaletteList = () => {
         const { showColorPaletteList } = this.state
         this.setState({
-            showColorPaletteList : !showColorPaletteList
+            showColorPaletteList: !showColorPaletteList
         })
     }
 
@@ -170,20 +179,20 @@ class ElementContainer extends Component {
     selectColor = (event) => {
         const selectedColor = event.target.getAttribute('data-value')
         this.setState({
-            activeColorIndex : config.colors.indexOf(selectedColor)
+            activeColorIndex: config.colors.indexOf(selectedColor)
         })
     }
-    
+
     /**
      * Rendering Opener element color palette
      * @param {e} event
      */
-    renderPaletteList = () =>{
+    renderPaletteList = () => {
         const { showColorPaletteList, activeColorIndex } = this.state
-        if(showColorPaletteList){
-            return config.colors.map( (color, index) => {
-                        return <li className={`color-palette-item ${index === activeColorIndex ? 'selected': ''}`} onClick={(event)=> this.selectColor(event)} key={index} data-value={color}></li>
-                    })           
+        if (showColorPaletteList) {
+            return config.colors.map((color, index) => {
+                return <li className={`color-palette-item ${index === activeColorIndex ? 'selected' : ''}`} onClick={(event) => this.selectColor(event)} key={index} data-value={color}></li>
+            })
         }
         else {
             return null
@@ -198,7 +207,7 @@ class ElementContainer extends Component {
             return (
                 <>
                     <Button onClick={this.toggleColorPaletteList} type="color-palette" />
-                    <ul className="color-palette-list">{this.renderPaletteList()}</ul>  
+                    <ul className="color-palette-list">{this.renderPaletteList()}</ul>
                 </>
             )
         }
@@ -216,7 +225,7 @@ class ElementContainer extends Component {
         showTocBlocker();
         this.setState({
             popup,
-            showDeleteElemPopup : true
+            showDeleteElemPopup: true
         });
     }
 
@@ -227,7 +236,7 @@ class ElementContainer extends Component {
         const { id, type, contentUrn } = this.props.element;
         const { parentUrn, asideData } = this.props;
         this.handleCommentPopup(false);
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
     }
@@ -239,17 +248,18 @@ class ElementContainer extends Component {
 
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo,permissions } = this.props;
-        let labelText = fetchElementTag(element, index);
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions } = this.props;
+        let labelText = fetchElementTag(element, index) || 'P';
+        config.elementToolbar = this.props.activeElement.toolbar || [];
         /* TODO need better handling with a function and dynamic component rendering with label text*/
-        switch(element.type) {
+        switch (element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor =<AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur = {this.handleBlur} handleFocus={this.handleFocus} showBlocker = {this.props.showBlocker}/>
+                editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur = {this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
             case elementTypeConstant.AUTHORED_TEXT:
@@ -257,7 +267,7 @@ class ElementContainer extends Component {
                 editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 break;
             case elementTypeConstant.FIGURE:
                 switch (element.figuretype) {
@@ -275,7 +285,7 @@ class ElementContainer extends Component {
                         labelText = LABELS[element.figuretype];
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations}  handleFocus={this.handleFocus} handleBlur = {this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo}/>;
+                        editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                         labelText = 'Qu';
                         break;
                     case elementTypeConstant.INTERACTIVE:
@@ -293,7 +303,7 @@ class ElementContainer extends Component {
                 }
                 break;
             case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'OL'
                 break;
             case elementTypeConstant.ELEMENT_ASIDE:
@@ -302,51 +312,54 @@ class ElementContainer extends Component {
                         editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                         labelText = LABELS[element.subtype] || 'AS';
                         break;
+                    default:
+                        editor = <ElementAsideContainer  permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                        labelText = 'AS'
                 }
-                break;                
+                break;
             case elementTypeConstant.METADATA_ANCHOR:
-                editor = <ElementMetaDataAnchor permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaDataAnchor permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'LO'
-                break;                
+                break;
             case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp = {this.openAssetPopoverPopUp} showBlocker = {this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur = {this.handleBlur} index={index} elementId={element.id}  element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'MA'
                 break;
         }
 
-        return(
-            <div className = "editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
-                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?    <div>
-                <Button type="element-label" btnClassName = {this.state.btnClassName} labelText={labelText} />
-                { this.props.permissions.includes('elements_add_remove') && config.slateType !=='assessment'? ( <Button type="delete-element"  onClick={() => this.showDeleteElemPopup(true)} /> )
-                : null }
-                {this.renderColorPaletteButton(element)}
-            </div>
-            : ''}
-            <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
-                {editor}
-            </div>
-            {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) ||  this.state.borderToggle == 'active'?<div>
-                {this.props.permissions.includes('notes_adding') && <Button type="add-comment" btnClassName = {this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                {this.props.permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick = {handleCommentspanel} type="comment-flag" />} 
-                {element.tcm && <Button type="tcm" />}
-                </div> :''}
-            { this.state.popup && <PopUp 
-                togglePopup={e => this.handleCommentPopup(e, this)} 
-                active={this.state.popup} 
-                handleChange={this.handleCommentChange}
-                saveContent={this.saveNewComment}
-                rows={COMMENTS_POPUP_ROWS}
-                dialogText={COMMENTS_POPUP_DIALOG_TEXT}
-                showDeleteElemPopup={this.state.showDeleteElemPopup}
-                deleteElement={this.deleteElement}
+        return (
+            <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                    <Button type="element-label" btnClassName={this.state.btnClassName} labelText={labelText} />
+                    {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
+                        : null}
+                    {this.renderColorPaletteButton(element)}
+                </div>
+                    : ''}
+                <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
+                    {editor}
+                </div>
+                {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
+                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                    {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
+                    {element.tcm && <Button type="tcm" />}
+                </div> : ''}
+                {this.state.popup && <PopUp
+                    togglePopup={e => this.handleCommentPopup(e, this)}
+                    active={this.state.popup}
+                    handleChange={this.handleCommentChange}
+                    saveContent={this.saveNewComment}
+                    rows={COMMENTS_POPUP_ROWS}
+                    dialogText={COMMENTS_POPUP_DIALOG_TEXT}
+                    showDeleteElemPopup={this.state.showDeleteElemPopup}
+                    deleteElement={this.deleteElement}
                 />}
                 {
                     <PageNumberContext.Consumer>
                         {
-                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement , this.props.permissions)
+                            ({ isPageNumberEnabled }) => this.props.children(this.state.isHovered, isPageNumberEnabled, this.props.activeElement, this.props.permissions)
                         }
-                    </PageNumberContext.Consumer>                    
+                    </PageNumberContext.Consumer>
                 }
             </div >
         );
@@ -359,9 +372,9 @@ class ElementContainer extends Component {
     handleCommentPopup(popup) {
         this.setState({
             popup,
-            showDeleteElemPopup : false
+            showDeleteElemPopup: false
         });
-        if(this.props.isBlockerActive){
+        if (this.props.isBlockerActive) {
             this.props.showBlocker(false)
             hideBlocker();
         }
@@ -383,8 +396,8 @@ class ElementContainer extends Component {
     saveNewComment = () => {
         const { comment } = this.state;
         const { id } = this.props.element;
-        
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         this.props.addComment(comment, id);
         this.handleCommentPopup(false);
     }
@@ -432,7 +445,7 @@ ElementContainer.defaultProps = {
 ElementContainer.propTypes = {
     /** Detail of element in JSON object */
     element: PropTypes.object,
-    elemBorderToggle : PropTypes.string
+    elemBorderToggle: PropTypes.string
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -469,7 +482,7 @@ const mapStateToProps = (state) => {
         activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
-        permissions : state.appStore.permissions,
+        permissions: state.appStore.permissions,
     }
 }
 

@@ -16,6 +16,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
+import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -27,8 +28,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 showBlocker: false,
                 toggleTocDelete: false,
                 tocDeleteMessage: null,
-                searchQuery: null,
-                showGlobalSearchPanel: false
             };
         }
 
@@ -187,35 +186,24 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
-                case 'search':
-                    {
-                        if (message.data && message.data !== null && message.data !== "") {
-                            this.setState({
-                                'searchQuery': message.data,
-                                'showGlobalSearchPanel': true
-                            });
-                        }
-                        else {
-                            this.setState({
-                                'searchQuery': null,
-                                'showGlobalSearchPanel': false
-                            });
-                        }
-                        break;
-                    }
             }
         }
 
         handleLOData=(message) =>{
-            if(message.statusForSave){
-               message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>"); 
-              this.props.currentSlateLO(message.loObj);
-              
-               let slateTagClass = document.getElementsByClassName("learning-objective")
-                let slateTagParent = slateTagClass[0].parentNode
-               slateTagClass[0].outerHTML='<svg class="learning-objective "xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>';
-               slateTagParent.appendChild(slateTagClass[0])
-                    }
+            if (message.statusForSave) {
+                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                this.props.currentSlateLO(message.loObj);
+                let slateTagClass = document.getElementsByClassName("learning-objective")
+                let slateTagParent = slateTagClass[0].parentNode;
+                if (message.toastData === "Learning Objectives has been unlinked ") {
+                    slateTagClass[0].outerHTML = metadataanchor;
+                }
+                else {
+                    slateTagClass[0].outerHTML = slateTagEnable;
+
+                }
+                slateTagParent.appendChild(slateTagClass[0])
+            }
            
             
         }
@@ -415,12 +403,7 @@ function WithWrapperCommunication(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <RootContext.Provider value={{
-                        searchQuery: this.state.searchQuery,
-                        showGlobalSearchPanel: this.state.showGlobalSearchPanel
-                    }}>
-                        <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
-                    </RootContext.Provider>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
                 </React.Fragment>
             )
         }

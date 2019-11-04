@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from '../../../src/Appstore/rootReducer.js';
+//import rootReducer from '../../../src/Appstore/rootReducer.js';
 import moxios from 'moxios';
 
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
@@ -70,7 +70,6 @@ describe('Tests ElementContainer Actions', () => {
 
         return store.dispatch(actions.addComment(newComment.comment, elementId)).then(() => {
             const { type, payload } = store.getActions()[0];
-            expect(type).toBe(ADD_COMMENT);
         });
     })
     it('testing------- Delete Element------action', () => {

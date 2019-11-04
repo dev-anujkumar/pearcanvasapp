@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import { AssessmentSlateData } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateData';
-import { assessmentSlateDefault, assessmentSlateWithData, DefaultSaletData } from "./../../../fixtures/AssessmentSlateCanvasTestingData";
+import { assessmentSlateDefault, assessmentSlateWithData, DefaultSlateData } from "./../../../fixtures/AssessmentSlateCanvasTestingData";
 import { Provider } from 'react-redux';
 const mockStore = configureMockStore(middlewares);
 
@@ -21,7 +21,7 @@ let initialState = {
     },
     appStore: {
         pageNumberData: {},
-        slateLevelData: DefaultSaletData
+        slateLevelData: DefaultSlateData
     }
 };
 describe('Testing Assessment Slate Data component', () => {
@@ -170,7 +170,8 @@ describe('Testing Assessment Slate Data component', () => {
             model: assessmentSlateWithData,
             getAssessmentData: true,
             toggleAssessmentPopup: function () { },
-            selectAssessmentType: mockLoginfn
+            selectAssessmentType: mockLoginfn,
+            showBlocker:jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();

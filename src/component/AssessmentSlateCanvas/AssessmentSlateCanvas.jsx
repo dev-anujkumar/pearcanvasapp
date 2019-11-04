@@ -13,6 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
+import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -27,19 +28,21 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
     }
+
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
     toggleAssessmentPopup = (value) => {
         this.setState({
             showAssessmentPopup: value
         });
     }
+
     /*** 
      * @description - This function is to select the Assessment type
      * @param type - type of assessment
     */
     selectAssessmentType=(type)=>{
         var assessmentType;
-        if(type==="Full Assessment CITE" || this.props.model.elementdata.assessmentformat === "CITE" ){
+        if(type===FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE" ){
             assessmentType="CITE"
         }else{
             assessmentType="TDX"
@@ -54,10 +57,9 @@ export class AssessmentSlateCanvas extends Component {
     addPufAssessment = (pufObj) => {
         showTocBlocker();
         disableHeader(true);
-        sendDataToIframe({'type': "blockerTOC",'message': {status: true}});     
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
+
     /***
      * @description Open C2 module with predefined Alfresco location
      * @param  value alfresco locationData
@@ -80,7 +82,7 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.props.showBlocker(true);
+       // this.props.showBlocker(true);
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
@@ -89,6 +91,7 @@ export class AssessmentSlateCanvas extends Component {
         });
 
     }
+
     /*** 
      * @description  Callback function to launch C2 mdeia browser
      * @param  assessmentData - the object contains assessment data
@@ -108,6 +111,7 @@ export class AssessmentSlateCanvas extends Component {
         }
         this.updateAssessment(id, itemID, title, assessmentFormat, "", "insert");
     }
+
     /*** @description - This function is to update state variables based on the parameters
        * @param id - assessment-id of the assessment
        * @param itemID - assessment-item-id of the assessment
@@ -152,12 +156,13 @@ export class AssessmentSlateCanvas extends Component {
     handleAssessmentFocus = () => {
         this.props.handleFocus();
     }
+    
     /*** @description - This function is to handle Blur on the Assessment element on blur*/ 
     handleAssessmentBlur = () =>{
         this.props.handleBlur();
     }
     render() {
-        const { } = this.props;
+        const { showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
             <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>  
@@ -178,6 +183,7 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     linkLearningApp ={this.linkLearningApp}
+                    showBlocker={showBlocker}
                     />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}

@@ -46,7 +46,11 @@ export class ElementFigure extends Component {
             // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({ imgSrc: epsURL })
+            if (epsURL !== "") {
+                this.setState({ imgSrc: epsURL })
+            } else {
+                this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
+            }
             document.querySelector("[name='alt_text']").innerHTML = altText;
             document.querySelector("[name='long_description']").innerHTML = longDesc;
 
@@ -339,7 +343,7 @@ export class ElementFigure extends Component {
                         </header>
                         <div data-type="mathml">
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.mathml} type={type} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor element = {model} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.mathml} type={type} slateLockInfo={slateLockInfo} />
 
                         </div>
                         <figcaption className="figcaptionText" >

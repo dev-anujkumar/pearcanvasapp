@@ -129,7 +129,6 @@
     font-weight: 600;
     text-overflow: ellipsis;
     word-break: break-all;
-    overflow:hidden;
     white-space: nowrap;
     
   }
@@ -144,7 +143,6 @@
     overflow:hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    overflow:hidden;
     white-space: nowrap;
   }
   .slate_assessment_data_id:hover{

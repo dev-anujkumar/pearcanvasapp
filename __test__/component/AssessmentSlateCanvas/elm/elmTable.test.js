@@ -6,7 +6,8 @@ import { Provider } from 'react-redux';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElmTable from '../../../../src/component/AssessmentSlateCanvas/elm/Components/ElmTable';
-import {DefaultSaletData,mockELMResponse} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import {DefaultSlateData,mockELMResponse} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+import config from '../../../../src/config/config';
 // import {  } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 
 const mockStore = configureMockStore(middlewares);
@@ -23,7 +24,7 @@ let initialState = {
  },
  appStore : {
      pageNumberData:{},
-     slateLevelData: DefaultSaletData
+     slateLevelData: DefaultSlateData
  }};
 describe('ELM Actions test', () => {
     it('renders without crashing', () => {

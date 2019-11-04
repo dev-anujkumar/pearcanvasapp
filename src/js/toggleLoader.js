@@ -36,12 +36,6 @@ export const hideTocBlocker = () => {
     sendDataToIframe({'type': "blockerTOC",'message': {status: false}});
 }
 
-export const showBlockerCanvas = ()=>{
-    $('.blocker').addClass('activeDND');
-}
-export const hideBlockerCanvas = ()=>{
-    $('.blocker').removeClass('activeDND');
-}
 
 export const disableHeader = (message) => {
     var splitSlateVex = "Are you sure you want to split this slate at the selected section?YesCancel";

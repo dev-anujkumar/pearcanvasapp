@@ -9,7 +9,6 @@
         "start": "webpack-dev-server --env.NODE_ENV=development --config webpack.dev.config.js",
         "build-dev": "rm -rf dist && bash ./build_dist.sh && webpack --config webpack.dev.config.js",
         "build-prod": "rm -rf dist && bash ./build_dist.sh && webpack --env.NODE_ENV=production --config webpack.prod.config.js",
-        "server": "cross-env NODE_ENV=development PORT=443 nodemon --exec babel-node ./dist/server/server.js --ignore ./src/ --ignore ./stories/ --ignore ./__test__/",
         "storybook": "start-storybook -p 6006 --debug-webpack --https --ssl-cert ./cert.pem --ssl-key ./key.pem",
         "build-storybook": "build-storybook",
         "test": "jest",

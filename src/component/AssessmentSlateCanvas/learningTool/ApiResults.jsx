@@ -54,10 +54,10 @@ ApiResults.displayName = "ApiResults"
 
 ApiResults.propTypes = {
     /** this objects holds the value of all Learning tool to show */
-    apiResponseData: PropTypes.array,
+    apiResponseData: PropTypes.object,
     /** this objects holds the value of selected Learning tempelate to show */
     selectedResult: PropTypes.object,
     /**selected entery from table of body */
-    selectedFigure: PropTypes.object
+    selectedFigure: PropTypes.func
 }
 export default ApiResults;
