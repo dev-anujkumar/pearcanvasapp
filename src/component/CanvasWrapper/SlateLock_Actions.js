@@ -80,7 +80,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
   * @param {*} slateId Slate manifest URN
   */
 export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) => {
-    let url = `locks/typ/releaselock`
+    let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId
