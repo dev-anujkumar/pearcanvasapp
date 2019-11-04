@@ -630,8 +630,14 @@ export class TinyMceEditor extends Component {
                     Removing the blinking cursor on first load by making it transparent
                 */
 
-                if(tinymce.editors.length && tinymce.activeEditor.id !== this.editorRef.current.id) {
-                    tinymce.remove('#' + tinymce.activeEditor.id);
+                if(tinymce.editors.length) {
+                    let activeElementID = (tinymce.activeEditor.id.split("-"))[1];
+                    let editorRefID = (this.editorRef.current.id.split("-"))[1];
+                    if(activeElementID !== editorRefID) {
+                        tinymce.remove('#' + tinymce.activeEditor.id);
+                        localStorage.removeItem('newElement');
+                
+                    }
                 }
                 
                 this.editorRef.current.style.caretColor = 'transparent';
@@ -643,7 +649,7 @@ export class TinyMceEditor extends Component {
                             Making blinking cursor color again to black
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                        // this.editorRef.current.blur();
+                        this.editorRef.current.blur();
                         if(document.getElementById(this.editorRef.current.id)) {
                             document.getElementById(this.editorRef.current.id).click();
                         }
