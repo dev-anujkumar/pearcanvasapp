@@ -76,11 +76,14 @@ class ElementContainer extends Component {
                     btnClassName: ''
                 })
             }
+         // ** This post message is require to enable comments panel icon in wrapper when element focused **/
+            sendDataToIframe({ 'type': 'elementFocus', 'message': {element:newProps.element}});
         } else {
             this.setState({
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
+         
         }
     }
 
