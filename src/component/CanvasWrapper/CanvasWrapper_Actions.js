@@ -106,7 +106,7 @@ const findElementType = (element, index) => {
 		case 'element-learningobjectivemapping':
 		case 'element-generateLOlist':
 		case 'element-learningobjectives':
-		case 'chapterintro':
+		case 'openerelement':
 			elementType = {...elementDataBank[element.type]}
 			break;
 		

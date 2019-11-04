@@ -575,7 +575,7 @@ class SlateWrapper extends Component {
      * @param {object} _elements
      */
     renderButtonsonCondition(_elements){
-        if(_elements.filter(element => element.type == "chapterintro").length){
+        if(_elements.filter(element => element.type == "openerelement").length){
             config.isCO = true
         }
         //set the value in slate when once metadata anchor is created on IS
@@ -615,6 +615,7 @@ class SlateWrapper extends Component {
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
+                                isBlockerActive={this.props.isBlockerActive}
                             >
                             {
                                    (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
