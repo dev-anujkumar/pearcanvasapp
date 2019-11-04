@@ -415,7 +415,15 @@ class SlateWrapper extends Component {
                     if (outerIndex !== 1) {
                         outerIndex = Number(outerIndex) + 1
                     }
+                }else{
+                    if(outerAsideIndex !=1){
+                        outerIndex = outerAsideIndex + 1
+                    }else{
+                        outerIndex =outerAsideIndex;
+                    }
+                    
                 }
+                console.log("outerAsideIndex",outerAsideIndex)
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
                 case 'metadata-anchor':

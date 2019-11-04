@@ -88,6 +88,8 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
                     break;
+                case 'toggleCommentsPanel':
+                        this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
                     {
                         /**
