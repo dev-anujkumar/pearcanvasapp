@@ -76,11 +76,13 @@ class ElementContainer extends Component {
                     btnClassName: ''
                 })
             }
+            sendDataToIframe({ 'type': 'elementFocus', 'message': {element:newProps.element}});
         } else {
             this.setState({
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
+         
         }
     }
 
