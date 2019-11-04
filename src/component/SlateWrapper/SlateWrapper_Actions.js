@@ -10,7 +10,7 @@ import {
 import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
-import {ASSESSMENT_SLATE} from '../../constants/Element_Constants';
+import {SLATE_ASSESSMENT} from '../../constants/Element_Constants';
 
 
 // import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
@@ -44,22 +44,7 @@ const openerData = {
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-const assessmentSlateData={
-    
-    "id": "urn:pearson:work:4ea3380f-8358-4c28-ad8a-3f626d109535",
-    "type": "element-assessment",
-    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-    "elementdata": {
-    "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
-    "assessmentid": "",
-    "assessmenttitle": "",
-    "assessmentformat": "",
-    "usagetype": ""
-    },
-    "contentUrn": "urn:pearson:entity:4e58545e-392c-4f08-bab7-60e0c59fa233",
-    "versionUrn": "urn:pearson:work:4ea3380f-8358-4c28-ad8a-3f626d109535"
-    
-}
+
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
@@ -70,10 +55,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-    
-   if(type!=="element-assessment") {
-
-   return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+ return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -104,6 +86,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })
+        }else if(type=== SLATE_ASSESSMENT){
+             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData.contents.bodymatter[0]);
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -133,22 +117,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         } 
         //console.log("create Api fail", error);
     }) 
-}else {
-              
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        const createdElementData = assessmentSlateData
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(0, 0, createdElementData);
-         dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-     
 }
-};
+
 export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;

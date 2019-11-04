@@ -35,3 +35,5 @@ export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.co
 export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
+
+export const SLATE_ASSESSMENT = "SLATE_ASSESSMENT";
