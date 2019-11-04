@@ -32,7 +32,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
  * @param {*} callback Callback method to be executed
  */
  export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => (dispatch, getState) =>{ 
-    let url = `locks?projectUrn=${projectUrn}&slateId=${slateId}`
+    let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
     return axios.get(url)
         .then((res) => {
@@ -53,7 +53,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
  * @param {*} lockDuration Lock duration
  */
 export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
-    let url =`locks/typ/setlock`
+    let url =`${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {
         projectUrn,
