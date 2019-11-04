@@ -47,7 +47,7 @@ let config = {
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     projectEntityUrn:"urn:pearson:entity:3d9363f1-36bb-47ea-8842-9b142027692c",
     citeUrn:"urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
-    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `toc-wrapper/index.html` : 'https://localhost:4000',
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     book_title:"ELMTEST_StgEnv_Krajewski Test",
     IDENTITY_URL: process.env.NODE_ENV === 'production' ? process.env.IDENTITY_URL : "/auth",
     //parentUrl: window.location.origin
