@@ -636,7 +636,6 @@ export class TinyMceEditor extends Component {
                     if(activeElementID !== editorRefID) {
                         tinymce.remove('#' + tinymce.activeEditor.id);
                         localStorage.removeItem('newElement');
-                
                     }
                 }
                 
