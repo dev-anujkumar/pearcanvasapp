@@ -623,23 +623,34 @@ export class TinyMceEditor extends Component {
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
-        if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
-            /*
-                Removing the blinking cursor on first load by making it transparent
-            */
+        if (!(isLocked && config.userId !== userId)) {
+            let newElement = localStorage.getItem('newElement');
+            if(!tinymce.editors.length || newElement) {
+                /*
+                    Removing the blinking cursor on first load by making it transparent
+                */
 
-            this.editorRef.current.style.caretColor = 'transparent';
-            this.editorRef.current.focus(); // element must be focused before
-            this.editorConfig.selector = '#' + this.editorRef.current.id;
-            tinymce.init(this.editorConfig).then((d) => { 
-                if (this.editorRef.current) {
-                    /*
-                        Making blinking cursor color again to black
-                    */
-                    this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                    this.editorRef.current.blur();
+                if(tinymce.editors.length && tinymce.activeEditor.id !== this.editorRef.current.id) {
+                    tinymce.remove('#' + tinymce.activeEditor.id);
                 }
-            })
+                
+                this.editorRef.current.style.caretColor = 'transparent';
+                this.editorRef.current.focus(); // element must be focused before
+                this.editorConfig.selector = '#' + this.editorRef.current.id;
+                tinymce.init(this.editorConfig).then((d) => { 
+                    if (this.editorRef.current) {
+                        /*
+                            Making blinking cursor color again to black
+                        */
+                        this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
+                        // this.editorRef.current.blur();
+                        if(document.getElementById(this.editorRef.current.id)) {
+                            document.getElementById(this.editorRef.current.id).click();
+                        }
+                        localStorage.removeItem('newElement');
+                    }
+                })
+            }
         }
     }
 

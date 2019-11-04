@@ -63,6 +63,7 @@ const assessmentSlateData={
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
+    localStorage.setItem('newElement', 1);
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
@@ -72,82 +73,78 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     };
     
    if(type!=="element-assessment") {
-
-   return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
-        JSON.stringify(_requestData),
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        }
-    ).then(createdElemData => {
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData.data;
-        if (type == 'SECTION_BREAK') {
-            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-                if (item.id == asideData.id) {
-                    item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+        return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+            JSON.stringify(_requestData),
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
                 }
-            })
-        } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
-           newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-                if (item.id == parentUrn.manifestUrn) {
-                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                } else if (item.type == "element-aside" && item.id == asideData.id) {
-                    item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
-                        if (ele.id === parentUrn.manifestUrn) {
-                            ele.contents.bodymatter.splice(index, 0, createdElementData)
-                        }
-                    })
-                }
-            })
-        }
-        else {
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-        }
-
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
             }
-        })
-
-    }).catch(error => {
-        // Opener Element mock creation
-        if(type == "OPENER"){
-            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        ).then(createdElemData => {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
-            const createdElementData = openerData
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            let createdElementData = createdElemData.data;
+            if (type == 'SECTION_BREAK') {
+                newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                    if (item.id == asideData.id) {
+                        item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                    }
+                })
+            } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                    if (item.id == parentUrn.manifestUrn) {
+                        item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                    } else if (item.type == "element-aside" && item.id == asideData.id) {
+                        item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                            if (ele.id === parentUrn.manifestUrn) {
+                                ele.contents.bodymatter.splice(index, 0, createdElementData)
+                            }
+                        })
+                    }
+                })
+            }
+            else {
+                newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            }
+
             dispatch({
                 type: AUTHORING_ELEMENT_CREATED,
                 payload: {
                     slateLevelData: newParentData
                 }
             })
-        } 
-        //console.log("create Api fail", error);
-    }) 
-}else {
-              
+        }).catch(error => {
+            // Opener Element mock creation
+            if(type == "OPENER"){
+                sendDataToIframe({'type': HideLoader,'message': { status: false }})
+                const parentData = getState().appStore.slateLevelData;
+                const newParentData = JSON.parse(JSON.stringify(parentData));
+                const createdElementData = openerData
+                newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+                dispatch({
+                    type: AUTHORING_ELEMENT_CREATED,
+                    payload: {
+                        slateLevelData: newParentData
+                    }
+                })
+            } 
+            //console.log("create Api fail", error);
+        }) 
+    } else {
         sendDataToIframe({'type': HideLoader,'message': { status: false }})
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         const createdElementData = assessmentSlateData
         newParentData[config.slateManifestURN].contents.bodymatter.splice(0, 0, createdElementData);
-         dispatch({
+        dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-     
-}
+    }
 };
 export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
