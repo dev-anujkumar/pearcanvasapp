@@ -32,7 +32,6 @@ import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
-const WRAPPER_URL = config.WRAPPER_URL;
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -77,7 +76,7 @@ class ElementContainer extends Component {
                     btnClassName: ''
                 })
             }
-            window.parent.postMessage({ 'type': 'elementFocus', 'message': {element:newProps.element} }, WRAPPER_URL);
+            sendDataToIframe({ 'type': 'elementFocus', 'message': {element:newProps.element}});
         } else {
             this.setState({
                 borderToggle: 'active',
