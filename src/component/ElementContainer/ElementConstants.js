@@ -33,7 +33,7 @@ export default {
 
 /****************Assessment Slate Element************************ */  
     ASSESSMENT_SLATE : "element-assessment",
-    SLATE_ASSESSMENT : "SLATE_ASSESSMENT "
+    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT "
     
 }
 

@@ -36,4 +36,4 @@ export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
 
-export const SLATE_ASSESSMENT = "SLATE_ASSESSMENT";
+export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";

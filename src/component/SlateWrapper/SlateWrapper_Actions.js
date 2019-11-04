@@ -7,10 +7,10 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE
 } from '../../constants/Action_Constants';
-import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
+
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
-import {SLATE_ASSESSMENT} from '../../constants/Element_Constants';
+
 
 
 // import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
@@ -86,8 +86,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })
-        }else if(type=== SLATE_ASSESSMENT){
-             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData.contents.bodymatter[0]);
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
