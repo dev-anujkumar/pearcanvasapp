@@ -25,21 +25,24 @@ describe('Testing Opener component with props', () => {
             isLocked: false,
             userId: 'c5Test01'
         },
-        model : openerElementData.html,
+        element : openerElementData,
         onClick : ()=>{},
         permissions: []
     }
     it('Simulating click event to open label dropdown', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
         openerComponent.find('div.element-dropdown-title.label-content').simulate('click');
+        expect(OpenerInstance.state.showLabelDropdown).toBe(true)
         openerComponent.find('ul.element-dropdown-content>li:first-child').simulate('click');
+        expect(OpenerInstance.state.showLabelDropdown).toBe(false)
     })
     it('Changing input number', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         openerComponent.find('input.element-dropdown-title.opener-number').simulate('change', { target: { value: '1234567890!!!' } });
     })
     describe('Simulating keyPress event on input number', () => {
-        const openerComponent = mount( <Provider store={store}><OpenerElement  /></Provider> )
+        const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         it('Simulating keyPress event on input number - alphanumeric input', () => {
             openerComponent.find('input.element-dropdown-title.opener-number').simulate('keypress', { which: 48 });
         })
@@ -63,5 +66,33 @@ describe('Testing Opener component with props', () => {
     it('Alfresco Data Handling', () => {
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>, { attachTo: document.body })
         openerComponent.find('OpenerElement').instance().dataFromAlfresco({ assetType: "image" })
+    })
+    it("Clicking on opener element with locked slate", () => {
+        const props = {
+            slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            },
+            element : openerElementData,
+            onClick : ()=>{},
+            permissions: []
+        }
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
+        expect(OpenerInstance.handleOpenerClick(props.slateLockInfo)).toEqual(false)
+    })
+    it("Clicking on image with locked slate", () => {
+        const props = {
+            slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            },
+            element : openerElementData,
+            onClick : ()=>{},
+            permissions: []
+        }
+        const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
+        const OpenerInstance = openerComponent.find('OpenerElement').instance()
+        expect(OpenerInstance.handleC2MediaClick()).toEqual(false)
     })
 })
