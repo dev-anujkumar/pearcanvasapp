@@ -8,7 +8,9 @@ describe('checkSlateLock Testing', () => {
             isLocked : true
         }
         config.userId = 'test1';
-        checkSlateLock(slateLockInfo)
+        let result = checkSlateLock(slateLockInfo)
+        expect(result).toBe(true)
+
     })
 
     it('checkSlateLock else', () => {
@@ -17,6 +19,8 @@ describe('checkSlateLock Testing', () => {
             isLocked : true
         }
         config.userId = 'test';
-        checkSlateLock(slateLockInfo)
+        let result = checkSlateLock(slateLockInfo);
+        expect(result).toBe(false)
+
     })
 });

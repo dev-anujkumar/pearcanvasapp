@@ -62,13 +62,13 @@ export const publishContent = function (type) {
 /**
 * @description - Used to toggle the comments panel block.
 */
-export const toggleCommentsPanel = function () {
-    store.dispatch({ 
-        type: 'TOGGLE_COMMENTS_PANEL', 
-        payload: { 
-        openCommentsPanel: !store.getState().prepareAllSlates.openCommentsPanel}
-    })
-}
+// export const toggleCommentsPanel = function () {
+//     store.dispatch({ 
+//         type: 'TOGGLE_COMMENTS_PANEL', 
+//         payload: { 
+//         openCommentsPanel: !store.getState().prepareAllSlates.openCommentsPanel}
+//     })
+// }
 /**
 * @description - Logout user's session.
 */

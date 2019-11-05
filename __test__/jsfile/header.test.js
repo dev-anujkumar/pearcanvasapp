@@ -8,7 +8,7 @@ jest.mock("../../src/js/auth_module", () => {
 
 var current_slate_urn = '';
 
-xdescribe('Header module testing', () => {
+describe('Header module testing', () => {
     it('Testing SET_CURRENT_SLATE function', () => {
         let urn = '123123'
         SET_CURRENT_SLATE(urn)
@@ -22,10 +22,10 @@ xdescribe('Header module testing', () => {
         releaseLockAndRedirect()
     }) 
 
-    it('Testing publishContent if function', () => {
-        let type = 'slatePreview'
-        publishContent(type)
-    })
+    // it('Testing publishContent if function', () => {
+    //     let type = 'slatePreview'
+    //     publishContent(type)
+    // })
 
     it('Testing publishContent else function', () => {
         let type = 'projectPreview'

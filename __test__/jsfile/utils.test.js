@@ -1,46 +1,61 @@
 var _ = require("lodash");
 const uuidV4 = require("uuid/v4");
-import {utils} from '../../src/js/utils.js';
+import { utils } from '../../src/js/utils.js';
 
 describe('Utils file function testing', () => {
     it('Testing getMonthName function', () => {
-        utils.getMonthName(2, true)
+        let result = utils.getMonthName(2, true)
+        expect(result).toBe('Mar')
+
     })
 
     it('Testing getMonthName else function', () => {
-        utils.getMonthName(2, false)
+        let result = utils.getMonthName(2, false);
+        expect(result).toBe('March')
+
     })
 
     it('Testing getCommentFormatTime function', () => {
-        utils.getCommentFormatTime(2, 2)
+        let result = utils.getCommentFormatTime(2, 2);
+        expect(result).toBe('02:02 AM')
+
     })
 
     it('Testing buildCommentDate function', () => {
-        utils.buildCommentDate('2015-03-25')
+        let result = utils.buildCommentDate('2015-03-25')
+        expect(result).toBe('Mar. 25, 2015 @05:30 AM')
+
     })
 
     it('Testing toTitleCase function', () => {
-        utils.toTitleCase('2015-03-25')
+        let result = utils.toTitleCase('2015-03-25')
+        expect(result).toBe('2015-03-25')
+
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'flashcards'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe(data)
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-slideshow-video'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('gallery-video')
+
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-slideshow-image'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('gallery-image')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-graph'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('graph')
     })
 
     it('Testing getTaxonomicType function', () => {
@@ -50,51 +65,63 @@ describe('Utils file function testing', () => {
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-survey'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('survey')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-timeline'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('timeline')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-fill-in-blank'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('fill-in-blank')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-multiple-choice'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('mcq')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-hotspot'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('hotspot')
     })
 
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-accounting-tables'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('accountingtable')
     })
-    
+
     it('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-video-with-interactive'
-        utils.getTaxonomicType(data)
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('video-mcq')
     })
-    
+
     it('Testing getTaxonomicFormat function', () => {
         let data = 'mmi'
-        utils.getTaxonomicFormat(data)
+        let type = utils.getTaxonomicFormat(data)
+        expect(type).toBe(data)
+
     })
 
     it('Testing getTaxonomicFormat function', () => {
         let data = 'cite'
-        utils.getTaxonomicFormat(data)
+        let type = utils.getTaxonomicFormat(data);
+        expect(type).toBe(data)
+
     })
 
     it('Testing getTaxonomicFormat function', () => {
         let data = 'tdx'
-        utils.getTaxonomicFormat(data)
+        let type = utils.getTaxonomicFormat(data);
+        expect(type).toBe(data)
     })
 });
