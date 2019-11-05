@@ -615,6 +615,29 @@ export class TinyMceEditor extends Component {
         this.props.openAssetPopoverPopUp(true);
     }
 
+    checkElementIds = () => {
+        if(tinymce.editors.length) {
+                    
+            /**
+             * Use below lines for compare the active element ID and new created element ID
+             * whether previous one new created instance or not on figure type element
+             */
+
+            let activeElementObj = tinymce.activeEditor.id.split("-");
+            let activeElementID = activeElementObj[1];
+            let editorRefObj = this.editorRef.current.id.split("-");
+            let editorRefID = editorRefObj[1];
+            let newElement = localStorage.getItem('newElement');
+
+            if(newElement && tinymce.activeEditor.id !== this.editorRef.current.id) {
+                if(activeElementObj.length !== editorRefObj.length && activeElementID === editorRefID) {
+                    activeElementObj[1] = parseInt(activeElementID) + 1;
+                }
+                tinymce.remove('#' + activeElementObj.join("-"));
+            }
+        }
+    }
+
     /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
@@ -630,35 +653,16 @@ export class TinyMceEditor extends Component {
              */
             let newElement = localStorage.getItem('newElement');
             if(!tinymce.editors.length || newElement) {
+
+                this.checkElementIds();
+
                 /*
                     Removing the blinking cursor on first load by making it transparent
                 */
-
-                if(tinymce.editors.length) {
-                    
-                    /**
-                     * Use below lines for compare the active element ID and new created element ID
-                     * whether previous one new created instance or not on figure type element
-                     */
-
-                    let activeElementObj = tinymce.activeEditor.id.split("-");
-                    let activeElementID = activeElementObj[1];
-                    let editorRefObj = this.editorRef.current.id.split("-");
-                    let editorRefID = editorRefObj[1];
-
-                    if(newElement && tinymce.activeEditor.id !== this.editorRef.current.id) {
-                        // let activeId = tinymce.activeEditor.id;
-                        if(activeElementObj.length !== editorRefObj.length && activeElementID === editorRefID) {
-                            activeElementObj[1] = parseInt(activeElementID) + 1;
-                        }
-                        console.log('activee::::', activeElementObj.join("-"));
-                        tinymce.remove('#' + activeElementObj.join("-"));
-                        // localStorage.removeItem('newElement');
-                    }
-                }
-                
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
+
+                // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id)) {
                     document.getElementById(this.editorRef.current.id).click();
                     this.setToolbarByElementType();
@@ -674,7 +678,6 @@ export class TinyMceEditor extends Component {
                         if(!newElement) {
                             this.editorRef.current.blur();
                         }
-                        // localStorage.removeItem('newElement');
                     }
                 })
             }
