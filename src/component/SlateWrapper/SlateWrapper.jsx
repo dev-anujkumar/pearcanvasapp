@@ -20,7 +20,7 @@ import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageType
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST,ELEMENT_ASSESSMENT, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -108,7 +108,7 @@ class SlateWrapper extends Component {
                 }
             }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                 this.props.createElement(ASSESSMENT_SLATE, "0");
+                 this.props.createElement(ELEMENT_ASSESSMENT, "0");
              }
         }
     }
