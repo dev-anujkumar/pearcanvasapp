@@ -23,8 +23,7 @@ describe('Utils file function testing', () => {
 
     it('Testing buildCommentDate function', () => {
         let result = utils.buildCommentDate('2015-03-25')
-        expect(result).toBe('Mar. 25, 2015 @05:30 AM')
-
+        expect(result).toBe('Mar. 24, 2015 @05:30 AM')
     })
 
     it('Testing toTitleCase function', () => {
