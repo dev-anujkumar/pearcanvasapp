@@ -23,7 +23,7 @@ import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrap
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader,OpenLOPopup, ViewLearningObjectiveSlate,ViewLearningObjectiveAssessment,AddLearningObjectiveSlate, AddLearningObjectiveAssessment,AddEditLearningObjective,UnlinkSlate,AddLearningObjectiveSlateDropdown,AddEditLearningObjectiveDropdown,ViewLearningObjectiveSlateDropdown,UnlinkSlateDropdown,AddLearningObjectiveAssessmentDropdown} from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -44,7 +44,7 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPalette: false,
-            activeColorIndex: 0,
+            activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false
         };
     }
@@ -76,11 +76,14 @@ class ElementContainer extends Component {
                     btnClassName: ''
                 })
             }
+         // ** This post message is require to enable comments panel icon in wrapper when element focused **/
+            sendDataToIframe({ 'type': 'elementFocus', 'message': {element:newProps.element}});
         } else {
             this.setState({
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
+         
         }
     }
 
@@ -140,25 +143,29 @@ class ElementContainer extends Component {
     learningObjectiveOperations = (text) => {
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
-        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT];
-        if (text == "View Learning Objective" && config.slateType !== 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } }, config.WRAPPER_URL);
+        let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
-        if (text == "View Learning Objective" && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } }, config.WRAPPER_URL);
+        if (text == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '' } });
         }
         // else if( !this.state.slateLockSatus){
-        if (text == "Add a New Learning Objective" && permissions && permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } }, config.WRAPPER_URL)
+        if (text == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
         }
 
-        else if (text == "Add From Existing or Edit" && permissions && permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } }, config.WRAPPER_URL)
+        else if (text == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
         }
 
-        else if (text == "Add From Existing" && permissions && permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } }, config.WRAPPER_URL)
+        else if (text == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys } })
         }
+        else if (text == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+        }
+
         //  }
         //  else(
         //      this.slateLockAlert(this.state.SlatelockUserInfo)
@@ -255,7 +262,7 @@ class ElementContainer extends Component {
                 break;
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
             case elementTypeConstant.AUTHORED_TEXT:

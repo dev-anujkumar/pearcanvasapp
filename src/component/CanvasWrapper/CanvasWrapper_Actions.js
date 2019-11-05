@@ -11,10 +11,6 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 
-const axiosApiInstance = axios.create({
-	baseURL: config.C4_API_URL,
-	withCredentials: true
-})
 
 const findElementType = (element, index) => {
 	let elementType = {};
@@ -106,7 +102,7 @@ const findElementType = (element, index) => {
 		case 'element-learningobjectivemapping':
 		case 'element-generateLOlist':
 		case 'element-learningobjectives':
-		case 'chapterintro':
+		case 'openerelement':
 			elementType = {...elementDataBank[element.type]}
 			break;
 		

@@ -1,6 +1,5 @@
-import $ from 'jquery';
-global.$ = global.jQuery = $;
-import {showBlocker, hideBlocker, showBlockerSectionBreak, hideBlockerSectionBreak, showTocBlocker, showHeaderBlocker, hideTocBlocker, showBlockerCanvas, hideBlockerCanvas, disableHeader} from '../../src/js/toggleLoader.js';
+
+import {showBlocker, hideBlocker, showBlockerSectionBreak, hideBlockerSectionBreak, showTocBlocker, showHeaderBlocker, hideTocBlocker, disableHeader} from '../../src/js/toggleLoader.js';
 
 describe('Testing toggleLoader file', () => {
     it('function testing showBlocker', () =>{
@@ -24,12 +23,7 @@ describe('Testing toggleLoader file', () => {
     it('function testing hideTocBlocker', () =>{
         hideTocBlocker()
     })
-    it('function testing showBlockerCanvas', () =>{
-        showBlockerCanvas()
-    })
-    it('function testing hideBlockerCanvas', () =>{
-        hideBlockerCanvas()
-    })
+    
     it('function testing disableHeader', () =>{
         disableHeader()
     })

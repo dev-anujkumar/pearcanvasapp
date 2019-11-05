@@ -323,6 +323,37 @@ describe('Testing <CanvasWrapper> Component', () => {
             }
             channelInstance.handleLOData(case12.data.message);
         })
+        test('Test for handleLOData function unlink', () => {
+            let channelInstance = wrapper.find('CommunicationWrapper').instance();
+            const div = document.createElement('div');
+            const loChild = document.createElement('div');
+            loChild.classList.add("learning-objective");
+            div.appendChild(loChild);
+            document.body.appendChild(div);
+            let stateValues = {
+                project_urn: '',
+                isTableLaunched: false,
+                showBlocker: true,
+                toggleTocDelete: false,
+                tocDeleteMessage: null
+            }
+            let case12 = {
+                data: {
+                    type: "statusForSave",
+                    statusForSave: true,
+                    message: {
+                        statusForSave: true,
+                        toastData: "Learning Objectives has been unlinked ",
+                        loObj: {
+                            label: {
+                                en: "hello"
+                            }
+                        }
+                    }
+                }
+            }
+            channelInstance.handleLOData(case12.data.message);
+        })
         test('Test for modifyState function', () => {
             channelInstance.modifyState(true);
             channelInstance.forceUpdate();

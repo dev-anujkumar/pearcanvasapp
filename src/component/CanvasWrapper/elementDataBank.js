@@ -50,10 +50,10 @@ const elementDataBank = {
         "tag" : "MA"
     },
 
-    "chapterintro": {
-        "elementType" : "chapterintro",
-        "primaryOption" : "primary-chapterintro",
-        "secondaryOption" : "secondary-chapterintro",
+    "openerelement": {
+        "elementType" : "openerelement",
+        "primaryOption" : "primary-openerelement",
+        "secondaryOption" : "secondary-openerelement",
         "tag" : "OE"
     },
 

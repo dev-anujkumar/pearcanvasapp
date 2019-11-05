@@ -9,7 +9,7 @@ import config from '../../../src/config/config';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-xdescribe('Tests Slate Wrapper Actions', () => {
+describe('Tests Slate Wrapper Actions', () => {
     let store;
     let initialState={appStore : {}};
 

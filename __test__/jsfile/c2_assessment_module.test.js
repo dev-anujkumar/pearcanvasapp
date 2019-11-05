@@ -1,6 +1,4 @@
 const configOBJ = require('../../src/config/config.js');
-import $ from 'jquery';
-global.$ = global.jQuery = $;
 
 
 import {c2AssessmentModule } from '../../src/js/c2_assessment_module.js';
