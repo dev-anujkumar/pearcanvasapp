@@ -91,32 +91,16 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'toggleCommentsPanel':
                         this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.enablePrev;
                     break;
                 case 'enableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                        config.disablePrev = message.enableNext;
                     break;
                 case 'disablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.disablePrev;
                     break;
                 case 'disableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disableNext = message.disableNext;
                     break;
                 case 'swappedIS':
                     {

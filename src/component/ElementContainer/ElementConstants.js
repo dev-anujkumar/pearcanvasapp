@@ -1,5 +1,5 @@
 export default {
-    OPENER : "chapterintro",
+    OPENER : "openerelement",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",
@@ -32,7 +32,9 @@ export default {
     METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
 
 /****************Assessment Slate Element************************ */  
-    ASSESSMENT_SLATE : "element-assessment"
+    ASSESSMENT_SLATE : "element-assessment",
+    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT "
+    
 }
 
 export const LABELS = {

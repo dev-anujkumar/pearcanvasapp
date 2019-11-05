@@ -4,12 +4,7 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
-/* let headers = {
-    "Content-Type": "application/json",
-    ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken,
 
-} */
 export const addComment = (commentString, elementId) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
@@ -20,7 +15,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
 
     let Comment = {
         commentType: "comment",
-        commentDateTime: new Date().toISOString(),   //"2019-04-09T14:22:28.218Z"
+        commentDateTime: new Date().toISOString(),  
         commentAssignee: config.userId,
         commentCreator: config.userId,
         commentString: commentString,
@@ -33,7 +28,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
     return axios.post(url, newComment,
         { headers: {
             "Content-Type": "application/json",
-            ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
+            ApiKey: config.STRUCTURE_APIKEY,
             PearsonSSOSession: config.ssoToken,
         
         } }
@@ -43,9 +38,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
-            // let _finalSlateObject = Object.values(_slateObject)[0];
             let { contents: _slateContent } = _slateObject;
-            // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
             const element = _slateBodyMatter.map(element => {

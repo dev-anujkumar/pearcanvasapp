@@ -44,7 +44,7 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPalette: false,
-            activeColorIndex: 0,
+            activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false
         };
     }
@@ -262,7 +262,7 @@ class ElementContainer extends Component {
                 break;
             case elementTypeConstant.OPENER:
                 const { activeColorIndex } = this.state
-                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} /* model={element.html} */ slateLockInfo={slateLockInfo} />
+                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
                 labelText = 'OE'
                 break;
             case elementTypeConstant.AUTHORED_TEXT:

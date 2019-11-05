@@ -676,13 +676,13 @@ export default {
         },
         enumType: 'interactive'
     },
-    "chapterintro": {
-        "primary-chapterintro": {
+    "openerelement": {
+        "primary-openerelement": {
             text: 'Opener Element',
             enum: 'NA',
             dropdownDisabled: true,
             subtype: {
-                'secondary-chapterintro': {
+                'secondary-openerelement': {
                     text: 'Opener Element',
                     labelText: 'OE',
                     enum: 'NA',
