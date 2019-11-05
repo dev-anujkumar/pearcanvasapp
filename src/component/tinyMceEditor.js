@@ -640,16 +640,30 @@ export class TinyMceEditor extends Component {
                      * Use below lines for compare the active element ID and new created element ID
                      * whether previous one new created instance or not on figure type element
                      */
-                    let activeElementID = (tinymce.activeEditor.id.split("-"))[1];
-                    let editorRefID = (this.editorRef.current.id.split("-"))[1];
-                    if(activeElementID !== editorRefID) {
-                        tinymce.remove('#' + tinymce.activeEditor.id);
-                        localStorage.removeItem('newElement');
+
+                    let activeElementObj = tinymce.activeEditor.id.split("-");
+                    let activeElementID = activeElementObj[1];
+                    let editorRefObj = this.editorRef.current.id.split("-");
+                    let editorRefID = editorRefObj[1];
+
+                    if(newElement && tinymce.activeEditor.id !== this.editorRef.current.id) {
+                        // let activeId = tinymce.activeEditor.id;
+                        if(activeElementObj.length !== editorRefObj.length && activeElementID === editorRefID) {
+                            activeElementObj[1] = parseInt(activeElementID) + 1;
+                        }
+                        console.log('activee::::', activeElementObj.join("-"));
+                        tinymce.remove('#' + activeElementObj.join("-"));
+                        // localStorage.removeItem('newElement');
                     }
                 }
                 
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
+                if(document.getElementById(this.editorRef.current.id)) {
+                    document.getElementById(this.editorRef.current.id).click();
+                    this.setToolbarByElementType();
+                    localStorage.removeItem('newElement');
+                }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
                 tinymce.init(this.editorConfig).then((d) => { 
                     if (this.editorRef.current) {
@@ -657,11 +671,10 @@ export class TinyMceEditor extends Component {
                             Making blinking cursor color again to black
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                        this.editorRef.current.blur();
-                        if(document.getElementById(this.editorRef.current.id)) {
-                            document.getElementById(this.editorRef.current.id).click();
+                        if(!newElement) {
+                            this.editorRef.current.blur();
                         }
-                        localStorage.removeItem('newElement');
+                        // localStorage.removeItem('newElement');
                     }
                 })
             }
@@ -744,7 +757,7 @@ export class TinyMceEditor extends Component {
          * case - if tinymce already has an active editor then...
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
-        if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if (document.getElementById(tinyMCE.activeEditor.id) && tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
             /*
                 Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula

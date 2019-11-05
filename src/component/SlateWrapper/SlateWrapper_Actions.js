@@ -7,36 +7,44 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE
 } from '../../constants/Action_Constants';
-import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
+
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
-import {ASSESSMENT_SLATE} from '../../constants/Element_Constants';
+
 
 
 // import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
 
 const openerData = {
-    "type": "chapterintro",
-    "subtype": "chapteropener",
-    "id": "urn:pearson:manifest:0fd35c2b-d70c-40c4-8c46-d283203fce09",
-    "schema": "http://schemas.pearson.com/wip-authoring/intro/1",
-    "contents": {
-        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-        "title": {
+    "id": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+    "versionUrn": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+    "contentUrn": "urn:pearson:entity:b345d729-e8b0-4e54-b4c8-0c24650ck8u6",
+    "type": "openerelement",
+    "backgroundcolor": "#000000",
+    "schema": "http://schemas.pearson.com/wip-authoring/openerelement/1",
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Chapter X: Opening Element Title",
+        "textsemantics": [
+            {
+                "type": "label",
+                "charStart": 0,
+                "charEnd": 7
+            },
+            {
+                "type": "number",
+                "charStart": 8,
+                "charEnd": 10
+            }
+        ]
+    },
+    "backgroundimage": {
+        "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/ch11_chapter_header.jpg",
+        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+        "imageid": "urn:pearson:alfresco:4932d1fb-e6d3-4080-9f23-032e0dfa219a",
+        "credits": {
             "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-            "text": "Chapter X: Opening Element Title",
-            "textsemantics": [
-                {
-                    "type": "label",
-                    "charStart": 0,
-                    "charEnd": 7
-                },
-                {
-                    "type": "number",
-                    "charStart": 8,
-                    "charEnd": 10
-                }
-            ]
+            "text": "Opening element credits for the background image."
         }
     }
 }
@@ -44,22 +52,7 @@ const openerData = {
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-const assessmentSlateData={
-    
-    "id": "urn:pearson:work:4ea3380f-8358-4c28-ad8a-3f626d109535",
-    "type": "element-assessment",
-    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-    "elementdata": {
-    "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
-    "assessmentid": "",
-    "assessmenttitle": "",
-    "assessmentformat": "",
-    "usagetype": ""
-    },
-    "contentUrn": "urn:pearson:entity:4e58545e-392c-4f08-bab7-60e0c59fa233",
-    "versionUrn": "urn:pearson:work:4ea3380f-8358-4c28-ad8a-3f626d109535"
-    
-}
+
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
@@ -72,80 +65,67 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "type": type
     };
     
-   if(type!=="element-assessment") {
-        return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
-            JSON.stringify(_requestData),
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
-                }
+    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
             }
-        ).then(createdElemData => {
-            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-            const parentData = getState().appStore.slateLevelData;
-            const newParentData = JSON.parse(JSON.stringify(parentData));
-            let createdElementData = createdElemData.data;
-            if (type == 'SECTION_BREAK') {
-                newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-                    if (item.id == asideData.id) {
-                        item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
-                    }
-                })
-            } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
-            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
-                    if (item.id == parentUrn.manifestUrn) {
-                        item.elementdata.bodymatter.splice(index, 0, createdElementData)
-                    } else if (item.type == "element-aside" && item.id == asideData.id) {
-                        item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
-                            if (ele.id === parentUrn.manifestUrn) {
-                                ele.contents.bodymatter.splice(index, 0, createdElementData)
-                            }
-                        })
-                    }
-                })
-            }
-            else {
-                newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-            }
-
-            dispatch({
-                type: AUTHORING_ELEMENT_CREATED,
-                payload: {
-                    slateLevelData: newParentData
-                }
-            })
-        }).catch(error => {
-            // Opener Element mock creation
-            if(type == "OPENER"){
-                sendDataToIframe({'type': HideLoader,'message': { status: false }})
-                const parentData = getState().appStore.slateLevelData;
-                const newParentData = JSON.parse(JSON.stringify(parentData));
-                const createdElementData = openerData
-                newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-                dispatch({
-                    type: AUTHORING_ELEMENT_CREATED,
-                    payload: {
-                        slateLevelData: newParentData
-                    }
-                })
-            } 
-            //console.log("create Api fail", error);
-        }) 
-    } else {
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        }
+    ).then(createdElemData => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        const createdElementData = assessmentSlateData
-        newParentData[config.slateManifestURN].contents.bodymatter.splice(0, 0, createdElementData);
+        let createdElementData = createdElemData.data;
+        if (type == 'SECTION_BREAK') {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == asideData.id) {
+                    item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                }
+            })
+        } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == parentUrn.manifestUrn) {
+                    item.elementdata.bodymatter.splice(index, 0, createdElementData)
+                } else if (item.type == "element-aside" && item.id == asideData.id) {
+                    item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
+                        if (ele.id === parentUrn.manifestUrn) {
+                            ele.contents.bodymatter.splice(index, 0, createdElementData)
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        }
+
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
                 slateLevelData: newParentData
             }
         })
-    }
-};
+    }).catch(error => {
+        // Opener Element mock creation
+        if(type == "OPENER"){
+            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            const createdElementData = openerData
+            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+            dispatch({
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        } 
+        //console.log("create Api fail", error);
+    })
+}
+
 export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;

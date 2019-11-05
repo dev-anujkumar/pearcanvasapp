@@ -812,23 +812,37 @@ export const SlatetDataOpenerElement = {
                     "status": "approved"
                 },
                 {
-                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "type": "opener",
-                    "subtype": "",
-                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                    "elementdata": {
+                    "id": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+                    "versionUrn": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+                    "contentUrn": "urn:pearson:entity:b345d729-e8b0-4e54-b4c8-0c24650ck8u6",
+                    "type": "openerelement",
+                    "backgroundcolor": "#003057",
+                    "schema": "http://schemas.pearson.com/wip-authoring/openerelement/1",
+                    "title": {
                         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                        "text": "asdfasdfasdf"
+                        "text": "Chapter X: Opening Element Title",
+                        "textsemantics": [
+                            {
+                                "type": "label",
+                                "charStart": 0,
+                                "charEnd": 7
+                            },
+                            {
+                                "type": "number",
+                                "charStart": 8,
+                                "charEnd": 10
+                            }
+                        ]
                     },
-                    "html": {
-                        "label": "Ch",
-                        "number": "166",
-                        "title": "Opener element title 1"
-                    },
-                    "comments": true,
-                    "tcm": true,
-                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                    "backgroundimage": {
+                        "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/ch11_chapter_header.jpg",
+                        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                        "imageid": "urn:pearson:alfresco:4932d1fb-e6d3-4080-9f23-032e0dfa219a",
+                        "credits": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                            "text": "Opening element credits for the background image."
+                        }
+                    }
                 }
             ]
         }
