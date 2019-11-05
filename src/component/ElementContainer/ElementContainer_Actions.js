@@ -4,12 +4,12 @@ import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
-let headers = {
+/* let headers = {
     "Content-Type": "application/json",
     ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
     PearsonSSOSession: config.ssoToken,
 
-}
+} */
 export const addComment = (commentString, elementId) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
@@ -31,7 +31,12 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
     }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
-        { headers: headers }
+        { headers: {
+            "Content-Type": "application/json",
+            ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken,
+        
+        } }
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
