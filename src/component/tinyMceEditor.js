@@ -624,6 +624,10 @@ export class TinyMceEditor extends Component {
          * case -  initialize first tinymce instance on very first editor element by default
          */
         if (!(isLocked && config.userId !== userId)) {
+
+            /**
+             * Check localstorage value to find out if did mount is calling for new created element
+             */
             let newElement = localStorage.getItem('newElement');
             if(!tinymce.editors.length || newElement) {
                 /*
@@ -631,6 +635,11 @@ export class TinyMceEditor extends Component {
                 */
 
                 if(tinymce.editors.length) {
+                    
+                    /**
+                     * Use below lines for compare the active element ID and new created element ID
+                     * whether previous one new created instance or not on figure type element
+                     */
                     let activeElementID = (tinymce.activeEditor.id.split("-"))[1];
                     let editorRefID = (this.editorRef.current.id.split("-"))[1];
                     if(activeElementID !== editorRefID) {
