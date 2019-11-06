@@ -418,8 +418,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, callback);
     }
 
     /**
@@ -473,8 +473,12 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus))
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus)).then(() => {
+                if (callback) {
+                    callback();
+                }
+            })
         },
         updateElement: (updatedData, elementIndex) => {
             dispatch(updateElement(updatedData, elementIndex))
