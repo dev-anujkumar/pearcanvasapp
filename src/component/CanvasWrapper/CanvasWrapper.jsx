@@ -64,20 +64,14 @@ export class CanvasWrapper extends Component {
             'type': CanvasIframeLoaded,
             'message': {}
         });
-        // *********************************************************
-        // *************** TO BE PLACED PROPERLY *****************//
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
         })
-        // *********************************************************
         let { projectUrn } = config,
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
 
-        // *************************************************
-        // commenting below setState() to test alternative
-        // *************************************************
         this.props.getSlateLockStatus(projectUrn ,slateId)     
         }
 

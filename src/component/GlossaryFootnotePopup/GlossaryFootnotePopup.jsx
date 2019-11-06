@@ -18,10 +18,9 @@ class GlossaryFootnotePopup extends Component {
         const { glossaryFootnoteValue, closePopup, saveContent } = this.props;
         const glossaryFootnote = glossaryFootnoteValue.type;
         let id = glossaryFootnote === 'Glossary' ? 'glossary-1' : 'footnote-0';
+
         return (
-
             <div className="glossary-toolbar-wrapper">
-
                 <div className="glossary-header">
                     <div className="glossary-title">
                         <Button type="close-container" onClick={saveContent} />
@@ -32,17 +31,17 @@ class GlossaryFootnotePopup extends Component {
                 <div id="toolbarGlossaryFootnote"></div>
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
-                    {glossaryFootnote === 'Glossary' &&
+                    {
+                        (glossaryFootnote === 'Glossary') &&
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor'>
                                 <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
-
                         </div>
                     }
                     <div className="glossary-definition-header">
-                        <div className="glossary-definition-label">{glossaryFootnote === 'Glossary' ? 'Definition:' : 'Note:'}</div>
+                        <div className="glossary-definition-label">{(glossaryFootnote === 'Glossary') ? 'Definition:' : 'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher">
                             <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
@@ -53,7 +52,6 @@ class GlossaryFootnotePopup extends Component {
                     </div>
                 </div>
             </div>
-
         )
     }
 
