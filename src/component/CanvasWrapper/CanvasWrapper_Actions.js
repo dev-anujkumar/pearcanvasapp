@@ -87,9 +87,15 @@ const findElementType = (element, index) => {
 			break;
 
 		case 'element-aside':
-				elementType = {
-					elementType : elementDataBank[element.type][element.subtype]["elementType"],
-					...elementDataBank[element.type][element.subtype][element.designtype]
+				if(element.subtype && element.designtype) {
+					elementType = {
+						elementType : elementDataBank[element.type][element.subtype]["elementType"],
+						...elementDataBank[element.type][element.subtype][element.designtype]
+					}
+				} else {
+					elementType = {
+						elementType: ''
+					}
 				}
 			break;
 
@@ -124,7 +130,7 @@ const findElementType = (element, index) => {
 
 export const fetchElementTag = (element, index = 0) => {
 	if (Object.keys(element).length > 0) {
-		return findElementType(element, index).tag;
+		return findElementType(element, index).tag || "";
 	}
 }
 

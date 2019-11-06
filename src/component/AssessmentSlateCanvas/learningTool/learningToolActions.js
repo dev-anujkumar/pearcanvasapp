@@ -99,6 +99,33 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
   }
 };
 
+export const openLTFunction = () => dispatch => {
+
+  let url = config.STRUCTURE_API_URL + 'core/learningtemplate/v2/taxonomy/disciplines?locale=en';
+    return axios.get(url,
+      {
+        headers: {
+          'X-Roles': 'ContentPlanningAdmin',
+          'Content-Type': 'application/json',
+          'apikey': config.STRUCTURE_APIKEY,
+          'pearsonssosession': config.ssoToken
+        }
+      }
+    )
+      .then(res => {
+        dispatch(getDiscipline(res.data)),
+          err => dispatch({
+            type: LT_API_RESULT_FAIL, payload: {
+              error: err,
+              showDisFilterValues: false
+            }
+          })
+
+      }).catch(error => {
+        //console.log('this is error while fetching from LT_LA api', error)
+    })
+ 
+};
 /**
 * @discription - This action is dispached when the figure has been selected in table body
 * @param {String} selectedFigure - value of selected figure
