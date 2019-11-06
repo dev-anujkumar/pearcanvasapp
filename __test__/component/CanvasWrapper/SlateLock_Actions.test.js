@@ -72,9 +72,9 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        return store.dispatch(actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback)).then(() => {
-
-        });
+        actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback).then(()=>{
+            callback(response)
+        })
     })
 
     it('testing-- setSlateLock  action', () => {
@@ -131,12 +131,13 @@ describe('Tests slateLock  action', () => {
                     slateStatus: false,
                     timestamp: "",
                     userId: ""
+                    
                 }
             });
         });
-        return store.dispatch(actions.releaseSlateLockWithCallback(projectUrn, slateId, callback)).then(() => {
-
-        });
+        actions.releaseSlateLockWithCallback(projectUrn, slateId, callback).then(()=>{
+            callback(response);
+        })
     })
 
     it('testing-- setLockPeriodFlag  action', () => {
