@@ -105,18 +105,18 @@ class ElementContainer extends Component {
     handleBlur = () => {
         let node = document.getElementById(tinyMCE.activeEditor.id);
         if (node) {
-            // let html = node.innerHTML;
-            // let text = node.innerText;
-            // let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-            // if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-            //     const dataToSend = this.props.element;  // prepare data to update
-            //     dataToSend.elementdata.text = text;
-            //     dataToSend.html.text = html;
-            //     dataToSend.html.footnotes = this.props.element.html.footnotes || {};
-            //     dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-            //     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
-            //     this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
-            // }
+            let html = node.innerHTML;
+            let text = node.innerText;
+            let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+            if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
+                const dataToSend = this.props.element;  // prepare data to update
+                dataToSend.elementdata.text = text;
+                dataToSend.html.text = html;
+                dataToSend.html.footnotes = this.props.element.html.footnotes || {};
+                dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
+                this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
+            }
         }
     }
 
