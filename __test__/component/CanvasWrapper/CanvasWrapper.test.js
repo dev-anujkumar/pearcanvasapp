@@ -257,7 +257,7 @@ describe('Testing <CanvasWrapper> Component', () => {
             channelInstance.handleIncommingMessages(case5);
             channelInstance.handleIncommingMessages(case8);
             channelInstance.handleIncommingMessages(case9);
-             // channelInstance.handleIncommingMessages(case10);
+            // channelInstance.handleIncommingMessages(case10);
             channelInstance.handleIncommingMessages(case11);
             channelInstance.handleIncommingMessages(case12);
             //channelInstance.handleIncommingMessages(case13);
