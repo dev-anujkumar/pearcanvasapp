@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { mount } from 'enzyme';
+import { mount , shallow } from 'enzyme';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
@@ -22,30 +22,11 @@ let initialState = {
     appStore: {
         pageNumberData: {},
         slateLevelData: DefaultSlateData
+    },
+    learningToolReducer:{
+        learningTypeSelected:""
     }
 };
-const mockGetDiscipline= jest.mock('../../../src/component/AssessmentSlateCanvas/learningTool/learningToolActions', () => {
-    return {
-        getDiscipline: function () {
-            return {
-                type: 'GET_DISCIPLINE', 
-                payload: {
-                  showDisFilterValues: true,
-                  apiResponseForDis: {}
-                }
-
-        }
-    }
-}
-})
-const mockOpenLTFunction = jest.mock('../../../src/component/AssessmentSlateCanvas/learningTool/openLTFunction', () => {
-    return {
-        openLTFunction: function (mockGetDiscipline) {
-           return  (<div>null</div>)
-        }
-    }
-}
-)
 describe('Testing Assessment Slate Data component', () => {
     const assessmentSlate = mount(<AssessmentSlateData />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
@@ -120,7 +101,6 @@ describe('Testing Assessment Slate Data component', () => {
         expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Learning App Type");
     });
     describe('Test-change assessment',()=>{
-        const mockLoginfn = jest.fn();
         let store = mockStore(initialState);
         let props = {
             getAssessmentDataPopup: false,
@@ -129,10 +109,11 @@ describe('Testing Assessment Slate Data component', () => {
             model: assessmentSlateWithData,
             getAssessmentData: true,
             toggleAssessmentPopup: function () { },
-            selectAssessmentType: mockLoginfn,
+            selectAssessmentType:  jest.fn(),
             showBlocker: jest.fn(),
             openLtAction: jest.fn(),
             getDiscipline:jest.fn(), 
+            openLTFunction: jest.fn(), 
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -186,9 +167,8 @@ describe('Testing Assessment Slate Data component', () => {
             expect(spychangeAssessment).toHaveBeenCalled();
             spychangeAssessment.mockClear(); 
         })
-        xit('Change Assessment-Learning App Type',()=>{
+        it('Change Assessment-Learning App Type',()=>{
             const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
-            const changeLearningApp = jest.fn();
             assessmentSlateDataInstance.setState({
                 activeAssessmentType: 'learningtemplate'
             });
@@ -205,7 +185,6 @@ describe('Testing Assessment Slate Data component', () => {
         })
     })
     describe('Test-main assessment',()=>{
-        const mockLoginfn = jest.fn();
         let store = mockStore(initialState);
         let props = {
             getAssessmentDataPopup: true,
@@ -214,7 +193,10 @@ describe('Testing Assessment Slate Data component', () => {
             model: assessmentSlateWithData,
             getAssessmentData: true,
             toggleAssessmentPopup: function () { },
-            selectAssessmentType: mockLoginfn
+            selectAssessmentType: jest.fn(),
+            openLTFunction: jest.fn(), 
+            openLtAction: jest.fn(),
+            getDiscipline:jest.fn(), 
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -268,22 +250,25 @@ describe('Testing Assessment Slate Data component', () => {
             expect(spymainAddAssessment).toHaveBeenCalled();
             spymainAddAssessment.mockClear(); 
         })
-        xit('main Assessment-Learning App Type',()=>{
+        it('main Assessment-Learning App Type',()=>{
             const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
-            const changeLearningApp = jest.fn();
+            const spychangeLearningApp = jest.spyOn(assessmentSlateDataInstance, 'changeLearningApp')
+            const event ={}
             assessmentSlateDataInstance.setState({
-                activeAssessmentType: 'learningtemplate'
+                activeAssessmentType: 'Learning App Type'
             });
             assessmentSlateDataInstance.forceUpdate();
             component.update();
-            assessmentSlateDataInstance.mainAddAssessment();
-            assessmentSlateDataInstance.changeLearningApp();
+            assessmentSlateDataInstance.mainAddAssessment(event,'Learning App Type');
+            // assessmentSlateDataInstance.changeLearningApp();
             assessmentSlateDataInstance.forceUpdate();
             component.update();
-            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('learningtemplate');
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Learning App Type');
             expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
             expect(spymainAddAssessment).toHaveBeenCalled();
             spymainAddAssessment.mockClear(); 
+            expect(spychangeLearningApp).toHaveBeenCalled();
+            spychangeLearningApp.mockClear(); 
         })
     })
     it('Test-close elm window', () => {
@@ -372,12 +357,13 @@ describe('Testing Assessment Slate Data component', () => {
         expect(spyclosePopUp).toHaveBeenCalled();
         spyclosePopUp.mockClear(); 
     });
-    xit('Test-changeLearningApp  function', done  => {
+    it('Test-changeLearningApp  function', done  => {
         let store = mockStore(initialState);
         let props = {
             getAssessmentDataPopup: true,
             getAssessmentData: true,
             openLtAction: jest.fn(),
+            openLTFunction: jest.fn(), 
             getDiscipline:jest.fn(), 
        }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
