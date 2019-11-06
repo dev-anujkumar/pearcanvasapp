@@ -661,11 +661,10 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
-
+                this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
-                if(document.getElementById(this.editorRef.current.id)) {
+                if(document.getElementById(this.editorRef.current.id) && newElement) {
                     document.getElementById(this.editorRef.current.id).click();
-                    this.setToolbarByElementType();
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
