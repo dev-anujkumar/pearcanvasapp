@@ -295,7 +295,8 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopOverSearch.showApoSearch
+        showApoSearch : state.assetPopOverSearch.showApoSearch,
+        logout
     };
 };
 
@@ -318,7 +319,6 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
-        logout,
         handleUserRole
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

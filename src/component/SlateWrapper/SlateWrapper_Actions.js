@@ -56,6 +56,7 @@ Array.prototype.move = function (from, to) {
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
+    localStorage.setItem('newElement', 1);
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
@@ -63,7 +64,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
- return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+    
+    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -83,7 +85,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
-           newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
                 } else if (item.type == "element-aside" && item.id == asideData.id) {
@@ -105,7 +107,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-
     }).catch(error => {
         // Opener Element mock creation
         if(type == "OPENER"){
@@ -122,7 +123,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         } 
         //console.log("create Api fail", error);
-    }) 
+    })
 }
 
 export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
