@@ -18,13 +18,13 @@ import {
 /**
  * 
  *@discription - This function is to fetchComments of the element called in slate wrapper action
-  @param {String} contentUrn - content urn of element 
+  @param {String} contentUrn - content urn of slate 
   @param {String} title - Title of the slate 
 */
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-    return axios.get(url, "",{
+    return axios.get(url,{
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -234,13 +234,15 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 */
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-    return axios.delete(url,{ headers: {
+
+          
+    let url = `${config.JAVA_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
+    return axios.delete(url,
+        { headers:{
         "Content-Type": "application/json",
-        ApiKey: config.STRUCTURE_APIKEY,
+     //   ApiKey: config.STRUCTURE_APIKEY,
         PearsonSSOSession: config.ssoToken
-    } })
-        .then(response => {
+    } }).then(response => {
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
