@@ -120,13 +120,18 @@ export class ElementAudioVideo extends Component {
      * @param index index of the current element
      * @param slateLockInfo object that defines the slate lock details */
 
-    renderAudioVideoType = (model = {},index,slateLockInfo) => {
+    renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;
         var assetPath;
         switch (model.figuretype) {
             case AUDIO:
                 /**JSX for Audio-type element*/
-                assetPath=model.figuredata.audio.path;
+                if(model && model.figuredata && model.figuredata.audio && model.figuredata.audio.path){
+                    assetPath=model.figuredata.audio.path;
+                }else{
+                    assetPath= DEFAULT_ASSET
+                }
+                
                 audioVideoJSX = <div className="divAudio">
                     <figure className="figureAudio"  >
                         <header className="figureHeader">
@@ -136,7 +141,7 @@ export class ElementAudioVideo extends Component {
                             <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
+                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : assetPath}</div>
                         <div className="pearson-component audio" data-type="audio">
                             <audio controls="none" preload="none" className="audio" onClick={this.handleC2MediaClick}>
                                 <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
@@ -154,8 +159,18 @@ export class ElementAudioVideo extends Component {
                 break;
             case VIDEO:
                 /**JSX for Video-type element*/
-                assetPath=model.figuredata.videos[0].path;
-                var posterImage=model.figuredata.posterimage.path;
+                var posterImage;
+                if(model && model.figuredata && model.figuredata.videos && model.figuredata.videos[0].path){
+                    assetPath=model.figuredata.videos[0].path;
+                }else{
+                    assetPath= DEFAULT_ASSET
+                }
+                if(model && model.figuredata && model.figuredata.posterimage){
+                    posterImage=model.figuredata.posterimage.path;
+                }else{
+                    posterImage= DEFAULT_VIDEO_POSTER_IMAGE
+                }
+               
                 audioVideoJSX = <div className="divVideo">
                     <figure className="figureVideo" >
 
@@ -166,7 +181,7 @@ export class ElementAudioVideo extends Component {
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
-                              poster={this.state.imgSrc?this.state.imgSrc : (posterImage !== "" ? posterImage : DEFAULT_VIDEO_POSTER_IMAGE)}
+                              poster={this.state.imgSrc?this.state.imgSrc : posterImage}
                             >
                                 <source src="" />
                                 <track src="" kind="subtitles" srcLang="en" label="English" />

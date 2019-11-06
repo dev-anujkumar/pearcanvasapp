@@ -101,7 +101,7 @@ export class ElementSingleAssessment extends Component {
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
-    renderAssessmentType = (model = {}) => {
+    renderAssessmentType = (model) => {
         var assessmentJSX;
         var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
         if (assessmentUsageType.length > 0) {
