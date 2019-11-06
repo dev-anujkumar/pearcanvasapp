@@ -232,7 +232,6 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
-            console.log("setCurrentSlate >> ", message)
             let currentSlateObject = {};
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
