@@ -5,9 +5,9 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
 // const authModule = require('./auth_module.js');
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
-const authModule = { GET_SSO_TOKEN : function() { return config_object.ssoToken } };
-const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}' ;
-const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}' ;
+const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
+const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
+const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}';
 //const images_path = 'dist/images/c2/';
 
 var uname = config_object['userId'];
@@ -35,7 +35,7 @@ const PATTERN_BROKER = config_patterns['PATTERN_BROKER'];
 const PATTERN_PRODUCT_LINK = config_patterns['PATTERN_PRODUCT_LINK'];
 const PATTERN_VENDOR = config_patterns['PATTERN_VENDOR'];
 const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
-// if(Object.keys(config_patterns).length > 0) {
+// if(Object.keys(config_patterns).length > 0) { 
 //     Object.values(config_patterns).forEach(pattern => {
 //         const script = document.createElement("script");
 //         script.type = "text/javascript";
@@ -46,7 +46,7 @@ const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
 
 /* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
 if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
-if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */
+if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */            //code for future need
 
 var patternBroker = PatternBroker.default;
 var patternProductLink = PatternProductLink.default;
@@ -58,35 +58,36 @@ var addAnAssetConfig = {};
 /*Reference the library*/
 
 /*Configure the library*/
-var libConfig = { 'locale': 'en_US',
-                'headers' : {
-                    'Content-Type'   : 'application/json',
-                    'Accept'         : 'application/ld+json',
-                    'X-Roles-Test'   : 'ContentMetadataEditor',
-                    'Prefer'         : 'annotation=true',
-                    'Apikey'         : CMDS_APIKEY,
-                    'x-apikey'       : CMDS_APIKEY,
-                    'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
-                    'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
-                },
-                    'database'          : CMDS_DATABASE,
-                    'server'            : CMDS_DATA_ENDPOINT,
-                    'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                    'userId'            : uname
-                };
+var libConfig = {
+    'locale': 'en_US',
+    'headers': {
+        'Content-Type': 'application/json',
+        'Accept': 'application/ld+json',
+        'X-Roles-Test': 'ContentMetadataEditor',
+        'Prefer': 'annotation=true',
+        'Apikey': CMDS_APIKEY,
+        'x-apikey': CMDS_APIKEY,
+        'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+    },
+    'database': CMDS_DATABASE,
+    'server': CMDS_DATA_ENDPOINT,
+    'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+    'userId': uname || config_object['userId']
+};
 
 patternBroker.setup(libConfig);
 
 // var module = {};
 export const c2MediaModule = {
-    addAnAsset:addAnAsset,
-    productLinkOnsaveCallBack: function(data,callback) {
+    addAnAsset: addAnAsset,
+    productLinkOnsaveCallBack: function (data, callback) {
         //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
         this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
 
     },
 
-    AddanAssetCallBack: function (data,callback) {
+    AddanAssetCallBack: function (data, callback) {
         var uniqueID = data.nodeRef && data.nodeRef.split('/')[3];
         var assetType = data.mimetype && data.mimetype.split('/')[0];
         data['uniqueID'] = uniqueID;
@@ -113,32 +114,32 @@ export const c2MediaModule = {
             }
         } else {
             assetType = JSON.parse(data['desc'])
-           if (assetType['smartLinkType']) {
-            let Height = patternBroker.extract(data,patternBroker.items.AddAnAsset['Height1'] ? patternBroker.items.AddAnAsset['Height1'] : patternBroker.items.AddAnAsset['Height'] ? patternBroker.items.AddAnAsset['Height'] :'');
-           let Width = patternBroker.extract(data,patternBroker.items.AddAnAsset['Width1'] ? patternBroker.items.AddAnAsset['Width1'] : patternBroker.items.AddAnAsset['Width'] ? patternBroker.items.AddAnAsset['Width'] :'') ;
-             // data['assetType'] = assetType['smartLinkType'].toLowerCase();
-                data['posterImageUrl'] = patternBroker.extract(data,patternBroker.items.AddAnAsset['Poster Image URL'] ? patternBroker.items.AddAnAsset['Poster Image URL'] : '')
+            if (assetType['smartLinkType']) {
+                let Height = patternBroker.extract(data, patternBroker.items.AddAnAsset['Height1'] ? patternBroker.items.AddAnAsset['Height1'] : patternBroker.items.AddAnAsset['Height'] ? patternBroker.items.AddAnAsset['Height'] : '');
+                let Width = patternBroker.extract(data, patternBroker.items.AddAnAsset['Width1'] ? patternBroker.items.AddAnAsset['Width1'] : patternBroker.items.AddAnAsset['Width'] ? patternBroker.items.AddAnAsset['Width'] : '');
+                // data['assetType'] = assetType['smartLinkType'].toLowerCase();
+                data['posterImageUrl'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['Poster Image URL'] ? patternBroker.items.AddAnAsset['Poster Image URL'] : '')
                 smartLinkURl = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link Asset URL'] ? patternBroker.items.AddAnAsset['Smart Link Asset URL'] : '');
-                let vendorName = patternBroker.extract(data,patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] ? patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] : '');
+                let vendorName = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] ? patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] : '');
                 data['smartLinkURl'] = smartLinkURl;
                 data['vendorName'] = vendorName;
                 data['width'] = Width
                 data['height'] = Height
-                data['smartlinkoptimizedmobileval'] = patternBroker.extract(data,patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
-                data['subtitle']= patternBroker.extract(data,patternBroker.items.AddAnAsset['subtitle'] ? patternBroker.items.AddAnAsset['subtitle']  : '');
-                data['spanishsubtitle']= patternBroker.extract(data,patternBroker.items.AddAnAsset['spanish subtitle'] ? patternBroker.items.AddAnAsset['spanish subtitle'] : '');
-                data['frenchsubtitle']= patternBroker.extract(data,patternBroker.items.AddAnAsset['french subtitle'] ? patternBroker.items.AddAnAsset['french subtitle'] : '');
-                let mobileVal= patternBroker.extract(data,patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
-                if(mobileVal){
-                    let optimizedValue=false;
-                    if(mobileVal.toLowerCase()==='yes'){
-                        optimizedValue=true
+                data['smartlinkoptimizedmobileval'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
+                data['subtitle'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['subtitle'] ? patternBroker.items.AddAnAsset['subtitle'] : '');
+                data['spanishsubtitle'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['spanish subtitle'] ? patternBroker.items.AddAnAsset['spanish subtitle'] : '');
+                data['frenchsubtitle'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['french subtitle'] ? patternBroker.items.AddAnAsset['french subtitle'] : '');
+                let mobileVal = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] ? patternBroker.items.AddAnAsset['Smart Link optimizedMobileVal'] : '');
+                if (mobileVal) {
+                    let optimizedValue = false;
+                    if (mobileVal.toLowerCase() === 'yes') {
+                        optimizedValue = true
                     }
-                    else if(mobileVal.toLowerCase()==='no'){
-                        optimizedValue=false
+                    else if (mobileVal.toLowerCase() === 'no') {
+                        optimizedValue = false
                     }
-                    else{
-                        optimizedValue=mobileVal.toLowerCase()
+                    else {
+                        optimizedValue = mobileVal.toLowerCase()
                     }
                     data['smartlinkoptimizedmobileval'] = optimizedValue;
                 }
@@ -164,44 +165,39 @@ export const c2MediaModule = {
                 }
             }
         }
-       // $('body').trigger('setImage', { data: data });
-       callback(data);
+        // $('body').trigger('setImage', { data: data });
+        callback(data);
     },
 
-    launchAssetBrowser: function(product, server, repo,callback) {
-
-        //console.log("launchAssetBrowser called: " + product, server, repo, );
+    launchAssetBrowser: function (product, server, repo, callback) {
 
         let productRef = product;
         let serverRef = server;
 
-        //console.log("productRef: " + productRef);
-
-        if(addAnAsset && addAnAsset.unmount){
-            //console.log("unmounting AddAnAsset");
+        if (addAnAsset && addAnAsset.unmount) {
             addAnAsset.unmount();
         }
 
-        //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
-        var libConfig = {   'locale': 'en_US',
-                        'headers' : {
-                            'Content-Type'        : 'application/json',
-                            'Accept'              : 'application/ld+json',
-                            'X-Roles-Test'        : 'ContentMetadataEditor',
-                            'Prefer'              : 'annotation=true',
-                            'Apikey'              : CMDS_APIKEY,
-                            'x-apikey'            : CMDS_APIKEY,
-                            'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
-                            'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
-                        },
-                        'database'          : CMDS_DATABASE,
-                        'server'            : CMDS_DATA_ENDPOINT,
-                        'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                        'userId'            : uname
-                    };
+        var libConfig = {
+            'locale': 'en_US',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Accept': 'application/ld+json',
+                'X-Roles-Test': 'ContentMetadataEditor',
+                'Prefer': 'annotation=true',
+                'Apikey': CMDS_APIKEY,
+                'x-apikey': CMDS_APIKEY,
+                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+            },
+            'database': CMDS_DATABASE,
+            'server': CMDS_DATA_ENDPOINT,
+            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+            'userId': uname || config_object['userId']
+        };
 
 
-        addAnAssetConfig =  {'selector' : renderderedTagSelector};
+        addAnAssetConfig = { 'selector': renderderedTagSelector };
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
         addAnAssetConfig.alfserver = serverRef; //data.repoInstance;
@@ -209,7 +205,7 @@ export const c2MediaModule = {
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
         addAnAssetConfig['epsserver'] = EPS_API;
-        addAnAssetConfig.imagePreview =  '{"imagePreview":true}';
+        addAnAssetConfig.imagePreview = '{"imagePreview":true}';
         addAnAssetConfig.register = 'some-register';  // YS
         addAnAssetConfig.showdescription = 'true';  // YS
         addAnAssetConfig.uploadAll = 'false';  // Rel 3.6
@@ -217,7 +213,7 @@ export const c2MediaModule = {
         addAnAsset = patternBroker.create('AddAnAsset', patternAddAnAsset);
 
         try {
-            if(addAnAsset.corsId){
+            if (addAnAsset.corsId) {
                 libConfig.headers['Correlation-Id'] = addAnAsset.corsId;
             }
             patternBroker.setup(libConfig);
@@ -227,7 +223,7 @@ export const c2MediaModule = {
 
             showTocBlocker();
             disableHeader(true);
-            window.parent.postMessage({'type':'hideToc', 'message':{}}, WRAPPER_URL);
+            window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
 
             //alfresco toc issue
             var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
@@ -237,14 +233,13 @@ export const c2MediaModule = {
 
             // Callback function to execute when mutations are observed
             var callbackOb = function (mutationsList, observer) {
-                //console.log(mutationsList)
                 for (var mutation of mutationsList) {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {
-                       {
-                        hideTocBlocker();
-                        disableHeader(false);
-                        observer.disconnect();
-                       }
+                        {
+                            hideTocBlocker();
+                            disableHeader(false);
+                            observer.disconnect();
+                        }
                     }
                 }
             };
@@ -265,109 +260,96 @@ export const c2MediaModule = {
 
     },
 
-    validateProperties: function(elements, property1, property2) {
+    validateProperties: function (elements, property1, property2) {
         return elements.hasOwnProperty('repo') && elements.hasOwnProperty('repoName');
     },
 
-    validateRegistries: function (cmisRepo){
+    validateRegistries: function (cmisRepo) {
         const isAllElementValid = cmisRepo.map((element) => {
             return this.validateProperties(element, 'repoName', 'repo')
         });
-        return isAllElementValid.every( (item) => item !== false);
+        return isAllElementValid.every((item) => item !== false);
     },
 
-    onLaunchAddAnAsset: function(callback) {
+    onLaunchAddAnAsset: function (callback) {
         disableHeader(true);
         showTocBlocker();
         addAnAssetConfig.nodeRef = '';//185fca35-4215-43bf-bf9d-11375903b2b4';
-        window.parent.postMessage({'type':'hideToc', 'message':{}}, WRAPPER_URL);		
-        if ( addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '' ) {
-
-            //console.log("addAnAssetConfig.nodeRef already set: " + addAnAssetConfig.nodeRef);
+        window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+        if (addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '') {
             this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
         } else {
 
-            //console.log("NO PROUCT LINK SET");
-
-            if(productLink && productLink.unmount){
-                //console.log("productLink unmount");
+            if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
 
-            if(CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== ''){
-               // try{
-                    const cmisRepo = JSON.parse(CMIS_REPO);
-                    if(cmisRepo.length > 0){
-                        const canWeProceedWithPL = this.validateRegistries(cmisRepo);
-                            if(canWeProceedWithPL){
-                                //uname = "c5test01";//store.getState().auth.user ? store.getState().auth.user.userId : "sso4";
-                                var libConfig = {   'locale': 'en_US',
-                                                'headers' : {
-                                                    'Content-Type'        : 'application/json',
-                                                    'Accept'              : 'application/ld+json',
-                                                    'X-Roles-Test'        : 'ContentMetadataEditor',
-                                                    'Prefer'              : 'annotation=true',
-                                                    'Apikey'              : CMDS_APIKEY,
-                                                    'x-apikey'            :  CMDS_APIKEY,
-                                                    'PearsonSSOSession' : authModule.GET_SSO_TOKEN(),
-                                                    'X-PearsonSSOSession' : authModule.GET_SSO_TOKEN()
-                                                },
-                                                'database'          : CMDS_DATABASE,
-                                                'server'            : CMDS_DATA_ENDPOINT,
-                                                'taxonomyserver'    : CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                                                'userId'            : uname
-                                            };
-                                //console.log('MMMMMMM',renderderedTagSelector,patternProductLink)
-                                var productLinkConfig = {'selector' : renderderedTagSelector};
-                                productLinkConfig.repoList = cmisRepo;
-                                productLinkConfig.language = 'en';  // YS
-                                productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
-                                productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
-                                productLink = patternBroker.create('ProductLink', patternProductLink);
-                                //console.log('jjjj',productLink.corsId)
-                                if(productLink.corsId){
-                                    libConfig.headers['Correlation-Id'] = productLink.corsId;
-                                }
-                                patternBroker.setup(libConfig);
-                                productLink.setup(productLinkConfig, this.productLinkOnsaveCallBack);
-                                productLink.run(productLink);
-                                productLink.on(callback);
-                            }else{
-                                console.log('CMIS REPO - Object(s) in CMIS REPO does not have RepoName/Repo property');
-                            }
-                    }else{
-                        console.log('CMIS REPO - Should have atleast one Registry');
+            if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
+                // try{
+                const cmisRepo = JSON.parse(CMIS_REPO);
+                if (cmisRepo.length > 0) {
+                    const canWeProceedWithPL = this.validateRegistries(cmisRepo);
+                    if (canWeProceedWithPL) {
+                        var libConfig = {
+                            'locale': 'en_US',
+                            'headers': {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/ld+json',
+                                'X-Roles-Test': 'ContentMetadataEditor',
+                                'Prefer': 'annotation=true',
+                                'Apikey': CMDS_APIKEY,
+                                'x-apikey': CMDS_APIKEY,
+                                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+                                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+                            },
+                            'database': CMDS_DATABASE,
+                            'server': CMDS_DATA_ENDPOINT,
+                            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                            'userId': uname || config_object['userId']
+                        };
+                        var productLinkConfig = { 'selector': renderderedTagSelector };
+                        productLinkConfig.repoList = cmisRepo;
+                        productLinkConfig.language = 'en';  // YS
+                        productLinkConfig.isRegisterGrid = '{"isRegisterGrid":false}';//Temporary fix for alignment issue
+                        productLinkConfig.subfolderAccess = '{"subfolderAccess":false}';//Temporary fix for alignment issue
+                        productLink = patternBroker.create('ProductLink', patternProductLink);
+                        if (productLink.corsId) {
+                            libConfig.headers['Correlation-Id'] = productLink.corsId;
+                        }
+                        patternBroker.setup(libConfig);
+                        productLink.setup(productLinkConfig, this.productLinkOnsaveCallBack);
+                        productLink.run(productLink);
+                        productLink.on(callback);
+                    } else {
+                        console.log('CMIS REPO - Object(s) in CMIS REPO does not have RepoName/Repo property');
                     }
-              //  }
-                // catch(error){
-                //     console.log('CMIS REPO - Invalid JSON Object', error);    
-                // }
-            }else {
+                } else {
+                    console.log('CMIS REPO - Should have atleast one Registry');
+                }
+            } else {
                 console.log('CMIS REPO - should not be Empty, Provide Valid REPO Values');
             }
         }
-        var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];		
+        var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
         // Options for the observer (which mutations to observe)		
-        var config = { attributes: true };		
+        var config = { attributes: true };
         // Callback function to execute when mutations are observed		
-        var callbackOb = function (mutationsList, observer) {		
+        var callbackOb = function (mutationsList, observer) {
             //console.log(mutationsList)		
-            for (var mutation of mutationsList) {		
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {		
-                   {		
-                    hideTocBlocker();	
-                    disableHeader(false);
-                    observer.disconnect();		
-                   }		
-                }		
-            }		
-        };		
+            for (var mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {
+                    {
+                        hideTocBlocker();
+                        disableHeader(false);
+                        observer.disconnect();
+                    }
+                }
+            }
+        };
         // Create an observer instance linked to the callback function		
-        var observer = new MutationObserver(callbackOb);		
+        var observer = new MutationObserver(callbackOb);
         // Start observing the target node for configured mutations		
         observer.observe(targetNode, config);
     }
 }
-
-//module.exports.onLaunchAddAnAsset();

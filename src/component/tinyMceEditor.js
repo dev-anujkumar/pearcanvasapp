@@ -661,6 +661,29 @@ export class TinyMceEditor extends Component {
         this.props.openAssetPopoverPopUp(true);
     }
 
+    checkElementIds = () => {
+        if(tinymce.editors.length) {
+                    
+            /**
+             * Use below lines for compare the active element ID and new created element ID
+             * whether previous one new created instance or not on figure type element
+             */
+
+            let activeElementObj = tinymce.activeEditor.id.split("-");
+            let activeElementID = activeElementObj[1];
+            let editorRefObj = this.editorRef.current.id.split("-");
+            let editorRefID = editorRefObj[1];
+            let newElement = localStorage.getItem('newElement');
+
+            if(newElement && tinymce.activeEditor.id !== this.editorRef.current.id) {
+                if(activeElementObj.length !== editorRefObj.length && activeElementID === editorRefID) {
+                    activeElementObj[1] = parseInt(activeElementID) + 1;
+                }
+                tinymce.remove('#' + activeElementObj.join("-"));
+            }
+        }
+    }
+
     /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
@@ -669,23 +692,41 @@ export class TinyMceEditor extends Component {
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
-        if (!tinymce.editors.length && !(isLocked && config.userId !== userId)) {
-            /*
-                Removing the blinking cursor on first load by making it transparent
-            */
+        if (!(isLocked && config.userId !== userId)) {
 
-            this.editorRef.current.style.caretColor = 'transparent';
-            this.editorRef.current.focus(); // element must be focused before
-            this.editorConfig.selector = '#' + this.editorRef.current.id;
-            tinymce.init(this.editorConfig).then((d) => { 
-                if (this.editorRef.current) {
-                    /*
-                        Making blinking cursor color again to black
-                    */
-                    this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                    this.editorRef.current.blur();
+            /**
+             * Check localstorage value to find out if did mount is calling for new created element
+             */
+            let newElement = localStorage.getItem('newElement');
+            if(!tinymce.editors.length || newElement) {
+
+                this.checkElementIds();
+
+                /*
+                    Removing the blinking cursor on first load by making it transparent
+                */
+                this.editorRef.current.style.caretColor = 'transparent';
+                this.editorRef.current.focus(); // element must be focused before
+
+                // Make element active on element create, set toolbar for same and remove localstorage values
+                if(document.getElementById(this.editorRef.current.id)) {
+                    document.getElementById(this.editorRef.current.id).click();
+                    this.setToolbarByElementType();
+                    localStorage.removeItem('newElement');
                 }
-            })
+                this.editorConfig.selector = '#' + this.editorRef.current.id;
+                tinymce.init(this.editorConfig).then((d) => { 
+                    if (this.editorRef.current) {
+                        /*
+                            Making blinking cursor color again to black
+                        */
+                        this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
+                        if(!newElement) {
+                            this.editorRef.current.blur();
+                        }
+                    }
+                })
+            }
         }
     }
 
@@ -765,7 +806,7 @@ export class TinyMceEditor extends Component {
          * case - if tinymce already has an active editor then...
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
-        if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if (document.getElementById(tinyMCE.activeEditor.id) && tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             let activeEditorId = tinymce.activeEditor.id;
             /*
                 Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula

@@ -41,6 +41,139 @@ const selectedFigureData = {
     title: "Smart link - 3rd party",
     versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
 }
+const initialState5={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: true,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: '',                       
+    currentlyLinkedImageData: {}
+};
+const expectedState5={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: false,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: '',                       
+    currentlyLinkedImageData: {}
+};
+const initialState6={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: false,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: '',                       
+    currentlyLinkedImageData: {}
+};
+const expectedState6={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: false,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: 'p',                       
+    currentlyLinkedImageData: {}
+};
+const initialState7={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: false,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: 'p',                       
+    currentlyLinkedImageData: {}
+};
+const expectedState7={
+    showApoSearch: false,                
+    showApoCurrentlyLinked: false,        
+    showApoBody: false,                  
+    showApoFooter: true,                 
+    figures: [],                         
+    selectedFigureValue:{
+        containerContentUrn: "urn:pearson:entity:cc8d16d5-4b68-4070-9277-930c70fe19d6",
+        entityUrn: "urn:pearson:entity:b2091e4a-7925-4d84-91fd-68cc43a431f7",
+        imageId: "urn:pearson:work:f95e0bd1-1b39-444b-aaca-d55a96e27f06",
+        path: "https://cite-media-stg.pearson.com/legacy_paths/9077191c-15b8-4b48-90d5-f732d66d864d/test0000.jpg",
+        subTile: "",
+        title: "Smart link - 3rd party",
+        versionUrn: "urn:pearson:work:0306c989-fc84-4ed8-8d51-fcde1813af98"
+    },             
+    noSearchResultFound: false,          
+    figureIsSelected: false,             
+    apoObject: {},
+    imageData: [],
+    searchTerm: 'p',                       
+    currentlyLinkedImageData: {},
+    removeAssetLink: true
+};
 describe('testing Asset Popover Reducer cases -->', () => {
 
     it('should return the initial state', () => {
@@ -96,29 +229,29 @@ describe('testing Asset Popover Reducer cases -->', () => {
         })
     })
     it('Test 5- APO_SEARCH_SAVE', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(initialState5, {
             type: 'APO_SEARCH_SAVE',
             payload: {
                 apoObject: {},
                 imageData: [],
                 figureIsSelected: false
             }
-        })
+        })).toEqual(expectedState5);
     })
     it('Test 6- USE_STATE_IMAGE_DATA', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(initialState6, {
             type: 'USE_STATE_IMAGE_DATA',
             payload: {
                 searchTerm: 'p'
             }
-        })
+        })).toEqual(expectedState6);
     })
     it('Test 7- REMOVE_ASSET_LINK', () => {
-        reducer(INITIAL_STATE, {
+        expect(reducer(initialState7, {
             type: 'REMOVE_ASSET_LINK',
             payload: {
                 removeAssetLink: true
             }
-        })
+        })).toEqual(expectedState7);
     })
 });

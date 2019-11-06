@@ -13,11 +13,7 @@ import {
     DELETE_COMMENT
 } from '../../constants/Action_Constants';
 
-let headers = {
-    "Content-Type": "application/json",
-    ApiKey: config.STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken
-}
+
 
 /**
  * 
@@ -95,7 +91,11 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`
     return axios.post(url, replyDataToSend,
-        { headers: headers }
+        { headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        } }
     )
         .then(response => {
             dispatch({
@@ -126,7 +126,11 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     };
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers: headers }
+        { headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        } }
     )
         .then(response => {
             dispatch({
@@ -152,7 +156,11 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
     let request = updateComment
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers: headers }
+        { headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        } }
     ).then(response => {
         dispatch({
             type: UPDATE_COMMENT,
@@ -202,7 +210,11 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
         assignee: newAssignee
     };
     return axios.put(url, req, {
-        headers: headers
+        headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        }
     }).then(response => {
         dispatch({
             type: UPDATE_ASSIGNEE,
@@ -223,14 +235,18 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 export const deleteComment = (commentUrn, elementId) => dispatch => {
     let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}`
-    return axios.delete(url,{ headers: headers })
+    return axios.delete(url,{ headers: {
+        "Content-Type": "application/json",
+        ApiKey: config.STRUCTURE_APIKEY,
+        PearsonSSOSession: config.ssoToken
+    } })
         .then(response => {
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
         }).catch(error => {
-            //console.log("error while updating user", error);
+            console.log("error while deleting user", error);
         })
 
 }
