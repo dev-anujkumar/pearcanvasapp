@@ -120,6 +120,31 @@ describe('Tests Learning Tool  action', () => {
        //expect(payload.title).toBe(title);
    });
 })
+
+it('testing--- openLTFunction action',()=>{
+  
+   store = mockStore(() => initialState);
+   const expectedActions = [{
+    type: GET_DISCIPLINE, payload: {
+      showDisFilterValues: true,
+      apiResponseForDis: disciplines
+    }
+   }];
+   moxios.wait(() => {
+       const request = moxios.requests.mostRecent();
+       request.respondWith({
+           status: 200,
+           response: disciplines
+       });
+   });
+
+   return store.dispatch(actions.openLTFunction ()).then(() => {
+       const { type, payload } = store.getActions()[0];
+        expect(type).toBe(GET_DISCIPLINE);
+       //expect(payload.title).toBe(title);
+   });
+})
+
 it('testing------- selectedFigureAction   action',()=>{
     store = mockStore(() => initialState);
      let selectedFigure = selectedResult;

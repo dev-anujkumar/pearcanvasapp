@@ -162,6 +162,24 @@ class SlateWrapper extends Component {
             return null
         }
     }
+
+    /**
+     * Prepares data after element swapping occurs
+     * @param {*} event event object
+     */
+    prepareSwapData = (event) => {
+        const { slateData } = this.props
+        const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        const swappedElementData = _slateBodyMatter[event.oldDraggableIndex]
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            workedExample: false,
+        } 
+        return dataObj
+    }
+    
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -237,16 +255,7 @@ class SlateWrapper extends Component {
 
                                         // Element dragging ended
                                         onUpdate: (/**Event*/evt) => {
-                                            let swappedElementData, swappedElementId;
-                                            swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                            let dataObj = {
-                                                oldIndex: evt.oldDraggableIndex,
-                                                newIndex: evt.newDraggableIndex,
-                                                swappedElementData: swappedElementData,
-                                                // slateId:_slateId,
-                                                workedExample: false,
-                                                swappedElementId: swappedElementId
-                                            }
+                                            let dataObj = this.prepareSwapData(evt)
                                             this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },

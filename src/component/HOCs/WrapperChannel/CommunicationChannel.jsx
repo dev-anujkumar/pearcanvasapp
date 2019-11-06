@@ -145,13 +145,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                     this.props.fetchAuthUser()
-                     config.ssoToken = message.ssoToken;
-                     config.projectUrn = message.id;
-                     config.citeUrn = message.citeUrn;
-                     config.projectEntityUrn = message.entityUrn;
-                     config.alfrescoMetaData = message.alfresco;
-                     config.book_title =  message.name;                  
+                    config.userId = message['x-prsn-user-id'].toLowerCase()
+                    this.props.fetchAuthUser()
+                    config.ssoToken = message.ssoToken;
+                    config.projectUrn = message.id;
+                    config.citeUrn = message.citeUrn;
+                    config.projectEntityUrn = message.entityUrn;
+                    config.alfrescoMetaData = message.alfresco;
+                    config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
