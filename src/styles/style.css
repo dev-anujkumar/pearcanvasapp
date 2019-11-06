@@ -16,8 +16,6 @@ body {
 
 .incorrect-data {
     color: red;
-    font-size: 15px;
-    font-weight: bold;
     display: flex;
     padding: 15px;
 }
