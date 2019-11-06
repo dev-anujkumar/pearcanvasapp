@@ -99,7 +99,6 @@ export class ReactEditor extends React.Component {
 
   onEditorBlur = (editor) => {
     editor.on('blur', (e) => {
-      this.props.glossaaryFootnotePopup(false);
       e.stopImmediatePropagation();
       e.preventDefault();
     });
@@ -186,7 +185,9 @@ export class ReactEditor extends React.Component {
   }
 
   handleClick = (e) => {
-    if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
+    let event = Object.assign({}, e);
+    let currentTarget = event.currentTarget;
+    if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
       return false;
     }
 
@@ -198,7 +199,7 @@ export class ReactEditor extends React.Component {
       }
     }
 
-    this.editorConfig.selector = '#' + e.target.id;
+    this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig);
   }
 
