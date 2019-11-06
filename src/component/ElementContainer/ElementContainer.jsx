@@ -32,6 +32,7 @@ import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
+import elementTypes from './../Sidebar/elementTypes';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -103,6 +104,7 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
+        const{elementType, primaryOption,secondaryOption} = this.props.activeElement;
         let node = document.getElementById(tinyMCE.activeEditor.id);
         if (node) {
             let html = node.innerHTML;
@@ -114,6 +116,8 @@ class ElementContainer extends Component {
                 dataToSend.html.text = html;
                 dataToSend.html.footnotes = this.props.element.html.footnotes || {};
                 dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+                dataToSend.inputType = elementTypes[elementType][primaryOption]['enum'];
+                dataToSend.inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
                 this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
             }
