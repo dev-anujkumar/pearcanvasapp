@@ -128,7 +128,6 @@ export const bindKeyDownEvent = (editor, e) => {
     /**
      * Facilitate indent feature at end of text on TAB key
      */
-    console.log('key code', e.which)
     if (atEnd && e.which == 9 && !e.shiftKey) {
         editor.editorCommands.commands.exec.indent();
     }
