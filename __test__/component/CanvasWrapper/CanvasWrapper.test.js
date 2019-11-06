@@ -217,7 +217,7 @@ describe('Testing <CanvasWrapper> Component', () => {
             let case10 = {
                 data: {
                     type: "projectDetails",
-                    message: ""
+                    message: {'x-prsn-user-id':"abc"}
                 }
             }
             let case11 = {
@@ -267,13 +267,6 @@ describe('Testing <CanvasWrapper> Component', () => {
         })
         test('Test for setUpdatedSlateTitle function', () => {
             let channelInstance = wrapper.find('CommunicationWrapper').instance();
-            let stateValues = {
-                project_urn: '',
-                isTableLaunched: false,
-                showBlocker: true,
-                toggleTocDelete: false,
-                tocDeleteMessage: null
-            }
             let currentSlate = {
                 category: "titleChange",
                 container: "chapter",
