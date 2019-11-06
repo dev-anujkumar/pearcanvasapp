@@ -115,7 +115,7 @@ describe('Tests slateLock  action', () => {
 
         });
     })
-    it('testing-- releaseSlateLockWithCallback  action', () => {
+    xit('testing-- releaseSlateLockWithCallback  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
             slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
