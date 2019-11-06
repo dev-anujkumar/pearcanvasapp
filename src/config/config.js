@@ -71,7 +71,7 @@ let config = {
     labelToolbar:['footnote','decreaseindent'],
     captionToolbar:['decreaseindent']
 };
-if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';
     config.userId= 'c5test01';
     config.userEmail = 'c5test01@mctest.local';
