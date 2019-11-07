@@ -16,7 +16,8 @@ import {
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
-    GET_PROJECT_PERMISSIONS
+    GET_PROJECT_PERMISSIONS,
+    SET_OLD_IMAGE_PATH
 } from '../constants/Action_Constants';
 
 /**
@@ -95,6 +96,11 @@ export default function (state = initialState, action) {
                 ...state,
                 permissions: action.payload
             }
+        case SET_OLD_IMAGE_PATH:
+            return {
+                ...state,
+                oldImage: action.payload.oldImage
+            }   
         default:
             return state;
     }

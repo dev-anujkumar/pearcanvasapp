@@ -305,6 +305,7 @@ export class TinyMceEditor extends Component {
             if(this.isTabPressed(e)){
                 e.preventDefault()
             }
+
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
@@ -322,6 +323,14 @@ export class TinyMceEditor extends Component {
                     activeElement.innerHTML = div.children[0].outerHTML;
                 }
                 this.lastContent = activeElement.innerHTML;
+            }
+
+            let key = e.keyCode || e.which;
+            if(key === 13 && this.props.element.type !== 'element-list') {
+                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
+                let nextSaparator = activeEditor.nextSibling;
+                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                textPicker.click();
             }
         });
     }
@@ -720,11 +729,10 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
-
+                this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
-                if(document.getElementById(this.editorRef.current.id)) {
+                if(document.getElementById(this.editorRef.current.id) && newElement) {
                     document.getElementById(this.editorRef.current.id).click();
-                    this.setToolbarByElementType();
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;

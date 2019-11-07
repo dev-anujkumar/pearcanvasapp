@@ -244,8 +244,7 @@ class ElementAsideContainer extends Component {
                                     showBlocker={this.props.showBlocker}
                                     asideData = {asideData}
                                     permissions = {this.props.permissions}
-
-                                // handleCommentspanel={this.props.handleCommentspanel}
+                                    handleCommentspanel={this.props.handleCommentspanel}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (

@@ -174,14 +174,21 @@ export default function (state = initialState, action) {
             }
         case DELETE_COMMENT:
             let deleteComment = JSON.parse(JSON.stringify(state.comments))
+            let deleteAllComment = JSON.parse(JSON.stringify(state.allComments))
             deleteComment.forEach((comment, index) => {
                 if (comment.commentUrn === payload) {
                     deleteComment.splice(index, 1)
                 }
             })
+            deleteAllComment.forEach((comment, index) => {
+                if (comment.commentUrn === payload) {
+                    deleteAllComment.splice(index, 1)
+                }
+            })
             return {
                 ...state,
-                comments: deleteComment
+                comments: deleteComment,
+                allComments:deleteAllComment
             }
         case ADD_NEW_COMMENT:
             let addComment = JSON.parse(JSON.stringify(state.allComments))

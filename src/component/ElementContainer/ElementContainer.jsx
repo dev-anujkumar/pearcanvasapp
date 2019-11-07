@@ -32,7 +32,8 @@ import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
-import elementTypes from './../Sidebar/elementTypes';
+import { updateFigureData } from './ElementContainer_Actions.js';
+import { createUpdatedData } from './UpdateElements.js';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -92,102 +93,56 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = () => {
-        this.setState({
-            borderToggle: 'active',
-            btnClassName: 'activeTagBgColor'
-        })
-        this.props.setActiveElement(this.props.element, this.props.index);
-        this.props.fetchCommentByElement(this.props.element.id);
+    handleFocus = (updateFromC2Flag) => {
+        if(updateFromC2Flag){
+            this.props.setActiveElement(this.props.element, this.props.index);
+        }
+        else {
+            this.setState({
+                borderToggle: 'active',
+                btnClassName: 'activeTagBgColor'
+            })
+            this.props.setActiveElement(this.props.element, this.props.index);
+            this.props.fetchCommentByElement(this.props.element.id);
+        }   
     }
 
-    createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId) => {
-        let dataToReturn = {}
-        switch (type){
-            case elementTypeConstant.AUTHORED_TEXT:
-                let { innerHTML, innerText } = node;
-                dataToReturn = {
-                    ...previousElementData,
-                    elementdata : {
-                        text : innerText
-                    },
-                    html : {
-                        text : innerHTML,
-                        footnotes : previousElementData.html.footnotes || {},
-                        glossaryentries : previousElementData.html.glossaryentries || {},
-                    },
-                    inputType : elementTypes[elementType][primaryOption]['enum'],
-                    inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']          
-                }
-                break;
+    figureDifference = (index, previousElementData) => {
+        let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
+            subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
+            captionHTML = document.getElementById(`cypress-${index}-2`).innerHTML,
+            creditsHTML = document.getElementById(`cypress-${index}-3`).innerHTML
 
-            case elementTypeConstant.FIGURE:
-                    switch (previousElementData.figuretype) {
-                        
-                        case elementTypeConstant.FIGURE_IMAGE:
-                            let titleHTML = document.getElementById(`cypress-${this.props.index}-0`).innerHTML,
-                                subtitleHTML = document.getElementById(`cypress-${this.props.index}-1`).innerHTML,
-                                captionHTML = document.getElementById(`cypress-${this.props.index}-2`).innerHTML,
-                                creditsHTML = document.getElementById(`cypress-${this.props.index}-3`).innerHTML
-                        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                html : {
-                                    captions: `<p>${captionHTML}</p>`,
-                                    credits: `<p>${creditsHTML}</p>`,
-                                    footnotes: {},
-                                    glossaryentries: {},
-                                    subtitle: subtitleHTML ,
-                                    title: titleHTML
-                                },
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] 
-                            }
-                            break;
-                        case elementTypeConstant.FIGURE_VIDEO:
-                                console.log("Figure VIDEO new data::>>", node.innerHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] 
-                            }
-                            break;
-                        case elementTypeConstant.FIGURE_ASSESSMENT:
-                                console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                            }
-                            break;
-                    }
-                    break;
-                
-            case elementTypeConstant.ELEMENT_ASIDE:
-                    switch (previousElementData.subtype) {
-                        case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                                console.log("Worked example new data::>>", node.innerHTML)
-                        default:
-                            dataToReturn = { 
-                                ...previousElementData,
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                        }
-                    }
-                break;
-        }
-        return dataToReturn
+        if(titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle || 
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits||
+            previousElementData.figuredata.path !== this.props.oldImage
+            ){
+                return true
+            }
+            else {
+                return false
+            }
     }
     
+    /**
+     * Calls API for element updation
+     * @param {*} node
+     * @param {*} previousElementData
+     * @param {*} elementType
+     * @param {*} primaryOption
+     * @param {*} secondaryOption
+     * @param {*} activeEditorId
+     */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId) => {
         let dataToSend = {}
         switch(previousElementData.type){
             case elementTypeConstant.AUTHORED_TEXT:
                 let html = node.innerHTML;
-                let text = node.innerText;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if(previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible){
-                    dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                     this.props.updateElement(dataToSend, this.props.index);
                 }
@@ -196,19 +151,34 @@ class ElementContainer extends Component {
             case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
-                        dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
-                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                        this.props.updateElement(dataToSend, this.props.index);
+                    case elementTypeConstant.FIGURE_TABLE:
+                    case elementTypeConstant.FIGURE_MATH_IMAGE:   
+                        if(this.figureDifference(this.props.index, previousElementData)){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                            this.props.updateElement(dataToSend, this.props.index);
+                        }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
-                        dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
-                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                        this.props.updateElement(dataToSend, this.props.index);
+                        if(this.figureDifference(this.props.index, previousElementData)){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                            this.props.updateElement(dataToSend, this.props.index);
+                        }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
-                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                        this.props.updateElement(dataToSend, this.props.index);
+                        if(this.figureDifference(this.props.index, previousElementData)){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                            this.props.updateElement(dataToSend, this.props.index);
+                        }
+                        break;
+                    case elementTypeConstant.INTERACTIVE:
+                        if(this.figureDifference(this.props.index, previousElementData)){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                            this.props.updateElement(dataToSend, this.props.index);
+                        }
                         break;
                 }
                 break;
@@ -217,11 +187,9 @@ class ElementContainer extends Component {
                     switch (previousElementData.subtype) {
                         case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:   
                         default:
-                            dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
+                            /* dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                            this.props.updateElement(dataToSend, this.props.index);
-                    
-                            
+                            this.props.updateElement(dataToSend, this.props.index); */          
                     }
                 break;
             
@@ -233,26 +201,12 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        const{ elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor.id
         let node = document.getElementById(activeEditorId);
         console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
         if (node) {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
-/*             let html = node.innerHTML;
-            let text = node.innerText;
-            let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-            if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-                const dataToSend = this.props.element;  // prepare data to update
-                dataToSend.elementdata.text = text;
-                dataToSend.html.text = html;
-                dataToSend.html.footnotes = this.props.element.html.footnotes || {};
-                dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-                dataToSend.inputType = elementTypes[elementType][primaryOption]['enum'];
-                dataToSend.inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
-                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
-            } */
         }
     }
 
@@ -381,6 +335,13 @@ class ElementContainer extends Component {
     }
 
     /**
+     * Updates figuredata to local store
+     */
+    updateFigureData = (figureData, index, cb) => {
+        this.props.updateFigureData(figureData, index, cb)
+    }
+    
+    /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
@@ -415,12 +376,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                            editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementFigure updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                             labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                             labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -430,12 +391,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.INTERACTIVE:
                             switch (element.figuredata.interactiveformat) {
                                 case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    editor = <ElementInteractive updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                     labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                     break;
                                 case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
                                 case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlurAside} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    editor = <ElementInteractive updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlurAside} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                     labelText = LABELS[element.figuredata.interactiveformat];
                                     break;
                             }
@@ -448,11 +409,11 @@ class ElementContainer extends Component {
                 case elementTypeConstant.ELEMENT_ASIDE:
                     switch (element.subtype) {
                         case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAsideContainer handleCommentspanel={handleCommentspanel} permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
                         default:
-                            editor = <ElementAsideContainer  permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAsideContainer  handleCommentspanel= {handleCommentspanel} permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                             // labelText = 'AS'
                     }
                     break;
@@ -540,7 +501,7 @@ class ElementContainer extends Component {
         const { id } = this.props.element;
 
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        this.props.addComment(comment, id);
+        this.props.addComment(comment, id,this.props.asideData,this.props.parentUrn);
         this.handleCommentPopup(false);
     }
 
@@ -608,8 +569,8 @@ ElementContainer.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addComment: (comments, elementId) => {
-            dispatch(addComment(comments, elementId))
+        addComment: (comments, elementId,asideData,ParentUrn) => {
+            dispatch(addComment(comments, elementId,asideData,ParentUrn))
         },
         fetchCommentByElement: (elementId) => {
             dispatch(fetchCommentByElement(elementId))
@@ -629,6 +590,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateElement: (updatedData, elementIndex) => {
             dispatch(updateElement(updatedData, elementIndex))
+        },
+        updateFigureData : (figureData, index, cb) =>{
+            dispatch(updateFigureData(figureData, index, cb))
         }
     }
 }
@@ -641,6 +605,7 @@ const mapStateToProps = (state) => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
+        oldImage: state.appStore.oldImage
     }
 }
 
