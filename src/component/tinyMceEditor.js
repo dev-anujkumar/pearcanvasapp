@@ -32,7 +32,6 @@ import {
     UnlinkSlateDropdown
 } from '../constants/IFrameMessageTypes';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import { createElement } from "./SlateWrapper/SlateWrapper_Actions";
 
 let context = {};
 
