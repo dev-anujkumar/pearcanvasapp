@@ -93,8 +93,10 @@ export class ElementAudioVideo extends Component {
                     }
                     break;
             }
-
-            this.props.updateFigureData(figureData, this.props.index)
+            this.props.updateFigureData(figureData, this.props.index, ()=>{
+                this.props.handleFocus("updateFromC2")
+                this.props.handleBlur()
+            })
         }
     }
     /**

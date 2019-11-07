@@ -25,6 +25,7 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
 /*---------------Element Updation ----------------------*/
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
+export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
 
 /*---------------Element Container ----------------------*/
 export const ADD_COMMENT = "ADD_COMMENT"

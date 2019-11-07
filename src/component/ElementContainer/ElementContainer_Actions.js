@@ -3,7 +3,7 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
@@ -178,14 +178,21 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
     }) 
 }
 
-export const updateFigureData = (figureData, elementIndex) => (dispatch, getState) => {
+export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
+    dispatch({
+        type: SET_OLD_IMAGE_PATH,
+        payload: {
+            oldImage: parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.path
+        }
+    })
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
             slateLevelData: newParentData
         }
     })
+    cb();
 }

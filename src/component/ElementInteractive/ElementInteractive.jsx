@@ -62,25 +62,28 @@ class Interactive extends React.Component {
                 interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
             }
             let posterImage = {};
-
-            /* To be used in update API integration */ 
-
-            // let itemsData = interactiveData['itemsData'];
-            // let id = interactiveData['id'] ? interactiveData['id'] : "";
-            // let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
-            // let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
-
-
+            let itemsData = interactiveData['itemsData'];
+            let id = interactiveData['id'] ? interactiveData['id'] : "";
+            let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
+            let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
-            // let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';          // To be used in update API integration
+            let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
             let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
-            // let imageId = "";                //  To be used in update API integration
+            let imageId = "";
             let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
-            // var interactiveFormat;           //  To be used in update API integration
             that.setState({itemID : workExample})
+            let figureData = {
+                schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                interactiveid: workExample,
+                interactivetype: tempInteractiveType,
+                interactiveformat: "mmi"
+            }
+            that.props.updateFigureData(figureData, this.props.index, ()=>{
+                this.props.handleFocus("updateFromC2")
+                this.props.handleBlur()
+            })
         }); 
-
     }
      
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
@@ -381,12 +384,12 @@ class Interactive extends React.Component {
                     </div>
                     <figcaption>
                         <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
-                         model={element.html.caption} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </figcaption>
                 </figure>
                 <div>
                     <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
-                     model={element.html.caption} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                 </div>
             </div>
         }
