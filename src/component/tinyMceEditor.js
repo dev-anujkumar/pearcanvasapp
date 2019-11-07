@@ -854,6 +854,12 @@ export class TinyMceEditor extends Component {
         /**
          * case - continuing with toggling glossary & footnote popup
          */
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance);
+            tinymce.init(this.editorConfig).then((d)=>{
+                this.setToolbarByElementType();
+            })
+        });
         if (isSameTarget) {
             this.editorOnClick(event);
         }
