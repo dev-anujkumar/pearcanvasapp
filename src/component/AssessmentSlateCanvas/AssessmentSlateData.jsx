@@ -1,7 +1,8 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { openLTFunction } from './learningTool/openLTFunction.js';
+//import { openLTFunction } from './learningTool/openLTFunction.js';
+//import { openLTFunction } from './learningTool/';
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
@@ -40,7 +41,7 @@ export class AssessmentSlateData extends Component {
     */
     changeLearningApp() {
         //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component//
-        openLTFunction(this.props.getDiscipline); 
+        this.props.openLTFunction(); 
         this.props.openLtAction();
         this.setState({
             dropdownValue: LEARNING_APP_TYPE,

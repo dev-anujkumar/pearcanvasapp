@@ -270,7 +270,7 @@ export default {
                 'secondary-blockcode-language-Default': {
                     text: 'Select',
                     labelText: 'BCE',
-                    enum: ''
+                    enum: 'SELECT'
                 },
                 'secondary-blockcode-language-C++': {
                     text: 'C++',
@@ -575,6 +575,7 @@ export default {
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
                     text: 'Worked Example 2',
@@ -631,7 +632,7 @@ export default {
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
                     labelText: 'SL',
-                    enum: ''
+                    enum: 'PDF'
                 },
                 'secondary-interactive-smartlink-web': {
                     text: 'External Website Link',
@@ -676,13 +677,13 @@ export default {
         },
         enumType: 'interactive'
     },
-    "chapterintro": {
-        "primary-chapterintro": {
+    "openerelement": {
+        "primary-openerelement": {
             text: 'Opener Element',
             enum: 'NA',
             dropdownDisabled: true,
             subtype: {
-                'secondary-chapterintro': {
+                'secondary-openerelement': {
                     text: 'Opener Element',
                     labelText: 'OE',
                     enum: 'NA',

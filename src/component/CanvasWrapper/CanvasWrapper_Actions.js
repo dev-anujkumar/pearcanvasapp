@@ -11,107 +11,109 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader} from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 
-const axiosApiInstance = axios.create({
-	baseURL: config.C4_API_URL,
-	withCredentials: true
-})
 
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-	switch (element.type) {
-		case 'element-authoredtext':
-			elementType['elementType'] = elementDataBank[element.type]["elementType"];
-			if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
-				elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
-				elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
-			} else {
-				elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
-				elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
-			}
-			break;
 
-		case 'element-blockfeature':
-			elementType = {
-				...elementDataBank[element.type][element.elementdata.type]
-			}
-			break;
-
-		case 'figure':
-
-		switch (element.figuretype){
-			case "image":
-			case "table":
-			case "mathImage":
-			case "authoredtext":
-			case "tableasmarkup":	
-				elementType = {
-					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-					primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-					...elementDataBank[element.type][element.figuretype][element.subtype]
+	try {
+		switch (element.type) {
+			case 'element-authoredtext':
+				elementType['elementType'] = elementDataBank[element.type]["elementType"];
+				if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
+					elementType['primaryOption'] = elementDataBank["element-authoredtext-heading"]["primaryOption"];
+					elementType['secondaryOption'] = 'secondary-heading-' + element.elementdata.headers[0].level;
+				} else {
+					elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
+					elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
 				}
 				break;
-			case "codelisting":
+
+			case 'element-blockfeature':
 				elementType = {
-					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-					primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+					...elementDataBank[element.type][element.elementdata.type]
 				}
-				switch (element.figuredata.programlanguage){
-					case "Select":
-						elementType.secondaryOption = `secondary-blockcode-language-Default`
+				break;
+
+			case 'figure':
+				switch (element.figuretype){
+					case "image":
+					case "table":
+					case "mathImage":
+					case "authoredtext":
+					case "tableasmarkup":
+						elementType = {
+							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							...elementDataBank[element.type][element.figuretype][element.subtype]
+						}
 						break;
+					case "codelisting":
+						elementType = {
+							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+						}
+						switch (element.figuredata.programlanguage){
+							case "Select":
+								elementType.secondaryOption = `secondary-blockcode-language-Default`
+								break;
 
-					default:
-						elementType.secondaryOption = `secondary-blockcode-language-${element.figuredata.programlanguage}`
+							default:
+								elementType.secondaryOption = `secondary-blockcode-language-${element.figuredata.programlanguage}`
+						}
+						break;
+					case "video":
+					case "audio" :
+						elementType = {
+							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+						}
+						break;
+					case "interactive":
+						elementType = {
+							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
+							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"]
+						}
+						break;
+					case "assessment":
+						elementType = {
+							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
+						}
+						break;
 				}
 				break;
-			case "video":
-			case "audio" :
+
+			case 'element-aside':
 				elementType = {
-					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-					primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-					...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+					elementType : elementDataBank[element.type][element.subtype]["elementType"],
+					...elementDataBank[element.type][element.subtype][element.designtype]
 				}
 				break;
-			case "interactive":
+
+			case 'element-list':
 				elementType = {
-					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-					primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-					secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"]
+					...elementDataBank[element.type][element.subtype]
 				}
 				break;
-			case "assessment":
-				elementType = {
-					elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-					primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-					...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
-				}
+
+			case 'element-learningobjectivemapping':
+			case 'element-generateLOlist':
+			case 'element-learningobjectives':
+			case 'openerelement':
+				elementType = {...elementDataBank[element.type]}
 				break;
-			}
-			break;
-
-		case 'element-aside':
-				elementType = {
-					// elementType : elementDataBank[element.type][element.subtype]["elementType"],
-					// ...elementDataBank[element.type][element.subtype][element.designtype]
-				}
-			break;
-
-		case 'element-list':
-			elementType = {
-				...elementDataBank[element.type][element.subtype]
-			}
-			break;
-
-		case 'element-learningobjectivemapping':
-		case 'element-generateLOlist':
-		case 'element-learningobjectives':
-		case 'chapterintro':
-			elementType = {...elementDataBank[element.type]}
-			break;
-		
-		default:
-			elementType = {...elementDataBank["element-authoredtext"]}
+			
+			default:
+				elementType = {...elementDataBank["element-authoredtext"]}
+		}
+	} catch(err) {
+		elementType = {
+			elementType: ''
+		}
 	}
 
 	elementType['elementId'] = element.id;
@@ -128,7 +130,7 @@ const findElementType = (element, index) => {
 
 export const fetchElementTag = (element, index = 0) => {
 	if (Object.keys(element).length > 0) {
-		return findElementType(element, index).tag;
+		return findElementType(element, index).tag || "";
 	}
 }
 

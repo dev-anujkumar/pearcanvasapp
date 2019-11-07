@@ -29,12 +29,12 @@ export class ReactEditor extends React.Component {
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           if (activeElement) {
-              if (activeElement.innerText.trim().length) {
-                  activeElement.classList.remove('place-holder')
-              }
-              else {
-                  activeElement.classList.add('place-holder')
-              }
+            if (activeElement.innerText.trim().length) {
+              activeElement.classList.remove('place-holder')
+            }
+            else {
+              activeElement.classList.add('place-holder')
+            }
           }
         });
         editor.ui.registry.addToggleButton('code', {
@@ -58,16 +58,16 @@ export class ReactEditor extends React.Component {
         });
       },
       init_instance_callback: function (editor) {
-        editor.fire('focus');
-
+        // editor.fire('focus');
         // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
-        //   if (activeElement) {
-        //       if (!activeElement.innerText.trim().length) {
-        //         activeElement.classList.add('place-holder')
-        //       }
+        // if (activeElement) {
+        //   if (!activeElement.innerText.trim().length) {
+        //     activeElement.classList.add('place-holder')
         //   }
+        // }
       },
     }
+    this.editorRef = React.createRef();
   }
 
   /*
@@ -98,8 +98,7 @@ export class ReactEditor extends React.Component {
   }
 
   onEditorBlur = (editor) => {
-    editor.on('blur',  (e) => {
-      this.props.glossaaryFootnotePopup(false);   
+    editor.on('blur', (e) => {
       e.stopImmediatePropagation();
       e.preventDefault();
     });
@@ -166,33 +165,48 @@ export class ReactEditor extends React.Component {
     });
   };
 
-  handleFocus = (e) => {
-    if (tinymce.activeEditor && tinymce.activeEditor.id === e.target.id) {
+  componentDidMount() {
+    let _isEditorPlaced = false;
+    for (let i = tinymce.editors.length - 1; i > -1; i--) {
+      let ed_id = tinymce.editors[i].id;
+      if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+        _isEditorPlaced = true;
+      }
+    }
+    if (!_isEditorPlaced) {
+      this.editorRef.current.focus();
+      this.editorConfig.selector = '#' + this.editorRef.current.id;
+      tinymce.init(this.editorConfig);
+    }
+  }
+
+  componentDidUpdate() {
+
+  }
+
+  handleClick = (e) => {
+    let event = Object.assign({}, e);
+    let currentTarget = event.currentTarget;
+    if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
       return false;
     }
 
     if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
       let activeEditorId = tinymce.activeEditor.id;
       tinymce.remove('#' + tinymce.activeEditor.id)
-      document.getElementById(activeEditorId).contentEditable = true;
+      if (document.getElementById(activeEditorId)) {
+        document.getElementById(activeEditorId).contentEditable = true;
+      }
     }
 
-    this.editorConfig.selector = '#' + e.target.id;
+    this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig);
   }
 
   render() {
-    // if (tinymce.activeEditor !== null && tinymce.activeEditor && tinymce.activeEditor.id) {
-    //   let activeEditorId = tinymce.activeEditor.id;
-    //   let element = document.getElementById(activeEditorId);
-    //   tinymce.remove('#' + tinymce.activeEditor.id)
-    //   element.contentEditable = true;
-    //   this.editorConfig.selector = '#' + activeEditorId;
-    //   tinymce.init(this.editorConfig);
-    // }
     return (
-      <div>   
-        <p className={this.props.className} placeholder={this.props.placeholder} onFocus={this.handleFocus} contentEditable="true" id={this.props.id} ></p>
+      <div>
+        <p ref={this.editorRef} className={this.props.className} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} ></p>
       </div>
     )
   }

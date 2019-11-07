@@ -12,12 +12,12 @@ describe('testing meta data Reducer cases --', () => {
         expect(metadataReducer(undefined, {})).toEqual(INIT_STATE);
     });
     it('get LO data', () => {
-        metadataReducer(INIT_STATE, {
+        expect(metadataReducer(INIT_STATE, {
             type: 'CURRENT_SLATE_LO_DATA',
-            payload: {
-                currentSlateLOData: currentSlateLOData
-            }
-        })
+            payload: 
+                 currentSlateLOData
+            
+        })).toEqual(currentSlateLOData);
     })
 
 });
