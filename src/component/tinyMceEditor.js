@@ -22,14 +22,14 @@ import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
-    metadataanchor,
     assetPopoverIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
-    UnlinkSlateDropdown
+    UnlinkSlateDropdown,
+    AddEditLOAssessmentDropdown
 } from '../constants/IFrameMessageTypes';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
 
@@ -64,7 +64,6 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
-                this.setMetaDataAnchorIcon(editor);
                 this.setMathmlFormulaIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addChemistryFormulaButton(editor);
@@ -79,8 +78,19 @@ export class TinyMceEditor extends Component {
                 this.editorKeyup(editor);
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
-                this.editorSlateTagIcon(editor);
                 this.insertListButtonIcon(editor);
+                editor.on('init', function (e) {
+                    if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !=="container-introduction"){
+                    document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
+                    if(props.model && props.model.elementdata && props.model.elementdata.assessmentid){
+                    document.getElementsByClassName("slate-tag-icon")[0].style.opacity = " 0.3";
+                    }
+                    else{
+                    document.getElementsByClassName("slate-tag-icon")[0].style.opacity = " 1";
+                    }
+                }
+                  });
+                  
                 // editor.on('keydown', function (e) {
                 //     /* if (e.keyCode == 13) {
                 //         e.preventDefault();
@@ -108,37 +118,6 @@ export class TinyMceEditor extends Component {
     insertListButtonIcon = (editor) => {
         insertListButton(editor);
     }
-    /**
-     * Adds LO item menu button to the editor toolbar
-     * @param {*} editor  editor instance
-     */
-    editorSlateTagIcon = (editor) => {
-        /* adding a slate tag button in toolbar */
-        if (config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter") {
-            editor.ui.registry.addMenuButton('slateTag', {
-                icon: 'metadataanchor',
-                tooltip: "Slate Tag",
-                fetch: function (callback) {
-                    let viewLoEnable = true;
-                    if (context.props.currentSlateLOData && (context.props.currentSlateLOData.id ? context.props.currentSlateLOData.id : context.props.currentSlateLOData.loUrn)) {
-                        viewLoEnable = false;
-                    }
-                    //show dropdown options in slate tag 
-                    var dropdownItemArray = [AddLearningObjectiveSlateDropdown, AddEditLearningObjectiveDropdown, ViewLearningObjectiveSlateDropdown, UnlinkSlateDropdown];
-                    var items = dropdownItemArray.map((item, index) => {
-                        return {
-                            type: 'menuitem',
-                            text: item,
-                            disabled: index == 2 || index == 3 ? viewLoEnable : false,
-                            onAction: () => context.learningObjectiveDropdown(item)
-                        }
-                    })
-                    callback(items);
-                }
-            });
-        }
-    }
-
     /**
      * This method is called when user clicks any button/executes command in the toolbar
      * @param {*} editor  editor instance
@@ -397,14 +376,6 @@ export class TinyMceEditor extends Component {
      */
     setMathmlFormulaIcon = editor => {
         editor.ui.registry.addIcon("tinymceFormulaIcon", tinymceFormulaIcon);
-    };
-
-    /**
-     * Adding custom icon for metadata anchor.
-     * @param {*} editor  editor instance
-     */
-    setMetaDataAnchorIcon = editor => {
-        editor.ui.registry.addIcon("metadataanchor", metadataanchor);
     };
 
     /**

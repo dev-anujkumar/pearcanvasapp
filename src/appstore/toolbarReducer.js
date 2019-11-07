@@ -1,9 +1,10 @@
 import {
-    TOGGLE_BORDERS
+    TOGGLE_BORDERS, TOGGLE_LO_DROPDOWN
 } from '../constants/Action_Constants';
 
 const INIT_STATE = {
-    elemBorderToggle: true
+    elemBorderToggle: true,
+    LODropdownToggle:false
 }
 
 export default function (state = INIT_STATE, action){
@@ -12,6 +13,11 @@ export default function (state = INIT_STATE, action){
             return {
                 ...state,
                 elemBorderToggle:!state.elemBorderToggle
+            }
+            case TOGGLE_LO_DROPDOWN:
+            return {
+                ...state,
+                LODropdownToggle:!state.LODropdownToggle
             }
         default:
             return state; 

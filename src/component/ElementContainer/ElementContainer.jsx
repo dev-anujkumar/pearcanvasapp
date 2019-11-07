@@ -254,7 +254,7 @@ class ElementContainer extends Component {
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         switch (element.type) {
             case elementTypeConstant.ASSESSMENT_SLATE:
-                editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
+                editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} slateLockInfo={slateLockInfo} handleBlur={this.handleBlur}/>
                 labelText = 'AS'
                 break;
             case elementTypeConstant.OPENER:
@@ -322,7 +322,7 @@ class ElementContainer extends Component {
                 labelText = 'LO'
                 break;
             case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                editor = <ElementMetaLOList  showBlocker={this.props.showBlocker} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                 labelText = 'MA'
                 break;
         }

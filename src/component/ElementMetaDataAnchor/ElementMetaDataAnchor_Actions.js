@@ -16,3 +16,29 @@ export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
         }
     })
 }
+export const isLOExist = (message) =>  (dispatch, getState) => {
+    if(message && ((message.loObj && message.loObj.id)|| message.loUrn)){
+        return dispatch({
+            type: 'SLATE_TAG_ENABLE',
+            payload: true
+        })
+    }
+    else if (message.toastData === "Learning Objectives has been unlinked ") {
+        return dispatch({
+            type: 'SLATE_TAG_ENABLE',
+            payload:  false
+        })
+    }
+    else{
+        return dispatch({
+            type: 'SLATE_TAG_ENABLE',
+            payload:  false
+        })
+    }
+}
+export const setCurrentModule = (moduleName) => (dispatch, getState) => {
+    dispatch({
+        type: 'SHOW_MODULE_NAME',
+        payload: moduleName
+    })
+}

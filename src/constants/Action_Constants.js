@@ -3,6 +3,7 @@ export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
 export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
+export const SET_SLATE_TYPE = 'SET_SLATE_TYPE'
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -33,6 +34,7 @@ export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
+export const TOGGLE_LO_DROPDOWN = 'TOGGLE_LO_DROPDOWN'
 
 /*---------------Slate Lock -------------------*/
 export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"
@@ -46,6 +48,8 @@ export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
 /*--------------- Slate Tag -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
+export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
+
 
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'

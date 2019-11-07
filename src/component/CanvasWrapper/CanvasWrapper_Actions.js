@@ -92,8 +92,8 @@ const findElementType = (element, index) => {
 
 		case 'element-aside':
 				elementType = {
-					elementType : elementDataBank[element.type][element.subtype]["elementType"],
-					...elementDataBank[element.type][element.subtype][element.designtype]
+					// elementType : elementDataBank[element.type][element.subtype]["elementType"],
+					// ...elementDataBank[element.type][element.subtype][element.designtype]
 				}
 			break;
 

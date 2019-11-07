@@ -12,8 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement , swapElement,
-    setSplittedElementIndex, createElementMeta,
-    createElementMetaList
+    setSplittedElementIndex
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
@@ -420,11 +419,12 @@ class SlateWrapper extends Component {
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElementMetaList(LO_LIST, indexToinsert,parentUrn);
+                        this.props.createElement(LO_LIST, indexToinsert,parentUrn);
                         
                     }
                     else{
-                        this.props.createElementMeta(METADATA_ANCHOR, indexToinsert,parentUrn)
+                        let LOUrn = this.props.currentSlateLOData.id?this.props.currentSlateLOData.id:this.props.currentSlateLOData.loUrn;
+                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,"","",LOUrn)
                     }
                    
                 break;
@@ -709,7 +709,9 @@ const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         slateTitleUpdated:state.appStore.slateTitleUpdated,
-        permissions: state.appStore.permissions
+        permissions: state.appStore.permissions,
+        currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        
     };
 };
 
@@ -718,8 +720,6 @@ export default connect(
     mapStateToProps,
     {
         createElement,
-        createElementMeta,
-        createElementMetaList,
         swapElement,
         setSplittedElementIndex
     }

@@ -5,7 +5,8 @@ import {
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
-    SET_UPDATED_SLATE_TITLE
+    SET_UPDATED_SLATE_TITLE,
+    SET_SLATE_TYPE
 } from '../../constants/Action_Constants';
 import { elementAside, elementAsideWorkExample, elementWorkExample } from '../../../fixtures/elementAsideData';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -60,7 +61,7 @@ const assessmentSlateData={
     "versionUrn": "urn:pearson:work:4ea3380f-8358-4c28-ad8a-3f626d109535"
     
 }
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let _requestData = {
@@ -68,8 +69,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
         "slateUrn": parentUrn && parentUrn.manifestUrn || config.slateManifestURN,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type
+        "type": type,
     };
+    if(type=="LO"){
+        _requestData.loref = loref?loref:""
+    }
     
    if(type!=="element-assessment") {
 
@@ -148,81 +152,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
      
 }
-};
-export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
-    config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
-    let createdElemData = {contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
-    elementdata:{
-        loref: " "
-    },
-    html: {
-        "text": "<p class=\"paragraphNumeroUno\"></p>"
-    },
-    id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    type: "element-learningobjectivemapping",
-    versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"}
-    
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
-        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
-        "index": index,
-        "type": type
-    };
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-       
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-
-   
-};
-export const createElementMetaList = (type, index,parentUrn) => (dispatch, getState) => {
-    config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
-    let createdElemData = {
-        id: -1, // A temporary id. The server decides the real id.
-        type: "element-generateLOlist",
-        schema: "http://schemas.pearson.com/wip-authoring/element/1",
-        elementdata: {
-            level:  "chapter",
-            groupby: "module"
-        },
-        mgmtinfo: {
-            lock: {
-                owner: "",
-                lockdate: ""
-            },
-            comments: [],
-            trackingdocumentid: ""
-        }}
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-
-   
 };
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
@@ -422,5 +351,11 @@ export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) =>{
     return dispatch({
         type: SET_UPDATED_SLATE_TITLE,
         payload: newSlateObj
+    }) 
+}
+export const setSlateType = (slateType) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_SLATE_TYPE,
+        payload: slateType
     }) 
 }

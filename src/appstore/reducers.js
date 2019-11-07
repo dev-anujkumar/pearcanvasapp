@@ -16,6 +16,7 @@ import {
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
+    SET_SLATE_TYPE,
     GET_PROJECT_PERMISSIONS
 } from '../constants/Action_Constants';
 
@@ -85,6 +86,11 @@ export default function (state = initialState, action) {
                         ...state,
                         slateTitleUpdated : action.payload.title
                     }
+        case SET_SLATE_TYPE:
+            return {
+                ...state,
+                slateType: action.payload
+            }
          case AUTHORING_ELEMENT_UPDATE:
              return {
                  ...state,
