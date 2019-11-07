@@ -205,32 +205,34 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP") {
+            let uri = e.target.parentElement.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
-                    this.props.openGlossaryFootnotePopUp(true, "Footnote");
+                    this.toggleGlossaryandFootnotePopup(true, "Footnote", uri);
                 }
-                this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                this.toggleGlossaryandFootnotePopup(false, null, uri, cbFunc);
             }
             else {
-                this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Footnote", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }
         /**
          * Case - clicking over Glossary text
          */
         else if (e.target.nodeName == "DFN") {
+            let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
-                    this.props.openGlossaryFootnotePopUp(true, "Glossary");
+                    this.toggleGlossaryandFootnotePopup(true, "Glossary", uri);
                 }
-                this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                this.toggleGlossaryandFootnotePopup(false, null, uri, cbFunc);
             }
             else {
-                this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }
         /**
@@ -252,7 +254,7 @@ export class TinyMceEditor extends Component {
             cbFunc = () => {
                 this.toggleGlossaryandFootnoteIcon(false);
             }
-            this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+            this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
         }
     }
 
@@ -632,7 +634,7 @@ export class TinyMceEditor extends Component {
             else {
                 editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
             }
-            this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); }); 
+            this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); }); 
         })
     }
     learningObjectiveDropdown(text){
@@ -644,19 +646,18 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
-        let sectedText = editor.selection.getContent({format: 'text'})
-        // let sectedText = window.getSelection().toString();
+        let selectedText = editor.selection.getContent({format: 'text'})
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
-                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             else {
-                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
+                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
             }            
-            if(sectedText !== ""){
+            if(selectedText !== ""){
                 editor.insertContent(insertionText);
-                this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }) 
     }
@@ -766,10 +767,10 @@ export class TinyMceEditor extends Component {
         }
         return toolbar;
     }
+
     /**
      * Set dynamic toolbar by element type
      */
-
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
         tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
@@ -868,6 +869,10 @@ export class TinyMceEditor extends Component {
         this.props.handleBlur()
     }
     
+    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
+        this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
+    }
+
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId;
