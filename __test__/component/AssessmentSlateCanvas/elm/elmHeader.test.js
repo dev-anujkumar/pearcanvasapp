@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 
 import ElmHeader from ' ../../../src/component/AssessmentSlateCanvas/elm/Components/ElmHeader';
@@ -10,8 +9,8 @@ describe('Testing ELM Header component', () => {
         closeElmWindow : function(){}
     }
     test('renders without crashing', () => {
-        const div = document.createElement('div');
-        ReactDOM.render(<ElmHeader {...props}/>, div);
-        ReactDOM.unmountComponentAtNode(div);
+        const component = mount(<ElmHeader {...props}/>)       
+        expect(component).toHaveLength(1);
+      
     })
 });

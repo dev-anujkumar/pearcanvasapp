@@ -129,11 +129,11 @@ export class ElementFigure extends Component {
     * @param slateLockInfo object that defines the slate lock details */
 
 
-    renderFigureType = (model={},index, slateLockInfo) => {
+    renderFigureType = (model,index, slateLockInfo) => {
         const { type } = this.props;
 
         var figureJsx;
-                var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
+                let divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
                 switch (model.subtype) {
                     case "image25Text":
                         divClass = 'divImage25Text';
@@ -266,43 +266,43 @@ export class ElementFigure extends Component {
                         figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
                         case 'image50TextEditorTable':
-                            divClass = 'divImage50TextTableEditor',
-                                figureClass = 'figureImage50TextEditorTable',
-                                figLabelClass = 'heading4ImageFullscreenTableEditorNumberLabel',
-                                figTitleClass = 'heading4Image50TextEditorTableNumberLabel',
-                                dataType = 'tableasmarkup',
-                                imageDimension = 'image50TextEditorTable',
-                                figCaptionClass = 'figcaptionImage50TextEditorTable',
+                            divClass = 'divImage50TextTableEditor';
+                                figureClass = 'figureImage50TextEditorTable';
+                                figLabelClass = 'heading4ImageFullscreenTableEditorNumberLabel';
+                                figTitleClass = 'heading4Image50TextEditorTableNumberLabel';
+                                dataType = 'tableasmarkup';
+                                imageDimension = 'image50TextEditorTable';
+                                figCaptionClass = 'figcaptionImage50TextEditorTable';
                                 figCreditClass = 'paragraphImage50TextEditorTableCredit';
                             break;
                             case 'imageTextWidthTableEditor':
-                        divClass = 'divImageTextWidthTableEditor',
-                            figureClass = 'figureImageTextWidthTableEditor',
-                            figLabelClass = 'heading4ImageTextWidthTableEditorNumberLabel',
-                            figTitleClass = 'heading4ImageTextWidthEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageTextWidthTableEditor',
-                            figCaptionClass = 'figcaptionImageTextWidthEditorTable',
+                        divClass = 'divImageTextWidthTableEditor';
+                            figureClass = 'figureImageTextWidthTableEditor';
+                            figLabelClass = 'heading4ImageTextWidthTableEditorNumberLabel';
+                            figTitleClass = 'heading4ImageTextWidthEditorTableNumberLabel';
+                            dataType = 'tableasmarkup';
+                            imageDimension = 'imageTextWidthTableEditor';
+                            figCaptionClass = 'figcaptionImageTextWidthEditorTable';
                             figCreditClass = 'paragraphImageTextWidthEditorTableCredit';
                         break;
                         case 'imageWiderThanTextEditorTable':
-                        divClass = 'divImageWiderThanTextTableEditor',
-                            figureClass = 'figureImageWiderThanTextEditorTable',
-                            figLabelClass = 'heading4ImageWiderThanTextTableEditorNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageWiderThanTextEditorTable',
-                            figCaptionClass = 'figcaptionImageWiderThanTextEditorTable',
+                        divClass = 'divImageWiderThanTextTableEditor';
+                            figureClass = 'figureImageWiderThanTextEditorTable';
+                            figLabelClass = 'heading4ImageWiderThanTextTableEditorNumberLabel';
+                            figTitleClass = 'heading4ImageWiderThanTextEditorTableNumberLabel';
+                            dataType = 'tableasmarkup';
+                            imageDimension = 'imageWiderThanTextEditorTable';
+                            figCaptionClass = 'figcaptionImageWiderThanTextEditorTable';
                             figCreditClass = 'paragraphImageWiderThanTextEditorTableCredit';
                         break;
                         case 'imageFullscreenTableEditor':
-                        divClass = 'divImageFullscreenTableEditor',
-                            figureClass = 'figureImageFullscreenEditorTable',
-                            figLabelClass = 'heading4ImageFullscreenEditorTableNumberLabel',
-                            figTitleClass = 'heading4ImageFullscreenEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageFullscreenTableEditor',
-                            figCaptionClass = 'figcaptionImageFullscreenEditorTable',
+                        divClass = 'divImageFullscreenTableEditor';
+                            figureClass = 'figureImageFullscreenEditorTable';
+                            figLabelClass = 'heading4ImageFullscreenEditorTableNumberLabel';
+                            figTitleClass = 'heading4ImageFullscreenEditorTableNumberLabel';
+                            dataType = 'tableasmarkup';
+                            imageDimension = 'imageFullscreenTableEditor';
+                            figCaptionClass = 'figcaptionImageFullscreenEditorTable';
                             figCreditClass = 'paragraphImageFullscreenEditorTableCredit';
                         break;
                 }
@@ -370,9 +370,9 @@ export class ElementFigure extends Component {
                     <figure className="figureCodeSnippet" >
                         <header>
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.title.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} slateLockInfo={slateLockInfo} />
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.subtitle.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} />
 
                         </header>
                         <div className="pearson-component blockcode codeSnippet blockCodeDiv" data-type="codeSnippet" >
@@ -381,11 +381,11 @@ export class ElementFigure extends Component {
                             </pre>
                         </div>
                         <figcaption >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.captions.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div>
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.credits.text} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
 
                 </div>

@@ -33,12 +33,14 @@ describe('ELM root component test', () => {
             addPufFunction: function(){},
             elmResource: function(){},
        }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
-        const div = document.createElement('div');
-        ReactDOM.render(<Provider store={store}><RootElmComponent {...props}/></Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
+
+        const component = mount(<Provider store={store}><RootElmComponent {...props}/></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.find('RootElmComponent').instance();
+        expect(instance).toBeDefined();
+
     })
-    test('hide PopUp', () => {
+    test('Test- hide PopUp', () => {
         let store = mockStore(() => initialState);
         let props ={
             openedFrom: 'slateAssessment',
@@ -48,14 +50,17 @@ describe('ELM root component test', () => {
         }
         const elmComponent = mount(<Provider store={store}><RootElmComponent {...props}/></Provider>);
         const elmComponentInstance = elmComponent.find('RootElmComponent').instance();
+        const spyhidePufPopup = jest.spyOn(elmComponentInstance, 'hidePufPopup')
         elmComponentInstance.hidePufPopup();
         elmComponentInstance.setState({
             hidePopup: true,
           })
           elmComponentInstance.forceUpdate();
           elmComponent.update();
+          expect(spyhidePufPopup).toHaveBeenCalled()
+          spyhidePufPopup.mockClear() 
     });
-    test('Navigate Back Function', () => {
+    test('Test- Navigate Back Function', () => {
         let store = mockStore(() => initialState);
         let props ={
             openedFrom: 'slateAssessment',
@@ -66,11 +71,14 @@ describe('ELM root component test', () => {
         }
         const elmComponent = mount(<Provider store={store}><RootElmComponent {...props}/></Provider>);
         const elmComponentInstance = elmComponent.find('RootElmComponent').instance();
+        const spynavigateBack = jest.spyOn(elmComponentInstance, 'navigateBack')
         elmComponentInstance.navigateBack(2);
         elmComponentInstance.setState({
             previousTableLength: 2,
           })
           elmComponentInstance.forceUpdate();
           elmComponent.update();
+          expect(spynavigateBack).toHaveBeenCalledWith(2)
+          spynavigateBack.mockClear() 
     });
 });
