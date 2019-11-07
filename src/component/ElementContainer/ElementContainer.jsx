@@ -32,6 +32,7 @@ import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
+import elementTypes from './../Sidebar/elementTypes';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -45,7 +46,8 @@ class ElementContainer extends Component {
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPalette: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
-            isHovered: false
+            isHovered: false,
+            hasError: false
         };
     }
     componentDidMount() {
@@ -103,6 +105,7 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
+        const{elementType, primaryOption,secondaryOption} = this.props.activeElement;
         let node = document.getElementById(tinyMCE.activeEditor.id);
         if (node) {
             let html = node.innerHTML;
@@ -114,6 +117,8 @@ class ElementContainer extends Component {
                 dataToSend.html.text = html;
                 dataToSend.html.footnotes = this.props.element.html.footnotes || {};
                 dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
+                dataToSend.inputType = elementTypes[elementType][primaryOption]['enum'];
+                dataToSend.inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    //show saving spinner
                 this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
             }
@@ -248,69 +253,68 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         /* TODO need better handling with a function and dynamic component rendering with label text*/
-        switch (element.type) {
-            case elementTypeConstant.ASSESSMENT_SLATE:
-                editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
-                labelText = 'AS'
-                break;
-            case elementTypeConstant.OPENER:
-                const { activeColorIndex } = this.state
-                editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
-                labelText = 'OE'
-                break;
-            case elementTypeConstant.AUTHORED_TEXT:
-            case elementTypeConstant.BLOCKFEATURE:
-                editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
-                break;
-            case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
-                editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
-                break;
-            case elementTypeConstant.FIGURE:
-                switch (element.figuretype) {
-                    case elementTypeConstant.FIGURE_IMAGE:
-                    case elementTypeConstant.FIGURE_TABLE:
-                    case elementTypeConstant.FIGURE_MATH_IMAGE:
-                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                    case elementTypeConstant.FIGURE_CODELISTING:
-                        editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
-                        labelText = LABELS[element.figuretype];
-                        break;
-                    case elementTypeConstant.FIGURE_AUDIO:
-                    case elementTypeConstant.FIGURE_VIDEO:
-                        editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
-                        labelText = LABELS[element.figuretype];
-                        break;
-                    case elementTypeConstant.FIGURE_ASSESSMENT:
-                        editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
-                        labelText = 'Qu';
-                        break;
-                    case elementTypeConstant.INTERACTIVE:
-                        switch (element.figuredata.interactiveformat) {
-                            case elementTypeConstant.INTERACTIVE_MMI:
-                                editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
-                                labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
-                                break;
-                            case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
-                            case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlurAside} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
-                                labelText = LABELS[element.figuredata.interactiveformat];
-                                break;
-                        }
-                }
-                break;
-            case elementTypeConstant.ELEMENT_LIST:
-                editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
-                labelText = 'OL'
-                break;
-            case elementTypeConstant.ELEMENT_ASIDE:
-                if(labelText) {
+        if(labelText) {
+            switch (element.type) {
+                case elementTypeConstant.ASSESSMENT_SLATE:
+                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
+                    labelText = 'AS'
+                    break;
+                case elementTypeConstant.OPENER:
+                    const { activeColorIndex } = this.state
+                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
+                    labelText = 'OE'
+                    break;
+                case elementTypeConstant.AUTHORED_TEXT:
+                case elementTypeConstant.BLOCKFEATURE:
+                    editor = <ElementAuthoring permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    break;
+                case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
+                    editor = <ElementLearningObjectiveItem permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    break;
+                case elementTypeConstant.FIGURE:
+                    switch (element.figuretype) {
+                        case elementTypeConstant.FIGURE_IMAGE:
+                        case elementTypeConstant.FIGURE_TABLE:
+                        case elementTypeConstant.FIGURE_MATH_IMAGE:
+                        case elementTypeConstant.FIGURE_AUTHORED_TEXT:
+                        case elementTypeConstant.FIGURE_CODELISTING:
+                            editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            labelText = LABELS[element.figuretype];
+                            break;
+                        case elementTypeConstant.FIGURE_AUDIO:
+                        case elementTypeConstant.FIGURE_VIDEO:
+                            editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            labelText = LABELS[element.figuretype];
+                            break;
+                        case elementTypeConstant.FIGURE_ASSESSMENT:
+                            editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            labelText = 'Qu';
+                            break;
+                        case elementTypeConstant.INTERACTIVE:
+                            switch (element.figuredata.interactiveformat) {
+                                case elementTypeConstant.INTERACTIVE_MMI:
+                                    editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
+                                    break;
+                                case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
+                                case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
+                                    editor = <ElementInteractive permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlurAside} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    labelText = LABELS[element.figuredata.interactiveformat];
+                                    break;
+                            }
+                    }
+                    break;
+                case elementTypeConstant.ELEMENT_LIST:
+                    editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    labelText = 'OL'
+                    break;
+                case elementTypeConstant.ELEMENT_ASIDE:
                     switch (element.subtype) {
                         case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
                             editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
@@ -320,18 +324,18 @@ class ElementContainer extends Component {
                             editor = <ElementAsideContainer  permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                             // labelText = 'AS'
                     }
-                } else {
-                    editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
-                }
-                break;
-            case elementTypeConstant.METADATA_ANCHOR:
-                editor = <ElementMetaDataAnchor permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
-                labelText = 'LO'
-                break;
-            case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
-                labelText = 'MA'
-                break;
+                    break;
+                case elementTypeConstant.METADATA_ANCHOR:
+                    editor = <ElementMetaDataAnchor permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    labelText = 'LO'
+                    break;
+                case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
+                    editor = <ElementMetaLOList permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} showBlocker={this.props.showBlocker} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    labelText = 'MA'
+                    break;
+            }
+        } else {
+            editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
         return (
@@ -414,8 +418,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, callback);
     }
 
     /**
@@ -428,7 +432,18 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        return this.renderElement(element);
+        try {
+            if (this.state.hasError) {
+                return (
+                    <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
+                )
+            }
+            return this.renderElement(element);
+        } catch (error) {
+            return (
+                <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
+            )
+        }
     }
     /**
      * @description - This function is for handling hover on element and showing page numbering box.
@@ -442,6 +457,11 @@ class ElementContainer extends Component {
      */
     handleOnMouseOut = () => {
         this.setState({ isHovered: false })
+    }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
     }
 }
 
@@ -469,8 +489,12 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus))
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus)).then(() => {
+                if (callback) {
+                    callback();
+                }
+            })
         },
         updateElement: (updatedData, elementIndex) => {
             dispatch(updateElement(updatedData, elementIndex))

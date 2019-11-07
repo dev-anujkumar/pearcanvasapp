@@ -476,7 +476,7 @@ menu li {
     width: initial;
     height: initial;
 }
-.btn{
+.comments-panel .btn{
     display:flex;
     justify-content: center;
     align-items:center;

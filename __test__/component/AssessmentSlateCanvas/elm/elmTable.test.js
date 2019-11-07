@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -7,8 +6,7 @@ const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElmTable from '../../../../src/component/AssessmentSlateCanvas/elm/Components/ElmTable';
 import {DefaultSlateData,mockELMResponse} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
-import config from '../../../../src/config/config';
-// import {  } from '../../../../fixtures/AssessmentSlateCanvasTestingData';
+
 
 const mockStore = configureMockStore(middlewares);
 
@@ -26,6 +24,7 @@ let initialState = {
      pageNumberData:{},
      slateLevelData: DefaultSlateData
  }};
+
 describe('ELM Actions test', () => {
     it('renders without crashing', () => {
         let store = mockStore(initialState);
@@ -37,9 +36,10 @@ describe('ELM Actions test', () => {
             hidePufPopup:  function(){},
             usageTypeMetadata: 'Quiz',
         }
-        const div = document.createElement('div');
-        ReactDOM.render(<Provider store={store}><ElmTable {...props}/></Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
+        const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.instance(); 
+        expect(instance).toBeDefined();
 
     });
     it('TEST- render table', () => {
@@ -47,26 +47,24 @@ describe('ELM Actions test', () => {
         let props ={
             errFlag:true,
             errorStatus:"404",
-            apiData:{},
+            apiData:mockELMResponse,
             navigateBack: function(){},
             hidePufPopup:  function(){},
             usageTypeMetadata: 'Quiz',
             addPufFunction:  function(){},
             closeElmWindow: function(){},
         }
-        let pufObj={
-            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            title:"Open response question updated",
-            assessmentFormat:"puf",
-            usagetype:"Quiz"
-        }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
+
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
         const elmTableInstance= component.find('ElmTable').instance();
-        elmTableInstance.renderTableData = (param)=>{return}
-        component.update();
+        expect(elmTableInstance).toBeDefined();
+        const spy = jest.spyOn(elmTableInstance, 'renderTableData')
+        elmTableInstance.renderTableData(props);
+        elmTableInstance.forceUpdate()
+        expect(spy).toHaveBeenCalled()
+        spy.mockClear()
     });
-    it('TEST- sortinf functions', () => {
+    it('TEST- sorting functions', () => {
         let store = mockStore(initialState);
         let props ={
             errFlag:true,
@@ -80,77 +78,56 @@ describe('ELM Actions test', () => {
             addPufFunction:  function(){},
             closeElmWindow: function(){},
         }
-        let pufObj={
-            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            title:"Open response question updated",
-            assessmentFormat:"puf",
-            usagetype:"Quiz"
-        }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
         const elmTableInstance= component.find('ElmTable').instance();
-        //elmTableInstance.renderTableData = ()=>{return;}
         elmTableInstance.setState({
             parentUrn :"urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
             apiData :{},
             renderTableData : ()=>{return;}
         })
-
+        const spy1 = jest.spyOn(elmTableInstance, 'dynamicSort')
+        const spy2 = jest.spyOn(elmTableInstance, 'setSort')
         elmTableInstance.forceUpdate();
-        
         component.update();  
-       elmTableInstance.dynamicSort("title");
-       elmTableInstance.setSort();
+        elmTableInstance.dynamicSort("title");
+        elmTableInstance.setSort();
+        expect(spy1).toHaveBeenCalled()
+        spy1.mockClear()
+        expect(spy2).toHaveBeenCalled()
+        spy2.mockClear()
     });
-    it('TEST-Functions', () => {
+    it('TEST- setSort function', () => {
         let store = mockStore(initialState);
         let props ={
             errFlag:true,
             errorStatus:"404",
             apiData:{
-                contents: {
-                    frontMatter: [],
-                    bodyMatter: [],
-                    backMatter: []
-                }
+                contents:[]
             },
             navigateBack: function(){},
             hidePufPopup:  function(){},
             usageTypeMetadata: 'Quiz',
-            addPufFunction:  (obj)=>{},
+            addPufFunction:  function(){},
             closeElmWindow: function(){},
-            openedFrom :"slateAssessment"
         }
-        let pufObj={
-            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            title:"Open response question updated",
-            assessmentFormat:"puf",
-            usagetype:"Quiz"
-        }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
         const elmTableInstance= component.find('ElmTable').instance();
         elmTableInstance.setState({
-            parentUrn :"urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29",
-            apiData :{}  ,
+            parentUrn :"urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
+            apiData :{},
             renderTableData : ()=>{return;},
-            addFlag:true,
-            currentAssessmentSelected:{
-                urn:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
-            }
+            sortFlag: false
         })
-        let firstName="ELMTEST_StgEnv_Krajewski Test";
+        const spy1 = jest.spyOn(elmTableInstance, 'dynamicSort')
+        const spy2 = jest.spyOn(elmTableInstance, 'setSort')
         elmTableInstance.forceUpdate();
-        elmTableInstance.getFolderLabel('part'); 
         component.update();  
-        elmTableInstance.sendPufAssessment();
-        elmTableInstance.addAssessment(pufObj);
-        elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab",mockELMResponse,"urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f");
-        elmTableInstance.getResourcefromFilterData(mockELMResponse,"urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
-        elmTableInstance.toggleActive(2);
-        elmTableInstance.navigateBack();
-        elmTableInstance.showNewValueList({},"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5" )
-        elmTableInstance.filterSubData(mockELMResponse,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab","urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
+        elmTableInstance.dynamicSort("title");
+        elmTableInstance.setSort();
+        expect(spy1).toHaveBeenCalled()
+        spy1.mockClear()
+        expect(spy2).toHaveBeenCalled()
+        spy2.mockClear()
     });
     it('TEST- switch case for getFolderLabel', () => {
         let store = mockStore(initialState);
@@ -171,13 +148,7 @@ describe('ELM Actions test', () => {
             closeElmWindow: function(){},
             openedFrom :"slateAssessment"
         }
-        let pufObj={
-            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            title:"Open response question updated",
-            assessmentFormat:"puf",
-            usagetype:"Quiz"
-        }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
+
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
         const elmTableInstance= component.find('ElmTable').instance();
         elmTableInstance.setState({
@@ -189,22 +160,72 @@ describe('ELM Actions test', () => {
                 urn:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
             }
         })
-        let firstName="ELMTEST_StgEnv_Krajewski Test";
-        elmTableInstance.forceUpdate();
+
         elmTableInstance.getFolderLabel('part'); 
+        const spygetFolderLabel = jest.spyOn(elmTableInstance, 'getFolderLabel')
+        elmTableInstance.forceUpdate();
+        component.update();
+        elmTableInstance.getFolderLabel('part'); 
+        expect(spygetFolderLabel).toHaveBeenCalledWith('part')     
         elmTableInstance.getFolderLabel('chapter'); 
+        expect(spygetFolderLabel).toHaveBeenCalledWith('chapter')  
         elmTableInstance.getFolderLabel('module'); 
+        expect(spygetFolderLabel).toHaveBeenCalledWith('module')  
         elmTableInstance.getFolderLabel('section'); 
+        expect(spygetFolderLabel).toHaveBeenCalledWith('section')  
         elmTableInstance.getFolderLabel('assessment'); 
-        elmTableInstance.getFolderLabel('container-introduction'); 
+        expect(spygetFolderLabel).toHaveBeenCalledWith('assessment')  
+        elmTableInstance.getFolderLabel('container-introduction');
+        expect(spygetFolderLabel).toHaveBeenCalledWith('container-introduction')   
         elmTableInstance.getFolderLabel('introductry-slate');
+        expect(spygetFolderLabel).toHaveBeenCalledWith('introductry-slate')  
         elmTableInstance.getFolderLabel('introduction');
+        expect(spygetFolderLabel).toHaveBeenCalledWith('introduction')  
         component.update();  
-        });
+        spygetFolderLabel.mockClear()
+    });
     it('TEST-filterSubData function', () => {
         let store = mockStore(initialState);
         let props ={
             errFlag:false,
+            errorStatus:"404",
+            apiData:{
+                contents: {
+                    frontMatter: [],
+                    bodyMatter: [],
+                    backMatter: []
+                }
+            },
+            navigateBack: function(){},
+            hidePufPopup:  function(){},
+            usageTypeMetadata: 'Quiz',
+            addPufFunction:  (obj)=>{},
+            closeElmWindow: function(){},
+            openedFrom :"slateAssessment"
+        }
+        const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
+        const elmTableInstance= component.find('ElmTable').instance();
+        elmTableInstance.setState({
+            parentUrn :"urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29",
+            apiData :{}  ,
+            renderTableData : ()=>{return;},
+            addFlag:true,
+            currentAssessmentSelected:{
+                urn:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
+            }
+        })
+        const spyfilterSubData = jest.spyOn(elmTableInstance, 'filterSubData')
+        elmTableInstance.forceUpdate();
+        component.update();  
+        elmTableInstance.filterSubData(mockELMResponse,"urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef","urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29")
+        expect(spyfilterSubData).toHaveBeenCalled()
+        expect(spyfilterSubData).toHaveBeenCalledWith(mockELMResponse,"urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef","urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29")
+        spyfilterSubData.mockClear()
+    });
+    describe('TEST-Functions',()=>{
+        let store = mockStore(initialState);
+        let props ={
+            errFlag:true,
             errorStatus:"404",
             apiData:{
                 contents: {
@@ -226,7 +247,6 @@ describe('ELM Actions test', () => {
             assessmentFormat:"puf",
             usagetype:"Quiz"
         }
-        Window.testCookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>);   
         const elmTableInstance= component.find('ElmTable').instance();
         elmTableInstance.setState({
@@ -238,10 +258,77 @@ describe('ELM Actions test', () => {
                 urn:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5"
             }
         })
-        let firstName="ELMTEST_StgEnv_Krajewski Test";
-        elmTableInstance.forceUpdate();
-        component.update();  
-        elmTableInstance.filterSubData(mockELMResponse,"urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef","urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6797b29")
-       
-    });
+        it('TEST-getFolderLabel',()=>{
+            const spygetFolderLabel = jest.spyOn(elmTableInstance, 'getFolderLabel')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.getFolderLabel('part');
+            expect(spygetFolderLabel).toHaveBeenCalled()
+            spygetFolderLabel.mockClear() 
+        })
+        it('TEST-sendPufAssessment',()=>{
+            const spysendPufAssessment = jest.spyOn(elmTableInstance, 'sendPufAssessment')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.sendPufAssessment();
+            expect(spysendPufAssessment).toHaveBeenCalled()
+            spysendPufAssessment.mockClear() 
+        })
+        it('TEST-addAssessment',()=>{
+            const spyaddAssessment = jest.spyOn(elmTableInstance, 'addAssessment')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.addAssessment(pufObj);
+            expect(spyaddAssessment).toHaveBeenCalled()
+            spyaddAssessment.mockClear() 
+        })
+        it('TEST-filterData',()=>{
+            const spyfilterData = jest.spyOn(elmTableInstance, 'filterData')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab",mockELMResponse,"urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f");
+            expect(spyfilterData).toHaveBeenCalled()
+            spyfilterData.mockClear() 
+        })
+        it('TEST-getResourcefromFilterData',()=>{
+            const spygetResourcefromFilterData = jest.spyOn(elmTableInstance, 'getResourcefromFilterData')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.getResourcefromFilterData(mockELMResponse,"urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
+            expect(spygetResourcefromFilterData).toHaveBeenCalled()
+            spygetResourcefromFilterData.mockClear() 
+        })
+        it('TEST-toggleActive',()=>{
+            const spytoggleActive = jest.spyOn(elmTableInstance, 'toggleActive')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.toggleActive(2);
+            expect(spytoggleActive).toHaveBeenCalled()
+            spytoggleActive.mockClear() 
+        })
+        it('TEST-navigateBack',()=>{
+            const spynavigateBack = jest.spyOn(elmTableInstance, 'navigateBack')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.navigateBack();
+            expect(spynavigateBack).toHaveBeenCalled()
+            spynavigateBack.mockClear()
+        })
+        it('TEST-showNewValueList',()=>{
+            const spyshowNewValueList = jest.spyOn(elmTableInstance, 'showNewValueList')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.showNewValueList({},"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5" )
+            expect(spyshowNewValueList).toHaveBeenCalled()
+            spyshowNewValueList.mockClear() 
+        })
+        it('TEST-filterSubData',()=>{
+            const spyfilterSubData = jest.spyOn(elmTableInstance, 'filterSubData')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.filterSubData(mockELMResponse,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab","urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
+            expect(spyfilterSubData).toHaveBeenCalled()
+            spyfilterSubData.mockClear() 
+        })
+    })
 });
