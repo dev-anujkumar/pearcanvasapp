@@ -81,6 +81,48 @@ ajax.put = function (url, data, callback, contentType, sync) {
     ajax.send(url, callback, 'PUT', data, contentType, sync);
 };
 
+export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) {
+    content_url = C6PUB_ENDPOINT;
+    ajax.post(content_url, JSON.stringify(pubConObj), callback, 'application/json', false, pubApiKey);
+    let parsedResponse = JSON.parse(response.responseText);
+    if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
+        let redis_url = C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
+        let inputObj = {};
+        inputObj.status = 'approved';
+        inputObj.distributable_urn = pubConObj.distributableVersionUrn;
+        inputObj.approver_name = pubConObj.requester;
+        inputObj.approved_date = pubConObj.timestamp;
+        inputObj.approve_date = pubConObj.timestamp;
+        ajax.put(redis_url, JSON.stringify(inputObj), pubCallBack, 'application/json', false);
+    } else {
+        pubCallBack(parsedResponse || 500);
+    }
+}
+
+export function publishTitleDelay(project, section, cite, callBack, isPreview) {
+    var content_url = CTOOL_PUBTITLE;
+    let content_data = {};
+    content_data["projectManifest"] = project;
+    content_data["sectionManifest"] = section;
+    content_data["citeManifest"] = cite;
+    content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
+    content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
+    if (isPreview == true) {
+        content_data["preview"] = true;
+    }
+    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
+    let parsedResponse = JSON.parse(response.responseText);
+
+    if (parsedResponse.data && parsedResponse.data.previewURL) {
+        let previewURL = parsedResponse.data.previewURL;
+        window.open(previewURL, '_blank');
+        if (callBack) { callBack(); }
+    } else {
+        alert("Title Preview failed to load.");
+        return false
+    }
+}
+
 export const c4PublishObj = {
 
     publishSlate: function (project, section, cite) {
@@ -115,27 +157,13 @@ export const c4PublishObj = {
         }
         //}
     },
+
     publishContent: function (pubConObj, pubCallBack) {
         let content_url = C6PUB_ENDPOINT;
         let pubApiKey = C6PUB_API_KEY;
         try {
             _.delay(() => {
-                content_url = C6PUB_ENDPOINT;
-                ajax.post(content_url, JSON.stringify(pubConObj), callback, 'application/json', false, pubApiKey);
-                let parsedResponse = JSON.parse(response.responseText);
-                if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
-                    let redis_url = C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
-                    let inputObj = {};
-                    inputObj.status = 'approved';
-                    inputObj.distributable_urn = pubConObj.distributableVersionUrn;
-                    inputObj.approver_name = pubConObj.requester;
-                    inputObj.approved_date = pubConObj.timestamp;
-                    inputObj.approve_date = pubConObj.timestamp;
-                    ajax.put(redis_url, JSON.stringify(inputObj), pubCallBack, 'application/json', false);
-
-                } else {
-                    pubCallBack(parsedResponse || 500);
-                }
+                publishContentDelay(content_url, pubConObj, pubApiKey,callback)
             }, 150);
             pubCallBack("");
         }
@@ -147,27 +175,7 @@ export const c4PublishObj = {
 
     publishTitle: function (project, section, cite, callBack, isPreview) {
         _.delay(() => {
-            var content_url = CTOOL_PUBTITLE;
-            let content_data = {};
-            content_data["projectManifest"] = project;
-            content_data["sectionManifest"] = section;
-            content_data["citeManifest"] = cite;
-            content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
-            content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
-            if (isPreview == true) {
-                content_data["preview"] = true;
-            }
-            ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
-            let parsedResponse = JSON.parse(response.responseText);
-
-            if (parsedResponse.data && parsedResponse.data.previewURL) {
-                let previewURL = parsedResponse.data.previewURL;
-                window.open(previewURL, '_blank');
-                if (callBack) { callBack(); }
-            } else {
-                alert("Title Preview failed to load.");
-                return false
-            }
+            publishTitleDelay(project, section, cite, callBack, isPreview)
         }, 150);
     },
 }

@@ -12,30 +12,38 @@ const initialState = {
     },
     withinLockPeriod: false
 }
-
+const slateLockInfoData ={
+    isLocked: false,
+    timestamp: "",
+    userId: ""
+}
+const expectedState2={
+    slateLockInfo:slateLockInfoData,
+    withinLockPeriod: false
+}
+const expectedState3 = {
+    slateLockInfo: slateLockInfoData,
+    withinLockPeriod: true
+}
 describe('testing slateLock Reducer cases -->', () => {
 
     it('should return the initial state', () => {
         expect(slateLockReducer(undefined, {})).toEqual(initialState);
     });
     it('Test 1- SET SLATE LOCK STATUS', () => {
-        slateLockReducer(initialState, {
+        expect(slateLockReducer(initialState, {
             type: SET_SLATE_LOCK_STATUS,
             payload: {
-                slateLockInfo: {
                     isLocked: false,
                     timestamp: "",
                     userId: ""
-                }
             }
-        })
+        })).toEqual(expectedState2);
     })
     it('Test 2- SET LOCK FLAG', () => {
-        slateLockReducer(initialState, {
+        expect(slateLockReducer(initialState, {
             type: SET_LOCK_FLAG,
-            payload: {
-                withinLockPeriod: true
-            }
-        })
+            payload: true
+        })).toEqual(expectedState3);
     })
 });

@@ -270,7 +270,7 @@ export default {
                 'secondary-blockcode-language-Default': {
                     text: 'Select',
                     labelText: 'BCE',
-                    enum: ''
+                    enum: 'SELECT'
                 },
                 'secondary-blockcode-language-C++': {
                     text: 'C++',
@@ -631,7 +631,7 @@ export default {
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
                     labelText: 'SL',
-                    enum: ''
+                    enum: 'PDF'
                 },
                 'secondary-interactive-smartlink-web': {
                     text: 'External Website Link',
@@ -676,13 +676,13 @@ export default {
         },
         enumType: 'interactive'
     },
-    "chapterintro": {
-        "primary-chapterintro": {
+    "openerelement": {
+        "primary-openerelement": {
             text: 'Opener Element',
             enum: 'NA',
             dropdownDisabled: true,
             subtype: {
-                'secondary-chapterintro': {
+                'secondary-openerelement': {
                     text: 'Opener Element',
                     labelText: 'OE',
                     enum: 'NA',

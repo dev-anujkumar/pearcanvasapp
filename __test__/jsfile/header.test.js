@@ -22,10 +22,10 @@ describe('Header module testing', () => {
         releaseLockAndRedirect()
     }) 
 
-    it('Testing publishContent if function', () => {
-        let type = 'slatePreview'
-        publishContent(type)
-    })
+    // it('Testing publishContent if function', () => {
+    //     let type = 'slatePreview'
+    //     publishContent(type)
+    // })
 
     it('Testing publishContent else function', () => {
         let type = 'projectPreview'

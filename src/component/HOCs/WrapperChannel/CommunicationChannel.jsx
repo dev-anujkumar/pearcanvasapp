@@ -88,33 +88,19 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
                     break;
+                case 'toggleCommentsPanel':
+                        this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.enablePrev;
                     break;
                 case 'enableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                        config.disablePrev = message.enableNext;
                     break;
                 case 'disablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.disablePrev;
                     break;
                 case 'disableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disableNext = message.disableNext;
                     break;
                 case 'swappedIS':
                     {
@@ -159,13 +145,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                     this.props.fetchAuthUser()
-                     config.ssoToken = message.ssoToken;
-                     config.projectUrn = message.id;
-                     config.citeUrn = message.citeUrn;
-                     config.projectEntityUrn = message.entityUrn;
-                     config.alfrescoMetaData = message.alfresco;
-                     config.book_title =  message.name;                  
+                    config.userId = message['x-prsn-user-id'].toLowerCase()
+                    this.props.fetchAuthUser()
+                    config.ssoToken = message.ssoToken;
+                    config.projectUrn = message.id;
+                    config.citeUrn = message.citeUrn;
+                    config.projectEntityUrn = message.entityUrn;
+                    config.alfrescoMetaData = message.alfresco;
+                    config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -246,7 +233,6 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
-            console.log("setCurrentSlate >> ", message)
             let currentSlateObject = {};
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {

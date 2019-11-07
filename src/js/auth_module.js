@@ -41,7 +41,6 @@ if ( IDENTITY_URL.indexOf("http") !== 1 ) {
 
 var myOpenam;
 if ( environment !== 'development' ) {
-
     myOpenam = new openamConfig(
         {	
             baseurl: BASE_URL,

@@ -17,12 +17,10 @@ const {
 export const getGlossaryFootnoteId = (elementId, enumType, callback) => {
 	let url = `${REACT_APP_API_URL}v1/slate/${config.projectUrn}/${elementId}/createWorkId/${enumType}`
     axios.post(url, null, { 
-        headers : {
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        } 
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
     })
     .then(res => {
         console.log("create glossary footnote API success : ", res)
