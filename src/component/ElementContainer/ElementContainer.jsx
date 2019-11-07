@@ -409,11 +409,11 @@ class ElementContainer extends Component {
                 case elementTypeConstant.ELEMENT_ASIDE:
                     switch (element.subtype) {
                         case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            editor = <ElementAsideContainer permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAsideContainer handleCommentspanel={handleCommentspanel} permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
                         default:
-                            editor = <ElementAsideContainer  permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAsideContainer  handleCommentspanel= {handleCommentspanel} permissions={permissions} showDeleteElemPopup={this.showDeleteElemPopup} showBlocker={this.props.showBlocker} setActiveElement={this.props.setActiveElement} handleBlur={this.handleBlur} handleFocus={this.handleFocus} btnClassName={this.state.btnClassName} borderToggle={this.state.borderToggle} elemBorderToggle={this.props.elemBorderToggle} elementSepratorProps={elementSepratorProps} index={index} element={element} elementId={element.id} type={element.type} slateLockInfo={slateLockInfo} />;
                             // labelText = 'AS'
                     }
                     break;
@@ -501,7 +501,7 @@ class ElementContainer extends Component {
         const { id } = this.props.element;
 
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        this.props.addComment(comment, id);
+        this.props.addComment(comment, id,this.props.asideData,this.props.parentUrn);
         this.handleCommentPopup(false);
     }
 
@@ -569,8 +569,8 @@ ElementContainer.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addComment: (comments, elementId) => {
-            dispatch(addComment(comments, elementId))
+        addComment: (comments, elementId,asideData,ParentUrn) => {
+            dispatch(addComment(comments, elementId,asideData,ParentUrn))
         },
         fetchCommentByElement: (elementId) => {
             dispatch(fetchCommentByElement(elementId))

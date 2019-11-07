@@ -5,7 +5,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
-export const addComment = (commentString, elementId) => (dispatch, getState) => {
+export const addComment = (commentString, elementId,asideData,parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
@@ -44,6 +44,22 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['comments'] = true
+                }else if(asideData && asideData.type == 'element-aside'){
+                    if(element.id == asideData.id){
+                        element.elementdata.bodymatter.map((nestedEle)=>{
+                            /*This condition add comment in element in aside */
+                            if(nestedEle.id == elementId){
+                                nestedEle['comments'] = true;
+                            }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                                  /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele)=>{
+                                    if(ele.id == elementId){
+                                        ele['comments'] = true;
+                                    }
+                                })
+                            }
+                        })
+                    }
                 }
             }
             );
