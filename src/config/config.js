@@ -6,6 +6,8 @@ let config = {
     PRODUCTAPI_ENDPOINT: process.env.PRODUCTAPI_ENDPOINT|| "https://contentapis-staging.pearsoncms.net/product-api/",
     ELM_ENDPOINT: process.env.ELM_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
+    AUDIO_NARRATION_URL : process.env.STRUCTURE_API_ENDPOINT_URL || 'https://contentapis-staging.pearsoncms.net/structure-api/',
+    AUDIO_API_KEY : process.env.STRUCTURE_APIKEY|| "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.COREAPI_ENDPOINT || "https://contentapis-staging.pearsoncms.net/core-api",
@@ -13,7 +15,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     MANIFEST_APIKEY: process.env.MANIFEST_APIKEY || 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "l9OML10F6LZZd6hHwZ-BRk5o0RY.*AAJTSQACMDIAAlNLABxSTmtZZlJwa3JmUzlndk9uejBUT0M4QlhTck09AAJTMQACMDE.*",
+    ssoToken: "qPpEZgpWchzsUi-8wwBeJvzWfpM.*AAJTSQACMDIAAlNLABxxTDZ4U0NHYTBjNUExTjM2YnRHS1pzaVQ1eGM9AAJTMQACMDQ.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
@@ -29,7 +31,7 @@ let config = {
         'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c'
     ],
-    PERMISSIONS : [],
+    // PERMISSIONS : [],
     //c2 required keys and urls
     CMDS_APIKEY: process.env.CMDS_APIKEY || '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.CMDS_DATA_ENDPOINT || 'https://staging.data.pearson.com',

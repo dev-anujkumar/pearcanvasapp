@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {connect} from 'react-redux';
 
 import '../../styles/Toolbar/Toolbar.css';
-
+import {
+    audioNarration,
+    audioNarrationEnable
+} from '../../images/TinyMce/TinyMce.jsx'
 import {toggleElemBordersAction} from './Toolbar_Actions.js';
+import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
+import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
 
 const _Toolbar = props => {
+    
+    const [addDropDown , setValueAdd] = useState(false);
+    const [openDropDown , setValueOpen] = useState(false);
+    function _handleAddDropdown () {
+        setValueAdd(!addDropDown);
+        console.log("addDropDown",addDropDown)
+    }
+    function _handleOpenDropdown () {
+        setValueOpen(!openDropDown);
+        console.log("openDropDown",openDropDown)
+    }
     /**
      * Function for show/hide border
      */
@@ -37,6 +53,29 @@ const _Toolbar = props => {
     return (
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
+            {
+                props.addAudio ?
+                    <div className="audio-block">
+                        <div className="audioicon">
+                            <div className="audio audioicon tooltip" onClick={() => _handleAddDropdown()}>
+                                {audioNarration}
+                                <span className="tooltiptext">Audio Tag</span>
+                            </div>
+
+                            {addDropDown && <AddAudioBook closeAddAudioBook={props.closeAddAudioBook} />}
+                        </div>
+                    </div> :
+                    <div className="audio-block">
+                        <div className="audioicon">
+                            <div className="audio audioicon tooltip" onClick={() => _handleOpenDropdown()}>
+                                {audioNarrationEnable}
+                                <span className="tooltiptext">Audio Tag</span>
+                            </div>
+
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={props.closeAudioBookDialog} />}
+                        </div>
+                    </div>
+            }
             <div class="toggle-actions">
             {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
@@ -59,7 +98,9 @@ const mapStateToProps = (state) => {
     const {elemBorderToggle} = state.toolbarReducer.elemBorderToggle
     return {
         elemBorderToggle,
-        permissions : state.appStore.permissions
+        permissions : state.appStore.permissions,
+        addAudio: state.audioReducer.addAudio,
+        openAudio: state.audioReducer.openAudio,
     }
 }
 

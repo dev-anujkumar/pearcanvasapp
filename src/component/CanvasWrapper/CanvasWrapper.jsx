@@ -33,6 +33,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { fetchAudioNarrationForContainer , deleteAudioNarrationForContainer,showAudioRemovePopup } from '../AudioNarration/AudioNarration_Actions'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +42,10 @@ export class CanvasWrapper extends Component {
             editorToolbarRef: null,
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false
+            isPageNumberEnabled : false,
+            openDropDown : false,
+            addDropDown : false
+
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
 
@@ -77,7 +81,7 @@ export class CanvasWrapper extends Component {
         // *************************************************
         // commenting below setState() to test alternative
         // *************************************************
-        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        this.props.getSlateLockStatus(projectUrn ,slateId)
         }
 
     componentDidUpdate(prevProps, prevState){
@@ -232,6 +236,46 @@ export class CanvasWrapper extends Component {
             return null
         }
     }
+
+    closeAudioBookDialog = (e) => {
+        this.setState({ openDropDown: !this.state.openDropDown })
+        return true;
+    }
+
+    closeAddAudioBook = (e) => {
+        this.setState({ addDropDown: !this.state.addDropDown })
+        return true;
+    }
+
+
+    processRemoveConfirmation = () => {
+        this.closeAudioBookDialog();
+        this.props.showAudioRemovePopup(false)
+        this.props.deleteAudioNarrationForContainer();
+    }
+    toggleAudioPopup = () => {
+        this.props.showAudioRemovePopup(false)
+        //  hideBlocker()
+    }
+    showAudioRemoveConfirmationPopup = () => {
+        if (this.props.openRemovePopUp) {
+            // showTocBlocker();
+            return (
+                <PopUp
+                    dialogText={"Do you want to remove the linked Audio Book with the slate?"}
+                    active={true}
+                    removeConfirmation={true}
+                    audioRemoveClass='audioRemoveClass'
+                    saveButtonText='OK'
+                    saveContent={this.processRemoveConfirmation}
+                    togglePopup={this.toggleAudioPopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
     
     render() {
         return (
@@ -239,7 +283,7 @@ export class CanvasWrapper extends Component {
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
                     {/* editor tool goes here */}
-                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
+                    <Toolbar togglePageNumbering={this.togglePageNumbering} closeAudioBookDialog={this.closeAudioBookDialog} closeAddAudioBook={this.closeAddAudioBook}/>
                     {/* custom list editor component */}
                 </div>
 
@@ -277,6 +321,7 @@ export class CanvasWrapper extends Component {
                     </div>
                 </div>
                 {this.showLockReleasePopup()}  
+                {this.showAudioRemoveConfirmationPopup()}
             </div>
         );
     }
@@ -290,12 +335,16 @@ export class CanvasWrapper extends Component {
 
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {
+    console.log("state.audioReducer.openRemovePopUp,",state.audioReducer.openRemovePopUp)
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopOverSearch.showApoSearch
+        showApoSearch : state.assetPopOverSearch.showApoSearch,
+        addAudio: state.audioReducer.addAudio,
+        openAudio: state.audioReducer.openAudio,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
     };
 };
 
@@ -319,6 +368,9 @@ export default connect(
         fetchAuthUser,
         handleSlateRefresh,
         logout,
-        handleUserRole
+        handleUserRole,
+        fetchAudioNarrationForContainer,
+        deleteAudioNarrationForContainer,
+        showAudioRemovePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
