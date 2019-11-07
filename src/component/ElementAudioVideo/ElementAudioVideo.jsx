@@ -28,31 +28,73 @@ export class ElementAudioVideo extends Component {
             let imageData = data;
             let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
             let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-            // let width = imageData['width'] ? imageData['width'] : "";
-            // let height = imageData['height'] ? imageData['height'] : "";
-            // let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-            // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-            // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-            // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+            let width = imageData['width'] ? imageData['width'] : "";
+            let height = imageData['height'] ? imageData['height'] : "";
+            let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+            let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+            let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+            let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
             if (figureType === "video" || figureType === "audio") {
 
-            //let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
+            let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
             if (figureType === "video" && epsURL === "") {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            // let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
-            // // let clipLength=Object.keys(clipInfo).length
-            // let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
-            // let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-            // //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
-            // let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            // let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-            // let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            // let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
+            // let clipLength=Object.keys(clipInfo).length
+            let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
+            let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
+            //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
+            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
+            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+            let figureData = {
+                height : height,
+                width : width,
+                srctype: this.props.model.figuredata.srctype
+            }
+            switch(figureType){
+                case "video":
+                    figureData = {
+                        ...figureData,
+                        videoid: `urn:pearson:alfresco:${uniqID}`,
+                        posterimage: {
+                            imageid: `urn:pearson:alfresco:${uniqID}`,
+                            path: epsURL,
+                        },
+                        videos: [
+                            {
+                                format: videoFormat,
+                                path: smartLinkURl
+                            }
+                        ],
+                        tracks: [],
+                        clipinfo : clipInfo,
+                        schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                    }
+                    break;
+                case "audio":
+                    figureData = {
+                        ...figureData,
+                        audioid: `urn:pearson:alfresco:${uniqID}`,
+                        posterimage: {
+                            imageid: `urn:pearson:alfresco:${uniqID}`,
+                            path: epsURL,
+                        },
+                        audio: {
+                            format: videoFormat,
+                            path: smartLinkURl
+                        },
+                        schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
+                    }
+                    break;
+            }
 
+            this.props.updateFigureData(figureData, this.props.index)
         }
     }
     /**

@@ -177,3 +177,15 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     }) 
 }
+
+export const updateFigureData = (figureData, elementIndex) => (dispatch, getState) => {
+    let parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
+}

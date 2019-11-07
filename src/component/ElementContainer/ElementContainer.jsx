@@ -33,7 +33,7 @@ import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import elementTypes from './../Sidebar/elementTypes';
-
+import { updateFigureData } from './ElementContainer_Actions.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -100,6 +100,33 @@ class ElementContainer extends Component {
         this.props.fetchCommentByElement(this.props.element.id);
     }
 
+    generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+        let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
+            subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
+            captionHTML = document.getElementById(`cypress-${index}-2`).innerHTML,
+            creditsHTML = document.getElementById(`cypress-${index}-3`).innerHTML
+
+            console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+
+        let data = {
+            ...previousElementData,
+            html : {
+                captions: `<p>${captionHTML}</p>`,
+                credits: `<p>${creditsHTML}</p>`,
+                footnotes: {},
+                glossaryentries: {},
+                subtitle: `<p>${subtitleHTML}</p>` ,
+                title: `<p>${titleHTML}</p>`,
+                postertext: "",
+                tableasHTML: "",
+                text: ""
+            },
+            inputType : elementTypes[elementType][primaryOption]['enum'],
+            inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        }
+        return data
+    }
+    
     createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId) => {
         let dataToReturn = {}
         switch (type){
@@ -124,40 +151,19 @@ class ElementContainer extends Component {
                     switch (previousElementData.figuretype) {
                         
                         case elementTypeConstant.FIGURE_IMAGE:
-                            let titleHTML = document.getElementById(`cypress-${this.props.index}-0`).innerHTML,
-                                subtitleHTML = document.getElementById(`cypress-${this.props.index}-1`).innerHTML,
-                                captionHTML = document.getElementById(`cypress-${this.props.index}-2`).innerHTML,
-                                creditsHTML = document.getElementById(`cypress-${this.props.index}-3`).innerHTML
-                        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                html : {
-                                    captions: `<p>${captionHTML}</p>`,
-                                    credits: `<p>${creditsHTML}</p>`,
-                                    footnotes: {},
-                                    glossaryentries: {},
-                                    subtitle: subtitleHTML ,
-                                    title: titleHTML
-                                },
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] 
-                            }
+                            dataToReturn = this.generateCommonFigureData(this.props.index, previousElementData, elementType, primaryOption, secondaryOption)
                             break;
                         case elementTypeConstant.FIGURE_VIDEO:
-                                console.log("Figure VIDEO new data::>>", node.innerHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'] 
-                            }
+                            console.log("Figure VIDEO new data::>>", node.innerHTML)
+                            dataToReturn = this.generateCommonFigureData(this.props.index, previousElementData, elementType, primaryOption, secondaryOption)
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                                console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
-                            dataToReturn = { 
-                                ...previousElementData,
-                                inputType : elementTypes[elementType][primaryOption]['enum'],
-                                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                            }
+                            console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                            dataToReturn = this.generateCommonFigureData(this.props.index, previousElementData, elementType, primaryOption, secondaryOption)
+                            break;
+                        case elementTypeConstant.INTERACTIVE:
+                            console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                            dataToReturn = this.generateCommonFigureData(this.props.index, previousElementData, elementType, primaryOption, secondaryOption)
                             break;
                     }
                     break;
@@ -209,6 +215,11 @@ class ElementContainer extends Component {
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                         this.props.updateElement(dataToSend, this.props.index);
                         break;
+                    case elementTypeConstant.INTERACTIVE:
+                            dataToSend = this.createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId)
+                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                            this.props.updateElement(dataToSend, this.props.index);
+                            break;
                 }
                 break;
             
@@ -232,26 +243,12 @@ class ElementContainer extends Component {
      * function will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        const{ elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor.id
         let node = document.getElementById(activeEditorId);
         console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
         if (node) {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
-/*             let html = node.innerHTML;
-            let text = node.innerText;
-            let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-            if (this.props.element.html && html !== this.props.element.html.text && !assetPopoverPopupIsVisible) {  //checking if current dom ids equal to previous                                      
-                const dataToSend = this.props.element;  // prepare data to update
-                dataToSend.elementdata.text = text;
-                dataToSend.html.text = html;
-                dataToSend.html.footnotes = this.props.element.html.footnotes || {};
-                dataToSend.html.glossaryentries = this.props.element.html.glossaryentries || {};
-                dataToSend.inputType = elementTypes[elementType][primaryOption]['enum'];
-                dataToSend.inputSubType = elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'];
-                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                this.props.updateElement(dataToSend, this.props.index);                         //update Current element data
-            } */
         }
     }
 
@@ -380,6 +377,13 @@ class ElementContainer extends Component {
     }
 
     /**
+     * Updates figuredata to local store
+     */
+    updateFigureData = (figureData, index) => {
+        this.props.updateFigureData(figureData, index)
+    }
+    
+    /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
@@ -415,12 +419,12 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                            editor = <ElementFigure permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementFigure updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                             labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                             labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -609,6 +613,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateElement: (updatedData, elementIndex) => {
             dispatch(updateElement(updatedData, elementIndex))
+        },
+        updateFigureData : (figureData, index) =>{
+            dispatch(updateFigureData(figureData, index))
         }
     }
 }
