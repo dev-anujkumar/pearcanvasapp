@@ -304,13 +304,6 @@ export class TinyMceEditor extends Component {
                 e.preventDefault()
             }
 
-            let key = e.keyCode || e.which;
-            if(key === 13) {
-                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
-                let nextSaparator = activeEditor.nextSibling;
-                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
-                textPicker.click();
-            }
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
@@ -328,6 +321,14 @@ export class TinyMceEditor extends Component {
                     activeElement.innerHTML = div.children[0].outerHTML;
                 }
                 this.lastContent = activeElement.innerHTML;
+            }
+
+            let key = e.keyCode || e.which;
+            if(key === 13 && this.props.element.type !== 'element-list') {
+                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
+                let nextSaparator = activeEditor.nextSibling;
+                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                textPicker.click();
             }
         });
     }
