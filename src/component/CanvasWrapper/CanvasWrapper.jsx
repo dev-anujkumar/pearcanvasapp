@@ -33,6 +33,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -63,20 +64,14 @@ export class CanvasWrapper extends Component {
             'type': CanvasIframeLoaded,
             'message': {}
         });
-        // *********************************************************
-        // *************** TO BE PLACED PROPERLY *****************//
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
         })
-        // *********************************************************
         let { projectUrn } = config,
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
 
-        // *************************************************
-        // commenting below setState() to test alternative
-        // *************************************************
         this.props.getSlateLockStatus(projectUrn ,slateId)     
         }
 
@@ -202,19 +197,7 @@ export class CanvasWrapper extends Component {
         return false
     }
 
-
-    
- /*    openGlossaryFootnotePopUp=()=>{
-       if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
-        return (
-        <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
-        )
-        
-    }
-    
-    }     */
-
-    showLockReleasePopup = () => {
+   showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
             // this.props.showCanvasBlocker(true)
             showTocBlocker();
@@ -262,10 +245,10 @@ export class CanvasWrapper extends Component {
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
                             <RootContext.Consumer>
-                            {
+                                {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -295,7 +278,8 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopOverSearch.showApoSearch
+        showApoSearch : state.assetPopOverSearch.showApoSearch,
+        logout
     };
 };
 
@@ -318,7 +302,7 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
-        logout,
-        handleUserRole
+        handleUserRole,
+        glossaaryFootnotePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

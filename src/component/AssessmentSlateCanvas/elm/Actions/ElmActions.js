@@ -1,10 +1,6 @@
 import config from '../../../../config/config';
 import {FULL_ASSESSMENT_PUF} from '../../AssessmentSlateConstants';
 import axios from 'axios';
-let headers = {
-    ApiKey: config.STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken
-}
 
 /**
  * This action creator is used to fetch ELM resources added to the project
@@ -12,7 +8,10 @@ let headers = {
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
     let url =`${assessmentType === FULL_ASSESSMENT_PUF ?`${config.ELM_ENDPOINT}`:`${config.ELM_ENDPOINT}`}v2/${config.projectUrn}/alignments/resources`;
     return axios.get(url, {
-          headers: headers
+          headers:  {
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken
+        }
     }).then((res) => {
         dispatch({
             type: 'GET_ELM_RESOURCES',

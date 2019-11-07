@@ -139,4 +139,70 @@ describe('Test for Sidebar component', () => {
             <Sidebar />
         </Provider>);
     });
+
+    it("With no activeElement", () => {
+        const activeElement = {}
+        
+        const sidebarWithData = mockStore({
+            appStore: {
+                activeElement,
+                updateElement,
+                slateLevelData
+            }
+        });
+    let sidebar = mount(<Provider store={sidebarWithData}>
+            <Sidebar />
+        </Provider>);
+    })
+
+    describe("Blockquote", () => {
+
+        it("Checking data for pullquote", () => {
+            const activeElement = {
+                elementId: "urn:pearson:work:28493c52-4356-48e5-8328-c24337bb3200",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                index: 0,
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-pullquote",
+                tag: "BQ"
+            }
+            
+            const sidebarWithData = mockStore({
+                appStore: {
+                    activeElement,
+                    updateElement,
+                    slateLevelData
+                }
+            });
+        let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            expect(sidebar.find('.element-dropdown').length).toBe(2)
+            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
+            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Pullquote")
+        })
+
+        it("Checking data for Marginalia with attribution", () => {
+            const activeElement = {
+                elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e2t",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-marginalia-attribution",
+                index: 1,
+                tag: "BQ"
+            }
+            
+            const sidebarWithData = mockStore({
+                appStore: {
+                    activeElement,
+                    updateElement,
+                    slateLevelData
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            expect(sidebar.find('.element-dropdown').length).toBe(2)
+            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
+            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
+        }) 
+    })
 });

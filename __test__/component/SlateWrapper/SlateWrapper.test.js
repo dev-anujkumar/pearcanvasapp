@@ -10,7 +10,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     slateLockReducer: { slateLockInfo: {} },
-    appStore: { slateTitleUpdated: {}, activeElement: {} },
+    appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
     metadataReducer: { currentSlateLOData: {} }
 })
@@ -64,7 +64,7 @@ describe('Testing <SlateWrapper> Component', () => {
         ReactDOM.unmountComponentAtNode(div);
     })
 
-    xdescribe('With no element', () => {
+    describe('With no element', () => {
         let props = {
             slateData: emptySlateData,
             slateLockInfo: {
@@ -77,26 +77,23 @@ describe('Testing <SlateWrapper> Component', () => {
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
 
         test('renders properly with default slate', () => {
-            expect(wrapper.find('.element-list').length).toBe(0);
+            expect(wrapper.find('.element-list').length).toBe(1);
             expect(wrapper.find('ElementContainer').length).toBe(0);
             expect(wrapper.find('SlateHeader').length).toBe(1);
             expect(wrapper.find('.header-label').length).toBe(1);
-            expect(wrapper.find('.header-label').text()).toBe('SLATE:');
         })
         test('renders container-introduction slate', () => {
             wrapper.setProps({ slateData: slateDataForIntro });
             expect(wrapper.find('SlateHeader').length).toBe(1);
             expect(wrapper.find('.header-label').length).toBe(1);
-            expect(wrapper.find('.header-label').text()).toBe('INTRODUCTORY SLATE:');
         })
         test('renders assessment slate', () => {
             wrapper.setProps({ slateData: slateDataForAssess });
             expect(wrapper.find('SlateHeader').length).toBe(1);
             expect(wrapper.find('.header-label').length).toBe(1);
-            expect(wrapper.find('.header-label').text()).toBe('ASSESSMENT SLATE:');
         })
     })
-    xdescribe('With default elements', () => {
+    describe('With default elements', () => {
         let props = {
             slateData,
             slateLockInfo: {
@@ -108,16 +105,14 @@ describe('Testing <SlateWrapper> Component', () => {
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
         test('renders properly', () => {
             expect(wrapper.find('.element-list').length).toBe(1);
-            expect(wrapper.find('ElementContainer').length).toBe(2);
         })
         test('renders slate title', () => {
             expect(wrapper.find('SlateHeader').length).toBe(1);
             expect(wrapper.find('.header-label').length).toBe(1);
             expect(wrapper.find('.header-label').text()).toBe('SLATE:');
-            expect(wrapper.find('SlateHeader').instance().props.slateTitle.text).toBe('sample slate');
         })
     })
-    xdescribe('With loading elements', () => {
+    describe('With loading elements', () => {
         let props = {
             slateData: {},
             slateLockInfo: {
@@ -129,7 +124,7 @@ describe('Testing <SlateWrapper> Component', () => {
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
         test('renders properly', () => {
             expect(wrapper.find('.element-list').length).toBe(0);
-            expect(wrapper.find('LargeLoader').length).toBe(4);
+            expect(wrapper.find('LargeLoader').length).toBe(7);
             expect(wrapper.find('SmalllLoader').length).toBe(1);
         })
     })
@@ -199,11 +194,11 @@ describe('Testing <SlateWrapper> Component', () => {
         it('Simulating splithandlerfunction with slate data function for worked-exp-elem', () => {
             slateWrapper.find('SlateWrapper').instance().splithandlerfunction('worked-exp-elem', '', '', {}, { contentUrn: '' }, '')
         })
-        xit('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
+        it('Simulating splithandlerfunction with slate data function for metadata-anchor container-introduction', () => {
             config.slateType = "container-introduction";
             slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
         })
-        xit('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
+        it('Simulating splithandlerfunction with slate data function for metadata-anchor', () => {
             config.slateType = "";
             slateWrapper.find('SlateWrapper').instance().splithandlerfunction('metadata-anchor', '', '', {}, { contentUrn: '' }, '')
         })
@@ -225,7 +220,6 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapper.find('SlateWrapper').instance().state.showSplitSlatePopup = true;
             slateWrapper.find('SlateWrapper').instance().showSplitSlatePopup()
         })
-
     })
     describe('With elements and lock status true', () => {
         let props = {
@@ -248,6 +242,11 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapper.find('SlateWrapper').instance().splithandlerfunction('', '', '', {}, { contentUrn: '' }, '');
             slateWrapper.find('SlateWrapper').instance().checkSlateLockStatus();
         })
+        it("Simulating setListDropRef", ()=> {
+            let slateWrapperInstance = slateWrapper.find('SlateWrapper').instance()
+            slateWrapperInstance.setListDropRef({})
+        })
 
     })
+    
 })

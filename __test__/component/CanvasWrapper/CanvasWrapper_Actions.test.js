@@ -18,7 +18,7 @@ let initialState = {
     splittedElementIndex: 0,
     pageNumberData: {}
 };
-describe('action file test', () => {
+xdescribe('action file test', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {

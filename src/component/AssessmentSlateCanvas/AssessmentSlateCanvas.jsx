@@ -10,7 +10,7 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLo
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
-import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
+import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
 import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
@@ -182,6 +182,7 @@ export class AssessmentSlateCanvas extends Component {
                     openLtAction ={this.props.openLtAction}
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
+                    openLTFunction = {this.props.openLTFunction}
                     linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     />
@@ -203,7 +204,8 @@ const mapStateToProps = (state, props) => {
 const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
-    getDiscipline: getDiscipline
+    getDiscipline: getDiscipline,
+    openLTFunction:openLTFunction
 }
 
 

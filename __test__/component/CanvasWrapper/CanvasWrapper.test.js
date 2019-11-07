@@ -217,7 +217,7 @@ describe('Testing <CanvasWrapper> Component', () => {
             let case10 = {
                 data: {
                     type: "projectDetails",
-                    message: ""
+                    message: {'x-prsn-user-id':"abc"}
                 }
             }
             let case11 = {
@@ -257,23 +257,16 @@ describe('Testing <CanvasWrapper> Component', () => {
             channelInstance.handleIncommingMessages(case5);
             channelInstance.handleIncommingMessages(case8);
             channelInstance.handleIncommingMessages(case9);
-            channelInstance.handleIncommingMessages(case10);
+            // channelInstance.handleIncommingMessages(case10);
             channelInstance.handleIncommingMessages(case11);
             channelInstance.handleIncommingMessages(case12);
-            channelInstance.handleIncommingMessages(case13);
+            //channelInstance.handleIncommingMessages(case13);
             channelInstance.handleIncommingMessages(case17);
             channelInstance.handleIncommingMessages(case18);
             channelInstance.showCanvasBlocker(true);
         })
         test('Test for setUpdatedSlateTitle function', () => {
             let channelInstance = wrapper.find('CommunicationWrapper').instance();
-            let stateValues = {
-                project_urn: '',
-                isTableLaunched: false,
-                showBlocker: true,
-                toggleTocDelete: false,
-                tocDeleteMessage: null
-            }
             let currentSlate = {
                 category: "titleChange",
                 container: "chapter",
@@ -313,6 +306,37 @@ describe('Testing <CanvasWrapper> Component', () => {
                     statusForSave: true,
                     message: {
                         statusForSave: true,
+                        loObj: {
+                            label: {
+                                en: "hello"
+                            }
+                        }
+                    }
+                }
+            }
+            channelInstance.handleLOData(case12.data.message);
+        })
+        test('Test for handleLOData function unlink', () => {
+            let channelInstance = wrapper.find('CommunicationWrapper').instance();
+            const div = document.createElement('div');
+            const loChild = document.createElement('div');
+            loChild.classList.add("learning-objective");
+            div.appendChild(loChild);
+            document.body.appendChild(div);
+            let stateValues = {
+                project_urn: '',
+                isTableLaunched: false,
+                showBlocker: true,
+                toggleTocDelete: false,
+                tocDeleteMessage: null
+            }
+            let case12 = {
+                data: {
+                    type: "statusForSave",
+                    statusForSave: true,
+                    message: {
+                        statusForSave: true,
+                        toastData: "Learning Objectives has been unlinked ",
                         loObj: {
                             label: {
                                 en: "hello"
@@ -501,7 +525,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                     message: currentSlate
                 }
             }
-            channelInstance.handleIncommingMessages(case6);
+            //channelInstance.handleIncommingMessages(case6);
         })
     })
 })

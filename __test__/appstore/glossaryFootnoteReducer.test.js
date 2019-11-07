@@ -5,6 +5,7 @@ const initialState = {
 };
 
 const glossaryFootnoteData = { "type": "Glossary", "popUpStatus": "true" }
+const expectedState = {    glossaryFootnoteValue: { "type": "Glossary", "popUpStatus": "true" }}
 
 describe('testing glossary Footnote Reducer cases --', () => {
 
@@ -12,12 +13,10 @@ describe('testing glossary Footnote Reducer cases --', () => {
         expect(glossaryFootnoteReducer(undefined, {})).toEqual(initialState);
     });
     it('get glossaryFootnoteValue', () => {
-        glossaryFootnoteReducer(initialState, {
+        expect(glossaryFootnoteReducer(initialState, {
             type: "OPEN_GLOSSARY_FOOTNOTE",
-            payload: {
-                glossaryFootnoteValue: glossaryFootnoteData
-            }
-        })
+            payload: glossaryFootnoteData            
+        })).toEqual(expectedState);
     })
 
 });

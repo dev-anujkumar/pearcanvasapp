@@ -20,7 +20,7 @@ import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageType
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ASSESSMENT_SLATE, OPENER}from './SlateWrapperConstants';
+import {TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST,ELEMENT_ASSESSMENT, OPENER}from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -108,7 +108,7 @@ class SlateWrapper extends Component {
                 }
             }else if(Object.values(_slateData).length> 0 && Object.values(_slateData)[0].contents.bodymatter<1 && config.slateType === 'assessment' ){
                  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                 this.props.createElement(ASSESSMENT_SLATE, "0");
+                 this.props.createElement(ELEMENT_ASSESSMENT, "0");
              }
         }
     }
@@ -162,6 +162,24 @@ class SlateWrapper extends Component {
             return null
         }
     }
+
+    /**
+     * Prepares data after element swapping occurs
+     * @param {*} event event object
+     */
+    prepareSwapData = (event) => {
+        const { slateData } = this.props
+        const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        const swappedElementData = _slateBodyMatter[event.oldDraggableIndex]
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            workedExample: false,
+        } 
+        return dataObj
+    }
+    
     /**
      * renderSlateHeader | renders slate title area with its slate type and title
      */
@@ -237,16 +255,7 @@ class SlateWrapper extends Component {
 
                                         // Element dragging ended
                                         onUpdate: (/**Event*/evt) => {
-                                            let swappedElementData, swappedElementId;
-                                            swappedElementData = _slateBodyMatter[evt.oldDraggableIndex]
-                                            let dataObj = {
-                                                oldIndex: evt.oldDraggableIndex,
-                                                newIndex: evt.newDraggableIndex,
-                                                swappedElementData: swappedElementData,
-                                                // slateId:_slateId,
-                                                workedExample: false,
-                                                swappedElementId: swappedElementId
-                                            }
+                                            let dataObj = this.prepareSwapData(evt)
                                             this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
@@ -415,6 +424,13 @@ class SlateWrapper extends Component {
                     if (outerIndex !== 1) {
                         outerIndex = Number(outerIndex) + 1
                     }
+                }else{
+                    if(outerAsideIndex !=1){
+                        outerIndex = outerAsideIndex + 1
+                    }else{
+                        outerIndex =outerAsideIndex;
+                    }
+                    
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
@@ -575,7 +591,7 @@ class SlateWrapper extends Component {
      * @param {object} _elements
      */
     renderButtonsonCondition(_elements){
-        if(_elements.filter(element => element.type == "chapterintro").length){
+        if(_elements.filter(element => element.type == "openerelement").length){
             config.isCO = true
         }
         //set the value in slate when once metadata anchor is created on IS
@@ -615,6 +631,7 @@ class SlateWrapper extends Component {
                                 handleCommentspanel={this.props.handleCommentspanel}
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
+                                isBlockerActive={this.props.isBlockerActive}
                             >
                             {
                                    (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
