@@ -31,7 +31,8 @@ import {
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown
 } from '../constants/IFrameMessageTypes';
-import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
+import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
+import { createElement } from "./SlateWrapper/SlateWrapper_Actions";
 
 let context = {};
 
@@ -302,6 +303,14 @@ export class TinyMceEditor extends Component {
         editor.on('keydown', (e) => {
             if(this.isTabPressed(e)){
                 e.preventDefault()
+            }
+
+            let key = e.keyCode || e.which;
+            if(key === 13) {
+                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
+                let nextSaparator = activeEditor.nextSibling;
+                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                textPicker.click();
             }
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
