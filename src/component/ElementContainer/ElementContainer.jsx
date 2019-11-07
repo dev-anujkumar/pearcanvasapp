@@ -46,7 +46,8 @@ class ElementContainer extends Component {
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPalette: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
-            isHovered: false
+            isHovered: false,
+            hasError: false
         };
     }
     componentDidMount() {
@@ -383,7 +384,6 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions } = this.props;
@@ -549,8 +549,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, callback);
     }
 
     /**
@@ -563,7 +563,18 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        return this.renderElement(element);
+        try {
+            if (this.state.hasError) {
+                return (
+                    <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
+                )
+            }
+            return this.renderElement(element);
+        } catch (error) {
+            return (
+                <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
+            )
+        }
     }
     /**
      * @description - This function is for handling hover on element and showing page numbering box.
@@ -577,6 +588,11 @@ class ElementContainer extends Component {
      */
     handleOnMouseOut = () => {
         this.setState({ isHovered: false })
+    }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
     }
 }
 
@@ -604,8 +620,12 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus))
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus)).then(() => {
+                if (callback) {
+                    callback();
+                }
+            })
         },
         updateElement: (updatedData, elementIndex) => {
             dispatch(updateElement(updatedData, elementIndex))
