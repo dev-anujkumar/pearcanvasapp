@@ -31,7 +31,8 @@ import {
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown
 } from '../constants/IFrameMessageTypes';
-import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
+import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
+import {checkforToolbarClick} from '../js/utils'
 
 let context = {};
 
@@ -872,7 +873,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        this.props.handleBlur()
+        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        if(checkforToolbarClick(relatedTargets)){
+            e.stopPropagation();
+            return;
+        }
+        this.props.handleBlur();
     }
     
     render() {
