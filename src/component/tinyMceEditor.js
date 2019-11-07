@@ -96,8 +96,6 @@ export class TinyMceEditor extends Component {
                 let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
                 revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
                 document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
-                let currentElement = document.getElementById(editor.id);
-                this.setCursorPosition(currentElement);
             }
         }
         this.editorRef  = React.createRef();
@@ -788,19 +786,6 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
             })
         });
-    }
-
-    setCursorPosition = (input) => {
-        let selection;
-        if (document.selection) {
-            selection = document.selection.createRange();
-            selection.moveStart('character', sel.rangeCount);
-            selection.select();
-        }
-        else {
-            selection = window.getSelection();
-            selection.collapse(input.firstChild, selection.rangeCount);
-        }
     }
 
     /**

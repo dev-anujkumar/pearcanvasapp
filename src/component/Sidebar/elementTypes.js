@@ -270,7 +270,7 @@ export default {
                 'secondary-blockcode-language-Default': {
                     text: 'Select',
                     labelText: 'BCE',
-                    enum: ''
+                    enum: 'SELECT'
                 },
                 'secondary-blockcode-language-C++': {
                     text: 'C++',

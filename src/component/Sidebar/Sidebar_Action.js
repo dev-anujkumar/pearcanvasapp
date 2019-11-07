@@ -8,6 +8,7 @@ import {
 
 import wipElementObject from './ElementWipData';
 import elementTypes from './../Sidebar/elementTypes';
+import figureDataBank from '../../js/figure_data_bank';
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
     
@@ -29,6 +30,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     const outputSubTypeList = outputPrimaryOptionType['subtype'],
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]],
         outputSubTypeEnum = outputSubType['enum']
+
+    oldElementData.figuredata=figureDataBank[newElementData['primaryOption']]
 
     const conversionDataToSend = {
         ...oldElementData,
