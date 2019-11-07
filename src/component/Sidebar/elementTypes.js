@@ -631,7 +631,7 @@ export default {
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
                     labelText: 'SL',
-                    enum: ''
+                    enum: 'PDF'
                 },
                 'secondary-interactive-smartlink-web': {
                     text: 'External Website Link',

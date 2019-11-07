@@ -15,23 +15,38 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
-        inputPrimaryOptionEnum = inputPrimaryOptionType['enum'],
         overallType = inputPrimaryOptionsList['enumType']
 
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
-        inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]],
-        inputSubTypeEnum = inputSubType['enum']
+        inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]
+
+    let inputSubTypeEnum = inputSubType['enum'],
+    inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
+
+    if(oldElementData.figuretype==="assessment"){
+        inputPrimaryOptionEnum=inputSubType['enum'];
+        inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase();
+    }
     
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
-        outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']],
-        outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
+        outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
 
     const outputSubTypeList = outputPrimaryOptionType['subtype'],
-        outputSubType = outputSubTypeList[[newElementData['secondaryOption']]],
-        outputSubTypeEnum = outputSubType['enum']
+        outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
-    oldElementData.figuredata=figureDataBank[newElementData['primaryOption']]
+    if (oldElementData.type === "figure") {
+        oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+    }
+
+    let outputSubTypeEnum = outputSubType['enum'],
+    outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
+    if (oldElementData.figuretype === "assessment") {
+        let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
+        outputPrimaryOptionEnum=outputSubType['enum'],
+        outputSubTypeEnum = usageType.toUpperCase(),
+        oldElementData.figuredata.elementdata.usagetype=usageType;
+    }
 
     const conversionDataToSend = {
         ...oldElementData,
