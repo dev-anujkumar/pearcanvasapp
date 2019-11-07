@@ -50,6 +50,15 @@ const _Toolbar = props => {
         )
     }
 
+
+    function closeAudioBookDialog() {
+          setValueOpen(!openDropDown);
+    }
+
+    function closeAddAudioBook () {
+        setValueAdd(!addDropDown);
+    }
+
     return (
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
@@ -62,7 +71,7 @@ const _Toolbar = props => {
                                 <span className="tooltiptext">Audio Tag</span>
                             </div>
 
-                            {addDropDown && <AddAudioBook closeAddAudioBook={props.closeAddAudioBook} />}
+                            {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
                         </div>
                     </div> :
                     <div className="audio-block">
@@ -72,7 +81,7 @@ const _Toolbar = props => {
                                 <span className="tooltiptext">Audio Tag</span>
                             </div>
 
-                            {openDropDown && <OpenAudioBook closeAudioBookDialog={props.closeAudioBookDialog} />}
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                         </div>
                     </div>
             }

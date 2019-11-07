@@ -25,36 +25,31 @@ class OpenAudioBook extends React.Component {
     }
 
 
-    // componentDidMount() {
-    //     document.addEventListener('mousedown', this.handleClick, false)
-    // }
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClick, false)
+    }
 
     handleClick = (e) => {
-        if (e.target.parentElement.parentElement.className == 'audioicon') {
-            return;
-        }
+        // if (e.target.parentElement.parentElement.className == 'audioicon') {
+        //     return;
+        // }
         if (this.node.contains(e.target)) {
             console.log("clicked inside");
             return;
         }
         console.log("clicked Outside");
-          this.props.closeAudioBookDialog()
+        this.props.closeAudioBookDialog()
     }
 
-    // componentWillReceiveProps(nextprops) {
-    //     if (this.props && this.props.audioData && this.props.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
-    //         this.props.closeAudioBookDialog()
-    //     }
-    // }
 
-    // static getDerivedStateFromProps(nextprops, prevState) {
-    //     if (prevState && prevState.audioData && prevState.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
-    //         this.props.closeAudioBookDialog()
-    //     }
-    //     else{
-    //         return null
-    //     }
-    // }
+    static getDerivedStateFromProps(nextprops, prevState) {
+        if (prevState && prevState.audioData && prevState.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
+            this.props.closeAudioBookDialog()
+        }
+        else{
+            return null
+        }
+    }
 
     // componentWillUnmount() {
     //     document.removeEventListener('mousedown', this.handleClick, false)
@@ -73,10 +68,10 @@ class OpenAudioBook extends React.Component {
         const { closeAudioBookDialog } = this.props;
 
         return (
-            <div className="audiodropdown" ref={node => this.node = node} onBlur={()=> this.handleClick()}>
+            <div className="audiodropdown" ref={node => this.node = node} onBlur={()=> this.handleClick(this)}>
                 <div style={{ padding: '15px' }}>
                     <h2 style={{ float: "left", color: '#3298B5' }}>Audio Book</h2>
-                    <span onClick={this.props.closeAudioBookDialog()} style={{ cursor: "pointer", float: "right", color: "#000000", fontWeight: "bold" }}>{closeIcon}</span>
+                    <span onClick={() => this.props.closeAudioBookDialog()} style={{ cursor: "pointer", float: "right", color: "#000000", fontWeight: "bold" }}>{closeIcon}</span>
                 </div>
                 <figure>
                     <figcaption style={{ padding: '10px' }}>{mediaTitle}</figcaption>
@@ -101,7 +96,6 @@ class OpenAudioBook extends React.Component {
 
 
 const mapStateToProps = (state) => {
-    console.log("state.audioReducer.audioData,",state.audioReducer.audioData)
     return {
         audioData: state.audioReducer.audioData,
     }
