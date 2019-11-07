@@ -50,6 +50,12 @@ export const showAudioRemovePopup = (value) => (dispatch, getState) => {
         payload: value
     })
 }
+export const showAudioSplitPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: "SPLIT_REMOVE_POPUP",
+        payload: value
+    })
+}
 
 /**
  * Method to get audio narration for container / state 
@@ -111,8 +117,6 @@ export const deleteAudioNarrationForContainer = (slateData) => async(dispatch, g
 }
 
 export const addAudioNarrationForContainer = (audioData) => async(dispatch, getState) => {
-    //const state = getState();
-   // var storeData = store.getState();
         let slateData = {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
@@ -125,7 +129,7 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
     fileExtension = fileName.replace(/^.*\./, '');
     try {
         if (fileExtension != 'mp3' || fileExtension != 'ogg' || fileExtension != 'opus' || fileExtension != 'wav') {
-           // document.getElementsByClassName('.audio-block').style.pointerEvents = "none"
+            document.getElementsByClassName('.audio-block').style.pointerEvents  = "none"
             let redirectionURL = await fetch(fileName);
             let mp3LocationData = redirectionURL.url;
             audioData = {
@@ -138,14 +142,14 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
             }
         }
     } catch (e) {
-        //document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
+        document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         console.log("Error while getting mp3 location from smartLink URL", e);
     }
 
     let url = `context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
     try {
         let audioPutResponse = await axiosInstance.put(url, audioData);
-       // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
+        document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         console.log("PUT response from Audio Narration", audioPutResponse);
         if( audioPutResponse && audioPutResponse.status == 400) {
             console.log("There is an error..", audioPutResponse);
@@ -158,7 +162,7 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
             store.dispatch(fetchAudioNarrationForContainer(slateData));
         }
     } catch(e) {
-      //  document.getElementsByClassName('.audio-block').css({pointerEvents: "auto"})
+       document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         console.log("Error while adding / updating audio narrative tool",e);
     }
 }

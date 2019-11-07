@@ -33,7 +33,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
-import { fetchAudioNarrationForContainer , deleteAudioNarrationForContainer,showAudioRemovePopup } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer , deleteAudioNarrationForContainer,showAudioRemovePopup , showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -56,6 +56,9 @@ export class CanvasWrapper extends Component {
             if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
             }
+            // if (prevState && prevState.audioData && prevState.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
+            //     this.closeAudioBookDialog()
+            // }
             return null;    
      }
 
@@ -237,32 +240,52 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    closeAudioBookDialog = (e) => {
-        this.setState({ openDropDown: !this.state.openDropDown })
-        return true;
-    }
+    // closeAudioBookDialog = (e) => {
+    //     this.setState({ openDropDown: !this.state.openDropDown })
+    //     console.log("this.state.openDropDown",this.state.openDropDown)
+    //     return true;
+    // }
 
-    closeAddAudioBook = (e) => {
-        this.setState({ addDropDown: !this.state.addDropDown })
-        return true;
-    }
+    // closeAddAudioBook = (e) => {
+    //     this.setState({ addDropDown: !this.state.addDropDown })
+    //     console.log("this.state.addDropDown",this.state.addDropDown)
+    //     return true;
+    // }
 
 
     processRemoveConfirmation = () => {
-        this.closeAudioBookDialog();
-        this.props.showAudioRemovePopup(false)
-        this.props.deleteAudioNarrationForContainer();
+       // this.closeAudioBookDialog();
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+            this.props.deleteAudioNarrationForContainer();
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
     }
     toggleAudioPopup = () => {
-        this.props.showAudioRemovePopup(false)
+
         //  hideBlocker()
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
     }
     showAudioRemoveConfirmationPopup = () => {
+        let dialogText;
         if (this.props.openRemovePopUp) {
+            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+        } else if (this.props.openSplitPopUp) {
+            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+        }
+        
+        if (this.props.openRemovePopUp || this.props.openSplitPopUp ) {
             // showTocBlocker();
             return (
                 <PopUp
-                    dialogText={"Do you want to remove the linked Audio Book with the slate?"}
+                    dialogText={dialogText}
                     active={true}
                     removeConfirmation={true}
                     audioRemoveClass='audioRemoveClass'
@@ -283,7 +306,7 @@ export class CanvasWrapper extends Component {
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
                 <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
                     {/* editor tool goes here */}
-                    <Toolbar togglePageNumbering={this.togglePageNumbering} closeAudioBookDialog={this.closeAudioBookDialog} closeAddAudioBook={this.closeAddAudioBook}/>
+                    <Toolbar togglePageNumbering={this.togglePageNumbering} />
                     {/* custom list editor component */}
                 </div>
 
@@ -345,6 +368,7 @@ const mapStateToProps = state => {
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp,
     };
 };
 
@@ -371,6 +395,7 @@ export default connect(
         handleUserRole,
         fetchAudioNarrationForContainer,
         deleteAudioNarrationForContainer,
-        showAudioRemovePopup
+        showAudioRemovePopup,
+        showAudioSplitPopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

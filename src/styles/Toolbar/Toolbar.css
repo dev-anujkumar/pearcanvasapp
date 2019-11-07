@@ -165,7 +165,7 @@
   font-weight: 600;
   margin-top: 5px;
   cursor: default;
-  /* padding: 10px !important; */
+  padding: 10px !important;
 }
 .audioRemoveButton {
   background-color: #3298B5; 
