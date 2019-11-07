@@ -70,5 +70,43 @@ export default {
         },
         "srctype": "externallink"
 
+    },
+    "primary-smartlink" : {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "3rd-party",
+        "interactiveformat": "external-link",
+        "posterimage": {
+        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "primary-showhide": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "showhide",
+        "interactiveformat": "mmi"
+    },
+    "primary-popup": {
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "interactiveid": "",
+        "interactivetype": "popup",
+        "interactiveformat": "narrative-link",
+        "posterimage": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        }
+    },
+    "primary-single-assessment": {
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "type": "element-assessment",
+        "subtype": "assessment",
+        "elementdata": {
+            "assessmentitemtype": "tdxAssessmentItem",
+            "assessmentformat": "tdx",
+            "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+            "posterimage": {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+            },
+            "usagetype": "Quiz"
+        }
     }
 }
