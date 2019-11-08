@@ -34,7 +34,6 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData } from './UpdateElements.js';
-import elementTypes from '../Sidebar/elementTypes';
 
 class ElementContainer extends Component {
     constructor(props) {
