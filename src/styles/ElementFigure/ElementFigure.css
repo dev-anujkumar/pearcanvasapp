@@ -159,3 +159,15 @@ figure,.element-container{
     letter-spacing: 0.02em;
     word-wrap: break-word;
 }
+.image50Text, .image50TextTableImage, .image50TextMathImage{
+    max-width: 340px !important;
+}
+img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage{
+    max-width: 680px !important;
+}
+img.imageWiderThanText, img.imageWiderThanTextTableImage, img.imageWiderThanTextMathImage{
+    max-width: 1080px !important;
+}
+img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage{
+    max-width: 100% !important;
+}
