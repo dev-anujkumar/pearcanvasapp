@@ -34,7 +34,7 @@ export class ElementMetaDataAnchor extends Component {
                   openAssetPopoverPopUp ={learningObjectiveOperations}
                   learningObjectiveOperations={learningObjectiveOperations}
                   openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-                  index={this.props.index}
+                  index={`${this.props.index}-0`}
                   elementId={this.props.elementId}
                   element={this.props.element}
                   placeholder="Metadata Anchor"
@@ -56,7 +56,7 @@ export class ElementMetaDataAnchor extends Component {
                   learningObjectiveOperations={learningObjectiveOperations}
                   currentSlateLOData={currentSlateLOData}
                   openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-                  index={this.props.index}
+                  index={`${this.props.index}-1`}
                   elementId={this.props.elementId}
                   element={this.props.element}
                   placeholder="Please add learning objective by tagging a slate"

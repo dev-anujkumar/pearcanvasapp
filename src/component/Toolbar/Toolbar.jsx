@@ -98,7 +98,7 @@ const _Toolbar = props => {
             }
             {/* *****end**** */}
 
-            <div class="toggle-actions">
+            <div className="toggle-actions">
             {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
                 <div className='elemPageText'>Element <br />Page Number</div>
