@@ -284,16 +284,19 @@ class ElmTable extends Component {
                             {this.state.tableValue.map((item, index) => {
                                 if (item.type == "assessment" && item.urn.includes("work")) {
                                     return (
-                                        <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} key={index} onClick={() => this.toggleActive(index)}>
-                                            <td className='td-class' key={index} onClick={() => this.addAssessment(item)}>
-                                                <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                <b className="elm-text-assesment">{item.urn}</b></td>
-                                        </tr>
+                                        <tbody key={index}>
+                                            <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} onClick={() => this.toggleActive(index)}>
+                                                <td className='td-class' key={index} onClick={() => this.addAssessment(item)}>
+                                                    <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
+                                                    <b className="elm-text-assesment">{item.urn}</b>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     );
                                 }
                                 else {
                                     return (
-                                        <tbody>
+                                        <tbody key={index}>
                                             {(this.props.openedFrom == 'slateAssessment') && (item.type !== 'figure') && <tr className='row-class'>
                                                 <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                                                     <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>

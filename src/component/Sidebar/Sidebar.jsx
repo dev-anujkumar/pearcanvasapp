@@ -86,9 +86,11 @@ class Sidebar extends Component {
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
                 primaryOptions = primaryOptionList.map(item => {
-                    return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
-                        {primaryOptionObject[item].text}
-                    </li>;
+                    if(item !== 'enumType') {
+                        return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
+                            {primaryOptionObject[item].text}
+                        </li>;
+                    }
                 });
     
                 let active = '';
