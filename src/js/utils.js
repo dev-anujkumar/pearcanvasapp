@@ -106,3 +106,16 @@ export const utils = {
         return type;
     },
 };
+
+export const checkforToolbarClick = (classList) =>{
+    let existingToolbarClasses = ["tox-tbtn","tox-tbtn--select","tox-split-button","tox-split-button__chevron"];
+    let isTargetFound = false;
+
+    classList.forEach((val)=>{
+        if(existingToolbarClasses.indexOf(val)>-1){
+            isTargetFound = true;
+            return;
+        }
+    })
+    return isTargetFound;
+}
