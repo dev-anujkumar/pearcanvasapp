@@ -8,6 +8,7 @@ import learningToolReducer from './learningToolReducer';
 import metadataReducer from './metadataReducer';
 import assetPopOverSearch from './assetPopoverReducer';
 import elmReducer from './elmReducer';
+import audioReducer from './audioNarrationReducer'
 
 export default combineReducers({
     appStore: appReducer,
@@ -19,5 +20,5 @@ export default combineReducers({
     assetPopOverSearch,
     elmReducer,
     learningToolReducer,
- 
+    audioReducer
 });

@@ -4,6 +4,7 @@
 import React from 'react';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
+import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
 * to make a skeleton of Glossary and Footnote.
@@ -12,9 +13,10 @@ class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
         const { showGlossaaryFootnote, glossaryFootnoteValue } = this.props;
+        console.table(glossaryFootnoteValue);
         return (
             <GlossaryFootnotePopup showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} />
         )
@@ -34,6 +36,13 @@ class GlossaryFootnoteMenu extends React.Component {
     * @param {event} 
     */
     saveContent = () => {
+        const { glossaryFootnoteValue } = this.props;
+        let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
+        let term = null;
+        let definition = null;
+        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
         this.props.showGlossaaryFootnote(false);
     }
 }
