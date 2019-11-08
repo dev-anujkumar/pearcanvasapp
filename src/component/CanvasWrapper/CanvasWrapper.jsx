@@ -43,10 +43,7 @@ export class CanvasWrapper extends Component {
             editorToolbarRef: null,
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false,
-            openDropDown : false,
-            addDropDown : false
-
+            isPageNumberEnabled : false
         }
         this.handleCommentspanel = this.handleCommentspanel.bind(this);
 
@@ -57,9 +54,6 @@ export class CanvasWrapper extends Component {
             if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
             }
-            // if (prevState && prevState.audioData && prevState.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
-            //     this.closeAudioBookDialog()
-            // }
             return null;    
      }
 
@@ -332,8 +326,6 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         showApoSearch : state.assetPopOverSearch.showApoSearch,
-        addAudio: state.audioReducer.addAudio,
-        openAudio: state.audioReducer.openAudio,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         logout
