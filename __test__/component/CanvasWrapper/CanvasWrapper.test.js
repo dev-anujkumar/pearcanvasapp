@@ -108,6 +108,10 @@ const initialState = {
     glossaryFootnoteReducer: {
         glossaryFootnoteValue: GlossaryMockState
     },
+    audioReducer : {
+        openRemovePopUp : false,
+        openSplitPopUp : false
+    },
     slateLockReducer: SlateLockMockState,
     assetPopOverSearch: AssetPopOverMockState
 };
@@ -394,6 +398,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 handleSlateRefresh: function () { },
                 logout: function () { },
                 publishContent: jest.fn(),
+                fetchAudioNarrationForContainer: jest.fn(),
                 introObject: {
                     isCO: false,
                     introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
@@ -430,6 +435,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 fetchSlateData: function () { },
                 handleSplitSlate: function () { },
                 currentSlateLO: function () { },
+                fetchAudioNarrationForContainer: jest.fn(),
                 setUpdatedSlateTitle: jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions', () => {
                     return {
                         setUpdatedSlateTitle: function (newSlateObj) {
@@ -444,6 +450,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 handleSlateRefresh: function () { },
                 logout: function () { },
                 publishContent: jest.fn(),
+                fetchAudioNarrationForContainer: jest.fn(),
                 introObject: {
                     isCO: false,
                     introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
