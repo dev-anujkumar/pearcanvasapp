@@ -5,17 +5,26 @@ import { showTocBlocker, hideTocBlocker } from '../../js/toggleLoader'
 import { c2MediaModule } from '../../js/c2_media_module';
 import config from '../../config/config';
 
+/**
+* @description - AddAudioBook is a class based component. It is defined simply for adding audio Narration.
+*/
 class AddAudioBook extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
+    /**
+    * @description - processConfirmation function responsible for opening the alfresco.
+    */
     processConfirmation = () => {
         this.props.closeAddAudioBook();
         this.handleC2MediaClick(this)
     }
 
+     /**
+    * @description - dataFromAlfresco function responsible for bringing data from the alfresco.
+    */
     dataFromAlfresco = (data) => {
         let imageData = data;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
@@ -107,7 +116,6 @@ class AddAudioBook extends React.Component {
 
     openConfirmationBox = (e) => {
         let that = this
-        // disableHeaderCanvas();
         showTocBlocker();
         that.processConfirmation();
     }
