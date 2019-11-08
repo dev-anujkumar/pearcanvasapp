@@ -2,15 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import config from '../../config/config';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
-    // this.onLOClickHandle = this.onLOClickHandle.bind(this);
 }
 
   render() {
