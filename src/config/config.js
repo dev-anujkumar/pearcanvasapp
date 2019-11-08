@@ -69,7 +69,10 @@ let config = {
     codeListingToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     labelToolbar:['footnote','decreaseindent'],
-    captionToolbar:['decreaseindent']
+    captionToolbar:['decreaseindent'],
+    GET_FIGURES : 'https://contentapis-qa.pearsoncms.net/',
+    GET_ASSETPOPOVER_ID : 'https://staging.api.pearson.com/',
+    APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx'
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';
