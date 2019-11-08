@@ -7,7 +7,8 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
     UPDATE_PAGENUMBER_SUCCESS,
-    UPDATE_PAGENUMBER
+    UPDATE_PAGENUMBER,
+    UPDATE_PAGENUMBER_FAIL
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -458,11 +459,17 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
-                    slateLevelData: newslateData,
+                 //   slateLevelData: {},
                     pageLoading: false
                 }
             })
         }).catch(error => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_FAIL,
+                payload: {
+                    pageLoading: false
+                }
+            })
             console.log("UPDATE PAGE NUMBER ERROR : ", error)
         })
     }
