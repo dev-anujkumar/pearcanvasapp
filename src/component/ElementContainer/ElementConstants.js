@@ -10,6 +10,7 @@ export default {
     FIGURE_MATH_IMAGE : "mathImage",
     FIGURE_AUTHORED_TEXT : "authoredtext",
     FIGURE_CODELISTING : "codelisting",
+    FIGURE_TABLE_EDITOR : "tableasmarkup",
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",

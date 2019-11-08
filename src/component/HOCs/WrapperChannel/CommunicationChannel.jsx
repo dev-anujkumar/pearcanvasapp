@@ -16,8 +16,6 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
-import { slateTagDisable, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
-import axios from 'axios';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -119,9 +117,9 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'refreshElementWithTable':
                     {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
+                        this.showCanvasBlocker(true);
+                        showHeaderBlocker();
+                        this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':
                     {
@@ -253,6 +251,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+                let slateData = {
+                    currentProjectId: config.projectUrn,
+                    slateEntityUrn: config.slateEntityURN
+                }
+                this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
