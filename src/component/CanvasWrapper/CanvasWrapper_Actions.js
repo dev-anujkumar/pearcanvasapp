@@ -149,7 +149,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {
-				[manifestURN]: slateData.data[manifestURN]
+				[manifestURN]: JSON.parse(JSON.stringify(slateData.data[manifestURN]))
 			}
 		});
 	});

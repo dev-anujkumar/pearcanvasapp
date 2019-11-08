@@ -118,6 +118,8 @@ class ElementContainer extends Component {
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits||
             previousElementData.figuredata.path !== this.props.oldImage
+            // ||
+            // previousElementData.html.tableasHTML !== this.props.tableData
             ){
                 return true
             }
@@ -152,7 +154,8 @@ class ElementContainer extends Component {
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
-                    case elementTypeConstant.FIGURE_MATH_IMAGE:   
+                    case elementTypeConstant.FIGURE_MATH_IMAGE:
+                    case elementTypeConstant.FIGURE_TABLE_EDITOR:   
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
@@ -376,13 +379,14 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_MATH_IMAGE:
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
-                            editor = <ElementFigure updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
-                            labelText = LABELS[element.figuretype];
+                        case elementTypeConstant.FIGURE_TABLE_EDITOR:
+                            editor = <ElementFigure updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id}/>;
+                            //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
                             editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
-                            labelText = LABELS[element.figuretype];
+                            //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
                             editor = <ElementSingleAssessment permissions={permissions} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.learningObjectiveOperations} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
@@ -594,7 +598,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateFigureData : (figureData, index, cb) =>{
             dispatch(updateFigureData(figureData, index, cb))
-        }
+        },
+        resetTableDataAction: (isReplaced) => {
+            dispatch(resetTableDataAction(isReplaced))
+        } 
     }
 }
 
