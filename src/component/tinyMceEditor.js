@@ -31,7 +31,8 @@ import {
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown
 } from '../constants/IFrameMessageTypes';
-import { getGlossaryFootnoteId } from "../js/glossaryFootnote"
+import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
+import {checkforToolbarClick} from '../js/utils'
 
 let context = {};
 
@@ -62,6 +63,7 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             paste_preprocess: this.pastePreProcess,
+            force_p_newlines : false,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
                 this.setMetaDataAnchorIcon(editor);
@@ -303,6 +305,7 @@ export class TinyMceEditor extends Component {
             if(this.isTabPressed(e)){
                 e.preventDefault()
             }
+
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
@@ -320,6 +323,14 @@ export class TinyMceEditor extends Component {
                     activeElement.innerHTML = div.children[0].outerHTML;
                 }
                 this.lastContent = activeElement.innerHTML;
+            }
+
+            let key = e.keyCode || e.which;
+            if(key === 13 && this.props.element.type !== 'element-list') {
+                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
+                let nextSaparator = activeEditor.nextSibling;
+                let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+                textPicker.click();
             }
         });
     }
@@ -718,11 +729,10 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
-
+                this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
-                if(document.getElementById(this.editorRef.current.id)) {
+                if(document.getElementById(this.editorRef.current.id) && newElement) {
                     document.getElementById(this.editorRef.current.id).click();
-                    this.setToolbarByElementType();
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -855,6 +865,12 @@ export class TinyMceEditor extends Component {
         /**
          * case - continuing with toggling glossary & footnote popup
          */
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance);
+            tinymce.init(this.editorConfig).then((d)=>{
+                this.setToolbarByElementType();
+            })
+        });
         if (isSameTarget) {
             this.editorOnClick(event);
         }
@@ -865,7 +881,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        this.props.handleBlur()
+        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        if(checkforToolbarClick(relatedTargets)){
+            e.stopPropagation();
+            return;
+        }
+        this.props.handleBlur();
     }
     
     render() {
@@ -910,15 +931,15 @@ export class TinyMceEditor extends Component {
         switch (this.props.tagName) {
             case 'p':
                 return (
-                    <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
+                    <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
                 return (
-                    <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
+                    <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
-                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
+                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             default:
                 return (
