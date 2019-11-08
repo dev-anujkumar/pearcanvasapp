@@ -131,7 +131,7 @@ export class ElementFigure extends Component {
 
 
     /**
-     * @description function will be called to add Table Editor SPA
+     * @description function will be called to launch Table Editor SPA
      */
     launchSPA=()=>{
     let editable = true;
@@ -154,7 +154,7 @@ export class ElementFigure extends Component {
     * @param model object that defined the type of element
     * @param index index of the current element
     * @param slateLockInfo object that defines the slate lock details */
-    renderFigureType = (model = {},index, slateLockInfo) => {
+    renderFigureType = (model,index, slateLockInfo) => {
         const { type } = this.props;
 
         var figureJsx;
@@ -313,18 +313,17 @@ export class ElementFigure extends Component {
                             <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle? model.html.subtitle:"title"} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML!==""? 'table-figure-data':""}` } data-type={dataType} onClick={this.addFigureResource} >                        
-                        {/* <div className="pearson-component image figureData"  data-type={dataType} onClick={this.addFigureResource} > */}
-                        {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML!=="" || this.props.model.figuredata.tableasHTML!==undefined)) ?
-                        <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{__html:this.props.model.figuredata.tableasHTML}} ></div> 
-                         :
-                         <img src= {this.state.imgSrc? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
-                         data-src={(model.figuredata.path && model.figuredata.path !== "" || model.figuredata.path !== undefined) ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
-                         title=""
-                         alt=""
-                         className={imageDimension + ' lazyload'}
-                         draggable="false" /> 
-            }
+                        <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} onClick={this.addFigureResource} >
+                            {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
+                                <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
+                                :
+                                <img src={this.state.imgSrc ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
+                                    data-src={(model.figuredata.path && model.figuredata.path !== "" || model.figuredata.path !== undefined) ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
+                                    title=""
+                                    alt=""
+                                    className={imageDimension + ' lazyload'}
+                                    draggable="false" />
+                            }
                         </div>
                         <figcaption >
                             <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption?model.html.caption:"cap"} slateLockInfo={slateLockInfo} />

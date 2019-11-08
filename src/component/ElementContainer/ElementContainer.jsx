@@ -613,11 +613,7 @@ const mapStateToProps = (state) => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
-        oldImage: state.appStore.oldImage,
-        tableData: state.appStore.tableData,
-        tableElementId : state.tableEditorReducer.tableElementId,
-        isTableLaunched: state.tableEditorReducer.isTableLaunched,
-        isTableElementRefeteched:state.tableEditorReducer.isTableElementRefeteched,
+        oldImage: state.appStore.oldImage
     }
 }
 
