@@ -186,8 +186,8 @@ export class ElementAudioVideo extends Component {
 
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : assetPath}</div>
-                        <div className="pearson-component audio" data-type="audio">
-                            <audio controls="none" preload="none" className="audio" onClick={this.handleC2MediaClick}>
+                        <div className="pearson-component audio" data-type="audio" onClick={this.handleC2MediaClick}>
+                            <audio controls="none" preload="none" className="audio" >
                                 <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
                             </audio>
                         </div>

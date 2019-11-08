@@ -33,6 +33,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { fetchAudioNarrationForContainer , deleteAudioNarrationForContainer,showAudioRemovePopup , showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -199,7 +200,6 @@ export class CanvasWrapper extends Component {
 
    showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
-            // this.props.showCanvasBlocker(true)
             showTocBlocker();
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return(
@@ -212,6 +212,51 @@ export class CanvasWrapper extends Component {
             )
         }
         else{
+            return null
+        }
+    }
+
+    processRemoveConfirmation = () => {
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+            this.props.deleteAudioNarrationForContainer();
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
+    }
+    toggleAudioPopup = () => {
+        //  hideBlocker()
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
+    }
+    showAudioRemoveConfirmationPopup = () => {
+        let dialogText;
+        if (this.props.openRemovePopUp) {
+            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+        } else if (this.props.openSplitPopUp) {
+            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+        }
+        
+        if (this.props.openRemovePopUp || this.props.openSplitPopUp ) {
+            // showTocBlocker();
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    removeConfirmation={true}
+                    audioRemoveClass='audioRemoveClass'
+                    saveButtonText='OK'
+                    saveContent={this.processRemoveConfirmation}
+                    togglePopup={this.toggleAudioPopup}
+                />
+            )
+        }
+        else {
             return null
         }
     }
@@ -260,6 +305,8 @@ export class CanvasWrapper extends Component {
                     </div>
                 </div>
                 {this.showLockReleasePopup()}  
+                {/* ***************Audio Narration remove Popup **************** */}
+                {this.showAudioRemoveConfirmationPopup()}
             </div>
         );
     }
@@ -279,6 +326,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         showApoSearch : state.assetPopOverSearch.showApoSearch,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp,
         logout
     };
 };
@@ -302,7 +351,12 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
+        logout,
         handleUserRole,
+        fetchAudioNarrationForContainer,
+        deleteAudioNarrationForContainer,
+        showAudioRemovePopup,
+        showAudioSplitPopup,
         glossaaryFootnotePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
