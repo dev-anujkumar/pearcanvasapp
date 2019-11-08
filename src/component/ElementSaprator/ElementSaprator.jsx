@@ -180,8 +180,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }
 
         return (
-            <Tooltip direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
-                <li key={key}>
+            <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
+                <li>
                     <Button type={elem.buttonType} onClick={buttonHandlerFunc} />
                 </li>
             </Tooltip>
