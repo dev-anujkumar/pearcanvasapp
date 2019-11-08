@@ -206,7 +206,6 @@ export class CanvasWrapper extends Component {
 
    showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
-            // this.props.showCanvasBlocker(true)
             showTocBlocker();
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return(
@@ -223,21 +222,7 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    // closeAudioBookDialog = (e) => {
-    //     this.setState({ openDropDown: !this.state.openDropDown })
-    //     console.log("this.state.openDropDown",this.state.openDropDown)
-    //     return true;
-    // }
-
-    // closeAddAudioBook = (e) => {
-    //     this.setState({ addDropDown: !this.state.addDropDown })
-    //     console.log("this.state.addDropDown",this.state.addDropDown)
-    //     return true;
-    // }
-
-
     processRemoveConfirmation = () => {
-       // this.closeAudioBookDialog();
         if(this.props.openRemovePopUp){
             this.props.showAudioRemovePopup(false)
             this.props.deleteAudioNarrationForContainer();
@@ -247,7 +232,6 @@ export class CanvasWrapper extends Component {
         }
     }
     toggleAudioPopup = () => {
-
         //  hideBlocker()
         if(this.props.openRemovePopUp){
             this.props.showAudioRemovePopup(false)
@@ -327,6 +311,7 @@ export class CanvasWrapper extends Component {
                     </div>
                 </div>
                 {this.showLockReleasePopup()}  
+                {/* ***************Audio Narration remove Popup **************** */}
                 {this.showAudioRemoveConfirmationPopup()}
             </div>
         );
@@ -341,7 +326,6 @@ export class CanvasWrapper extends Component {
 
 CanvasWrapper.displayName = "CanvasWrapper"
 const mapStateToProps = state => {
-    console.log("state.audioReducer.openRemovePopUp,",state.audioReducer.openRemovePopUp)
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,

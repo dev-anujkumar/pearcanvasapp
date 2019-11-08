@@ -18,32 +18,6 @@ const axiosInstance = axios.create({
  * @param {*} value 
  */
 
-//  export const addAudioNarration = (value) => (dispatch, getState) => {
-//      dispatch({
-//          type: "ADD_AUDIO_NARRATION",
-//          payload: true
-//      })
-//  }
-
-//  export const openAudioNarration = (value) => (dispatch, getState) => {
-//     dispatch({
-//         type: "OPEN_AUDIO_NARRATION",
-//         payload: true
-//     })
-// }
-
-// export const checkAudioNarration = (value) => (dispatch, getState) =>{
-    
-//     dispatch({
-//         type: "ADD_AUDIO_NARRATION",
-//         payload: false
-//     })
-//     dispatch({
-//         type: "OPEN_AUDIO_NARRATION",
-//         payload: true
-//     })
-// }
-
 export const showAudioRemovePopup = (value) => (dispatch, getState) => {
     dispatch({
         type: "SHOW_REMOVE_POPUP",

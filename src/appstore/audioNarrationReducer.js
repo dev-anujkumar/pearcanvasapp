@@ -34,12 +34,6 @@ export default function reducer (state = INITIAL_STATE, action) {
         audioData: action.payload
       }
     }
-    // case 'OPEN_ALFRESCO_AUDIO' : {
-    //   return {
-    //     ...state,
-    //     openAlfresco: action.payload
-    //   }
-    // }
     case 'SHOW_REMOVE_POPUP' : {
       return {
         ...state,

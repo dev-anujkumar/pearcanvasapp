@@ -33,7 +33,6 @@ class AddAudioBook extends React.Component {
                 }
                 this.props.addAudioNarrationForContainer(audioData);
                 hideTocBlocker();
-                // enableHeaderCanvas();
                 return false;
             }
             //  else if (audioNarration == "audioNarration") {
@@ -64,11 +63,6 @@ class AddAudioBook extends React.Component {
      * @description function will be called on image src add and fetch resources from Alfresco
      */
     handleC2MediaClick = (e) => {
-        // this.props.handleFocus();
-        // if (e.target.tagName.toLowerCase() === "p") {
-        //     e.stopPropagation();
-        //     return;
-        // }
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
@@ -106,12 +100,6 @@ class AddAudioBook extends React.Component {
         }
 
     }
-
-    // processClose = () => {
-    //     this.props.closeAddAudioBook();
-    //     // enableHeaderCanvas();
-    //     hideTocBlocker();
-    // }
 
     shouldComponentUpdate() {
         return false;
