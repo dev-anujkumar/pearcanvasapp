@@ -228,28 +228,23 @@ class SlateWrapper extends Component {
                     return (
                         <div className={`slate-content ${config.slateType ==='assessment'?'assessment-slate': ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
-                                <Sortable
-                                    options={{
-                                        // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
-                                        sort: true,  // sorting inside list
-                                        preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
-                                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-                                        dragoverBubble: false,
-                                        removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-
-
-                                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-
-
-                                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                        scrollSpeed: 10,
-                                        handle: '.element-label', //Drag only by element tag name button
-                                        dataIdAttr: 'data-id',
-                                        scroll: true, // or HTMLElement
-                                        filter: ".elementSapratorContainer",
-                                        draggable: ".editor",
-                                        forceFallback: true,
-                                        onStart: function (/**Event*/evt) {
+                            <Sortable 
+                               options={{
+                                   sort: true,  // sorting inside list
+                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                   dragoverBubble: false,
+                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                   scrollSpeed: 10,
+                                   handle : '.element-label', //Drag only by element tag name button
+                                   dataIdAttr: 'data-id',
+                                   scroll: true, // or HTMLElement
+                                   filter: ".elementSapratorContainer",
+                                   draggable: ".editor",
+                                   forceFallback: true, 
+                                   onStart: function (/**Event*/evt) {
                                             // same properties as onEnd
                                             _context.checkSlateLockStatus(evt)
                                         },
@@ -260,26 +255,16 @@ class SlateWrapper extends Component {
                                             this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
-
-                                    }}
-
-                                    // [Optional] Use ref to get the sortable instance
-                                    // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
-                                    ref={(c) => {
-                                        if (c) {
-                                            let sortable = c.sortable;
-                                        }
-                                    }}
-
-                                    // [Optional] A tag to specify the wrapping element. Defaults to "div".
-                                    tag="div"
-
-                                    onChange={(items, sortable, evt) => { }}
-                                >
-                                    {
-                                        this['cloneCOSlateControlledSource_' + random]
-                                        //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
-                                    }
+                               }}
+                                ref={(c) => {
+                                   if (c) {
+                                       let sortable = c.sortable;
+                                   }
+                               }}
+                               tag="div"
+                               onChange = {function(items, sortable, evt) { }}
+                           >
+                                        {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
                             <SlateFooter />
