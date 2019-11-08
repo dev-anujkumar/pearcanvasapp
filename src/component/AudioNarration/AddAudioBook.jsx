@@ -133,7 +133,9 @@ const mapStateToProps = (state) => {
     return {
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
-        openRemovePopUp: state.audioReducer.openRemovePopUp
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        permissions : state.appStore.permissions
+
     }
 }
 
