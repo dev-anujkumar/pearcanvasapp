@@ -1,8 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import ReactDOM from 'react-dom';
 import ElementAuthoring from '../../../src/component/ElementAuthoring/ElementAuthoring'
 
-xdescribe('Testing Element  component with props', () => {
+describe('Testing Element  component with props', () => {
+    const div = document.createElement('div');
     let type = "element-authoredtext";
     let props={
         slateLockInfo:{
@@ -12,20 +14,7 @@ xdescribe('Testing Element  component with props', () => {
     const elementAuthoring = mount(<ElementAuthoring {...props} type={type} />);
     let elementAuthoringInstance = elementAuthoring.find('ElementAuthoring').instance();
     it('render Element component ', () => {  
-        expect(elementAuthoring).toMatchSnapshot();
+        ReactDOM.render(<ElementAuthoring {...props}/>, div);
     })
 
-    it('onClick', () => {
-        elementAuthoringInstance.onClick();
-    })
-    it('onBlur', () => {
-        elementAuthoringInstance.onBlur();
-    })
-    it('onKeyup', () => {
-        elementAuthoringInstance.onKeyup();
-    })
-
-    it('onFocus', () => {
-        elementAuthoringInstance.onFocus();
-    })
 })

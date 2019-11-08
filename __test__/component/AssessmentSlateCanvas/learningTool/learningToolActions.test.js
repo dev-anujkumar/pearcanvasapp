@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from '../../../../src/Appstore/rootReducer.js';
+//import rootReducer from '../../../../src/Appstore/rootReducer.js';
 import moxios from 'moxios';
 import * as actions from '../../../../src/component/AssessmentSlateCanvas/learningTool/learningToolActions';
 import axios from 'axios';
@@ -120,6 +120,31 @@ describe('Tests Learning Tool  action', () => {
        //expect(payload.title).toBe(title);
    });
 })
+
+it('testing--- openLTFunction action',()=>{
+  
+   store = mockStore(() => initialState);
+   const expectedActions = [{
+    type: GET_DISCIPLINE, payload: {
+      showDisFilterValues: true,
+      apiResponseForDis: disciplines
+    }
+   }];
+   moxios.wait(() => {
+       const request = moxios.requests.mostRecent();
+       request.respondWith({
+           status: 200,
+           response: disciplines
+       });
+   });
+
+   return store.dispatch(actions.openLTFunction ()).then(() => {
+       const { type, payload } = store.getActions()[0];
+        expect(type).toBe(GET_DISCIPLINE);
+       //expect(payload.title).toBe(title);
+   });
+})
+
 it('testing------- selectedFigureAction   action',()=>{
     store = mockStore(() => initialState);
      let selectedFigure = selectedResult;

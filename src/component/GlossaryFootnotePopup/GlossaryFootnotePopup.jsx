@@ -5,41 +5,22 @@
 import React, { Component } from 'react';
 import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
-import  ReactEditor  from "../tinyMceGlossaryFootnoteEditor"
+import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 
 class GlossaryFootnotePopup extends Component {
-    constructor(){
+    constructor() {
         super();
-        this.state={}
+        this.state = {}
 
     }
-    componentDidMount() {
-        this.handleFocus();
-    }
-    componentDidUpdate(){
-       this.handleFocus()
-    }
 
-    /**
-    * @description - This function is to handle focus of Glossary and Footnote.
-    * @param {event} 
-    */
-    handleFocus = () => {
-        if (document.getElementById("glossary-0")) {
-            document.getElementById("glossary-0").focus();
-        }
-        else if (document.getElementById("footnote-0")) {
-            document.getElementById("footnote-0").focus();
-        }
-    }
-    
     render() {
-         const { glossaryFootnote ,closePopup , saveContent} = this.props;
-         let id = glossaryFootnote === 'Glossary'? 'glossary-1' : 'footnote-0';
-        return (
+        const { glossaryFootnoteValue, closePopup, saveContent } = this.props;
+        const glossaryFootnote = glossaryFootnoteValue.type;
+        let id = glossaryFootnote === 'Glossary' ? 'glossary-1' : 'footnote-0';
 
+        return (
             <div className="glossary-toolbar-wrapper">
-                
                 <div className="glossary-header">
                     <div className="glossary-title">
                         <Button type="close-container" onClick={saveContent} />
@@ -47,32 +28,40 @@ class GlossaryFootnotePopup extends Component {
                         <div className="clr"></div>
                     </div>
                 </div>
-               <div id="toolbarGlossaryFootnote"></div>
+                <div id="toolbarGlossaryFootnote"></div>
                 <div className="glossary-body">
                     <div id="glossary-toolbar"></div>
-                    {glossaryFootnote === 'Glossary' && 
-                    <div className="glossary-word-header">
-                        <div className="glossary-word-title">Term:</div>
-                        <div className="glossary-word-name glossary-word-description" id='glossary-editor'>
-                            <ReactEditor glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup} className='definition-editor' placeholder="Type Something" id='glossary-0'/>
+                    {
+                        (glossaryFootnote === 'Glossary') &&
+                        <div className="glossary-word-header">
+                            <div className="glossary-word-title">Term:</div>
+                            <div className="glossary-word-name glossary-word-description" id='glossary-editor'>
+                                <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                            </div>
                         </div>
-
-                    </div>
                     }
                     <div className="glossary-definition-header">
-                        <div className="glossary-definition-label">{glossaryFootnote === 'Glossary'?'Definition:':'Note:'}</div>
+                        <div className="glossary-definition-label">{(glossaryFootnote === 'Glossary') ? 'Definition:' : 'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher">
-                            <ReactEditor glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup} className='definition-editor' placeholder="Type Something" id={id}/>
+                            <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">
                         <span className="glossary-cancel-button" onClick={closePopup}>Cancel</span>
-                        <span className="glossary-save-button"  onClick={saveContent}>Save</span>
+                        <span className="glossary-save-button" onClick={saveContent}>Save</span>
                     </div>
                 </div>
             </div>
-
         )
+    }
+
+    componentWillUnmount() {
+        for (let i = tinymce.editors.length - 1; i > -1; i--) {
+            let ed_id = tinymce.editors[i].id;
+            if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+                tinymce.remove(`#${ed_id}`)
+            }
+        }
     }
 }
 

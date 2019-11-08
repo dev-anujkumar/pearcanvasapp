@@ -59,13 +59,14 @@ class Sidebar extends Component {
                 elementType: this.state.activeElementType,
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption,
-                labelText
+                labelText,
+                toolbar: elementList[this.state.activeElementType][value].toolbar
             });
         }
     }
 
     toggleElementDropdown = e => {
-        if(this.state.activePrimaryOption == "primary-chapterintro"){
+        if(this.state.activePrimaryOption == "primary-openerelement"){
             e.stopPropagation()
             return false
         }
@@ -146,7 +147,8 @@ class Sidebar extends Component {
                 elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value,
-                labelText
+                labelText,
+                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
             });
         }
     }

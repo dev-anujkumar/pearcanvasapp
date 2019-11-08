@@ -8,6 +8,7 @@
 // IMPORT - Plugins //
 import React from 'react';
 
-export const PageNumberContext = React.createContext({
-    isPageNumberEnabled: false
+const PageNumberContext = React.createContext({
+    isPageNumberEnabled: false,
 })
+export default PageNumberContext

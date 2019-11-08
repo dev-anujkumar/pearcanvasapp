@@ -1,19 +1,64 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
 import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { spy, stub } from 'sinon';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-const middlewares = [thunk];
+import { JestEnvironment } from '@jest/environment';
 import { Provider } from 'react-redux';
-
 const mockStore = configureMockStore(middlewares);
+const setActiveElement = new stub();
+const handleFocus =new stub();
+let initialState = {
+    appStore: {
+        pageNumberData: {},
+        slateLevelData: {},
+        permissions: [],
+        activeElement: {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementType: "element-authoredtext",
+            elementWipType: "element-authoredtext",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            index: "1-0",
+            tag: "H1",
+            toolbar: ['bold']
+        }
+    },
+    toolbarReducer: {
+        elemBorderToggle: true
+    },
+    slateLockReducer: {
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        }
+    },
+    metadataReducer: {
+        currentSlateLOData: {}
+    }
 
-const store = mockStore({});
+};
+
+let store = mockStore(initialState);
+
 
 describe('Testing ElementAside component with props', () => {
+    let esProps = [            {
+        buttonType: 'worked-exp-elem',
+        buttonHandler: () => {},
+        tooltipText: 'Worked Example',
+        tooltipDirection: 'left'
+    },
+    {
+        buttonType: 'section-break-elem',
+        buttonHandler: () => {},
+        tooltipText: 'Section Break',
+        tooltipDirection: 'left'
+    },];
     let props = {
         element: elementAsideWorkExample,
         swapElement : swapElement,
@@ -69,6 +114,11 @@ describe('Testing ElementAside component with props', () => {
             let renderAside = instance.renderAside(designType)
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
+        it('should render  handle focus function correctly', () => {
+
+            instance.handleFocus()
+         //   expect(sectiondata.props.className).toEqual('section');
+        })
 
         it('should render  renderWorkExample  function correctly', () => {
 
@@ -78,52 +128,52 @@ describe('Testing ElementAside component with props', () => {
         })
     })
     describe('Testing functions with props', () => {
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideSidebar01"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideSidebar01BorderTop');
-    })
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideSidebar02"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideSidebar02BorderTop');
-    })
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideSidebar03"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideSidebar03BorderTop');
-    })
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideSidebar01"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideSidebar01BorderTop');
+        })
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideSidebar02"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideSidebar02BorderTop');
+        })
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideSidebar03"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideSidebar03BorderTop');
+        })
 
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideTacticBox"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideTacticBoxBorderTop');
-    })
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideTacticBox"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideTacticBoxBorderTop');
+        })
 
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideSidebar04"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideSidebar04');
-    })
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideSidebar04"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideSidebar04');
+        })
 
-    
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideSidebar05"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.children[0].props.className).toEqual('asideSidebar05');
-    })
 
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideActivity"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.children[0].props.className).toEqual('asideActivity');
-    })  
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideSidebar05"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.children[0].props.className).toEqual('asideSidebar05');
+        })
 
-    it('should render  borderTop  function correctly', () => {
-        let designType = "asideFeature"
-        let borderTop = instance.borderTop(designType)
-        expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
-    })  
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideActivity"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.children[0].props.className).toEqual('asideActivity');
+        })
+
+        it('should render  borderTop  function correctly', () => {
+            let designType = "asideFeature"
+            let borderTop = instance.borderTop(designType)
+            expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
+        })
 
     it(' handleFocus function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)

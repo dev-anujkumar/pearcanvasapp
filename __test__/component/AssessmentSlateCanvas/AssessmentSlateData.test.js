@@ -1,143 +1,390 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { mount } from 'enzyme';
+import { mount , shallow } from 'enzyme';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+import configureMockStore from 'redux-mock-store';
 import { AssessmentSlateData } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateData';
-import {assessmentSlateDefault,assessmentSlateWithData} from "./../../../fixtures/AssessmentSlateCanvasTestingData";
+import { assessmentSlateDefault, assessmentSlateWithData, DefaultSlateData } from "./../../../fixtures/AssessmentSlateCanvasTestingData";
+import { Provider } from 'react-redux';
+const mockStore = configureMockStore(middlewares);
 
-
+let initialState = {
+    elmReducer: {
+        elmData: {
+            numberOfResources: 88,
+            contentUrn: "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e0",
+            versionUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
+        },
+        errFlag: false,
+        errorStatus: ""
+    },
+    appStore: {
+        pageNumberData: {},
+        slateLevelData: DefaultSlateData
+    },
+    learningToolReducer:{
+        learningTypeSelected:""
+    }
+};
 describe('Testing Assessment Slate Data component', () => {
-    const div = document.createElement('div');
-    const assessmentSlate = mount( <AssessmentSlateData   />)
+    const assessmentSlate = mount(<AssessmentSlateData />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
-    it('render Assessment Slate Data component ', () => {
-        
-            ReactDOM.render(<AssessmentSlateData />, div);
-            ReactDOM.unmountComponentAtNode(div);
+    it('render Assessment Slate Data component without crashing ', () => {
+        const assessmentSlate = mount(<AssessmentSlateData model={assessmentSlateDefault}/>)
+        expect(assessmentSlate).toHaveLength(1);
+        let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
+        expect(assessmentSlateDataInstance).toBeDefined();
     })
-    
     it('onClick Assessment Type Event', () => {
         assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
         assessmentSlateDataInstance.setState({
-        activeAssessmentType: 'Select'
-    });
-
-    let activeAssessmentType = {
-        activeAssessmentType: {
-            getAttribute: function(dataValue) {
-                return 'Full Assessment CITE';
-            }
-        }
-    }       
+            activeAssessmentType: 'Select'
+        });
         assessmentSlate.find('div.slate_assessment_type_dropdown.activeDropdown').simulate('click');
         assessmentSlate.find('ul.slate_assessment_type_dropdown_options>li:first-child').simulate('click');
-   });   
-it('onClick UsageType Event', () => {
-    let props={
-        getAssessmentDataPopup :false,
-        assessmentId:"urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
-        assessmentItemTitle:"1.1 Homework",
-        model:assessmentSlateWithData,
-        getAssessmentData:true,
-        
-    }
-    const component = mount(<AssessmentSlateData {...props} />);   
-    const assessmentSlateDataInstance= component.instance(); 
-    assessmentSlateDataInstance.setState({
-        activeAssessmentType:"Full Assessment CITE",
-        activeAssessmentUsageType: 'Quiz'
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment CITE');
     });
-    assessmentSlateDataInstance.forceUpdate();
-    component.update();
-     component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
-    component.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
-
-
-        
-});
-  
-    it('Render succcessfully addedd screen', () => {
-        let props = {
-            getAssessmentDataPopup: true,
-            assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
-            assessmentItemTitle: "1.1 Homework",
-            model: assessmentSlateWithData,
-            getAssessmentData: true,
-
-        }
-        const component = mount(<AssessmentSlateData {...props} />);
-        assessmentSlateDataInstance.setState({
-            activeAssessmentType: 'Full Assessment PUF',
-            showElmComponent: true,
-        });
-        assessmentSlateDataInstance.forceUpdate();
-    });
-    it('Active assessment type handling', () => {
-        let props = {
-            getAssessmentData : true,
-            getAssessmentDataPopup : false,
-        }
-        const component = mount(<AssessmentSlateData {...props} />);
-        assessmentSlateDataInstance.setState({
-            activeAssessmentType : "Learning App Type"   
-        });
-
-        assessmentSlateDataInstance.forceUpdate();
-    });
-    it('change assessment', () => {
-        const mockLoginfn = jest.fn();
+    it('onClick UsageType Event', () => {
         let props = {
             getAssessmentDataPopup: false,
             assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
             assessmentItemTitle: "1.1 Homework",
             model: assessmentSlateWithData,
             getAssessmentData: true,
-            toggleAssessmentPopup : function(){},
-            selectAssessmentType :mockLoginfn
+
         }
-     
         const component = mount(<AssessmentSlateData {...props} />);
-        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        const assessmentSlateDataInstance = component.instance();
         assessmentSlateDataInstance.setState({
-            activeAssessmentType : "Full Assessment CITE"   
+            activeAssessmentType: "Full Assessment CITE",
+            activeAssessmentUsageType: 'Quiz'
         });
         assessmentSlateDataInstance.forceUpdate();
         component.update();
-        // let assessmentFormat = "puf";
-        assessmentSlateDataInstance.changeAssessment();
+        component.find('div.slate_assessment_metadata_container .singleAssessment_Dropdown_activeDropdown').simulate('click');
+        component.find('ul.slate_assessment_metadata_type_dropdown_options>li:first-child').simulate('click');
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment CITE');
+        expect(assessmentSlateDataInstance.state.activeAssessmentUsageType).toBe('Quiz');
+
+    });
+    it('Test-Render succcessfully addedd screen', () => {
+        let store = mockStore(initialState);
+        let props = {
+            getAssessmentDataPopup: true,
+            assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+            assessmentItemTitle: "1.1 Homework",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
         assessmentSlateDataInstance.setState({
-            activeAssessmentType: 'Full Assessment CITE',
+            activeAssessmentType: 'Full Assessment PUF',
             showElmComponent: true,
-        })
+        });
         assessmentSlateDataInstance.forceUpdate();
-        component.update();
-        assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment PUF');
+        expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+    });
+    it('Test-Active assessment type handling', () => {
+        let props = {
+            getAssessmentData: true,
+            getAssessmentDataPopup: false,
+        }
+        const component = mount(<AssessmentSlateData {...props} />);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType: "Learning App Type"
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Learning App Type");
+    });
+    describe('Test-change assessment',()=>{
+        let store = mockStore(initialState);
+        let props = {
+            getAssessmentDataPopup: false,
+            assessmentId: "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74",
+            assessmentItemTitle: "1.1 Homework",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup: function () { },
+            selectAssessmentType:  jest.fn(),
+            showBlocker: jest.fn(),
+            openLtAction: jest.fn(),
+            getDiscipline:jest.fn(), 
+            openLTFunction: jest.fn(), 
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        it('Change Assessment-CITE',()=>{
+            const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
+            const spyaddC2MediaAssessment = jest.spyOn(assessmentSlateDataInstance, 'addC2MediaAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Full Assessment CITE"
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.changeAssessment();
+            assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Full Assessment CITE");
+            expect(spychangeAssessment).toHaveBeenCalled();
+            spychangeAssessment.mockClear(); 
+            expect(spyaddC2MediaAssessment).toHaveBeenCalled();
+            spyaddC2MediaAssessment.mockClear(); 
+        })
+        it('Change Assessment-PUF',()=>{
+            const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Full Assessment PUF",
+                showElmComponent: true,
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.changeAssessment();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Full Assessment PUF");
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spychangeAssessment).toHaveBeenCalled();
+            spychangeAssessment.mockClear(); 
+        })
+        it('Change Assessment-Learnosity',()=>{
+            const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Learnosity",
+                showElmComponent: true,
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.changeAssessment();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Learnosity");
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spychangeAssessment).toHaveBeenCalled();
+            spychangeAssessment.mockClear(); 
+        })
+        it('Change Assessment-Learning App Type',()=>{
+            const spychangeAssessment = jest.spyOn(assessmentSlateDataInstance, 'changeAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: 'learningtemplate'
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.changeAssessment();
+            assessmentSlateDataInstance.changeLearningApp();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('learningtemplate');
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spychangeAssessment).toHaveBeenCalled();
+            spychangeAssessment.mockClear(); 
+        })
     })
-    it('main assessment', () => {
-        const mockLoginfn = jest.fn();
+    describe('Test-main assessment',()=>{
+        let store = mockStore(initialState);
         let props = {
             getAssessmentDataPopup: true,
             assessmentId: "",
             assessmentItemTitle: "",
             model: assessmentSlateWithData,
             getAssessmentData: true,
-            toggleAssessmentPopup : function(){},
-            selectAssessmentType :mockLoginfn
+            toggleAssessmentPopup: function () { },
+            selectAssessmentType: jest.fn(),
+            openLTFunction: jest.fn(), 
+            openLtAction: jest.fn(),
+            getDiscipline:jest.fn(), 
         }
-     
-        const component = mount(<AssessmentSlateData {...props} />);
-        let assessmentSlateDataInstance =component.find('AssessmentSlateData').instance();
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        it('main Assessment-CITE',()=>{
+            const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
+            const spyaddC2MediaAssessment = jest.spyOn(assessmentSlateDataInstance, 'addC2MediaAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Full Assessment CITE"
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.mainAddAssessment();
+            assessmentSlateDataInstance.addC2MediaAssessment('Full Assessment CITE');
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Full Assessment CITE");
+            expect(spymainAddAssessment).toHaveBeenCalled();
+            spymainAddAssessment.mockClear(); 
+            expect(spyaddC2MediaAssessment).toHaveBeenCalled();
+            spyaddC2MediaAssessment.mockClear(); 
+        })
+        it('main Assessment-PUF',()=>{
+            const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Full Assessment PUF",
+                showElmComponent: true,
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.mainAddAssessment();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Full Assessment PUF");
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spymainAddAssessment).toHaveBeenCalled();
+            spymainAddAssessment.mockClear(); 
+        })
+        it('main Assessment-Learnosity',()=>{
+            const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: "Learnosity",
+                showElmComponent: true,
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.mainAddAssessment();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe("Learnosity");
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spymainAddAssessment).toHaveBeenCalled();
+            spymainAddAssessment.mockClear(); 
+        })
+        it('main Assessment-Learning App Type',()=>{
+            const spymainAddAssessment = jest.spyOn(assessmentSlateDataInstance, 'mainAddAssessment')
+            const spychangeLearningApp = jest.spyOn(assessmentSlateDataInstance, 'changeLearningApp')
+            const event ={}
+            assessmentSlateDataInstance.setState({
+                activeAssessmentType: 'Learning App Type'
+            });
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            assessmentSlateDataInstance.mainAddAssessment(event,'Learning App Type');
+            // assessmentSlateDataInstance.changeLearningApp();
+            assessmentSlateDataInstance.forceUpdate();
+            component.update();
+            expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Learning App Type');
+            expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+            expect(spymainAddAssessment).toHaveBeenCalled();
+            spymainAddAssessment.mockClear(); 
+            expect(spychangeLearningApp).toHaveBeenCalled();
+            spychangeLearningApp.mockClear(); 
+        })
+    })
+    it('Test-close elm window', () => {
+        const mockLoginfn = jest.fn();
+        let store = mockStore(initialState);
+        let props = {
+            getAssessmentDataPopup: true,
+            assessmentId: "",
+            assessmentItemTitle: "",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup: function () { },
+            selectAssessmentType: mockLoginfn,
+            showBlocker:jest.fn()
+        }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        const spycloseElmWindow = jest.spyOn(assessmentSlateDataInstance, 'closeElmWindow')
         assessmentSlateDataInstance.setState({
-            activeAssessmentType : "Full Assessment PUF"   
+            activeAssessmentType: "Full Assessment PUF",
+            showElmComponent: true
         });
         assessmentSlateDataInstance.forceUpdate();
         component.update();
-      
-        assessmentSlateDataInstance.mainAddAssessment('',"Full Assessment CITE");
-        assessmentSlateDataInstance.setState({
-            showElmComponent: true,
-        })
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment PUF');
+        expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+        assessmentSlateDataInstance.closeElmWindow();
         assessmentSlateDataInstance.forceUpdate();
         component.update();
-       
-    })
+        expect(spycloseElmWindow).toHaveBeenCalled();
+        spycloseElmWindow.mockClear(); 
+    });
+    it('Test-add puf assessment', () => {
+        const mockLoginfn = jest.fn();
+        let store = mockStore(initialState);
+        let pufObj={
+            id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+            title:"Open response question updated",
+            assessmentFormat:"puf",
+            usagetype:"Quiz"
+        }
+        let props = {
+            getAssessmentDataPopup: true,
+            assessmentId: "",
+            assessmentItemTitle: "",
+            model: assessmentSlateWithData,
+            getAssessmentData: true,
+            toggleAssessmentPopup: function () { },
+            selectAssessmentType: mockLoginfn,
+            addPufAssessment:  function (pufObj) { }
+        }      
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        const spyaddPufAssessment = jest.spyOn(assessmentSlateDataInstance, 'addPufAssessment')
+        assessmentSlateDataInstance.setState({
+            activeAssessmentType: "Full Assessment PUF",
+            showElmComponent: true
+        });
+        assessmentSlateDataInstance.addPufAssessment (pufObj);
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        expect(assessmentSlateDataInstance.state.activeAssessmentType).toBe('Full Assessment PUF');
+        expect(assessmentSlateDataInstance.state.showElmComponent).toBe(true);
+        expect(spyaddPufAssessment).toHaveBeenCalledWith(pufObj);
+        spyaddPufAssessment.mockClear(); 
+    });
+    it('Test-closePopUp  function', () => {
+        const mockLoginfn = jest.fn();
+        let store = mockStore(initialState);
+        let props = {
+            getAssessmentDataPopup: true,
+            getAssessmentData: true,
+       }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        const spyclosePopUp = jest.spyOn(assessmentSlateDataInstance, 'closePopUp')
+        assessmentSlateDataInstance.setState({
+            changeLearningData: false
+        });
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        assessmentSlateDataInstance.closePopUp();        
+        expect(assessmentSlateDataInstance.state.changeLearningData).toBe(false);
+        assessmentSlateDataInstance.forceUpdate();
+        component.update();
+        expect(spyclosePopUp).toHaveBeenCalled();
+        spyclosePopUp.mockClear(); 
+    });
+    it('Test-changeLearningApp  function', done  => {
+        let store = mockStore(initialState);
+        let props = {
+            getAssessmentDataPopup: true,
+            getAssessmentData: true,
+            openLtAction: jest.fn(),
+            openLTFunction: jest.fn(), 
+            getDiscipline:jest.fn(), 
+       }
+        const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
+        let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
+        const spychangeLearningApp = jest.spyOn(assessmentSlateDataInstance, 'changeLearningApp')
+        assessmentSlateDataInstance.setState({
+            dropdownValue: 'Learning App Type',
+            changeLearningData: true
+        });       
+        // assessmentSlateDataInstance.forceUpdate();
+        // component.update();
+        assessmentSlateDataInstance.changeLearningApp();
+        assessmentSlateDataInstance.forceUpdate();
+        // assessmentSlateDataInstance.mockOpenLTFunction(mockGetDiscipline);
+        
+        component.update();
+        expect(assessmentSlateDataInstance.state.changeLearningData).toBe(true);
+        expect(assessmentSlateDataInstance.state.dropdownValue).toBe('Learning App Type');
+        expect(spychangeLearningApp).toHaveBeenCalled();
+        done()
+   
+        spychangeLearningApp.mockClear(); 
+    });
 })

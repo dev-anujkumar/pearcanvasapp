@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
-
+import tinymce from 'tinymce/tinymce';
+import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
@@ -40,6 +41,15 @@ class ElementAsideContainer extends Component {
     }
     handleFocus = () => {
         this.props.setActiveElement(this.props.element);
+        let toolbar = config.asideToolbar
+        if(toolbar && toolbar.length){
+            tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+            .each((index) => {
+                if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
+                    tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                }
+            });
+        }  
         this.props.handleFocus()
     }
 /**
@@ -215,6 +225,7 @@ class ElementAsideContainer extends Component {
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
                     showDeleteElemPopup = {this.props.showDeleteElemPopup}
+                    permissions = {this.props.permissions}
                 />
                 <Sortable 
                                options={{
@@ -297,6 +308,7 @@ class ElementAsideContainer extends Component {
                                     index={index}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
                                     elementType={this.props.element.type}
+                                    permissions = {this.props.permissions}
                                 />
                                 }
                                 <ElementContainer
@@ -305,12 +317,12 @@ class ElementAsideContainer extends Component {
                                     parentUrn ={parentUrn}
                                     showBlocker={this.props.showBlocker}
                                     asideData = {asideData}
-
-                                // handleCommentspanel={this.props.handleCommentspanel}
+                                    permissions = {this.props.permissions}
+                                    handleCommentspanel={this.props.handleCommentspanel}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (
-                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
+                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions = {this.props.permissions} />
                                         )
                                     }
                                 </ElementContainer>
@@ -319,6 +331,7 @@ class ElementAsideContainer extends Component {
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
+                                    permissions = {this.props.permissions}
                                 />
                             </React.Fragment>
                         )
@@ -328,7 +341,7 @@ class ElementAsideContainer extends Component {
             }
 
         } catch (error) {
-            //console.log("error", error)
+            console.log("error", error)
         }
     }
      /**

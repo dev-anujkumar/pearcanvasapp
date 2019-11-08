@@ -1,26 +1,34 @@
 export default {
     "opener":{
-        "type": "chapterintro",
-        "subtype": "chapteropener",
-        "id": "urn:pearson:manifest:0fd35c2b-d70c-40c4-8c46-d283203fce09",
-        "schema": "http://schemas.pearson.com/wip-authoring/intro/1",
-        "contents": {
-            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
-            "title": {
+        "id": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+        "versionUrn": "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+        "contentUrn": "urn:pearson:entity:b345d729-e8b0-4e54-b4c8-0c24650ck8u6",
+        "type": "openerelement",
+        "backgroundcolor": "#000000",
+        "schema": "http://schemas.pearson.com/wip-authoring/openerelement/1",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "Chapter X: Opening Element Title",
+            "textsemantics": [
+                {
+                    "type": "label",
+                    "charStart": 0,
+                    "charEnd": 7
+                },
+                {
+                    "type": "number",
+                    "charStart": 8,
+                    "charEnd": 10
+                }
+            ]
+        },
+        "backgroundimage": {
+            "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/ch11_chapter_header.jpg",
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "imageid": "urn:pearson:alfresco:4932d1fb-e6d3-4080-9f23-032e0dfa219a",
+            "credits": {
                 "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": "Chapter X: Opening Element Title",
-                "textsemantics": [
-                    {
-                        "type": "label",
-                        "charStart": 0,
-                        "charEnd": 7
-                    },
-                    {
-                        "type": "number",
-                        "charStart": 8,
-                        "charEnd": 10
-                    }
-                ]
+                "text": "Opening element credits for the background image."
             }
         }
     },
@@ -1470,6 +1478,59 @@ export default {
             "interactiveid": "",
             "interactivetype": "popup",
             "interactiveformat": "narrative-link",
+            "posterimage": {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            }
+        },
+        "html": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "title": "<p><br></p>",
+            "subtitle": "<p><br></p>",
+            "caption": "<p><br></p>",
+            "credit": "<p><br></p>",
+            "text": "",
+            "postertext": "",
+            "tableasHTML": ""
+        },
+        "versionUrn": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
+        "contentUrn": "urn:pearson:entity:5a79c9c5-99fd-4814-b4d3-17e8b55973b3"
+    },
+    "pdf":{
+        "id": "urn:pearson:work:d5a8989a-f468-47b1-aca0-452e2503a09a",
+        "type": "figure",
+        "figuretype": "interactive",
+        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        },
+        "subtitle": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "captions": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "credits": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "figuredata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+            "interactiveid": "",
+            "interactivetype": "pdf",
             "posterimage": {
                 "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
             }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
-import { labelOptions } from './LabelOptions'
+import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
@@ -17,13 +16,14 @@ class OpenerElement extends Component {
 
     constructor(props){
         super(props)
-
+        const { textsemantics, text } = props.element.title
+        const bgImage = props.element.backgroundimage.path
         this.state = {
-            label: props.model ? props.model.label : "Chapter",
-            number: props.model ? props.model.number : "",
-            title: props.model ? props.model.title : "",
+            label: getOpenerContent(textsemantics, "label", text),
+            number: getOpenerContent(textsemantics, "number", text),
+            title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
-            imgSrc: null,
+            imgSrc: getOpenerImageSource(bgImage),
             width: null
         }
     }
@@ -50,6 +50,8 @@ class OpenerElement extends Component {
             if (document.querySelector("[name='long_description']"))
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
+        disableHeader(false)
+        hideTocBlocker()
     }
     handleC2ExtendedClick = (data) => {
         let data_1 = data;
@@ -66,8 +68,8 @@ class OpenerElement extends Component {
      * @param {e} event
      */
     handleC2MediaClick = (e) => {
-        const { slateLockInfo } = this.props
-        if(slateLockInfo.isLocked && config.userId != slateLockInfo.userId)
+        const { slateLockInfo , permissions } = this.props
+        if(checkSlateLock(slateLockInfo))
             return false
 
         if (e.target.tagName.toLowerCase() === "p") {
@@ -95,13 +97,15 @@ class OpenerElement extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
         } else {
-            c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                        that.dataFromAlfresco(data);
+            if (permissions.includes('alfresco_crud_access')) {
+                c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                    c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                        c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                            that.dataFromAlfresco(data);
+                        })
                     })
-                })
-            });
+                });
+            }
         }
     }
 
@@ -113,13 +117,14 @@ class OpenerElement extends Component {
         this.setState({
             label: e.target.innerHTML
         })
+        this.handleBlur(e)
         this.toggleLabelDropdown()
     }
     
     /**
      * Toggles label dropdown
      */
-    toggleLabelDropdown = () => {
+    toggleLabelDropdown = (e) => {
         this.setState({
             showLabelDropdown: !this.state.showLabelDropdown
         })
@@ -204,6 +209,15 @@ class OpenerElement extends Component {
         this.props.onClick()
 
     }
+
+    /**
+     * Handles blur event for each input box and initiates saving call
+     * @param {*} event blur event object
+     */
+    handleBlur = (event) => {
+        console.log("Blur from :", event.target)
+    }
+    
     
     render() {
         const { imgSrc, width } = this.state
@@ -221,11 +235,11 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} />
+                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
                     <div className="opener-label-box">
                         <div className="opener-title-text">Title</div>
-                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
+                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
@@ -245,4 +259,5 @@ OpenerElement.propTypes = {
 
 OpenerElement.displayName = 'OpenerElement'
 
-export default OpenerElement
+export default OpenerElement;
+  

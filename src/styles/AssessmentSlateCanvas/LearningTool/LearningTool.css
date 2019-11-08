@@ -188,8 +188,7 @@
     border: 1px solid #dcdcdc;
     display: inline-block;
     cursor: pointer;
-    color: #777777;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     padding: 8px 24px;
@@ -206,8 +205,7 @@
     border: 1px solid #dcdcdc;
     display: inline-block;
     cursor: pointer;
-    color: #777777;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     font-weight: bold;
     padding: 8px 24px;

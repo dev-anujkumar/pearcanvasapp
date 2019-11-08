@@ -14,6 +14,7 @@ import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../Commen
 import Toolbar from '../Toolbar';
 import config from './../../config/config';
 
+
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -29,8 +30,11 @@ import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { PageNumberContext } from './CanvasContexts.js';
+import { handleUserRole } from './UserRole_Actions'
+import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
+import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -61,20 +65,14 @@ export class CanvasWrapper extends Component {
             'type': CanvasIframeLoaded,
             'message': {}
         });
-        // *********************************************************
-        // *************** TO BE PLACED PROPERLY *****************//
         sendDataToIframe({
             'type': ShowHeader,
             'message': true
         })
-        // *********************************************************
         let { projectUrn } = config,
             // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
 
-        // *************************************************
-        // commenting below setState() to test alternative
-        // *************************************************
         this.props.getSlateLockStatus(projectUrn ,slateId)     
         }
 
@@ -200,21 +198,8 @@ export class CanvasWrapper extends Component {
         return false
     }
 
-
-    
- /*    openGlossaryFootnotePopUp=()=>{
-       if(this.props.glossaryFootnoteValue.type==="Glossary"||this.props.glossaryFootnoteValue.type==="Footnote"){
-        return (
-        <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus}/>
-        )
-        
-    }
-    
-    }     */
-
-    showLockReleasePopup = () => {
+   showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
-            // this.props.showCanvasBlocker(true)
             showTocBlocker();
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return(
@@ -251,19 +236,26 @@ export class CanvasWrapper extends Component {
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
-                                <PageNumberContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
+                                <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
                                     <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
-                                </PageNumberContext.Provider>                                
+                                </RootContext.Provider>                                
                             </div>
                         </div>
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
-                            {/* <span className='--rm-place'>Settings</span> */}
-                           
-                            {this.props.glossaryFootnoteValue.popUpStatus ?  <GlossaryFootnoteMenu  activePopUp={this.props.glossaryFootnoteValue.popUpStatus} />: <Sidebar showPopUp={this.showPopUp}/> }
-                            {/*  <Sidebar showPopUp={this.showPopUp}/> */}
-                            {/* put side setting */}
+                            <RootContext.Consumer>
+                                {
+                                    () => {
+                                        if (this.props.glossaryFootnoteValue.popUpStatus) {
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
+                                        }
+                                        else {
+                                            return (<Sidebar showPopUp={this.showPopUp} />)
+                                        }
+                                    }
+                                }
+                            </RootContext.Consumer>
                         </div>
                     </div>
                 </div>
@@ -286,7 +278,10 @@ const mapStateToProps = state => {
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        showApoSearch : state.assetPopOverSearch.showApoSearch
+        showApoSearch : state.assetPopOverSearch.showApoSearch,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp,
+        logout
     };
 };
 
@@ -309,6 +304,9 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
-        logout
+        logout,
+        handleUserRole,
+        fetchAudioNarrationForContainer,
+        glossaaryFootnotePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

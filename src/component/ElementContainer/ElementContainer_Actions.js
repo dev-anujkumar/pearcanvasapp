@@ -3,14 +3,9 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
-let headers = {
-    "Content-Type": "application/json",
-    ApiKey: "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",//STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken,
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
-}
-export const addComment = (commentString, elementId) => (dispatch, getState) => {
+export const addComment = (commentString, elementId,asideData,parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
@@ -20,7 +15,7 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
 
     let Comment = {
         commentType: "comment",
-        commentDateTime: new Date().toISOString(),   //"2019-04-09T14:22:28.218Z"
+        commentDateTime: new Date().toISOString(),  
         commentAssignee: config.userId,
         commentCreator: config.userId,
         commentString: commentString,
@@ -31,21 +26,40 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
     }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
-        { headers: headers }
+        { headers: {
+            "Content-Type": "application/json",
+            ApiKey: config.STRUCTURE_APIKEY,
+            PearsonSSOSession: config.ssoToken,
+        
+        } }
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
-            // let _finalSlateObject = Object.values(_slateObject)[0];
             let { contents: _slateContent } = _slateObject;
-            // let { contents: _slateContent } = _slateObjects;
             let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['comments'] = true
+                }else if(asideData && asideData.type == 'element-aside'){
+                    if(element.id == asideData.id){
+                        element.elementdata.bodymatter.map((nestedEle)=>{
+                            /*This condition add comment in element in aside */
+                            if(nestedEle.id == elementId){
+                                nestedEle['comments'] = true;
+                            }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                                  /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele)=>{
+                                    if(ele.id == elementId){
+                                        ele['comments'] = true;
+                                    }
+                                })
+                            }
+                        })
+                    }
                 }
             }
             );
@@ -64,13 +78,29 @@ export const addComment = (commentString, elementId) => (dispatch, getState) => 
 }
 
 
-export const deleteElement = (elmId, type, parentUrn,asideData) => (dispatch, getState) => {
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "entityUrn": parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
-        "workUrn": elmId
-    };
-    axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
+
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
+
+    const prepareDeleteRequestData = (type) => {
+        switch (type){
+            case "element-workedexample":
+            case "element-aside":
+                return {
+                    "projectUrn": config.projectUrn,
+                    "entityUrn": contentUrn
+                }
+            default:
+                return {
+                    "projectUrn": config.projectUrn,
+                    "entityUrn": parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
+                    "workUrn": elmId
+                }
+        }
+    }
+
+    let _requestData = prepareDeleteRequestData(type)
+
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -136,7 +166,7 @@ export const deleteElement = (elmId, type, parentUrn,asideData) => (dispatch, ge
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData,elementIndex) => (dispatch, getState) => {
-    axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+    return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
             headers: {
@@ -162,4 +192,23 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     }) 
+}
+
+export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, getState) => {
+    let parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
+    dispatch({
+        type: SET_OLD_IMAGE_PATH,
+        payload: {
+            oldImage: parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.path
+        }
+    })
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
+    cb();
 }

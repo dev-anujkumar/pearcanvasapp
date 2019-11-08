@@ -15,6 +15,8 @@ import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
+import RootContext from '../../CanvasWrapper/CanvasContexts.js';
+import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -25,7 +27,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 isTableLaunched: false,
                 showBlocker: false,
                 toggleTocDelete: false,
-                tocDeleteMessage: null
+                tocDeleteMessage: null,
             };
         }
 
@@ -86,33 +88,19 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
                     break;
+                case 'toggleCommentsPanel':
+                        this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.enablePrev;
                     break;
                 case 'enableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                        config.disablePrev = message.enableNext;
                     break;
                 case 'disablePrev':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disablePrev = message.disablePrev;
                     break;
                 case 'disableNext':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
+                    config.disableNext = message.disableNext;
                     break;
                 case 'swappedIS':
                     {
@@ -157,12 +145,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                     this.props.fetchAuthUser()
-                     config.ssoToken = message.ssoToken;
-                     config.projectUrn = message.id;
-                     config.citeUrn = message.citeUrn;
-                     config.projectEntityUrn = message.entityUrn;
-                     config.alfrescoMetaData = message.alfresco;
+                    config.userId = message['x-prsn-user-id'].toLowerCase()
+                    this.props.fetchAuthUser()
+                    config.ssoToken = message.ssoToken;
+                    config.projectUrn = message.id;
+                    config.citeUrn = message.citeUrn;
+                    config.projectEntityUrn = message.entityUrn;
+                    config.alfrescoMetaData = message.alfresco;
+                    config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -187,20 +177,26 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleLOData=(message) =>{
-            if(message.statusForSave){
-                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>"); 
-               this.props.currentSlateLO(message.loObj);
-               var slateTagClass = document.getElementsByClassName("tox-tbtn");
-               slateTagClass[slateTagClass.length-1].className +=" slateTagClass";
-               var slateTagDesign = document.getElementsByClassName("slateTagClass");
-               slateTagDesign.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)"><g id="baseline-label-24px"><path id="Path_1664" data-name="Path 1664" d="M17.63,5.84A1.994,1.994,0,0,0,16,5L5,5.01A2,2,0,0,0,3,7V17a2,2,0,0,0,2,1.99L16,19a1.994,1.994,0,0,0,1.63-.84L22,12,17.63,5.84Z" fill="#42a316"/></g><g id="check" transform="translate(4.6 3.4)"><path id="Path_1665" data-name="Path 1665" d="M5.907,10.346,4.027,8.466,3.4,9.093,5.907,11.6l5.373-5.373L10.654,5.6Z" transform="translate(-1)" fill="#fff"/></g></g></svg>';
-           }
+            if (message.statusForSave) {
+                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                this.props.currentSlateLO(message.loObj);
+                let slateTagClass = document.getElementsByClassName("learning-objective")
+                let slateTagParent = slateTagClass[0].parentNode;
+                if (message.toastData === "Learning Objectives has been unlinked ") {
+                    slateTagClass[0].outerHTML = metadataanchor;
+                }
+                else {
+                    slateTagClass[0].outerHTML = slateTagEnable;
+
+                }
+                slateTagParent.appendChild(slateTagClass[0])
+            }
            
             
         }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
-                config.PERMISSIONS = message.permissions;
+                this.props.handleUserRole(message.permissions)
             }
         }
 
@@ -237,7 +233,6 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
-            console.log("setCurrentSlate >> ", message)
             let currentSlateObject = {};
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
@@ -262,6 +257,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+                let slateData = {
+                    currentProjectId: config.projectUrn,
+                    slateEntityUrn: config.slateEntityURN
+                }
+                this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

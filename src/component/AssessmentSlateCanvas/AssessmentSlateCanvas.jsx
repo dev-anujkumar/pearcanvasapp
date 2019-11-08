@@ -2,7 +2,6 @@
 * Root Component of Assessment Slate Canvas
 */
 
-
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
@@ -11,8 +10,10 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLo
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
-import { closeLtAction,openLtAction,getDiscipline} from './learningTool/learningToolActions';
-
+import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
+import { sendDataToIframe } from '../../constants/utility.js';
+import {ShowLoader} from '../../constants/IFrameMessageTypes';
+import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -27,24 +28,38 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
     }
+
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
     toggleAssessmentPopup = (value) => {
         this.setState({
             showAssessmentPopup: value
         });
     }
-    /*** @description - This function is to select the Assessment type
+
+    /*** 
+     * @description - This function is to select the Assessment type
      * @param type - type of assessment
     */
     selectAssessmentType=(type)=>{
         var assessmentType;
-        if(type==="Full Assessment CITE" || this.props.model.elementdata.assessmentformat === "CITE" ){
+        if(type===FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE" ){
             assessmentType="CITE"
         }else{
             assessmentType="TDX"
         }
         return assessmentType
     }
+
+    /*** 
+    * @description - This is the function to add C2-Media to Assessment Slate 
+    * @param pufObj - The object contains data about PUF Assessment 
+    */
+    addPufAssessment = (pufObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
+    }
+
     /***
      * @description Open C2 module with predefined Alfresco location
      * @param  value alfresco locationData
@@ -67,6 +82,7 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
+       // this.props.showBlocker(true);
         this.toggleAssessmentPopup(false);
         
         productId = (value && value !== "") ? value : "Unspecified";
@@ -75,6 +91,11 @@ export class AssessmentSlateCanvas extends Component {
         });
 
     }
+
+    /*** 
+     * @description  Callback function to launch C2 mdeia browser
+     * @param  assessmentData - the object contains assessment data
+     */
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
@@ -90,6 +111,7 @@ export class AssessmentSlateCanvas extends Component {
         }
         this.updateAssessment(id, itemID, title, assessmentFormat, "", "insert");
     }
+
     /*** @description - This function is to update state variables based on the parameters
        * @param id - assessment-id of the assessment
        * @param itemID - assessment-item-id of the assessment
@@ -134,15 +156,16 @@ export class AssessmentSlateCanvas extends Component {
     handleAssessmentFocus = () => {
         this.props.handleFocus();
     }
+    
     /*** @description - This function is to handle Blur on the Assessment element on blur*/ 
     handleAssessmentBlur = () =>{
         this.props.handleBlur();
     }
     render() {
-        const { } = this.props;
+        const { showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
-            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>
+            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>  
                 <AssessmentSlateData
                     type={this.props.type}
                     getAssessmentDataPopup={getAssessmentDataPopup}
@@ -154,11 +177,14 @@ export class AssessmentSlateCanvas extends Component {
                     toggleAssessmentPopup={this.toggleAssessmentPopup}
                     selectAssessmentType={this.selectAssessmentType}
                     assessmentSlateElement={assessmentSlateElement}
+                    addPufAssessment={this.addPufAssessment}
                     model={this.props.model} 
                     openLtAction ={this.props.openLtAction}
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
+                    openLTFunction = {this.props.openLTFunction}
                     linkLearningApp ={this.linkLearningApp}
+                    showBlocker={showBlocker}
                     />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
@@ -178,7 +204,8 @@ const mapStateToProps = (state, props) => {
 const mapActionToProps = {
     openLtAction: openLtAction,
     closeLtAction: closeLtAction,
-    getDiscipline: getDiscipline
+    getDiscipline: getDiscipline,
+    openLTFunction:openLTFunction
 }
 
 

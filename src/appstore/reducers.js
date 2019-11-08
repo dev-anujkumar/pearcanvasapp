@@ -10,16 +10,14 @@ import {
     SET_ACTIVE_ELEMENT,
     AUTHORING_ELEMENT_CREATED,
     AUTHORING_ELEMENT_UPDATE,
-    ASSESSMENT_ELEMENT_CREATED,
     ADD_COMMENT,
-    VIDEO_ELEMENT_CREATED,
-    FIGURE_ELEMENT_CREATED,
-    INTERACTIVE_ELEMENT_CREATED,
     DELETE_ELEMENT,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
-    SET_UPDATED_SLATE_TITLE
+    SET_UPDATED_SLATE_TITLE,
+    GET_PROJECT_PERMISSIONS,
+    SET_OLD_IMAGE_PATH
 } from '../constants/Action_Constants';
 
 /**
@@ -32,7 +30,8 @@ const initialState = {
     // elementsTag: {},
     activeElement: {},
     splittedElementIndex: 0,
-    pageNumberData: {}
+    pageNumberData: {},
+    permissions: []
 };
 
 /**
@@ -57,30 +56,10 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case ASSESSMENT_ELEMENT_CREATED:
-                    return {
-                        ...state,
-                        slateLevelData: action.payload.slateLevelData
-                    };
-        case FIGURE_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
-            };
         case ADD_COMMENT:
             return {
                 ...state,
                 slateLevelData: action.payload
-            };
-        case VIDEO_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
-            };
-        case INTERACTIVE_ELEMENT_CREATED:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
             };
         case DELETE_ELEMENT : 
             return {
@@ -112,6 +91,16 @@ export default function (state = initialState, action) {
                  ...state,
                  slateLevelData: action.payload.slateLevelData
              }
+        case GET_PROJECT_PERMISSIONS:
+            return {
+                ...state,
+                permissions: action.payload
+            }
+        case SET_OLD_IMAGE_PATH:
+            return {
+                ...state,
+                oldImage: action.payload.oldImage
+            }   
         default:
             return state;
     }
