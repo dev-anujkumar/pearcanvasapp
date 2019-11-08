@@ -7,6 +7,8 @@ let config = {
     ELM_ENDPOINT: process.env.ELM_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : process.env.STRUCTURE_API_ENDPOINT_URL || 'https://contentapis-staging.pearsoncms.net/structure-api/',
+    PAGE_NUMBER_UPDATE_ENDPOINT :process.env.PAGE_NUMBER_UPDATE_ENDPOINT || "https://contentapis-staging.pearsoncms.net/print-api",
+    OPENER_ELEMENT_COREAPI_KEY:  process.env.OPENER_ELEMENT_COREAPI_KEY|| "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
     AUDIO_API_KEY : process.env.STRUCTURE_APIKEY|| "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',

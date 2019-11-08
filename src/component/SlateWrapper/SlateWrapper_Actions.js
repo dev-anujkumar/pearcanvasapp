@@ -1,15 +1,17 @@
 import axios from 'axios';
 import config from '../../config/config';
 import {
-    AUTHORING_ELEMENT_CREATED,ASSESSMENT_ELEMENT_CREATED,
+    AUTHORING_ELEMENT_CREATED, ASSESSMENT_ELEMENT_CREATED,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
-    SET_UPDATED_SLATE_TITLE
+    SET_UPDATED_SLATE_TITLE,
+    UPDATE_PAGENUMBER_SUCCESS,
+    UPDATE_PAGENUMBER
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
 
 
 
@@ -64,8 +66,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
-    
-    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -85,7 +87,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
-        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
                 } else if (item.type == "element-aside" && item.id == asideData.id) {
@@ -109,8 +111,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
     }).catch(error => {
         // Opener Element mock creation
-        if(type == "OPENER"){
-            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        if (type == "OPENER") {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             const createdElementData = openerData
@@ -121,51 +123,53 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     slateLevelData: newParentData
                 }
             })
-        } 
+        }
         //console.log("create Api fail", error);
     })
 }
 
-export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
+export const createElementMeta = (type, index, parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
-    let createdElemData = {contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
-    elementdata:{
-        loref: " "
-    },
-    html: {
-        "text": "<p class=\"paragraphNumeroUno\"></p>"
-    },
-    id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    type: "element-learningobjectivemapping",
-    versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"}
-    
+    let createdElemData = {
+        contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
+        elementdata: {
+            loref: " "
+        },
+        html: {
+            "text": "<p class=\"paragraphNumeroUno\"></p>"
+        },
+        id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
+        schema: "http://schemas.pearson.com/wip-authoring/element/1",
+        type: "element-learningobjectivemapping",
+        versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"
+    }
+
     let _requestData = {
         "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
-        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
+        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
+        "slateUrn": parentUrn && parentUrn.manifestUrn || config.slateManifestURN,
         "index": index,
         "type": type
     };
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-       
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
 
-   
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let createdElementData = createdElemData;
+    if (newParentData[config.slateManifestURN])
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+
+    dispatch({
+        type: AUTHORING_ELEMENT_CREATED,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
+
+
 };
-export const createElementMetaList = (type, index,parentUrn) => (dispatch, getState) => {
+export const createElementMetaList = (type, index, parentUrn) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let createdElemData = {
@@ -173,7 +177,7 @@ export const createElementMetaList = (type, index,parentUrn) => (dispatch, getSt
         type: "element-generateLOlist",
         schema: "http://schemas.pearson.com/wip-authoring/element/1",
         elementdata: {
-            level:  "chapter",
+            level: "chapter",
             groupby: "module"
         },
         mgmtinfo: {
@@ -183,23 +187,24 @@ export const createElementMetaList = (type, index,parentUrn) => (dispatch, getSt
             },
             comments: [],
             trackingdocumentid: ""
-        }}
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
+        }
+    }
 
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
+    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let createdElementData = createdElemData;
+    if (newParentData[config.slateManifestURN])
+        newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
 
-   
+    dispatch({
+        type: AUTHORING_ELEMENT_CREATED,
+        payload: {
+            slateLevelData: newParentData
+        }
+    })
+
+
 };
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
@@ -395,9 +400,78 @@ export const setElementPageNumber = (numberObject) => (dispatch, getState) => {
         payload: pageNumberData
     })
 }
-export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) =>{
+
+export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_PAGENUMBER,
+        payload: {
+            pageLoading: true
+        }
+    })
+    let data = {
+        pageNumber: pagenumber
+    }
+    if (data.pageNumber) {
+        return axios.put(
+            `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementId}`,
+            data,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        ).then(res => {
+
+            /** This will uncomment when pagenumber key is fixed**/
+
+
+        /*   const parentData = getState().appStore.slateLevelData;
+            const newslateData = JSON.parse(JSON.stringify(parentData));
+            let _slateObject = Object.values(newslateData)[0];
+            let { contents: _slateContent } = _slateObject;
+            let { bodymatter: _slateBodyMatter } = _slateContent;
+            const element = _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                    element['pageNumber'] = pagenumber
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
+                         
+                            if (nestedEle.id == elementId) {
+                                nestedEle['pageNumber'] = pagenumber;
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                              
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele['pageNumber'] = pagenumber;
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }) */
+
+            dispatch({
+                type: UPDATE_PAGENUMBER_SUCCESS,
+                payload: {
+                    slateLevelData: newslateData,
+                    pageLoading: false
+                }
+            })
+        }).catch(error => {
+            console.log("UPDATE PAGE NUMBER ERROR : ", error)
+        })
+    }
+
+}
+
+export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {
     return dispatch({
         type: SET_UPDATED_SLATE_TITLE,
         payload: newSlateObj
-    }) 
+    })
 }

@@ -248,7 +248,7 @@ class ElementAsideContainer extends Component {
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (
-                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions = {this.props.permissions} />
+                                            <PageNumberElement asideData = {asideData} parentUrn ={parentUrn} element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions = {this.props.permissions} />
                                         )
                                     }
                                 </ElementContainer>

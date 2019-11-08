@@ -46,19 +46,21 @@ class PageNumber extends React.Component {
     }
 
     updatePageNumber = (e, currOperation, changedInputValue) => {
+        const {id} = this.props.element;
+        const {asideData,parentUrn} = this.props
         console.log('loader', this.state.loader)
-        this.setState({ loader: true });
+     //   this.setState({ loader: true });
         e.currentTarget.parents('.pageNumberBox').classList.remove('greenBorder');
-
-        setTimeout(() => {
+        let pageNumber = e.currentTarget.value;
+        this.props.updatePageNumber(pageNumber,id,asideData,parentUrn)
+        /* setTimeout(() => {
             this.setState({ loader: false });
-        }, 1000);
+        }, 1000); */
     }
 
     render() {
-        
         let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
-        let loader = this.state.loader;
+        let loader = this.props.pageLoading;
         let content = null;
         if (loader)
             content = <div className='pageNumberBoxLoader'><div className='loaderPage'></div></div>

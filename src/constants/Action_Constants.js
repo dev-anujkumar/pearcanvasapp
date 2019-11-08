@@ -72,3 +72,7 @@ export const LT_TYPE_FILTER_SELECTED = "LT_TYPE_FILTER_SELECTED"
 /*--------------- User Role -------------------*/
 export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
 
+/*--------------- Page Numbering -------------------*/
+export const UPDATE_PAGENUMBER_SUCCESS = 'UPDATE_PAGENUMBER_SUCCESS'
+export const UPDATE_PAGENUMBER = 'UPDATE_PAGENUMBER'
+

@@ -13,7 +13,8 @@ import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement , swapElement,
     setSplittedElementIndex, createElementMeta,
-    createElementMetaList
+    createElementMetaList,
+    updatePageNumber
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
@@ -607,6 +608,7 @@ class SlateWrapper extends Component {
      * renderElement | renders single element according to its type
      */
     renderElement(_elements, _slateType, slateLockInfo) {
+        const {updatePageNumber,pageLoading} = this.props;
         try {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
@@ -635,7 +637,7 @@ class SlateWrapper extends Component {
                             >
                             {
                                    (isHovered, isPageNumberEnabled, activeElement ,permissions ) => (
-                                       <PageNumberElement element={element} _slateType={_slateType} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
+                                       <PageNumberElement pageLoading = {pageLoading} updatePageNumber = {updatePageNumber} element={element} _slateType={_slateType} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement}  permissions = {permissions}/>
                                    )
                                }
                            </ElementContainer>
@@ -727,7 +729,8 @@ const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         slateTitleUpdated:state.appStore.slateTitleUpdated,
-        permissions: state.appStore.permissions
+        permissions: state.appStore.permissions,
+        pageLoading: state.appStore.pageLoading
     };
 };
 
@@ -739,6 +742,7 @@ export default connect(
         createElementMeta,
         createElementMetaList,
         swapElement,
-        setSplittedElementIndex
+        setSplittedElementIndex,
+        updatePageNumber
     }
 )(SlateWrapper);

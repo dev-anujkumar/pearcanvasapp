@@ -17,7 +17,9 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
     GET_PROJECT_PERMISSIONS,
-    SET_OLD_IMAGE_PATH
+    SET_OLD_IMAGE_PATH,
+    UPDATE_PAGENUMBER_SUCCESS,
+    UPDATE_PAGENUMBER
 } from '../constants/Action_Constants';
 
 /**
@@ -100,7 +102,18 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 oldImage: action.payload.oldImage
-            }   
+            }  
+       case UPDATE_PAGENUMBER_SUCCESS:
+           return{
+               ...state,
+               slateLevelData: action.payload.slateLevelData,
+               pageLoading:action.payload.pageLoading
+           }
+        case UPDATE_PAGENUMBER:
+            return {
+                ...state,
+                 pageLoading:action.payload.pageLoading
+            }
         default:
             return state;
     }
