@@ -53,7 +53,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         inputType : inputPrimaryOptionEnum,
         inputSubType : inputSubTypeEnum,
         outputType : outputPrimaryOptionEnum,
-        outputSubType: outputSubTypeEnum
+        outputSubType: outputSubTypeEnum,
+        projectUrn : config.projectUrn
     }
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`

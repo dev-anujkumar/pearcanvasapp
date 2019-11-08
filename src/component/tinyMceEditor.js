@@ -32,6 +32,7 @@ import {
     UnlinkSlateDropdown
 } from '../constants/IFrameMessageTypes';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
+import {checkforToolbarClick} from '../js/utils'
 
 let context = {};
 
@@ -62,6 +63,7 @@ export class TinyMceEditor extends Component {
             forced_root_block: '',
             remove_linebreaks: false,
             paste_preprocess: this.pastePreProcess,
+            force_p_newlines : false,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
                 this.setMetaDataAnchorIcon(editor);
@@ -205,32 +207,34 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
         if (e.target.parentElement && e.target.parentElement.nodeName == "SUP") {
+            let uri = e.target.parentElement.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
-                    this.props.openGlossaryFootnotePopUp(true, "Footnote");
+                    this.toggleGlossaryandFootnotePopup(true, "Footnote", uri);
                 }
-                this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                this.toggleGlossaryandFootnotePopup(false, null, uri, cbFunc);
             }
             else {
-                this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Footnote", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }
         /**
          * Case - clicking over Glossary text
          */
         else if (e.target.nodeName == "DFN") {
+            let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
-                    this.props.openGlossaryFootnotePopUp(true, "Glossary");
+                    this.toggleGlossaryandFootnotePopup(true, "Glossary", uri);
                 }
-                this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+                this.toggleGlossaryandFootnotePopup(false, null, uri, cbFunc);
             }
             else {
-                this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }
         /**
@@ -252,7 +256,7 @@ export class TinyMceEditor extends Component {
             cbFunc = () => {
                 this.toggleGlossaryandFootnoteIcon(false);
             }
-            this.props.openGlossaryFootnotePopUp(false, null, cbFunc);
+            this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
         }
     }
 
@@ -641,7 +645,7 @@ export class TinyMceEditor extends Component {
             else {
                 editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
             }
-            this.props.openGlossaryFootnotePopUp(true, "Footnote", () => { this.toggleGlossaryandFootnoteIcon(true); }); 
+            this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); }); 
         })
     }
     learningObjectiveDropdown(text){
@@ -653,19 +657,18 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
-        let sectedText = editor.selection.getContent({format: 'text'})
-        // let sectedText = window.getSelection().toString();
+        let selectedText = editor.selection.getContent({format: 'text'})
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
-                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${sectedText}</dfn>`
+                insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             else {
-                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + sectedText + '</dfn>'
+                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
             }            
-            if(sectedText !== ""){
+            if(selectedText !== ""){
                 editor.insertContent(insertionText);
-                this.props.openGlossaryFootnotePopUp(true, "Glossary", () => { this.toggleGlossaryandFootnoteIcon(true); });
+                this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
         }) 
     }
@@ -774,10 +777,10 @@ export class TinyMceEditor extends Component {
         }
         return toolbar;
     }
+
     /**
      * Set dynamic toolbar by element type
      */
-
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
         tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
@@ -879,9 +882,18 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        this.props.handleBlur()
+        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        if(checkforToolbarClick(relatedTargets)){
+            e.stopPropagation();
+            return;
+        }
+        this.props.handleBlur();
     }
     
+    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
+        this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
+    }
+
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId;
@@ -924,15 +936,15 @@ export class TinyMceEditor extends Component {
         switch (this.props.tagName) {
             case 'p':
                 return (
-                    <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</p>
+                    <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
                 return (
-                    <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}></h4>
+                    <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
-                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}>{htmlToReactParser.parse(this.props.model)}</code>
+                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             default:
                 return (

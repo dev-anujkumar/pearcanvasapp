@@ -414,27 +414,11 @@ export default {
             toolbar: ['assetpopover','decreaseindent'],
             enum: 'TABLE_EDITOR',
             subtype: {
-                'secondary-editor-table-half': {
-                    text: '50% Text Width',
+                'secondary-editor-table-equation': {
+                    text: 'Table Editor',
                     labelText: 'TE',
-                    enum: 'IMAGE_50_TEXT_TABLE'
-                },
-                'secondary-editor-table-width': {
-                    text: 'Text Width',
-                    labelText: 'TE',
-                    enum: 'IMAGE_TEXT_WIDTH_TABLE'
-                },
-                'secondary-editor-table-wider': {
-                    text: 'Wider Than Text',
-                    labelText: 'TE',
-                    enum: 'IMAGE_WIDER_TABLE'
-                },
-                'secondary-editor-table-full': {
-                    text: 'Full Screen',
-                    labelText: 'TE',
-                    enum: 'IMAGE_FULL_TABLE'
+                    enum: 'IMAGE_TEXT_WIDTH_TABLE_EDITOR'
                 }
-                
             }
         },
         enumType: 'image',
@@ -575,6 +559,7 @@ export default {
         'primary-workedexample-we2': {
             text: 'Worked Example 2',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            enum: 'WORKED_EXAMPLE',
             subtype: {
                 'secondary-workedexample-we2': {
                     text: 'Worked Example 2',

@@ -17,7 +17,7 @@ import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../Canvas
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
-
+ 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -91,16 +91,20 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'toggleCommentsPanel':
                         this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
-                    config.disablePrev = message.enablePrev;
+                    // config.disablePrev = message.enablePrev;
+                    config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        config.disablePrev = message.enableNext;
+                        // config.disablePrev = message.enableNext;
+                        config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
-                    config.disablePrev = message.disablePrev;
+                    // config.disablePrev = message.disablePrev;
+                    config.disablePrev = true;//message.disablePrev;
                     break;
                 case 'disableNext':
-                    config.disableNext = message.disableNext;
+                    // config.disableNext = message.disableNext;
+                    config.disableNext = true;//message.disableNext;
                     break;
                 case 'swappedIS':
                     {
@@ -118,9 +122,9 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'refreshElementWithTable':
                     {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
+                        this.showCanvasBlocker(true);
+                        showHeaderBlocker();
+                        this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':
                     {
