@@ -7,35 +7,52 @@ let indivisualData = {
     mathml: [ ]
 }
 
+/**
+ * 
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
 export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-        subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-        captionHTML = document.getElementById(`cypress-${index}-2`).innerHTML,
-        creditsHTML = document.getElementById(`cypress-${index}-3`).innerHTML
+    let titleDOM = document.getElementById(`cypress-${index}-0`),
+        subtitleDOM = document.getElementById(`cypress-${index}-1`),
+        captionDOM = document.getElementById(`cypress-${index}-2`),
+        creditsDOM = document.getElementById(`cypress-${index}-3`)
 
-        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+    let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+        captionHTML = captionDOM ? captionDOM.innerHTML : "",
+        creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-    
+    let titleText = titleDOM ? titleDOM.innerText : "",
+        subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
+        captionText = captionDOM ? captionDOM.innerText : "",
+        creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+        console.log("FIGURE DATA UPDATED TITLE INNERhtml>>>:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+        console.log("FIGURE DATA UPDATED TITLE INNERtext>>>:",titleDOM.innerText, "SUBTITLE:", subtitleDOM.innerText, "CAPTION:", captionDOM.innerText, "CREDITS:", creditsDOM.innerText)
     let data = {
         ...previousElementData,
         title :{
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-0`).innerText
+            text : titleText
         },
         subtitle : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-1`).innerText,
-            footnotes : [ ]
+            text : subtitleText,
+            footnotes : []
         },
         captions : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-2`).innerText,
-            footnotes : [ ]
+            text : captionText,
+            footnotes : []
         },
         credits : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-3`).innerText,
-            footnotes : [ ]
+            text : creditsText,
+            footnotes : []
         },
         html : {
             captions: `<p>${captionHTML}</p>`,
@@ -55,10 +72,20 @@ export const generateCommonFigureData = (index, previousElementData, elementType
 }
 
 export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-        subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-        captionHTML = document.getElementById(`cypress-${index}-3`).innerHTML,
-        creditsHTML = document.getElementById(`cypress-${index}-4`).innerHTML
+    let titleDOM = document.getElementById(`cypress-${index}-0`),
+        subtitleDOM = document.getElementById(`cypress-${index}-1`),
+        captionDOM = document.getElementById(`cypress-${index}-3`),
+        creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+    let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+        captionHTML = captionDOM ? captionDOM.innerHTML : "",
+        creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+    let titleText = titleDOM ? titleDOM.innerText : "",
+        subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
+        captionText = captionDOM ? captionDOM.innerText : "",
+        creditsText = creditsDOM ? creditsDOM.innerText : ""
 
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
 
@@ -66,21 +93,21 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         ...previousElementData,
         title :{
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-0`).innerText        
+            text : titleText        
         },
         subtitle : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-1`).innerText,
+            text : subtitleText,
             footnotes : [ ]
         },
         captions : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-3`).innerText,
+            text : captionText,
             footnotes : [ ]
         },
         credits : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-4`).innerText,
+            text : creditsText,
             footnotes : [ ]
         },
         html : {
@@ -100,34 +127,56 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     return data
 }
 
+/**
+ * Data preparation for blockcode element
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-        subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-        preformattedText = document.getElementById(`cypress-${index}-2`).innerHTML,
-        captionHTML = document.getElementById(`cypress-${index}-3`).innerHTML,
-        creditsHTML = document.getElementById(`cypress-${index}-4`).innerHTML
-        
-        console.log("FIGURE DATA UPDATED TITLE BLOCKCODE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML, "preformattedText HTML", preformattedText)
 
+    let titleDOM = document.getElementById(`cypress-${index}-0`),
+        subtitleDOM = document.getElementById(`cypress-${index}-1`),
+        preformattedText = document.getElementById(`cypress-${index}-2`)
+        captionDOM = document.getElementById(`cypress-${index}-3`),
+        creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+    let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+        captionHTML = captionDOM ? captionDOM.innerHTML : "",
+        creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+    let titleText = titleDOM ? titleDOM.innerText : "",
+        subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
+        captionText = captionDOM ? captionDOM.innerText : "",
+        creditsText = creditsDOM ? creditsDOM.innerText : ""
+        
+        console.log("FIGURE DATA UPDATED TITLE BLOCKCODE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+        console.log("preformattedText HTML BLOCKCODE::", preformattedText)
+        preformattedText = preformattedText.replace(/&lt;/g, "<")
+        preformattedText = preformattedText.replace(/&gt;/g, ">")
+        console.log("preformattedText HTML BLOCKCODE PROCESSED::", preformattedText.split("\n"))
     let data = {
         ...previousElementData,
         title :{
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-0`).innerText
+            text : titleText
         },
         subtitle : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-1`).innerText,
+            text : subtitleText,
             footnotes : [ ]
         },
         captions : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-3`).innerText,
+            text : captionText,
             footnotes : [ ]
         },
         credits : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-4`).innerText,
+            text : creditsText,
             footnotes : [ ]
         },
         html : {
@@ -147,9 +196,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             numbered: true,
             startNumber: "1",
             programlanguage: previousElementData.figuredata.programlanguage,
-            preformattedtext: [
-            ""
-            ]
+            preformattedtext: [...preformattedText.split("\n")]
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
@@ -166,10 +213,21 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
  * @param {*} secondaryOption 
  */
 const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-        subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-        captionHTML = document.getElementById(`cypress-${index}-3`).innerHTML,
-        creditsHTML = document.getElementById(`cypress-${index}-4`).innerHTML
+
+    let titleDOM = document.getElementById(`cypress-${index}-0`),
+        subtitleDOM = document.getElementById(`cypress-${index}-1`),
+        captionDOM = document.getElementById(`cypress-${index}-3`),
+        creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+    let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+        subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+        captionHTML = captionDOM ? captionDOM.innerHTML : "",
+        creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+    let titleText = titleDOM ? titleDOM.innerText : "",
+        subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
+        captionText = captionDOM ? captionDOM.innerText : "",
+        creditsText = creditsDOM ? creditsDOM.innerText : ""
 
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
     
@@ -177,21 +235,21 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         ...previousElementData,
         title :{
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-0`).innerText
+            text : titleText
         },
         subtitle : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-1`).innerText,
+            text : subtitleText,
             footnotes : [ ]
         },
         captions : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-3`).innerText,
+            text : captionText,
             footnotes : [ ]
         },
         credits : {
             ...indivisualData,
-            text : document.getElementById(`cypress-${index}-4`).innerText,
+            text : creditsText,
             footnotes : [ ]
         },
         figuredata : {
@@ -221,6 +279,18 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     return data
 }
 
+/**
+ * Returns data to send for updation of all elements.
+ * @param {*} type 
+ * @param {*} previousElementData 
+ * @param {*} node 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ * @param {*} activeEditorId 
+ * @param {*} index 
+ * @param {*} containerContext 
+ */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
     let dataToReturn = {}
     switch (type){

@@ -108,10 +108,15 @@ class ElementContainer extends Component {
     }
 
     figureDifference = (index, previousElementData) => {
-        let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-            subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-            captionHTML = document.getElementById(`cypress-${index}-2`).innerHTML,
-            creditsHTML = document.getElementById(`cypress-${index}-3`).innerHTML
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            captionDOM = document.getElementById(`cypress-${index}-2`),
+            creditsDOM = document.getElementById(`cypress-${index}-3`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
@@ -125,6 +130,32 @@ class ElementContainer extends Component {
                 return false
             }
     }
+
+    figureDifferenceInteractive = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            interactiveDOM = document.getElementById(`cypress-${index}-2`),
+            captionsDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
+            captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsHTML.innerHTML : ""
+
+        if(titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle || 
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits
+            ){
+                return true
+            }
+            else {
+                return false
+            }
+    }
+    
     
     /**
      * Calls API for element updation
@@ -175,7 +206,7 @@ class ElementContainer extends Component {
                         }
                         break;                    
                     case elementTypeConstant.INTERACTIVE:
-                        if(this.figureDifference(this.props.index, previousElementData)){
+                        if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                             this.props.updateElement(dataToSend, this.props.index);
@@ -218,7 +249,7 @@ class ElementContainer extends Component {
      */
     handleBlur = () => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = tinyMCE.activeEditor.id
+        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
         console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
         if (node) {
