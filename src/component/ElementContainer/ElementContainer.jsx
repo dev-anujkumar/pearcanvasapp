@@ -118,8 +118,6 @@ class ElementContainer extends Component {
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits||
             previousElementData.figuredata.path !== this.props.oldImage
-            // ||
-            // previousElementData.html.tableasHTML !== this.props.tableData
             ){
                 return true
             }

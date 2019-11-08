@@ -134,9 +134,7 @@ export class ElementFigure extends Component {
      * @description function will be called to launch Table Editor SPA
      */
     launchSPA=()=>{
-    let editable = true;
-    let tableId = this.props.elementId;
-    sendDataToIframe({'type':'launchTableSPA', 'message':{}, "id" : tableId, "editable" :editable });
+    sendDataToIframe({'type':'launchTableSPA', 'message':{}, "id" : this.props.elementId, "editable" :true });
 }
     /**
      * @description function will be called on image src add and fetch resources based on figuretype

@@ -17,7 +17,7 @@ import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../Canvas
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
- 
+import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -120,6 +120,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     {
                         this.showCanvasBlocker(true);
                         showHeaderBlocker();
+                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':

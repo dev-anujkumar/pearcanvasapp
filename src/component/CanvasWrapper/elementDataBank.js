@@ -115,22 +115,6 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-image-figure-quarter"
             }
         },
-        // "table" : {
-        //     "elementType" : "figure",
-        //     "primaryOption" : "primary-image-table",
-        //     "image50TextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-half"
-        //     },
-        //     "imageTextWidthTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-width"
-        //     },
-        //     "imageWiderThanTextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-wider"
-        //     },
-        //     "imageFullscreenTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-full"
-        //     },
-        // },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",

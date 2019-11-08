@@ -22,7 +22,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
