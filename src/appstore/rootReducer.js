@@ -8,7 +8,6 @@ import learningToolReducer from './learningToolReducer';
 import metadataReducer from './metadataReducer';
 import assetPopOverSearch from './assetPopoverReducer';
 import elmReducer from './elmReducer';
-import tableEditorReducer from './tableEditorReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -19,7 +18,6 @@ export default combineReducers({
     slateLockReducer,
     assetPopOverSearch,
     elmReducer,
-    learningToolReducer,
-    tableEditorReducer
+    learningToolReducer
 
 });

@@ -17,7 +17,7 @@ import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../Canvas
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
-
+ 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -118,9 +118,9 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'refreshElementWithTable':
                     {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
+                        this.showCanvasBlocker(true);
+                        showHeaderBlocker();
+                        this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':
                     {

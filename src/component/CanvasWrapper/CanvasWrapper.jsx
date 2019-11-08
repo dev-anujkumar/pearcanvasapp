@@ -15,6 +15,7 @@ import Toolbar from '../Toolbar';
 import config from './../../config/config';
 
 
+
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
