@@ -302,7 +302,7 @@ class ElementAsideContainer extends Component {
                     else {
                         showSectionBreak = (elementLength == index + 1)? true:false
                         return (
-                            <React.Fragment key={`elem-aside-${element.id}`}>
+                            <React.Fragment key={element.id}>
                                 {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
                                     upperOne={true}
                                     index={index}
