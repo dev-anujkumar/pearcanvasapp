@@ -510,8 +510,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, callback) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, callback);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback);
     }
 
     /**
@@ -537,6 +537,7 @@ class ElementContainer extends Component {
             )
         }
     }
+
     /**
      * @description - This function is for handling hover on element and showing page numbering box.
      */
@@ -581,8 +582,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, callback) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType)).then(() => {
                 if (callback) {
                     callback();
                 }
