@@ -139,6 +139,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         switch(previousElementData.type){
             case elementTypeConstant.AUTHORED_TEXT:
+            case elementTypeConstant.BLOCKFEATURE:
                 let html = node.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if(previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible){
@@ -152,7 +153,7 @@ class ElementContainer extends Component {
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
-                    case elementTypeConstant.FIGURE_MATH_IMAGE:   
+                    case elementTypeConstant.FIGURE_MATH_IMAGE:
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
@@ -172,7 +173,7 @@ class ElementContainer extends Component {
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                             this.props.updateElement(dataToSend, this.props.index);
                         }
-                        break;
+                        break;                    
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
@@ -180,6 +181,21 @@ class ElementContainer extends Component {
                             this.props.updateElement(dataToSend, this.props.index);
                         }
                         break;
+
+                    case elementTypeConstant.FIGURE_CODELISTING:
+                            if(this.figureDifference(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index);
+                            }
+                            break;
+                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
+                            if(this.figureDifference(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index);
+                            }
+                            break;
                 }
                 break;
             
