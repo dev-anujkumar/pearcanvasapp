@@ -74,6 +74,7 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
                 payload: null
             }
         },
+
         fetchComments: function () {
             return {
                 type: 'FETCH_COMMENTS',
@@ -88,6 +89,7 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
         }
     }
 })
+
 
 
 import {
@@ -250,6 +252,18 @@ describe('Testing <CanvasWrapper> Component', () => {
                     message: ""
                 }
             }
+            let case19 = {
+                data: {
+                    type: "getSlateLOResponse",
+                    message: ""
+                }
+            }
+            let case20 = {
+                data: {
+                    type: "getLOlistResponse",
+                    message: ""
+                }
+            }
             channelInstance.handleIncommingMessages(case1);
             channelInstance.handleIncommingMessages(case2);
             channelInstance.handleIncommingMessages(case3);
@@ -263,6 +277,8 @@ describe('Testing <CanvasWrapper> Component', () => {
             //channelInstance.handleIncommingMessages(case13);
             channelInstance.handleIncommingMessages(case17);
             channelInstance.handleIncommingMessages(case18);
+            channelInstance.handleIncommingMessages(case19);
+            channelInstance.handleIncommingMessages(case20);
             channelInstance.showCanvasBlocker(true);
         })
         test('Test for setUpdatedSlateTitle function', () => {
@@ -527,5 +543,6 @@ describe('Testing <CanvasWrapper> Component', () => {
             }
             //channelInstance.handleIncommingMessages(case6);
         })
+       
     })
 })

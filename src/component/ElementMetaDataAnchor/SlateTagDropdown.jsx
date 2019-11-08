@@ -17,6 +17,7 @@ class SlateTagDropdown extends React.Component {
     }
   
     learningObjectiveDropdown = (e) => {
+        console.log("kanika", e.target.innerText)
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
