@@ -62,7 +62,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            tableasHTML: "",
+            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
@@ -279,6 +279,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     return data
 }
 
+<<<<<<< HEAD
 /**
  * Returns data to send for updation of all elements.
  * @param {*} type 
@@ -291,6 +292,35 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  * @param {*} index 
  * @param {*} containerContext 
  */
+=======
+export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let dataToSend = {...previousElementData,
+        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']}
+    dataToSend.figuredata.elementdata;
+    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
+
+    let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
+    dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
+
+    let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
+    dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
+
+    let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
+    dataToSend.figuredata.elementdata.usagetype = usageType;
+    dataToSend.inputSubType = usageType.toUpperCase();
+
+    return dataToSend;
+}
+
+export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let dataToSend = {...previousElementData,
+        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        inputSubType : previousElementData.elementdata.usagetype.toUpperCase()}
+
+        return dataToSend;
+}
+
+>>>>>>> 5a3167a08d9f59e8247bea8bfc989997b6a1696e
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
     let dataToReturn = {}
     switch (type){
@@ -327,7 +357,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
@@ -353,6 +383,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
                     }
                 }
+            break;
+        
+        case elementTypeConstant.ASSESSMENT_SLATE:
+            dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
     }
     return dataToReturn
