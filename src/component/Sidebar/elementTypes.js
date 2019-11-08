@@ -414,27 +414,11 @@ export default {
             toolbar: ['assetpopover','decreaseindent'],
             enum: 'TABLE_EDITOR',
             subtype: {
-                'secondary-editor-table-half': {
-                    text: '50% Text Width',
+                'secondary-editor-table-equation': {
+                    text: 'Table Editor',
                     labelText: 'TE',
-                    enum: 'IMAGE_50_TEXT_TABLE'
-                },
-                'secondary-editor-table-width': {
-                    text: 'Text Width',
-                    labelText: 'TE',
-                    enum: 'IMAGE_TEXT_WIDTH_TABLE'
-                },
-                'secondary-editor-table-wider': {
-                    text: 'Wider Than Text',
-                    labelText: 'TE',
-                    enum: 'IMAGE_WIDER_TABLE'
-                },
-                'secondary-editor-table-full': {
-                    text: 'Full Screen',
-                    labelText: 'TE',
-                    enum: 'IMAGE_FULL_TABLE'
+                    enum: 'IMAGE_TEXT_WIDTH_TABLE_EDITOR'
                 }
-                
             }
         },
         enumType: 'image',
@@ -603,6 +587,27 @@ export default {
                     enum: 'SINGLE_ASSESSMENT_TDX'		
                 }		
             }		
+        },
+        'primary-assessment-slate' : {
+            text: 'Single Assessment',
+            enum: '',		
+            subtype: {		
+                'secondary-assessment-cite': {		
+                    text: 'CITE',		
+                    labelText: 'As',
+                    enum: 'SINGLE_ASSESSMENT_CITE'
+                },		
+                'secondary-assessment-tdx': {		
+                    text: 'TDX',		
+                    labelText: 'As',
+                    enum: 'SINGLE_ASSESSMENT_TDX'		
+                },
+                'secondary-assessment-puf' : {
+                    text: 'PUF',		
+                    labelText: 'As',
+                    enum: 'ASSESSMENT_PUF'	
+                }	
+            }
         },
         enumType: 'assessment',		
     },

@@ -14,13 +14,18 @@ const _Toolbar = props => {
     
     const [addDropDown , setValueAdd] = useState(false);
     const [openDropDown , setValueOpen] = useState(false);
+
+    /**
+     * Function for show/hide audio Narration dropdown
+     */
     function _handleAddDropdown () {
         setValueAdd(!addDropDown);
-        console.log("addDropDown",addDropDown)
     }
+    /**
+     * Function for show/hide alfresco for audio Narration
+     */
     function _handleOpenDropdown () {
         setValueOpen(!openDropDown);
-        console.log("openDropDown",openDropDown)
     }
     /**
      * Function for show/hide border
@@ -49,7 +54,9 @@ const _Toolbar = props => {
             </>
         )
     }
-
+    /**
+     * Function for handling audio Narration dropdown
+     */
 
     function closeAudioBookDialog() {
           setValueOpen(!openDropDown);
@@ -62,6 +69,8 @@ const _Toolbar = props => {
     return (
         <div className='toolbar-container'>
             <div className="header" id="tinymceToolbar"></div>
+
+            {/* ***********************Audio Narration in toolbar******************************************** */}
             {
                 props.addAudio ?
                     <div className="audio-block">
@@ -74,6 +83,8 @@ const _Toolbar = props => {
                             {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
                         </div>
                     </div> :
+                    
+                    // for Enabling the audio Narration icon
                     <div className="audio-block">
                         <div className="audioicon">
                             <div className="audio audioicon tooltip" onClick={() => _handleOpenDropdown()}>
@@ -85,7 +96,9 @@ const _Toolbar = props => {
                         </div>
                     </div>
             }
-            <div class="toggle-actions">
+            {/* *****end**** */}
+
+            <div className="toggle-actions">
             {props.permissions.includes('toggle_element_page_no') &&
             <div className='elem-page-number'>
                 <div className='elemPageText'>Element <br />Page Number</div>

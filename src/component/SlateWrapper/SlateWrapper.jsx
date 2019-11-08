@@ -28,6 +28,7 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
+import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -230,17 +231,12 @@ class SlateWrapper extends Component {
                             <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
                                 <Sortable
                                     options={{
-                                        // group: "editor",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
                                         sort: true,  // sorting inside list
-                                        preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
-                                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                        animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
                                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-
-
                                         fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-
-
                                         scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                                         scrollSpeed: 10,
                                         handle: '.element-label', //Drag only by element tag name button
@@ -260,26 +256,16 @@ class SlateWrapper extends Component {
                                             this.props.swapElement(dataObj, () => { })
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
-
                                     }}
-
-                                    // [Optional] Use ref to get the sortable instance
-                                    // https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute
                                     ref={(c) => {
                                         if (c) {
                                             let sortable = c.sortable;
                                         }
                                     }}
-
-                                    // [Optional] A tag to specify the wrapping element. Defaults to "div".
                                     tag="div"
-
-                                    onChange={(items, sortable, evt) => { }}
+                                    onChange={function (items, sortable, evt) { }}
                                 >
-                                    {
-                                        this['cloneCOSlateControlledSource_' + random]
-                                        //this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
-                                    }
+                                    {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
                             <SlateFooter />
@@ -623,6 +609,7 @@ class SlateWrapper extends Component {
                                         esProps={this.elementSepratorProps(index, true)}
                                         elementType={element.type}
                                         permissions={this.props.permissions}
+                                        showAudioSplitPopup={this.props.showAudioSplitPopup}
                                     />
                                     : null
                             }
@@ -637,11 +624,9 @@ class SlateWrapper extends Component {
                             >
                                 {
                                     (isHovered, isPageNumberEnabled, activeElement, permissions) => (
-                                        <PageNumberElement
-                                            pageLoading={pageLoading}
+                                        <PageNumberElement pageLoading={pageLoading}
                                             updatePageNumber={updatePageNumber}
-                                            element={element}
-                                            _slateType={_slateType}
+                                            element={element} _slateType={_slateType}
                                             isHovered={isHovered}
                                             isPageNumberEnabled={isPageNumberEnabled}
                                             activeElement={activeElement}
@@ -657,6 +642,7 @@ class SlateWrapper extends Component {
                                     slateType={_slateType}
                                     toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                     permissions={this.props.permissions}
+                                    showAudioSplitPopup={this.props.showAudioSplitPopup}
                                 />
                                 : null
                             }
@@ -670,6 +656,70 @@ class SlateWrapper extends Component {
         } catch (error) {
             // handle error
             //console.error(error);
+        }
+    }
+
+    /**
+    * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
+    */
+
+    processRemoveConfirmation = () => {
+        hideBlocker()
+        hideTocBlocker()
+        if (this.props.openRemovePopUp) {
+            this.props.showAudioRemovePopup(false)
+            this.props.deleteAudioNarrationForContainer();
+        }
+        else if (this.props.openSplitPopUp) {
+            this.props.showAudioSplitPopup(false)
+        }
+        this.props.showBlocker(false)
+    }
+    /**
+    * @description - toggleAudioPopup function responsible for show/hide remove popup.
+    */
+    toggleAudioPopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if (this.props.openRemovePopUp) {
+            this.props.showAudioRemovePopup(false)
+        }
+        else if (this.props.openSplitPopUp) {
+            this.props.showAudioSplitPopup(false)
+        }
+    }
+
+    /**
+    * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
+    */
+
+    showAudioRemoveConfirmationPopup = () => {
+
+        let dialogText;
+        if (this.props.openRemovePopUp) {
+            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+        } else if (this.props.openSplitPopUp) {
+            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+        }
+
+        if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    removeConfirmation={true}
+                    audioRemoveClass='audioRemoveClass'
+                    saveButtonText='OK'
+                    saveContent={this.processRemoveConfirmation}
+                    togglePopup={this.toggleAudioPopup}
+                />
+            )
+        }
+        else {
+            return null
         }
     }
 
@@ -716,6 +766,8 @@ class SlateWrapper extends Component {
                 {this.showLockPopup()}
                 {this.showSplitSlatePopup()}
                 {this.showTocDeletePopup()}
+                {/* ***************Audio Narration remove Popup **************** */}
+                {this.showAudioRemoveConfirmationPopup()}
             </React.Fragment>
         );
     }
@@ -738,7 +790,11 @@ const mapStateToProps = state => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         slateTitleUpdated: state.appStore.slateTitleUpdated,
         permissions: state.appStore.permissions,
-        pageLoading: state.appStore.pageLoading
+        pageLoading: state.appStore.pageLoading,
+        slateTitleUpdated:state.appStore.slateTitleUpdated,
+        permissions: state.appStore.permissions,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp
     };
 };
 
@@ -751,6 +807,10 @@ export default connect(
         createElementMetaList,
         swapElement,
         setSplittedElementIndex,
-        updatePageNumber
+        updatePageNumber,
+        fetchAudioNarrationForContainer ,
+        deleteAudioNarrationForContainer,
+        showAudioRemovePopup ,
+        showAudioSplitPopup
     }
 )(SlateWrapper);
