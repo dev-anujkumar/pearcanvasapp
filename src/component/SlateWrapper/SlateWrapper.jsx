@@ -27,6 +27,7 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker , disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
+import { fetchAudioNarrationForContainer , deleteAudioNarrationForContainer,showAudioRemovePopup , showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -621,6 +622,7 @@ class SlateWrapper extends Component {
                                 esProps={this.elementSepratorProps(index, true)}
                                 elementType={element.type}
                                 permissions = {this.props.permissions}
+                                showAudioSplitPopup = {this.props.showAudioSplitPopup}
                             />
                             : null
                              }
@@ -647,6 +649,7 @@ class SlateWrapper extends Component {
                                 slateType={_slateType}
                                 toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                 permissions = {this.props.permissions}
+                                showAudioSplitPopup = {this.props.showAudioSplitPopup}
                             />
                             : null
                             }
@@ -660,6 +663,70 @@ class SlateWrapper extends Component {
         } catch (error) {
             // handle error
             //console.error(error);
+        }
+    }
+
+    /**
+    * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
+    */
+
+    processRemoveConfirmation = () => {
+        hideBlocker()
+        hideTocBlocker()
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+            this.props.deleteAudioNarrationForContainer();
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
+        this.props.showBlocker(false)
+    }
+    /**
+    * @description - toggleAudioPopup function responsible for show/hide remove popup.
+    */
+    toggleAudioPopup = () => {
+         this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        if(this.props.openRemovePopUp){
+            this.props.showAudioRemovePopup(false)
+        }
+        else if(this.props.openSplitPopUp){
+            this.props.showAudioSplitPopup(false)
+        }
+    }
+
+    /**
+    * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
+    */
+
+    showAudioRemoveConfirmationPopup = () => {
+
+        let dialogText;
+        if (this.props.openRemovePopUp) {
+            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+        } else if (this.props.openSplitPopUp) {
+            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+        }
+        
+        if (this.props.openRemovePopUp || this.props.openSplitPopUp ) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    removeConfirmation={true}
+                    audioRemoveClass='audioRemoveClass'
+                    saveButtonText='OK'
+                    saveContent={this.processRemoveConfirmation}
+                    togglePopup={this.toggleAudioPopup}
+                />
+            )
+        }
+        else {
+            return null
         }
     }
 
@@ -706,6 +773,8 @@ class SlateWrapper extends Component {
                 {this.showLockPopup()}
                 {this.showSplitSlatePopup()}
                 {this.showTocDeletePopup()}
+                 {/* ***************Audio Narration remove Popup **************** */}
+                 {this.showAudioRemoveConfirmationPopup()}
             </React.Fragment>
         );
     }
@@ -727,7 +796,9 @@ const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         slateTitleUpdated:state.appStore.slateTitleUpdated,
-        permissions: state.appStore.permissions
+        permissions: state.appStore.permissions,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp
     };
 };
 
@@ -739,6 +810,10 @@ export default connect(
         createElementMeta,
         createElementMetaList,
         swapElement,
-        setSplittedElementIndex
+        setSplittedElementIndex,
+        fetchAudioNarrationForContainer , 
+        deleteAudioNarrationForContainer,
+        showAudioRemovePopup , 
+        showAudioSplitPopup
     }
 )(SlateWrapper);

@@ -257,6 +257,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+                let slateData = {
+                    currentProjectId: config.projectUrn,
+                    slateEntityUrn: config.slateEntityURN
+                }
+                this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
             }
             /**

@@ -34,6 +34,7 @@ import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_A
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
+import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 export class CanvasWrapper extends Component {
     constructor(props) {
@@ -200,7 +201,6 @@ export class CanvasWrapper extends Component {
 
    showLockReleasePopup = () => {
         if(this.state.showReleasePopup){
-            // this.props.showCanvasBlocker(true)
             showTocBlocker();
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return(
@@ -280,6 +280,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         showApoSearch : state.assetPopOverSearch.showApoSearch,
+        openRemovePopUp: state.audioReducer.openRemovePopUp,
+        openSplitPopUp: state.audioReducer.openSplitPopUp,
         logout
     };
 };
@@ -303,7 +305,9 @@ export default connect(
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
+        logout,
         handleUserRole,
+        fetchAudioNarrationForContainer,
         glossaaryFootnotePopup
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

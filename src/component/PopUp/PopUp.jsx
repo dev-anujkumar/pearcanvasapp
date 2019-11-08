@@ -75,7 +75,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation){
             return null
         }
         else if(props.isLockPopup && props.withInputBox){
@@ -140,6 +140,11 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )  
         }
+        else if(props.removeConfirmation){
+            return (
+                <div className={`dialog-window ${props.audioRemoveClass}`} >{props.dialogText}</div>
+            )
+        }
         else {
             return(
                 <div className={`dialog-window ${props.assessmentClass}`} >{props.dialogText}</div>
@@ -149,7 +154,7 @@ class PopUp extends React.Component {
  
     
     render() {
-        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, } = this.props;
+        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
         return (
             <div className="">
                 {
