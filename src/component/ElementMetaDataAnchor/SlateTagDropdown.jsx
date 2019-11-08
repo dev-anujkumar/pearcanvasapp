@@ -7,16 +7,30 @@ import {
     UnlinkSlateDropdown,
     AddEditLOAssessmentDropdown,
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
-    } 
-from '../../constants/IFrameMessageTypes';
+}
+    from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
     }
-  
+    componentWillMount() {
+        document.addEventListener('mousedown', this.handleClick, false)
+    }
+    handleClick = (e) => {
+        if(this.node.contains(e.target)){
+            console.log("clicked inside");
+            return;
+        }
+        this.props.closeLODropdown()
+    }
+    // componentWillUnmount() {
+    //     document.removeEventListener('mousedown', this.handleClick, false)
+    // }
+
     learningObjectiveDropdown = (e) => {
+        // e.stopPropagation();
         console.log("kanika", e.target.innerText)
         let currentSlateLOData = this.props.currentSlateLOData;
         // let isLOExist= this.state.isLOExists;
@@ -50,7 +64,7 @@ class SlateTagDropdown extends React.Component {
     }
     render = () => {
         return (
-            <div className="learningobjectivedropdown">
+            <div className="learningobjectivedropdown" ref={node => this.node = node}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'section' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveSlateDropdown}</li>}

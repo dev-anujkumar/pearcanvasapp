@@ -188,8 +188,6 @@ export class AssessmentSlateCanvas extends Component {
                     showBlocker={showBlocker}
                     />
                 <TinyMceEditor
-                    learningObjectiveOperations={this.props.learningObjectiveOperations}
-                    currentSlateLOData={this.props.currentSlateLOData}
                     slateLockInfo={this.props.slateLockInfo}
                     handleBlur={this.props.handleBlur}
                     model={this.props.model}

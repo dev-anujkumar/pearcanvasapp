@@ -18,8 +18,11 @@ const _Toolbar = props => {
     }
     function _handleLODropdown () {
         setLODropdown(!lodropdown);
-        props.toggleLODropdown()
        
+       
+    }
+    function closeLODropdown(){
+        setLODropdown(!lodropdown);
     }
     /**
      * @description {responsable for render switch buttons}
@@ -53,8 +56,8 @@ const _Toolbar = props => {
                     <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                     {props.isLOExist? slateTagEnable:slateTagDisable }
                     </div>
-                    {props.LODropdownToggle &&
-                    <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} handleLODropdown={_handleLODropdown}/>
+                    {lodropdown &&
+                    <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} />
                     }
                 </div>
             </div>
