@@ -29,7 +29,7 @@ import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
 
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO,isLOExist } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -300,6 +300,7 @@ export default connect(
         setLockPeriodFlag,
         handleSplitSlate,
         currentSlateLO,
+        currentSlateLOMath,
         isLOExist,
         setUpdatedSlateTitle,
         setSlateType,
@@ -309,6 +310,6 @@ export default connect(
         logout,
         handleUserRole,
         fetchAudioNarrationForContainer,
-        glossaaryFootnotePopup
+        glossaaryFootnotePopup,
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

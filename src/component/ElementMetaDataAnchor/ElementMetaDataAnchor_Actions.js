@@ -16,6 +16,16 @@ export const currentSlateLO = (currentSlateLOData) =>  (dispatch, getState) => {
         }
     })
 }
+
+export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getState) => {
+    return dispatch({
+        type: 'CURRENT_SLATE_LO_DATA_MATH',
+        payload: {
+            currentSlateLODataMath: currentSlateLODataMath,
+        }
+    })
+}
+
 export const isLOExist = (message) =>  (dispatch, getState) => {
     if(message && ((message.loObj && message.loObj.id)|| message.loUrn)){
         return dispatch({

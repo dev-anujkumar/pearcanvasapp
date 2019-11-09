@@ -47,9 +47,11 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
-/*--------------- Slate Tag -------------------*/
+/*--------------- Slate Tag(MetaData Anchor) -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
 export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
+export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
+export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
 
 
 /*--------------- Asset Popover -------------------*/

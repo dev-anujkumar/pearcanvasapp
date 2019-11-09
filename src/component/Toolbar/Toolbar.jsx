@@ -15,7 +15,7 @@ import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
 
 const _Toolbar = props => {
-    const [lodropdown, setLODropdown] = useState(true);
+    const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
 

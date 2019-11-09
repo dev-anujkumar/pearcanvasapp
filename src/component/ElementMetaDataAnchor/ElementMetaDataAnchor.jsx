@@ -5,19 +5,20 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
-}
+  }
 
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
     }
 
-    const { slateLockInfo} = this.props
+    const { slateLockInfo } = this.props
     return (
-      <div className="learningObjectiveContainer" onClick={() => this.onLOClickHandle(this.props.currentSlateLOData)} >
+      <div className="learningObjectiveContainer" onClick={() => {this.onLOClickHandle(this.props.currentSlateLOData)}} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -66,15 +67,18 @@ export class ElementMetaDataAnchor extends Component {
     return currentLOData;
   }
 
-   /**
-     * @description - show popup on click on element that no data is present and also edit the data
-     * @param {object} loldata
-  */
- onLOClickHandle(loData) {
-  let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.LEARNING_OBJECTIVES_ENDPOINT,config.COREAPI_ENDPOINT];
-  sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata:loData,projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL:config.WRAPPER_URL} })
-        
-}
+  /**
+    * @description - show popup on click on element that no data is present and also edit the data
+    * @param {object} loldata
+ */
+  onLOClickHandle(loData) {
+    if (this.props.permissions.includes('lo_edit_metadata')) {
+      loData.label.en =  this.props.currentSlateLODataMath;
+      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+      let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.COREAPI_ENDPOINT];
+      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
+    }
+  }
 
 }
 ElementMetaDataAnchor.defaultProps = {
@@ -98,7 +102,9 @@ ElementMetaDataAnchor.propTypes = {
 ElementMetaDataAnchor.displayName = "ElementMetaDataAnchor"
 const mapStateToProps = (state) => {
   return {
-    currentSlateLOData: state.metadataReducer.currentSlateLOData
+    currentSlateLOData: state.metadataReducer.currentSlateLOData,
+    currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath,
+
   }
 }
 export default connect(mapStateToProps)(ElementMetaDataAnchor);

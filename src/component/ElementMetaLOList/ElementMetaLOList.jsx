@@ -6,11 +6,8 @@ import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
+import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
-  constructor(props) {
-    super(props);
- }
-
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
@@ -76,7 +73,7 @@ export class ElementMetaLOList extends Component {
   */
   prepareLOLData = (lolData) => {
     let jsx, finalloldata = "";
-    if (lolData !== "") {
+    if (lolData !== "" && lolData.length> 0) {
       lolData.forEach((value, index) => {
         finalloldata += value.loContent ? value.loContent : value;
 
@@ -95,8 +92,12 @@ export class ElementMetaLOList extends Component {
   */
   onLOLClickHandle(lolData) {
     if(lolData == "" || (lolData && lolData.length === 0)){
-      sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-     }
+      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+      setTimeout(function(){ sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+      }, 1000);
+    }
+    
   }
   
 }

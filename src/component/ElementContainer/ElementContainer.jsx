@@ -391,7 +391,7 @@ class ElementContainer extends Component {
                     labelText = 'LO'
                     break;
                 case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'MA'
                     break;
             }

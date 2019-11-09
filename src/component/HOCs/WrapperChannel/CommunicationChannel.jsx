@@ -160,9 +160,14 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.handleLOData(message);
                 break;
                 case 'getSlateLOResponse':
+                    message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
+                    message.label.en= response.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                     this.props.currentSlateLO(message);
                     this.props.isLOExist(message);
                 break;
+                case 'loEditResponse':
+                    sendDataToIframe({ 'type': "HideLoader", 'message': { status: false } })
+                    break;
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
                 break;
@@ -183,10 +188,14 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleLOData=(message) =>{
             if (message.statusForSave) {
+                this.props.currentSlateLOMath(message.loObj.label.en);
                 message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                 this.props.currentSlateLO(message.loObj);
                 this.props.isLOExist(message);
             }
+        }
+        handleLOStore=()=> {
+            
         }
         handlePermissioning = (message) => {
             if (message && message.permissions) {
