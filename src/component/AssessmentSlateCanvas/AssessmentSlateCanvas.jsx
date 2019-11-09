@@ -198,6 +198,7 @@ export class AssessmentSlateCanvas extends Component {
                     slateLockInfo={this.props.slateLockInfo}
                     handleBlur={this.props.handleBlur}
                     model={this.props.model}
+                    handleEditorFocus={this.props.handleFocus}
                 />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}

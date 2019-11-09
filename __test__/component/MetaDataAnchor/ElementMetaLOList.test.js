@@ -15,7 +15,7 @@ let props={
     slateLockInfo:{
         isLocked:false
     },
-    currentSlateLOData:{}
+    currentSlateLOData:""
 }
     let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
     let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
@@ -28,9 +28,10 @@ describe('Test Rendering of metadaanchor on slate', () => {
     })
     it('on lo click', () => {
         let data = "";
-        wrapper.find('.learningObjectiveContainer').simulate('click');
+        elementMetaAnchorInstance.onLOLClickHandle(data);
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
+  
    
     
 });

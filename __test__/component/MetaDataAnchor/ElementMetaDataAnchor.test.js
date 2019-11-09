@@ -17,6 +17,11 @@ const store = mockStore({
 let props = {
     slateLockInfo: {
         isLocked: false
+    },
+    permissions:['lo_edit_metadata'],
+    currentSlateLOData:{
+        "lourn": "urn:5567809876",
+        "label": { en: "test data" }
     }
 }
 let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
@@ -35,7 +40,8 @@ describe('Test Rendering of metadaanchor on slate', () => {
             "label": { en: "test data" }
         }
 
-        wrapper.find('.learningObjectiveContainer').simulate('click');
+        //wrapper.find('.learningObjectiveContainer').simulate('click');
+        elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
 

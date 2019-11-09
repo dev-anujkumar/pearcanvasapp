@@ -150,7 +150,6 @@ const mapStateToProps = (state) => {
         elemBorderToggle,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
-        LODropdownToggle: state.toolbarReducer.LODropdownToggle,
         slateType: state.appStore.slateType,
         isLOExist: state.metadataReducer.slateTagEnable,
         addAudio: state.audioReducer.addAudio,

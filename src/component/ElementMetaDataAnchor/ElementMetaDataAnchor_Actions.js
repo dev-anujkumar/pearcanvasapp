@@ -39,6 +39,12 @@ export const isLOExist = (message) =>  (dispatch, getState) => {
             payload:  false
         })
     }
+    else if (message.toastData === "Learning Objectives has been aligned ") {
+        return dispatch({
+            type: 'SLATE_TAG_ENABLE',
+            payload:  true
+        })
+    }
     else{
         return dispatch({
             type: 'SLATE_TAG_ENABLE',

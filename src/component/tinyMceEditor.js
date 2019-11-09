@@ -84,12 +84,21 @@ export class TinyMceEditor extends Component {
                 editor.on('init', function (e) {
                     if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !=="container-introduction"){
                     document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-                    if(props.model && props.model.elementdata && props.model.elementdata.assessmentid){
-                    document.getElementsByClassName("slate-tag-icon")[0].style.opacity = " 0.3";
+                    if(config.slateType =="section"){
+                    document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
                     }
-                    else{
-                    document.getElementsByClassName("slate-tag-icon")[0].style.opacity = " 1";
-                    }
+                    // if(config.slateType =="assessment"){
+                    //     if(props.model && props.model.elementdata && props.model.elementdata.assessmentid){
+                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                    //         }
+                    //         else{
+                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.add("disable");
+                    //         }
+                    // }
+                    // else{
+                    //     document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                    // }
+                    
                 }
                   });
                   

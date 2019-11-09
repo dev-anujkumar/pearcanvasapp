@@ -35,7 +35,6 @@ export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
-export const TOGGLE_LO_DROPDOWN = 'TOGGLE_LO_DROPDOWN'
 
 /*---------------Slate Lock -------------------*/
 export const SET_SLATE_LOCK_STATUS = "SET_SLATE_LOCK_STATUS"

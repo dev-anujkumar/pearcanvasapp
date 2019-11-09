@@ -165,7 +165,8 @@ function WithWrapperCommunication(WrappedComponent) {
                 break;
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
-                    message.label.en= response.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                    if(message){
+                    message.label.en= message.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>")}
                     this.props.currentSlateLO(message);
                     this.props.isLOExist(message);
                 break;
@@ -192,9 +193,11 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleLOData=(message) =>{
             if (message.statusForSave) {
-                this.props.currentSlateLOMath(message.loObj.label.en);
+                message.loObj?this.props.currentSlateLOMath(message.loObj.label.en):this.props.currentSlateLOMath("");
+                if(message.loObj && message.loObj.label && message.loObj.label.en){
                 message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
-                this.props.currentSlateLO(message.loObj);
+                }
+                message.loObj?this.props.currentSlateLO(message.loObj):this.props.currentSlateLO();
                 this.props.isLOExist(message);
             }
         }

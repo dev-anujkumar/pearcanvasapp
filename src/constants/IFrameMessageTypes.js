@@ -19,7 +19,6 @@ export const NoSlateTagOnSlate ="SLATE TAG NOT FOUND"
 //dropdown values of slate tag
 export const AddLearningObjectiveSlateDropdown ="Add a New Learning Objective"
 export const AddEditLearningObjectiveDropdown ="Add From Existing or Edit"
-export const AddEditLOAssessmentDropdown ="Add From Existing"
 export const ViewLearningObjectiveSlateDropdown = "View Learning Objective"
 export const UnlinkSlateDropdown ="Unlink Slate"
 export const AddLearningObjectiveAssessmentDropdown ="Add From Existing"
