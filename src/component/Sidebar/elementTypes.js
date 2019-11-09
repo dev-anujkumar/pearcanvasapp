@@ -588,6 +588,27 @@ export default {
                 }		
             }		
         },
+        'primary-assessment-slate' : {
+            text: 'Single Assessment',
+            enum: '',		
+            subtype: {		
+                'secondary-assessment-cite': {		
+                    text: 'CITE',		
+                    labelText: 'As',
+                    enum: 'SINGLE_ASSESSMENT_CITE'
+                },		
+                'secondary-assessment-tdx': {		
+                    text: 'TDX',		
+                    labelText: 'As',
+                    enum: 'SINGLE_ASSESSMENT_TDX'		
+                },
+                'secondary-assessment-puf' : {
+                    text: 'PUF',		
+                    labelText: 'As',
+                    enum: 'ASSESSMENT_PUF'	
+                }	
+            }
+        },
         enumType: 'assessment',		
     },
     'element-interactive': {

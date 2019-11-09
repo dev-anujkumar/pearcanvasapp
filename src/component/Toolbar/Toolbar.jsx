@@ -126,16 +126,16 @@ const _Toolbar = props => {
             }
             {/* *****end**** */}
 
-            <div class="toggle-actions">
-                {props.permissions.includes('toggle_element_page_no') &&
-                    <div className='elem-page-number'>
-                        <div className='elemPageText'>Element <br />Page Number</div>
-                        {_elemToggleBtnJsx('pageNumber')}
-                    </div>
-                }
-                {props.permissions.includes('toggle_element_borders') &&
-                    <div className='element-borders'>
-                        <div className='elemBorderText'>Element Borders</div>
+            <div className="toggle-actions">
+            {props.permissions.includes('toggle_element_page_no') &&
+            <div className='elem-page-number'>
+                <div className='elemPageText'>Element <br />Page Number</div>
+                {_elemToggleBtnJsx('pageNumber')}
+            </div>
+            }
+            {props.permissions.includes('toggle_element_borders') &&
+                <div className='element-borders'>
+                    <div className='elemBorderText'>Element Borders</div>
                         {_elemToggleBtnJsx('border')}
                     </div>
                 }

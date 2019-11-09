@@ -131,13 +131,13 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
         "projectUrn": config.projectUrn,
         "currentSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
-        "destSlateEntityUrn": config.slateEntityURN,
+        "destSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn:config.slateEntityURN,
         "workUrn": swappedElementData.id,
         "entityUrn": swappedElementData.contentUrn,
         "type": swappedElementData.type,
@@ -157,41 +157,40 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         .then((responseData) => {
             if (responseData && responseData.status == '200') {
 
-                //Remove old tinymce instance to hide multiple toolbar
-
-
-                // document.getElementById(activeEditorIdTiny).focus();
-
-                // else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
-                //     document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
-                // }
-
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
-                newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
-                //console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
 
-                // let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (workedExample) {
+                let newBodymatter = newParentData[slateId].contents.bodymatter;
+                if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    // for(let i in newBodymatter){
-                    //     if(newBodymatter[i].type == 'element-aside' && newBodymatter[i].id == currentSlateEntityUrn){
-                    //         //Swap inside WE
-                    //         // let weArr = newArr[i].elementdata.bodymatter
-                    //         [newArr[i].elementdata.bodymatter[newIndex], newArr[i].elementdata.bodymatter[oldIndex]] = [newArr[i].elementdata.bodymatter[oldIndex], newArr[i].elementdata.bodymatter[newIndex]];
-                    //     }
-                    // }
+                    for(let i in newBodymatter){
+                        if( newBodymatter[i].contentUrn== currentSlateEntityUrn){
+                            newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }
+                }else if(containerTypeElem && containerTypeElem == 'section'){
+                    newBodymatter.forEach(element => {
+                        if(element.id == asideId){
+                            element.elementdata.bodymatter.forEach((nestedElem) => {
+                                if(nestedElem.contentUrn == currentSlateEntityUrn){
+                                    nestedElem.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            })
+                        }
+                    });
+                }else{
+                    newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
-
                 newParentData = JSON.parse(JSON.stringify(newParentData));
+
                 dispatch({
                     type: SWAP_ELEMENT,
                     payload: {
-                        slateLevelData: newParentData
+                        slateLevelData: newParentData,
                     }
                 })
 

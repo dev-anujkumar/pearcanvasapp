@@ -110,7 +110,12 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat = "";
             alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
-        this.updateAssessment(id, itemID, title, assessmentFormat, "", "insert");
+        let usagetype="Quiz"
+        let usage = document.getElementsByClassName('span.slate_assessment_metadata_dropdown_label')[0];
+        if(usage){
+            usagetype=usage.innerText;
+        }
+        this.updateAssessment(id, itemID, title, assessmentFormat, usagetype, "insert");
     }
 
     /*** @description - This function is to update state variables based on the parameters
@@ -142,7 +147,9 @@ export class AssessmentSlateCanvas extends Component {
         this.setState({assessmentId: id,
             assessmentItemId : itemID,
             assessmentItemTitle:title,
-            getAssessmentData:true,})                    
+            getAssessmentData:true,},()=>{
+                this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
+            })                    
 
     }
 
@@ -159,14 +166,14 @@ export class AssessmentSlateCanvas extends Component {
     }
     
     /*** @description - This function is to handle Blur on the Assessment element on blur*/ 
-    handleAssessmentBlur = () =>{
-        this.props.handleBlur();
+    handleAssessmentBlur = (assessmentData) =>{
+        this.props.handleBlur(assessmentData);
     }
     render() {
         const { showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
-            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus} onBlur={this.handleAssessmentBlur}>  
+            <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus}>  
                 <AssessmentSlateData
                     type={this.props.type}
                     getAssessmentDataPopup={getAssessmentDataPopup}

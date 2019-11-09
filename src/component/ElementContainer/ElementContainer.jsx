@@ -127,7 +127,7 @@ class ElementContainer extends Component {
                 return false
             }
     }
-    
+
     /**
      * Calls API for element updation
      * @param {*} node
@@ -170,11 +170,9 @@ class ElementContainer extends Component {
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        if(this.figureDifference(this.props.index, previousElementData)){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                            this.props.updateElement(dataToSend, this.props.index);
-                        }
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifference(this.props.index, previousElementData)){
@@ -195,8 +193,10 @@ class ElementContainer extends Component {
                             this.props.updateElement(dataToSend, this.props.index); */          
                     }
                 break;
-            
-
+            case elementTypeConstant.ASSESSMENT_SLATE :
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    this.props.updateElement(dataToSend, this.props.index);
+                    break;
         }
     }
     
@@ -211,6 +211,17 @@ class ElementContainer extends Component {
         if (node) {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
+    }
+
+    handleBlurAssessmentSlate = (assessmentData)=>{
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        let dataToSend = {...this.props.element}
+        dataToSend.elementdata.assessmentid=assessmentData.id;
+        dataToSend.elementdata.assessmenttitle=assessmentData.title;
+        dataToSend.elementdata.assessmentformat=assessmentData.format;
+        dataToSend.elementdata.usagetype=assessmentData.usageType;
+
+        this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
     }
 
     /**
@@ -322,7 +333,7 @@ class ElementContainer extends Component {
         if(labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlur} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
+                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} />
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
