@@ -25,8 +25,11 @@ describe('Test for Sidebar component', () => {
         appStore: {
             activeElement,
             updateElement,
-            slateLevelData
-        }
+            slateLevelData,
+        },
+        metadataReducer: {
+            showModule: true
+        },
     });
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f'
@@ -108,7 +111,10 @@ describe('Test for Sidebar component', () => {
                 activeElement,
                 updateElement,
                 slateLevelData
-            }
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -132,7 +138,10 @@ describe('Test for Sidebar component', () => {
                 activeElement,
                 updateElement,
                 slateLevelData
-            }
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -148,7 +157,10 @@ describe('Test for Sidebar component', () => {
                 activeElement,
                 updateElement,
                 slateLevelData
-            }
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
         });
     let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
@@ -173,7 +185,10 @@ describe('Test for Sidebar component', () => {
                     activeElement,
                     updateElement,
                     slateLevelData
-                }
+                },
+                metadataReducer: {
+                    currentSlateLOData: {}
+                },
             });
         let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
@@ -197,7 +212,10 @@ describe('Test for Sidebar component', () => {
                     activeElement,
                     updateElement,
                     slateLevelData
-                }
+                },
+                metadataReducer: {
+                    currentSlateLOData: {}
+                },
             });
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
