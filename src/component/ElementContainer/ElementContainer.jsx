@@ -205,10 +205,10 @@ class ElementContainer extends Component {
      */
     handleBlur = () => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = tinyMCE.activeEditor.id
+        let activeEditorId = tinyMCE.activeEditor?tinyMCE.activeEditor.id:'';
         let node = document.getElementById(activeEditorId);
-        console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
-        if (node) {
+        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
+        if (node||elementType==='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
     }
