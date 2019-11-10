@@ -16,7 +16,6 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
-import { metadataanchor, slateTagEnable } from '../../../images/TinyMce/TinyMce.jsx';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -91,16 +90,20 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'toggleCommentsPanel':
                         this.props.toggleCommentsPanel(true);
                 case 'enablePrev':
-                    config.disablePrev = message.enablePrev;
+                    // config.disablePrev = message.enablePrev;
+                    config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        config.disablePrev = message.enableNext;
+                        // config.disablePrev = message.enableNext;
+                        config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
-                    config.disablePrev = message.disablePrev;
+                    // config.disablePrev = message.disablePrev;
+                    config.disablePrev = true;//message.disablePrev;
                     break;
                 case 'disableNext':
-                    config.disableNext = message.disableNext;
+                    // config.disableNext = message.disableNext;
+                    config.disableNext = true;//message.disableNext;
                     break;
                 case 'swappedIS':
                     {
@@ -118,9 +121,9 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'refreshElementWithTable':
                     {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
+                        this.showCanvasBlocker(true);
+                        showHeaderBlocker();
+                        this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':
                     {
@@ -159,7 +162,19 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'statusForSave':
                     this.handleLOData(message);
-                    
+                break;
+                case 'getSlateLOResponse':
+                    message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
+                    if(message){
+                    message.label.en= message.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>")}
+                    this.props.currentSlateLO(message);
+                    this.props.isLOExist(message);
+                break;
+                case 'loEditResponse':
+                    sendDataToIframe({ 'type': "HideLoader", 'message': { status: false } })
+                    break;
+                case 'getLOlistResponse':
+                    this.props.currentSlateLO(message);
                 break;
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
@@ -178,20 +193,15 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleLOData=(message) =>{
             if (message.statusForSave) {
+                message.loObj?this.props.currentSlateLOMath(message.loObj.label.en):this.props.currentSlateLOMath("");
+                if(message.loObj && message.loObj.label && message.loObj.label.en){
                 message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
-                this.props.currentSlateLO(message.loObj);
-                let slateTagClass = document.getElementsByClassName("learning-objective")
-                let slateTagParent = slateTagClass[0].parentNode;
-                if (message.toastData === "Learning Objectives has been unlinked ") {
-                    slateTagClass[0].outerHTML = metadataanchor;
                 }
-                else {
-                    slateTagClass[0].outerHTML = slateTagEnable;
-
-                }
-                slateTagParent.appendChild(slateTagClass[0])
+                message.loObj?this.props.currentSlateLO(message.loObj):this.props.currentSlateLO();
+                this.props.isLOExist(message);
             }
-           
+        }
+        handleLOStore=()=> {
             
         }
         handlePermissioning = (message) => {
@@ -257,7 +267,20 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+                let slateData = {
+                    currentProjectId: config.projectUrn,
+                    slateEntityUrn: config.slateEntityURN
+                }
+                this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
+                this.props.setSlateType(config.slateType);
+                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
+                if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
+                sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys} })
+                }
+                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
+                sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
+                }
             }
             /**
              * TO BE IMPLEMENTED

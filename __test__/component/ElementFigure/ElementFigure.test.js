@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import { ElementFigure } from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage25TextElementDefault, figureImage25TextElementWithData ,figureImage50TextElementDefault,figureImage50TextElementWithData, figureImageTextWidthElementDefault,figureImageTextWidthElementWithData, figureImageWiderElementDefault,figureImageWiderElementWithData, figureImageFullElementDefault,figureImageFullElementWithData,tableImage50TextElementDefault,tableImage50TextElementWithData,tableImageTextWidthElementDefault,tableImageTextWidthElementWithData,tableImageWiderElementDefault,tableImageWiderElementWithData,tableImageFullElementDefault,tableImageFullElementWithData, mathImage50TextElementDefault,mathImage50TextElementWithData,mathImageTextWidthElementDefault,mathImageTextWidthElementWithData,mathImageWiderElementDefault,mathImageWiderElementWithData,mathImageFullElementDefault,mathImageFullElementWithData, mathmlEditorDefault,mathmlEditorWithData,blockCodeEditorDefault,blockCodeEditorWithData, figureTableEditor50TextElementDefault,figureTableEditor50TextElementWithData, figureTableEditorTextWidthElementDefault, figureTableEditorTextWidthElementWithData, figureTableEditorWiderElementDefault, figureTableEditorWiderElementWithData, figureTableEditorFullElementDefault, figureTableEditorFullElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage25TextElementDefault, figureImage25TextElementWithData ,figureImage50TextElementDefault,figureImage50TextElementWithData, figureImageTextWidthElementDefault,figureImageTextWidthElementWithData, figureImageWiderElementDefault,figureImageWiderElementWithData, figureImageFullElementDefault,figureImageFullElementWithData,tableImage50TextElementDefault,tableImage50TextElementWithData,tableImageTextWidthElementDefault,tableImageTextWidthElementWithData,tableImageWiderElementDefault,tableImageWiderElementWithData,tableImageFullElementDefault,tableImageFullElementWithData, mathImage50TextElementDefault,mathImage50TextElementWithData,mathImageTextWidthElementDefault,mathImageTextWidthElementWithData,mathImageWiderElementDefault,mathImageWiderElementWithData,mathImageFullElementDefault,mathImageFullElementWithData, mathmlEditorDefault,mathmlEditorWithData,blockCodeEditorDefault,blockCodeEditorWithData, figureTableEditorTextWidthElementDefault, figureTableEditorTextWidthElementWithData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 
 describe('Testing Figure element component', () => {
@@ -119,7 +119,7 @@ describe('Testing Figure element component', () => {
     });
     describe('With table editor element', () => {
         let props = {
-            model: figureTableEditor50TextElementDefault,
+            model: figureTableEditorTextWidthElementDefault,
             index: 9,
             slateLockInfo: {
                 isLocked: false,
@@ -131,17 +131,7 @@ describe('Testing Figure element component', () => {
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
-        test('renders properly with default TableEditor-50% Text', () => {
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        })
-        test('renders  properly with mock data TableEditor-50% Text', () => {
-            component.setProps({ model: figureTableEditor50TextElementWithData ,index:10});
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        })
         test('renders  properly with default TableEditor-TextWidth', () => {
-            component.setProps({ model: figureTableEditorTextWidthElementDefault ,index:11});
             ReactDOM.render(<ElementFigure {...props}/>, div);
             ReactDOM.unmountComponentAtNode(div);
         })
@@ -150,27 +140,7 @@ describe('Testing Figure element component', () => {
             ReactDOM.render(<ElementFigure {...props}/>, div);
             ReactDOM.unmountComponentAtNode(div);
         })
-        test('renders  properly with default TableEditor-Wider than Text', () => {
-            component.setProps({ model: figureTableEditorWiderElementDefault ,index:13});
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-  
-        })
-        test('renders  properly with mock data TableEditor-Wider than Text', () => {
-            component.setProps({ model: figureTableEditorWiderElementWithData,index:14 });
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        })
-        test('renders  properly with default TableEditor-Fullscreen', () => {
-            component.setProps({ model: figureTableEditorFullElementDefault,index:15 });
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        })
-        test('renders  properly with mock data TableEditor-Fullscreen', () => {
-            component.setProps({ model: figureTableEditorFullElementWithData ,index:16});
-            ReactDOM.render(<ElementFigure {...props}/>, div);
-            ReactDOM.unmountComponentAtNode(div);
-        })
+
     });
     describe('With table image element', () => {
         let props = {
@@ -331,8 +301,11 @@ describe('Testing Figure element component', () => {
                 userId: 'c5Test01'
             },
             onClick : ()=>{},
-            handleFocus: function(){},
-            permissions: []
+            permissions: [],
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            
         };
         const e = {
             target:{
@@ -350,6 +323,14 @@ describe('Testing Figure element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         }) 
+        it('TEST- Call AddResource function for C2Mdeia',()=>{
+            const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
+            elementFigureInstance.addFigureResource(e);
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyaddFigureResource).toHaveBeenCalledWith(e)
+            spyaddFigureResource.mockClear()
+        })
         it('onClick-if case', () => {
             let props = {
                 slateLockInfo: {
@@ -456,7 +437,47 @@ describe('Testing Figure element component', () => {
                 spydataFromAlfresco.mockClear()
             }) 
          
-        })   
+        }) 
+ 
     })
-    
+    describe('TEST-----Table Editor',()=>{
+        let type = "figure";
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            model:{
+                figuretype:"tableasmarkup",
+            },
+            onClick : ()=>{},
+            handleFocus: function(){},
+            permissions: [],
+            elementId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        };
+        const e = {
+            target:{
+                tagName: "p"
+            },
+            stopPropagation() { }
+        }
+        const elementFigure = mount(<ElementFigure type={type} index="30" {...props}/>);
+        let elementFigureInstance = elementFigure.find('ElementFigure').instance();
+        it('TEST- Call AddResource function',()=>{
+            const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
+            elementFigureInstance.addFigureResource(e);
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyaddFigureResource).toHaveBeenCalledWith(e)
+            spyaddFigureResource.mockClear()
+        })
+        it('TEST- Call launchSPA function',()=>{
+            const spylaunchSPA = jest.spyOn(elementFigureInstance, 'launchSPA') 
+            elementFigureInstance.launchSPA();
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spylaunchSPA).toHaveBeenCalled()
+            spylaunchSPA.mockClear()
+        })
+    }) 
 });

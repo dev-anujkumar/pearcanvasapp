@@ -7,7 +7,12 @@ import { c2AssessmentModule } from '../../../src/js/c2_assessment_module';
 import {selectedResult} from '../../../fixtures/learningTool';
 describe('Testing Assessment Slate Canvas component', () => {
     test('renders without crashing', () => {
-        const component = mount(<AssessmentSlateCanvas model={assessmentSlateDefault}/>)
+        let props ={slateLockInfo: {
+            isLocked: false,
+            timestamp: "",
+            userId: ""
+        }}
+        const component = mount(<AssessmentSlateCanvas model={assessmentSlateDefault} {...props}/>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();
@@ -17,7 +22,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleFocus: function(){},
             handleBlur : function(){},
             showBlocker : jest.fn(),
-            model : assessmentSlateDefault
+            model : assessmentSlateDefault,slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -34,7 +43,12 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleFocus: function(){},
             handleBlur : function(){},
             showBlocker : jest.fn(),
-            model : assessmentSlateDefault
+            model : assessmentSlateDefault,
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -50,6 +64,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleFocus: function(){},
             handleBlur : function(){},
             showBlocker : jest.fn(),
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            },
             model : assessmentSlateDefault
         }
 
@@ -67,6 +86,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
   
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
@@ -89,6 +113,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur: function () { },
             model: assessmentSlateDefault,
             onClick: () => { },
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props} />);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -144,6 +173,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             model : assessmentSlateDefault,
             onClick : ()=>{},
             closeLtAction: function(){},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -165,6 +199,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -182,6 +221,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
         const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
@@ -199,6 +243,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         let pufObj={
             id:"urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
@@ -228,6 +277,11 @@ describe('Testing Assessment Slate Canvas component', () => {
             handleBlur : function(){},
             model : assessmentSlateDefault,
             onClick : ()=>{},
+            slateLockInfo: {
+                isLocked: false,
+                timestamp: "",
+                userId: ""
+            }
         }
         const expectedValue = { assessmentType: "CITE" }
         const assessmentSlate = mount(<AssessmentSlateCanvas {...props} />);
