@@ -1,6 +1,11 @@
 import axios from 'axios'
 import config from '../../config/config.js'
 import store from '../../appstore/store.js'
+import {
+    OPEN_AUDIO_NARRATION,
+    SHOW_REMOVE_POPUP,
+    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+} from '../../constants/Action_Constants.js'
 
 const axiosInstance = axios.create({
     baseURL: config.AUDIO_NARRATION_URL,
@@ -20,13 +25,13 @@ const axiosInstance = axios.create({
 
 export const showAudioRemovePopup = (value) => (dispatch, getState) => {
     dispatch({
-        type: "SHOW_REMOVE_POPUP",
+        type: SHOW_REMOVE_POPUP,
         payload: value
     })
 }
 export const showAudioSplitPopup = (value) => (dispatch, getState) => {
     dispatch({
-        type: "SPLIT_REMOVE_POPUP",
+        type: SPLIT_REMOVE_POPUP,
         payload: value
     })
 }
@@ -41,19 +46,18 @@ export const fetchAudioNarrationForContainer = (slateData) => async(dispatch, ge
     try {
         let audioDataResponse = await axiosInstance.get(url);
         if(audioDataResponse && audioDataResponse.data && audioDataResponse.status == 200){
-            dispatch({ type: "CURRENT_SLATE_AUDIO_NARRATION", payload: audioDataResponse.data});
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: true })
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: false })
+            dispatch({ type: CURRENT_SLATE_AUDIO_NARRATION, payload: audioDataResponse.data});
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
         }
         else {
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: true })
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: false })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
         }
 
     } catch (e){
-        console.log("errrorrr from Audio",e);
-        dispatch({ type: "ADD_AUDIO_NARRATION", payload: true })
-        dispatch({ type: "OPEN_AUDIO_NARRATION", payload: false })
+        dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
+        dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
     }
 
 }
@@ -75,17 +79,17 @@ export const deleteAudioNarrationForContainer = (slateData) => async(dispatch, g
         let audioDataResponse = await axiosInstance.delete(url);
         if(audioDataResponse && audioDataResponse.status == 200){
             fetchAudioNarrationForContainer(slateData)
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: false })
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: true })
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
         }
         else {
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: false })
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: true })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
         }
 
     } catch (e){
-        dispatch({ type: "ADD_AUDIO_NARRATION", payload: false })
-        dispatch({ type: "OPEN_AUDIO_NARRATION", payload: true })
+        dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
+        dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
     }
 
 }
@@ -125,12 +129,12 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
         let audioPutResponse = await axiosInstance.put(url, audioData);
        // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         if( audioPutResponse && audioPutResponse.status == 400) {
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: false })
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: true })
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
 
         } else {
-            dispatch({ type: "OPEN_AUDIO_NARRATION", payload: true })
-            dispatch({ type: "ADD_AUDIO_NARRATION", payload: false })
+            dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
+            dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
             store.dispatch(fetchAudioNarrationForContainer(slateData));
         }
     } catch(e) {

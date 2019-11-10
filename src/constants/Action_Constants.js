@@ -77,3 +77,9 @@ export const LT_TYPE_FILTER_SELECTED = "LT_TYPE_FILTER_SELECTED"
 /*--------------- User Role -------------------*/
 export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
 
+/*--------------- Audio Narration -------------------*/
+export const OPEN_AUDIO_NARRATION = 'OPEN_AUDIO_NARRATION'
+export const SHOW_REMOVE_POPUP = 'SHOW_REMOVE_POPUP'
+export const SPLIT_REMOVE_POPUP = 'SPLIT_REMOVE_POPUP'
+export const CURRENT_SLATE_AUDIO_NARRATION = 'CURRENT_SLATE_AUDIO_NARRATION'
+export const ADD_AUDIO_NARRATION = 'ADD_AUDIO_NARRATION'
