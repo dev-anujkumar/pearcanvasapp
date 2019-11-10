@@ -8,7 +8,7 @@ let indivisualData = {
 }
 
 /**
- * 
+ * Generates updated element data for figure element
  * @param {*} index 
  * @param {*} previousElementData 
  * @param {*} elementType 
@@ -71,6 +71,14 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     return data
 }
 
+/**
+ * Generates updated element data for figure interactive element
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
 export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -279,20 +287,14 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     return data
 }
 
-<<<<<<< HEAD
 /**
- * Returns data to send for updation of all elements.
- * @param {*} type 
+ * Data preparation for assessment element
+ * @param {*} index 
  * @param {*} previousElementData 
- * @param {*} node 
  * @param {*} elementType 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
- * @param {*} activeEditorId 
- * @param {*} index 
- * @param {*} containerContext 
  */
-=======
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']}
@@ -312,6 +314,14 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     return dataToSend;
 }
 
+/**
+ * Data preparation for assessment slate
+ * @param {*} index 
+ * @param {*} previousElementData 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
@@ -320,7 +330,18 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
         return dataToSend;
 }
 
->>>>>>> 5a3167a08d9f59e8247bea8bfc989997b6a1696e
+/**
+ * Prepares new element data for all elements
+ * @param {*} type 
+ * @param {*} previousElementData 
+ * @param {*} node 
+ * @param {*} elementType 
+ * @param {*} primaryOption 
+ * @param {*} secondaryOption 
+ * @param {*} activeEditorId 
+ * @param {*} index 
+ * @param {*} containerContext 
+ */
 export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
     let dataToReturn = {}
     switch (type){

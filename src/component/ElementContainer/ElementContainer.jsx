@@ -65,7 +65,6 @@ class ElementContainer extends Component {
     }
 
 
-    // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps) {
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if (newProps.elemBorderToggle) {
@@ -107,6 +106,11 @@ class ElementContainer extends Component {
         }   
     }
 
+    /**
+     * Checks for any difference in data before initiating saving call
+     * @param {*} index element index
+     * @param {*} previousElementData old element data
+     */
     figureDifference = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -133,6 +137,11 @@ class ElementContainer extends Component {
             }
     }
 
+    /**
+     * Checks for any difference in data before initiating saving call (Interactive element)
+     * @param {*} index element index
+     * @param {*} previousElementData old element data
+     */
     figureDifferenceInteractive = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -144,7 +153,7 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsHTML.innerHTML : ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
@@ -248,7 +257,7 @@ class ElementContainer extends Component {
     }
     
     /**
-     * function will be called on element blur and a saving call will be made
+     * Will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -260,6 +269,9 @@ class ElementContainer extends Component {
         }
     }
 
+    /**
+     * Will e called on assessment element's blur
+     */
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
@@ -329,7 +341,10 @@ class ElementContainer extends Component {
         })
     }
 
-
+    /**
+     * Updates background color in opener element.
+     * @param {*} event event object
+     */
     selectColor = (event) => {
         const selectedColor = event.target.getAttribute('data-value')
         this.setState({
@@ -397,6 +412,9 @@ class ElementContainer extends Component {
 
     /**
      * Updates figuredata to local store
+     * @param {*} figureData updated figuredata object
+     * @param {*} index index of figure element
+     * @param {*} cb callback method
      */
     updateFigureData = (figureData, index, cb) => {
         this.props.updateFigureData(figureData, index, cb)
