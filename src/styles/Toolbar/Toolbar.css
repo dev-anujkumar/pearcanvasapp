@@ -141,7 +141,7 @@
 .learningobjectivedropdown ul {
   padding:0;
 }
-.slate-tag-icon{
+.slate-tag-icon, .audio{
   display:none;
 }
 .slate-tag-icon.disable{
@@ -162,7 +162,6 @@
     padding-top: 6px;
     z-index: 22;
     background: transparent;
-    display:inline-block;
 }
 .audioicon  {
   cursor: pointer;

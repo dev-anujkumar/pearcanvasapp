@@ -103,9 +103,8 @@ const _Toolbar = props => {
                 props.addAudio ?
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className="audio audioicon tooltip" onClick={() => _handleAddDropdown()}>
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => _handleAddDropdown()}>
                                 {audioNarration}
-                                <span className="tooltiptext">Audio Tag</span>
                             </div>
 
                             {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
@@ -115,9 +114,8 @@ const _Toolbar = props => {
                     // for Enabling the audio Narration icon
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className="audio audioicon tooltip" onClick={() => _handleOpenDropdown()}>
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => _handleOpenDropdown()}>
                                 {audioNarrationEnable}
-                                <span className="tooltiptext">Audio Tag</span>
                             </div>
 
                             {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
