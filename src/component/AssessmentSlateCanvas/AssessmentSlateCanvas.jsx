@@ -14,6 +14,7 @@ import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learni
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
 import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
+import TinyMceEditor from "./../tinyMceEditor"
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -193,6 +194,12 @@ export class AssessmentSlateCanvas extends Component {
                     linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     />
+                <TinyMceEditor
+                    slateLockInfo={this.props.slateLockInfo}
+                    handleBlur={this.props.handleBlur}
+                    model={this.props.model}
+                    handleEditorFocus={this.props.handleFocus}
+                />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
             </div>

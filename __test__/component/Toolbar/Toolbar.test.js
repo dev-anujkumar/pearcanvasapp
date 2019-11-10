@@ -12,6 +12,9 @@ const store = mockStore({
     toolbarReducer: {
         elemBorderToggle: true
     },
+    metadataReducer: {
+        currentSlateLOData: {}
+    },
     appStore: {
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -25,7 +28,7 @@ const store = mockStore({
     }
 });
 
-let wrapper
+let  wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
 
 beforeEach(() => {
     wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
