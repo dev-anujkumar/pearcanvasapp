@@ -883,6 +883,7 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
+        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
     }
 
     /**
