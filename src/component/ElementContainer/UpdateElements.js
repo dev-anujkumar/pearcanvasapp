@@ -377,7 +377,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
