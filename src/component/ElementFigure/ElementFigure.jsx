@@ -328,11 +328,11 @@ export class ElementFigure extends Component {
                                 draggable="false" />
                         </div>
                         <figcaption >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter Caption..." tagName={'div'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div >
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Credit..." tagName={'div'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
 
                 </div>
