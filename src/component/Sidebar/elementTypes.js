@@ -3,7 +3,7 @@ export default {
         'primary-paragraph': {
             text: 'Paragraph',
             enum: 'AUTHORED_TEXT',
-            toolbar: ['undo','redo'],
+            toolbar: [],
             subtype: {
                 'secondary-paragraph': {
                     text: 'Paragraph',
