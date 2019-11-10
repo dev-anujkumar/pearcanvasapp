@@ -722,7 +722,10 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
-                    document.getElementById(this.editorRef.current.id).click();
+                    let timeoutId = setTimeout(()=>{
+                        document.getElementById(this.editorRef.current.id).click();
+                        clearTimeout(timeoutId)
+                    },0)
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -748,6 +751,22 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
+        }
+        if(tinymce && tinymce.editors && tinymce.editors.length>1){
+            let indexes = Object.keys(tinymce.editors)
+            indexes.forEach((value)=>{
+                if(value!==tinymce.activeEditor.id){
+                    if(tinymce.editors[value]){
+                        tinymce.editors[value].remove();
+                    }
+                }
+                else{
+                    setTimeout(()=>{
+                        document.getElementById(tinymce.activeEditor.id).focus();
+                        document.getElementById(tinymce.activeEditor.id).click();
+                    },0)
+                }
+            })
         }
     }
 
