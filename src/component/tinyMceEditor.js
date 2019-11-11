@@ -236,7 +236,8 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement) {
+            if (activeElement) { 
+                this.lastContent = activeElement.innerHTML;
                 if (!activeElement.children.length) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
@@ -255,13 +256,14 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                this.lastContent = activeElement.innerHTML;                       
                 if (activeElement.innerText.trim().length) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
                     activeElement.classList.add('place-holder')
                 }
+                this.lastContent = activeElement.innerHTML;                       
+                
             }
         });
     }
@@ -671,7 +673,13 @@ export class TinyMceEditor extends Component {
         }
     }
 
+    /**
+     * Called immediately before mounting occurs, and before Component#render. Avoid introducing any side-effects or subscriptions in this method.
+     */
     componentWillMount(){
+        /**
+         * Defines initial placeholder
+         */
         if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
@@ -698,6 +706,7 @@ export class TinyMceEditor extends Component {
             }
         }
     }
+
     /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
@@ -910,7 +919,7 @@ export class TinyMceEditor extends Component {
         }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
-        let id = 'cypress-' + this.props.index;
+        let id = 'cypress-' + this.props.index;       
         classes = this.props.className + " cypress-editable " + this.placeHolderClass;
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
