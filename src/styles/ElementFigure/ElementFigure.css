@@ -50,6 +50,9 @@ h4.figureLabel, h4.figureTitle{
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
 }
+.figure-header .figureLabel.cypress-editable  em{
+    font-weight: 900;
+}
 .figure-header{
     min-height: 86px;
 }
