@@ -13,7 +13,7 @@ const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import { getSlateLockStatus, getSlateLockStatusWithCallback , releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 
@@ -185,10 +185,30 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
                     break;
+                case 'getSlateLockStatus' :
+                    this.releaseLockAndRedirect()
+                    break;
                 case 'logout':
                     this.props.logout();
                     break;
             }
+        }
+
+        releaseLockAndRedirect = () => { 
+            let projectUrn = config.projectUrn
+            let slateId = config.slateManifestURN
+            if (projectUrn && slateId){
+                releaseSlateLockWithCallback(projectUrn, slateId, (response) => {
+                   this.redirectDashboard();                    
+                });
+            }
+        }
+
+        redirectDashboard () {
+            sendDataToIframe({
+                'type': 'redirectTODashboard',
+                'message': {}
+            })
         }
 
         handleLOData=(message) =>{
