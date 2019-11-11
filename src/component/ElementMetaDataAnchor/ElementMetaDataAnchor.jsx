@@ -18,7 +18,7 @@ export class ElementMetaDataAnchor extends Component {
 
     const { slateLockInfo } = this.props
     return (
-      <div className="learningObjectiveContainer" onClick={() => {this.onLOClickHandle(this.props.currentSlateLOData)}} >
+      <div className="learningObjectiveContainer" onClick={(e) => { this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -71,9 +71,15 @@ export class ElementMetaDataAnchor extends Component {
     * @description - show popup on click on element that no data is present and also edit the data
     * @param {object} loldata
  */
-  onLOClickHandle(loData) {
+  onLOClickHandle = (loData, e) => {
+    if (config.editorRefID == e.target.id) {
+      config.editorRefID = "";
+      return false;
+    }
     if (this.props.permissions.includes('lo_edit_metadata')) {
-      loData.label.en =  this.props.currentSlateLODataMath;
+      if (loData && loData.label && loData.label.en) {
+        loData.label.en = this.props.currentSlateLODataMath;
+      }
       sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
       let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.COREAPI_ENDPOINT];
       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })

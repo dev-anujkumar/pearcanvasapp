@@ -15,7 +15,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets //
 import './styles/style.css';
 
-console.log('!!!!! ---- canvas-0.0.21 ---- !!!!!!');
+console.log('!!!!! ---- canvas-0.0.25 ---- !!!!!!');
 
 class App extends Component {
     constructor(props) {
@@ -48,19 +48,7 @@ class App extends Component {
                     <CanvasWrapper />
                 </div>
             </Provider>
-
         );
-    }
-
-    componentDidMount () {
-        // if(Object.keys(config.PATTERNS).length > 0) {
-        //     Object.values(config.PATTERNS).forEach(pattern => {
-        //         const script = document.createElement("script");
-        //         script.type = "text/javascript";
-        //         script.src = pattern;
-        //         document.body.appendChild(script);
-        //     });
-        // }
     }
 }
 export default App;
