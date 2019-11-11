@@ -722,7 +722,10 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
-                    document.getElementById(this.editorRef.current.id).click();
+                    let timeoutId = setTimeout(()=>{
+                        document.getElementById(this.editorRef.current.id).click();
+                        clearTimeout(timeoutId)
+                    },0)
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -748,6 +751,22 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
+        }
+        if(tinymce && tinymce.editors && tinymce.editors.length>1){
+            let indexes = Object.keys(tinymce.editors)
+            indexes.forEach((value)=>{
+                if(value!==tinymce.activeEditor.id){
+                    if(tinymce.editors[value]){
+                        tinymce.editors[value].remove();
+                    }
+                }
+                else{
+                    setTimeout(()=>{
+                        document.getElementById(tinymce.activeEditor.id).focus();
+                        document.getElementById(tinymce.activeEditor.id).click();
+                    },0)
+                }
+            })
         }
     }
 
@@ -815,7 +834,7 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if (!isSameTarget && document.getElementById(tinyMCE.activeEditor.id) && tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if (!isSameTarget && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
@@ -864,6 +883,7 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
+        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
     }
 
     /**

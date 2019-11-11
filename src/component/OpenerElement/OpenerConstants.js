@@ -7,33 +7,36 @@ export const labelOptions = ["No Label", "Chapter", "Ch", "Part", "Unit"]
  * @param {*} titleText raw data
  */
 export const getOpenerContent = (textSemantics, type, titleText) => {
-    let contentData = textSemantics.filter(data => data.type === type)[0]
-    let contentNumberData = textSemantics.filter(data => data.type === "number")[0]
     let dataToReturn = ""
-    switch(type){
-        case "label":
-            if(contentData){
-                dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd)
-            }
-            else{
-                dataToReturn = "Chapter"
-            }
-            break;
+    if(textSemantics && textSemantics.length > 0 && titleText) {
+        let contentData = textSemantics.filter(data => data.type === type)[0]
+        let contentNumberData = textSemantics.filter(data => data.type === "number")[0]
+        switch(type){
+            case "label":
+                if(contentData){
+                    dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd)
+                }
+                else{
+                    dataToReturn = "No Label"
+                }
+                break;
 
-        case "number":
-            if(contentData){
-                dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd - 1)
-            }
-            break;
+            case "number":
+                if(contentData){
+                    dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd - 1)
+                }
+                break;
 
-        case "title":
-        default:
-            if(contentNumberData){
-                dataToReturn = titleText.substring(contentNumberData.charEnd).trimLeft()
-            }
-            break;      
+            case "title":
+            default:
+                if(contentNumberData){
+                    dataToReturn = titleText.substring(contentNumberData.charEnd).trimLeft()
+                }
+                break;      
+        }
     }
-    return dataToReturn
+
+    return dataToReturn;
 }
 
 /**

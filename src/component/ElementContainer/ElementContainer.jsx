@@ -166,6 +166,10 @@ class ElementContainer extends Component {
                 return false
             }
     }
+
+    updateOpenerElement = (dataToSend) => {
+        this.props.updateElement(dataToSend, 0);
+    }
     
     
     /**
@@ -403,7 +407,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex } = this.state
-                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
+                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
