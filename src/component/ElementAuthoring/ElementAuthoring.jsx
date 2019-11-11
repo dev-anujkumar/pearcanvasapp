@@ -24,6 +24,7 @@ export class ElementAuthoring extends Component {
           handleEditorFocus={this.props.handleFocus}
           handleBlur = {this.props.handleBlur}
           slateLockInfo={slateLockInfo}
+          onListSelect={this.props.onListSelect}
         />
     )
 

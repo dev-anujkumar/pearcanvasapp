@@ -48,6 +48,7 @@ export class ListElement extends Component {
                 onBlur={this.onBlur}
                 onClick={this.onClick}
                 slateLockInfo={slateLockInfo}
+                onListSelect={this.props.onListSelect}
             />
         )
     }

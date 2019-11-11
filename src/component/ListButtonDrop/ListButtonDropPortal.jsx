@@ -29,27 +29,10 @@ class ListButtonDropPortal extends Component {
     }
 
     componentDidUpdate() {
-        // **********************************
-        // DON'T remove this comment
-        // **********************************
-        // let { refToToolBar: refBtn } = this.props;
-        // if (refBtn) {
-        //     refBtn.appendChild(this.el);
-        // }
-        // **********************************
         this.inputRef.current.value = this.startValue;
     }
 
     componentWillUnmount = () => {
-        // **********************************
-        // DON'T remove this comment
-        // **********************************
-        // let { refToToolBar: refBtn } = this.props;
-        // if (refBtn) {
-        //     refBtn.removeChild(this.el);
-        // }
-        // **********************************
-
         if (this.portalElem) {
             this.portalElem.removeChild(this.el);
         }

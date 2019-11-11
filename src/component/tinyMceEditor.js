@@ -18,6 +18,7 @@ import config from '../config/config';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
 import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
+import { insertUoListButton } from './ListElement/eventBindingUoList.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -101,7 +102,12 @@ export class TinyMceEditor extends Component {
      */
     insertListButtonIcon = (editor) => {
         insertListButton(editor);
+        insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
+    onUnorderedListButtonClick = (type) => {
+        this.props.onListSelect(type, "");
+    }
+
     /**
      * Adds LO item menu button to the editor toolbar
      * @param {*} editor  editor instance

@@ -39,7 +39,6 @@ export class CanvasWrapper extends Component {
         super(props);
 
         this.state = {
-            editorToolbarRef: null,
             showReleasePopup : false,
             toggleApo : false,
             isPageNumberEnabled : false
@@ -220,7 +219,7 @@ export class CanvasWrapper extends Component {
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
-                <div id="editor-toolbar" className="editor-toolbar" ref="editorToolbarRef">
+                <div id="editor-toolbar" className="editor-toolbar">
                     {/* editor tool goes here */}
                     <Toolbar togglePageNumbering={this.togglePageNumbering} />
                     {/* custom list editor component */}
@@ -237,7 +236,7 @@ export class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
                                 </RootContext.Provider>                                
                             </div>
                         </div>
