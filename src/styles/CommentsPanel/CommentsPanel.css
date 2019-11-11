@@ -2,10 +2,12 @@
         /* Common css*/
 /* ---------------------------------*/
 
-#root *{
+*{
+    box-sizing: border-box;
+}
+html{
     font-size: 12px ;
     font-family: 'Open Sans', sans-serif;
-    box-sizing: border-box;
 }
 .root-width {
     width: 100%;
@@ -544,4 +546,7 @@ menu li {
 }
 .defaultAssignee{
     margin-left:15px;
+}
+#ext_AddAnAsset{
+    font-family: sans-serif!important;
 }
