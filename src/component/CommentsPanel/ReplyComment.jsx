@@ -9,8 +9,6 @@ class ReplyComment extends React.Component {
             userInfo: {},
             text: ""
         }
-        this.updateCommentText = this.updateCommentText.bind(this);
-        this.replyComment = this.replyComment.bind(this);
     }
 
     /**

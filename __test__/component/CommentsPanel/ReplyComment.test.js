@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import ReplyComment from '../../../src/component/CommentsPanel/ReplyComment';
 import { comment, commentWithReply } from '../../../fixtures/commentPanelData.js'
 import { spy, stub } from 'sinon';
-
+import config from '../../../src/config/config';
 describe('Testing CommentsPanel component with props', () => {
     const updateReplyComment = new stub();
     let props = {
@@ -15,6 +15,7 @@ describe('Testing CommentsPanel component with props', () => {
         updateReplyComment={updateReplyComment}
         {...props} />)
     const instance = wrapper.instance();
+    
     it('tests the function  replyCommentForm with if condition', () => {
         let replyForm = instance.replyCommentForm(props);
         expect(replyForm.props.className).toEqual('reply');
@@ -29,6 +30,10 @@ describe('Testing CommentsPanel component with props', () => {
     })
 
     it('tests the function  replyComment with if condition', () => {
+        config.userId = "c5test01";
+        process.env = {
+            NODE_ENV: "development"
+        }
         instance.replyComment(props);
     })
 
