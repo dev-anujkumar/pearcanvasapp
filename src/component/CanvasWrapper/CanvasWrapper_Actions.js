@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config/config';
-import mockdata from './../../appstore/mockdata';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
