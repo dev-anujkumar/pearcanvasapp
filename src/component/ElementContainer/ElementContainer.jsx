@@ -86,6 +86,7 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
+        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
@@ -258,6 +259,7 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
+        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
