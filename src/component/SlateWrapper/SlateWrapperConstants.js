@@ -10,3 +10,6 @@ export const METADATA_ANCHOR = "LO";
 export const LO_LIST = "LO_LIST";
 export const OPENER = "OPENER_ELEMENT";
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
+
+/*-----------------Pop Dialog text-------------------------- */
+export const ALREADY_USED_SLATE = "The following slate is already in use by another member. In use by: "
