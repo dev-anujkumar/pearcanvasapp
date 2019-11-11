@@ -7,15 +7,11 @@
 
 // IMPORT - Plugins //
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 // IMPORT - Components/Dependencies //
-const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
-import { thisExpression } from '@babel/types';
-import RootContext from '../../CanvasWrapper/CanvasContexts.js';
+import { releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -31,12 +27,6 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         componentDidMount() {
-            // ***********************************************************
-            // ****** Uncomment once config module is in place ******
-            // let manifest_object = configModule.GET_MANIFEST_OBJECT();
-            // let project_urn = manifest_object['PROJECT_URN'];
-            // this.setState({ project_urn });
-            // ***********************************************************
             this.initTocCommunictionChannel();
         }
 
@@ -185,10 +175,30 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
                     break;
+                case 'getSlateLockStatus' :
+                    this.releaseLockAndRedirect()
+                    break;
                 case 'logout':
                     this.props.logout();
                     break;
             }
+        }
+
+        releaseLockAndRedirect = () => { 
+            let projectUrn = config.projectUrn
+            let slateId = config.slateManifestURN
+            if (projectUrn && slateId){
+                releaseSlateLockWithCallback(projectUrn, slateId, (response) => {
+                   this.redirectDashboard();                    
+                });
+            }
+        }
+
+        redirectDashboard () {
+            sendDataToIframe({
+                'type': 'redirectTODashboard',
+                'message': {}
+            })
         }
 
         handleLOData=(message) =>{
@@ -254,7 +264,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-                // const { entityUrn, containerUrn } = message.node;
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
@@ -274,6 +283,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
+                this.props.glossaaryFootnotePopup(false);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
                 sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys} })
@@ -313,57 +323,10 @@ function WithWrapperCommunication(WrappedComponent) {
 
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
-            // let projectUrn = message.changedValue.projectUrn;
-            // let userName = 'c5test01'//this.getCookie("USER_NAME");
-            // let deleteSlateId = message.changedValue.containerUrn;
             /**
              * Delete element details for logging
              */
-
             that.deleteTocItem(message);
-
-
-            // getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
-            //     if (response == "error"){
-            //         if(type==='withPendingTrack') {
-            //             // that.deleteTocItemWithPendingTrack(message);
-            //         }
-            //         else {
-            //             that.deleteTocItem(message);
-            //         }
-            //         return false;
-            //     }
-            //     try{
-            //         let status = {
-            //             slateLocked : response.isLocked,
-            //             userInfo : response.userId    
-            //         }
-            //         if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
-            //             status.slateLocked = false;
-            //         }
-
-            //         if(status.slateLocked){
-            //             that.slateLockAlert(status.userInfo);
-            //         }
-
-            //         else{
-            //             if(type==='withPendingTrack') {
-            //                 // that.deleteTocItemWithPendingTrack(message);
-            //             }
-            //             else {
-            //                 that.deleteTocItem(message);
-            //             }
-            //         }
-            //     }
-            //     catch(err){
-            //         if(type==='withPendingTrack') {
-            //             // that.deleteTocItemWithPendingTrack(message);
-            //         }
-            //         else {
-            //             that.deleteTocItem(message);
-            //         }
-            //     }   
-            //});
         }
 
         onDeleteTocItem = (message, type) => {

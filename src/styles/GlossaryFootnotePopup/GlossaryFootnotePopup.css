@@ -122,3 +122,6 @@
 #toolbarGlossaryFootnote .tox .tox-toolbar__group{
     padding: 1px 4px 2px 4px !important;
 }
+#toolbarGlossaryFootnote .fa {
+    font: normal normal normal 14px/1 FontAwesome;
+}

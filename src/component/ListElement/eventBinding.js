@@ -9,6 +9,19 @@
 require('./polyfills.js')
 
 /**
+ * insertUoListButton | inserts custom list button for unordered list with icon in existing editor toolbar
+ */
+export const insertUoListButton = (editor, onIconClick) => {
+    editor.ui.registry.addButton('customUoListButton', {
+        text: '<i class="fa fa-list-ul" aria-hidden="true"></i>',
+        tooltip: 'Unordered List',
+        onAction: () => {
+            onIconClick('disc');
+        }
+    });
+}
+
+/**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
 export const insertListButton = (editor) => {
@@ -159,7 +172,8 @@ export const bindKeyDownEvent = (editor, e) => {
              * if is is first item then prevent default
              */
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            if (closestLi.closest('ol').findChildren('li').indexOf(closestLi) === 0) {
+            let closestLiOl = closestLi.closest('ol') || closestLi.closest('ul');
+            if (closestLiOl.findChildren('li').indexOf(closestLi) === 0) {
                 prohibitEventBubling(e);
                 return false;
             }
@@ -252,6 +266,9 @@ const updateNestedList = (element) => {
     let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
 
+    let UlClassList = ['disc', 'square', 'circle', 'disc'];
+    let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
+
     let allOlElement = element.querySelectorAll('ol');
     if (allOlElement.length == 0) {
         allOlElement = element.querySelectorAll('ul');
@@ -284,12 +301,10 @@ const updateNestedList = (element) => {
         }
 
         switch (olClass) {
-
             case "decimal":
                 allOlElement[i].classList.add(decimalOlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(decimalLiClassList[treelevel - 1]) });
                 break;
-
             case "upper-alpha":
                 allOlElement[i].classList.add(upperAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperAlphaLiClassList[treelevel - 1]) });
@@ -306,16 +321,17 @@ const updateNestedList = (element) => {
                 allOlElement[i].classList.add(lowerRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerRomanLiClassList[treelevel - 1]) });
                 break;
-
             case "none":
                 allOlElement[i].classList.add('none');
                 [...childLielement].forEach((elem) => { elem.removeAllClass() });
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoNone') });
                 childLielement[0].classList.add('reset');
-
                 break;
             case "disc":
+                allOlElement[i].classList.add('disc');
+                allOlElement[i].classList.add(UlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
+                [...childLielement].forEach((elem) => { elem.classList.add(UlLiClassList[treelevel - 1]) });
                 break;
         }
         treelevel = treelevel + 1;

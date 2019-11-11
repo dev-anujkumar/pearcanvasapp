@@ -3,18 +3,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
-import tinymce from 'tinymce/tinymce';
 import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
-import { swapElement} from '../SlateWrapper/SlateWrapper_Actions'
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-
-//import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 // IMPORT - Assets //
@@ -42,21 +39,21 @@ class ElementAsideContainer extends Component {
     handleFocus = () => {
         this.props.setActiveElement(this.props.element);
         let toolbar = config.asideToolbar
-        if(toolbar && toolbar.length){
+        if (toolbar && toolbar.length) {
             tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
-            .each((index) => {
-                if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
-                    tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
-                }
-            });
-        }  
+                .each((index) => {
+                    if (config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1) {
+                        tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                    }
+                });
+        }
         this.props.handleFocus()
     }
-/**
- * 
- * @discription - renderSlate | renders slate editor area with all elements it contain
- * @param {string} element -object of element
- */
+    /**
+     * 
+     * @discription - renderSlate | renders slate editor area with all elements it contain
+     * @param {string} element -object of element
+     */
 
     renderContainer({ element: _containerData }) {
         try {
@@ -66,11 +63,11 @@ class ElementAsideContainer extends Component {
                     let { title: _slateTitle, bodymatter: _bodyMatter } = _contents || _elementData;
                     let { index } = this.props
                     let parentUrn = {
-                        manifestUrn:_containerId,
-                        contentUrn :_containerData.contentUrn,
-                        elementType:_containerType
+                        manifestUrn: _containerId,
+                        contentUrn: _containerData.contentUrn,
+                        elementType: _containerType
                     }
-                    let filterElement = _bodyMatter.filter( (ele) => ele.type == "manifest");
+                    let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index,elementLength)
                     return (
@@ -88,7 +85,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -138,9 +135,9 @@ class ElementAsideContainer extends Component {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
-            manifestUrn:_elementId,
-            contentUrn :element.contentUrn,
-            elementType:_elementType
+            manifestUrn: _elementId,
+            contentUrn: element.contentUrn,
+            elementType: _elementType
         }
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
@@ -161,7 +158,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -208,9 +205,9 @@ class ElementAsideContainer extends Component {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
         let parentUrn = {
-            manifestUrn:_elementId,
-            contentUrn :_element.contentUrn,
-            elementType:_elementType
+            manifestUrn: _elementId,
+            contentUrn: _element.contentUrn,
+            elementType: _elementType
         }
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
@@ -224,8 +221,8 @@ class ElementAsideContainer extends Component {
                     borderToggle={borderToggle}
                     setActiveElement={this.props.setActiveElement}
                     element={_element}
-                    showDeleteElemPopup = {this.props.showDeleteElemPopup}
-                    permissions = {this.props.permissions}
+                    showDeleteElemPopup={this.props.showDeleteElemPopup}
+                    permissions={this.props.permissions}
                 />
                 <Sortable 
                                options={{
@@ -240,7 +237,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -274,7 +271,7 @@ class ElementAsideContainer extends Component {
                            </Sortable>
             </div>
         )
-}
+    }
 
     /**
    * 
@@ -284,11 +281,11 @@ class ElementAsideContainer extends Component {
    */
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
-        let showSectionBreak ; 
+        let showSectionBreak;
         let asideData = {
-             type:"element-aside",
-             id:this.props.element.id,
-             contentUrn:this.props.element.contentUrn
+            type: "element-aside",
+            id: this.props.element.id,
+            contentUrn: this.props.element.contentUrn
         };
         try {
             if (_elements !== null && _elements !== undefined) {
@@ -300,7 +297,7 @@ class ElementAsideContainer extends Component {
                         return this.sectionBreak(element, index);
                     }
                     else {
-                        showSectionBreak = (elementLength == index + 1)? true:false
+                        showSectionBreak = (elementLength == index + 1) ? true : false
                         return (
                             <React.Fragment key={element.id}>
                                 {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
@@ -308,21 +305,29 @@ class ElementAsideContainer extends Component {
                                     index={index}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
                                     elementType={this.props.element.type}
-                                    permissions = {this.props.permissions}
+                                    permissions={this.props.permissions}
                                 />
                                 }
                                 <ElementContainer
                                     element={element}
                                     index={`${parentIndex}-${index}`}
-                                    parentUrn ={parentUrn}
+                                    parentUrn={parentUrn}
                                     showBlocker={this.props.showBlocker}
-                                    asideData = {asideData}
-                                    permissions = {this.props.permissions}
+                                    asideData={asideData}
+                                    permissions={this.props.permissions}
                                     handleCommentspanel={this.props.handleCommentspanel}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (
-                                            <PageNumberElement element={element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions = {this.props.permissions} />
+                                            <PageNumberElement
+                                                updatePageNumber={this.props.updatePageNumber}
+                                                asideData={asideData}
+                                                parentUrn={parentUrn}
+                                                element={element}
+                                                isHovered={isHovered}
+                                                isPageNumberEnabled={isPageNumberEnabled}
+                                                activeElement={activeElement}
+                                                permissions={this.props.permissions} />
                                         )
                                     }
                                 </ElementContainer>
@@ -330,8 +335,8 @@ class ElementAsideContainer extends Component {
                                     index={index}
                                     esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
-                                    sectionBreak={ this.props.element.subtype == "workedexample" ? showSectionBreak :false}
-                                    permissions = {this.props.permissions}
+                                    sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
+                                    permissions={this.props.permissions}
                                 />
                             </React.Fragment>
                         )
@@ -344,11 +349,11 @@ class ElementAsideContainer extends Component {
             console.log("error", error)
         }
     }
-     /**
-   * 
-   * @discription - This function is renders workexample
-   * @param {string} designtype -string to select type of work example
-   */
+    /**
+  * 
+  * @discription - This function is renders workexample
+  * @param {string} designtype -string to select type of work example
+  */
 
     renderWorkExample = (designtype) => {
         return (
@@ -360,11 +365,11 @@ class ElementAsideContainer extends Component {
         )
     }
 
-       /**
-   * 
-   * @discription - This function is renders diffrent types of border of aside
-   * @param {string} designtype -string to select type of aside container
-   */
+    /**
+* 
+* @discription - This function is renders diffrent types of border of aside
+* @param {string} designtype -string to select type of aside container
+*/
 
     borderTop = (designtype) => {
         if (designtype == "asideSidebar01" || designtype == "asideSidebar02" || designtype == "asideSidebar03" || designtype == "asideTacticBox") {
@@ -393,31 +398,31 @@ class ElementAsideContainer extends Component {
                     <h3 className="heading3ActivityLabel"></h3>
                 </React.Fragment>
             )
-        }else {
-            return(
+        } else {
+            return (
                 <div className={designtype + "BorderTop"} />
             )
-           
+
         }
     }
-     /**
-   * 
-   * @discription - This function is renders aside container
-   * @param {string} designtype -string to select type of aside container
-   */
+    /**
+  * 
+  * @discription - This function is renders aside container
+  * @param {string} designtype -string to select type of aside container
+  */
 
     renderAside = (designtype) => {
-        
-            return (
-                <React.Fragment>
-                    {this.borderTop(designtype)}
-                    {this.renderContainer(this.props)}
-                    <div className={designtype + "BorderBottom"} />
-                </React.Fragment>
 
-            )
+        return (
+            <React.Fragment>
+                {this.borderTop(designtype)}
+                {this.renderContainer(this.props)}
+                <div className={designtype + "BorderBottom"} />
+            </React.Fragment>
+
+        )
     }
-   
+
 
     /**
      * render | renders title and slate wrapper

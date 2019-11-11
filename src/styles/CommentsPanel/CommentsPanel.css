@@ -1,13 +1,11 @@
 /* ---------------------------------*/
         /* Common css*/
 /* ---------------------------------*/
-* {
-    box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
-}
-html {
+
+#root *{
     font-size: 12px ;
     font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
 }
 .root-width {
     width: 100%;
