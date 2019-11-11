@@ -15,6 +15,7 @@ import {
     setSplittedElementIndex, createElementMeta,
     createElementMetaList,
     updatePageNumber,
+    
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
@@ -30,6 +31,7 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag } from '../CanvasWrapper/SlateLock_Actions'
+import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
 
 let random = guid();
@@ -257,6 +259,7 @@ class SlateWrapper extends Component {
                                         onUpdate: (/**Event*/evt) => {
                                             let dataObj = this.prepareSwapData(evt)
                                             this.props.swapElement(dataObj, () => { })
+                                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
                                     }}
@@ -924,6 +927,7 @@ export default connect(
         showAudioSplitPopup,
         setLockPeriodFlag,
         setSlateLock,
-        releaseSlateLock
+        releaseSlateLock,
+        setActiveElement
     }
 )(SlateWrapper);
