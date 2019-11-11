@@ -38,8 +38,6 @@ export class ElementFigure extends Component {
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
