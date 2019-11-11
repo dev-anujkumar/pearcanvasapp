@@ -50,9 +50,15 @@
 }
 
 .slate-content .cypress-editable, .slate-content .cypress-editable * {
-    padding: 0;
+    /* padding: 0; */
     position: relative;
     outline: none !important;
+}
+
+blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
 }
 
 #pageNumberForm {

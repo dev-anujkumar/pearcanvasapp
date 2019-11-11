@@ -12,7 +12,8 @@ const store = mockStore({
     slateLockReducer: { slateLockInfo: {} },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
     toolbarReducer: { elemBorderToggle: true },
-    metadataReducer: { currentSlateLOData: {} }
+    metadataReducer: { currentSlateLOData: {} },
+    audioReducer: {openRemovePopUp: false}
 })
 import config from '../../../src/config/config';
 //IMPORT TINYMCE 
@@ -54,7 +55,8 @@ describe('Testing <SlateWrapper> Component', () => {
             userId: 'c5Test01'
         },
         permissions : [],
-        toggleTocDelete: true
+        toggleTocDelete: true,
+        openRemovePopUp : true,
     };
     test('renders without crashing', () => {
         const div = document.createElement('div');
@@ -71,7 +73,12 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            permissions : []
+            audioReducer : {
+                openRemovePopUp : true,
+                openSplitPopUp : false
+            },
+            permissions : [],
+            openRemovePopUp : true,
 
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
@@ -100,7 +107,12 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
+            audioReducer : {
+                openRemovePopUp : true,
+                openSplitPopUp : false
+            },
             permissions : [],
+            openRemovePopUp : true,
         };
         let wrapper = mount(<SlateWrapper store={store} {...props} />);
         test('renders properly', () => {
@@ -119,7 +131,12 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: false,
                 userId: 'c5Test01'
             },
-            permissions : []
+            audioReducer : {
+                openRemovePopUp : true,
+                openSplitPopUp : false
+            },
+            permissions : [],
+            openRemovePopUp : true,
         };
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
         test('renders properly', () => {
@@ -136,7 +153,12 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: true,
                 userId: 'c5Test01'
             },
+            audioReducer : {
+                openRemovePopUp : true,
+                openSplitPopUp : false
+            },
             permissions : [],
+            openRemovePopUp : true,
             setSlateLock : ()=>{},
             showBlocker : ()=>{},
             modifyState : ()=>{}
@@ -228,7 +250,12 @@ describe('Testing <SlateWrapper> Component', () => {
                 isLocked: true,
                 userId: 'c5Test02'
             },
+            audioReducer : {
+                openRemovePopUp : true,
+                openSplitPopUp : false
+            },
             permissions : [],
+            openRemovePopUp : true,
             setSlateLock : ()=>{},
             showBlocker : ()=>{},
             modifyState : ()=>{}

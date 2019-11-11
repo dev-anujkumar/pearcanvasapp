@@ -108,6 +108,124 @@
     position: absolute;
     right:40px;
   }
-  .header{
-    width:100%;
-  }
+ 
+  .learningobjectivedropdown {
+    font-weight: bold;
+    color: black;
+    position: absolute;
+    background-color: white;
+    width: 233px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.learningobjectivedropdown li {
+  padding: 6px 0 6px 10px;
+  cursor: pointer;
+  margin:0
+}
+.learningobjectivedropdown li.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: gray;
+}
+.leaningobjective-block {
+  cursor: pointer;
+  padding: 8px 16px 0 0;
+}
+.learningobjectivedropdown ul {
+  padding:0;
+}
+.slate-tag-icon, .audio{
+  display:none;
+}
+.slate-tag-icon.disable{
+  opacity: 0.3;
+  cursor:not-allowed;
+  pointer-events: none
+}
+.slate-tag-icon.enable{
+  opacity: 1;
+  cursor:pointer;
+  pointer-events: auto
+}
+
+  .audio-block{
+    /* height: 39px; */
+    position: relative;
+    padding-right: 20px;
+    padding-top: 6px;
+    z-index: 22;
+    background: transparent;
+}
+.audioicon  {
+  cursor: pointer;
+  margin-top: 2px;
+}
+.audioicon span {
+  white-space: nowrap;
+  
+}
+.audioicon.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.audioicon.tooltip .tooltiptext::after {
+  content: none;
+}
+.audioicon.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
+  border-radius: 2px;
+  padding: 1px 0px;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s;
+  z-index: 2;
+  top: 30px;
+  left: -17px;
+  font-size: 11px;
+  width: 60px;
+}
+
+.audiodropdown{
+  font-weight: bold;
+  color: black;
+  position: absolute;
+  background-color: white;
+  /* width: 350px; */
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 5px;
+  cursor: default;
+  padding: 10px !important;
+}
+.audioRemoveButton {
+  background-color: #3298B5; 
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.audioRemoveRound {
+  border-radius: 4px;
+  float: right;
+}

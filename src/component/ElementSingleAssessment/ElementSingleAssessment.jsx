@@ -21,7 +21,7 @@ export class ElementSingleAssessment extends Component {
             assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: props.model && props.figuredata && props.figuredata.elementdata ? props.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: props.model && props.model.figuredata && props.model.figuredata.elementdata &&props.model.figuredata.elementdata.usagetype ? props.model.figuredata.elementdata.usagetype : "Quiz",
 
         };
     } 
@@ -64,7 +64,10 @@ export class ElementSingleAssessment extends Component {
             assessmentFormat = "";
             alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
-        this.setState({assessmentId: id,assessmentItemId : itemID,})
+        this.setState({assessmentId: id,assessmentItemId : itemID},
+            ()=>{
+            this.saveAssessment();
+        })
     }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
@@ -77,10 +80,16 @@ export class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        this.setState({
-            asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: usageType,
-        });
+        if (this.state.activeAsseessmentUsageType !== usageType) {
+            this.setState({
+                activeAsseessmentUsageType: usageType
+            }, () => {
+                this.saveAssessment();
+            });
+        }
+            this.setState({
+                asseessmentUsageTypeDropdown: false,
+            })
     }
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
     toggleUsageTypeDropdown = () => {
@@ -95,6 +104,10 @@ export class ElementSingleAssessment extends Component {
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       
     handleAssessmentBlur = () =>{
+        this.props.handleBlur();
+    }
+    /*** @description - This function will be called to save the assessment data */
+    saveAssessment = () =>{
         this.props.handleBlur();
     }
 

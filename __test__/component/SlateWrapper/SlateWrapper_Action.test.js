@@ -215,33 +215,7 @@ describe('Tests Slate Wrapper Actions', () => {
             store.dispatch(actions.getElementPageNumber ())
             });
 
-    it('testing------- createElementMeta ------action', () => {
-        let createdElemData = {
-            id: -1, // A temporary id. The server decides the real id.
-            type: "element-generateLOlist",
-            schema: "http://schemas.pearson.com/wip-authoring/element/1",
-            elementdata: {
-                level:  "chapter",
-                groupby: "module"
-            },
-            mgmtinfo: {
-                lock: {
-                    owner: "",
-                    lockdate: ""
-                },
-                comments: [],
-                trackingdocumentid: ""
-            }}
-        store.dispatch(actions.createElementMeta('','',''))
-        const { type } = store.getActions()[0];
-        expect(type).toBe(AUTHORING_ELEMENT_CREATED);
-    });
-    it('testing------- createElementMetaList ------action', () => {
-        store.dispatch(actions.createElementMetaList('','',''))
-        const { type } = store.getActions()[0];
-        expect(type).toBe(AUTHORING_ELEMENT_CREATED);
-
-    });
+   
     it('testing------- handleSplitSlate ------action', () => {
 
         moxios.wait(() => {
