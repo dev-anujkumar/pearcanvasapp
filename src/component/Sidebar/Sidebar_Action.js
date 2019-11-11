@@ -1,12 +1,9 @@
 import axios from 'axios';
-
 import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
-
-import wipElementObject from './ElementWipData';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 
@@ -132,23 +129,4 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
 export const updateElement = (elementData) => (dispatch, getState) => {
     let appStore =  getState().appStore;
     dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement));
-    // let slateLevelData = handleElementConversion(elementData, getState().appStore.slateLevelData);
-    
-    // let activeElementObject = {
-    //     elementId: elementData.elementId,
-    //     elementType: elementData.elementType,
-    //     primaryOption: elementData.primaryOption,
-    //     secondaryOption: elementData.secondaryOption,
-    //     tag: elementData.labelText
-    // }
-
-    // dispatch({
-	// 	type: SET_ACTIVE_ELEMENT,
-	// 	payload: activeElementObject
-	// });
-
-    // dispatch({
-    //     type: FETCH_SLATE_DATA,
-    //     payload: slateLevelData
-    // });
 }

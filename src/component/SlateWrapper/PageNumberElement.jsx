@@ -6,7 +6,7 @@
  */
 
 // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React from 'react';
 
 class PageNumber extends React.Component {
     constructor(props) {
@@ -31,15 +31,6 @@ class PageNumber extends React.Component {
     }
 
     textBoxClicked = (e) => {
-        // ******************************************************************************
-        // if(this.props.slateLockInfo.status){
-        //     this.slateLockAlert(this.props.slateLockInfo.userInfo);
-        //     return false;
-        // }
-        // else{
-        //     $(e.currentTarget).parents('.pageNumberBox').addClass('greenBorder');
-        // }
-        // ******************************************************************************
         e.currentTarget.parents('.pageNumberBox').classList.add('greenBorder');
         /*following will stop event propgation to upside in nested element*/
         e.stopPropagation();
@@ -48,14 +39,9 @@ class PageNumber extends React.Component {
     updatePageNumber = (e, currOperation, changedInputValue) => {
         const {id} = this.props.element;
         const {asideData,parentUrn} = this.props
-        console.log('loader', this.state.loader)
-     //   this.setState({ loader: true });
         e.currentTarget.parents('.pageNumberBox').classList.remove('greenBorder');
         let pageNumber = e.currentTarget.value;
         this.props.updatePageNumber(pageNumber,id,asideData,parentUrn)
-        /* setTimeout(() => {
-            this.setState({ loader: false });
-        }, 1000); */
     }
 
     render() {

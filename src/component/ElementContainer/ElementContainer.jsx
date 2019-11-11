@@ -14,7 +14,6 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { assetPopoverPopup } from '../AssetPopover/AssetPopover_Actions';
 import { addComment, deleteElement, updateElement } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
@@ -23,12 +22,10 @@ import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrap
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveSlateDropdown, AddEditLearningObjectiveDropdown, ViewLearningObjectiveSlateDropdown, UnlinkSlateDropdown, AddLearningObjectiveAssessmentDropdown } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
-import arrowButton from '../../images/OpenerElement/arrow.png'
-import { ASSESSMENT_SLATE } from './../../constants/Element_Constants';
 import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
@@ -53,13 +50,6 @@ class ElementContainer extends Component {
         };
     }
     componentDidMount() {
-        if (this.props.index == 0) {
-            // this.setState({
-            //     borderToggle : 'active',
-            //     btnClassName : 'activeTagBgColor'
-
-            // })
-        }
         this.setState({
             ElementId: this.props.element.id
         })

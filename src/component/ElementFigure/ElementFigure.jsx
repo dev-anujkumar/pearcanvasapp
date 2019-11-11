@@ -35,15 +35,9 @@ export class ElementFigure extends Component {
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
         let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";

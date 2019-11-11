@@ -20,7 +20,6 @@ class SlateTagDropdown extends React.Component {
     }
     handleClick = (e) => {
         if(this.node.contains(e.target)){
-            console.log("clicked inside");
             return;
         }
         this.props.closeLODropdown()
@@ -30,10 +29,11 @@ class SlateTagDropdown extends React.Component {
     // }
 
     learningObjectiveDropdown = (e) => {
-        // e.stopPropagation();
-        console.log("kanika", e.target.innerText)
         let currentSlateLOData = this.props.currentSlateLOData;
-        let assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+        let assessmentuRN="";
+        if(config.slateType === 'assessment'){
+        assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+        }
         // let isLOExist= this.state.isLOExists;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
