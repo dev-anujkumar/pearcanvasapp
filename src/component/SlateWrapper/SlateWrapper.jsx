@@ -12,8 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 import {
     createElement, swapElement,
-    setSplittedElementIndex, createElementMeta,
-    createElementMetaList,
+    setSplittedElementIndex,
     updatePageNumber,
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -21,7 +20,8 @@ import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageType
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
-import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER } from './SlateWrapperConstants';
+import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
+    ALREADY_USED_SLATE } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -36,10 +36,6 @@ let random = guid();
 class SlateWrapper extends Component {
     constructor(props) {
         super(props);
-
-        this.setListDropRef = this.setListDropRef.bind(this);
-        this.handleClickOutside = this.handleClickOutside.bind(this);
-        this.customListDropClickAction = this.customListDropClickAction.bind(this);
         this.state = {
             previousSlateId: null,
             showLockPopup: false,
@@ -64,7 +60,7 @@ class SlateWrapper extends Component {
      * setListDropRef | sets list drop ref to listDropRef
      * @param {*} node | node reference to ListButtonDrop component
      */
-    setListDropRef(node) {
+    setListDropRef = (node) => {
         this.listDropRef = node;
     }
 
@@ -72,26 +68,18 @@ class SlateWrapper extends Component {
      * handleClickOutside | currently handles when clicked outside of list drop
      * @param {*} event | current triggerd event with target
      */
-    handleClickOutside(event) {
+    handleClickOutside = (event) => {
         // *********************************************************************
         // handle when clicked outside of listdrop 
         if (this.listDropRef && !this.listDropRef.contains(event.target)) {
             if (event.target.classList.contains('fa-list-ol') ||
-                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Ordered List"))
                 return;
             let _listWrapperDiv = document.querySelector('#listDropWrapper');
             if (_listWrapperDiv)
                 _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active');
         }
         // *********************************************************************
-    }
-
-    /**
-     * customListDropClickAction | handle when user clicks one of the ordered list option 
-     * @param {string} type | chosen orderd list type
-     * @param {number} value | entered numeric value
-     */
-    customListDropClickAction(type, value) {
     }
 
     componentDidUpdate() {
@@ -193,13 +181,11 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let title = {
                         text: this.props.slateTitleUpdated
                     }
                     let _slateTitle = title.text ? title : _slateContent.title
-                    // let { title: _slateTitle } = _slateContent;
                     return (
                         <SlateHeader onNavigate={this.props.navigate} slateType={config.slateType} slateTitle={_slateTitle} slateLockInfo={this.props.slateLockInfo} />
                     )
@@ -224,7 +210,6 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
-                    // let _finalSlateObject = Object.values(_slateObject)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
@@ -413,14 +398,12 @@ class SlateWrapper extends Component {
 
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
-            const dialogText = `The following slate is already in use by another member. In use by: `
             this.props.showBlocker(true)
             showTocBlocker();
             return (
-                <PopUp dialogText={dialogText}
+                <PopUp dialogText={ALREADY_USED_SLATE}
                     rows="1"
                     cols="1"
-                    /*maxLength*/
                     active={true}
                     togglePopup={this.togglePopup}
                     inputValue={lockOwner}
@@ -469,15 +452,12 @@ class SlateWrapper extends Component {
                 this.props.createElement(TEXT, indexToinsert, parentUrn, asideData);
                 break;
             case 'image-elem':
-                // this.props.createFigureElement(IMAGE, indexToinsert);
                 this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData);
                 break;
             case 'audio-elem':
-                // this.props.createVideoElement(elevideo, indexToinsert)
                 this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData);
                 break;
             case 'interactive-elem':
-                //this.props.createInteractiveElement('INTERACTIVE', Number(index + 1))
                 this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData);
                 break;
             case 'assessment-elem':
@@ -711,6 +691,7 @@ class SlateWrapper extends Component {
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onListSelect={this.props.convertToListElement}
                             >
                                 {
                                     (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -859,7 +840,7 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
-                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
                             <ListButtonDrop
