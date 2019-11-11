@@ -3,17 +3,21 @@ import ReactDOM from 'react-dom';
 require('../../../src/component/ListElement/polyfills.js');
 import PageNumberElement from '../../../src/component/SlateWrapper/PageNumberElement.jsx';
 import thunk from 'redux-thunk';
+import { spy, stub } from 'sinon';
 describe('Testing <PageNumberElement> Component', () => {    
     let nodeRef = null;
     let spy = sinon.spy();
+    const updatePageNumber = new stub();
     let props = {
         element: {},
         isHovered: {},
         isPageNumberEnabled: {},
         activeElement: {},
-        permissions: ['edit_print_page_no']
+        permissions: ['edit_print_page_no'],
+        updatePageNumber: {updatePageNumber}
     }
-    const wrapper = mount(<PageNumberElement {...props} />, { attachTo: document.body });
+  
+    const wrapper = mount(<PageNumberElement {...props}  updatePageNumber= {updatePageNumber}/>, { attachTo: document.body });
     const wrapperInstance = wrapper.instance();
     let parentDiv = document.createElement('div')
     parentDiv.classList.add('pageNumberBox')
