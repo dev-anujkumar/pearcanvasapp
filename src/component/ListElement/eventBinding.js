@@ -9,6 +9,19 @@
 require('./polyfills.js')
 
 /**
+ * insertUoListButton | inserts custom list button for unordered list with icon in existing editor toolbar
+ */
+export const insertUoListButton = (editor, onIconClick) => {
+    editor.ui.registry.addButton('customUoListButton', {
+        text: '<i class="fa fa-list-ul" aria-hidden="true"></i>',
+        tooltip: 'Unordered List',
+        onAction: () => {
+            onIconClick('disc');
+        }
+    });
+}
+
+/**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
 export const insertListButton = (editor) => {
