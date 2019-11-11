@@ -57,7 +57,7 @@ class PopUp extends React.Component {
         return(
             <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
                 <span className={`save-button ${props.splitSlateClass}`} onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Ok</span>
-                <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Cancel</span>
+                <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e,false)}>Cancel</span>
             </div>
         )
         else {
@@ -97,7 +97,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive){
             return null
         }
         else{
