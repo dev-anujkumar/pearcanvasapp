@@ -8,5 +8,5 @@ export const WORKED_EXAMPLE = "WORKED_EXAMPLE";
 export const SECTION_BREAK = "SECTION_BREAK";
 export const METADATA_ANCHOR = "LO";
 export const LO_LIST = "LO_LIST";
-export const OPENER = "OPENER";
+export const OPENER = "OPENER_ELEMENT";
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";

@@ -65,7 +65,6 @@ class ElementContainer extends Component {
     }
 
 
-    // static getDerivedStateFromProps(nextProps, prevState) {
     componentWillReceiveProps(newProps) {
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if (newProps.elemBorderToggle) {
@@ -107,11 +106,21 @@ class ElementContainer extends Component {
         }   
     }
 
+    /**
+     * Checks for any difference in data before initiating saving call
+     * @param {*} index element index
+     * @param {*} previousElementData old element data
+     */
     figureDifference = (index, previousElementData) => {
-        let titleHTML = document.getElementById(`cypress-${index}-0`).innerHTML,
-            subtitleHTML = document.getElementById(`cypress-${index}-1`).innerHTML,
-            captionHTML = document.getElementById(`cypress-${index}-2`).innerHTML,
-            creditsHTML = document.getElementById(`cypress-${index}-3`).innerHTML
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            captionDOM = document.getElementById(`cypress-${index}-2`),
+            creditsDOM = document.getElementById(`cypress-${index}-3`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
@@ -129,6 +138,41 @@ class ElementContainer extends Component {
     }
 
     /**
+     * Checks for any difference in data before initiating saving call (Interactive element)
+     * @param {*} index element index
+     * @param {*} previousElementData old element data
+     */
+    figureDifferenceInteractive = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            interactiveDOM = document.getElementById(`cypress-${index}-2`),
+            captionsDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
+            captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+        if(titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle || 
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits
+            ){
+                return true
+            }
+            else {
+                return false
+            }
+    }
+
+    updateOpenerElement = (dataToSend) => {
+        this.props.updateElement(dataToSend, 0);
+    }
+    
+    
+    /**
      * Calls API for element updation
      * @param {*} node
      * @param {*} previousElementData
@@ -141,6 +185,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         switch(previousElementData.type){
             case elementTypeConstant.AUTHORED_TEXT:
+            case elementTypeConstant.BLOCKFEATURE:
                 let html = node.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if(previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible){
@@ -175,12 +220,27 @@ class ElementContainer extends Component {
                         this.props.updateElement(dataToSend, this.props.index);
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        if(this.figureDifference(this.props.index, previousElementData)){
+                        if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                             this.props.updateElement(dataToSend, this.props.index);
                         }
                         break;
+
+                    case elementTypeConstant.FIGURE_CODELISTING:
+                            if(this.figureDifference(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index);
+                            }
+                            break;
+                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
+                            if(this.figureDifference(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index);
+                            }
+                            break;
                 }
                 break;
             
@@ -201,18 +261,21 @@ class ElementContainer extends Component {
     }
     
     /**
-     * function will be called on element blur and a saving call will be made
+     * Will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = tinyMCE.activeEditor.id
+        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
-        if (node) {
+        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
+        if (node||elementType==='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
     }
 
+    /**
+     * Will e called on assessment element's blur
+     */
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
@@ -247,7 +310,10 @@ class ElementContainer extends Component {
         })
     }
 
-
+    /**
+     * Updates background color in opener element.
+     * @param {*} event event object
+     */
     selectColor = (event) => {
         const selectedColor = event.target.getAttribute('data-value')
         this.setState({
@@ -315,6 +381,9 @@ class ElementContainer extends Component {
 
     /**
      * Updates figuredata to local store
+     * @param {*} figureData updated figuredata object
+     * @param {*} index index of figure element
+     * @param {*} cb callback method
      */
     updateFigureData = (figureData, index, cb) => {
         this.props.updateFigureData(figureData, index, cb)
@@ -338,7 +407,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex } = this.state
-                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} />
+                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
