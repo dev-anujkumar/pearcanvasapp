@@ -1,13 +1,11 @@
 /* ---------------------------------*/
         /* Common css*/
 /* ---------------------------------*/
-*:not(.overlay-0-0.overlayLittle-0-1 *) {
-    box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
-}
-html:not(.overlay-0-0.overlayLittle-0-1 *) {
+
+#root *{
     font-size: 12px ;
     font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
 }
 .root-width {
     width: 100%;

@@ -85,7 +85,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -158,7 +158,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -237,7 +237,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){

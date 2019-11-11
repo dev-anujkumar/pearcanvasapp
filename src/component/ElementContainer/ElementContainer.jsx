@@ -51,7 +51,9 @@ class ElementContainer extends Component {
     }
     componentDidMount() {
         this.setState({
-            ElementId: this.props.element.id
+            ElementId: this.props.element.id,
+            btnClassName : '',
+            isOpener : this.props.element.type===elementTypeConstant.OPENER
         })
     }
 
@@ -511,7 +513,7 @@ class ElementContainer extends Component {
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={this.state.btnClassName} labelText={labelText} />
+                    <Button type="element-label" btnClassName={`${this.state.btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
