@@ -24,7 +24,9 @@ class Sidebar extends Component {
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
-            attrInput: ""
+            attrInput: "",
+            bceToggleValue: true,
+            bceNumberStartFrom : "1"
         };
     }
 
@@ -222,7 +224,7 @@ class Sidebar extends Component {
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
     
                 attributions = attributionsList.map(item => {
                     return <div key={item} data-attribution={attributionsObject[item].text}>
@@ -230,13 +232,49 @@ class Sidebar extends Component {
                         <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onFocus={this.onFocus} onBlur={this.onBlur} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
-    
-                attributions = <div className="attributions">
-                    {attributions}
-                </div>;
             }
+            if(this.state.activePrimaryOption === "primary-blockcode-equation"){
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={this.handleBceToggle}/>
+                        <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        disabled={!this.state.bceToggleValue}/>
+                    </div>
+                </div>
+                    return attributions;
+            }
+
+            attributions = <div className="attributions">
+                {attributions}
+            </div>;
     
             return attributions;
+        }  
+    }
+
+
+    /**
+    * handleBceToggle function responsible for handling toggle value for BCE element
+    */
+    handleBceToggle = () => {
+        this.setState({
+            bceToggleValue : !this.state.bceToggleValue
+        })
+    }
+
+    /**
+    * handleBceNumber function responsible for handling Number start from field value in BCE element
+    */
+    handleBceNumber = (e) => {
+        let regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
+            this.setState({ bceNumberStartFrom: e.target.value }, () => {
+            })
         }  
     }
 

@@ -19,7 +19,7 @@ class OpenerElement extends Component {
         const { textsemantics, text } = props.element.title
         const bgImage = props.element.backgroundimage.path
         this.state = {
-            label: getOpenerContent(textsemantics, "label", text),
+            label: getOpenerContent(textsemantics, "label", text) || "No Label",
             number: getOpenerContent(textsemantics, "number", text),
             title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
@@ -215,7 +215,20 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
-        console.log("Blur from :", event.target)
+        let element = this.props.element;
+        let { label, number, title } = this.state;
+        let textSemantics = [];
+        if(element.title) {
+            if('text' in element.title) {
+                element.title.text = `${label} ${number}: ${title}`;
+            }
+            
+            if('textsemantics' in element.title) {
+                element.textsemantics = textSemantics;
+            }
+        }
+
+        // this.props.updateElement(element);
     }
     
     

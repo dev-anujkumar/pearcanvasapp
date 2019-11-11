@@ -4,7 +4,7 @@
     "description": "Pearson Cypress Canvas Stablization",
     "main": "./src/index.js",
     "scripts": {
-        "build": "rm -rf dist && bash ./build_dist.sh && webpack --env.NODE_ENV=production --config webpack.prod.config.js",
+        "build": "webpack --env.NODE_ENV=production --config webpack.prod.config.js",
         "build:watch": "npm run build --watch",
         "start": "webpack-dev-server --env.NODE_ENV=development --config webpack.dev.config.js",
         "build-dev": "rm -rf dist && bash ./build_dist.sh && webpack --config webpack.dev.config.js",

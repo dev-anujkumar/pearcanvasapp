@@ -77,6 +77,11 @@ export const LT_TYPE_FILTER_SELECTED = "LT_TYPE_FILTER_SELECTED"
 /*--------------- User Role -------------------*/
 export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
 
+/*--------------- Page Numbering -------------------*/
+export const UPDATE_PAGENUMBER_SUCCESS = 'UPDATE_PAGENUMBER_SUCCESS'
+export const UPDATE_PAGENUMBER = 'UPDATE_PAGENUMBER'
+export const UPDATE_PAGENUMBER_FAIL = 'UPDATE_PAGENUMBER_FAIL'
+
 /*--------------- Audio Narration -------------------*/
 export const OPEN_AUDIO_NARRATION = 'OPEN_AUDIO_NARRATION'
 export const SHOW_REMOVE_POPUP = 'SHOW_REMOVE_POPUP'

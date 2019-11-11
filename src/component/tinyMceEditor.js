@@ -41,6 +41,7 @@ export class TinyMceEditor extends Component {
         super(props);
         context = this;
         let viewLoEnable = true;
+        this.placeHolderClass = ''
         this.chemistryMlMenuButton = null;
         this.mathMlMenuButton = null;
         this.assetPopoverButtonState = null;
@@ -88,17 +89,6 @@ export class TinyMceEditor extends Component {
                     if(config.slateType =="section"){
                     document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
                     }
-                    // if(config.slateType =="assessment"){
-                    //     if(props.model && props.model.elementdata && props.model.elementdata.assessmentid){
-                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-                    //         }
-                    //         else{
-                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.add("disable");
-                    //         }
-                    // }
-                    // else{
-                    //     document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-                    // }
                     
                 }
                   });
@@ -269,28 +259,34 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement) {
+            if (activeElement) { 
+                this.lastContent = activeElement.innerHTML;
                 if (!activeElement.children.length) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    div.children[0].innerHTML = '<br/>';
-                    activeElement.innerHTML = div.children[0].outerHTML;
+                    if(div.children && div.children[0]){
+                        div.children[0].innerHTML = '<br/>';
+                        activeElement.innerHTML = div.children[0].outerHTML;
+                    }
                 }
                 else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    div.children[0].innerHTML = '<br/>';
-                    activeElement.innerHTML = div.children[0].outerHTML;
+                    if(div.children && div.children[0]){
+                        div.children[0].innerHTML = '<br/>';
+                        activeElement.innerHTML = div.children[0].outerHTML;
+                    }
                 }
-                this.lastContent = activeElement.innerHTML;                       
                 if (activeElement.innerText.trim().length) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
                     activeElement.classList.add('place-holder')
                 }
+                this.lastContent = activeElement.innerHTML;                       
+                
             }
         });
     }
@@ -312,14 +308,18 @@ export class TinyMceEditor extends Component {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    div.children[0].innerHTML = '<br/>';
-                    activeElement.innerHTML = div.children[0].outerHTML;
+                    if(div.children && div.children[0]){
+                        div.children[0].innerHTML = '<br/>';
+                        activeElement.innerHTML = div.children[0].outerHTML;
+                    }
                 }
                 else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    div.children[0].innerHTML = '<br/>';
-                    activeElement.innerHTML = div.children[0].outerHTML;
+                    if(div.children && div.children[0]){
+                        div.children[0].innerHTML = '<br/>';
+                        activeElement.innerHTML = div.children[0].outerHTML;
+                    }
                 }
                 this.lastContent = activeElement.innerHTML;
             }
@@ -559,7 +559,11 @@ export class TinyMceEditor extends Component {
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
-        args.content = testElement.innerText;
+        if(testElement.innerText.trim().length){
+            args.content = tinymce.activeEditor.selection.getContent()
+        }else{
+            args.content = testElement.innerText;
+        } 
     }
 
     /**
@@ -697,9 +701,44 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Called immediately before mounting occurs, and before Component#render. Avoid introducing any side-effects or subscriptions in this method.
+     */
+    componentWillMount(){
+        /**
+         * Defines initial placeholder
+         */
+        if (this.props.model && this.props.model.text) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.text;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length)
+                this.placeHolderClass = 'place-holder';
+        }
+        else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.figuredata.text;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+        } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.figuredata.preformattedtext;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+        } else {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+        }
+    }
+
+    /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+
         const { slateLockInfo: { isLocked, userId } } = this.props
         /**
          * case -  initialize first tinymce instance on very first editor element by default
@@ -722,6 +761,7 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
+                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(()=>{
                         document.getElementById(this.editorRef.current.id).click();
                         clearTimeout(timeoutId)
@@ -743,7 +783,7 @@ export class TinyMceEditor extends Component {
             }
         }
     }
-
+    
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
@@ -834,7 +874,7 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if (!isSameTarget && document.getElementById(tinyMCE.activeEditor.id) && tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if (!isSameTarget && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
@@ -912,35 +952,8 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-' + this.props.index;
-        let placeHolderClass = '';
-        if (this.props.model && this.props.model.text) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.text;
-            if (testElem.innerText == "" && !testElem.innerText.length)
-                placeHolderClass = 'place-holder';
-        }
-        else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.figuredata.text;
-            if (testElem.innerText == "" && !testElem.innerText.length) {
-                placeHolderClass = 'place-holder';
-            }
-        } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.figuredata.preformattedtext;
-            if (testElem.innerText == "" && !testElem.innerText.length) {
-                placeHolderClass = 'place-holder';
-            }
-        } else {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model;
-            if (testElem.innerText == "" && !testElem.innerText.length) {
-                placeHolderClass = 'place-holder';
-            }
-        }
-
-        // this.setToolbarByElementType();
-        classes = this.props.className + " cypress-editable " + placeHolderClass;
+        
+        classes = this.props.className + " cypress-editable " + this.placeHolderClass;
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':

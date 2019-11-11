@@ -97,3 +97,26 @@
     opacity: 0.2!important;
     pointer-events: none!important;
 }
+
+.toggle-value-bce {
+    float: left;
+    font-weight: bold;
+    padding-right: 10px;
+    padding-top: 4px;
+}
+.alt-Text-LineNumber{
+    float: left;
+    margin-Top: 20px;
+}
+.line-number{
+    width: 209px;
+    height: 26px;
+}
+.alt-Text-LineNumber input[type="number"]::-webkit-outer-spin-button,
+.alt-Text-LineNumber input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.alt-Text-LineNumber input[type="number"] {
+    -moz-appearance: textfield;
+}

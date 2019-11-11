@@ -1,13 +1,15 @@
 let config = {
     REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
-    STRUCTURE_API_URL : process.env.NODE_ENV === "production" ? process.env.STRUCTURE_API_URL : "https://staging.api.pearson.com/",
-    LEARNING_OBJECTIVES_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.LEARNING_OBJECTIVES_ENDPOINT : "https://contentapis-staging.pearsoncms.net/lo-api/",
-    ASSET_POPOVER_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.ASSET_POPOVER_ENDPOINT : "https://contentapis-staging.pearsoncms.net/manifest-api/",
-    PRODUCTAPI_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.PRODUCTAPI_ENDPOINT : "https://contentapis-staging.pearsoncms.net/product-api/",
-    ELM_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.ELM_ENDPOINT : "https://contentapis-staging.pearsoncms.net/manifest-api/",
-    SLATE_REFRESH_URL : process.env.NODE_ENV === "production" ? process.env.SLATE_REFRESH_URL :"https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
-    AUDIO_NARRATION_URL : process.env.NODE_ENV === "production" ? process.env.STRUCTURE_API_ENDPOINT_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
-    AUDIO_API_KEY :process.env.NODE_ENV === "production" ? process.env.AUDIO_API_KEY : "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
+    STRUCTURE_API_URL :"https://staging.api.pearson.com/",
+    LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-staging.pearsoncms.net/lo-api/",
+    ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    PRODUCTAPI_ENDPOINT: process.env.PRODUCTAPI_ENDPOINT|| "https://contentapis-staging.pearsoncms.net/product-api/",
+    ELM_ENDPOINT: process.env.ELM_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
+    AUDIO_NARRATION_URL : process.env.STRUCTURE_API_ENDPOINT_URL || 'https://contentapis-staging.pearsoncms.net/structure-api/',
+    PAGE_NUMBER_UPDATE_ENDPOINT :process.env.PAGE_NUMBER_UPDATE_ENDPOINT || "https://contentapis-staging.pearsoncms.net/print-api",
+    OPENER_ELEMENT_COREAPI_KEY:  process.env.OPENER_ELEMENT_COREAPI_KEY|| "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
+    AUDIO_API_KEY : process.env.STRUCTURE_APIKEY|| "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.COREAPI_ENDPOINT : "https://contentapis-staging.pearsoncms.net/core-api",
@@ -18,7 +20,7 @@ let config = {
     ssoToken: "i2KQRvTIpS5MCcQniBc38hsfEgc.*AAJTSQACMDIAAlNLABx6ODZncW9ZcmlwMGlsN2IwUHNlK0lVeEk4TlE9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
-    slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+    slateManifestURN : null,
     parentContainerUrn:"",
     parentEntityUrn:"",
     slateType : 'section',
@@ -69,12 +71,13 @@ let config = {
     elementToolbar: [],
     headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     codeListingToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-    asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+    asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     labelToolbar:['footnote','decreaseindent'],
     captionToolbar:['decreaseindent'],
     GET_FIGURES : process.env.NODE_ENV === 'production' ? process.env.GET_FIGURES : 'https://contentapis-qa.pearsoncms.net/',
     GET_ASSETPOPOVER_ID : process.env.NODE_ENV === 'production' ? process.env.GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
-    APO_API_KEY : process.env.NODE_ENV === 'production' ? process.env.APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx'
+    APO_API_KEY : process.env.NODE_ENV === 'production' ? process.env.APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
+    editorRefID:""
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';

@@ -37,24 +37,50 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  */
 export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition) => {
     let glossaryEntry = Object.create({})
-    glossaryEntry[glossaryfootnoteid] = {
-        term,
-        definition
+    let footnoteEntry = Object.create({})
+    let semanticType = type.toUpperCase()
+    let data = {}
+    switch(semanticType){
+        case "FOOTNOTE":
+                footnoteEntry[glossaryfootnoteid] = {
+                definition
+            }
+            data = {
+                id: elementWorkId,
+                type: elementType,
+                versionUrn: null,
+                contentUrn: null,
+                html: {
+                    text: null,
+                    glossaryentries: {},
+                    footnotes: footnoteEntry,
+                    assetspopover: {}
+                }
+            }
+            break;
+
+        case "GLOSSARY":
+                glossaryEntry[glossaryfootnoteid] = {
+                    term,
+                    definition
+                }
+               data = {
+                    id: elementWorkId,
+                    type: elementType,
+                    versionUrn: null,
+                    contentUrn: null,
+                    html: {
+                        text: null,
+                        glossaryentries: glossaryEntry,
+                        footnotes: {},
+                        assetspopover: {}
+                    }
+                }
+            break;
     }
-    let data = {
-        id: elementWorkId,
-        type: elementType,
-        versionUrn: null,
-        contentUrn: null,
-        html: {
-            text: null,
-            glossaryentries: glossaryEntry,
-            footnotes: {},
-            assetspopover: {}
-        }
-    }
+    
     let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
-    axios.post(url, JSON.stringify(data), {
+    axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
