@@ -19,17 +19,16 @@ import config from './../../config/config';
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, setSlateLock, releaseSlateLock, setLockPeriodFlag } from './SlateLock_Actions'
+import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import PopUp from '../PopUp';
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
 
-import { handleSplitSlate,setUpdatedSlateTitle } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType } from '../SlateWrapper/SlateWrapper_Actions'
+import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -127,93 +126,13 @@ export class CanvasWrapper extends Component {
             count = Math.floor(seconds / interval.seconds);
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
         }
-        
-     
+         
     }
-
 
     updateTimer = () => {
         setInterval(() => {
             this.timeSince("'")
         }, 60000)
-    }
-
-
-
-    releaseSlateLock = (projectUrn, slateId) => {
-        this.props.releaseSlateLock(projectUrn, slateId)
-    }
-
-    debounceReleaseLock = (callback) => {
-        //900000ms - 15mins
-        let timer;
-        let _context = this
-        return function (){ 
-            clearTimeout(timer)
-            timer = setTimeout(()=>{
-                 this.debounceReleaseHandler(callback, _context)
-            },900000)
-        }
-    }
-    debounceReleaseHandler = (callback, context) => {
-        if (context.props.withinLockPeriod) {
-            callback(config.projectUrn, Object.keys(context.props.slateLevelData)[0])
-            context.props.setLockPeriodFlag(false)
-            // alert("Lock has been released")
-            context.setState({
-                showReleasePopup: true
-            })
-        }
-    }
-
-    debounceReleaseTimeout = this.debounceReleaseLock(this.releaseSlateLock);
-
-    setSlateLock = (slateId, lockDuration) => {
-        if(this.props.withinLockPeriod){
-            this.debounceReleaseTimeout()
-            // this.debounceReleaseTimeout(this.props.releaseSlateLock)
-        }
-        else{
-            const { projectUrn } = config
-            this.props.setLockPeriodFlag(true)
-            this.props.setSlateLock(projectUrn, slateId, lockDuration)
-            this.debounceReleaseTimeout()  
-        }
-    }
-
-    toggleLockReleasePopup = (toggleValue, event) => {
-        this.setState({
-            showReleasePopup: toggleValue
-        })
-        this.props.showCanvasBlocker(toggleValue)
-        hideBlocker()
-        this.prohibitPropagation(event)
-    }
-
-    prohibitPropagation = (event) =>{
-        if(event){
-            event.preventDefault()
-            event.stopPropagation()
-        }
-        return false
-    }
-
-   showLockReleasePopup = () => {
-        if(this.state.showReleasePopup){
-            showTocBlocker();
-            const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
-            return(
-                <PopUp  dialogText={dialogText}
-                        active={true}
-                        togglePopup={this.toggleLockReleasePopup}
-                        isLockReleasePopup={true}
-                        isInputDisabled={true}
-                />
-            )
-        }
-        else{
-            return null
-        }
     }
     
     render() {
@@ -237,7 +156,7 @@ export class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} setSlateLock={this.setSlateLock} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} refToToolBar={this.state.editorToolbarRef} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
                                 </RootContext.Provider>                                
                             </div>
                         </div>
@@ -259,7 +178,6 @@ export class CanvasWrapper extends Component {
                         </div>
                     </div>
                 </div>
-                {this.showLockReleasePopup()}  
             </div>
         );
     }
@@ -276,7 +194,6 @@ const mapStateToProps = state => {
     return {
         slateLevelData: state.appStore.slateLevelData,
         glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
@@ -295,18 +212,19 @@ export default connect(
         fetchCommentByElement,
         convertToListElement,
         getSlateLockStatus,
-        setSlateLock,
-        releaseSlateLock,
-        setLockPeriodFlag,
         handleSplitSlate,
         currentSlateLO,
+        currentSlateLOMath,
+        isLOExist,
         setUpdatedSlateTitle,
+        setSlateType,
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
         logout,
         handleUserRole,
         fetchAudioNarrationForContainer,
-        glossaaryFootnotePopup
+        glossaaryFootnotePopup,
+        releaseSlateLock
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
