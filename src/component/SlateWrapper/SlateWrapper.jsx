@@ -75,7 +75,7 @@ class SlateWrapper extends Component {
         // handle when clicked outside of listdrop 
         if (this.listDropRef && !this.listDropRef.contains(event.target)) {
             if (event.target.classList.contains('fa-list-ol') ||
-                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Ordered List"))
                 return;
             let _listWrapperDiv = document.querySelector('#listDropWrapper');
             if (_listWrapperDiv)
@@ -694,6 +694,7 @@ class SlateWrapper extends Component {
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onListSelect={this.props.convertToListElement}
                             >
                                 {
                                     (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -842,7 +843,7 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
-                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
                             <ListButtonDrop

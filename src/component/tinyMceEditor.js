@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -96,7 +96,12 @@ export class TinyMceEditor extends Component {
      */
     insertListButtonIcon = (editor) => {
         insertListButton(editor);
+        insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
+    onUnorderedListButtonClick = (type) => {
+        this.props.onListSelect(type, "");
+    }
+
     /**
      * This method is called when user clicks any button/executes command in the toolbar
      * @param {*} editor  editor instance
@@ -762,22 +767,26 @@ export class TinyMceEditor extends Component {
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
     componentDidUpdate() {
-        if(tinymce && tinymce.editors && tinymce.editors.length>1){
-            let indexes = Object.keys(tinymce.editors)
-            indexes.forEach((value)=>{
-                if(value!==tinymce.activeEditor.id){
-                    if(tinymce.editors[value]){
-                        tinymce.editors[value].remove();
-                    }
-                }
-                else{
-                    setTimeout(()=>{
-                        document.getElementById(tinymce.activeEditor.id).focus();
-                        document.getElementById(tinymce.activeEditor.id).click();
-                    },0)
-                }
-            })
-        } 
+        if (!tinymce.editors.length) {
+            //console.log('tiny update')
+            //tinymce.init(this.editorConfig)
+        }
+    }
+
+    componentWillUnmount() {
+        /**
+         * Fixing - 
+         * 1. on selecting next element, list getting disappeared
+         * 2. event doesn't get binded again on coverting list from para
+         * 3 . etc related to tinymce not in sync issues
+         * must code to sync tinymce editor instances ant any moment of time
+         */
+        for (let i = tinymce.editors.length - 1; i > -1; i--) {
+            let ed_id = tinymce.editors[i].id;
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
+                tinymce.remove(`#${ed_id}`)
+            }
+        }
     }
 
     setInstanceToolbar = () => {
