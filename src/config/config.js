@@ -20,7 +20,7 @@ let config = {
     ssoToken: "i2KQRvTIpS5MCcQniBc38hsfEgc.*AAJTSQACMDIAAlNLABx6ODZncW9ZcmlwMGlsN2IwUHNlK0lVeEk4TlE9AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
-    slateManifestURN : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+    slateManifestURN : null,
     parentContainerUrn:"",
     parentEntityUrn:"",
     slateType : 'section',
