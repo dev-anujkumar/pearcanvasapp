@@ -69,7 +69,6 @@ export class CanvasWrapper extends Component {
             'message': true
         })
         let { projectUrn } = config,
-            // slateId = Object.keys(this.props.slateLevelData)[0]
             slateId = config.slateManifestURN
 
         this.props.getSlateLockStatus(projectUrn ,slateId)     
@@ -77,27 +76,7 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-        // if(this.state.navigation) {
-            // if(document.getElementById("cypress-0")){
-            //     document.getElementById("cypress-0").focus();
-            // }
-
-        //     this.state.navigation = false;
-        // } else {
         const { slateLockInfo: { isLocked, userId } } = this.props
-        // if (window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && true) {
-        //     document.getElementById(window.tinymce.activeEditor.id).focus();
-        // } else if (tinymce.$('.cypress-editable').length && true) {
-        //     tinymce.$('.cypress-editable').eq(0).trigger('focus');
-        // }     
-
-        /* let { projectUrn } = config,
-            slateId = Object.keys(prevProps.slateLevelData)[0],
-            newSlateId = Object.keys(this.props.slateLevelData)[0]
-
-        if(newSlateId && slateId !== newSlateId){
-            this.props.getSlateLockStatus(projectUrn, newSlateId)
-        } */
     }
     
     handleCommentspanel(elementId){

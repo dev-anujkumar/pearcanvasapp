@@ -1,5 +1,4 @@
 // IMPORT - plugins
-import axios from 'axios';
 // IMPORT - constants
 import {
     FETCH_SLATE_DATA,

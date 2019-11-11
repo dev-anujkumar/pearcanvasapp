@@ -5,9 +5,7 @@ const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
 const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
 const CMDS_DATABASE = config_object['CMDS_DATABASE'];
-const CMIS_US_REPO = config_object['CMIS_US_REPO'];
-const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
-import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
+import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
 
@@ -42,20 +40,7 @@ var libConfig = {
 
 patternBroker.setup(libConfig);
 
-//var module = {};
 export const c2AssessmentModule = {
-
-  searchAndSelectCallBack: function (data) {
-    /* returned data format is :
-    { type: web-link,
-      title: xxxx,
-      dateModified: Apr 1 2017,
-      id: urn:pearson:work:33db101a-328f-4011-86da-045175e2f5f9,
-      workExample: https://urn:pearson:manifestation:bf5403a5-273d-4d56-b295-ffe3c7177cf3,
-      taxonomicType: https://schema.pearson.com/ns/taxonomictype/web-link
-    }
-    */
-  },
   searchAndSelectonSave: function (data) {
     console.log("searchAndSelectonSave data: " + '', data);
 

@@ -1,5 +1,4 @@
-import { CONTENT_STYLE } from './TinymceDefaultCss'
-import tinymce from 'tinymce/tinymce';
+import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap';
 export const EditorConfig = {
     formats: {
