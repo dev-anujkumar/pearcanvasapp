@@ -262,25 +262,6 @@ describe('Test for element container component', () => {
         elementContainerInstance.handleFocus();
          elementContainerInstance.handleBlurAside();
     })
-    it('learningObjectiveOperations ', () => {
-       
-        config.slateType ="assessment";
-        config.PERMISSIONS=['lo_edit_metadata'];
-        document.cookie="tet"
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        elementContainerInstance.learningObjectiveOperations("View Learning Objective");
-        config.slateType ="section";
-        config.PERMISSIONS=['lo_edit_metadata'];
-        console.log(document.cookie)
-        //let elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        elementContainerInstance.learningObjectiveOperations("View Learning Objective");
-        //elementContainerInstance.learningObjectiveOperations("Add a New Learning Objective");
-        // instance.learningObjectiveOperations("Add From Existing or Edit");
-        // instance.learningObjectiveOperations("Add From Existing");
-        
-        
-       // elementContainerInstance.find('span#close-container').simulate('click');
-    })
     it('toggleColorPaletteList ', () => {
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         elementContainerInstance.toggleColorPaletteList();

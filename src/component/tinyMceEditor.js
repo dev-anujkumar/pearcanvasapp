@@ -22,14 +22,14 @@ import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
     tinymceFormulaChemistryIcon,
-    metadataanchor,
     assetPopoverIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
-    UnlinkSlateDropdown
+    UnlinkSlateDropdown,
+    AddEditLOAssessmentDropdown
 } from '../constants/IFrameMessageTypes';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import {checkforToolbarClick} from '../js/utils'
@@ -66,7 +66,6 @@ export class TinyMceEditor extends Component {
             force_p_newlines : false,
             setup: (editor) => {
                 this.setChemistryFormulaIcon(editor);
-                this.setMetaDataAnchorIcon(editor);
                 this.setMathmlFormulaIcon(editor);
                 this.setAssetPopoverIcon(editor);
                 this.addChemistryFormulaButton(editor);
@@ -81,8 +80,37 @@ export class TinyMceEditor extends Component {
                 this.editorKeyup(editor);
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
-                this.editorSlateTagIcon(editor);
                 this.insertListButtonIcon(editor);
+                editor.on('init', function (e) {
+                    document.getElementsByClassName("audio")[0].style.display = "block";
+                    if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !=="container-introduction"){
+                    document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
+                    if(config.slateType =="section"){
+                    document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                    }
+                    // if(config.slateType =="assessment"){
+                    //     if(props.model && props.model.elementdata && props.model.elementdata.assessmentid){
+                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                    //         }
+                    //         else{
+                    //         document.getElementsByClassName("slate-tag-icon")[0].classList.add("disable");
+                    //         }
+                    // }
+                    // else{
+                    //     document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                    // }
+                    
+                }
+                  });
+                  
+                // editor.on('keydown', function (e) {
+                //     /* if (e.keyCode == 13) {
+                //         e.preventDefault();
+                //         return false;
+                //     } */
+                //     bindKeyDownEvent(editor, e);
+                // });
+                
             },
 
             init_instance_callback: (editor) => { 
@@ -102,37 +130,6 @@ export class TinyMceEditor extends Component {
     insertListButtonIcon = (editor) => {
         insertListButton(editor);
     }
-    /**
-     * Adds LO item menu button to the editor toolbar
-     * @param {*} editor  editor instance
-     */
-    editorSlateTagIcon = (editor) => {
-        /* adding a slate tag button in toolbar */
-        if (config.slateType == "section" && config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter") {
-            editor.ui.registry.addMenuButton('slateTag', {
-                icon: 'metadataanchor',
-                tooltip: "Slate Tag",
-                fetch: function (callback) {
-                    let viewLoEnable = true;
-                    if (context.props.currentSlateLOData && (context.props.currentSlateLOData.id ? context.props.currentSlateLOData.id : context.props.currentSlateLOData.loUrn)) {
-                        viewLoEnable = false;
-                    }
-                    //show dropdown options in slate tag 
-                    var dropdownItemArray = [AddLearningObjectiveSlateDropdown, AddEditLearningObjectiveDropdown, ViewLearningObjectiveSlateDropdown, UnlinkSlateDropdown];
-                    var items = dropdownItemArray.map((item, index) => {
-                        return {
-                            type: 'menuitem',
-                            text: item,
-                            disabled: index == 2 || index == 3 ? viewLoEnable : false,
-                            onAction: () => context.learningObjectiveDropdown(item)
-                        }
-                    })
-                    callback(items);
-                }
-            });
-        }
-    }
-
     /**
      * This method is called when user clicks any button/executes command in the toolbar
      * @param {*} editor  editor instance
@@ -470,14 +467,6 @@ export class TinyMceEditor extends Component {
     };
 
     /**
-     * Adding custom icon for metadata anchor.
-     * @param {*} editor  editor instance
-     */
-    setMetaDataAnchorIcon = editor => {
-        editor.ui.registry.addIcon("metadataanchor", metadataanchor);
-    };
-
-    /**
      * Adding button and bind exec command on clicking the button to open the chemistry editor
      * @param {*} editor  editor instance
      */
@@ -733,7 +722,10 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
-                    document.getElementById(this.editorRef.current.id).click();
+                    let timeoutId = setTimeout(()=>{
+                        document.getElementById(this.editorRef.current.id).click();
+                        clearTimeout(timeoutId)
+                    },0)
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
@@ -759,6 +751,22 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
+        }
+        if(tinymce && tinymce.editors && tinymce.editors.length>1){
+            let indexes = Object.keys(tinymce.editors)
+            indexes.forEach((value)=>{
+                if(value!==tinymce.activeEditor.id){
+                    if(tinymce.editors[value]){
+                        tinymce.editors[value].remove();
+                    }
+                }
+                else{
+                    setTimeout(()=>{
+                        document.getElementById(tinymce.activeEditor.id).focus();
+                        document.getElementById(tinymce.activeEditor.id).click();
+                    },0)
+                }
+            })
         }
     }
 
@@ -826,7 +834,7 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if (!isSameTarget && document.getElementById(tinyMCE.activeEditor.id) && tinymce.activeEditor && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if (!isSameTarget && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
@@ -875,6 +883,7 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
+        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
     }
 
     /**
@@ -891,7 +900,7 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
     }
 
     render() {

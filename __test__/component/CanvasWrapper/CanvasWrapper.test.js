@@ -74,6 +74,7 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
                 payload: null
             }
         },
+
         fetchComments: function () {
             return {
                 type: 'FETCH_COMMENTS',
@@ -88,6 +89,7 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
         }
     }
 })
+
 
 
 import {
@@ -107,6 +109,10 @@ const initialState = {
     },
     glossaryFootnoteReducer: {
         glossaryFootnoteValue: GlossaryMockState
+    },
+    audioReducer : {
+        openRemovePopUp : false,
+        openSplitPopUp : false
     },
     slateLockReducer: SlateLockMockState,
     assetPopOverSearch: AssetPopOverMockState
@@ -250,6 +256,18 @@ describe('Testing <CanvasWrapper> Component', () => {
                     message: ""
                 }
             }
+            let case19 = {
+                data: {
+                    type: "getSlateLOResponse",
+                    message: ""
+                }
+            }
+            let case20 = {
+                data: {
+                    type: "getLOlistResponse",
+                    message: ""
+                }
+            }
             channelInstance.handleIncommingMessages(case1);
             channelInstance.handleIncommingMessages(case2);
             channelInstance.handleIncommingMessages(case3);
@@ -263,6 +281,8 @@ describe('Testing <CanvasWrapper> Component', () => {
             //channelInstance.handleIncommingMessages(case13);
             channelInstance.handleIncommingMessages(case17);
             channelInstance.handleIncommingMessages(case18);
+            channelInstance.handleIncommingMessages(case19);
+            channelInstance.handleIncommingMessages(case20);
             channelInstance.showCanvasBlocker(true);
         })
         test('Test for setUpdatedSlateTitle function', () => {
@@ -394,6 +414,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 handleSlateRefresh: function () { },
                 logout: function () { },
                 publishContent: jest.fn(),
+                fetchAudioNarrationForContainer: jest.fn(),
                 introObject: {
                     isCO: false,
                     introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
@@ -430,6 +451,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 fetchSlateData: function () { },
                 handleSplitSlate: function () { },
                 currentSlateLO: function () { },
+                fetchAudioNarrationForContainer: jest.fn(),
                 setUpdatedSlateTitle: jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions', () => {
                     return {
                         setUpdatedSlateTitle: function (newSlateObj) {
@@ -444,6 +466,7 @@ describe('Testing <CanvasWrapper> Component', () => {
                 handleSlateRefresh: function () { },
                 logout: function () { },
                 publishContent: jest.fn(),
+                fetchAudioNarrationForContainer: jest.fn(),
                 introObject: {
                     isCO: false,
                     introSlate: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29"
@@ -527,5 +550,6 @@ describe('Testing <CanvasWrapper> Component', () => {
             }
             //channelInstance.handleIncommingMessages(case6);
         })
+       
     })
 })

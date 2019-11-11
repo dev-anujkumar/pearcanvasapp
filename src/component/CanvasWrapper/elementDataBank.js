@@ -115,22 +115,22 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-image-figure-quarter"
             }
         },
-        "table" : {
-            "elementType" : "figure",
-            "primaryOption" : "primary-image-table",
-            "image50TextTableImage" : {
-                "secondaryOption" : "secondary-image-table-half"
-            },
-            "imageTextWidthTableImage" : {
-                "secondaryOption" : "secondary-image-table-width"
-            },
-            "imageWiderThanTextTableImage" : {
-                "secondaryOption" : "secondary-image-table-wider"
-            },
-            "imageFullscreenTableImage" : {
-                "secondaryOption" : "secondary-image-table-full"
-            },
-        },
+        // "table" : {
+        //     "elementType" : "figure",
+        //     "primaryOption" : "primary-image-table",
+        //     "image50TextTableImage" : {
+        //         "secondaryOption" : "secondary-image-table-half"
+        //     },
+        //     "imageTextWidthTableImage" : {
+        //         "secondaryOption" : "secondary-image-table-width"
+        //     },
+        //     "imageWiderThanTextTableImage" : {
+        //         "secondaryOption" : "secondary-image-table-wider"
+        //     },
+        //     "imageFullscreenTableImage" : {
+        //         "secondaryOption" : "secondary-image-table-full"
+        //     },
+        // },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",
@@ -162,17 +162,24 @@ const elementDataBank = {
             "elementType" : "figure",
             "primaryOption" : "primary-editor-table-equation",
             "imageTextWidthTableEditor" : {
-                "secondaryOption" : "secondary-editor-table-width"
-            },
-            "imageWiderThanTextEditorTable" : {
-                "secondaryOption" : "secondary-editor-table-wider"
-            },
-            "imageFullscreenTableEditor" : {
-                "secondaryOption" : "secondary-editor-table-full"
-            },
-            "image50TextEditorTable" : {
-                "secondaryOption" : "secondary-editor-table-half"
+                "secondaryOption" : "secondary-editor-table-equation"
             }
+        },
+        "table" : {
+            "elementType" : "figure",
+            "primaryOption" : "primary-image-table",
+            "image50TextTableImage" : {
+                "secondaryOption" : "secondary-image-table-half"
+            },
+            "imageTextWidthTableImage" : {
+                "secondaryOption" : "secondary-image-table-width"
+            },
+            "imageWiderThanTextTableImage" : {
+                "secondaryOption" : "secondary-image-table-wider"
+            },
+            "imageFullscreenTableImage" : {
+                "secondaryOption" : "secondary-image-table-full"
+            },
         },
         "video" : {
             "elementType" : "video-audio",
