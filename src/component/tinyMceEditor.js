@@ -75,7 +75,7 @@ export class TinyMceEditor extends Component {
                     document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
                     if(config.slateType =="section"){
                     document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-                    }                    
+                    }                                        
                 }
                   });                
             },
@@ -734,6 +734,7 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
+                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(()=>{
                         document.getElementById(this.editorRef.current.id).click();
                         clearTimeout(timeoutId)
@@ -755,7 +756,7 @@ export class TinyMceEditor extends Component {
             }
         }
     }
-
+    
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
      */
