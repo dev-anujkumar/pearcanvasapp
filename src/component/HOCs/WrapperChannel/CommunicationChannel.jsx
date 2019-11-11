@@ -13,7 +13,7 @@ const configModule = {}; // TO BE IMPORTED
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { getSlateLockStatus, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import { getSlateLockStatus, getSlateLockStatusWithCallback , releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { thisExpression } from '@babel/types';
 import RootContext from '../../CanvasWrapper/CanvasContexts.js';
 
@@ -198,7 +198,7 @@ function WithWrapperCommunication(WrappedComponent) {
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
             if (projectUrn && slateId){
-                this.props.releaseSlateLock(projectUrn, slateId, (response) => {
+                releaseSlateLockWithCallback(projectUrn, slateId, (response) => {
                    this.redirectDashboard();                    
                 });
             }
