@@ -17,8 +17,7 @@ import config from '../config/config';
 //import { ReactDOMServer }  from 'react-dom/server';
 const HtmlToReactParser = require('html-to-react').Parser;
 const htmlToReactParser = new HtmlToReactParser();
-import { insertListButton, bindKeyDownEvent } from './ListElement/eventBinding.js';
-import { insertUoListButton } from './ListElement/eventBindingUoList.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
