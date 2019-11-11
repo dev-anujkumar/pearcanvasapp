@@ -185,10 +185,30 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'projectPreview':
                     this.props.publishContent('projectPreview');
                     break;
+                case 'getSlateLockStatus' :
+                    this.releaseLockAndRedirect()
+                    break;
                 case 'logout':
                     this.props.logout();
                     break;
             }
+        }
+
+        releaseLockAndRedirect = () => { 
+            let projectUrn = config.projectUrn
+            let slateId = config.slateManifestURN
+            if (projectUrn && slateId){
+                this.props.releaseSlateLock(projectUrn, slateId, (response) => {
+                   this.redirectDashboard();                    
+                });
+            }
+        }
+
+        redirectDashboard () {
+            sendDataToIframe({
+                'type': 'redirectTODashboard',
+                'message': {}
+            })
         }
 
         handleLOData=(message) =>{
