@@ -202,6 +202,7 @@ class ElementContainer extends Component {
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
+                    case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifference(this.props.index, previousElementData)) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
