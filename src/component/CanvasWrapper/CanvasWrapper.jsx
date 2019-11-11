@@ -14,19 +14,16 @@ import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../Commen
 import Toolbar from '../Toolbar';
 import config from './../../config/config';
 
-
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { CanvasIframeLoaded, HideWrapperLoader, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
+import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
-
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
@@ -43,10 +40,7 @@ export class CanvasWrapper extends Component {
             showReleasePopup : false,
             toggleApo : false,
             isPageNumberEnabled : false
-        }
-        this.handleCommentspanel = this.handleCommentspanel.bind(this);
-
-        
+        }        
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
@@ -58,7 +52,6 @@ export class CanvasWrapper extends Component {
 
     componentDidMount() {        
         // uncomment to run Canvas Stabilization app as stand alone app //
-        // this.props.fetchSlateData(this.state.activeSlate);
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
         sendDataToIframe({
             'type': CanvasIframeLoaded,
@@ -69,45 +62,21 @@ export class CanvasWrapper extends Component {
             'message': true
         })
         let { projectUrn } = config,
-            // slateId = Object.keys(this.props.slateLevelData)[0]
-            slateId = config.slateManifestURN
-
+        slateId = config.slateManifestURN
         this.props.getSlateLockStatus(projectUrn ,slateId)     
         }
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
-        // if(this.state.navigation) {
-            // if(document.getElementById("cypress-0")){
-            //     document.getElementById("cypress-0").focus();
-            // }
-
-        //     this.state.navigation = false;
-        // } else {
-        const { slateLockInfo: { isLocked, userId } } = this.props
-        // if (window.tinymce.activeEditor && document.getElementById(window.tinymce.activeEditor.id) && true) {
-        //     document.getElementById(window.tinymce.activeEditor.id).focus();
-        // } else if (tinymce.$('.cypress-editable').length && true) {
-        //     tinymce.$('.cypress-editable').eq(0).trigger('focus');
-        // }     
-
-        /* let { projectUrn } = config,
-            slateId = Object.keys(prevProps.slateLevelData)[0],
-            newSlateId = Object.keys(this.props.slateLevelData)[0]
-
-        if(newSlateId && slateId !== newSlateId){
-            this.props.getSlateLockStatus(projectUrn, newSlateId)
-        } */
     }
     
-    handleCommentspanel(elementId){
+    handleCommentspanel = (elementId) => {
         this.props.toggleCommentsPanel(true);
         this.props.fetchCommentByElement(elementId);
         sendDataToIframe({
             'type': TocToggle,
             'message': {"open":false}
-        });
-        
+        });       
     }
 
     timeSince() {
@@ -125,8 +94,7 @@ export class CanvasWrapper extends Component {
         if (interval && interval.label != 'second') {
             count = Math.floor(seconds / interval.seconds);
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
-        }
-         
+        }        
     }
 
     updateTimer = () => {
