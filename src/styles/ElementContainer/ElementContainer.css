@@ -95,3 +95,6 @@ abbr.AssetPopoverTerm{
   button.SearchLibraryStyles__btnCancel___1G1qN{
     font-size: 14px
   }
+  .ignore-for-drag{
+      cursor: default!important;
+  }
