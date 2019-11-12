@@ -53,7 +53,9 @@ export class ElementFigure extends Component {
                 height : height,
                 width: width,
                 schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                imageid: `urn:pearson:alfresco:${uniqID}`
+                imageid: `urn:pearson:alfresco:${uniqID}`,
+                alttext: altText,
+                longdescripton: longDesc
             }
             this.props.updateFigureData(figureData, this.props.index, ()=>{
                 this.props.handleFocus("updateFromC2")
