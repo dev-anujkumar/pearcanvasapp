@@ -86,7 +86,6 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
-        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
@@ -258,7 +257,6 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
@@ -382,6 +380,16 @@ class ElementContainer extends Component {
      */
     updateFigureData = (figureData, index, cb) => {
         this.props.updateFigureData(figureData, index, cb)
+    }
+
+    toolbarHandling = (action = "") => {console.log("handle data:::", action);
+        if(document.querySelector('div#tinymceToolbar .tox-toolbar')) {
+            if(action === "add") {
+                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
+            } else if(action === "remove") {
+                document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
+            }
+        }
     }
 
     /**
@@ -520,7 +528,7 @@ class ElementContainer extends Component {
                     {this.renderColorPaletteButton(element)}
                 </div>
                     : ''}
-                <div className={`element-container ${this.state.borderToggle}`} data-id={element.id}>
+                <div className={`element-container ${this.state.borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
                     {editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
