@@ -69,5 +69,6 @@ figure.figureAudio{
     margin-top: 1px;
 }   
 
-
-
+.pearson-component.audio,.pearson-component .audio{
+    display: block !important;
+}
