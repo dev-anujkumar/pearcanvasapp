@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import {
-    AUTHORING_ELEMENT_CREATED, ASSESSMENT_ELEMENT_CREATED,
+    AUTHORING_ELEMENT_CREATED,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,

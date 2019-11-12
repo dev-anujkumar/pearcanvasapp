@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Sortable from 'react-sortablejs';
-import tinymce from 'tinymce/tinymce';
 import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
@@ -13,8 +12,6 @@ import { guid } from '../../constants/utility.js';
 import PageNumberElement from '../SlateWrapper/PageNumberElement.jsx';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-
-//import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
 // IMPORT - Assets //
@@ -88,7 +85,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -161,7 +158,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -240,7 +237,7 @@ class ElementAsideContainer extends Component {
                                    handle : '.element-label', //Drag only by element tag name button
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
-                                   filter: ".elementSapratorContainer",
+                                   filter: ".ignore-for-drag",
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){

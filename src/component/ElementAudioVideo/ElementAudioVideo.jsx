@@ -39,12 +39,7 @@ export class ElementAudioVideo extends Component {
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
-            // let clipLength=Object.keys(clipInfo).length
-            let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-            //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
