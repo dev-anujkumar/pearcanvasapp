@@ -19,14 +19,34 @@ class SlateTagDropdown extends React.Component {
         document.addEventListener('mousedown', this.handleClick, false)
     }
     handleClick = (e) => {
-        if(this.node.contains(e.target)){
-            return;
+        if (this.closestByClass(e.target, 'leaningobjective-block')) {
+        return;
+            
         }
         this.props.closeLODropdown()
+       
     }
-    // componentWillUnmount() {
-    //     document.removeEventListener('mousedown', this.handleClick, false)
-    // }
+    closestByClass = function(el, clazz) {
+    // Traverse the DOM up with a while loop
+    while (el.className != clazz) {
+        // Increment the loop to the parent node
+        el = el.parentNode;
+        if (!el) {
+            return null;
+        }
+    }
+    // At this point, the while loop has stopped and `el` represents the element that has
+    // the class you specified in the second parameter of the function `clazz`
+
+    // Then return the matched element
+    return el;
+}
+ closest = function(el, fn) {
+        return el && (fn(el) ? el : closest(el.parentNode, fn));
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClick, false)
+    }
 
     learningObjectiveDropdown = (e) => {
         let currentSlateLOData = this.props.currentSlateLOData;
@@ -57,11 +77,12 @@ class SlateTagDropdown extends React.Component {
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
         }
-
+        this.props.closeLODropdown();
         //  }
         //  else(
         //      this.slateLockAlert(this.state.SlatelockUserInfo)
         //  )
+
     }
     render = () => {
         return (
