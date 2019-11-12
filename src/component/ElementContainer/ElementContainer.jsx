@@ -383,7 +383,7 @@ class ElementContainer extends Component {
         this.props.updateFigureData(figureData, index, cb)
     }
 
-    toolbarHandling = (action = "") => {console.log("handle data:::", action);
+    toolbarHandling = (action = "") => {
         if(document.querySelector('div#tinymceToolbar .tox-toolbar')) {
             if(action === "add") {
                 document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
