@@ -7,12 +7,6 @@ const {
 
 import { OPEN_GLOSSARY_FOOTNOTE } from "./../../constants/Action_Constants";
 
-let headers = {
-    "Content-Type": "application/json",
-    ApiKey: config.STRUCTURE_APIKEY,
-    PearsonSSOSession: config.ssoToken,
-
-}
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType) => async (dispatch) => {
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,

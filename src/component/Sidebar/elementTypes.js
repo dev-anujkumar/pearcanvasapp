@@ -432,12 +432,14 @@ export default {
                 'secondary-video-smartlink': {
                     text: 'SPP Video Link (sl)',
                     labelText: 'VID',
-                    enum: 'EXTERNAL_LINK'
+                    enum: 'EXTERNAL_LINK',
+                    wipValue : 'externallink'
                 },
                 'secondary-video-alfresco': {
                     text: 'Alfresco Video Link',
                     labelText: 'VID',
-                    enum: 'INTERNAL_LINK'
+                    enum: 'INTERNAL_LINK',
+                    wipValue:'internal'
                 }
             }
         },
@@ -449,12 +451,14 @@ export default {
                 'secondary-audio-smartlink': {
                     text: 'SPP Audio Link (sl)',
                     labelText: 'AUD',
-                    enum: 'EXTERNAL_LINK'
+                    enum: 'EXTERNAL_LINK',
+                    wipValue : 'externallink'
                 },
                 'secondary-audio-alfresco': {
                     text: 'Alfresco Audio Link',
                     labelText: 'AUD',
-                    enum: 'INTERNAL_LINK'
+                    enum: 'INTERNAL_LINK',
+                    wipValue:'internal'
                 }
             }
         },
@@ -595,17 +599,17 @@ export default {
                 'secondary-assessment-cite': {		
                     text: 'CITE',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_CITE'
+                    enum: 'ELEMENT_ASSESSMENT'
                 },		
                 'secondary-assessment-tdx': {		
                     text: 'TDX',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_TDX'		
+                    enum: 'ELEMENT_ASSESSMENT'		
                 },
                 'secondary-assessment-puf' : {
                     text: 'PUF',		
                     labelText: 'As',
-                    enum: 'ASSESSMENT_PUF'	
+                    enum: 'ELEMENT_ASSESSMENT'	
                 }	
             }
         },
@@ -620,7 +624,8 @@ export default {
                 'secondary-interactive-mmi': {
                     text: 'MMI',
                     labelText: 'MMI',
-                    enum: 'FLASHCARDS'
+                    enum: 'FLASHCARDS',
+                    wipValue: 'fpo'
                 }
             }
         },
@@ -632,27 +637,32 @@ export default {
                 'secondary-interactive-smartlink-third': {
                     text: '3rd Party',
                     labelText: 'SL',
-                    enum: 'THIRD_PARTY'
+                    enum: 'THIRD_PARTY',
+                    wipValue: '3rd-party'
                 },
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
                     labelText: 'SL',
-                    enum: 'PDF'
+                    enum: 'PDF',
+                    wipValue: 'pdf'
                 },
                 'secondary-interactive-smartlink-web': {
                     text: 'External Website Link',
                     labelText: 'SL',
-                    enum: 'WEB_LINK'
+                    enum: 'WEB_LINK',
+                    wipValue: 'web-link'
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
                     text: 'Legacy Web Link',
                     labelText: 'SL',
-                    enum: 'POPUP_WEBLINK'
+                    enum: 'POPUP_WEBLINK',
+                    wipValue: 'pop-up-web-link'
                 },
                 'secondary-interactive-smartlink-tab': {
                     text: 'Table',
                     labelText: 'SL',
-                    enum: 'TABLE'
+                    enum: 'TABLE',
+                    wipValue: 'table'
                 }
             }
         },
@@ -664,7 +674,8 @@ export default {
                 'secondary-interactive-showhide': {
                     text: 'Show Hide',
                     labelText: 'SH',
-                    enum: 'SHOWHIDE'
+                    enum: 'SHOWHIDE',
+                    wipValue: 'showhide'
                 }
             }
         },
@@ -676,7 +687,8 @@ export default {
                 'secondary-interactive-popup': {
                     text: 'Pop Up Window',
                     labelText: 'Pop',
-                    enum: 'POPUP'
+                    enum: 'POPUP',
+                    wipValue: 'popup'
                 }
             }
         },

@@ -73,6 +73,7 @@ export const addComment = (commentString, elementId,asideData,parentUrn) => (dis
             });
 
         }).catch(error => {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             console.log("Failed to add comment", error);
         })
 }
@@ -157,6 +158,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
         }
 
     }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("delete Api fail", error);
     })
 }
@@ -175,17 +177,15 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
             }
         }
     ).then(response =>{
-        //console.log("response from update API",response.data)
-        /* let parentData = getState().appStore.slateLevelData;
+        let parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        //console.log("parentData",parentData[config.slateManifestURN]);
         newParentData[config.slateManifestURN].contents.bodymatter[elementIndex]=response.data;
         dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
                 slateLevelData: newParentData
             }
-        }) */
+        })
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
 
     }).catch(error => {

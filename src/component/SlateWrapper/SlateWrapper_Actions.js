@@ -203,7 +203,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
         })
         .catch((err) => {
-            //console.log('Error occured while swaping element', err)
+              /* For hiding the spinning loader send HideLoader message to Wrapper component */
+              sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+             // console.log('Error occured while swaping element', err)
         })
 }
 
@@ -285,16 +287,6 @@ export const getElementPageNumber = () => (dispatch) => { }
 export const setElementPageNumber = (numberObject) => (dispatch, getState) => {
     const { pageNumberData } = getState().appStore;
     let { id, type, pageid, pagenumber } = numberObject;
-    // let mock = {
-    //     'urn:pearson:work:57a64368-ad55-4b07-83bc-74d00eb77af3': {
-    //         id: 'urn:pearson:work:57a64368-ad55-4b07-83bc-74d00eb77af3',
-    //         type: 'element-authoredtext',
-    //         pagereference: {
-    //             pageid: 'urn:pearson:manifest:7aa45b74-e3b6-4031-a647-c99052642ca7',
-    //             pagenumber: '24'
-    //         }
-    //     }
-    // }
     // if pagenumber data is not present for current element
     if (!pageNumberData.hasOwnProperty(id)) {
         let newPageNumber = {

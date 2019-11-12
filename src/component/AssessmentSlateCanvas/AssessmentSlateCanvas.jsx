@@ -31,7 +31,7 @@ export class AssessmentSlateCanvas extends Component {
     }
 
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
-    toggleAssessmentPopup = (value) => {
+    toggleAssessmentPopup = (e,value) => {
         this.setState({
             showAssessmentPopup: value
         });
@@ -84,7 +84,7 @@ export class AssessmentSlateCanvas extends Component {
         showTocBlocker();
         disableHeader(true);
        // this.props.showBlocker(true);
-        this.toggleAssessmentPopup(false);
+        this.toggleAssessmentPopup('',false);
         
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
@@ -201,7 +201,7 @@ export class AssessmentSlateCanvas extends Component {
                     handleEditorFocus={this.props.handleFocus}
                 />
                     
-                {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
+                {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
             </div>
         );
     }
