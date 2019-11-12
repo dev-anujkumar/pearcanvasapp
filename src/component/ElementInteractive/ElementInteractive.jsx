@@ -409,6 +409,8 @@ class Interactive extends React.Component {
             this.props.handleFocus();
             this.setState({showAssesmentpopup:value})
         }
+        disableHeader(value);
+        this.props.showBlocker(value)
     }
 
     dataFromAlfresco = (data) => {

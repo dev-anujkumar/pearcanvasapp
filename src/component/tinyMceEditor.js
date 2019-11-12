@@ -135,6 +135,14 @@ export class TinyMceEditor extends Component {
                 case "outdent":
                     this.onBeforeOutdent(e, content)
                     break;
+                case "RemoveFormat":
+                    let selectedText = window.getSelection().toString();
+                    if(selectedText == "") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
+                
             }
         })
     }
@@ -289,7 +297,7 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
                     if(div.children && div.children[0]){
@@ -531,8 +539,8 @@ export class TinyMceEditor extends Component {
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
-        if(testElement.innerText.trim().length){
-            args.content = tinymce.activeEditor.selection.getContent()
+        if(testElement.innerText.trim().length && this.props.element && this.props.element.type !== 'element-authoredtext' ){
+            args.content = tinymce.activeEditor.selection.getContent();
         }else{
             args.content = testElement.innerText;
         } 

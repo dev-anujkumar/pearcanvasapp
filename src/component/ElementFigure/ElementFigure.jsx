@@ -17,7 +17,7 @@ import { sendDataToIframe } from '../../constants/utility';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 
-export class ElementFigure extends Component {
+class ElementFigure extends Component {
     constructor(props) {
         super(props);
         this.state={

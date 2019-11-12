@@ -1,2 +1,2 @@
-import {ElementAudioVideo} from './ElementAudioVideo.jsx';
+import ElementAudioVideo from './ElementAudioVideo.jsx';
 export default ElementAudioVideo;

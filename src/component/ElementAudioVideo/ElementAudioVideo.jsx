@@ -12,7 +12,7 @@ import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../cons
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
-export class ElementAudioVideo extends Component {
+class ElementAudioVideo extends Component {
     constructor(props) {
         super(props);
         this.state={

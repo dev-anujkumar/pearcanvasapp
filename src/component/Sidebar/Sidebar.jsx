@@ -17,6 +17,8 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        let numbered = this.props.activeElement.numbered || true;
+        let startNumber = this.props.activeElement.startNumber || "1"
         
         this.state = {
             elementDropdown: '',
@@ -25,8 +27,8 @@ class Sidebar extends Component {
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
-            bceToggleValue: true,
-            bceNumberStartFrom : "1"
+            bceToggleValue: numbered,
+            bceNumberStartFrom : startNumber
         };
     }
 
@@ -82,6 +84,12 @@ class Sidebar extends Component {
         });
     }
 
+    removeElementDropdown = e => {
+        this.setState({
+            elementDropdown: ''
+        });
+    }
+
     primaryOption = () => {
         let primaryOptions = '';
         if(this.state.activeElementType){
@@ -102,7 +110,7 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown">
+                    className="element-dropdown" onMouseLeave={this.removeElementDropdown}>
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {dropdownArrow}
@@ -181,7 +189,7 @@ class Sidebar extends Component {
                 }
     
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`}>
+                    className={`element-dropdown ${display}`} onMouseLeave={this.removeElementDropdown}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -234,6 +242,10 @@ class Sidebar extends Component {
                 });
             }
             if(this.state.activePrimaryOption === "primary-blockcode-equation"){
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement.querySelector(".blockCodeFigure")
+                attrNode.setAttribute("numbered", this.state.bceToggleValue)
+                attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
@@ -243,7 +255,7 @@ class Sidebar extends Component {
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
                         <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!this.state.bceToggleValue}/>
+                        disabled={!this.state.bceToggleValue} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
                     return attributions;
@@ -257,6 +269,11 @@ class Sidebar extends Component {
         }  
     }
 
+    handleBceBlur = () => {
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+    }
+
 
     /**
     * handleBceToggle function responsible for handling toggle value for BCE element
@@ -265,6 +282,7 @@ class Sidebar extends Component {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         })
+        this.handleBceBlur()
     }
 
     /**
@@ -275,7 +293,7 @@ class Sidebar extends Component {
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
             })
-        }  
+        }
     }
 
     
