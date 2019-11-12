@@ -546,8 +546,8 @@ export class TinyMceEditor extends Component {
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
-        if(testElement.innerText.trim().length){
-            args.content = tinymce.activeEditor.selection.getContent()
+        if(testElement.innerText.trim().length && this.props.element && this.props.element.type !== 'element-authoredtext' ){
+            args.content = tinymce.activeEditor.selection.getContent();
         }else{
             args.content = testElement.innerText;
         } 
