@@ -86,7 +86,9 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
-        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
+
+            document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
+                
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
@@ -145,12 +147,13 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
+            interactiveImagePath = ""
 
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
             captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits
+            creditsHTML !== previousElementData.html.credits 
             ){
                 return true
             }
@@ -257,11 +260,13 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = () => {
-        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
+     
+            document.querySelector('div#tinymceToolbar .tox-toolbar').classList.add("disable");
+
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
+      //  console.log("tinyMCE.activeEditor.id>>::", activeEditorId)
         if (node||elementType==='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
@@ -359,6 +364,14 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: true
         });
+    }
+
+    /**
+     *Open TCM SPA for active element
+     * @param {elementId} 
+     */
+    handleTCM=()=>{
+        //to be implemented later
     }
 
     /**
@@ -525,7 +538,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element.tcm && <Button type="tcm" />}
+                    {element.tcm && <Button type="tcm" onClick={this.handleTCM}/>}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -691,7 +704,8 @@ const mapStateToProps = (state) => {
         activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         permissions: state.appStore.permissions,
-        oldImage: state.appStore.oldImage
+        oldImage: state.appStore.oldImage,
+        interactiveImage: state.appStore.interactiveImage
     }
 }
 

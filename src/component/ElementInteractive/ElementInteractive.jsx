@@ -12,7 +12,7 @@ import { showTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
-
+import axios from 'axios';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -22,8 +22,9 @@ class Interactive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            itemID : null,
+            itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
             posterImage : null,
+            imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false
         };
 
@@ -51,7 +52,7 @@ class Interactive extends React.Component {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
             if (tempInteractiveType === 'video-mcq') {
-                let responseData = await axios.get(config_object.SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
+                let responseData = await axios.get(config.INTERACTIVE_ENDPOINT + "/" + interactiveData['workExample'][0],
                     {
                         headers: {
                             "x-apikey": config.MANIFEST_APIKEY
@@ -73,15 +74,26 @@ class Interactive extends React.Component {
             let imageId = "";
             let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
             that.setState({itemID : workExample})
-            let figureData = {
+            let figureData={}
+            if(tempInteractiveType === 'video-mcq'){
+                figureData = {
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                    interactiveid: workExample,
+                    interactivetype: tempInteractiveType,
+                    interactiveformat: "mmi",
+                    posterimage: posterImage,
+                }
+            }else{
+             figureData = {
                 schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
                 interactiveid: workExample,
                 interactivetype: tempInteractiveType,
                 interactiveformat: "mmi"
             }
-            that.props.updateFigureData(figureData, this.props.index, ()=>{
-                this.props.handleFocus("updateFromC2")
-                this.props.handleBlur()
+        }
+            that.props.updateFigureData(figureData, that.props.index, ()=>{
+                that.props.handleFocus("updateFromC2")
+                that.props.handleBlur()
             })
         }); 
     }
@@ -352,6 +364,32 @@ class Interactive extends React.Component {
                 </figure>
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
+        }else if(context === 'video-mcq') {
+            jsx = <div className={divImage} resource="">
+                <figure className={figureImage} resource="">
+                    <header>
+                            <TinyMceEditor  openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-0`} className={heading4Label + ' figureLabel'} id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.html.title}
+                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-1`} className={heading4Title + ' figureTitle'} id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.html.subtitle}
+                             handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                    </header>
+                    <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
+                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
+
+                        <img src={this.state.imagePath ? this.state.imagePath : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"} title="View Image" alt=""
+                            className={imageDimension + " lazyload"} />
+
+                    </div>
+                    <figcaption>
+                        <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-3`} className={figcaptionClass + " figureCaption"} id={this.props.id} placeholder="Enter caption..." tagName={'p'} 
+                         model={element.html.captions} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                    </figcaption>
+                </figure>
+                <div>
+                    <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-4`} className={paragraphCredit + " figureCredit"} id={this.props.id} placeholder="Enter credit..." tagName={'p'}
+                     model={element.html.credits} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                </div>
+            </div>
         }
         else {
             jsx = <div className={divImage} resource="">
@@ -378,7 +416,7 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.figuredata.postertext.text? element.figuredata.postertext.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
