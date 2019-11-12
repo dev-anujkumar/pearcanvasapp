@@ -4,7 +4,7 @@ import store from '../../appstore/store.js'
 import {
     OPEN_AUDIO_NARRATION,
     SHOW_REMOVE_POPUP,
-    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
 } from '../../constants/Action_Constants.js'
 
 const axiosInstance = axios.create({
@@ -17,6 +17,34 @@ const axiosInstance = axios.create({
         'PearsonSSOSession': config.ssoToken,
     }
 })
+
+if (window.addEventListener) {
+    // For standards-compliant web browsers       
+    window.addEventListener("message", handleIncommingMessages, false);
+}
+else {
+    window.attachEvent("onmessage", handleIncommingMessages);
+}
+
+/* function is added just for updating the ssoToken */
+const handleIncommingMessages = (e) => {
+    let messageType = e.data.type;
+    let message = e.data.message;
+    switch (messageType) {
+        case 'projectDetails' :            
+            axiosInstance = axios.create({
+                baseURL: config.AUDIO_NARRATION_URL,
+                 withCredentials: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'ApiKey': config.AUDIO_API_KEY,
+                    'PearsonSSOSession': message.ssoToken,
+                }
+            })                       
+            break;
+    }
+}
 
 /**
  * 
@@ -32,6 +60,12 @@ export const showAudioRemovePopup = (value) => (dispatch, getState) => {
 export const showAudioSplitPopup = (value) => (dispatch, getState) => {
     dispatch({
         type: SPLIT_REMOVE_POPUP,
+        payload: value
+    })
+}
+export const showWrongAudioPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: WRONG_AUDIO_REMOVE_POPUP,
         payload: value
     })
 }

@@ -139,6 +139,11 @@ export default {
             toolbar: ['assetpopover','decreaseindent'],
             enum: 'IMAGE',
             subtype: {
+                'secondary-image-figure-width': {
+                    text: 'Text Width',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_TEXT_WIDTH'
+                },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
                     labelText: 'Fg',
@@ -148,12 +153,7 @@ export default {
                     text: '50% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_50_TEXT'
-                },
-                'secondary-image-figure-width': {
-                    text: 'Text Width',
-                    labelText: 'Fg',
-                    enum: 'IMAGE_TEXT_WIDTH'
-                },
+                },               
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
@@ -432,12 +432,14 @@ export default {
                 'secondary-video-smartlink': {
                     text: 'SPP Video Link (sl)',
                     labelText: 'VID',
-                    enum: 'EXTERNAL_LINK'
+                    enum: 'EXTERNAL_LINK',
+                    wipValue : 'externallink'
                 },
                 'secondary-video-alfresco': {
                     text: 'Alfresco Video Link',
                     labelText: 'VID',
-                    enum: 'INTERNAL_LINK'
+                    enum: 'INTERNAL_LINK',
+                    wipValue:'internal'
                 }
             }
         },
@@ -449,30 +451,20 @@ export default {
                 'secondary-audio-smartlink': {
                     text: 'SPP Audio Link (sl)',
                     labelText: 'AUD',
-                    enum: 'EXTERNAL_LINK'
+                    enum: 'EXTERNAL_LINK',
+                    wipValue : 'externallink'
                 },
                 'secondary-audio-alfresco': {
                     text: 'Alfresco Audio Link',
                     labelText: 'AUD',
-                    enum: 'INTERNAL_LINK'
+                    enum: 'INTERNAL_LINK',
+                    wipValue:'internal'
                 }
             }
         },
         enumType: 'audiovideo',
     },
     'element-aside': {
-        'primary-aside-lol': {
-            text: 'Learning Objective List',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-            enum: 'LEARNING_OBJECTIVE_LIST',
-            subtype: {
-                'secondary-aside-lol': {
-                    text: 'Learning Objective List',
-                    labelText: 'As',
-                    enum: 'NA',
-                }
-            }
-        },
         'primary-aside-aside': {
             text: 'Aside',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
@@ -541,6 +533,44 @@ export default {
                 }
             }
         },
+        'primary-aside-lol': {
+            text: 'Learning Objective List',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            enum: 'LEARNING_OBJECTIVE_LIST',
+            subtype: {
+                'secondary-aside-lol': {
+                    text: 'Learning Objective List',
+                    labelText: 'As',
+                    enum: 'NA',
+                }
+            }
+        },
+        'primary-aside-showhide': {
+            text: 'Show Hide',
+            toolbar: ['assetpopover'],
+            enum: 'MMI',
+            subtype: {
+                'secondary-aside-showhide': {
+                    text: 'Show Hide',
+                    labelText: 'SH',
+                    enum: 'SHOWHIDE',
+                    wipValue: 'showhide'
+                }
+            }
+        },
+        'primary-aside-popup': {
+            text: 'Pop Up',
+            toolbar: ['assetpopover'],
+            enum: 'NARRATIVE_LINK',
+            subtype: {
+                'secondary-aside-popup': {
+                    text: 'Pop Up',
+                    labelText: 'Pop',
+                    enum: 'POPUP',
+                    wipValue: 'popup'
+                }
+            }
+        },
         enumType: 'container',
     },
     'element-workedexample': {
@@ -595,17 +625,17 @@ export default {
                 'secondary-assessment-cite': {		
                     text: 'CITE',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_CITE'
+                    enum: 'ELEMENT_ASSESSMENT'
                 },		
                 'secondary-assessment-tdx': {		
                     text: 'TDX',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_TDX'		
+                    enum: 'ELEMENT_ASSESSMENT'		
                 },
                 'secondary-assessment-puf' : {
                     text: 'PUF',		
                     labelText: 'As',
-                    enum: 'ASSESSMENT_PUF'	
+                    enum: 'ELEMENT_ASSESSMENT'	
                 }	
             }
         },
@@ -620,7 +650,8 @@ export default {
                 'secondary-interactive-mmi': {
                     text: 'MMI',
                     labelText: 'MMI',
-                    enum: 'FLASHCARDS'
+                    enum: 'FLASHCARDS',
+                    wipValue: 'fpo'
                 }
             }
         },
@@ -632,51 +663,32 @@ export default {
                 'secondary-interactive-smartlink-third': {
                     text: '3rd Party',
                     labelText: 'SL',
-                    enum: 'THIRD_PARTY'
+                    enum: 'THIRD_PARTY',
+                    wipValue: '3rd-party'
                 },
                 'secondary-interactive-smartlink-pdf': {
                     text: 'PDF',
                     labelText: 'SL',
-                    enum: 'PDF'
+                    enum: 'PDF',
+                    wipValue: 'pdf'
                 },
                 'secondary-interactive-smartlink-web': {
                     text: 'External Website Link',
                     labelText: 'SL',
-                    enum: 'WEB_LINK'
+                    enum: 'WEB_LINK',
+                    wipValue: 'web-link'
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
                     text: 'Legacy Web Link',
                     labelText: 'SL',
-                    enum: 'POPUP_WEBLINK'
+                    enum: 'POPUP_WEBLINK',
+                    wipValue: 'pop-up-web-link'
                 },
                 'secondary-interactive-smartlink-tab': {
                     text: 'Table',
                     labelText: 'SL',
-                    enum: 'TABLE'
-                }
-            }
-        },
-        'primary-showhide': {
-            text: 'Show Hide',
-            toolbar: ['assetpopover'],
-            enum: 'MMI',
-            subtype: {
-                'secondary-interactive-showhide': {
-                    text: 'Show Hide',
-                    labelText: 'SH',
-                    enum: 'SHOWHIDE'
-                }
-            }
-        },
-        'primary-popup': {
-            text: 'Pop Up Window',
-            toolbar: ['assetpopover'],
-            enum: 'NARRATIVE_LINK',
-            subtype: {
-                'secondary-interactive-popup': {
-                    text: 'Pop Up Window',
-                    labelText: 'Pop',
-                    enum: 'POPUP'
+                    enum: 'TABLE',
+                    wipValue: 'table'
                 }
             }
         },

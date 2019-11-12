@@ -135,6 +135,14 @@ export class TinyMceEditor extends Component {
                 case "outdent":
                     this.onBeforeOutdent(e, content)
                     break;
+                case "RemoveFormat":
+                    let selectedText = window.getSelection().toString();
+                    if(selectedText == "") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
+                
             }
         })
     }
@@ -175,8 +183,9 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Footnote text
          */
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP") {
-            let uri = e.target.parentElement.dataset.uri;
+     
+        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
+            let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
@@ -192,7 +201,7 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Glossary text
          */
-        else if (e.target.nodeName == "DFN") {
+        else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
@@ -241,21 +250,14 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            let isMediaElement =tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
             if (activeElement) { 
+                let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!activeElement.children.length) {
+                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length===1 && activeElement.children[0].tagName==="BR")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]){
-                        div.children[0].innerHTML = '<br/>';
-                        activeElement.innerHTML = div.children[0].outerHTML;
-                    }
-                }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
-                    //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                    let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
+                    div.innerHTML = lastCont;
                     if(div.children && div.children[0]){
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
@@ -295,7 +297,7 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
+                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
                     if(div.children && div.children[0]){
@@ -537,8 +539,8 @@ export class TinyMceEditor extends Component {
     pastePreProcess = (plugin, args) => {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
-        if(testElement.innerText.trim().length){
-            args.content = tinymce.activeEditor.selection.getContent()
+        if(testElement.innerText.trim().length && this.props.element && this.props.element.type !== 'element-authoredtext' ){
+            args.content = tinymce.activeEditor.selection.getContent();
         }else{
             args.content = testElement.innerText;
         } 
@@ -901,7 +903,6 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
-        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
     }
 
     /**
@@ -918,7 +919,9 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
+        let elementId=this.props.element?this.props.element.id:"";
+        let elementType = this.props.element?this.props.element.type:"";
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, callback); 
     }
 
     render() {

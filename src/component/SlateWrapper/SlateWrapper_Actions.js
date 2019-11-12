@@ -129,7 +129,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         }
-        //console.log("create Api fail", error);
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.log("create Api fail", error);
     })
 }
 
@@ -203,7 +204,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
         })
         .catch((err) => {
-            //console.log('Error occured while swaping element', err)
+              /* For hiding the spinning loader send HideLoader message to Wrapper component */
+              sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+             // console.log('Error occured while swaping element', err)
         })
 }
 
