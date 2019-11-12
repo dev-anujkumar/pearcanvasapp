@@ -16,12 +16,10 @@ export class ElementLearningObjectiveItem extends Component {
             "text": `<h2 class=\"heading2learningObjectiveItem\">sdas</h2>`
         }
     }
-    const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,learningObjectiveOperations,currentSlateLOData,openAssetPopoverPopUp} = this.props
+    const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp} = this.props
      return (
         <TinyMceEditor
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
-          learningObjectiveOperations={learningObjectiveOperations}
-          currentSlateLOData={currentSlateLOData}
           openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
           index={this.props.index}
           elementId={this.props.elementId}
@@ -36,6 +34,7 @@ export class ElementLearningObjectiveItem extends Component {
           onBlur={this.onBlur}
           onClick={this.onClick}
           slateLockInfo={slateLockInfo}
+          onListSelect={this.props.onListSelect}
         />
     )
 

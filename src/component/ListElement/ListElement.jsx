@@ -31,8 +31,6 @@ export class ListElement extends Component {
         //***************************************************************
         return (
             <TinyMceEditor
-                currentSlateLOData={this.props.currentSlateLOData} 
-                learningObjectiveOperations={this.props.learningObjectiveOperations}
                 openAssetPopoverPopUp={this.props.openAssetPopoverPopUp}
                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                 index={this.props.index}
@@ -48,6 +46,7 @@ export class ListElement extends Component {
                 onBlur={this.onBlur}
                 onClick={this.onClick}
                 slateLockInfo={slateLockInfo}
+                onListSelect={this.props.onListSelect}
             />
         )
     }

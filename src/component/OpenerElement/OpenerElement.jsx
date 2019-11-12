@@ -19,7 +19,7 @@ class OpenerElement extends Component {
         const { textsemantics, text } = props.element.title
         const bgImage = props.element.backgroundimage.path
         this.state = {
-            label: getOpenerContent(textsemantics, "label", text),
+            label: getOpenerContent(textsemantics, "label", text) || "No Label",
             number: getOpenerContent(textsemantics, "number", text),
             title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
@@ -210,12 +210,42 @@ class OpenerElement extends Component {
 
     }
 
+    createSemantics = ({...values}) => {
+        let textSemantics = [];
+        let currentIndex = 0;
+        
+        Object.keys(values).forEach(item => {
+            textSemantics.push({
+                "type": item,
+                "charStart": currentIndex,
+                "charEnd": currentIndex += (values[item]).length
+            });
+            currentIndex++;
+        });
+
+        return textSemantics;
+    }
+
     /**
      * Handles blur event for each input box and initiates saving call
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
-        console.log("Blur from :", event.target)
+        let element = this.props.element;
+        let { label, number, title } = this.state;
+        label = event.target.innerText || label;
+
+        if(element.title) {
+            if('text' in element.title) {
+                element.title.text = `${label} ${number}: ${title}`;
+            }
+            
+            if('textsemantics' in element.title) {
+                element.title.textsemantics = this.createSemantics({label, number});
+            }
+        }
+        
+        this.props.updateElement(element);
     }
     
     

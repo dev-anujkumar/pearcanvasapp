@@ -175,10 +175,8 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
             }
         }
     ).then(response =>{
-        //console.log("response from update API",response.data)
         let parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        //console.log("parentData",parentData[config.slateManifestURN]);
         newParentData[config.slateManifestURN].contents.bodymatter[elementIndex]=response.data;
         dispatch({
             type: AUTHORING_ELEMENT_UPDATE,

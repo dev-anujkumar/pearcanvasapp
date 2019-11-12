@@ -1,15 +1,19 @@
 import axios from 'axios';
 import config from '../../config/config';
 import {
-    AUTHORING_ELEMENT_CREATED,ASSESSMENT_ELEMENT_CREATED,
+    AUTHORING_ELEMENT_CREATED,
     SWAP_ELEMENT,
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
-    SET_UPDATED_SLATE_TITLE
+    SET_UPDATED_SLATE_TITLE,
+    UPDATE_PAGENUMBER_SUCCESS,
+    UPDATE_PAGENUMBER,
+    UPDATE_PAGENUMBER_FAIL,
+    SET_SLATE_TYPE
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader,NextSlate} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
 
 
 
@@ -53,7 +57,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     localStorage.setItem('newElement', 1);
@@ -62,8 +66,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
         "slateUrn": parentUrn && parentUrn.manifestUrn || config.slateManifestURN,
         "index": outerAsideIndex ? outerAsideIndex : index,
-        "type": type
+        "type": type,
     };
+    if(type=="LO"){
+        _requestData.loref = loref?loref:""
+    }
     
     return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
@@ -85,7 +92,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         } else if (asideData && asideData.type == 'element-aside' && type !== 'SECTION_BREAK') {
-        newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == parentUrn.manifestUrn) {
                     item.elementdata.bodymatter.splice(index, 0, createdElementData)
                 } else if (item.type == "element-aside" && item.id == asideData.id) {
@@ -109,8 +116,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
     }).catch(error => {
         // Opener Element mock creation
-        if(type == "OPENER"){
-            sendDataToIframe({'type': HideLoader,'message': { status: false }})
+        if (type == "OPENER") {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             const createdElementData = openerData
@@ -121,95 +128,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     slateLevelData: newParentData
                 }
             })
-        } 
+        }
         //console.log("create Api fail", error);
     })
 }
 
-export const createElementMeta = (type, index,parentUrn) => (dispatch, getState) => {
-    config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
-    let createdElemData = {contentUrn: "urn:pearson:entity:8dc6560b-e67e-4aad-a81b-ac7d7be48bf9",
-    elementdata:{
-        loref: " "
-    },
-    html: {
-        "text": "<p class=\"paragraphNumeroUno\"></p>"
-    },
-    id: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217",
-    schema: "http://schemas.pearson.com/wip-authoring/element/1",
-    type: "element-learningobjectivemapping",
-    versionUrn: "urn:pearson:work:c4429b96-d88f-4ad3-8d00-60f73f3bf217"}
-    
-    let _requestData = {
-        "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN ,
-        "slateUrn": parentUrn &&  parentUrn.manifestUrn|| config.slateManifestURN,
-        "index": index,
-        "type": type
-    };
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-       
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-
-   
-};
-export const createElementMetaList = (type, index,parentUrn) => (dispatch, getState) => {
-    config.currentInsertedIndex = index;
-    config.currentInsertedType = type;
-    let createdElemData = {
-        id: -1, // A temporary id. The server decides the real id.
-        type: "element-generateLOlist",
-        schema: "http://schemas.pearson.com/wip-authoring/element/1",
-        elementdata: {
-            level:  "chapter",
-            groupby: "module"
-        },
-        mgmtinfo: {
-            lock: {
-                owner: "",
-                lockdate: ""
-            },
-            comments: [],
-            trackingdocumentid: ""
-        }}
-    
-        sendDataToIframe({'type': HideLoader,'message': { status: false }})
-        const parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        let createdElementData = createdElemData;
-        if(newParentData[config.slateManifestURN])
-            newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
-
-        dispatch({
-            type: AUTHORING_ELEMENT_CREATED,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
-
-   
-};
-
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, workedExample, swappedElementId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
         "projectUrn": config.projectUrn,
         "currentSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
-        "destSlateEntityUrn": config.slateEntityURN,
+        "destSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn:config.slateEntityURN,
         "workUrn": swappedElementData.id,
         "entityUrn": swappedElementData.contentUrn,
         "type": swappedElementData.type,
@@ -229,41 +160,40 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         .then((responseData) => {
             if (responseData && responseData.status == '200') {
 
-                //Remove old tinymce instance to hide multiple toolbar
-
-
-                // document.getElementById(activeEditorIdTiny).focus();
-
-                // else if(config.currentInsertedType === "IMAGE" || config.currentInsertedType === "VIDEO" || config.currentInsertedType === "INTERACTIVE"){
-                //     document.getElementById("cypress-"+config.currentInsertedIndex+"-0").focus();
-                // }
-
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
 
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
-                newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
-                //console.log('this is data of old elemenet', newParentData[slateId].contents.bodymatter[oldIndex]);
 
-                // let newBodymatter = newParentData[slateId].contents.bodymatter;
-                if (workedExample) {
+                let newBodymatter = newParentData[slateId].contents.bodymatter;
+                if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    // for(let i in newBodymatter){
-                    //     if(newBodymatter[i].type == 'element-aside' && newBodymatter[i].id == currentSlateEntityUrn){
-                    //         //Swap inside WE
-                    //         // let weArr = newArr[i].elementdata.bodymatter
-                    //         [newArr[i].elementdata.bodymatter[newIndex], newArr[i].elementdata.bodymatter[oldIndex]] = [newArr[i].elementdata.bodymatter[oldIndex], newArr[i].elementdata.bodymatter[newIndex]];
-                    //     }
-                    // }
+                    for(let i in newBodymatter){
+                        if( newBodymatter[i].contentUrn== currentSlateEntityUrn){
+                            newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
+                        }
+                    }
+                }else if(containerTypeElem && containerTypeElem == 'section'){
+                    newBodymatter.forEach(element => {
+                        if(element.id == asideId){
+                            element.elementdata.bodymatter.forEach((nestedElem) => {
+                                if(nestedElem.contentUrn == currentSlateEntityUrn){
+                                    nestedElem.contents.bodymatter.move(oldIndex, newIndex);
+                                }
+                            })
+                        }
+                    });
+                }else{
+                    newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
-
                 newParentData = JSON.parse(JSON.stringify(newParentData));
+
                 dispatch({
                     type: SWAP_ELEMENT,
                     payload: {
-                        slateLevelData: newParentData
+                        slateLevelData: newParentData,
                     }
                 })
 
@@ -395,9 +325,90 @@ export const setElementPageNumber = (numberObject) => (dispatch, getState) => {
         payload: pageNumberData
     })
 }
-export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) =>{
+
+export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_PAGENUMBER,
+        payload: {
+            pageLoading: true
+        }
+    })
+    let data = {
+        pageNumber: pagenumber
+    }
+    if (data.pageNumber) {
+        return axios.put(
+            `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementId}`,
+            data,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        ).then(res => {
+
+            /** This will uncomment when pagenumber key is fixed**/
+
+
+        /*   const parentData = getState().appStore.slateLevelData;
+            const newslateData = JSON.parse(JSON.stringify(parentData));
+            let _slateObject = Object.values(newslateData)[0];
+            let { contents: _slateContent } = _slateObject;
+            let { bodymatter: _slateBodyMatter } = _slateContent;
+            const element = _slateBodyMatter.map(element => {
+                if (element.id === elementId) {
+                    element['pageNumber'] = pagenumber
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
+                         
+                            if (nestedEle.id == elementId) {
+                                nestedEle['pageNumber'] = pagenumber;
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                              
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
+                                        ele['pageNumber'] = pagenumber;
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }) */
+
+            dispatch({
+                type: UPDATE_PAGENUMBER_SUCCESS,
+                payload: {
+                 //   slateLevelData: {},
+                    pageLoading: false
+                }
+            })
+        }).catch(error => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_FAIL,
+                payload: {
+                    pageLoading: false
+                }
+            })
+            console.log("UPDATE PAGE NUMBER ERROR : ", error)
+        })
+    }
+
+}
+
+export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {
     return dispatch({
         type: SET_UPDATED_SLATE_TITLE,
         payload: newSlateObj
+    })
+}
+export const setSlateType = (slateType) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_SLATE_TYPE,
+        payload: slateType
     }) 
 }

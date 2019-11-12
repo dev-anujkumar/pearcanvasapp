@@ -270,6 +270,10 @@ const elementDataBank = {
             "asideActivity" : {
                 "primaryOption" : "primary-aside-tactic",
                 "secondaryOption" : "secondary-aside-activity"
+            },
+            "asideLearningObjective" : {
+                "primaryOption" : "primary-aside-lol",
+                "secondaryOption" : "secondary-aside-lol"
             }
         },
         "workedexample" : {

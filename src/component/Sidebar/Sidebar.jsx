@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import { updateElement } from './Sidebar_Action';
+import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 
 class Sidebar extends Component {
@@ -23,7 +24,9 @@ class Sidebar extends Component {
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
-            attrInput: ""
+            attrInput: "",
+            bceToggleValue: true,
+            bceNumberStartFrom : "1"
         };
     }
 
@@ -86,9 +89,11 @@ class Sidebar extends Component {
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
                 primaryOptions = primaryOptionList.map(item => {
-                    return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
-                        {primaryOptionObject[item].text}
-                    </li>;
+                    if(item !== 'enumType') {
+                        return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
+                            {primaryOptionObject[item].text}
+                        </li>;
+                    }
                 });
     
                 let active = '';
@@ -123,9 +128,8 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                     <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                         <p>Show Module Name</p>
-                        <label className="switch"><input type="checkbox" checked="" /><span className="slider round"></span></label>
-                       
-                         </div>;
+                        <label className="switch"><input type="checkbox" onClick={this.showModuleName} checked={this.props.showModule? true : false} /><span className="slider round"></span></label>
+                        </div>;
             return primaryOptions;
         }
         
@@ -220,24 +224,93 @@ class Sidebar extends Component {
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
-                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML : ""
+                let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
     
                 attributions = attributionsList.map(item => {
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onFocus={this.onFocus} onBlur={this.onBlur} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
-    
-                attributions = <div className="attributions">
-                    {attributions}
-                </div>;
             }
+            if(this.state.activePrimaryOption === "primary-blockcode-equation"){
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={this.handleBceToggle}/>
+                        <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        disabled={!this.state.bceToggleValue}/>
+                    </div>
+                </div>
+                    return attributions;
+            }
+
+            attributions = <div className="attributions">
+                {attributions}
+            </div>;
     
             return attributions;
         }  
     }
 
+
+    /**
+    * handleBceToggle function responsible for handling toggle value for BCE element
+    */
+    handleBceToggle = () => {
+        this.setState({
+            bceToggleValue : !this.state.bceToggleValue
+        })
+    }
+
+    /**
+    * handleBceNumber function responsible for handling Number start from field value in BCE element
+    */
+    handleBceNumber = (e) => {
+        let regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
+            this.setState({ bceNumberStartFrom: e.target.value }, () => {
+            })
+        }  
+    }
+
+    onFocus=()=>{
+        document.querySelector('div#tinymceToolbar').classList.add('toolbar-disabled')
+    }
+
+    onBlur=()=>{
+        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
+    }
+
+    
+    showModuleName = (e) => {
+        this.props.setCurrentModule(e.currentTarget.checked);
+        let els = document.getElementsByClassName('moduleContainer');
+        let i = 0;
+        if (e.currentTarget.checked == false) {
+            while (i < els.length) {
+                let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+                if (children.length > 0) {
+                    els[i].classList.remove('showmodule');
+                }
+                i++;
+            }
+        }
+        else {
+            while (i < els.length) {
+                let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+                if (children.length > 0) {
+                    els[i].classList.add('showmodule');
+                }
+                i++;
+            }
+        }
+
+    }
     render = () => {
         return (
             <div className="canvas-sidebar">
@@ -262,12 +335,14 @@ Sidebar.propTypes = {
 const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
+        showModule:state.metadataReducer.showModule
     };
 };
 
 export default connect(
     mapStateToProps, 
     {
-        updateElement
+        updateElement,
+        setCurrentModule
     }
 )(Sidebar);

@@ -1,3 +1,9 @@
+import {
+  OPEN_AUDIO_NARRATION,
+  SHOW_REMOVE_POPUP,
+  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+} from '../constants/Action_Constants'
+
 
 const INITIAL_STATE = {
   addAudio: false,
@@ -16,31 +22,31 @@ const INITIAL_STATE = {
 export default function reducer (state = INITIAL_STATE, action) {
   switch (action.type) {
 
-    case 'ADD_AUDIO_NARRATION': {
+    case ADD_AUDIO_NARRATION: {
       return {
         ...state,
         addAudio: action.payload
       }
     }
-    case 'OPEN_AUDIO_NARRATION' : {
+    case OPEN_AUDIO_NARRATION : {
       return {
         ...state,
         openAudio: action.payload
       }
     }
-    case 'CURRENT_SLATE_AUDIO_NARRATION' : {
+    case CURRENT_SLATE_AUDIO_NARRATION : {
       return {
         ...state,
         audioData: action.payload
       }
     }
-    case 'SHOW_REMOVE_POPUP' : {
+    case SHOW_REMOVE_POPUP : {
       return {
         ...state,
         openRemovePopUp: action.payload
       }
     }
-    case 'SPLIT_REMOVE_POPUP' : {
+    case SPLIT_REMOVE_POPUP : {
       return {
         ...state,
         openSplitPopUp: action.payload

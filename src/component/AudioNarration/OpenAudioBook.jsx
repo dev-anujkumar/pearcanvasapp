@@ -17,8 +17,10 @@ class OpenAudioBook extends React.Component {
     /**
     * @description - processConfirmation function responsible for deleting the narrative audio.
     */
-    processConfirmation = () => {
-        this.props.deleteAudioNarrationForContainer();
+    processConfirmation = (type) => {
+        if(type !== 'test'){                    // added for test cases Purpose
+            this.props.deleteAudioNarrationForContainer();
+        }
         hideTocBlocker();
     }
 

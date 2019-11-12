@@ -16,8 +16,12 @@ import {
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
+    SET_SLATE_TYPE,
     GET_PROJECT_PERMISSIONS,
-    SET_OLD_IMAGE_PATH
+    SET_OLD_IMAGE_PATH,
+    UPDATE_PAGENUMBER_SUCCESS,
+    UPDATE_PAGENUMBER,
+    UPDATE_PAGENUMBER_FAIL 
 } from '../constants/Action_Constants';
 
 /**
@@ -86,6 +90,11 @@ export default function (state = initialState, action) {
                         ...state,
                         slateTitleUpdated : action.payload.title
                     }
+        case SET_SLATE_TYPE:
+            return {
+                ...state,
+                slateType: action.payload
+            }
          case AUTHORING_ELEMENT_UPDATE:
              return {
                  ...state,
@@ -100,7 +109,23 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 oldImage: action.payload.oldImage
-            }   
+            }  
+       case UPDATE_PAGENUMBER_SUCCESS:
+           return{
+               ...state,
+               //slateLevelData: action.payload.slateLevelData,
+               pageLoading:action.payload.pageLoading
+           }
+        case UPDATE_PAGENUMBER:
+            return {
+                ...state,
+                 pageLoading:action.payload.pageLoading
+            }
+        case UPDATE_PAGENUMBER_FAIL: 
+        return {
+            ...state,
+            pageLoading:action.payload.pageLoading
+        }
         default:
             return state;
     }

@@ -186,6 +186,7 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
+        document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         var assessmentSlateJSX;
         var assessmentTypeValue;
         var changeTypeValue;
@@ -207,6 +208,7 @@ export class AssessmentSlateData extends Component {
                         <div className="slate_assessment_data_details">
                             <div className="slate_assessment_data_title">{this.props.assessmentItemTitle}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
                             <div className="slate_assessment_change_button" onClick={this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
@@ -243,6 +245,7 @@ export class AssessmentSlateData extends Component {
                 <div className="clr"></div>
             </div>
         } else {
+            document.getElementsByClassName("slate-tag-icon")[0].classList.add("disable");
             assessmentSlateJSX = <div className="slate_initial_selection">
                 <div className="slate_assessment_type_label">Please select an assessment type.</div>
                 <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>

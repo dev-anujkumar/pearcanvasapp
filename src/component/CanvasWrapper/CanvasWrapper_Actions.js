@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config/config';
-import mockdata from './../../appstore/mockdata';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
@@ -88,6 +87,9 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'element-aside':
+				if(element.designtype == ""){
+					element.designtype = "asideLearningObjective";
+				}
 				elementType = {
 					elementType : elementDataBank[element.type][element.subtype]["elementType"],
 					...elementDataBank[element.type][element.subtype][element.designtype]
