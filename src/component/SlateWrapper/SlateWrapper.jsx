@@ -14,6 +14,7 @@ import {
     createElement, swapElement,
     setSplittedElementIndex,
     updatePageNumber,
+    
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
@@ -30,6 +31,7 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag } from '../CanvasWrapper/SlateLock_Actions'
+import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
 
 let random = guid();
@@ -73,7 +75,7 @@ class SlateWrapper extends Component {
         // handle when clicked outside of listdrop 
         if (this.listDropRef && !this.listDropRef.contains(event.target)) {
             if (event.target.classList.contains('fa-list-ol') ||
-                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Insert Ordered List"))
+                (event.target.type === "button" && event.target.getAttribute('aria-label') === "Ordered List"))
                 return;
             let _listWrapperDiv = document.querySelector('#listDropWrapper');
             if (_listWrapperDiv)
@@ -230,7 +232,7 @@ class SlateWrapper extends Component {
                                         handle: '.element-label', //Drag only by element tag name button
                                         dataIdAttr: 'data-id',
                                         scroll: true, // or HTMLElement
-                                        filter: ".elementSapratorContainer",
+                                        filter: ".ignore-for-drag",
                                         draggable: ".editor",
                                         forceFallback: true,
                                         onStart: function (/**Event*/evt) {
@@ -242,6 +244,7 @@ class SlateWrapper extends Component {
                                         onUpdate: (/**Event*/evt) => {
                                             let dataObj = this.prepareSwapData(evt)
                                             this.props.swapElement(dataObj, () => { })
+                                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                         },
                                     }}
@@ -691,6 +694,7 @@ class SlateWrapper extends Component {
                                 elementSepratorProps={this.elementSepratorProps}
                                 showBlocker={this.props.showBlocker}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onListSelect={this.props.convertToListElement}
                             >
                                 {
                                     (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -839,7 +843,7 @@ class SlateWrapper extends Component {
                         this.renderSlate(this.props)
                     }
                 </div>
-                <ListButtonDropPortal refToToolBar={this.props.refToToolBar} slateData={this.props.slateData}>
+                <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (
                             <ListButtonDrop
@@ -904,6 +908,7 @@ export default connect(
         showAudioSplitPopup,
         setLockPeriodFlag,
         setSlateLock,
-        releaseSlateLock
+        releaseSlateLock,
+        setActiveElement
     }
 )(SlateWrapper);

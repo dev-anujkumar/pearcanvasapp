@@ -33,15 +33,10 @@ class OpenerElement extends Component {
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
         let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             this.setState({ imgSrc: epsURL, width })
@@ -210,6 +205,22 @@ class OpenerElement extends Component {
 
     }
 
+    createSemantics = ({...values}) => {
+        let textSemantics = [];
+        let currentIndex = 0;
+        
+        Object.keys(values).forEach(item => {
+            textSemantics.push({
+                "type": item,
+                "charStart": currentIndex,
+                "charEnd": currentIndex += (values[item]).length
+            });
+            currentIndex++;
+        });
+
+        return textSemantics;
+    }
+
     /**
      * Handles blur event for each input box and initiates saving call
      * @param {*} event blur event object
@@ -217,18 +228,19 @@ class OpenerElement extends Component {
     handleBlur = (event) => {
         let element = this.props.element;
         let { label, number, title } = this.state;
-        let textSemantics = [];
+        label = event.target.innerText || label;
+
         if(element.title) {
             if('text' in element.title) {
                 element.title.text = `${label} ${number}: ${title}`;
             }
             
             if('textsemantics' in element.title) {
-                element.textsemantics = textSemantics;
+                element.title.textsemantics = this.createSemantics({label, number});
             }
         }
-
-        // this.props.updateElement(element);
+        
+        this.props.updateElement(element);
     }
     
     

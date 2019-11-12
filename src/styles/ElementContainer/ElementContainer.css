@@ -92,6 +92,9 @@ abbr.AssetPopoverTerm{
   button#assetSelectBtn{
       font-size: 14px
   }
-  button.SearchLibraryStyles__btnCancel___1G1qN{
+  button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
     font-size: 14px
+  }
+  .ignore-for-drag{
+      cursor: default!important;
   }

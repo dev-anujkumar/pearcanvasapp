@@ -1,11 +1,11 @@
 /* ---------------------------------*/
         /* Common css*/
 /* ---------------------------------*/
-* {
+
+*{
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
 }
-html {
+html{
     font-size: 12px ;
     font-family: 'Open Sans', sans-serif;
 }
@@ -546,4 +546,7 @@ menu li {
 }
 .defaultAssignee{
     margin-left:15px;
+}
+#ext_AddAnAsset{
+    font-family: sans-serif!important;
 }

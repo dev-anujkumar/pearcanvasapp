@@ -58,7 +58,7 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.elementId !== '') {
+        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.updateElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -147,7 +147,7 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.elementId !== '') {
+        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.updateElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
