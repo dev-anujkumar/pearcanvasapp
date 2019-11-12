@@ -96,14 +96,14 @@
     letter-spacing: 0.01em;
 }
 
-::placeholder{
+/* ::placeholder{
     font-size: 14px;
     font-family: 'Open Sans', sans-serif;
     line-height: 1.80em;
     letter-spacing: 0.01em;
     margin: 0;
     outline: none;
-}
+} */
 #toolbarGlossaryFootnote .tox-toolbar {
     background: transparent !important;
 }

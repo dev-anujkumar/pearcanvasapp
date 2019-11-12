@@ -175,8 +175,9 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Footnote text
          */
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP") {
-            let uri = e.target.parentElement.dataset.uri;
+     
+        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.dataset.uri) {
+            let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
@@ -192,7 +193,7 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Glossary text
          */
-        else if (e.target.nodeName == "DFN") {
+        else if (e.target.nodeName == "DFN" || e.target.closest("dfn")) {
             let uri = e.target.dataset.uri;
             this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {

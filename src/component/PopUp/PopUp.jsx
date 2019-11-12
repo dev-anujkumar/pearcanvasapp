@@ -13,10 +13,27 @@ import PropTypes from 'prop-types'
 class PopUp extends React.Component {
     constructor(props) {
         super(props);
-        this.state ={ }
+        this.modelRef = React.createRef();
     }
 
+    componentDidMount(){ 
+        
+          /**  Event Listner for close the popup on enter*/      
+        this.modelRef.current.addEventListener("keypress", (event) => {
+            if(event.which == "13"){
+                document.querySelector(".save-button").click();
+            }
+        });
+        this.modelRef.current.focus();
+    }
 
+    componentWillUnmount(){
+        this.modelRef.current.removeEventListener("keypress", (event) => {
+            if(event.which == "13"){
+                document.querySelector(".save-button").click();
+            }
+        });
+    }
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -24,7 +41,7 @@ class PopUp extends React.Component {
     renderButtons = (props) => {
         if(props.isLockPopup || props.isLockReleasePopup){ //Slate lock popup
             return(
-                <div className={`dialog-buttons ${props.slateLockClass}`}>
+                <div  className={`dialog-buttons ${props.slateLockClass}` }>
                     <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
                 </div>
             )
@@ -39,7 +56,7 @@ class PopUp extends React.Component {
         }else
         if(props.showDeleteElemPopup) {
             return(
-                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                <div  className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
                     <span className="cancel-button" id='close-container' onClick={() => props.togglePopup(false)}>{props.cancelBtnText}</span>
                 </div>
@@ -156,10 +173,10 @@ class PopUp extends React.Component {
     render() {
         const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
         return (
-            <div className="">
+            <div className="model">
                 {
                     active ? 
-                    <div className={`model-popup ${assessmentClass}`}>
+                        <div tabIndex = "-1" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}
