@@ -147,7 +147,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
-        preformattedText = document.getElementById(`cypress-${index}-2`)
+        preformattedText = document.getElementById(`cypress-${index}-2`).innerText,
         captionDOM = document.getElementById(`cypress-${index}-3`),
         creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -373,6 +373,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
+                    case elementTypeConstant.FIGURE_AUDIO:
                         console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
