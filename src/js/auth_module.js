@@ -8,6 +8,9 @@ let environment = config_object.NODE_ENV;
 require('../auth/openam.js');
 import openamConfig from '../auth/openam.js';
 
+/* Session Variables */
+let session_token = "";
+
 var BASE_URL;
 
 if ( IDENTITY_URL.indexOf("http") !== 1 ) {
