@@ -404,6 +404,8 @@ class Interactive extends React.Component {
     togglePopup = (value)=>{
         this.props.handleFocus();
         this.setState({showAssesmentpopup:value})
+        disableHeader(value);
+        this.props.showBlocker(value)
     }
 
 

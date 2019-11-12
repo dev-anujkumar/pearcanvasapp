@@ -42,10 +42,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let data = {}
     switch(semanticType){
         case "FOOTNOTE":
-                footnoteEntry[glossaryfootnoteid] = {
-                definition
-            }
-            data = {
+                footnoteEntry[glossaryfootnoteid] = definition
+                        data = {
                 id: elementWorkId,
                 type: elementType,
                 versionUrn: null,
