@@ -79,7 +79,7 @@ export class AssessmentSlateData extends Component {
      * @param activeAssessmentType - assessment -type 
     */
     addC2MediaAssessment = (activeAssessmentType) => {
-        this.props.toggleAssessmentPopup(true);
+        this.props.toggleAssessmentPopup('',true);
         this.props.selectAssessmentType(activeAssessmentType);
 
     }

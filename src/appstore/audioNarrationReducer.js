@@ -1,7 +1,7 @@
 import {
   OPEN_AUDIO_NARRATION,
   SHOW_REMOVE_POPUP,
-  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+  SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
 } from '../constants/Action_Constants'
 
 
@@ -11,7 +11,8 @@ const INITIAL_STATE = {
   audioData: {},
   openAlfresco: false,
   openPopUp: false,
-  openSplitPopUp : false
+  openSplitPopUp : false,
+  openWrongAudioPopup: false
 }
 /**
  * Reducer method for user related activation, deactivation and projects
@@ -50,6 +51,12 @@ export default function reducer (state = INITIAL_STATE, action) {
       return {
         ...state,
         openSplitPopUp: action.payload
+      }
+    }
+    case WRONG_AUDIO_REMOVE_POPUP : {
+      return {
+        ...state,
+        openWrongAudioPopup: action.payload
       }
     }
    

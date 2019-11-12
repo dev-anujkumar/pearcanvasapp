@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config/config';
-import mockdata from './../../appstore/mockdata';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
@@ -52,6 +51,8 @@ const findElementType = (element, index) => {
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							numbered : element.figuredata.numbered,
+							startNumber : element.figuredata.startNumber
 						}
 						switch (element.figuredata.programlanguage){
 							case "Select":

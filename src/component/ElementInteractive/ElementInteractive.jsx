@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
+import { c2MediaModule } from './../../js/c2_media_module';
 import { showTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
@@ -22,16 +23,15 @@ class Interactive extends React.Component {
         super(props);
         this.state = {
             itemID : null,
+            posterImage : null,
             showAssesmentpopup: false
         };
 
     }
 
     /**
-     * @description - This function is for rendering the Jsx Part of different Interactive Elements.
-     * @param {event} element
-     * @param {event} itemId
-     * @param {event} index
+     * @description - This function is for accessing c2_assessment library for interactive.
+     * @param {event} value
      */
 
     handleC2InteractiveClick = (value) => {
@@ -363,22 +363,22 @@ class Interactive extends React.Component {
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                     </header>
                     <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
-                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(true)}} >
+                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
                         {
                             imageDimension !== '' ?
                                 (context === 'table' ?
                                     <a className="" href="javascript:void(0)">
-                                        <img src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+                                        <img src={this.state.posterImage?this.state.posterImage:"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"}
                                             data-src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png" title="View Image" alt=""
                                             className={imageDimension + " lazyload"} />
                                     </a>
-                                    : <img src="https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png" title="View Image" alt=""
+                                    : <img src={this.state.posterImage?this.state.posterImage:"https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"} title="View Image" alt=""
                                         className={imageDimension + " lazyload"} />
                                 )
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.html.postertext} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
@@ -401,15 +401,137 @@ class Interactive extends React.Component {
      * @param {event} value
      */
 
-    togglePopup = (value)=>{
-        this.props.handleFocus();
-        this.setState({showAssesmentpopup:value})
+    togglePopup = (e,value)=>{
+        if(this.props.model.figuredata.interactiveformat==="external-link"){
+            this.handleC2MediaClick(e);
+        }
+        else{
+            this.props.handleFocus();
+            this.setState({showAssesmentpopup:value})
+        }
         disableHeader(value);
         this.props.showBlocker(value)
     }
 
+    dataFromAlfresco = (data) => {
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
+        //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
+        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
 
 
+        if (smartLinkType) {
+            let uniqInterString = imageData && imageData.req && imageData.req.url;
+            let uniqueIDInteractive;
+            let uniqInter = (uniqInterString) ? uniqInterString.split('s.cmis:objectId = ')[1].replace(/\'/g, '') : "";
+            if (uniqInter) {
+                uniqueIDInteractive = "urn:pearson:alfresco:" + uniqInter
+            }
+
+            if (smartLinkType.toLowerCase() === "3rd party interactive" || smartLinkType.toLowerCase() === "metrodigi interactive" || smartLinkType.toLowerCase() === "table") {
+                let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
+                if (epsURL == "" || epsURL == undefined) {
+                    epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png";
+                }
+                let vendorName = imageData['vendorName'];
+                let mobileready = imageData['smartlinkoptimizedmobileval'];
+
+                this.setState({ itemID: uniqueIDInteractive, posterImage: posterURL })
+                let figuredata = {
+                    height: height,
+                    width: width,
+                    mobileready: mobileready,
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                    interactiveid: uniqueIDInteractive,
+                    interactivetype: "3rd-party",
+                    interactiveformat: "external-link",
+                    vendor: vendorName,
+                    posterimage: {
+                        "imageid": uniqueIDInteractive,
+                        "path": posterURL
+                    },
+                    "path": smartLinkPath
+                }
+                this.props.updateFigureData(figuredata, this.props.index, ()=>{
+                    this.props.handleFocus("updateFromC2")
+                    this.props.handleBlur()
+                })
+            }
+        }
+    }
+    /**
+     * @description Open C2 module with predefined Alfresco location
+     * @param {*} locationData alfresco locationData
+     */
+    handleC2ExtendedClick = (locationData) => {
+        let data_1 = locationData;
+        let that = this;
+        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                that.dataFromAlfresco(data);
+            })
+        })
+
+    }
+    /**
+     * @description function will be called on image src add and fetch resources from Alfresco
+     */
+    handleC2MediaClick = (e) => {
+        this.props.handleFocus();
+        if (e.target.tagName.toLowerCase() === "p") {
+            e.stopPropagation();
+            return;
+        }
+        let that = this;
+        let alfrescoPath = config.alfrescoMetaData;
+        var data_1 = false;
+
+        if (alfrescoPath && alfrescoPath.nodeRef) {         //if alfresco location is available
+            data_1 = alfrescoPath;
+            /*
+                data according to new project api 
+            */
+            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+
+            /*
+                data according to old core api and c2media
+            */
+            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+
+            this.handleC2ExtendedClick(data_1)
+
+        } else {
+           if(this.props.permissions.includes('alfresco_crud_access')){ 
+               c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
+                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                        that.dataFromAlfresco(data);
+                    })
+                })
+            })
+            }
+        }
+
+    }
+
+
+    /**
+     * @description - This function is for rendering the Jsx Part of different Interactive Elements.
+     * @param {event} element
+     * @param {event} itemId
+     * @param {event} index
+     */
 
     render() {
         const { model, itemId, index, slateLockInfo } = this.props;
@@ -418,7 +540,7 @@ class Interactive extends React.Component {
                
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssesmentpopup? <PopUp handleC2Click ={this.handleC2InteractiveClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssesmentpopup? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
                     </div>
                 
             )

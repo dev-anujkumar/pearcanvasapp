@@ -1,6 +1,4 @@
 var _ = require("lodash");
-const uuidV4 = require("uuid/v4");
-//import findAndReplaceDOMText from "./findAndReplaceDOMText"
 
 export const utils = {
 

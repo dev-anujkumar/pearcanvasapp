@@ -1,10 +1,10 @@
 // IMPORT - plugins
-import axios from 'axios';
 // IMPORT - constants
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT
 } from './../../constants/Action_Constants';
+import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
 // IMPORT - other dependencies
 
 // ************************************************************************
@@ -32,6 +32,29 @@ let _listObjectTemplate_ = {
     "versionUrn": "",
     "contentUrn": ""
 }
+let _ullistObjectTemplate_ = {
+    "id": "",
+    "type": "element-list",
+    "subtype": "disc",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "designtype": "list",
+    "elementdata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/list/1#/definitions/list",
+        "type": "list",
+        "listtype": "unordered",
+        "designtype": "list",
+        "subtype": "disc",
+        "startNumber": "",
+        "listitems": []
+    },
+    "html": {
+        "text": ``
+    },
+    "comments": false,
+    "tcm": true,
+    "versionUrn": "",
+    "contentUrn": ""
+}
 // ************************************************************************
 
 export const convertToListElement = (type, startvalue) => (dispatch, getState) => {
@@ -40,6 +63,8 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
     const slateObject = Object.values(newParentData)[0];
     const { contents } = slateObject;
     const { bodymatter } = contents;
+    let listObjectTemplate = (type === 'disc') ? JSON.parse(JSON.stringify(_ullistObjectTemplate_)) : JSON.parse(JSON.stringify(_listObjectTemplate_));
+
     bodymatter.map((element, index) => {
         if (activeElement.elementId === element.id) {
             //***************************************************************
@@ -50,32 +75,33 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
                 }
             }
             //***************************************************************
-            _listObjectTemplate_.id = element.id;
-            _listObjectTemplate_.subtype = type;
-            _listObjectTemplate_.elementdata.subtype = type;
-            _listObjectTemplate_.elementdata.startNumber = startvalue;
-            _listObjectTemplate_.versionUrn = element.versionUrn;
-            _listObjectTemplate_.contentUrn = element.versionUrn;
-            _listObjectTemplate_.html.text = getInitialListContent(type, startvalue, element.html.text);
-            bodymatter[index] = JSON.parse(JSON.stringify(_listObjectTemplate_));
+            listObjectTemplate.id = element.id;
+            listObjectTemplate.subtype = type;
+            listObjectTemplate.elementdata.subtype = type;
+            listObjectTemplate.elementdata.startNumber = startvalue;
+            listObjectTemplate.versionUrn = element.versionUrn;
+            listObjectTemplate.contentUrn = element.versionUrn;
+            listObjectTemplate.html.text = getInitialListContent(type, startvalue, element.html.text);
+            bodymatter[index] = listObjectTemplate;
         }
     });
 
-    dispatch(updateElementType(activeElement));
+    dispatch(updateElementType(activeElement, type));
     dispatch({
         type: FETCH_SLATE_DATA,
         payload: newParentData
     });
 }
 
-const updateElementType = (activeElement) => (dispatch) => {
+const updateElementType = (activeElement, type) => (dispatch) => {
     const newActiveElement = {
+        ...activeElement,
         elementId: activeElement.elementId,
         elementType: "element-authoredtext",
         elementWipType: "element-list",
         primaryOption: "primary-list",
-        secondaryOption: "secondary-list-3",
-        tag: "OL"
+        secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
+        tag: LIST_TYPE_MAPPINGS[type].tag
     }
 
     dispatch({
@@ -102,6 +128,8 @@ const getInitialListContent = (type, startvalue, preText) => {
             return `<ol class='lower-roman' data-treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoLowerRoman'>${innerText}</li></ol>`;
         case 'no-style':
             return `<ol class='none' data-treelevel='1' style='counter-increment: none;'><li class='listItemNumeroUnoNone reset'>${innerText}</li></ol>`;
+        case 'disc':
+            return `<ul class='disc' data-treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoBullet'>${innerText}</li></ul>`;
         default:
             return `<ol class='none' data-treelevel='1' style='counter-increment: none;'><li class='listItemNumeroUnoNone reset'>${innerText}</li></ol>`
     }

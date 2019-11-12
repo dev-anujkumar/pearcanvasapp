@@ -17,6 +17,8 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        let numbered = this.props.activeElement.numbered || true;
+        let startNumber = this.props.activeElement.startNumber || "1"
         
         this.state = {
             elementDropdown: '',
@@ -24,7 +26,9 @@ class Sidebar extends Component {
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
-            attrInput: ""
+            attrInput: "",
+            bceToggleValue: numbered,
+            bceNumberStartFrom : startNumber
         };
     }
 
@@ -54,7 +58,7 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.elementId !== '') {
+        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.updateElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -80,6 +84,12 @@ class Sidebar extends Component {
         });
     }
 
+    removeElementDropdown = e => {
+        this.setState({
+            elementDropdown: ''
+        });
+    }
+
     primaryOption = () => {
         let primaryOptions = '';
         if(this.state.activeElementType){
@@ -100,7 +110,7 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown">
+                    className="element-dropdown" onMouseLeave={this.removeElementDropdown}>
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {dropdownArrow}
@@ -143,7 +153,7 @@ class Sidebar extends Component {
             activeLabelText: labelText
         });
 
-        if(this.props.activeElement.elementId !== '') {
+        if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
             this.props.updateElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -179,7 +189,7 @@ class Sidebar extends Component {
                 }
     
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`}>
+                    className={`element-dropdown ${display}`} onMouseLeave={this.removeElementDropdown}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -230,14 +240,60 @@ class Sidebar extends Component {
                         <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onFocus={this.onFocus} onBlur={this.onBlur} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
-    
-                attributions = <div className="attributions">
-                    {attributions}
-                </div>;
             }
+            if(this.state.activePrimaryOption === "primary-blockcode-equation"){
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement.querySelector(".blockCodeFigure")
+                attrNode.setAttribute("numbered", this.state.bceToggleValue)
+                attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                attributions = <div>
+                    <div className="panel_show_module">
+                        <div className="toggle-value-bce">Use Line Numbers</div>
+                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={this.handleBceToggle}/>
+                        <span className="slider round"></span></label>
+                    </div>
+                    <div className="alt-Text-LineNumber" >
+                        <div className="toggle-value-bce">Start numbering from</div>
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
+                        disabled={!this.state.bceToggleValue} onBlur={this.handleBceBlur}/>
+                    </div>
+                </div>
+                    return attributions;
+            }
+
+            attributions = <div className="attributions">
+                {attributions}
+            </div>;
     
             return attributions;
         }  
+    }
+
+    handleBceBlur = () => {
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+    }
+
+
+    /**
+    * handleBceToggle function responsible for handling toggle value for BCE element
+    */
+    handleBceToggle = () => {
+        this.setState({
+            bceToggleValue : !this.state.bceToggleValue
+        })
+        this.handleBceBlur()
+    }
+
+    /**
+    * handleBceNumber function responsible for handling Number start from field value in BCE element
+    */
+    handleBceNumber = (e) => {
+        let regex = /^[0-9]*(?:\.\d{1,2})?$/
+        if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
+            this.setState({ bceNumberStartFrom: e.target.value }, () => {
+            })
+        }
     }
 
     onFocus=()=>{
