@@ -163,15 +163,20 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         })
     }
 
-    if (elementType == ELEMENT_ASIDE) {
+    if (elementType == ELEMENT_ASIDE ) {
         updatedEsProps = esProps.filter((btnObj) => {
             buttonType = btnObj.buttonType;
-            if (sectionBreak) {
-                return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
-            } else {
-                return buttonType !== OPENER && buttonType !== SECTION_BREAK;
+            if (sectionBreak && (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER)) {
+                return  buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
+            } else if(!sectionBreak && (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER)) {
+                return buttonType !== SECTION_BREAK && buttonType !== METADATA_ANCHOR && buttonType !== OPENER && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
+            }else if (sectionBreak && (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER)){
+                return buttonType !== METADATA_ANCHOR && buttonType !== OPENER && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
+            }else{
+                return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
             }
         })
+        
     }
 
     return updatedEsProps.map((elem, key) => {
