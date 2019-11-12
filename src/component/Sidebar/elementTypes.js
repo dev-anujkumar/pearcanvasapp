@@ -139,6 +139,11 @@ export default {
             toolbar: ['assetpopover','decreaseindent'],
             enum: 'IMAGE',
             subtype: {
+                'secondary-image-figure-width': {
+                    text: 'Text Width',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_TEXT_WIDTH'
+                },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
                     labelText: 'Fg',
@@ -148,12 +153,7 @@ export default {
                     text: '50% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_50_TEXT'
-                },
-                'secondary-image-figure-width': {
-                    text: 'Text Width',
-                    labelText: 'Fg',
-                    enum: 'IMAGE_TEXT_WIDTH'
-                },
+                },               
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
