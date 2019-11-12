@@ -242,21 +242,14 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+            let isMediaElement =tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
             if (activeElement) { 
+                let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!activeElement.children.length) {
+                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length===1 && activeElement.children[0].tagName==="BR")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]){
-                        div.children[0].innerHTML = '<br/>';
-                        activeElement.innerHTML = div.children[0].outerHTML;
-                    }
-                }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR') {
-                    //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                    let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
+                    div.innerHTML = lastCont;
                     if(div.children && div.children[0]){
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
@@ -902,7 +895,6 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
-        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
     }
 
     /**
@@ -919,7 +911,9 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, this.props.element.id, this.props.element.type, callback); 
+        let elementId=this.props.element?this.props.element.id:"";
+        let elementType = this.props.element?this.props.element.type:"";
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, callback); 
     }
 
     render() {
