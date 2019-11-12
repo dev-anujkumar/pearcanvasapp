@@ -73,6 +73,7 @@ export const addComment = (commentString, elementId,asideData,parentUrn) => (dis
             });
 
         }).catch(error => {
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             console.log("Failed to add comment", error);
         })
 }
@@ -157,6 +158,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
         }
 
     }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("delete Api fail", error);
     })
 }
