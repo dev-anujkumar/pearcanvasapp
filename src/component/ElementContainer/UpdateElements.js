@@ -328,7 +328,10 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase()}
+        inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
+        html: {
+            title: "<p></p>"
+        }}
 
         return dataToSend;
 }
