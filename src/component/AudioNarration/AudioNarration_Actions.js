@@ -4,7 +4,7 @@ import store from '../../appstore/store.js'
 import {
     OPEN_AUDIO_NARRATION,
     SHOW_REMOVE_POPUP,
-    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
 } from '../../constants/Action_Constants.js'
 
 const axiosInstance = axios.create({
@@ -32,6 +32,12 @@ export const showAudioRemovePopup = (value) => (dispatch, getState) => {
 export const showAudioSplitPopup = (value) => (dispatch, getState) => {
     dispatch({
         type: SPLIT_REMOVE_POPUP,
+        payload: value
+    })
+}
+export const showWrongAudioPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: WRONG_AUDIO_REMOVE_POPUP,
         payload: value
     })
 }

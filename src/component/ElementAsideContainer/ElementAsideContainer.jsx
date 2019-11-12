@@ -103,6 +103,7 @@ class ElementAsideContainer extends Component {
                                             containerTypeElem: 'we',
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}
@@ -177,6 +178,7 @@ class ElementAsideContainer extends Component {
                                             asideId : this.props.element.id
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}
@@ -256,6 +258,7 @@ class ElementAsideContainer extends Component {
                                             asideId : this.props.element.id, 
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
+                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}

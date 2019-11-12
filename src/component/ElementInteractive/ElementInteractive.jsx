@@ -378,7 +378,7 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.html.postertext} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
@@ -409,6 +409,8 @@ class Interactive extends React.Component {
             this.props.handleFocus();
             this.setState({showAssesmentpopup:value})
         }
+        disableHeader(value);
+        this.props.showBlocker(value)
     }
 
     dataFromAlfresco = (data) => {
