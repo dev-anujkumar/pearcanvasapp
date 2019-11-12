@@ -599,17 +599,17 @@ export default {
                 'secondary-assessment-cite': {		
                     text: 'CITE',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_CITE'
+                    enum: 'ELEMENT_ASSESSMENT'
                 },		
                 'secondary-assessment-tdx': {		
                     text: 'TDX',		
                     labelText: 'As',
-                    enum: 'SINGLE_ASSESSMENT_TDX'		
+                    enum: 'ELEMENT_ASSESSMENT'		
                 },
                 'secondary-assessment-puf' : {
                     text: 'PUF',		
                     labelText: 'As',
-                    enum: 'ASSESSMENT_PUF'	
+                    enum: 'ELEMENT_ASSESSMENT'	
                 }	
             }
         },

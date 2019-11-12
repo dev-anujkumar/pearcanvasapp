@@ -51,6 +51,8 @@ const findElementType = (element, index) => {
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							numbered : element.figuredata.numbered,
+							startNumber : element.figuredata.startNumber
 						}
 						switch (element.figuredata.programlanguage){
 							case "Select":
