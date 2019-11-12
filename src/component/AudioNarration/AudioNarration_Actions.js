@@ -18,6 +18,34 @@ const axiosInstance = axios.create({
     }
 })
 
+if (window.addEventListener) {
+    // For standards-compliant web browsers       
+    window.addEventListener("message", handleIncommingMessages, false);
+}
+else {
+    window.attachEvent("onmessage", handleIncommingMessages);
+}
+
+/* function is added just for updating the ssoToken */
+const handleIncommingMessages = (e) => {
+    let messageType = e.data.type;
+    let message = e.data.message;
+    switch (messageType) {
+        case 'projectDetails' :            
+            axiosInstance = axios.create({
+                baseURL: config.AUDIO_NARRATION_URL,
+                 withCredentials: false,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'ApiKey': config.AUDIO_API_KEY,
+                    'PearsonSSOSession': message.ssoToken,
+                }
+            })                       
+            break;
+    }
+}
+
 /**
  * 
  * @param {*} value 
