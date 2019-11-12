@@ -203,7 +203,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
         })
         .catch((err) => {
-            //console.log('Error occured while swaping element', err)
+              /* For hiding the spinning loader send HideLoader message to Wrapper component */
+              sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+             // console.log('Error occured while swaping element', err)
         })
 }
 

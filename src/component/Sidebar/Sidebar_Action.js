@@ -34,6 +34,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     if (oldElementData.type === "figure") {
         oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+        if(oldElementData.figuredata.srctype){
+            oldElementData.figuredata.srctype=outputSubType['wipValue']
+        }
+        if(oldElementData.figuredata.interactivetype){
+            oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
+        }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
@@ -70,8 +76,9 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             if(newElementData.elementId === focusedElement[index].id) {
                 focusedElement[index] = res.data;
             } else {
-                if('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) {
-                    focusedElement = focusedElement[index].elementdata.bodymatter;
+                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
+                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
                 }
             }
         });
@@ -114,8 +121,8 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
             if(elementData.elementId === bodymatter[index].id) {
                 dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes));
             } else {
-                if('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) {
-                    bodymatter = bodymatter[index].elementdata.bodymatter;
+                if(('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents))  {
+                    bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||  bodymatter[index].contents.bodymatter
                 }
                 
             }
