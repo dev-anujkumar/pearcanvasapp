@@ -135,6 +135,14 @@ export class TinyMceEditor extends Component {
                 case "outdent":
                     this.onBeforeOutdent(e, content)
                     break;
+                case "RemoveFormat":
+                    let selectedText = window.getSelection().toString();
+                    if(selectedText == "") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
+                
             }
         })
     }
