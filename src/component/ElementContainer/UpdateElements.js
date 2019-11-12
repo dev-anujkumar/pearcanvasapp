@@ -297,7 +297,10 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']}
+        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        html: {
+            title: "<p></p>"
+        }}
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 
