@@ -27,7 +27,6 @@ export class ElementSingleAssessment extends Component {
     } 
 
     handleC2AssessmentClick=(value)=> {
-        let that = this;
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -54,8 +53,6 @@ export class ElementSingleAssessment extends Component {
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
-        let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
-        var assessmentFormat;
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
         } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {

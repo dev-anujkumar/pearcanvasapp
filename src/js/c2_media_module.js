@@ -1,22 +1,13 @@
-// import store from '../store';
-import store from './../appstore/store';
+
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
 
-// const authModule = require('./auth_module.js');
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
-const tab_visibility_for_asset_popover = '{"audio" : false,"image": true,"other":false,"video": false,"epsUrl":true,"defaulttab":"search"}';
-//const images_path = 'dist/images/c2/';
-
 var uname = config_object['userId'];
-
 const renderderedTagSelector = '#c2-modal';
 
-// const configModule = require('./config_module.js');
-// let config_object = configModule.GET_CONFIG();
-let config_patterns = config_object.PATTERNS;
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
@@ -25,24 +16,8 @@ const CMDS_DATABASE = config_object['CMDS_DATABASE'];
 /* const CMIS_US_REPO = config_object['CMIS_US_REPO'];
 const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
 const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
-//const list = [{"repo":CMIS_UK_REPO,"repoName":"UK"}, {"repo":CMIS_US_REPO,"repoName":"US"}];
-// let list = [];
 const EPS_API = config_object['EPS_API'];
 const CMIS_REPO = config_object['CMIS_REPO'].toString();
-//const CMIS_REPO = '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]';
-const PATTERN_ADD_ASSET = config_patterns['PATTERN_ADD_ASSET'];
-const PATTERN_BROKER = config_patterns['PATTERN_BROKER'];
-const PATTERN_PRODUCT_LINK = config_patterns['PATTERN_PRODUCT_LINK'];
-const PATTERN_VENDOR = config_patterns['PATTERN_VENDOR'];
-const PATTERN_SEARCH_SELECT = config_patterns['PATTERN_SEARCH_SELECT'];
-// if(Object.keys(config_patterns).length > 0) { 
-//     Object.values(config_patterns).forEach(pattern => {
-//         const script = document.createElement("script");
-//         script.type = "text/javascript";
-//         script.src = pattern;
-//         document.head.appendChild(script);
-//     });
-// }
 
 /* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
 if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
@@ -78,11 +53,9 @@ var libConfig = {
 
 patternBroker.setup(libConfig);
 
-// var module = {};
 export const c2MediaModule = {
     addAnAsset: addAnAsset,
     productLinkOnsaveCallBack: function (data, callback) {
-        //console.log("productLinkOnsaveCallBack: " + JSON.stringify(data));
         this.launchAssetBrowser(data.nodeRef, data.repoInstance, data.repoName, callback);
 
     },
@@ -117,7 +90,6 @@ export const c2MediaModule = {
             if (assetType['smartLinkType']) {
                 let Height = patternBroker.extract(data, patternBroker.items.AddAnAsset['Height1'] ? patternBroker.items.AddAnAsset['Height1'] : patternBroker.items.AddAnAsset['Height'] ? patternBroker.items.AddAnAsset['Height'] : '');
                 let Width = patternBroker.extract(data, patternBroker.items.AddAnAsset['Width1'] ? patternBroker.items.AddAnAsset['Width1'] : patternBroker.items.AddAnAsset['Width'] ? patternBroker.items.AddAnAsset['Width'] : '');
-                // data['assetType'] = assetType['smartLinkType'].toLowerCase();
                 data['posterImageUrl'] = patternBroker.extract(data, patternBroker.items.AddAnAsset['Poster Image URL'] ? patternBroker.items.AddAnAsset['Poster Image URL'] : '')
                 smartLinkURl = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link Asset URL'] ? patternBroker.items.AddAnAsset['Smart Link Asset URL'] : '');
                 let vendorName = patternBroker.extract(data, patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] ? patternBroker.items.AddAnAsset['Smart Link thirdPartyVendorVal'] : '');
