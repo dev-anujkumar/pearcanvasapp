@@ -34,6 +34,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     if (oldElementData.type === "figure") {
         oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+        if(oldElementData.figuredata.srctype){
+            oldElementData.figuredata.srctype=outputSubType['wipValue']
+        }
+        if(oldElementData.figuredata.interactivetype){
+            oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
+        }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
