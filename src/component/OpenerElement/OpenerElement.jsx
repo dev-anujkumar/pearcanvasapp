@@ -36,6 +36,8 @@ class OpenerElement extends Component {
     }
 
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
