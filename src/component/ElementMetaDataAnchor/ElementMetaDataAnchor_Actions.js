@@ -17,7 +17,7 @@ export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getSta
 }
 
 export const isLOExist = (message) =>  (dispatch, getState) => {
-    if(message && ((message.loObj && message.loObj.id)|| message.loUrn)){
+    if(message && (message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn){
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload: true

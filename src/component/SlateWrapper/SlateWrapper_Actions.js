@@ -129,7 +129,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         }
-        //console.log("create Api fail", error);
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.log("create Api fail", error);
     })
 }
 

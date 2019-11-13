@@ -60,7 +60,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         projectUrn : config.projectUrn
     }
 
-    document.querySelector('div#tinymceToolbar').classList.add('toolbar-disabled')  //disable toolbar on conversion
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 

@@ -110,6 +110,32 @@ h1, h2, h3, h4, h5, p {
     position : absolute;
     margin-top : 7px;
 }
+
+.element-container.h1 .cypress-editable.place-holder::before {
+    font-size: 23px;
+    margin-top: 2px;
+}
+.element-container.h2 .cypress-editable.place-holder::before {
+    font-size: 16px;
+    margin-top: 3px;
+}
+.element-container.h3 .cypress-editable.place-holder::before {
+    font-size: 15px;
+    margin-top: 3px;
+}
+.element-container.h4 .cypress-editable.place-holder::before {
+    font-size: 15px;
+    margin-top: 3px;
+}
+.element-container.h5 .cypress-editable.place-holder::before {
+    font-size: 14px;
+    margin-top: 1px;
+}
+.element-container.h6 .cypress-editable.place-holder::before {
+    font-size: 14px;
+    margin-top: 0px;
+}
+
 .definition-editor.place-holder::before{
     content: attr(placeholder);
     color: #ADADAD; 
