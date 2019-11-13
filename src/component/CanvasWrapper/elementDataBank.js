@@ -99,6 +99,9 @@ const elementDataBank = {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
             "image50Text" : {
                 "secondaryOption" : "secondary-image-figure-half"
             },

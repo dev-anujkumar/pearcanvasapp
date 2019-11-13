@@ -245,8 +245,8 @@ export class TinyMceEditor extends Component {
     }
 
     toggleGlossaryandFootnoteIcon = (flag) => {
-        this.glossaryBtnInstance.setDisabled(flag)
-        this.footnoteBtnInstance.setDisabled(flag)
+        this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(flag)
+        this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
     /**
@@ -767,7 +767,7 @@ export class TinyMceEditor extends Component {
                     }
                 })
             }
-        }
+        }    
     }
     
     /**
@@ -777,6 +777,13 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
+        }
+        let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
+
+        if(tinyMCEInstancesNodes.length>1){
+            if(tinyMCEInstancesNodes[1].parentElement.id!=="toolbarGlossaryFootnote"){
+                tinyMCEInstancesNodes[0].remove()
+            }
         }
     }
 
