@@ -73,12 +73,16 @@ class ElementContainer extends Component {
             }
             // ** This post message is require to enable comments panel icon in wrapper when element focused **/
             sendDataToIframe({ 'type': 'elementFocus', 'message': { element: newProps.element } });
-        } else {
+        } else if(newProps.element.type == "openerelement"){
+            this.setState({
+                borderToggle: 'active',
+            })
+        }
+        else {
             this.setState({
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
-
         }
     }
 
@@ -90,10 +94,17 @@ class ElementContainer extends Component {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
         else {
-            this.setState({
-                borderToggle: 'active',
-                btnClassName: 'activeTagBgColor'
-            })
+            if(this.props.element.type == "openerelement"){
+                this.setState({
+                    borderToggle: 'active'
+                })
+            }
+            else{
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }   
             this.props.setActiveElement(this.props.element, this.props.index);
             this.props.fetchCommentByElement(this.props.element.id);
         }

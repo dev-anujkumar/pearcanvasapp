@@ -206,6 +206,16 @@ class SlateWrapper extends Component {
         }
     }
 
+    /**
+     * Checks for opener element and prevents swapping.
+     */
+    checkOpener = evt => {
+        if(evt.newDraggableIndex === 0 && config.isCO){
+            return true
+        }
+        return false
+    }
+
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
@@ -242,6 +252,11 @@ class SlateWrapper extends Component {
 
                                         // Element dragging ended
                                         onUpdate: (/**Event*/evt) => {
+                                            if(this.checkOpener(evt)){
+                                                evt.preventDefault()
+                                                evt.stopPropagation()
+                                                return false
+                                            }
                                             let dataObj = this.prepareSwapData(evt)
                                             this.props.swapElement(dataObj, () => { })
                                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -680,7 +695,7 @@ class SlateWrapper extends Component {
                                         firstOne={index === 0}
                                         index={index}
                                         esProps={this.elementSepratorProps(index, true)}
-                                        elementType={element.type}
+                                        elementType= ""
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}

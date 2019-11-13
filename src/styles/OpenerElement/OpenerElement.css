@@ -1,3 +1,7 @@
+.opener-element-container{
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
 .opener-element-container .opener-label-box{
     width: 34%;
     margin-right: 2px;
@@ -34,6 +38,7 @@
 }
 .opener-element-container .element-dropdown-title.label-content{
     padding: 10px 5px;
+    padding-left: 11px;
 }
 .opener-element-container ul.element-dropdown-content{
     position: absolute;
@@ -69,4 +74,10 @@
     height: 8px;
     float: right;
     margin: -2px 2px;
+}
+.opener-label-box.oe-number-box{
+    width: 18%;
+}
+.opener-label-box.oe-title-box{
+    width: 49%;
 }
