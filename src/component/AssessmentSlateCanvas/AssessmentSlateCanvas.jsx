@@ -22,9 +22,9 @@ export class AssessmentSlateCanvas extends Component {
         this.state={
             showAssessmentPopup:false,
             getAssessmentDataPopup:false,
-            getAssessmentData:false,
+            getAssessmentData:props.model && props.model.elementdata &&  props.model.elementdata.assessmentid? true: false,
             assessmentId: props.model && props.model.elementdata && props.model.elementdata.assessmentid ?props.model.elementdata.assessmentid :"",
-            assessmentItemId: "",
+            assessmentItemId: props.model && props.model.elementdata && props.model.elementdata.assessmentitemid ?props.model.elementdata.assessmentitemid :"",
             assessmentItemTitle: props.model && props.model.elementdata && props.model.elementdata.assessmenttitle ?props.model.elementdata.assessmenttitle :"",
             assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
@@ -35,6 +35,18 @@ export class AssessmentSlateCanvas extends Component {
         this.setState({
             showAssessmentPopup: value
         });
+    }
+    componentWillReceiveProps(nextProps){   
+        this.setState({
+            showAssessmentPopup:false,
+            getAssessmentDataPopup:false,
+            getAssessmentData:nextProps.model && nextProps.model.elementdata &&  nextProps.model.elementdata.assessmentid? true: false,
+            assessmentId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentid ?nextProps.model.elementdata.assessmentid :"",
+            assessmentItemId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentitemid ?nextProps.model.elementdata.assessmentitemid :"",
+            assessmentItemTitle: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmenttitle ?nextProps.model.elementdata.assessmenttitle :"",
+            assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :""
+
+              })
     }
 
     /*** 
@@ -193,6 +205,7 @@ export class AssessmentSlateCanvas extends Component {
                     openLTFunction = {this.props.openLTFunction}
                     linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
+                    updateAssessment ={this.updateAssessment}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
