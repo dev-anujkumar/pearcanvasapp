@@ -500,7 +500,7 @@ class SlateWrapper extends Component {
                     }
                     else{
                         let LOUrn = this.props.currentSlateLOData.id?this.props.currentSlateLOData.id:this.props.currentSlateLOData.loUrn;
-                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,"","",LOUrn)
+                        this.props.createElement(METADATA_ANCHOR, indexToinsert,parentUrn,asideData,"",LOUrn)
                     }
                    
                 break;

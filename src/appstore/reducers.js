@@ -17,6 +17,7 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
     SET_SLATE_TYPE,
+    SET_SLATE_ENTITY,
     GET_PROJECT_PERMISSIONS,
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
@@ -95,6 +96,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateType: action.payload
             }
+        case SET_SLATE_ENTITY:
+        return {
+            ...state,
+            setSlateEntity: action.payload
+        }
          case AUTHORING_ELEMENT_UPDATE:
              return {
                  ...state,
