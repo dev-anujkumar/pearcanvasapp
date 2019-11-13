@@ -30,6 +30,7 @@ export class ElementMetaDataAnchor extends Component {
               model={wipmodel}
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
+              handleBlur = {this.props.handleBlur}
             />
           </div>
           <div className="Container">
@@ -43,6 +44,7 @@ export class ElementMetaDataAnchor extends Component {
                 model={this.prepareLOData(this.props.currentSlateLOData)}
                 slateLockInfo={slateLockInfo}
                 handleEditorFocus={this.props.handleFocus}
+                handleBlur = {this.props.handleBlur}
               />
             </div>
           </div>
@@ -72,7 +74,17 @@ export class ElementMetaDataAnchor extends Component {
     * @param {object} loldata
  */
   onLOClickHandle = (loData, e) => {
-    if (config.editorRefID == e.target.id) {
+    /**
+    * @description - To check is it tinymce current target and click on current element id
+    */
+    let targetId = '';
+    if (tinymce.$(e.target).parents('.cypress-editable').length) {
+      targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
+    }
+    else {
+      targetId = e.target.id;
+    }
+    if (config.editorRefID == targetId) {
       config.editorRefID = "";
       return false;
     }
@@ -80,7 +92,7 @@ export class ElementMetaDataAnchor extends Component {
       if (loData && loData.label && loData.label.en) {
         loData.label.en = this.props.currentSlateLODataMath;
       }
-     this.props.showBlocker(true);
+      this.props.showBlocker(true);
       let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.COREAPI_ENDPOINT];
       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
     }

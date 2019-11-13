@@ -161,7 +161,9 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.isLOExist(message);
                 break;
                 case 'loEditResponse':
-                    sendDataToIframe({ 'type': "HideLoader", 'message': { status: false } })
+                    this.setState({
+                        showBlocker: false
+                    });
                     break;
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
@@ -206,14 +208,34 @@ function WithWrapperCommunication(WrappedComponent) {
             })
         }
 
-        handleLOData=(message) =>{
+        handleLOData = (message) => {
             if (message.statusForSave) {
-                message.loObj?this.props.currentSlateLOMath(message.loObj.label.en):this.props.currentSlateLOMath("");
-                if(message.loObj && message.loObj.label && message.loObj.label.en){
-                message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
+                if (message.loObj && message.loObj.label && message.loObj.label.en) {
+                    message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                 }
-                message.loObj?this.props.currentSlateLO(message.loObj):this.props.currentSlateLO();
+                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO();
                 this.props.isLOExist(message);
+                let slateData = this.props.slateLevelData;
+                const newSlateData = JSON.parse(JSON.stringify(slateData));
+                let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter
+                let LOElements = [];
+
+                bodymatter.forEach((item, index) => {
+                    if (item.type == "element-learningobjectivemapping") {
+                        LOElements.push(item.id)
+                    }
+                });
+                let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
+                let LOWipData = {
+                    "elementdata": {
+                        "loref": loUrn
+                    },
+                    "metaDataAnchorID": LOElements
+                }
+
+                this.props.updateElement(LOWipData)
+
             }
         }
         handleLOStore=()=> {
