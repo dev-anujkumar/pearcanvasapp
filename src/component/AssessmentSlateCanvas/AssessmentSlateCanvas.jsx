@@ -13,7 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
-import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE, LEARNING_TEMPLATE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -138,7 +138,7 @@ export class AssessmentSlateCanvas extends Component {
        * @param usageType - usageType of the assessment
        * @param change - type of change - insert/update
     */
-    updateAssessment=(id,itemID,title,format,usageType,change)=>{       
+    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{       
         if(change==='insert'){
             this.setState({
                 getAssessmentDataPopup: true
@@ -160,7 +160,12 @@ export class AssessmentSlateCanvas extends Component {
             assessmentItemId : itemID,
             assessmentItemTitle:title,
             getAssessmentData:true,},()=>{
-                this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
+                if(format ===LEARNING_TEMPLATE){
+                    this.handleAssessmentBlur({id : id,itemID : itemID,title :"",usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
+                }else{
+                    this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
+                }
+                
             })                    
 
     }
@@ -168,7 +173,7 @@ export class AssessmentSlateCanvas extends Component {
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType, usagetype, change) =>{
         console.log(selectedLearningType);
-        this.updateAssessment();
+        this.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,usagetype,change,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
 
@@ -212,6 +217,7 @@ export class AssessmentSlateCanvas extends Component {
                     handleBlur={this.props.handleBlur}
                     model={this.props.model}
                     handleEditorFocus={this.props.handleFocus}
+                    className="addLOdata"
                 />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}

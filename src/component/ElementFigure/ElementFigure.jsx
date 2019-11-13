@@ -164,6 +164,7 @@ class ElementFigure extends Component {
                         figCaptionClass = 'figcaptionImage25Text';
                         figCreditClass = 'paragraphImage25TextCredit';
                         break;
+                    case "informalfigure":
                     case "image50Text":
                         divClass = 'divImage50Text';
                         figureClass = 'figureImage50Text';
@@ -297,7 +298,7 @@ class ElementFigure extends Component {
 
                 }
 
-                /**JSX for Figure Image, Table Image, Math Image*/
+                /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
                         <header className="figure-header">

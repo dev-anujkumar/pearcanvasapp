@@ -263,6 +263,8 @@ class ElementContainer extends Component {
       //  console.log("tinyMCE.activeEditor.id>>::", activeEditorId)
         if (node||elementType==='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
+        }else if(node||elementType==='image' && this.props.element.subtype ==='informalfigure'){
+            this.handleContentChange(node, this.props.element, elementType,"primary-image-figure" , "secondary-image-figure-half", activeEditorId)
         }
     }
 
@@ -276,6 +278,12 @@ class ElementContainer extends Component {
         dataToSend.elementdata.assessmenttitle=assessmentData.title;
         dataToSend.elementdata.assessmentformat=assessmentData.format;
         dataToSend.elementdata.usagetype=assessmentData.usageType;
+        if(assessmentData.format === 'learningtemplate'){
+            dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
+            dataToSend.elementdata["templateid"] = assessmentData.templateid;
+            dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
+            dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
+        }
 
         this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
     }

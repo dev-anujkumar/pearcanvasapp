@@ -29,7 +29,6 @@ class Interactive extends React.Component {
         };
 
     }
-
     /**
      * @description - This function is for accessing c2_assessment library for interactive.
      * @param {event} value
@@ -73,7 +72,8 @@ class Interactive extends React.Component {
             let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
             let imageId = "";
             let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
-            that.setState({itemID : workExample})
+            that.setState({itemID : workExample,
+                imagePath:posterImage.path })
             let figureData={}
             if(tempInteractiveType === 'video-mcq'){
                 figureData = {
@@ -81,7 +81,11 @@ class Interactive extends React.Component {
                     interactiveid: workExample,
                     interactivetype: tempInteractiveType,
                     interactiveformat: "mmi",
-                    posterimage: posterImage,
+                    posterimage: {
+                        "imageid": posterImage.imageid,
+                        "path": posterImage.path
+                    },
+                    // alttext: alttext  //to be added later
                 }
             }else{
              figureData = {
