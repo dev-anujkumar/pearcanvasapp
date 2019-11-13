@@ -14,7 +14,6 @@ import elementDataBank from './elementDataBank'
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-
 	try {
 		switch (element.type) {
 			case 'element-authoredtext':
@@ -41,9 +40,13 @@ const findElementType = (element, index) => {
 					case "mathImage":
 					case "authoredtext":
 					case "tableasmarkup":
+						let altText = element.figuredata.alttext ? element.figuredata.alttext : ""
+						let longDesc = element.figuredata.longdescripton ? element.figuredata.longdescripton : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							altText,
+							longDesc,
 							...elementDataBank[element.type][element.figuretype][element.subtype]
 						}
 						break;
@@ -68,7 +71,7 @@ const findElementType = (element, index) => {
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype||'externallink']
 						}
 						break;
 					case "interactive":
