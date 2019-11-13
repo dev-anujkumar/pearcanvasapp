@@ -80,7 +80,7 @@ export class ElementMetaDataAnchor extends Component {
       if (loData && loData.label && loData.label.en) {
         loData.label.en = this.props.currentSlateLODataMath;
       }
-      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+     this.props.showBlocker(true);
       let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.COREAPI_ENDPOINT];
       sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
     }

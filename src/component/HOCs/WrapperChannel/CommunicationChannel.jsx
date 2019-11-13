@@ -169,10 +169,10 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
-                // case 'cancelCEPopup':
-                //     this.setState({
-                //         showBlocker: false
-                //     });
+                case 'cancelCEPopup':
+                    this.setState({
+                        showBlocker: false
+                    });
                  break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
@@ -288,6 +288,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
+                this.props.setSlateEntity(config.slateEntityURN);
                 this.props.glossaaryFootnotePopup(false);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){

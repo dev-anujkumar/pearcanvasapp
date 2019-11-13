@@ -151,6 +151,7 @@ const mapStateToProps = (state) => {
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         slateType: state.appStore.slateType,
+        setSlateEntity: state.appStore.setSlateEntity,
         isLOExist: state.metadataReducer.slateTagEnable,
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
