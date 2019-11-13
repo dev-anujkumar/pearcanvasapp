@@ -255,10 +255,6 @@ const elementDataBank = {
     "element-aside" : {
         "sidebar" : {
             "elementType" : "element-aside",
-            "asideTacticBox" : {
-                "primaryOption" : "primary-aside-tactic",
-                "secondaryOption" : "secondary-aside-tactic"
-            },
             "asideSidebar01" : {
                 "primaryOption" : "primary-aside-aside",
                 "secondaryOption" : "secondary-aside-sb1"
@@ -290,6 +286,13 @@ const elementDataBank = {
             "asideLearningObjective" : {
                 "primaryOption" : "primary-aside-lol",
                 "secondaryOption" : "secondary-aside-lol"
+            }
+        },
+        "Tactic" : {
+            "elementType" : "element-aside",
+            "asideTacticBox" : {
+                "primaryOption" : "primary-aside-tactic",
+                "secondaryOption" : "secondary-aside-tactic"
             }
         },
         "workedexample" : {
