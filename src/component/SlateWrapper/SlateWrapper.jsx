@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -352,7 +352,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        OPEN_AM.logout();
+        //OPEN_AM.logout();
     }
 
     /**
@@ -683,6 +683,7 @@ class SlateWrapper extends Component {
                                         elementType={element.type}
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                        openAudio={this.props.openAudio}
                                     />
                                     : null
                             }
@@ -717,6 +718,7 @@ class SlateWrapper extends Component {
                                     toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                     permissions={this.props.permissions}
                                     showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                    openAudio={this.props.openAudio}
                                 />
                                 : null
                             }
@@ -741,11 +743,12 @@ class SlateWrapper extends Component {
         hideBlocker()
         hideTocBlocker()
         if (this.props.openRemovePopUp) {
-            this.props.showAudioRemovePopup(false)
+            this.props.showAudioRemovePopup(false)           
             this.props.deleteAudioNarrationForContainer();
         }
         else if (this.props.openSplitPopUp) {
             this.props.showAudioSplitPopup(false)
+            this.toggleSplitSlatePopup(true, this.props.indexSplit)
         }
         this.props.showBlocker(false)
     }
@@ -781,12 +784,16 @@ class SlateWrapper extends Component {
     showAudioRemoveConfirmationPopup = () => {
 
         let dialogText;
+        let audioRemoveClass;
         if (this.props.openRemovePopUp) {
-            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+            dialogText = REMOVE_LINKED_AUDIO
+            audioRemoveClass='audioRemoveClass'
         } else if (this.props.openSplitPopUp) {
-            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+            dialogText = SPLIT_SLATE_WITH_ADDED_AUDIO
+            audioRemoveClass='audioWrongPop'
         } else if (this.props.openWrongAudioPopup) {
-            dialogText = "Selected alfresco media type is not an Audio."
+            dialogText = NOT_AUDIO_ASSET
+            audioRemoveClass='audioRemoveClass'
         }
 
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
@@ -797,7 +804,7 @@ class SlateWrapper extends Component {
                     dialogText={dialogText}
                     active={true}
                     removeConfirmation={true}
-                    audioRemoveClass='audioRemoveClass'
+                    audioRemoveClass={audioRemoveClass}
                     saveButtonText='OK'
                     saveContent={this.processRemoveConfirmation}
                     togglePopup={this.toggleAudioPopup}
@@ -812,7 +819,7 @@ class SlateWrapper extends Component {
                     dialogText={dialogText}
                     active={true}
                     wrongAudio={true}
-                    audioRemoveClass='audioRemoveClass'
+                    audioRemoveClass={audioRemoveClass}
                     saveButtonText='OK'
                     togglePopup={this.toggleWrongAudioPopup}
                 />
@@ -917,7 +924,9 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup : state.audioReducer.openWrongAudioPopup,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        openAudio: state.audioReducer.openAudio,
+        indexSplit : state.audioReducer.indexSplit
     };
 };
 

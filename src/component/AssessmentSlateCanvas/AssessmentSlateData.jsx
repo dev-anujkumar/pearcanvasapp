@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 // IMPORT - Assets //
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe } from '../../../src/constants/utility.js';
@@ -169,9 +169,21 @@ export class AssessmentSlateData extends Component {
 
             activeAssessmentUsageType: usageType,
         });
+        let assessmentType ="";
         this.usageTypeDropdownRef.current.classList.add('notselect')
         this.usageTypeRef.current.classList.add('notselect')
-
+        if(this.state.activeAssessmentType===FULL_ASSESSMENT_CITE){
+            assessmentType = 'cite';
+        }else if( this.state.activeAssessmentType===FULL_ASSESSMENT_TDX){
+            assessmentType = 'tdx';
+        }else if(this.state.activeAssessmentType===FULL_ASSESSMENT_PUF){
+            assessmentType = 'puf';
+        }else if(this.state.activeAssessmentType===LEARNING_APP_TYPE || usageType===LEARNING_TEMPLATE ){
+            assessmentType = LEARNING_TEMPLATE;
+        }else{
+            assessmentType = 'learnosity';
+        }
+        this.props.updateAssessment(this.props.assessmentId,this.props.assessmentItemId,this.props.assessmentItemTitle,assessmentType,usageType,'update');
     }
 
     /*** @description - This function is to select the Assessment usage-type from dropdown*/

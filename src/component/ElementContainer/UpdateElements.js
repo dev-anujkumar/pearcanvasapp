@@ -62,7 +62,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
@@ -94,6 +93,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+        if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
+            delete previousElementData.figuredata.posterimage;
+        }
 
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
 
@@ -385,14 +388,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        console.log("Figure VIDEO new data::>>", node.innerHTML)
+                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
@@ -422,4 +425,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     return dataToReturn
+}
+
+export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let dataToReturn = {};
+    if(elementData) {
+        dataToReturn = {
+            ...elementData,
+            inputType: elementTypes[elementType][primaryOption]['enum'],
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+        }
+    }
+
+    return dataToReturn;
 }

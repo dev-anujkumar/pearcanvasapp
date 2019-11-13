@@ -68,7 +68,7 @@ const findElementType = (element, index) => {
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype||'externallink']
 						}
 						break;
 					case "interactive":
