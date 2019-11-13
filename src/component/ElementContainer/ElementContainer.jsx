@@ -86,7 +86,7 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
-        document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
+       document.querySelector('div#tinymceToolbar .tox-toolbar').classList.remove("disable");
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
@@ -176,6 +176,7 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId) => {
+        const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -185,7 +186,7 @@ class ElementContainer extends Component {
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    this.props.updateElement(dataToSend, this.props.index);
+                    this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
                 break;
 
@@ -198,7 +199,7 @@ class ElementContainer extends Component {
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
@@ -206,19 +207,19 @@ class ElementContainer extends Component {
                         if (this.figureDifference(this.props.index, previousElementData)) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index);
+                        this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index),parentUrn,asideData;
                         }
                         break;
 
@@ -226,14 +227,14 @@ class ElementContainer extends Component {
                             if(this.figureDifference(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index);
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                             if(this.figureDifference(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index);
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                             }
                             break;
                 }
@@ -250,7 +251,7 @@ class ElementContainer extends Component {
                 break;
             case elementTypeConstant.ASSESSMENT_SLATE :
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                    this.props.updateElement(dataToSend, this.props.index);
+                    this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
         }
     }
@@ -671,8 +672,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex) => {
-            dispatch(updateElement(updatedData, elementIndex))
+        updateElement: (updatedData, elementIndex,parentUrn,asideData) => {
+            dispatch(updateElement(updatedData, elementIndex,parentUrn,asideData))
         },
         updateFigureData: (figureData, index, cb) => {
             dispatch(updateFigureData(figureData, index, cb))
