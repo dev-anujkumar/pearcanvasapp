@@ -139,6 +139,11 @@ export default {
             toolbar: ['assetpopover','decreaseindent'],
             enum: 'IMAGE',
             subtype: {
+                'secondary-image-figure-width': {
+                    text: 'Text Width',
+                    labelText: 'Fg',
+                    enum: 'IMAGE_TEXT_WIDTH'
+                },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
                     labelText: 'Fg',
@@ -148,12 +153,7 @@ export default {
                     text: '50% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_50_TEXT'
-                },
-                'secondary-image-figure-width': {
-                    text: 'Text Width',
-                    labelText: 'Fg',
-                    enum: 'IMAGE_TEXT_WIDTH'
-                },
+                },               
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
@@ -465,18 +465,6 @@ export default {
         enumType: 'audiovideo',
     },
     'element-aside': {
-        'primary-aside-lol': {
-            text: 'Learning Objective List',
-            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-            enum: 'LEARNING_OBJECTIVE_LIST',
-            subtype: {
-                'secondary-aside-lol': {
-                    text: 'Learning Objective List',
-                    labelText: 'As',
-                    enum: 'NA',
-                }
-            }
-        },
         'primary-aside-aside': {
             text: 'Aside',
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
@@ -542,6 +530,44 @@ export default {
                     text: 'Tactic Box',
                     labelText: 'As',
                     enum: 'NA'
+                }
+            }
+        },
+        'primary-aside-lol': {
+            text: 'Learning Objective List',
+            toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
+            enum: 'LEARNING_OBJECTIVE_LIST',
+            subtype: {
+                'secondary-aside-lol': {
+                    text: 'Learning Objective List',
+                    labelText: 'As',
+                    enum: 'NA',
+                }
+            }
+        },
+        'primary-aside-showhide': {
+            text: 'Show Hide',
+            toolbar: ['assetpopover'],
+            enum: 'MMI',
+            subtype: {
+                'secondary-aside-showhide': {
+                    text: 'Show Hide',
+                    labelText: 'SH',
+                    enum: 'SHOWHIDE',
+                    wipValue: 'showhide'
+                }
+            }
+        },
+        'primary-aside-popup': {
+            text: 'Pop Up',
+            toolbar: ['assetpopover'],
+            enum: 'NARRATIVE_LINK',
+            subtype: {
+                'secondary-aside-popup': {
+                    text: 'Pop Up',
+                    labelText: 'Pop',
+                    enum: 'POPUP',
+                    wipValue: 'popup'
                 }
             }
         },
@@ -663,32 +689,6 @@ export default {
                     labelText: 'SL',
                     enum: 'TABLE',
                     wipValue: 'table'
-                }
-            }
-        },
-        'primary-showhide': {
-            text: 'Show Hide',
-            toolbar: ['assetpopover'],
-            enum: 'MMI',
-            subtype: {
-                'secondary-interactive-showhide': {
-                    text: 'Show Hide',
-                    labelText: 'SH',
-                    enum: 'SHOWHIDE',
-                    wipValue: 'showhide'
-                }
-            }
-        },
-        'primary-popup': {
-            text: 'Pop Up Window',
-            toolbar: ['assetpopover'],
-            enum: 'NARRATIVE_LINK',
-            subtype: {
-                'secondary-interactive-popup': {
-                    text: 'Pop Up Window',
-                    labelText: 'Pop',
-                    enum: 'POPUP',
-                    wipValue: 'popup'
                 }
             }
         },

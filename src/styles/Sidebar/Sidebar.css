@@ -79,7 +79,7 @@
 .canvas-sidebar .attributions {
     margin-top: 20px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .canvas-sidebar .attributions .attribution-editor {
