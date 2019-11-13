@@ -229,3 +229,16 @@
 .audioRemoveClass {
   line-height: 1.22em;
 }
+
+.audioWrongPop{
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  padding-top: 0.9em;
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 500px;
+  font-size: 1.0em;
+  line-height: 1.9em;
+  font-weight: normal;
+}

@@ -683,6 +683,7 @@ class SlateWrapper extends Component {
                                         elementType={element.type}
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                        openAudio={this.props.openAudio}
                                     />
                                     : null
                             }
@@ -717,6 +718,7 @@ class SlateWrapper extends Component {
                                     toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                     permissions={this.props.permissions}
                                     showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                    openAudio={this.props.openAudio}
                                 />
                                 : null
                             }
@@ -741,11 +743,12 @@ class SlateWrapper extends Component {
         hideBlocker()
         hideTocBlocker()
         if (this.props.openRemovePopUp) {
-            this.props.showAudioRemovePopup(false)
+            this.props.showAudioRemovePopup(false)           
             this.props.deleteAudioNarrationForContainer();
         }
         else if (this.props.openSplitPopUp) {
             this.props.showAudioSplitPopup(false)
+            this.toggleSplitSlatePopup(true, this.props.indexSplit)
         }
         this.props.showBlocker(false)
     }
@@ -781,12 +784,16 @@ class SlateWrapper extends Component {
     showAudioRemoveConfirmationPopup = () => {
 
         let dialogText;
+        let audioRemoveClass;
         if (this.props.openRemovePopUp) {
             dialogText = "Do you want to remove the linked Audio Book with the slate?"
+            audioRemoveClass='audioRemoveClass'
         } else if (this.props.openSplitPopUp) {
             dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+            audioRemoveClass='audioWrongPop'
         } else if (this.props.openWrongAudioPopup) {
             dialogText = "Selected alfresco media type is not an Audio."
+            audioRemoveClass='audioRemoveClass'
         }
 
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
@@ -797,7 +804,7 @@ class SlateWrapper extends Component {
                     dialogText={dialogText}
                     active={true}
                     removeConfirmation={true}
-                    audioRemoveClass='audioRemoveClass'
+                    audioRemoveClass={audioRemoveClass}
                     saveButtonText='OK'
                     saveContent={this.processRemoveConfirmation}
                     togglePopup={this.toggleAudioPopup}
@@ -812,7 +819,7 @@ class SlateWrapper extends Component {
                     dialogText={dialogText}
                     active={true}
                     wrongAudio={true}
-                    audioRemoveClass='audioRemoveClass'
+                    audioRemoveClass={audioRemoveClass}
                     saveButtonText='OK'
                     togglePopup={this.toggleWrongAudioPopup}
                 />
@@ -917,7 +924,9 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         openWrongAudioPopup : state.audioReducer.openWrongAudioPopup,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        openAudio: state.audioReducer.openAudio,
+        indexSplit : state.audioReducer.indexSplit
     };
 };
 
