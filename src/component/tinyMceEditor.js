@@ -80,7 +80,11 @@ export class TinyMceEditor extends Component {
                   });                
             },
 
-            init_instance_callback: (editor) => { 
+            init_instance_callback: (editor) => {
+                tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
+                    e.preventDefault();                   
+                    e.stopPropagation();                   
+                    })
                 /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
                 let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
                 revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
