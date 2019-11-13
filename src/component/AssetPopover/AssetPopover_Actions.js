@@ -4,10 +4,10 @@ import {
   TOGGLE_APO_SEARCH,
   REMOVE_ASSET_LINK,
   SELECTED_FIGURE,
-  IMAGES_FROM_API,
+  IMAGES_FROM_API
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-const { STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES } = config;
+const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES } = config;
 
 //Action for render currently linked figure data
 export const apoSearchCloseAction = () => {
@@ -81,7 +81,7 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
         'accept': 'application/json',
         'cache-control': 'no-cache',
         'apikey': STRUCTURE_APIKEY,
-        'pearsonssosession': ssoToken
+        'pearsonssosession': config.ssoToken
       }
     }).then(res => res.json()).then(
       data => dispatch({
@@ -120,7 +120,7 @@ export async function getAssetPopoverId(workUrn) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'PearsonSSOSession': ssoToken,
+        'PearsonSSOSession': config.ssoToken,
         'apikey': APO_API_KEY,
       }
     })

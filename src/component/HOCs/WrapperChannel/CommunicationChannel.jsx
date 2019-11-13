@@ -171,6 +171,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
+                // case 'cancelCEPopup':
+                //     this.setState({
+                //         showBlocker: false
+                //     });
+                 break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;
