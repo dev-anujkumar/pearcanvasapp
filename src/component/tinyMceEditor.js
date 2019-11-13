@@ -71,13 +71,15 @@ export class TinyMceEditor extends Component {
                 this.insertListButtonIcon(editor);
                 editor.on('init', function (e) {
                     document.getElementsByClassName("audio")[0].style.display = "block";
-                    if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !=="container-introduction"){
-                    document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-                    if(config.slateType =="section"){
-                    document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-                    }                                        
-                }
-                  });                
+                    if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
+                        if (document.getElementsByClassName("slate-tag-icon").length) {
+                            document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
+                            if (config.slateType == "section") {
+                                document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
+                            }
+                        }
+                    }
+                });
             },
 
             init_instance_callback: (editor) => {
