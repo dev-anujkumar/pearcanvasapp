@@ -198,6 +198,6 @@ export default connect(
         fetchAudioNarrationForContainer,
         glossaaryFootnotePopup,
         releaseSlateLock,
-        updateElement,
+        updateElement
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
