@@ -226,5 +226,7 @@ export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, get
             slateLevelData: newParentData
         }
     })
-    cb();
+    setTimeout(()=>{
+        cb();
+    },300)
 }

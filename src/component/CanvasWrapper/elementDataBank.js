@@ -223,6 +223,14 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "video-mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
         },
         "assessment" : {
             "elementType" : "element-assessment",

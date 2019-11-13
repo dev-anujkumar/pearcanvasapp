@@ -51,7 +51,7 @@ class Interactive extends React.Component {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
             if (tempInteractiveType === 'video-mcq') {
-                let responseData = await axios.get(config.STRUCTURE_API_URL + "/content/scapi/" + interactiveData['workExample'][0],
+                let responseData = await axios.get(config.STRUCTURE_API_URL + "content/scapi/" + interactiveData['workExample'][0],
                     {
                         headers: {
                             "x-apikey": config.MANIFEST_APIKEY
@@ -95,9 +95,13 @@ class Interactive extends React.Component {
                 interactiveformat: "mmi"
             }
         }
-            that.props.updateFigureData(figureData, that.props.index, ()=>{
-                that.props.handleFocus("updateFromC2")
-                that.props.handleBlur()
+        
+            that.props.updateFigureData(figureData, that.props.index, ()=>{                
+                that.props.handleFocus("updateFromC2");
+                setTimeout(()=>{
+                    that.props.handleBlur()
+                },300)
+               
             })
         }); 
     }
@@ -368,7 +372,7 @@ class Interactive extends React.Component {
                 </figure>
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
-        }else if(context === 'video-mcq') {
+        }else if(context === 'video-mcq' || context === 'mcq') {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>

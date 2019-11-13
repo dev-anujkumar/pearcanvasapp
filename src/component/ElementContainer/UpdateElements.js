@@ -384,14 +384,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        console.log("Figure VIDEO new data::>>", node.innerHTML)
+                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:

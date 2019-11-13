@@ -144,13 +144,12 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
-            interactiveImagePath = ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
             captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits 
+            creditsHTML !== previousElementData.html.credits
             ){
                 return true
             }
@@ -260,11 +259,9 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-      //  console.log("tinyMCE.activeEditor.id>>::", activeEditorId)
-        if (node||elementType==='element-assessment') {
+        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
+        if (node||elementType!=='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
-        }else if(node||elementType==='image' && this.props.element.subtype ==='informalfigure'){
-            this.handleContentChange(node, this.props.element, elementType,"primary-image-figure" , "secondary-image-figure-half", activeEditorId)
         }
     }
 
@@ -278,12 +275,6 @@ class ElementContainer extends Component {
         dataToSend.elementdata.assessmenttitle=assessmentData.title;
         dataToSend.elementdata.assessmentformat=assessmentData.format;
         dataToSend.elementdata.usagetype=assessmentData.usageType;
-        if(assessmentData.format === 'learningtemplate'){
-            dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
-            dataToSend.elementdata["templateid"] = assessmentData.templateid;
-            dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
-            dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
-        }
 
         this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
     }
@@ -366,14 +357,6 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: true
         });
-    }
-
-    /**
-     *Open TCM SPA for active element
-     * @param {elementId} 
-     */
-    handleTCM=()=>{
-        //to be implemented later
     }
 
     /**
@@ -550,7 +533,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element.tcm && <Button type="tcm" onClick={this.handleTCM}/>}
+                    {element.tcm && <Button type="tcm" />}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -716,8 +699,7 @@ const mapStateToProps = (state) => {
         activeElement: state.appStore.activeElement,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         permissions: state.appStore.permissions,
-        oldImage: state.appStore.oldImage,
-        interactiveImage: state.appStore.interactiveImage
+        oldImage: state.appStore.oldImage
     }
 }
 
