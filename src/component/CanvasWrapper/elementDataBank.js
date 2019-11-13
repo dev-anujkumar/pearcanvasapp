@@ -99,6 +99,9 @@ const elementDataBank = {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
             "image50Text" : {
                 "secondaryOption" : "secondary-image-figure-half"
             },
@@ -239,6 +242,10 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "video-mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            }
         },
         "assessment" : {
             "elementType" : "element-assessment",

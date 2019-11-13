@@ -166,6 +166,7 @@ class ElementFigure extends Component {
                         figCaptionClass = 'figcaptionImage25Text';
                         figCreditClass = 'paragraphImage25TextCredit';
                         break;
+                    case "informalfigure":
                     case "image50Text":
                         divClass = 'divImage50Text';
                         figureClass = 'figureImage50Text';

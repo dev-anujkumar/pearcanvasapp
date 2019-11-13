@@ -22,7 +22,7 @@ class Interactive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            itemID : null,
+            itemID : this.props.model.figuredata?this.props.model.figuredata.interactiveid:null,
             posterImage : null,
             showAssesmentpopup: false
         };
@@ -91,6 +91,7 @@ class Interactive extends React.Component {
         var context = element && element.figuredata && element.figuredata.interactivetype;
         switch (context) {
 
+            case "video-mcq":
             case "fpo":
                 divImage = 'divImageTextWidth';
                 figureImage = 'figureImageTextWidth';
