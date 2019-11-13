@@ -9,6 +9,8 @@ import config from '../../config/config';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
@@ -25,6 +27,8 @@ class ElementAudioVideo extends Component {
      * @param {*} data selected asset data
      */
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
             let imageData = data;
             let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
             let figureType = imageData['assetType'] ? imageData['assetType'] : "";
