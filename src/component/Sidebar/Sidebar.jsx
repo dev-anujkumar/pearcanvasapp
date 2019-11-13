@@ -233,8 +233,13 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
-    
                 attributions = attributionsList.map(item => {
+                    if(item==="alt_text"){
+                        attrValue=this.props.activeElement.altText?this.props.activeElement.altText:""
+                    }
+                    else if(item==="long_description"){
+                        attrValue=this.props.activeElement.longDesc?this.props.activeElement.longDesc:""
+                    }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
                         <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
