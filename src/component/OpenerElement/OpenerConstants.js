@@ -23,14 +23,14 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
 
             case "number":
                 if(contentData){
-                    dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd - 1)
+                    dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd)
                 }
                 break;
 
             case "title":
             default:
                 if(contentNumberData){
-                    dataToReturn = titleText.substring(contentNumberData.charEnd).trimLeft()
+                    dataToReturn = titleText.substring(contentNumberData.charEnd + 1).trimLeft()
                 }
                 break;      
         }

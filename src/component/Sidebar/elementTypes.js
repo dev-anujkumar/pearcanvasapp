@@ -697,13 +697,13 @@ export default {
     "openerelement": {
         "primary-openerelement": {
             text: 'Opener Element',
-            enum: 'NA',
+            enum: 'openerelement',
             dropdownDisabled: true,
             subtype: {
                 'secondary-openerelement': {
                     text: 'Opener Element',
                     labelText: 'OE',
-                    enum: 'NA',
+                    enum: 'openerelement',
                 }
             },
             attributes: {
