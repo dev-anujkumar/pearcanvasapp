@@ -62,7 +62,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
@@ -389,14 +388,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        console.log("Figure VIDEO new data::>>", node.innerHTML)
+                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
@@ -426,4 +425,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     return dataToReturn
+}
+
+export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let dataToReturn = {};
+    if(elementData) {
+        dataToReturn = {
+            ...elementData,
+            inputType: elementTypes[elementType][primaryOption]['enum'],
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+        }
+    }
+
+    return dataToReturn;
 }

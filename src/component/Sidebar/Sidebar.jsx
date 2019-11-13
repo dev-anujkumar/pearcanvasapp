@@ -22,6 +22,7 @@ class Sidebar extends Component {
         
         this.state = {
             elementDropdown: '',
+            activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
@@ -34,7 +35,14 @@ class Sidebar extends Component {
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
+            let elementDropdown = prevState.elementDropdown;
+            if(nextProps.activeElement.elementId !== prevState.activeElementId) {
+                elementDropdown = '';
+            }
+            
             return {
+                elementDropdown: elementDropdown,
+                activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
@@ -84,18 +92,15 @@ class Sidebar extends Component {
         });
     }
 
-    removeElementDropdown = e => {
-        this.setState({
-            elementDropdown: ''
-        });
-    }
-
     primaryOption = () => {
         let primaryOptions = '';
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
+                if(this.state.activeElementType === 'element-assessment'){
+                    delete primaryOptionList[1];
+                }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -110,7 +115,7 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown" onMouseLeave={this.removeElementDropdown}>
+                    className="element-dropdown">
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {dropdownArrow}
@@ -189,7 +194,7 @@ class Sidebar extends Component {
                 }
     
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`} onMouseLeave={this.removeElementDropdown}>
+                    className={`element-dropdown ${display}`}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}

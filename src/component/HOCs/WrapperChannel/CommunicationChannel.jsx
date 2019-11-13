@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
+import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 
 function WithWrapperCommunication(WrappedComponent) {
@@ -113,6 +114,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     {
                         this.showCanvasBlocker(true);
                         showHeaderBlocker();
+                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         this.props.fetchSlateData(config.slateManifestURN);
                     }
                 case 'canvasBlocker':
@@ -169,6 +171,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
+                // case 'cancelCEPopup':
+                //     this.setState({
+                //         showBlocker: false
+                //     });
+                 break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;

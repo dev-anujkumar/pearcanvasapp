@@ -19,7 +19,7 @@ export class ElementMetaLOList extends Component {
     const { slateLockInfo} = this.props
     return (
 
-      <div className="learningObjectiveContainer" onClick={() => this.onLOLClickHandle(this.props.currentSlateLOData)} >
+      <div className="learningObjectiveContainer" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -91,6 +91,10 @@ export class ElementMetaLOList extends Component {
      * @param {object} loldata
   */
   onLOLClickHandle(lolData) {
+    if (config.editorRefID == e.target.id) {
+      config.editorRefID = "";
+      return false;
+    }
     if(lolData == "" || (lolData && lolData.length === 0)){
       sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
       setTimeout(function(){ sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
