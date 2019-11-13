@@ -115,22 +115,6 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-image-figure-quarter"
             }
         },
-        // "table" : {
-        //     "elementType" : "figure",
-        //     "primaryOption" : "primary-image-table",
-        //     "image50TextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-half"
-        //     },
-        //     "imageTextWidthTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-width"
-        //     },
-        //     "imageWiderThanTextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-wider"
-        //     },
-        //     "imageFullscreenTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-full"
-        //     },
-        // },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",
@@ -239,6 +223,14 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "video-mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
         },
         "assessment" : {
             "elementType" : "element-assessment",
@@ -255,10 +247,6 @@ const elementDataBank = {
     "element-aside" : {
         "sidebar" : {
             "elementType" : "element-aside",
-            "asideTacticBox" : {
-                "primaryOption" : "primary-aside-tactic",
-                "secondaryOption" : "secondary-aside-tactic"
-            },
             "asideSidebar01" : {
                 "primaryOption" : "primary-aside-aside",
                 "secondaryOption" : "secondary-aside-sb1"
@@ -290,6 +278,13 @@ const elementDataBank = {
             "asideLearningObjective" : {
                 "primaryOption" : "primary-aside-lol",
                 "secondaryOption" : "secondary-aside-lol"
+            }
+        },
+        "Tactic" : {
+            "elementType" : "element-aside",
+            "asideTacticBox" : {
+                "primaryOption" : "primary-aside-tactic",
+                "secondaryOption" : "secondary-aside-tactic"
             }
         },
         "workedexample" : {

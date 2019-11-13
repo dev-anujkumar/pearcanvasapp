@@ -17,22 +17,32 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        let numbered = this.props.activeElement.numbered || true;
+        let startNumber = this.props.activeElement.startNumber || "1"
         
         this.state = {
             elementDropdown: '',
+            activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
-            bceToggleValue: true,
-            bceNumberStartFrom : "1"
+            bceToggleValue: numbered,
+            bceNumberStartFrom : startNumber
         };
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
+            let elementDropdown = prevState.elementDropdown;
+            if(nextProps.activeElement.elementId !== prevState.activeElementId) {
+                elementDropdown = '';
+            }
+            
             return {
+                elementDropdown: elementDropdown,
+                activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
@@ -88,6 +98,9 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
+                if(this.state.activeElementType === 'element-assessment'){
+                    delete primaryOptionList[1];
+                }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -229,11 +242,15 @@ class Sidebar extends Component {
                 attributions = attributionsList.map(item => {
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onFocus={this.onFocus} onBlur={this.onBlur} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
             if(this.state.activePrimaryOption === "primary-blockcode-equation"){
+                let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
+                let attrNode = activeElement.querySelector(".blockCodeFigure")
+                attrNode.setAttribute("numbered", this.state.bceToggleValue)
+                attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
@@ -243,7 +260,7 @@ class Sidebar extends Component {
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
                         <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!this.state.bceToggleValue}/>
+                        disabled={!this.state.bceToggleValue} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
                     return attributions;
@@ -257,6 +274,11 @@ class Sidebar extends Component {
         }  
     }
 
+    handleBceBlur = () => {
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).focus()
+        document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
+    }
+
 
     /**
     * handleBceToggle function responsible for handling toggle value for BCE element
@@ -265,6 +287,7 @@ class Sidebar extends Component {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
         })
+        this.handleBceBlur()
     }
 
     /**
@@ -275,15 +298,7 @@ class Sidebar extends Component {
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
             })
-        }  
-    }
-
-    onFocus=()=>{
-        document.querySelector('div#tinymceToolbar').classList.add('toolbar-disabled')
-    }
-
-    onBlur=()=>{
-        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
+        }
     }
 
     

@@ -34,6 +34,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     if (oldElementData.type === "figure") {
         oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+        if(oldElementData.figuredata.srctype){
+            oldElementData.figuredata.srctype=outputSubType['wipValue']
+        }
+        if(oldElementData.figuredata.interactivetype){
+            oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
+        }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
@@ -54,7 +60,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         projectUrn : config.projectUrn
     }
 
-    document.querySelector('div#tinymceToolbar').classList.add('toolbar-disabled')  //disable toolbar on conversion
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 

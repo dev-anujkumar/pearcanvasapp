@@ -43,7 +43,7 @@ export class ElementSingleAssessment extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.toggleAssessmentPopup(false);
+        this.toggleAssessmentPopup('',false);
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData)=> {
             this.launchAssetBrowserCallBack(assessmentData) 
@@ -53,6 +53,7 @@ export class ElementSingleAssessment extends Component {
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
+        let assessmentFormat="";
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
         } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
@@ -68,7 +69,7 @@ export class ElementSingleAssessment extends Component {
     }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
-    toggleAssessmentPopup = (value) => {
+    toggleAssessmentPopup = (e,value) => {
         this.setState({
             showAssessmentPopup : value
         });
@@ -143,7 +144,7 @@ export class ElementSingleAssessment extends Component {
                     ) : null
                 }
 
-                <div className="pearson-component image" data-uri="" data-type="image" onClick={()=>{this.toggleAssessmentPopup(true)}}>
+                <div className="pearson-component image" data-uri="" data-type="image" onClick={(e)=>{this.toggleAssessmentPopup(e,true)}}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
@@ -158,7 +159,7 @@ export class ElementSingleAssessment extends Component {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
             </div>
         );
     }

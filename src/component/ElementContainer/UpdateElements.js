@@ -62,7 +62,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
@@ -145,6 +144,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
 
+
+    let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+    let startNumber = getAttributeBCE.getAttribute("startnumber")
+    let isNumbered = getAttributeBCE.getAttribute("numbered")
+
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         preformattedText = document.getElementById(`cypress-${index}-2`).innerText,
@@ -201,8 +205,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: previousElementData.figuretype,
-            numbered: true,
-            startNumber: "1",
+            numbered: isNumbered,
+            startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             preformattedtext: [...preformattedText.split("\n")]
         },
@@ -297,7 +301,10 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
-        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']}
+        inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+        html: {
+            title: "<p></p>"
+        }}
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 
@@ -325,7 +332,10 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase()}
+        inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
+        html: {
+            title: "<p></p>"
+        }}
 
         return dataToSend;
 }
@@ -374,14 +384,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        console.log("Figure VIDEO new data::>>", node.innerHTML)
+                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
@@ -411,4 +421,17 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     return dataToReturn
+}
+
+export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let dataToReturn = {};
+    if(elementData) {
+        dataToReturn = {
+            ...elementData,
+            inputType: elementTypes[elementType][primaryOption]['enum'],
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+        }
+    }
+
+    return dataToReturn;
 }

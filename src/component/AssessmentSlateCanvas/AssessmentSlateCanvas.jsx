@@ -13,7 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {ShowLoader} from '../../constants/IFrameMessageTypes';
-import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE, LEARNING_TEMPLATE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -22,19 +22,31 @@ export class AssessmentSlateCanvas extends Component {
         this.state={
             showAssessmentPopup:false,
             getAssessmentDataPopup:false,
-            getAssessmentData:false,
+            getAssessmentData:props.model && props.model.elementdata &&  props.model.elementdata.assessmentid? true: false,
             assessmentId: props.model && props.model.elementdata && props.model.elementdata.assessmentid ?props.model.elementdata.assessmentid :"",
-            assessmentItemId: "",
+            assessmentItemId: props.model && props.model.elementdata && props.model.elementdata.assessmentitemid ?props.model.elementdata.assessmentitemid :"",
             assessmentItemTitle: props.model && props.model.elementdata && props.model.elementdata.assessmenttitle ?props.model.elementdata.assessmenttitle :"",
             assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
         }
     }
 
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
-    toggleAssessmentPopup = (value) => {
+    toggleAssessmentPopup = (e,value) => {
         this.setState({
             showAssessmentPopup: value
         });
+    }
+    componentWillReceiveProps(nextProps){   
+        this.setState({
+            showAssessmentPopup:false,
+            getAssessmentDataPopup:false,
+            getAssessmentData:nextProps.model && nextProps.model.elementdata &&  nextProps.model.elementdata.assessmentid? true: false,
+            assessmentId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentid ?nextProps.model.elementdata.assessmentid :"",
+            assessmentItemId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentitemid ?nextProps.model.elementdata.assessmentitemid :"",
+            assessmentItemTitle: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmenttitle ?nextProps.model.elementdata.assessmenttitle :"",
+            assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :""
+
+              })
     }
 
     /*** 
@@ -84,7 +96,7 @@ export class AssessmentSlateCanvas extends Component {
         showTocBlocker();
         disableHeader(true);
        // this.props.showBlocker(true);
-        this.toggleAssessmentPopup(false);
+        this.toggleAssessmentPopup('',false);
         
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
@@ -126,7 +138,7 @@ export class AssessmentSlateCanvas extends Component {
        * @param usageType - usageType of the assessment
        * @param change - type of change - insert/update
     */
-    updateAssessment=(id,itemID,title,format,usageType,change)=>{       
+    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{       
         if(change==='insert'){
             this.setState({
                 getAssessmentDataPopup: true
@@ -148,7 +160,12 @@ export class AssessmentSlateCanvas extends Component {
             assessmentItemId : itemID,
             assessmentItemTitle:title,
             getAssessmentData:true,},()=>{
-                this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
+                if(format ===LEARNING_TEMPLATE){
+                    this.handleAssessmentBlur({id : id,itemID : itemID,title :"",usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
+                }else{
+                    this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
+                }
+                
             })                    
 
     }
@@ -156,7 +173,7 @@ export class AssessmentSlateCanvas extends Component {
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType, usagetype, change) =>{
         console.log(selectedLearningType);
-        this.updateAssessment();
+        this.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,usagetype,change,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
 
@@ -193,15 +210,17 @@ export class AssessmentSlateCanvas extends Component {
                     openLTFunction = {this.props.openLTFunction}
                     linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
+                    updateAssessment ={this.updateAssessment}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
                     handleBlur={this.props.handleBlur}
                     model={this.props.model}
                     handleEditorFocus={this.props.handleFocus}
+                    className="addLOdata"
                 />
                     
-                {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
+                {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
             </div>
         );
     }

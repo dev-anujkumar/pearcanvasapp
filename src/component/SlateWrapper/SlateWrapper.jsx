@@ -22,14 +22,14 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
-import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup } from '../AudioNarration/AudioNarration_Actions'
+import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
@@ -352,7 +352,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        OPEN_AM.logout();
+        //OPEN_AM.logout();
     }
 
     /**
@@ -683,6 +683,7 @@ class SlateWrapper extends Component {
                                         elementType={element.type}
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                        openAudio={this.props.openAudio}
                                     />
                                     : null
                             }
@@ -717,6 +718,7 @@ class SlateWrapper extends Component {
                                     toggleSplitSlatePopup={this.toggleSplitSlatePopup}
                                     permissions={this.props.permissions}
                                     showAudioSplitPopup={this.props.showAudioSplitPopup}
+                                    openAudio={this.props.openAudio}
                                 />
                                 : null
                             }
@@ -741,11 +743,12 @@ class SlateWrapper extends Component {
         hideBlocker()
         hideTocBlocker()
         if (this.props.openRemovePopUp) {
-            this.props.showAudioRemovePopup(false)
+            this.props.showAudioRemovePopup(false)           
             this.props.deleteAudioNarrationForContainer();
         }
         else if (this.props.openSplitPopUp) {
             this.props.showAudioSplitPopup(false)
+            this.toggleSplitSlatePopup(true, this.props.indexSplit)
         }
         this.props.showBlocker(false)
     }
@@ -764,6 +767,16 @@ class SlateWrapper extends Component {
         }
     }
 
+     /**
+    * @description - toggleWrongAudioPopup function responsible for wrong Audio selection popup.
+    */
+    toggleWrongAudioPopup = () => {
+        this.props.showBlocker(false)
+        hideTocBlocker()
+        hideBlocker()
+        this.props.showWrongAudioPopup(false)
+    }
+
     /**
     * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
     */
@@ -771,10 +784,16 @@ class SlateWrapper extends Component {
     showAudioRemoveConfirmationPopup = () => {
 
         let dialogText;
+        let audioRemoveClass;
         if (this.props.openRemovePopUp) {
-            dialogText = "Do you want to remove the linked Audio Book with the slate?"
+            dialogText = REMOVE_LINKED_AUDIO
+            audioRemoveClass='audioRemoveClass'
         } else if (this.props.openSplitPopUp) {
-            dialogText = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
+            dialogText = SPLIT_SLATE_WITH_ADDED_AUDIO
+            audioRemoveClass='audioWrongPop'
+        } else if (this.props.openWrongAudioPopup) {
+            dialogText = NOT_AUDIO_ASSET
+            audioRemoveClass='audioRemoveClass'
         }
 
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
@@ -785,10 +804,24 @@ class SlateWrapper extends Component {
                     dialogText={dialogText}
                     active={true}
                     removeConfirmation={true}
-                    audioRemoveClass='audioRemoveClass'
+                    audioRemoveClass={audioRemoveClass}
                     saveButtonText='OK'
                     saveContent={this.processRemoveConfirmation}
                     togglePopup={this.toggleAudioPopup}
+                />
+            )
+        }
+        else if (this.props.openWrongAudioPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    wrongAudio={true}
+                    audioRemoveClass={audioRemoveClass}
+                    saveButtonText='OK'
+                    togglePopup={this.toggleWrongAudioPopup}
                 />
             )
         }
@@ -890,7 +923,10 @@ const mapStateToProps = state => {
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        openWrongAudioPopup : state.audioReducer.openWrongAudioPopup,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        openAudio: state.audioReducer.openAudio,
+        indexSplit : state.audioReducer.indexSplit
     };
 };
 
@@ -909,6 +945,7 @@ export default connect(
         setLockPeriodFlag,
         setSlateLock,
         releaseSlateLock,
-        setActiveElement
+        setActiveElement,
+        showWrongAudioPopup
     }
 )(SlateWrapper);

@@ -4,19 +4,19 @@ import store from '../../appstore/store.js'
 import {
     OPEN_AUDIO_NARRATION,
     SHOW_REMOVE_POPUP,
-    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION
+    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
 } from '../../constants/Action_Constants.js'
 
-const axiosInstance = axios.create({
-    baseURL: config.AUDIO_NARRATION_URL,
-     withCredentials: false,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'ApiKey': config.AUDIO_API_KEY,
-        'PearsonSSOSession': config.ssoToken,
-    }
-})
+// const axiosInstance = axios.create({
+//     baseURL: config.AUDIO_NARRATION_URL,
+//      withCredentials: false,
+//     headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json',
+//         'ApiKey': config.AUDIO_API_KEY,
+//         'PearsonSSOSession': config.ssoToken,
+//     }
+// })
 
 /**
  * 
@@ -29,9 +29,18 @@ export const showAudioRemovePopup = (value) => (dispatch, getState) => {
         payload: value
     })
 }
-export const showAudioSplitPopup = (value) => (dispatch, getState) => {
+export const showAudioSplitPopup = (value,index) => (dispatch, getState) => {
     dispatch({
         type: SPLIT_REMOVE_POPUP,
+        payload: {
+            value: value,
+            index : index
+        }
+    })
+}
+export const showWrongAudioPopup = (value) => (dispatch, getState) => {
+    dispatch({
+        type: WRONG_AUDIO_REMOVE_POPUP,
         payload: value
     })
 }
@@ -42,9 +51,16 @@ export const showAudioSplitPopup = (value) => (dispatch, getState) => {
  */
 export const fetchAudioNarrationForContainer = (slateData) => async(dispatch, getState) => {
     
-    let url = `context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
+    let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
     try {
-        let audioDataResponse = await axiosInstance.get(url);
+        let audioDataResponse = await axios.get(url,{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'ApiKey': config.AUDIO_API_KEY,
+                'PearsonSSOSession': config.ssoToken,
+            }
+        });
         if(audioDataResponse && audioDataResponse.data && audioDataResponse.status == 200){
             dispatch({ type: CURRENT_SLATE_AUDIO_NARRATION, payload: audioDataResponse.data});
             dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
@@ -73,10 +89,17 @@ export const deleteAudioNarrationForContainer = (slateData) => async(dispatch, g
             slateEntityUrn: config.slateEntityURN
         }
     var narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
-    let url = `context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
+    let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
 
     try {
-        let audioDataResponse = await axiosInstance.delete(url);
+        let audioDataResponse = await axios.delete(url,{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'ApiKey': config.AUDIO_API_KEY,
+                'PearsonSSOSession': config.ssoToken,
+            }
+        });
         if(audioDataResponse && audioDataResponse.status == 200){
             fetchAudioNarrationForContainer(slateData)
             dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
@@ -124,9 +147,16 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
         console.log("Error while getting mp3 location from smartLink URL", e);
     }
 
-    let url = `context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
+    let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio`;
     try {
-        let audioPutResponse = await axiosInstance.put(url, audioData);
+        let audioPutResponse = await axios.put(url, audioData, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'ApiKey': config.AUDIO_API_KEY,
+                'PearsonSSOSession': config.ssoToken,
+            }
+        });
        // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         if( audioPutResponse && audioPutResponse.status == 400) {
             dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })

@@ -27,7 +27,6 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 /*---------------Element Updation ----------------------*/
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
 export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
-
 /*---------------Element Container ----------------------*/
 export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
@@ -88,3 +87,4 @@ export const SHOW_REMOVE_POPUP = 'SHOW_REMOVE_POPUP'
 export const SPLIT_REMOVE_POPUP = 'SPLIT_REMOVE_POPUP'
 export const CURRENT_SLATE_AUDIO_NARRATION = 'CURRENT_SLATE_AUDIO_NARRATION'
 export const ADD_AUDIO_NARRATION = 'ADD_AUDIO_NARRATION'
+export const WRONG_AUDIO_REMOVE_POPUP = 'WRONG_AUDIO_REMOVE_POPUP'

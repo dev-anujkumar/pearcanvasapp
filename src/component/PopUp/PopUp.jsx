@@ -39,7 +39,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        if(props.isLockPopup || props.isLockReleasePopup){ //Slate lock popup
+        if(props.isLockPopup || props.isLockReleasePopup || props.wrongAudio){ //Slate lock popup
             return(
                 <div  className={`dialog-buttons ${props.slateLockClass}` }>
                     <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
@@ -92,7 +92,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio){
             return null
         }
         else if(props.isLockPopup && props.withInputBox){
@@ -114,7 +114,7 @@ class PopUp extends React.Component {
         }
     }
     renderCloseSymbol = (props) => {
-        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive){
+        if(props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.tocDelete || props.assessmentAndInteractive || props.removeConfirmation){
             return null
         }
         else{
@@ -157,7 +157,7 @@ class PopUp extends React.Component {
                 <div className={`dialog-window ${props.slateLockClass}`} >{props.dialogText}</div>
             )  
         }
-        else if(props.removeConfirmation){
+        else if(props.removeConfirmation || props.wrongAudio){
             return (
                 <div className={`dialog-window ${props.audioRemoveClass}`} >{props.dialogText}</div>
             )
