@@ -422,3 +422,16 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     return dataToReturn
 }
+
+export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    let dataToReturn = {};
+    if(elementData) {
+        dataToReturn = {
+            ...elementData,
+            inputType: elementTypes[elementType][primaryOption]['enum'],
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+        }
+    }
+
+    return dataToReturn;
+}

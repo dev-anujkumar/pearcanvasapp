@@ -229,3 +229,12 @@
   border-radius: 4px;
   float: right;
 }
+.openAudioIcon{
+    height: 7px;
+    width: 7px;
+    background: #0D8604;
+    position: absolute;
+    border-radius: 50%;
+    margin-left: 12px;
+    margin-top: -23px;
+}

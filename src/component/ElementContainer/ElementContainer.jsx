@@ -30,7 +30,7 @@ import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { updatePageNumber } from '../SlateWrapper/SlateWrapper_Actions';
 
 class ElementContainer extends Component {
@@ -159,6 +159,8 @@ class ElementContainer extends Component {
     }
 
     updateOpenerElement = (dataToSend) => {
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
         this.props.updateElement(dataToSend, 0);
     }
     
