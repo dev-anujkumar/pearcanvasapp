@@ -206,7 +206,7 @@ export class ReactEditor extends React.Component {
   render() {
     return (
       <div>
-        <p ref={this.editorRef} className={this.props.className} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} ></p>
+        <p ref={this.editorRef} className={this.props.className} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue }}></p>
       </div>
     )
   }

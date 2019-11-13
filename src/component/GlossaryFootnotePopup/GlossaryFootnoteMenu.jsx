@@ -15,10 +15,10 @@ class GlossaryFootnoteMenu extends React.Component {
     }
 
     render() {
-        const { showGlossaaryFootnote, glossaryFootnoteValue } = this.props;
+        const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
         console.table(glossaryFootnoteValue);
         return (
-            <GlossaryFootnotePopup showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} />
+            <GlossaryFootnotePopup showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue}/>
         )
     }
 

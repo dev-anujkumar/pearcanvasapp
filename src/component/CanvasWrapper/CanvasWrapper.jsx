@@ -137,7 +137,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -168,7 +168,8 @@ const mapStateToProps = state => {
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
-        logout
+        logout,
+        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue
     };
 };
 

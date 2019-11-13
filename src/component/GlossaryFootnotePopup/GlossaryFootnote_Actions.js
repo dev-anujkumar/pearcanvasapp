@@ -1,11 +1,12 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js'
 
 const {
     REACT_APP_API_URL
 } = config
 
-import { OPEN_GLOSSARY_FOOTNOTE } from "./../../constants/Action_Constants";
+import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY } from "./../../constants/Action_Constants";
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType) => async (dispatch) => {
     let glossaaryFootnoteValue = {
@@ -16,9 +17,29 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         glossaryfootnoteid
     }
 
+    if(status === true){
+        const slateId = config.slateManifestURN;
+        const parentData = store.getState().appStore.slateLevelData;
+        let newParentData = JSON.parse(JSON.stringify(parentData));
+        let newBodymatter = newParentData[slateId].contents.bodymatter;
+        var footnoteContentText;
+         //find element 
+         for(let i in newBodymatter){
+            if( newBodymatter[i].versionUrn== elementWorkId){
+                footnoteContentText = newBodymatter[i].html['footnotes'][glossaryfootnoteid];
+                console.log('this is footnote text', glossaryfootnoteid, newBodymatter[i].html['footnotes'][glossaryfootnoteid])
+            }
+        }
+    }
+
+
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
-        payload: glossaaryFootnoteValue
+        // payload: glossaaryFootnoteValue
+        payload: {
+            glossaaryFootnoteValue :  glossaaryFootnoteValue,
+            glossaryFootNoteCurrentValue : footnoteContentText
+        }
     });
 }
 
@@ -52,10 +73,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
 
         case "GLOSSARY":
-                glossaryEntry[glossaryfootnoteid] = {
+                glossaryEntry[glossaryfootnoteid] = JSON.stringify({
                     term,
                     definition
-                }
+                })
                data = {
                     id: elementWorkId,
                     type: elementType,
@@ -63,7 +84,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     contentUrn: null,
                     html: {
                         text: null,
-                        glossaryentries: glossaryEntry,
+                        glossaryentries:  glossaryEntry,
                         footnotes: {},
                         assetspopover: {}
                     }
@@ -78,7 +99,27 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        console.log("save glossary footnote API success : ", res)
+        const slateId = config.slateManifestURN;
+        const parentData = store.getState().appStore.slateLevelData;
+        let newParentData = JSON.parse(JSON.stringify(parentData));
+        let newBodymatter = newParentData[slateId].contents.bodymatter;
+        //find element 
+        for(let i in newBodymatter){
+            if( newBodymatter[i].contentUrn== res.data.contentUrn){
+                newBodymatter[i] = res.data
+            }
+        }
+        console.log('>>>>Newbody', newParentData)
+        //  newParentData = JSON.parse(JSON.stringify(newParentData));
+
+        store.dispatch({
+            type: UPDATE_FOOTNOTEGLOSSARY,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+        
+        console.log("save glossary footnote API success : ", res.data)
     }).catch(err => {
         console.log("save glossary footnote API error : ", err)
     })

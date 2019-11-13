@@ -33,6 +33,8 @@ export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
 export const OPEN_GLOSSARY_FOOTNOTE = "OPEN_GLOSSARY_FOOTNOTE"
 export const ADD_GLOSSARY_FOOTNOTE = "ADD_GLOSSARY_FOOTNOTE"
+export const UPDATE_FOOTNOTEGLOSSARY = "UPDATE_FOOTNOTEGLOSSARY"
+
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 

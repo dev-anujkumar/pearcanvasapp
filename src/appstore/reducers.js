@@ -21,7 +21,8 @@ import {
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
-    UPDATE_PAGENUMBER_FAIL 
+    UPDATE_PAGENUMBER_FAIL,
+    UPDATE_FOOTNOTEGLOSSARY 
 } from '../constants/Action_Constants';
 
 /**
@@ -35,7 +36,7 @@ const initialState = {
     activeElement: {},
     splittedElementIndex: 0,
     pageNumberData: {},
-    permissions: []
+    permissions: [],
 };
 
 /**
@@ -70,7 +71,7 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case SWAP_ELEMENT : 
+        case SWAP_ELEMENT: 
                 return {
                     ...state,
                     slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
@@ -126,6 +127,11 @@ export default function (state = initialState, action) {
             ...state,
             pageLoading:action.payload.pageLoading
         }
+        case UPDATE_FOOTNOTEGLOSSARY:
+            return {
+                ...state,
+                slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
+            }
         default:
             return state;
     }
