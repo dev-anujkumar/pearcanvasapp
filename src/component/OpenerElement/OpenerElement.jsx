@@ -258,11 +258,11 @@ class OpenerElement extends Component {
                             <span>{dropdownArrow}</span>
                         </div>
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
                         <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
                         <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>
