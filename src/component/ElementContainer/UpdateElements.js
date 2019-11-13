@@ -358,7 +358,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
         case elementTypeConstant.BLOCKFEATURE:
-
+        case elementTypeConstant.ELEMENT_LIST:
             let { innerHTML, innerText } = node;
             dataToReturn = {
                 ...previousElementData,
