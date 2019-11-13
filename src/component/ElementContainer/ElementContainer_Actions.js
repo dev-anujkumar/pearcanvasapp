@@ -3,7 +3,7 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH, SET_INTERACTIVE_IMAGE_PATH } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH} from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId,asideData,parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
@@ -199,27 +199,12 @@ export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, get
     let interactiveImage ="";
     const newParentData = JSON.parse(JSON.stringify(parentData));
     newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
-    
-    if(newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.interactivetype  ==='video-mcq' ){
-        if(parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.posterimage){
-            interactiveImage =parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata['posterimage'].path;
-        }else{
-            interactiveImage ='';
+    dispatch({
+        type: SET_OLD_IMAGE_PATH,
+        payload: {
+            oldImage: parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.path
         }
-        dispatch({
-            type: SET_INTERACTIVE_IMAGE_PATH,
-            payload: {
-                oldImage: interactiveImage
-            }
-        })
-    }else{
-        dispatch({
-            type: SET_OLD_IMAGE_PATH,
-            payload: {
-                oldImage: parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.path
-            }
-        })
-    }
+    })
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {

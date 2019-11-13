@@ -21,8 +21,7 @@ import {
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
-    UPDATE_PAGENUMBER_FAIL,
-    SET_INTERACTIVE_IMAGE_PATH
+    UPDATE_PAGENUMBER_FAIL
 } from '../constants/Action_Constants';
 
 /**
@@ -126,12 +125,7 @@ export default function (state = initialState, action) {
         return {
             ...state,
             pageLoading:action.payload.pageLoading
-        }
-        case SET_INTERACTIVE_IMAGE_PATH:
-            return {
-                ...state,
-                interactiveImage: action.payload.interactiveImage
-            }  
+        } 
         default:
             return state;
     }
