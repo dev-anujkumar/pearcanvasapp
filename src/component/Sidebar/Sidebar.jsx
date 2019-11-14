@@ -226,6 +226,14 @@ class Sidebar extends Component {
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
+            if((primaryOptionList.text && primaryOptionList.text==="MMI" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
+                primaryOptionList['attributes']={
+                    "alt_text":{
+                        "isEditable": false,
+                        "text": "Alt Text"
+                    }
+                }
+            }
             if(primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);
