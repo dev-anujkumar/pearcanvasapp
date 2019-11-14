@@ -83,6 +83,19 @@ export class TinyMceEditor extends Component {
             },
 
             init_instance_callback: (editor) => {
+                editor.on('Change', function (e) {
+                    let content = e.target.getContent({format: 'text'}),
+                        contentHTML = e.target.getContent(),
+                        activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+
+                    if(content.trim().length || contentHTML.match(/<math/g)){
+                        activeElement.classList.remove('place-holder')
+                    }
+                    else {
+                        activeElement.classList.add('place-holder')
+                    }
+                  });
+
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
                     e.preventDefault();                   
                     e.stopPropagation();                   
