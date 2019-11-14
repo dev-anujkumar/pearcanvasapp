@@ -73,12 +73,16 @@ class ElementContainer extends Component {
             }
             // ** This post message is require to enable comments panel icon in wrapper when element focused **/
             sendDataToIframe({ 'type': 'elementFocus', 'message': { element: newProps.element } });
-        } else {
+        } else if(newProps.element.type == "openerelement"){
+            this.setState({
+                borderToggle: 'active',
+            })
+        }
+        else {
             this.setState({
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
-
         }
     }
 
@@ -90,10 +94,17 @@ class ElementContainer extends Component {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
         else {
-            this.setState({
-                borderToggle: 'active',
-                btnClassName: 'activeTagBgColor'
-            })
+            if(this.props.element.type == "openerelement"){
+                this.setState({
+                    borderToggle: 'active'
+                })
+            }
+            else{
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }   
             this.props.setActiveElement(this.props.element, this.props.index);
             this.props.fetchCommentByElement(this.props.element.id);
         }
@@ -175,6 +186,7 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId) => {
+        const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -184,7 +196,7 @@ class ElementContainer extends Component {
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    this.props.updateElement(dataToSend, this.props.index);
+                    this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
                 break;
 
@@ -197,7 +209,7 @@ class ElementContainer extends Component {
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
@@ -205,19 +217,19 @@ class ElementContainer extends Component {
                         if (this.figureDifference(this.props.index, previousElementData)) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index);
+                        this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index);
+                            this.props.updateElement(dataToSend, this.props.index),parentUrn,asideData;
                         }
                         break;
 
@@ -225,14 +237,14 @@ class ElementContainer extends Component {
                             if(this.figureDifference(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index);
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                             if(this.figureDifference(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index);
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                             }
                             break;
                 }
@@ -249,7 +261,7 @@ class ElementContainer extends Component {
                 break;
             case elementTypeConstant.ASSESSMENT_SLATE :
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                    this.props.updateElement(dataToSend, this.props.index);
+                    this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
         }
     }
@@ -515,7 +527,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
-                    editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
+                    editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur} handleFocus={this.handleFocus}  index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
                     labelText = 'LO'
                     break;
                 case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
@@ -621,7 +633,7 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        try {
+       try {
             if (this.state.hasError) {
                 return (
                     <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
@@ -686,8 +698,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex) => {
-            dispatch(updateElement(updatedData, elementIndex))
+        updateElement: (updatedData, elementIndex,parentUrn,asideData) => {
+            dispatch(updateElement(updatedData, elementIndex,parentUrn,asideData))
         },
         updateFigureData: (figureData, index, cb) => {
             dispatch(updateFigureData(figureData, index, cb))

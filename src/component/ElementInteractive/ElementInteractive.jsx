@@ -8,7 +8,7 @@ import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { c2MediaModule } from './../../js/c2_media_module';
-import { showTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { showTocBlocker,hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
@@ -458,6 +458,8 @@ class Interactive extends React.Component {
     }
 
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
