@@ -32,3 +32,6 @@ h3.moduleName {
 .divLearningObjectives  div >:first-child h3.moduleName {
     margin-top: 10px;
 }
+.learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
+    display:none;
+  }

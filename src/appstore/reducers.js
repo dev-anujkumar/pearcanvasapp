@@ -17,12 +17,14 @@ import {
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
     SET_SLATE_TYPE,
+    SET_SLATE_ENTITY,
     GET_PROJECT_PERMISSIONS,
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
-    UPDATE_FOOTNOTEGLOSSARY 
+    UPDATE_FOOTNOTEGLOSSARY, 
+    FETCH_DATA_ON_SLATE_REFRESH
 } from '../constants/Action_Constants';
 
 /**
@@ -71,7 +73,12 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case SWAP_ELEMENT: 
+        case FETCH_DATA_ON_SLATE_REFRESH : 
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
+        case SWAP_ELEMENT : 
                 return {
                     ...state,
                     slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
@@ -96,6 +103,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateType: action.payload
             }
+        case SET_SLATE_ENTITY:
+        return {
+            ...state,
+            setSlateEntity: action.payload
+        }
          case AUTHORING_ELEMENT_UPDATE:
              return {
                  ...state,

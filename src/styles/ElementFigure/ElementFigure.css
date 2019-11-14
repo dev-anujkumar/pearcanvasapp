@@ -68,6 +68,7 @@ h4.figureLabel, h4.figureTitle{
     padding: 10px 0;
     width:100%!important;
     max-width: 100% !important;
+    overflow-x: auto;
 }
 .figureElement .pearson-component.image.figureData {
     cursor:copy!important ;

@@ -32,6 +32,9 @@ export class AssessmentSlateCanvas extends Component {
 
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
     toggleAssessmentPopup = (e,value) => {
+        this.props.showBlocker(value);
+        disableHeader(value);
+        value ? showTocBlocker(value) : hideTocBlocker(value)
         this.setState({
             showAssessmentPopup: value
         });
@@ -139,6 +142,7 @@ export class AssessmentSlateCanvas extends Component {
        * @param change - type of change - insert/update
     */
     updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{       
+       // updateAssessment=(id,itemID,title,format,usageType,change)=>{       
         if(change==='insert'){
             this.setState({
                 getAssessmentDataPopup: true
@@ -156,26 +160,24 @@ export class AssessmentSlateCanvas extends Component {
 
             })
         }
+        
         this.setState({assessmentId: id,
             assessmentItemId : itemID,
             assessmentItemTitle:title,
-            getAssessmentData:true,},()=>{
-                if(format ===LEARNING_TEMPLATE){
-                    this.handleAssessmentBlur({id : id,itemID : itemID,title :"",usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
-                }else{
-                    this.handleAssessmentBlur({id : id,itemID : itemID,title : title,usageType : usageType,format : format});
-                }
-                
-            })                    
+            getAssessmentData:true,},()=>{ 
+             this.handleAssessmentBlur({id : id,itemID : itemID,title :title,usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
+                // this.handleAssessmentBlur({id : id,itemID : itemID,title :title,usageType : usageType,format : format});
+        })                    
 
     }
 
     /*** @description - This function is to link learning app*/
-    linkLearningApp = (selectedLearningType, usagetype, change) =>{
-        console.log(selectedLearningType);
-        this.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,usagetype,change,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
-        this.props.closeLtAction();
-    }
+    //  linkLearningApp = (selectedLearningType, usagetype, change) =>{
+    //      console.log(selectedLearningType);
+    //     this.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,usagetype,change,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
+    //     // this.updateAssessment();
+    //      this.props.closeLtAction();
+    //  }
 
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     handleAssessmentFocus = () => {
@@ -208,7 +210,7 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     openLTFunction = {this.props.openLTFunction}
-                    linkLearningApp ={this.linkLearningApp}
+                    // linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
                     />

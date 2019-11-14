@@ -20,11 +20,11 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-
+import {updateElement}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
-import { handleSplitSlate,setUpdatedSlateTitle, setSlateType } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
@@ -168,8 +168,9 @@ const mapStateToProps = state => {
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
-        logout,
-        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue
+        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
+        currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        logout
     };
 };
 
@@ -189,6 +190,7 @@ export default connect(
         isLOExist,
         setUpdatedSlateTitle,
         setSlateType,
+        setSlateEntity,
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,
@@ -196,6 +198,7 @@ export default connect(
         handleUserRole,
         fetchAudioNarrationForContainer,
         glossaaryFootnotePopup,
-        releaseSlateLock
+        releaseSlateLock,
+        updateElement
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
