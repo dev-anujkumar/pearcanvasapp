@@ -37,6 +37,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
+        console.log('Glossary foornote value """""""""""""""""""""""""""""""', this.props)
         let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
         let term = null;
         let definition = null;

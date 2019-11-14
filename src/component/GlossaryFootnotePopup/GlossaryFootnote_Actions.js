@@ -8,7 +8,7 @@ const {
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY } from "./../../constants/Action_Constants";
 
-export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType) => async (dispatch) => {
+export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index) => async (dispatch) => {
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -18,28 +18,50 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
     }
 
     if (status === true) {
+
         let semanticType = glossaaryFootnote.toUpperCase();
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
+
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
-        for (let i in newBodymatter) {
-            if (newBodymatter[i].versionUrn == elementWorkId) {
-                glossaryFootElem = newBodymatter[i]
+
+        if (typeof (index) == 'number') {
+            if (newBodymatter[index].versionUrn == elementWorkId) {
+                glossaryFootElem = newBodymatter[index]
             }
+        } else {
+            let indexes = index.split('-');
+            let indexesLen = indexes.length, condition;
+            if (indexesLen == 2) {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                if (condition.versionUrn == elementWorkId) {
+                    glossaryFootElem = condition
+                }
+            } else if (indexesLen == 3) {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementWorkId) {
+                    glossaryFootElem = condition
+                }
+            }
+
         }
-        console.log('this is footnote and glossary', store.getState())
+
+
         switch (semanticType) {
             case 'FOOTNOTE':
-                footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
+                footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
                 break;
             case 'GLOSSARY':
-                tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
+                tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
                 footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
                 glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term
         }
     }
+
+    console.log('this is footnote and glossary -------------------', index, glossaryContentText, footnoteContentText)
+
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
         // payload: glossaaryFootnoteValue
@@ -47,7 +69,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaaryFootnoteValue: glossaaryFootnoteValue,
             glossaryFootNoteCurrentValue: {
                 footnoteContentText,
-                glossaryContentText
+                glossaryContentText,
+                index
             }
         }
     });
@@ -113,11 +136,29 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
-        //find element 
-        for (let i in newBodymatter) {
-            if (newBodymatter[i].contentUrn == res.data.contentUrn) {
-                newBodymatter[i] = res.data
+        const index = store.getState().glossaryFootnoteReducer.indexElement;
+
+        console.log('>>>>>>>>>>>>>>>>>>>>>', index)
+        if (typeof (index) == 'number') {
+            if (newBodymatter[index].versionUrn == elementWorkId) {
+                newBodymatter[index] = res.data
             }
+        } else {
+            let indexes = index.split('-');
+            let indexesLen = indexes.length, condition;
+            if (indexesLen == 2) {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                if (condition.versionUrn == elementWorkId) {
+                    condition = res.data
+
+                }
+            } else if (indexesLen == 3) {
+                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                if (condition.versionUrn == elementWorkId) {
+                    condition = res.data
+                }
+            }
+
         }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,

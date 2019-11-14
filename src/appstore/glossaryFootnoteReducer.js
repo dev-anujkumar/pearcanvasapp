@@ -5,7 +5,8 @@ import {OPEN_GLOSSARY_FOOTNOTE, ADD_GLOSSARY_FOOTNOTE} from  '../constants/Actio
 
 const initialState = {
        glossaryFootnoteValue:{"type":"","popUpStatus":false},
-       glossaryFootNoteCurrentValue:''
+       glossaryFootNoteCurrentValue:'',
+       indexElement :''
 };
 export default function (state = initialState, action) {
     switch(action.type){
@@ -15,7 +16,8 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 glossaryFootnoteValue: action.payload.glossaaryFootnoteValue,
-                glossaryFootNoteCurrentValue : action.payload.glossaryFootNoteCurrentValue
+                glossaryFootNoteCurrentValue : action.payload.glossaryFootNoteCurrentValue,
+                indexElement :  action.payload.index
             }
         default:
             return state;

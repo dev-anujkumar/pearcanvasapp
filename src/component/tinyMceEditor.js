@@ -927,7 +927,8 @@ export class TinyMceEditor extends Component {
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
         let elementId=this.props.element?this.props.element.id:"";
         let elementType = this.props.element?this.props.element.type:"";
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, callback); 
+        let index = this.props.index;
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, callback); 
     }
 
     render() {
