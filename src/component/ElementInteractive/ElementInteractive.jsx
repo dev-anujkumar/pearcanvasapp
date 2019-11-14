@@ -94,7 +94,7 @@ class Interactive extends React.Component {
             }
         }
         
-            that.props.updateFigureData(figureData, that.props.index, ()=>{                
+            that.props.updateFigureData(figureData, that.props.index, this.props.elementId,()=>{                
                 that.props.handleFocus("updateFromC2");
                 setTimeout(()=>{
                     that.props.handleBlur()
@@ -504,7 +504,7 @@ class Interactive extends React.Component {
                     },
                     "path": smartLinkPath
                 }
-                this.props.updateFigureData(figuredata, this.props.index, ()=>{
+                this.props.updateFigureData(figuredata, this.props.index, this.props.elementId,()=>{
                     this.props.handleFocus("updateFromC2")
                     this.props.handleBlur()
                 })

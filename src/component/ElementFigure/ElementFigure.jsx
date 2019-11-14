@@ -58,7 +58,7 @@ class ElementFigure extends Component {
                 alttext: altText,
                 longdescripton: longDesc
             }
-            this.props.updateFigureData(figureData, this.props.index, ()=>{
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId ,()=>{
                 this.props.handleFocus("updateFromC2")
                 this.props.handleBlur()
             })   
