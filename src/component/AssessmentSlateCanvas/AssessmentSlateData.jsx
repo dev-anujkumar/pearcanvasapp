@@ -25,18 +25,18 @@ export class AssessmentSlateData extends Component {
 
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     this.setState({
-    //         activeAssessmentUsageType: nextProps.model && nextProps.elementdata && nextProps.elementdata.usagetype ? nextProps.elementdata.usagetype : "Quiz",
-    //     })
-    // }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            activeAssessmentUsageType: nextProps.model && nextProps.elementdata && nextProps.elementdata.usagetype ? nextProps.elementdata.usagetype : "Quiz",
+        })
+    }
 
-    // /*** @description - This function is to link learning app*/
-    // linkLearningApp = (selectedLearningType) =>{
-    //     console.log(selectedLearningType);
-    //     this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
-    //     this.props.closeLtAction();
-    // }
+    /*** @description - This function is to link learning app*/
+    linkLearningApp = (selectedLearningType) =>{
+        console.log(selectedLearningType);
+        this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
+        this.props.closeLtAction();
+    }
 
     /*** @description - This function is to close ELM PopUp
     */
@@ -51,14 +51,14 @@ export class AssessmentSlateData extends Component {
     
     /*** @description - This function is to change the lerning system
     */
-    changeLearningApp(usageType,change) {
+    changeLearningApp(usageType, change) {
         //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component//
         this.props.openLTFunction(); 
         this.props.openLtAction();
         this.setState({
             dropdownValue: LEARNING_APP_TYPE,
             changeLearningData: true,
-            // learningToolStatus: change
+            learningToolStatus: change
         });
 }
 
@@ -82,8 +82,8 @@ export class AssessmentSlateData extends Component {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
         } else if (assessmentFormat === LEARNING_TEMPLATE) {
-            //   this.changeLearningApp(this.state.activeAssessmentUsageType,'update'); 
-              this.changeLearningApp(); 
+            this.changeLearningApp(this.state.activeAssessmentUsageType,'update'); 
+              //this.changeLearningApp(); 
         } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
@@ -123,8 +123,8 @@ export class AssessmentSlateData extends Component {
     mainAddAssessment = (e, activeAssessmentType) => {
         switch (activeAssessmentType) {
             case LEARNING_APP_TYPE:
-                // return this.changeLearningApp('Quiz','insert')
-                return this.changeLearningApp()
+                return this.changeLearningApp('Quiz','insert')
+                //return this.changeLearningApp()
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -262,7 +262,7 @@ export class AssessmentSlateData extends Component {
         else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE) {
             return (
                 <div>
-                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.props.linkLearningApp} />
+                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
                 </div>
             )
         } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) {
