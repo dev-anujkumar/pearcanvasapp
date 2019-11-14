@@ -21,12 +21,8 @@ import {
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
-<<<<<<< HEAD
     UPDATE_PAGENUMBER_FAIL,
     UPDATE_FOOTNOTEGLOSSARY 
-=======
-    UPDATE_PAGENUMBER_FAIL
->>>>>>> 9e964ce4a95de42624fadbbb6051f3b9c31e6652
 } from '../constants/Action_Constants';
 
 /**
