@@ -188,18 +188,27 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
 
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
-                element = response.data
-            } else if (asideData && asideData.type == 'element-aside') {
-                if (element.id == asideData.id) {
-                    let nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
+                element  = {
+                    ...element,
+                    ...response.data
+                };
+            }else if(asideData && asideData.type == 'element-aside'){
+                if(element.id == asideData.id){
+                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
                         /*This condition add object of element in existing element  in aside */
-                        if (nestedEle.id == elementId) {
-                            nestedEle = response.data;
-                        } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                            /*This condition add object of element in existing element  in section of aside */
-                            let ele = nestedEle.contents.bodymatter.map((ele) => {
-                                if (ele.id == elementId) {
-                                    ele = response.data;
+                        if(nestedEle.id == elementId){
+                            nestedEle  = {
+                                ...nestedEle,
+                                ...response.data
+                            };
+                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                              /*This condition add object of element in existing element  in section of aside */
+                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
+                                if(ele.id == elementId){
+                                    ele = {
+                                        ...ele,
+                                        ...response.data
+                                    };
                                 }
                                 return ele
                             })

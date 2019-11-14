@@ -150,8 +150,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    let startNumber = getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE.getAttribute("numbered")
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -361,7 +361,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
         case elementTypeConstant.BLOCKFEATURE:
-
+        case elementTypeConstant.ELEMENT_LIST:
             let { innerHTML, innerText } = node;
             dataToReturn = {
                 ...previousElementData,
@@ -384,6 +384,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
+                    case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:

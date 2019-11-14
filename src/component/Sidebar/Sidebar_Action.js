@@ -90,7 +90,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,
             tag: newElementData.labelText,
-            toolbar: newElementData.toolbar
+            toolbar: newElementData.toolbar,
+            elementWipType: newElementData.elementWipType,
         };
 
         dispatch({
@@ -131,7 +132,7 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
     return store;
 }
 
-export const updateElement = (elementData) => (dispatch, getState) => {
+export const conversionElement = (elementData) => (dispatch, getState) => {
     let appStore =  getState().appStore;
     dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement));
 }
