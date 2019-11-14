@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Sidebar from '../../../src/component/Sidebar';
-import { updateElement } from './../../../src/component/Sidebar/Sidebar_Action';
+import { conversionElement } from './../../../src/component/Sidebar/Sidebar_Action';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -109,7 +109,7 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                conversionElement,
                 slateLevelData
             },
             metadataReducer: {
@@ -136,7 +136,7 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                conversionElement,
                 slateLevelData
             },
             metadataReducer: {
@@ -155,7 +155,7 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                conversionElement,
                 slateLevelData
             },
             metadataReducer: {
@@ -183,7 +183,7 @@ describe('Test for Sidebar component', () => {
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
-                    updateElement,
+                    conversionElement,
                     slateLevelData
                 },
                 metadataReducer: {
@@ -210,7 +210,7 @@ describe('Test for Sidebar component', () => {
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
-                    updateElement,
+                    conversionElement,
                     slateLevelData
                 },
                 metadataReducer: {
