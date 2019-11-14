@@ -78,8 +78,12 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    document.getElementsByClassName("audio")[0].style.display = "block";
-                    document.getElementsByClassName("openAudioIcon")[0].style.display = "block";
+                    if(document.querySelector('.audio')){
+                        document.querySelector('.audio').style.display = "block";
+                    }
+                    if(document.querySelector('.openAudioIcon')){
+                        document.querySelector('.openAudioIcon').style.display = "block";
+                    }
                 });
             },
 

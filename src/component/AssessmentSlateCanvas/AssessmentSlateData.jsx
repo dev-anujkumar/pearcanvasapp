@@ -25,13 +25,20 @@ export class AssessmentSlateData extends Component {
 
     }
 
-componentDidMount(){
-    if(this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid){
-        this.setState({
-            activeAssessmentType :this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
-        })
-    }    
-}
+    componentDidMount() {
+        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.setState({
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+            })
+        }
+    }
+    componentDidUpdate() {
+        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.setState({
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+            })
+        }
+    }
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
@@ -53,14 +60,17 @@ componentDidMount(){
     /*** @description - This function is to change the lerning system
     */
     changeLearningApp(usageType, change) {
+        showTocBlocker();
+        disableHeader(true);
+        this.props.showBlocker(true);
         //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component//
         this.props.openLTFunction(); 
-        this.props.openLtAction();
+        this.props.openLtAction();  
         this.setState({
             dropdownValue: LEARNING_APP_TYPE,
             changeLearningData: true,
             learningToolStatus: change
-        });
+        });            
 }
 
     /*** @description - This function is to handle change in assessment/LT-LA
@@ -68,14 +78,14 @@ componentDidMount(){
     */
     changeAssessment = (e) => {
         let assessmentFormat = this.state.activeAssessmentType;
-        if (assessmentFormat == FULL_ASSESSMENT_PUF) {
+        if (assessmentFormat === FULL_ASSESSMENT_PUF) {
             this.setState({
                 activeAssessmentType: FULL_ASSESSMENT_PUF,
                 showElmComponent: true,
             }, () => {
                     this.mainAddAssessment(e, FULL_ASSESSMENT_PUF);
                 })
-        } else if (assessmentFormat == LEARNOSITY) {
+        } else if (assessmentFormat === LEARNOSITY) {
             this.setState({
                 activeAssessmentType: LEARNOSITY,
                 showElmComponent: true,
@@ -84,8 +94,7 @@ componentDidMount(){
             })
         } else if (assessmentFormat === LEARNING_TEMPLATE) {
             this.changeLearningApp(this.state.activeAssessmentUsageType,'update'); 
-              //this.changeLearningApp(); 
-        } else {
+            } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
     }
@@ -103,11 +112,12 @@ componentDidMount(){
     * @description - This function is to close the LT/LA popup 
     */
     closePopUp = () => {
-        //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
         this.setState({
             changeLearningData: false
         }, () => {
-            // disableHeader(false);
+             disableHeader(false);
+             hideTocBlocker();
+             this.props.showBlocker(false);
         })
     }
     
@@ -124,8 +134,8 @@ componentDidMount(){
     mainAddAssessment = (e, activeAssessmentType) => {
         switch (activeAssessmentType) {
             case LEARNING_APP_TYPE:
-                return this.changeLearningApp('Quiz','insert')
-                //return this.changeLearningApp()
+               
+                    return   this.changeLearningApp('Quiz', 'insert')
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
