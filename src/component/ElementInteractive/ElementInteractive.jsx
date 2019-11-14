@@ -43,8 +43,8 @@ class Interactive extends React.Component {
         let searchSelectAssessmentURN = "";
         let productId = "";
         let searchTypeOptVal = "";
-        showTocBlocker();
-        disableHeader(true);
+        // showTocBlocker();
+        // disableHeader(true);
         this.togglePopup(false);
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {

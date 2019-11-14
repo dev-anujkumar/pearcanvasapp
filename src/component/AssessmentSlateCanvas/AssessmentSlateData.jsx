@@ -25,11 +25,6 @@ export class AssessmentSlateData extends Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            activeAssessmentUsageType: nextProps.model && nextProps.elementdata && nextProps.elementdata.usagetype ? nextProps.elementdata.usagetype : "Quiz",
-        })
-    }
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
