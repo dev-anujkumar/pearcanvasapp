@@ -61,6 +61,6 @@ width:230px;
     opacity: 0.3;
 }
 .learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
-    display:none;
+    display:none !important;
   }
  
