@@ -70,6 +70,9 @@ export class ElementSingleAssessment extends Component {
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {
+        this.props.showBlocker(value);
+        disableHeader(value);
+        value ? showTocBlocker(value) : hideTocBlocker(value)
         this.setState({
             showAssessmentPopup : value
         });
