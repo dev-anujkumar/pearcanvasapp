@@ -106,7 +106,7 @@ export const utils = {
 };
 
 export const checkforToolbarClick = (classList) =>{
-    let existingToolbarClasses = ["tox-tbtn","tox-tbtn--select","tox-split-button","tox-split-button__chevron"];
+    let existingToolbarClasses = ["tox-tbtn","tox-tbtn--select","tox-split-button","wrs_focusElement","tox-split-button__chevron"];
     let isTargetFound = false;
 
     classList.forEach((val)=>{
