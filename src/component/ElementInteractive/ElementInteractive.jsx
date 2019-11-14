@@ -422,7 +422,7 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text? element.figuredata.postertext.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.html.postertext ? element.html.postertext : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
@@ -447,14 +447,18 @@ class Interactive extends React.Component {
 
     togglePopup = (e,value)=>{
         if(this.props.model.figuredata.interactiveformat==="external-link"){
+            if(e.target.classList.contains('actionPU')){
+                return;
+            }
             this.handleC2MediaClick(e);
         }
-        else{
+        else {
+            this.props.showBlocker(value);
+            disableHeader(value);
+            value ? showTocBlocker(value) : hideTocBlocker(value)
             this.props.handleFocus();
-            this.setState({showAssesmentpopup:value})
+            this.setState({ showAssesmentpopup: value })
         }
-        disableHeader(value);
-        this.props.showBlocker(value)
     }
 
     dataFromAlfresco = (data) => {
