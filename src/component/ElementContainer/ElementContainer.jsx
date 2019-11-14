@@ -264,6 +264,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
+            case elementTypeConstant.ELEMENT_LIST:
+                {
+                    let html = node.innerHTML;
+                    if (previousElementData.html && html !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index);
+                    }
+                    break;
+                }
         }
     }
 

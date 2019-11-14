@@ -88,7 +88,7 @@ const elementDataBank = {
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-6"
         },
-        "none" : {
+        "no-style" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-7"
