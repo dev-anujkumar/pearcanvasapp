@@ -150,8 +150,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    let startNumber = getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE.getAttribute("numbered")
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
