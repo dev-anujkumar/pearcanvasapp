@@ -12,7 +12,8 @@ const INITIAL_STATE = {
   openAlfresco: false,
   openPopUp: false,
   openSplitPopUp : false,
-  openWrongAudioPopup: false
+  openWrongAudioPopup: false,
+  indexSplit:0
 }
 /**
  * Reducer method for user related activation, deactivation and projects
@@ -50,7 +51,8 @@ export default function reducer (state = INITIAL_STATE, action) {
     case SPLIT_REMOVE_POPUP : {
       return {
         ...state,
-        openSplitPopUp: action.payload
+        openSplitPopUp: action.payload.value,
+        indexSplit : action.payload.index
       }
     }
     case WRONG_AUDIO_REMOVE_POPUP : {

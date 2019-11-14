@@ -30,7 +30,7 @@ import PageNumberContext from '../CanvasWrapper/CanvasContexts.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { updatePageNumber } from '../SlateWrapper/SlateWrapper_Actions';
 
 class ElementContainer extends Component {
@@ -120,8 +120,6 @@ class ElementContainer extends Component {
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             previousElementData.figuredata.path !== this.props.oldImage
-            // ||
-            // previousElementData.html.tableasHTML !== this.props.tableData
             ){
                 return true
             }
@@ -161,6 +159,8 @@ class ElementContainer extends Component {
     }
 
     updateOpenerElement = (dataToSend) => {
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
         this.props.updateElement(dataToSend, 0);
     }
     
@@ -262,7 +262,7 @@ class ElementContainer extends Component {
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
         //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
-        if (node||elementType==='element-assessment') {
+        if (node||elementType!=='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
     }
