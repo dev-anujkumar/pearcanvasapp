@@ -49,8 +49,6 @@ class ElementFigure extends Component {
             } else {
                 this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
             }
-            document.querySelector("[name='alt_text']").innerHTML = altText;
-            document.querySelector("[name='long_description']").innerHTML = longDesc;
             let figureData = {
                 path : epsURL,
                 height : height,
