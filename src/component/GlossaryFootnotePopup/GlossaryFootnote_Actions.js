@@ -59,19 +59,15 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term
         }
     }
-
-    console.log('this is footnote and glossary -------------------', index, glossaryContentText, footnoteContentText)
-
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
-        // payload: glossaaryFootnoteValue
         payload: {
             glossaaryFootnoteValue: glossaaryFootnoteValue,
             glossaryFootNoteCurrentValue: {
                 footnoteContentText,
                 glossaryContentText,
             },
-            elementIndex : index
+            elementIndex: index
         }
     });
 }
@@ -83,12 +79,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementInnerHtml) => {
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
     let data = {}
     var index = store.getState().glossaryFootnoteReducer.elementIndex;
+    const slateId = config.slateManifestURN;
+    const parentData = store.getState().appStore.slateLevelData;
+    let newParentData = JSON.parse(JSON.stringify(parentData));
+    let newBodymatter = newParentData[slateId].contents.bodymatter;
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -98,7 +98,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 versionUrn: null,
                 contentUrn: null,
                 html: {
-                    text: null,
+                    text: elementInnerHtml,
                     glossaryentries: {},
                     footnotes: footnoteEntry,
                     assetspopover: {}
@@ -117,7 +117,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 versionUrn: null,
                 contentUrn: null,
                 html: {
-                    text: null,
+                    text: elementInnerHtml,
                     glossaryentries: glossaryEntry,
                     footnotes: {},
                     assetspopover: {}
@@ -133,12 +133,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        const slateId = config.slateManifestURN;
-        const parentData = store.getState().appStore.slateLevelData;
-        let newParentData = JSON.parse(JSON.stringify(parentData));
-        let newBodymatter = newParentData[slateId].contents.bodymatter;
 
-        console.log('>>>>>>>>>>>>>>>>>>>>>', index)
         if (typeof (index) == 'number') {
             if (newBodymatter[index].versionUrn == elementWorkId) {
                 newBodymatter[index] = res.data
@@ -154,7 +149,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             } else if (indexesLen == 3) {
                 condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementWorkId) {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
                 }
             }
 

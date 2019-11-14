@@ -37,13 +37,15 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        console.log('Glossary foornote value """""""""""""""""""""""""""""""', this.props)
         let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
-        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
+        let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
+        let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
+        let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementInnerHtml)
         this.props.showGlossaaryFootnote(false);
     }
 }
