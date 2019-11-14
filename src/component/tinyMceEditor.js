@@ -713,31 +713,7 @@ export class TinyMceEditor extends Component {
         /**
          * Defines initial placeholder
          */
-        if (this.props.model && this.props.model.text) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.text;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length)
-                this.placeHolderClass = 'place-holder';
-        }
-        else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.figuredata.text;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
-                this.placeHolderClass = 'place-holder';
-            }
-        } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model.figuredata.preformattedtext;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
-                this.placeHolderClass = 'place-holder';
-            }
-        } else {
-            let testElem = document.createElement('div');
-            testElem.innerHTML = this.props.model;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
-                this.placeHolderClass = 'place-holder';
-            }
-        }
+        this.handlePlaceholer()
     }
 
     /**
@@ -789,6 +765,50 @@ export class TinyMceEditor extends Component {
             }
         }    
     }
+
+    /**
+    * Defines initial placeholder
+    */
+    handlePlaceholer = () => {
+
+        if (this.props.model && this.props.model.text) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.text;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length)
+                this.placeHolderClass = 'place-holder';
+            else {
+                this.placeHolderClass = '';
+            }
+        }
+        else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.figuredata.text;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+            else {
+                this.placeHolderClass = '';
+            }
+        } else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.preformattedtext) {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model.figuredata.preformattedtext;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+            else {
+                this.placeHolderClass = '';
+            }
+        } else {
+            let testElem = document.createElement('div');
+            testElem.innerHTML = this.props.model;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+                this.placeHolderClass = 'place-holder';
+            }
+            else {
+                this.placeHolderClass = '';
+            }
+        }
+    }
     
     /**
      * React's lifecycle method. Called immediately after updating occurs. Not called for the initial render.
@@ -805,6 +825,7 @@ export class TinyMceEditor extends Component {
                 tinyMCEInstancesNodes[0].remove()
             }
         }
+        this.handlePlaceholer() 
     }
 
     componentWillUnmount() {
