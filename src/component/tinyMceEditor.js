@@ -89,11 +89,13 @@ export class TinyMceEditor extends Component {
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
-                    if(content.trim().length || contentHTML.match(/<math/g)){
-                        activeElement.classList.remove('place-holder')
-                    }
-                    else {
-                        activeElement.classList.add('place-holder')
+                    if (activeElement) { 
+                        if(content.trim().length || contentHTML.match(/<math/g)){
+                            activeElement.classList.remove('place-holder')
+                        }
+                        else {
+                            activeElement.classList.add('place-holder')
+                        }
                     }
                   });
 
