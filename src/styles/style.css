@@ -234,3 +234,7 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 .noSeparatorContainer{
     margin-bottom: 18px;
 }
+
+#tinymceToolbar {
+    min-width: 681px;
+}
