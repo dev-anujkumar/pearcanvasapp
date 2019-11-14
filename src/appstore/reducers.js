@@ -22,7 +22,8 @@ import {
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
-    UPDATE_PAGENUMBER_FAIL
+    UPDATE_PAGENUMBER_FAIL,
+    FETCH_DATA_ON_SLATE_REFRESH
 } from '../constants/Action_Constants';
 
 /**
@@ -67,6 +68,11 @@ export default function (state = initialState, action) {
                 slateLevelData: action.payload
             };
         case DELETE_ELEMENT : 
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
+        case FETCH_DATA_ON_SLATE_REFRESH : 
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData

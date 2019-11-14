@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { updateElement } from './Sidebar_Action';
+ import { conversionElement } from './Sidebar_Action';
+import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 
@@ -67,7 +68,7 @@ class Sidebar extends Component {
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.updateElement({
+            this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: value,
@@ -159,7 +160,7 @@ class Sidebar extends Component {
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.updateElement({
+            this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,
@@ -226,6 +227,14 @@ class Sidebar extends Component {
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
+            if((primaryOptionList.text && primaryOptionList.text==="MMI" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
+                primaryOptionList['attributes']={
+                    "alt_text":{
+                        "isEditable": false,
+                        "text": "Alt Text"
+                    }
+                }
+            }
             if(primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);
@@ -311,6 +320,7 @@ class Sidebar extends Component {
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
         let i = 0;
+        let groupby ="";
         if (e.currentTarget.checked == false) {
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
@@ -321,6 +331,7 @@ class Sidebar extends Component {
             }
         }
         else {
+            groupby="module";
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
                 if (children.length > 0) {
@@ -329,6 +340,14 @@ class Sidebar extends Component {
                 i++;
             }
         }
+        let data = {
+            "elementdata": {
+                level: "chapter",
+                groupby: groupby
+            },
+            "metaDataAnchorID": [this.props.activeElement.elementId]
+        }
+        this.props.updateElement(data)
 
     }
     render = () => {
@@ -363,6 +382,7 @@ export default connect(
     mapStateToProps, 
     {
         updateElement,
-        setCurrentModule
+        setCurrentModule,
+        conversionElement
     }
 )(Sidebar);
