@@ -22,7 +22,7 @@ export class AssessmentSlateData extends Component {
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
-
+        this.typeRef = React.createRef();
     }
 
     componentDidMount() {
@@ -154,6 +154,7 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
     toggleAssessmentTypeDropdown = () => {
+        this.typeRef.current.classList.remove('notselect');
         this.typeDropdownRef.current.classList.remove('notselect')
     }
 
@@ -166,6 +167,7 @@ export class AssessmentSlateData extends Component {
             activeAssessmentType: type,
         });
         this.typeDropdownRef.current.classList.add('notselect')
+        this.typeRef.current.classList.add('notselect')
     }
 
     /*** @description - This function is to select the Assessment type from dropdown*/
@@ -289,7 +291,7 @@ export class AssessmentSlateData extends Component {
             }
             assessmentSlateJSX = <div className="slate_initial_selection">
                 <div className="slate_assessment_type_label">Please select an assessment type.</div>
-                <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
+                <div className="slate_assessment_type_dropdown activeDropdown notselect" ref={this.typeRef} onClick={this.toggleAssessmentTypeDropdown}>
                     <span className="slate_assessment_dropdown_label">{this.state.activeAssessmentType}</span>
                     <span className="slate_assessment_dropdown_image"></span>
                     <div className="clr"></div>
