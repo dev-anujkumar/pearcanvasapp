@@ -14,7 +14,6 @@ import elementDataBank from './elementDataBank'
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-
 	try {
 		switch (element.type) {
 			case 'element-authoredtext':
@@ -35,15 +34,20 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'figure':
+					let altText="";
 				switch (element.figuretype){
 					case "image":
 					case "table":
 					case "mathImage":
 					case "authoredtext":
 					case "tableasmarkup":
+						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
+						let longDesc = element.figuredata.longdescripton ? element.figuredata.longdescripton : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							altText,
+							longDesc,
 							...elementDataBank[element.type][element.figuretype][element.subtype]
 						}
 						break;
@@ -68,14 +72,16 @@ const findElementType = (element, index) => {
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype]
+							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype||'externallink']
 						}
 						break;
 					case "interactive":
+						altText = element.figuredata.alttext ? element.figuredata.alttext : "",
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"]
+							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
+							altText
 						}
 						break;
 					case "assessment":

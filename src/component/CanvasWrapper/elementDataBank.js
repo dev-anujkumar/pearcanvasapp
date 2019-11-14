@@ -99,6 +99,9 @@ const elementDataBank = {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
             "image50Text" : {
                 "secondaryOption" : "secondary-image-figure-half"
             },
@@ -115,22 +118,6 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-image-figure-quarter"
             }
         },
-        // "table" : {
-        //     "elementType" : "figure",
-        //     "primaryOption" : "primary-image-table",
-        //     "image50TextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-half"
-        //     },
-        //     "imageTextWidthTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-width"
-        //     },
-        //     "imageWiderThanTextTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-wider"
-        //     },
-        //     "imageFullscreenTableImage" : {
-        //         "secondaryOption" : "secondary-image-table-full"
-        //     },
-        // },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",
@@ -236,6 +223,14 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-interactive-mmi"
             },
             "flashcards": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "video-mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "mcq": {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },

@@ -620,7 +620,7 @@ export default {
             }		
         },
         'primary-assessment-slate' : {
-            text: 'Single Assessment',
+            text: 'Assessment Slate',
             enum: '',		
             subtype: {		
                 'secondary-assessment-cite': {		
@@ -637,7 +637,17 @@ export default {
                     text: 'PUF',		
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'	
-                }	
+                },
+                'secondary-assessment-learnosity' : {
+                    text: 'LEARNOSITY',		
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'	
+                },
+                'secondary-assessment-learningtemplate' : {
+                    text: 'LEARNING TEMPLATE',		
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'	
+                }			
             }
         },
         enumType: 'assessment',		

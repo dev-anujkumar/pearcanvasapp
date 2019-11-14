@@ -9,7 +9,9 @@ import {
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
-    SET_SLATE_TYPE
+    SET_SLATE_TYPE,
+    SET_SLATE_ENTITY
+    
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -403,5 +405,11 @@ export const setSlateType = (slateType) => (dispatch, getState) =>{
     return dispatch({
         type: SET_SLATE_TYPE,
         payload: slateType
+    }) 
+}
+export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_SLATE_ENTITY,
+        payload: setSlateEntity
     }) 
 }

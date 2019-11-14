@@ -4,6 +4,8 @@ export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
 export const SET_SLATE_TYPE = 'SET_SLATE_TYPE'
+export const SET_SLATE_ENTITY = 'SET_SLATE_ENTITY'
+export const FETCH_DATA_ON_SLATE_REFRESH= 'FETCH_DATA_ON_SLATE_REFRESH'
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -27,7 +29,6 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 /*---------------Element Updation ----------------------*/
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
 export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
-
 /*---------------Element Container ----------------------*/
 export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"

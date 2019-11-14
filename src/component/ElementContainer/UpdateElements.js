@@ -62,7 +62,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             subtitle: `<p>${subtitleHTML}</p>` ,
             title: `<p>${titleHTML}</p>`,
             postertext: "",
-            // tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
@@ -94,6 +93,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+        if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
+            delete previousElementData.figuredata.posterimage;
+        }
 
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
 
@@ -147,8 +150,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
 
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    let startNumber = getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE.getAttribute("numbered")
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -381,18 +384,19 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
+                    case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        console.log("Figure VIDEO new data::>>", node.innerHTML)
+                     //   console.log("Figure VIDEO new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
+                      //  console.log("Figure ASSESSMENT new data::>>", node.innerHTML)
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:

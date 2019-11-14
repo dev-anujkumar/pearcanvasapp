@@ -70,7 +70,6 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 editor.on('init', function (e) {
-                    document.getElementsByClassName("audio")[0].style.display = "block";
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
                             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
@@ -79,10 +78,31 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
+                    if(document.querySelector('.audio')){
+                        document.querySelector('.audio').style.display = "block";
+                    }
+                    if(document.querySelector('.openAudioIcon')){
+                        document.querySelector('.openAudioIcon').style.display = "block";
+                    }
                 });
             },
 
             init_instance_callback: (editor) => {
+                editor.on('Change', function (e) {
+                    let content = e.target.getContent({format: 'text'}),
+                        contentHTML = e.target.getContent(),
+                        activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+
+                    if (activeElement) { 
+                        if(content.trim().length || contentHTML.match(/<math/g)){
+                            activeElement.classList.remove('place-holder')
+                        }
+                        else {
+                            activeElement.classList.add('place-holder')
+                        }
+                    }
+                  });
+
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
                     e.preventDefault();                   
                     e.stopPropagation();                   
@@ -245,8 +265,8 @@ export class TinyMceEditor extends Component {
     }
 
     toggleGlossaryandFootnoteIcon = (flag) => {
-        this.glossaryBtnInstance.setDisabled(flag)
-        this.footnoteBtnInstance.setDisabled(flag)
+        this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(flag)
+        this.footnoteBtnInstance && this.footnoteBtnInstance.setDisabled(flag)
     }
 
     /**
@@ -260,7 +280,7 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length===1 && activeElement.children[0].tagName==="BR")) {
+                if (!isMediaElement && !activeElement.children.length || (activeElement.children.length===1 && activeElement.children[0].tagName==="BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -315,7 +335,7 @@ export class TinyMceEditor extends Component {
             }
 
             let key = e.keyCode || e.which;
-            if(key === 13 && this.props.element.type !== 'element-list') {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE") {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
                 let nextSaparator = activeEditor.nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
@@ -767,7 +787,7 @@ export class TinyMceEditor extends Component {
                     }
                 })
             }
-        }
+        }    
     }
     
     /**
@@ -777,6 +797,13 @@ export class TinyMceEditor extends Component {
         if (!tinymce.editors.length) {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
+        }
+        let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
+
+        if(tinyMCEInstancesNodes.length>1){
+            if(tinyMCEInstancesNodes[1].parentElement.id!=="toolbarGlossaryFootnote"){
+                tinyMCEInstancesNodes[0].remove()
+            }
         }
     }
 
