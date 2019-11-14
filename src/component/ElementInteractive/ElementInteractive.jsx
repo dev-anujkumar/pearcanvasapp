@@ -56,7 +56,7 @@ class Interactive extends React.Component {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
             if (tempInteractiveType === 'video-mcq') {
-                let responseData = await axios.get(config.STRUCTURE_API_URL + "content/scapi/" + interactiveData['workExample'][0],
+                let responseData = await axios.get(config.CONTENT_SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
                     {
                         headers: {
                             "ApiKey": config.MANIFEST_APIKEY,
@@ -452,14 +452,18 @@ class Interactive extends React.Component {
 
     togglePopup = (e,value)=>{
         if(this.props.model.figuredata.interactiveformat==="external-link"){
+            if(e.target.classList.contains('actionPU')){
+                return;
+            }
             this.handleC2MediaClick(e);
         }
-        else{
+        else {
+            this.props.showBlocker(value);
+            disableHeader(value);
+            value ? showTocBlocker(value) : hideTocBlocker(value)
             this.props.handleFocus();
-            this.setState({showAssesmentpopup:value})
+            this.setState({ showAssesmentpopup: value })
         }
-        disableHeader(value);
-        this.props.showBlocker(value)
     }
 
     dataFromAlfresco = (data) => {

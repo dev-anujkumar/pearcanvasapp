@@ -131,7 +131,7 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
     return store;
 }
 
-export const updateElement = (elementData) => (dispatch, getState) => {
+export const conversionElement = (elementData) => (dispatch, getState) => {
     let appStore =  getState().appStore;
     dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement));
 }

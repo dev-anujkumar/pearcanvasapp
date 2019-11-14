@@ -367,7 +367,7 @@ class ElementFigure extends Component {
                 preformattedText.forEach(function(item){
                     let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
                     let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
-                    processedText+=`<div>${encodedItem2}</div>`            
+                    processedText+=`${encodedItem2}<br />`            
                 })
                 /**JSX for Block Code Editor*/
                 figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">
