@@ -80,9 +80,11 @@ export const assessmentIcon = (function () {
 
 export const openerElement = (function () {
     return (
-        <svg id="openerElement" viewBox="0 0 17 17" width="17" height="17" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <rect width="17" height="17" fill="none" />
-            <path className="cls-1" d="M8.75,9.06v8.75H0V8.94A6.61,6.61,0,0,1,5.62,2.19l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z" /><path className="cls-1" d="M20,9.06v8.75H11.25V8.94a6.62,6.62,0,0,1,5.63-6.75l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z" /></svg>
+        <svg fill= "#9e9e9e" style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <title>Opener Element</title>
+            <path class="cls-1" d="M8.75,9.06v8.75H0V8.94A6.61,6.61,0,0,1,5.62,2.19l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
+            <path class="cls-1" d="M20,9.06v8.75H11.25V8.94a6.62,6.62,0,0,1,5.63-6.75l.75,1.75s-2.5.37-3,2.37a3.14,3.14,0,0,0,.5,2.75Z"></path>
+        </svg>
     )
 })();
 

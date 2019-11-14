@@ -80,9 +80,12 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
-        if(this.state.activePrimaryOption == "primary-openerelement"){
-            e.stopPropagation()
-            return false
+        const { activePrimaryOption } = this.state
+        if(e.target.dataset && e.target.dataset.element !== "secondary"){
+            if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment"){
+                e.stopPropagation()
+                return false
+            }
         }
         let elementDropdown = e.target.getAttribute('data-element');
         if(this.state.elementDropdown === elementDropdown) {
@@ -94,6 +97,7 @@ class Sidebar extends Component {
     }
 
     primaryOption = () => {
+        const { activePrimaryOption } = this.state
         let primaryOptions = '';
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -119,7 +123,7 @@ class Sidebar extends Component {
                     className="element-dropdown">
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        {dropdownArrow}
+                        { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
