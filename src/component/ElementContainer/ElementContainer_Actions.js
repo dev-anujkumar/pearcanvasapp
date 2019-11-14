@@ -3,9 +3,9 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH} from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
-export const addComment = (commentString, elementId,asideData,parentUrn) => (dispatch, getState) => {
+export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
@@ -15,23 +15,25 @@ export const addComment = (commentString, elementId,asideData,parentUrn) => (dis
 
     let Comment = {
         commentType: "comment",
-        commentDateTime: new Date().toISOString(),  
+        commentDateTime: new Date().toISOString(),
         commentAssignee: config.userId,
         commentCreator: config.userId,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
         replyComments: [],
-        commentUrn:""
+        commentUrn: ""
     }
     newComment = JSON.stringify(newComment);
     return axios.post(url, newComment,
-        { headers: {
-            "Content-Type": "application/json",
-            ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken,
-        
-        } }
+        {
+            headers: {
+                "Content-Type": "application/json",
+                ApiKey: config.STRUCTURE_APIKEY,
+                PearsonSSOSession: config.ssoToken,
+
+            }
+        }
     )
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -44,16 +46,16 @@ export const addComment = (commentString, elementId,asideData,parentUrn) => (dis
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['comments'] = true
-                }else if(asideData && asideData.type == 'element-aside'){
-                    if(element.id == asideData.id){
-                        element.elementdata.bodymatter.map((nestedEle)=>{
+                } else if (asideData && asideData.type == 'element-aside') {
+                    if (element.id == asideData.id) {
+                        element.elementdata.bodymatter.map((nestedEle) => {
                             /*This condition add comment in element in aside */
-                            if(nestedEle.id == elementId){
+                            if (nestedEle.id == elementId) {
                                 nestedEle['comments'] = true;
-                            }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
-                                  /*This condition add comment in element in section of aside */
-                                nestedEle.contents.bodymatter.map((ele)=>{
-                                    if(ele.id == elementId){
+                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                                /*This condition add comment in element in section of aside */
+                                nestedEle.contents.bodymatter.map((ele) => {
+                                    if (ele.id == elementId) {
                                         ele['comments'] = true;
                                     }
                                 })
@@ -83,7 +85,7 @@ export const addComment = (commentString, elementId,asideData,parentUrn) => (dis
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (type) => {
-        switch (type){
+        switch (type) {
             case "element-workedexample":
             case "element-aside":
                 return {
@@ -132,21 +134,21 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
                             }
                         })
                     }
-                    } else if (parentUrn && parentUrn.elementType == "manifest") {
-                        if (element.id === asideData.id) {
-                            element.elementdata.bodymatter.forEach((ele) => {
-                                if (ele.id == parentUrn.manifestUrn) {
-                                    ele.contents.bodymatter.forEach((el, indexInner) => {
-                                        if (el.id === elmId) {
-                                            ele.contents.bodymatter.splice(indexInner, 1);
-                                        }
-                                    })
-                                }
+                } else if (parentUrn && parentUrn.elementType == "manifest") {
+                    if (element.id === asideData.id) {
+                        element.elementdata.bodymatter.forEach((ele) => {
+                            if (ele.id == parentUrn.manifestUrn) {
+                                ele.contents.bodymatter.forEach((el, indexInner) => {
+                                    if (el.id === elmId) {
+                                        ele.contents.bodymatter.splice(indexInner, 1);
+                                    }
+                                })
+                            }
 
-                            })
-                        }
+                        })
                     }
-                
+                }
+
             })
 
             dispatch({
@@ -167,7 +169,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData,elementIndex,parentUrn,asideData) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -176,27 +178,27 @@ export const updateElement = (updatedData,elementIndex,parentUrn,asideData) => (
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response =>{
+    ).then(response => {
         let parentData = getState().appStore.slateLevelData;
-        let  newslateData = JSON.parse(JSON.stringify(parentData));
+        let newslateData = JSON.parse(JSON.stringify(parentData));
         let _slateObject = Object.values(newslateData)[0];
         let { contents: _slateContent } = _slateObject;
         let { bodymatter: _slateBodyMatter } = _slateContent;
         let elementId = updatedData.id
-      
+
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
-                element  = response.data
-            }else if(asideData && asideData.type == 'element-aside'){
-                if(element.id == asideData.id){
-                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                element = response.data
+            } else if (asideData && asideData.type == 'element-aside') {
+                if (element.id == asideData.id) {
+                    let nestedBodyMatter = element.elementdata.bodymatter.map((nestedEle) => {
                         /*This condition add object of element in existing element  in aside */
-                        if(nestedEle.id == elementId){
-                            nestedEle  = response.data;
-                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
-                              /*This condition add object of element in existing element  in section of aside */
-                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
-                                if(ele.id == elementId){
+                        if (nestedEle.id == elementId) {
+                            nestedEle = response.data;
+                        } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                            /*This condition add object of element in existing element  in section of aside */
+                            let ele = nestedEle.contents.bodymatter.map((ele) => {
+                                if (ele.id == elementId) {
                                     ele = response.data;
                                 }
                                 return ele
@@ -223,18 +225,43 @@ export const updateElement = (updatedData,elementIndex,parentUrn,asideData) => (
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-    }) 
+    })
 }
 
-export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, getState) => {
-    let parentData = getState().appStore.slateLevelData;
-    let interactiveImage ="";
+export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {
+    let parentData = getState().appStore.slateLevelData,
+        element,
+        interactiveImage = "",
+        index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
+    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+    // newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figuredata
+    if (typeof (index) == 'number') {
+        if (newBodymatter[index].versionUrn == elementId) {
+            newBodymatter[index].figuredata = figureData
+            element = newBodymatter[index]
+        }
+    } else {
+        let indexes = index.split('-');
+        let indexesLen = indexes.length, condition;
+        if (indexesLen == 2) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+            if (condition.versionUrn == elementId) {
+                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
+                element = condition
+            }
+        } else if (indexesLen == 3) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+            if (condition.versionUrn == elementId) {
+                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                element = condition
+            }
+        }
+    }
     dispatch({
         type: SET_OLD_IMAGE_PATH,
         payload: {
-            oldImage: parentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata.path
+            oldImage: element.figuredata.path
         }
     })
     dispatch({
@@ -243,7 +270,7 @@ export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, get
             slateLevelData: newParentData
         }
     })
-    setTimeout(()=>{
+    setTimeout(() => {
         cb();
-    },300)
+    }, 300)
 }
