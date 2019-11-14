@@ -29,13 +29,18 @@ class Interactive extends React.Component {
         };
 
     }
+    componentDidMount(){
+        this.setState({
+            itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
+            posterImage : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",  
+        })
+    }
     /**
      * @description - This function is for accessing c2_assessment library for interactive.
      * @param {event} value
      */
 
     handleC2InteractiveClick = (value) => {
-
         let that = this;
         let fileName = "";
         let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()] || ['CITE'];
@@ -422,7 +427,7 @@ class Interactive extends React.Component {
                                 : 
                                  <a className={hyperlinkClass} href="javascript:void(0)">
                                     <TinyMceEditor openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.figuredata.postertext.text? element.figuredata.postertext.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
+                                    model={element.html.postertext? element.html.postertext : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} />
                                  </a>
                         }
                     </div>
@@ -488,7 +493,7 @@ class Interactive extends React.Component {
                 let vendorName = imageData['vendorName'];
                 let mobileready = imageData['smartlinkoptimizedmobileval'];
 
-                this.setState({ itemID: uniqueIDInteractive, posterImage: posterURL })
+                this.setState({ itemID: uniqueIDInteractive, posterImage: epsURL })
                 let figuredata = {
                     height: height,
                     width: width,
@@ -500,9 +505,9 @@ class Interactive extends React.Component {
                     vendor: vendorName,
                     posterimage: {
                         "imageid": uniqueIDInteractive,
-                        "path": posterURL
+                        "path": epsURL
                     },
-                    "path": smartLinkPath
+                    "path": smartLinkPath[0]
                 }
                 this.props.updateFigureData(figuredata, this.props.index, ()=>{
                     this.props.handleFocus("updateFromC2")
@@ -511,6 +516,7 @@ class Interactive extends React.Component {
             }
         }
     }
+
     /**
      * @description Open C2 module with predefined Alfresco location
      * @param {*} locationData alfresco locationData
@@ -525,6 +531,7 @@ class Interactive extends React.Component {
         })
 
     }
+
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
@@ -571,7 +578,6 @@ class Interactive extends React.Component {
         }
 
     }
-
 
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
