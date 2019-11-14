@@ -384,6 +384,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
+                    case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
