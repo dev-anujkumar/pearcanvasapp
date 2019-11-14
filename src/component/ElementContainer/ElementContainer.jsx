@@ -229,7 +229,7 @@ class ElementContainer extends Component {
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index),parentUrn,asideData;
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData)
                         }
                         break;
 
