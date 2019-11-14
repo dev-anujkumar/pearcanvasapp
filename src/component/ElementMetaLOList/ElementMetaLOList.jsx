@@ -6,8 +6,24 @@ import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
+import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
+  //To show module name if groupby module is present in wip
+  componentDidMount() {
+    if (this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module") {
+      this.props.setCurrentModule(true);
+      let els = document.getElementsByClassName('moduleContainer');
+      els = Array.from(els);
+      els.map((item, i) => {
+        let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
+        if (children.length > 0) {
+          els[i].classList.add('showmodule');
+        }
+      })
+    }
+
+  }
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
@@ -16,10 +32,10 @@ export class ElementMetaLOList extends Component {
       "text": `<p>Learning Objectives</p>`
     }
 
-    const { slateLockInfo} = this.props
+    const { slateLockInfo } = this.props
     return (
 
-      <div className="learningObjectiveContainer" onClick={() => this.onLOLClickHandle(this.props.currentSlateLOData)} >
+      <div className="learningObjectiveContainer" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -31,6 +47,7 @@ export class ElementMetaLOList extends Component {
               model={wipmodel}
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
+              handleBlur={this.props.handleBlur}
             />
           </div>
           <div className="Container">
@@ -46,6 +63,7 @@ export class ElementMetaLOList extends Component {
                     model={LOListmodel}
                     handleEditorFocus={this.props.handleFocus}
                     slateLockInfo={slateLockInfo}
+                    handleBlur={this.props.handleBlur}
                   />
                 </h2>
                 <TinyMceEditor
@@ -57,6 +75,7 @@ export class ElementMetaLOList extends Component {
                   model={this.prepareLOLData(this.props.currentSlateLOData)}
                   handleEditorFocus={this.props.handleFocus}
                   slateLockInfo={slateLockInfo}
+                  handleBlur={this.props.handleBlur}
                 />
               </div>
             </div>
@@ -73,7 +92,7 @@ export class ElementMetaLOList extends Component {
   */
   prepareLOLData = (lolData) => {
     let jsx, finalloldata = "";
-    if (lolData !== "" && lolData.length> 0) {
+    if (lolData !== "" && lolData.length > 0) {
       lolData.forEach((value, index) => {
         finalloldata += value.loContent ? value.loContent : value;
 
@@ -90,16 +109,32 @@ export class ElementMetaLOList extends Component {
      * @description - show popup on click on element that no data is present 
      * @param {object} loldata
   */
-  onLOLClickHandle(lolData) {
-    if(lolData == "" || (lolData && lolData.length === 0)){
-      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-      setTimeout(function(){ sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+  onLOLClickHandle(lolData, e) {
+    /**
+    * @description - To check is it tinymce current target and click on current element id
+    */
+    let targetId = '';
+    if (tinymce.$(e.target).parents('.cypress-editable').length) {
+      targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
+    }
+    else {
+      targetId = e.target.id;
+    }
+    if (config.editorRefID == targetId) {
+      config.editorRefID = "";
+      return false;
+    }
+    if (lolData == "" || (lolData && lolData.length === 0)) {
+      this.props.showBlocker(true);
+      let that = this;
+      setTimeout(function () {
+        sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': NoSlateTagIS, 'data': '', 'chapterContainerUrn': '', 'isLOExist': false, 'editAction': '' } }, config.WRAPPER_URL)
+        that.props.showBlocker(false);
       }, 1000);
     }
-    
+
   }
-  
+
 }
 ElementMetaLOList.defaultProps = {
   type: "element-generateLOlist"
@@ -124,4 +159,6 @@ const mapStateToProps = (state) => {
     currentSlateLOData: state.metadataReducer.currentSlateLOData
   }
 }
-export default connect(mapStateToProps)(ElementMetaLOList);
+export default connect(mapStateToProps, {
+  setCurrentModule
+})(ElementMetaLOList);

@@ -42,9 +42,11 @@ const _Toolbar = props => {
      * Function for show/hide dropdown
      */
     function _handleLODropdown() {
+        console.log("_handleLODropdown")
         setLODropdown(!lodropdown);
     }
     function closeLODropdown() {
+        console.log("closeLODropdown")
         setLODropdown(!lodropdown);
     }
     /**
@@ -117,7 +119,7 @@ const _Toolbar = props => {
                             <div className="audio audioicon" title="Audio Tag" onClick={() => _handleOpenDropdown()}>
                                 {audioNarrationEnable}
                             </div>
-
+                            <span class="openAudioIcon"></span>
                             {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
                         </div>
                     </div>
@@ -149,6 +151,7 @@ const mapStateToProps = (state) => {
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         slateType: state.appStore.slateType,
+        setSlateEntity: state.appStore.setSlateEntity,
         isLOExist: state.metadataReducer.slateTagEnable,
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,

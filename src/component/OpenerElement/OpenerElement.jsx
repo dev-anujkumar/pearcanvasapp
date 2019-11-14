@@ -16,19 +16,28 @@ class OpenerElement extends Component {
 
     constructor(props){
         super(props)
-        const { textsemantics, text } = props.element.title
-        const bgImage = props.element.backgroundimage.path
+        const { textsemantics, text } = props.element.title;
+        const bgImage = props.element.backgroundimage.path;
+
+        if (document.querySelector("[name='alt_text']") && props.element.backgroundimage.alttext)
+            document.querySelector("[name='alt_text']").innerHTML = props.element.backgroundimage.alttext;
+        if (document.querySelector("[name='long_description']") && props.element.backgroundimage.longdescripton)
+            document.querySelector("[name='long_description']").innerHTML = props.element.backgroundimage.longdescripton;
+
         this.state = {
             label: getOpenerContent(textsemantics, "label", text) || "No Label",
             number: getOpenerContent(textsemantics, "number", text),
             title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
             imgSrc: getOpenerImageSource(bgImage),
-            width: null
+            width: null,
+            imageId: props.element.backgroundimage.imageid ? props.element.backgroundimage.imageid : "",
         }
     }
 
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
@@ -39,7 +48,12 @@ class OpenerElement extends Component {
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({ imgSrc: epsURL, width })
+            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
+            this.setState({
+                imgSrc: epsURL,
+                imageId: imageId,
+                width
+            });
             if (document.querySelector("[name='alt_text']"))
                 document.querySelector("[name='alt_text']").innerHTML = altText;
             if (document.querySelector("[name='long_description']"))
@@ -227,19 +241,47 @@ class OpenerElement extends Component {
      */
     handleBlur = (event) => {
         let element = this.props.element;
-        let { label, number, title } = this.state;
+        let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target.innerText || label;
 
-        if(element.title) {
-            if('text' in element.title) {
-                element.title.text = `${label} ${number}: ${title}`;
-            }
-            
-            if('textsemantics' in element.title) {
-                element.title.textsemantics = this.createSemantics({label, number});
-            }
+        if(!element.title) {
+            element.title = {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "",
+                "textsemantics": []
+            };
         }
-        
+                
+        element.title.text = `${label} ${number}: ${title}`;
+        element.title.textsemantics = this.createSemantics({label, number});
+
+        if(!element.backgroundimage) {
+            element.backgroundimage = {
+                "path": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "",
+                "alttext": "",
+                "longdescripton": "",
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                }
+            };
+        }
+
+        let altText = "";
+        let longDesc = "";
+        if (document.querySelector("[name='alt_text']"))
+            altText = document.querySelector("[name='alt_text']").innerHTML;
+        if (document.querySelector("[name='long_description']"))
+            longDesc = document.querySelector("[name='long_description']").innerHTML;
+
+        element.backgroundimage.path = imgSrc;
+        element.backgroundimage.imageid = imageId;
+        element.backgroundimage.alttext = altText;
+        element.backgroundimage.longdescripton = longDesc;
+        element.backgroundcolor = this.props.backgroundColor;
+
         this.props.updateElement(element);
     }
     
@@ -258,11 +300,11 @@ class OpenerElement extends Component {
                             <span>{dropdownArrow}</span>
                         </div>
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
                         <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
                         <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { addAudioNarrationForContainer , showWrongAudioPopup } from './AudioNarration_Actions'
 import { connect } from 'react-redux';
-import { showTocBlocker, hideTocBlocker } from '../../js/toggleLoader'
+import { showTocBlocker, hideTocBlocker, disableHeader} from '../../js/toggleLoader'
 import { c2MediaModule } from '../../js/c2_media_module';
 import config from '../../config/config';
 
@@ -26,13 +26,14 @@ class AddAudioBook extends React.Component {
     * @description - dataFromAlfresco function responsible for bringing data from the alfresco.
     */
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let smartLinkType = data && data.desc && data.desc.smartLinkType
-
-        if (figureType === "audio" || smartLinkType === "Audio") {
-            let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-            if (data.desc && (data.desc.smartLinkType == "Audio" || data.assetType == "audio" || smartLinkAssetType == "Audio")) {
+        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
+        
+        if (figureType === "audio" || smartLinkType === "Audio" || smartLinkAssetType == "Audio") {
                 let audioData = {
                     "narrativeAudioUrn": data.uniqueID || "",
                     "location": data.smartLinkURl,
@@ -44,7 +45,6 @@ class AddAudioBook extends React.Component {
                 this.props.addAudioNarrationForContainer(audioData);
                 hideTocBlocker();
                 return false;
-            }
 
         }
         else if (figureType != "audio" || smartLinkType != "Audio") {

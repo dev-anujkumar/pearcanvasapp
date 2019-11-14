@@ -3,7 +3,7 @@ import config from '../../config/config';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT ,AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH} from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId,asideData,parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
@@ -167,7 +167,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData,elementIndex) => (dispatch, getState) => {
+export const updateElement = (updatedData,elementIndex,parentUrn,asideData) => (dispatch, getState) => {
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -178,12 +178,44 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
         }
     ).then(response =>{
         let parentData = getState().appStore.slateLevelData;
-        const newParentData = JSON.parse(JSON.stringify(parentData));
-        newParentData[config.slateManifestURN].contents.bodymatter[elementIndex]=response.data;
+        let  newslateData = JSON.parse(JSON.stringify(parentData));
+        let _slateObject = Object.values(newslateData)[0];
+        let { contents: _slateContent } = _slateObject;
+        let { bodymatter: _slateBodyMatter } = _slateContent;
+        let elementId = updatedData.id
+      
+        _slateBodyMatter = _slateBodyMatter.map(element => {
+            if (element.id === elementId) {
+                element  = response.data
+            }else if(asideData && asideData.type == 'element-aside'){
+                if(element.id == asideData.id){
+                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                        /*This condition add object of element in existing element  in aside */
+                        if(nestedEle.id == elementId){
+                            nestedEle  = response.data;
+                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                              /*This condition add object of element in existing element  in section of aside */
+                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
+                                if(ele.id == elementId){
+                                    ele = response.data;
+                                }
+                                return ele
+                            })
+                            nestedEle.contents.bodymatter = ele;
+                        }
+                        return nestedEle;
+                    })
+                    element.elementdata.bodymatter = nestedBodyMatter;
+                }
+            }
+            return element
+        })
+        _slateContent.bodymatter = _slateBodyMatter
+        _slateObject.contents = _slateContent
         dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
-                slateLevelData: newParentData
+                slateLevelData: newslateData
             }
         })
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
@@ -196,6 +228,7 @@ export const updateElement = (updatedData,elementIndex) => (dispatch, getState) 
 
 export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData;
+    let interactiveImage ="";
     const newParentData = JSON.parse(JSON.stringify(parentData));
     newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figureData
     dispatch({
@@ -210,5 +243,7 @@ export const updateFigureData = (figureData, elementIndex, cb) => (dispatch, get
             slateLevelData: newParentData
         }
     })
-    cb();
+    setTimeout(()=>{
+        cb();
+    },300)
 }

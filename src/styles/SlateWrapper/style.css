@@ -44,11 +44,6 @@
     padding: 40px 0;
 }
 
-.toolbar-disabled {
-    opacity: 0.4;
-    pointer-events: none;
-}
-
 .slate-content .cypress-editable, .slate-content .cypress-editable * {
     /* padding: 0; */
     position: relative;

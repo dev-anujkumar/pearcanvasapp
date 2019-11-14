@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 
 import elementList from './elementTypes.js';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
-import { updateElement } from './Sidebar_Action';
+ import { conversionElement } from './Sidebar_Action';
+import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 
@@ -22,6 +23,7 @@ class Sidebar extends Component {
         
         this.state = {
             elementDropdown: '',
+            activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
             activeSecondaryOption: secondaryFirstOption,
@@ -34,7 +36,14 @@ class Sidebar extends Component {
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
+            let elementDropdown = prevState.elementDropdown;
+            if(nextProps.activeElement.elementId !== prevState.activeElementId) {
+                elementDropdown = '';
+            }
+            
             return {
+                elementDropdown: elementDropdown,
+                activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
@@ -59,7 +68,7 @@ class Sidebar extends Component {
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.updateElement({
+            this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: value,
@@ -71,9 +80,12 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
-        if(this.state.activePrimaryOption == "primary-openerelement"){
-            e.stopPropagation()
-            return false
+        const { activePrimaryOption } = this.state
+        if(e.target.dataset && e.target.dataset.element !== "secondary"){
+            if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment"){
+                e.stopPropagation()
+                return false
+            }
         }
         let elementDropdown = e.target.getAttribute('data-element');
         if(this.state.elementDropdown === elementDropdown) {
@@ -84,18 +96,16 @@ class Sidebar extends Component {
         });
     }
 
-    removeElementDropdown = e => {
-        this.setState({
-            elementDropdown: ''
-        });
-    }
-
     primaryOption = () => {
+        const { activePrimaryOption } = this.state
         let primaryOptions = '';
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
             if(primaryOptionList.length > 0) {
+                if(this.state.activeElementType === 'element-assessment'){
+                    delete primaryOptionList[1];
+                }
                 primaryOptions = primaryOptionList.map(item => {
                     if(item !== 'enumType') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
@@ -110,10 +120,10 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown" onMouseLeave={this.removeElementDropdown}>
+                    className="element-dropdown">
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
-                        {dropdownArrow}
+                        { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
                     </div>
                     <ul className={`element-dropdown-content primary-options ${active}`}>
                         {primaryOptions}
@@ -154,7 +164,7 @@ class Sidebar extends Component {
         });
 
         if(this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.updateElement({
+            this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
                 primaryOption: this.state.activePrimaryOption,
@@ -189,7 +199,7 @@ class Sidebar extends Component {
                 }
     
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`} onMouseLeave={this.removeElementDropdown}>
+                    className={`element-dropdown ${display}`}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -221,6 +231,14 @@ class Sidebar extends Component {
         if(this.state.activeElementType){
             let primaryOptionList = elementList[this.state.activeElementType][this.state.activePrimaryOption];
             let secondaryOptionList = primaryOptionList.subtype[this.state.activeSecondaryOption];
+            if((primaryOptionList.text && primaryOptionList.text==="MMI" )&& (this.props.activeElement.altText && this.props.activeElement.altText!="")){
+                primaryOptionList['attributes']={
+                    "alt_text":{
+                        "isEditable": false,
+                        "text": "Alt Text"
+                    }
+                }
+            }
             if(primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);
@@ -233,11 +251,16 @@ class Sidebar extends Component {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
-    
                 attributions = attributionsList.map(item => {
+                    if(item==="alt_text"){
+                        attrValue=this.props.activeElement.altText?this.props.activeElement.altText:""
+                    }
+                    else if(item==="long_description"){
+                        attrValue=this.props.activeElement.longDesc?this.props.activeElement.longDesc:""
+                    }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onFocus={this.onFocus} onBlur={this.onBlur} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
@@ -296,19 +319,12 @@ class Sidebar extends Component {
         }
     }
 
-    onFocus=()=>{
-        document.querySelector('div#tinymceToolbar').classList.add('toolbar-disabled')
-    }
-
-    onBlur=()=>{
-        document.querySelector('div#tinymceToolbar').classList.remove('toolbar-disabled')
-    }
-
     
     showModuleName = (e) => {
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
         let i = 0;
+        let groupby ="";
         if (e.currentTarget.checked == false) {
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
@@ -319,6 +335,7 @@ class Sidebar extends Component {
             }
         }
         else {
+            groupby="module";
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
                 if (children.length > 0) {
@@ -327,6 +344,14 @@ class Sidebar extends Component {
                 i++;
             }
         }
+        let data = {
+            "elementdata": {
+                level: "chapter",
+                groupby: groupby
+            },
+            "metaDataAnchorID": [this.props.activeElement.elementId]
+        }
+        this.props.updateElement(data)
 
     }
     render = () => {
@@ -361,6 +386,7 @@ export default connect(
     mapStateToProps, 
     {
         updateElement,
-        setCurrentModule
+        setCurrentModule,
+        conversionElement
     }
 )(Sidebar);

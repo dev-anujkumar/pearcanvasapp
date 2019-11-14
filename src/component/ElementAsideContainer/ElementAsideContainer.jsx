@@ -30,6 +30,7 @@ class ElementAsideContainer extends Component {
     }
     componentDidMount() {
         this.asideRef.current.addEventListener("focus", this.handleFocus);
+      
 
     }
 
@@ -103,7 +104,7 @@ class ElementAsideContainer extends Component {
                                             containerTypeElem: 'we',
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
+                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}
@@ -178,7 +179,7 @@ class ElementAsideContainer extends Component {
                                             asideId : this.props.element.id
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
+                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}
@@ -258,7 +259,7 @@ class ElementAsideContainer extends Component {
                                             asideId : this.props.element.id, 
                                         }
                                        this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,newIndex);
+                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
                                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                                    },
                                }}
@@ -305,8 +306,9 @@ class ElementAsideContainer extends Component {
                             <React.Fragment key={element.id}>
                                 {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
                                     upperOne={true}
+                                    firstOne={index === 0}
                                     index={index}
-                                    esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData)}
+                                    esProps={this.props.elementSepratorProps(index, true, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     permissions={this.props.permissions}
                                 />

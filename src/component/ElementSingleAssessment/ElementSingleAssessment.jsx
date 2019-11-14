@@ -53,6 +53,7 @@ export class ElementSingleAssessment extends Component {
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
+        let assessmentFormat="";
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
         } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
@@ -69,6 +70,9 @@ export class ElementSingleAssessment extends Component {
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {
+        this.props.showBlocker(value);
+        disableHeader(value);
+        value ? showTocBlocker(value) : hideTocBlocker(value)
         this.setState({
             showAssessmentPopup : value
         });
