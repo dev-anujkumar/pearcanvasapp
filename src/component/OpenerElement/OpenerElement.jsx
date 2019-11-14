@@ -38,6 +38,7 @@ class OpenerElement extends Component {
     dataFromAlfresco = (data) => {
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
         let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
@@ -46,7 +47,6 @@ class OpenerElement extends Component {
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
             this.setState({
                 imgSrc: epsURL,
                 imageId: imageId,
@@ -57,6 +57,8 @@ class OpenerElement extends Component {
             if (document.querySelector("[name='long_description']"))
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
+        
+        this.handleBlur({imgSrc: epsURL, imageId});
         disableHeader(false)
         hideTocBlocker()
     }
@@ -240,7 +242,9 @@ class OpenerElement extends Component {
     handleBlur = (event) => {
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
-        label = event.target.innerText || label;
+        label = event.target && event.target.innerText ? event.target.innerText : label;
+        imgSrc = event.imgSrc || imgSrc;
+        imageId = event.imageId || imageId;
 
         if(!element.title) {
             element.title = {

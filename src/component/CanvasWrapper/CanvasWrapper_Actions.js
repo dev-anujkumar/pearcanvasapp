@@ -139,7 +139,7 @@ export const fetchElementTag = (element, index = 0) => {
 }
 
 export const fetchSlateData = (manifestURN) => dispatch => {
-	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}`, {
+	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken

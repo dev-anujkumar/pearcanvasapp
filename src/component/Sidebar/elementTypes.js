@@ -52,11 +52,12 @@ export default {
         'primary-learning-objective': {
             text: 'Learning Objective Item',
             toolbar: ['bold', 'italic','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','footnote', 'glossary','assetpopover'],
+            enum: 'LEARNING_OBJECTIVE',
             subtype: {
                 'secondary-learning-objective': {
                     text: 'Learning Objective',
                     labelText: 'LO',
-                    enum: 'H1',
+                    enum: 'NA',
                 }
             }
         },
