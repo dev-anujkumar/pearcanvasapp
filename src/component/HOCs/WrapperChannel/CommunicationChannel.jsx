@@ -166,6 +166,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
                 break;
+                case 'getAssessmentLOResponse':
+                    console.log("this is assessment response--",message);
+                    let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
+                    this.props.isLOExist(newMessage);
+                   break;    
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
@@ -223,14 +228,14 @@ function WithWrapperCommunication(WrappedComponent) {
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
-            this.props.handleSlateRefresh(id)
+            this.props.handleSlateRefresh(id);
         }
 
         sendDataToIframe = (messageObj) => {
             sendDataToIframe(messageObj);
         }
         hanndleSplitSlate = (newSlateObj) => {
-            this.props.handleSplitSlate(newSlateObj)
+            this.props.handleSplitSlate(newSlateObj);
         }
         sendingPermissions = () => {
             /**
@@ -284,12 +289,28 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
                 this.props.glossaaryFootnotePopup(false);
-                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
+                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
                 sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys} })
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
+                }
+                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+                    let assessmentDiv = document.querySelector('.slate_assessment_data_id_lo');
+                    let assessmentId= assessmentDiv && assessmentDiv.innerText.length>0 ? assessmentDiv.innerText : "";
+                     //let projectUrn= 'urn:pearson:distributable:4b69a12b-224d-46a4-a0c3-1a00f39c0258'
+                //let assessmentId='urn:pearson:work:29c05611-40d0-4ef9-9148-81dffae4624c'
+                 //   console.log("new elenebbbbb000===",document.querySelector('.slate_assessment_data_id_lo').innerText);
+                    if(assessmentId!=""){
+                        sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys} });
+                    }
+                    else{
+                       //set tag to grey here 
+                       let newMessage = {assessmentResponseMsg:false};
+                       this.props.isLOExist(newMessage);
+                    }
+                    
                 }
             }
             /**
