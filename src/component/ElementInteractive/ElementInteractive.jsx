@@ -460,6 +460,7 @@ class Interactive extends React.Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
+        this.props.showBlocker(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";

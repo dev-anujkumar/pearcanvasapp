@@ -14,7 +14,7 @@ export class AssessmentSlateData extends Component {
         super(props);
         this.state = {
             activeAssessmentType: 'Select',
-            activeAssessmentUsageType: props.model && props.elementdata && props.elementdata.usagetype ? props.elementdata.usagetype : "Quiz",
+            activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
             learningToolStatus: ''
@@ -25,7 +25,13 @@ export class AssessmentSlateData extends Component {
 
     }
 
-
+componentDidMount(){
+    if(this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid){
+        this.setState({
+            activeAssessmentType :this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+        })
+    }    
+}
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
@@ -210,10 +216,10 @@ export class AssessmentSlateData extends Component {
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
-        var assessmentSlateJSX;
-        var assessmentTypeValue;
-        var changeTypeValue;
-        if(this.state.activeAssessmentType === LEARNING_APP_TYPE){
+        let assessmentSlateJSX;
+        let assessmentTypeValue;
+        let changeTypeValue;
+        if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
         }else {
