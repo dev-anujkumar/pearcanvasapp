@@ -238,3 +238,7 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 #tinymceToolbar {
     min-width: 681px;
 }
+
+P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
+    font-size: 100% !important;
+}

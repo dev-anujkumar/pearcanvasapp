@@ -94,6 +94,7 @@
     font-family: 'Open Sans', sans-serif;
     line-height: 1.80em;
     letter-spacing: 0.01em;
+    cursor:text;
 }
 
 /* ::placeholder{

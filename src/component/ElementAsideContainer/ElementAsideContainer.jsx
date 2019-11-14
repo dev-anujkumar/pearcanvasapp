@@ -87,6 +87,7 @@ class ElementAsideContainer extends Component {
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
                                    filter: ".ignore-for-drag",
+                                   preventOnFilter: false,
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -161,6 +162,7 @@ class ElementAsideContainer extends Component {
                                    dataIdAttr: 'data-id',
                                    scroll: true, // or HTMLElement
                                    filter: ".ignore-for-drag",
+                                   preventOnFilter: false,
                                    draggable: ".editor",
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
@@ -242,6 +244,7 @@ class ElementAsideContainer extends Component {
                                    scroll: true, // or HTMLElement
                                    filter: ".ignore-for-drag",
                                    draggable: ".editor",
+                                   preventOnFilter: false,
                                    forceFallback: true, 
                                    onStart: function (/**Event*/){
                                        // same properties as onEnd

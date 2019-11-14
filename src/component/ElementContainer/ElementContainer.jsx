@@ -230,7 +230,7 @@ class ElementContainer extends Component {
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index),parentUrn,asideData;
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData)
                         }
                         break;
 
@@ -264,6 +264,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
+            case elementTypeConstant.ELEMENT_LIST:
+                {
+                    let html = node.innerHTML;
+                    if (previousElementData.html && html !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index);
+                    }
+                    break;
+                }
         }
     }
 
@@ -404,8 +414,8 @@ class ElementContainer extends Component {
      * @param {*} index index of figure element
      * @param {*} cb callback method
      */
-    updateFigureData = (figureData, index, cb) => {
-        this.props.updateFigureData(figureData, index, cb)
+    updateFigureData = (figureData, index, elementId,cb) => {
+        this.props.updateFigureData(figureData, index,elementId, cb)
     }
 
     toolbarHandling = (action = "") => {
@@ -459,7 +469,7 @@ class ElementContainer extends Component {
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
@@ -719,8 +729,8 @@ const mapDispatchToProps = (dispatch) => {
         updateElement: (updatedData, elementIndex,parentUrn,asideData) => {
             dispatch(updateElement(updatedData, elementIndex,parentUrn,asideData))
         },
-        updateFigureData: (figureData, index, cb) => {
-            dispatch(updateFigureData(figureData, index, cb))
+        updateFigureData: (figureData, index, elementId ,cb) => {
+            dispatch(updateFigureData(figureData, index, elementId,cb))
         },
         updatePageNumber: (pagenumber, elementId, asideData, parentUrn) => {
             dispatch(updatePageNumber(pagenumber, elementId, asideData, parentUrn))
