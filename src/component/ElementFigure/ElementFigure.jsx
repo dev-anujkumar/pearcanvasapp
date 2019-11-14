@@ -12,6 +12,7 @@ DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility';
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 
 
 /*** @description - ElementFigure is a class based component. It is defined simply
@@ -30,6 +31,8 @@ class ElementFigure extends Component {
      * @param {*} data selected asset data
      */
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
@@ -46,8 +49,6 @@ class ElementFigure extends Component {
             } else {
                 this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
             }
-            document.querySelector("[name='alt_text']").innerHTML = altText;
-            document.querySelector("[name='long_description']").innerHTML = longDesc;
             let figureData = {
                 path : epsURL,
                 height : height,

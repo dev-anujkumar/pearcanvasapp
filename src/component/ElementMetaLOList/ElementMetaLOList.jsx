@@ -31,6 +31,7 @@ export class ElementMetaLOList extends Component {
               model={wipmodel}
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
+              handleBlur = {this.props.handleBlur}
             />
           </div>
           <div className="Container">
@@ -46,6 +47,7 @@ export class ElementMetaLOList extends Component {
                     model={LOListmodel}
                     handleEditorFocus={this.props.handleFocus}
                     slateLockInfo={slateLockInfo}
+                    handleBlur = {this.props.handleBlur}
                   />
                 </h2>
                 <TinyMceEditor
@@ -57,6 +59,7 @@ export class ElementMetaLOList extends Component {
                   model={this.prepareLOLData(this.props.currentSlateLOData)}
                   handleEditorFocus={this.props.handleFocus}
                   slateLockInfo={slateLockInfo}
+                  handleBlur = {this.props.handleBlur}
                 />
               </div>
             </div>
@@ -90,15 +93,26 @@ export class ElementMetaLOList extends Component {
      * @description - show popup on click on element that no data is present 
      * @param {object} loldata
   */
-  onLOLClickHandle(lolData) {
-    if (config.editorRefID == e.target.id) {
-      config.editorRefID = "";
-      return false;
-    }
+  onLOLClickHandle(lolData, e) {
+    /**
+    * @description - To check is it tinymce current target and click on current element id
+    */
+   let targetId = '';
+   if (tinymce.$(e.target).parents('.cypress-editable').length) {
+     targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
+   }
+   else {
+     targetId = e.target.id;
+   }
+   if (config.editorRefID == targetId) {
+     config.editorRefID = "";
+     return false;
+   }
     if(lolData == "" || (lolData && lolData.length === 0)){
-      sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+      this.props.showBlocker(true);
+      let that=this;
       setTimeout(function(){ sendDataToIframe({'type': OpenLOPopup,'message':{'text':NoSlateTagIS,'data':'','chapterContainerUrn':'','isLOExist':false,'editAction':''}},config.WRAPPER_URL)
-      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+      that.props.showBlocker(false);
       }, 1000);
     }
     

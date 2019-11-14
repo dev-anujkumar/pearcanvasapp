@@ -8,7 +8,7 @@ import './../../styles/ElementInteractive/ElementInteractive.css';
 import TinyMceEditor from "../tinyMceEditor";
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { c2MediaModule } from './../../js/c2_media_module';
-import { showTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { showTocBlocker,hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
@@ -43,8 +43,8 @@ class Interactive extends React.Component {
         let searchSelectAssessmentURN = "";
         let productId = "";
         let searchTypeOptVal = "";
-        showTocBlocker();
-        disableHeader(true);
+        // showTocBlocker();
+        // disableHeader(true);
         this.togglePopup(false);
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
@@ -54,7 +54,8 @@ class Interactive extends React.Component {
                 let responseData = await axios.get(config.STRUCTURE_API_URL + "content/scapi/" + interactiveData['workExample'][0],
                     {
                         headers: {
-                            "x-apikey": config.MANIFEST_APIKEY
+                            "ApiKey": config.MANIFEST_APIKEY,
+                            "PearsonSSOSession":config.ssoToken,
                         }
                     });
                 interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
@@ -72,25 +73,22 @@ class Interactive extends React.Component {
             let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
             let imageId = "";
             let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
-            that.setState({itemID : workExample,
+            that.setState({itemID : itemId,
                 imagePath:posterImage.path })
             let figureData={}
             if(tempInteractiveType === 'video-mcq'){
                 figureData = {
                     schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-                    interactiveid: workExample,
+                    interactiveid: itemId,
                     interactivetype: tempInteractiveType,
                     interactiveformat: "mmi",
-                    posterimage: {
-                        "imageid": posterImage.imageid,
-                        "path": posterImage.path
-                    },
-                    // alttext: alttext  //to be added later
+                    posterimage: posterImage,
+                    alttext: alttext  
                 }
             }else{
              figureData = {
                 schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-                interactiveid: workExample,
+                interactiveid: itemId,
                 interactivetype: tempInteractiveType,
                 interactiveformat: "mmi"
             }
@@ -460,6 +458,9 @@ class Interactive extends React.Component {
     }
 
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
