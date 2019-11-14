@@ -5,6 +5,7 @@ const CMDS_APIKEY = config_object['CMDS_APIKEY'];
 const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
 const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
 const CMDS_DATABASE = config_object['CMDS_DATABASE'];
+const CMDS_AUTHORIZATION = config_object['CMDS_AUTHORIZATION'];
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
@@ -26,11 +27,13 @@ var libConfig = {
     'Content-Type': 'application/json',
     'Accept': 'application/ld+json',
     'X-Roles-Test': 'ContentMetadataEditor',
+    'X-Roles' : 'ContentMetadataEditor',
     'Prefer': 'annotation=true',
     'Apikey': CMDS_APIKEY,
     'X-APIKey': CMDS_APIKEY,
     'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+    'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+    'Authorization': CMDS_AUTHORIZATION
   },
   'database': CMDS_DATABASE,
   'server': CMDS_DATA_ENDPOINT,
@@ -57,11 +60,13 @@ export const c2AssessmentModule = {
         'Content-Type': 'application/json',
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
+        'X-Roles' : 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
         'Apikey': CMDS_APIKEY,
         'X-APIKey': CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+        'Authorization': CMDS_AUTHORIZATION
       },
       'database': CMDS_DATABASE,
       'server': CMDS_DATA_ENDPOINT,

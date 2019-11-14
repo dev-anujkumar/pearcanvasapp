@@ -14,6 +14,7 @@ let config = {
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.COREAPI_ENDPOINT : "https://contentapis-staging.pearsoncms.net/core-api",
+    CONTENT_SCAPI_ENDPOINT : process.env.NODE_ENV === 'production' ? process.env.CONTENT_SCAPI_ENDPOINT : "https://staging.api.pearson.com/content/scapi",
     JAVA_API_URL: process.env.NODE_ENV === 'production' ? process.env.JAVA_API_URL : "https://10.11.7.24:8443/app/toc-javaapp/",
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: process.env.NODE_ENV === 'production' ? process.env.STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
@@ -35,6 +36,7 @@ let config = {
     CMDS_SCHEMA_ENDPOINT: process.env.NODE_ENV === 'production' ? process.env.CMDS_SCHEMA_ENDPOINT : 'https://staging.schema.pearson.com',
     CMDS_DATABASE: process.env.NODE_ENV === 'production' ? process.env.CMDS_DATABASE : '?db=qa2',
     CMIS_REPO   : process.env.NODE_ENV === 'production' ? process.env.CMIS_REPO : '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]',
+    CMDS_AUTHORIZATION:process.env.NODE_ENV === 'production' ? process.env.CMDS_AUTHORIZATION : 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
     EPS_API: process.env.NODE_ENV === 'production' ? process.env.EPS_API : 'https://us-school-stg.pearsoned.com/school',
     //c4 required keys and urls
     CTOOL_APIKEY: process.env.NODE_ENV === 'production' ? process.env.CTOOL_APIKEY : 'INpAP0MaiVP9Rohy4rB0ue3j2SGE3Abk',

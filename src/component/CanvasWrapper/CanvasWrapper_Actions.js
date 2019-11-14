@@ -34,13 +34,14 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'figure':
+					let altText="";
 				switch (element.figuretype){
 					case "image":
 					case "table":
 					case "mathImage":
 					case "authoredtext":
 					case "tableasmarkup":
-						let altText = element.figuredata.alttext ? element.figuredata.alttext : ""
+						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
 						let longDesc = element.figuredata.longdescripton ? element.figuredata.longdescripton : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
@@ -75,10 +76,12 @@ const findElementType = (element, index) => {
 						}
 						break;
 					case "interactive":
+						altText = element.figuredata.alttext ? element.figuredata.alttext : "",
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"]
+							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
+							altText
 						}
 						break;
 					case "assessment":
