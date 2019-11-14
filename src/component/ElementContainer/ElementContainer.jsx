@@ -285,11 +285,17 @@ class ElementContainer extends Component {
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
-        dataToSend.elementdata.assessmentid=assessmentData.id;
-        dataToSend.elementdata.assessmenttitle=assessmentData.title;
-        dataToSend.elementdata.assessmentformat=assessmentData.format;
-        dataToSend.elementdata.usagetype=assessmentData.usageType;
-
+       
+        dataToSend.elementdata.assessmenttitle = assessmentData.title;
+        dataToSend.elementdata.assessmentformat = assessmentData.format;
+        dataToSend.elementdata.usagetype = assessmentData.usageType;
+        dataToSend.elementdata.assessmentid = assessmentData.id;
+        if (assessmentData.format === 'learningtemplate') {
+            dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
+            dataToSend.elementdata["templateid"] = assessmentData.templateid;
+            dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
+            dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
+        } 
         this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
     }
 
