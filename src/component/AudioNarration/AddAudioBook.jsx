@@ -31,10 +31,9 @@ class AddAudioBook extends React.Component {
         let imageData = data;
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let smartLinkType = data && data.desc && data.desc.smartLinkType
-
-        if (figureType === "audio" || smartLinkType === "Audio") {
-            let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
-            if (data.desc && (data.desc.smartLinkType == "Audio" || data.assetType == "audio" || smartLinkAssetType == "Audio")) {
+        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
+        
+        if (figureType === "audio" || smartLinkType === "Audio" || smartLinkAssetType == "Audio") {
                 let audioData = {
                     "narrativeAudioUrn": data.uniqueID || "",
                     "location": data.smartLinkURl,
@@ -46,7 +45,6 @@ class AddAudioBook extends React.Component {
                 this.props.addAudioNarrationForContainer(audioData);
                 hideTocBlocker();
                 return false;
-            }
 
         }
         else if (figureType != "audio" || smartLinkType != "Audio") {
