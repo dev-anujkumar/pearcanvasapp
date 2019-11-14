@@ -141,7 +141,7 @@
 .learningobjectivedropdown ul {
   padding:0;
 }
-.slate-tag-icon, .audio{
+.slate-tag-icon, .audio , .openAudioIcon{
   display:none;
 }
 .slate-tag-icon.disable{
