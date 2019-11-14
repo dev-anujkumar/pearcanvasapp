@@ -70,8 +70,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaryFootNoteCurrentValue: {
                 footnoteContentText,
                 glossaryContentText,
-                index
-            }
+            },
+            elementIndex : index
         }
     });
 }
@@ -88,6 +88,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
     let data = {}
+    var index = store.getState().glossaryFootnoteReducer.elementIndex;
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -136,7 +137,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
-        const index = store.getState().glossaryFootnoteReducer.indexElement;
 
         console.log('>>>>>>>>>>>>>>>>>>>>>', index)
         if (typeof (index) == 'number') {
@@ -149,13 +149,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (indexesLen == 2) {
                 condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                 if (condition.versionUrn == elementWorkId) {
-                    condition = res.data
-
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                 }
             } else if (indexesLen == 3) {
                 condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                 if (condition.versionUrn == elementWorkId) {
-                    condition = res.data
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
                 }
             }
 
