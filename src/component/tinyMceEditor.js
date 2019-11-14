@@ -948,9 +948,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if( e.relatedTarget && !e.relatedTarget.classList.contains('wrs_focusElement') ){
-            this.props.handleBlur();
-        }
+        this.props.handleBlur();
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
