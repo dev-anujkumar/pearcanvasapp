@@ -70,7 +70,6 @@ export class TinyMceEditor extends Component {
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
                 editor.on('init', function (e) {
-                    document.getElementsByClassName("audio")[0].style.display = "block";
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
                             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
@@ -79,6 +78,8 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
+                    document.getElementsByClassName("audio")[0].style.display = "block";
+                    document.getElementsByClassName("openAudioIcon")[0].style.display = "block";
                 });
             },
 
