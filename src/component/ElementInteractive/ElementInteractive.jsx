@@ -51,7 +51,7 @@ class Interactive extends React.Component {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
             if (tempInteractiveType === 'video-mcq') {
-                let responseData = await axios.get(config.STRUCTURE_API_URL + "content/scapi/" + interactiveData['workExample'][0],
+                let responseData = await axios.get(config.CONTENT_SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
                     {
                         headers: {
                             "ApiKey": config.MANIFEST_APIKEY,
