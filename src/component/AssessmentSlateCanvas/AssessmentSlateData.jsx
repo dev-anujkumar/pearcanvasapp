@@ -32,13 +32,6 @@ export class AssessmentSlateData extends Component {
             })
         }
     }
-    componentDidUpdate() {
-        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
-            this.setState({
-                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
-            })
-        }
-    }
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
