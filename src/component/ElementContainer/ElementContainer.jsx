@@ -288,10 +288,7 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
-        if (node||elementType!=='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
-        }
     }
 
     /**
@@ -436,7 +433,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-    renderElement = (element = {}) => {        
+    renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
         let labelText = fetchElementTag(element, index);
@@ -497,7 +494,7 @@ class ElementContainer extends Component {
                 case elementTypeConstant.ELEMENT_LIST:
                     editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
                     labelText = 'OL'
-                    if (element.subtype === 'disc')
+                    if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
                     break;
                 case elementTypeConstant.ELEMENT_ASIDE:

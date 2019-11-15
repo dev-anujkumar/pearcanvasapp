@@ -28,10 +28,11 @@ export class AssessmentSlateData extends Component {
     componentDidMount() {
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
             this.setState({
-                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
             })
         }
     }
+
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
@@ -86,7 +87,7 @@ export class AssessmentSlateData extends Component {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
         } else if (assessmentFormat === LEARNING_TEMPLATE) {
-            this.changeLearningApp(this.state.activeAssessmentUsageType,'update'); 
+            this.changeLearningApp(LEARNING_TEMPLATE,'update'); 
             } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }

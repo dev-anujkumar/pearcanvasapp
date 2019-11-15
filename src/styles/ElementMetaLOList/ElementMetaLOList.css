@@ -39,3 +39,6 @@ h3.moduleName {
 .learningObjectiveContainer .container {
     pointer-events: none;
 }
+.learningObjectiveinnerText img{
+    vertical-align:middle;
+}

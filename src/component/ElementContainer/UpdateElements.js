@@ -309,6 +309,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         html: {
             title: "<p></p>"
         }}
+        
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 
