@@ -171,6 +171,11 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 				[manifestURN]: JSON.parse(JSON.stringify(slateData.data[manifestURN]))
 			}
 		});
+
+		dispatch({
+			type: SET_ACTIVE_ELEMENT,
+			payload: {}
+		});
 	});
 };
 
