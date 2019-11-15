@@ -88,7 +88,7 @@ const elementDataBank = {
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-6"
         },
-        "no-style" : {
+        "none" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-7"
@@ -149,6 +149,9 @@ const elementDataBank = {
             "elementType" : "figure",
             "primaryOption" : "primary-editor-table-equation",
             "imageTextWidthTableEditor" : {
+                "secondaryOption" : "secondary-editor-table-equation"
+            },
+            "image50TextEditorTable" : {
                 "secondaryOption" : "secondary-editor-table-equation"
             }
         },
