@@ -244,6 +244,8 @@ class SlateWrapper extends Component {
                                         scroll: true, // or HTMLElement
                                         filter: ".ignore-for-drag",
                                         draggable: ".editor",
+                                       // ignoreNextClick : false,
+                                        preventOnFilter: false,
                                         forceFallback: true,
                                         onStart: function (/**Event*/evt) {
                                             // same properties as onEnd
