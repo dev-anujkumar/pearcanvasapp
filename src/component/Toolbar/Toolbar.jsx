@@ -20,7 +20,7 @@ const _Toolbar = props => {
     const [openDropDown, setValueOpen] = useState(false);
     useEffect(() => {
         setLODropdown(false);
-      }, [props.setSlateEntity]); // Only re-run the effect if count changes
+      }, [props.setSlateEntity]); 
     /**
      * Function for show/hide audio Narration dropdown
      */
