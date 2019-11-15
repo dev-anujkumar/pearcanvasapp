@@ -17,15 +17,22 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId: null,
-            assessmentItemId : null,
+            assessmentId:  this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId :this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: props.model && props.model.figuredata && props.model.figuredata.elementdata &&props.model.figuredata.elementdata.usagetype ? props.model.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
 
         };
-    } 
-
+    }
+    componentDidMount() {
+        this.setState({
+            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
+        })
+    }
+    
     handleC2AssessmentClick=(value)=> {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
@@ -66,7 +73,7 @@ export class ElementSingleAssessment extends Component {
         }
         this.setState({assessmentId: id,assessmentItemId : itemID},
             ()=>{
-            this.saveAssessment();
+                this.saveAssessment();
         })
     }
     /**Assessment PopUp Functions */
@@ -83,10 +90,10 @@ export class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        if (this.state.activeAsseessmentUsageType !== usageType) {
+       if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
                 activeAsseessmentUsageType: usageType
-            }, () => {
+            },()=>{
                 this.saveAssessment();
             });
         }
@@ -94,6 +101,7 @@ export class ElementSingleAssessment extends Component {
                 asseessmentUsageTypeDropdown: false,
             })
     }
+
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
     toggleUsageTypeDropdown = () => {
         this.setState({
@@ -110,8 +118,8 @@ export class ElementSingleAssessment extends Component {
         this.props.handleBlur();
     }
     /*** @description - This function will be called to save the assessment data */
-    saveAssessment = () =>{
-        this.props.handleBlur();
+    saveAssessment = () =>{ 
+            this.props.handleBlur();
     }
 
     /*** @description - This function is for handling the different types of figure-element.
@@ -164,7 +172,8 @@ export class ElementSingleAssessment extends Component {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
+                
             </div>
         );
     }

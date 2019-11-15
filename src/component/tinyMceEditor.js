@@ -90,7 +90,7 @@ export class TinyMceEditor extends Component {
             },
 
             init_instance_callback: (editor) => {
-                editor.on('Change', function (e) {
+                editor.on('Change', (e) => {
                     let content = e.target.getContent({format: 'text'}),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -106,15 +106,15 @@ export class TinyMceEditor extends Component {
                 });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
-                    e.preventDefault();
-                    e.stopPropagation();
-                })       
+                    e.preventDefault();                   
+                    e.stopPropagation();                   
+                    })
                 editor.shortcuts.add('alt+shift+5', "description of the strike through shortcut", function () {
                     editor.execCommand('Strikethrough', false);
                 });
-                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
-                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
-                revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
+                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+                revertingTempContainerHtml = revertingTempContainerHtml.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
                 document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
             }
         }
@@ -169,6 +169,11 @@ export class TinyMceEditor extends Component {
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
                     if(selectedText == "") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    else if(selectedText===window.getSelection().anchorNode.nodeValue){
+                        e.target.targetElm.children[0].innerHTML=window.getSelection().toString();
                         e.preventDefault();
                         e.stopPropagation();
                     }
@@ -760,6 +765,15 @@ export class TinyMceEditor extends Component {
                     localStorage.removeItem('newElement');
                 }
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
+               
+                /**
+                 * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
+                 * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
+                 */
+                let tempFirstContainerHtml = tinyMCE.$("#" + this.editorRef.current.id).html()
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
+
                 tinymce.init(this.editorConfig).then((d) => { 
                     if (this.editorRef.current) {
                         /*
@@ -918,9 +932,17 @@ export class TinyMceEditor extends Component {
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
              * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
              */
-            let tempContainerHtml = tinyMCE.activeEditor.getContentAreaContainer().innerHTML;
-            tempContainerHtml = tempContainerHtml.replace('data-mathml', 'temp-data-mathml').replace('Wirisformula', 'temp_Wirisformula');
-            document.getElementById(tinyMCE.activeEditor.id).innerHTML = tempContainerHtml;
+            let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
+            tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+
+            /*
+                Before entering to new element follow same  procedure
+            */
+            let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
+            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
+
         }
         /**
          * case - is this is not the same target then

@@ -288,10 +288,7 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        //console.log("tinyMCE.activeEditor.id>>::", tinyMCE.activeEditor.id)
-        if (node||elementType!=='element-assessment') {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
-        }
     }
 
     /**
@@ -436,7 +433,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-    renderElement = (element = {}) => {        
+    renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
         let labelText = fetchElementTag(element, index);
