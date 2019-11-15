@@ -25,9 +25,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
+        console.log('thsi si sinner html', index)
+        let tempUpdatedIndex = index.split('-');
 
-        if (elementType === "figure") {
-            let updatedIndex = index.split('-')[0];
+        if (tempUpdatedIndex.length == 3 && elementType === "figure") { // it is figure inside WE
+            let updatedIndex = tempUpdatedIndex[2];
+            // console.log("newBodymatter[updatedIndex ", newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
+            glossaryFootElem = newBodymatter[updatedIndex]
+            // console.log('This si index', glossaaryFootnoteValue, index, newBodymatter[updatedIndex])
+        } else if (elementType === "figure") {
+            let updatedIndex = tempUpdatedIndex[0];
             console.log("newBodymatter[updatedIndex ", newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
             glossaryFootElem = newBodymatter[updatedIndex]
             console.log('This si index', glossaaryFootnoteValue, index, newBodymatter[updatedIndex])
@@ -96,23 +103,48 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let newBodymatter = newParentData[slateId].contents.bodymatter;
     let workEditor, workContainer;
 
-    console.log('thsi si sinner html', workContainer)
     //Get updated innerHtml of element for API request 
-    if (elementType == 'figure') {
+    let tempUpdatedIndex = index.split('-');
+    if (tempUpdatedIndex.length == 3 && elementType === "figure") { // it is figure inside WE
+        console.log('thsis is index in figure', index)
+        let label, title, captions, credits, elementIndex
+        elementIndex = tempUpdatedIndex[0] + '-' +tempUpdatedIndex[1]
+
+        label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
+        title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+
+        if (elementSubType == 'image') {
+            captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+            credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+        } else if (elementSubType == 'interactive') {
+            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+        }
+
+        figureDataObj = {
+            "title": label,
+            "subtitle": title,
+            "text": "",
+            "postertext": "",
+            "tableasHTML": "",
+            "captions": captions,
+            "credits": credits
+        }
+    } else if (elementType == 'figure') {
         console.log('thsis is index in figure', index)
         let label, title, captions, credits, elementIndex
         elementIndex = index.split('-')[0]
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
-        if(elementSubType == 'image'){
+        if (elementSubType == 'image') {
             captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
             credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-        }else if (elementSubType == 'interactive'){
+        } else if (elementSubType == 'interactive') {
             captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
         }
-       
+
         figureDataObj = {
             "title": label,
             "subtitle": title,
@@ -176,7 +208,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }).then(res => {
         console.log('this is index in case of any ', index)
-        if (elementType === "figure") {
+        let tempUpdatedIndex = index.split('-');
+
+        if (tempUpdatedIndex.length == 3 && elementType === "figure") { // it is figure inside WE
+            let updatedIndex = tempUpdatedIndex[2];
+            newBodymatter[updatedIndex] = res.data
+        }else if(elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
             console.log('>>>>>>>>', newBodymatter[updatedIndex])
