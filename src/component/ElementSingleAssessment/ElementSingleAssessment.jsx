@@ -17,11 +17,11 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId:  null,
-            assessmentItemId : null,
+            assessmentId:  this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId :this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: "Quiz",
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
 
         };
     }
