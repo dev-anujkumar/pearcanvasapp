@@ -7,7 +7,6 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
   //To show module name if groupby module is present in wip
   componentDidMount() {
@@ -22,7 +21,7 @@ export class ElementMetaLOList extends Component {
         }
       })
     }
-    else{
+    else {
       this.props.setCurrentModule(false)
     };
 
@@ -98,10 +97,10 @@ export class ElementMetaLOList extends Component {
     if (lolData !== "" && lolData.length > 0) {
       lolData.forEach((value, index) => {
         finalloldata += value.loContent ? value.loContent : value;
-
       })
       jsx = "<div>" + finalloldata + "</div>";
     }
+
     let currentLOLData = {
       "text": jsx ? jsx : "<p></p>"
     }
@@ -116,15 +115,8 @@ export class ElementMetaLOList extends Component {
     /**
     * @description - To check is it tinymce current target and click on current element id
     */
-    let targetId = '';
     this.props.handleFocus();
-    if (tinymce.$(e.target).parents('.cypress-editable').length) {
-      targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
-    }
-    else {
-      targetId = e.target.id;
-    }
-    if (config.editorRefID == targetId) {
+    if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }

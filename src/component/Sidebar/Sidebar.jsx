@@ -74,8 +74,7 @@ class Sidebar extends Component {
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption,
                 labelText,
-                toolbar: elementList[this.state.activeElementType][value].toolbar,
-                elementWipType: (value === 'primary-list') && 'element-list' || ''
+                toolbar: elementList[this.state.activeElementType][value].toolbar
             });
         }
     }
@@ -171,8 +170,7 @@ class Sidebar extends Component {
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value,
                 labelText,
-                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar,
-                elementWipType: (this.state.activePrimaryOption === 'primary-list') && 'element-list' || ''
+                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
             });
         }
     }
@@ -327,7 +325,7 @@ class Sidebar extends Component {
         let els = document.getElementsByClassName('moduleContainer');
         let i = 0;
         let groupby ="";
-        if (this.props.showModule== false) {
+        if (e.currentTarget.checked == false) {
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
                 if (children.length > 0) {
