@@ -35,7 +35,6 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-        console.log(selectedLearningType);
         this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
@@ -54,7 +53,6 @@ export class AssessmentSlateData extends Component {
     /*** @description - This function is to change the lerning system
     */
     changeLearningApp(learningType, change) {
-        console.log('usageType',learningType)
         showTocBlocker();
         disableHeader(true);
         this.props.showBlocker(true);
@@ -65,8 +63,7 @@ export class AssessmentSlateData extends Component {
             activeAssessmentType: learningType,
             changeLearningData: true,
             learningToolStatus: change
-        });  
-        console.log('changeLearningData',this.state.changeLearningData)          
+        });         
 }
 
     /*** @description - This function is to handle change in assessment/LT-LA
