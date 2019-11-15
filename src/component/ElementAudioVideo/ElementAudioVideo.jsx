@@ -19,7 +19,8 @@ class ElementAudioVideo extends Component {
         super(props);
         this.state={
             imgSrc: null,
-            assetData : null
+            assetData: null,
+            elementType: this.props.model.figuretype || ""
         }
     }
     /**
@@ -164,6 +165,18 @@ class ElementAudioVideo extends Component {
      * @param model object that defined the type of element
      * @param index index of the current element
      * @param slateLockInfo object that defines the slate lock details */
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if(nextProps.model && 'figuretype' in nextProps.model && nextProps.model.figuretype !== prevState.elementType) {
+            return {
+                imgSrc: null,
+                assetData: null,
+                elementType: nextProps.model.figuretype || ""
+            };
+        }
+
+        return null;
+    }
 
     renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;
