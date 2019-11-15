@@ -5,7 +5,6 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
-import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
@@ -18,8 +17,8 @@ export class ElementMetaDataAnchor extends Component {
 
     const { slateLockInfo } = this.props
     return (
-      <div className="learningObjectiveContainer" onClick={(e) => { this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
-        <div className="container">
+      <div className="learningObjectiveContainer" id="slateLO" onClick={(e) => { this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
+        <div className="container" >
           <div className="matadata_anchor" >
             <TinyMceEditor
               index={this.props.index}
@@ -76,17 +75,8 @@ export class ElementMetaDataAnchor extends Component {
     * @param {object} loldata
  */
   onLOClickHandle = (loData, e) => {
-    /**
-    * @description - To check is it tinymce current target and click on current element id
-    */
-    let targetId = '';
-    if (tinymce.$(e.target).parents('.cypress-editable').length) {
-      targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
-    }
-    else {
-      targetId = e.target.id;
-    }
-    if (config.editorRefID == targetId) {
+    this.props.handleFocus();
+    if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }

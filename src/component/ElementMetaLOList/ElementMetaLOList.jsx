@@ -7,7 +7,6 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 export class ElementMetaLOList extends Component {
   //To show module name if groupby module is present in wip
   componentDidMount() {
@@ -22,6 +21,9 @@ export class ElementMetaLOList extends Component {
         }
       })
     }
+    else {
+      this.props.setCurrentModule(false)
+    };
 
   }
   render() {
@@ -35,7 +37,7 @@ export class ElementMetaLOList extends Component {
     const { slateLockInfo } = this.props
     return (
 
-      <div className="learningObjectiveContainer" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
+      <div className="learningObjectiveContainer" id="introslateLOL" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -98,10 +100,10 @@ export class ElementMetaLOList extends Component {
     if (lolData !== "" && lolData.length > 0) {
       lolData.forEach((value, index) => {
         finalloldata += value.loContent ? value.loContent : value;
-
       })
       jsx = "<div>" + finalloldata + "</div>";
     }
+
     let currentLOLData = {
       "text": jsx ? jsx : "<p></p>"
     }
@@ -116,14 +118,8 @@ export class ElementMetaLOList extends Component {
     /**
     * @description - To check is it tinymce current target and click on current element id
     */
-    let targetId = '';
-    if (tinymce.$(e.target).parents('.cypress-editable').length) {
-      targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
-    }
-    else {
-      targetId = e.target.id;
-    }
-    if (config.editorRefID == targetId) {
+    this.props.handleFocus();
+    if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }

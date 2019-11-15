@@ -11,7 +11,8 @@ import {
     UPDATE_PAGENUMBER_FAIL,
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
-    ACCESS_DENIED_POPUP
+    ACCESS_DENIED_POPUP,
+    FETCH_SLATE_DATA
     
 } from '../../constants/Action_Constants';
 
@@ -246,7 +247,9 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         "contentUrn": newSlateObj.entityUrn,
         "versionUrn": newSlateObj.containerUrn
     }
-    let oldSlateBodymatter = getState().appStore.slateLevelData[config.slateManifestURN].contents.bodymatter
+
+    let slateLevelData = getState().appStore.slateLevelData[config.slateManifestURN];
+    let oldSlateBodymatter = slateLevelData.contents.bodymatter;
     let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
 
     oldSlateBodymatter.forEach((oldSlateBody) => {
@@ -261,6 +264,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             id: newSlateBody.id
         })
     })
+    slateLevelData.contents.bodymatter=oldSlateBodymatter;
     slateDataList.push(oldSlateData, newSlateData)
 
     return axios.put(
@@ -273,9 +277,16 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
-        sendDataToIframe({ 'type': NextSlate, 'message': {} })
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({
+            type: FETCH_SLATE_DATA,
+            payload: {
+                [config.slateManifestURN]: slateLevelData,
+            }
+        })
     }).catch(error => {
         //console.log("SPLIT SLATE API ERROR : ", error)
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     })
 }
 
