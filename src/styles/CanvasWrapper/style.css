@@ -100,3 +100,7 @@
     /* visibility: hidden !important; */
 
 }
+.sidebar-panel{
+    position:fixed;
+    left:0px;
+}
