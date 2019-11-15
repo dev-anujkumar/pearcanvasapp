@@ -143,8 +143,7 @@ export class AssessmentSlateCanvas extends Component {
        * @param change - type of change - insert/update
     */
     updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{       
-       // updateAssessment=(id,itemID,title,format,usageType,change)=>{       
-        if(change==='insert'){
+         if(change==='insert'){
             this.setState({
                 getAssessmentDataPopup: true
             }, () => {
@@ -167,7 +166,6 @@ export class AssessmentSlateCanvas extends Component {
             assessmentItemTitle:title,
             getAssessmentData:true,},()=>{ 
              this.handleAssessmentBlur({id : id,itemID : itemID,title :title,usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
-                // this.handleAssessmentBlur({id : id,itemID : itemID,title :title,usageType : usageType,format : format});
         })                    
 
     }
