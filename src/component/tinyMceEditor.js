@@ -890,6 +890,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+            if(tinymce.activeEditor && tinymce.activeEditor.id){
+                document.getElementById(tinymce.activeEditor.id).contentEditable = false
+                return
+            }
+        }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
