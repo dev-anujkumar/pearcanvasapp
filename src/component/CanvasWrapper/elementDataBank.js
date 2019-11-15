@@ -150,6 +150,9 @@ const elementDataBank = {
             "primaryOption" : "primary-editor-table-equation",
             "imageTextWidthTableEditor" : {
                 "secondaryOption" : "secondary-editor-table-equation"
+            },
+            "image50TextEditorTable" : {
+                "secondaryOption" : "secondary-editor-table-equation"
             }
         },
         "table" : {
