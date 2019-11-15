@@ -51,15 +51,6 @@
     cursor: pointer;
     position: relative;
   }
-   .slate_assessment_type_dropdown{
-    border: 1px solid #c0c0c0;
-    margin: 20px 0 10px;
-    border-radius: 25px;
-    background: #fff;
-    padding: 8px;
-    cursor: pointer;
-    position: relative;
-  }
   .slate_assessment_dropdown_label, .slate_assessment_metadata_dropdown_label{
     float:left;
     font-size: 14px;
