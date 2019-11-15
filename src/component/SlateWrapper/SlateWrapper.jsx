@@ -30,7 +30,7 @@ import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
-import { setSlateLock, releaseSlateLock, setLockPeriodFlag } from '../CanvasWrapper/SlateLock_Actions'
+import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
 
@@ -228,7 +228,7 @@ class SlateWrapper extends Component {
                     let _context = this;
                     return (
                         <div className={`slate-content ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            <div className='element-list' onClickCapture={this.checkSlateLockStatus}>
+                            <div className='element-list'>
                                 <Sortable
                                     options={{
                                         sort: true,  // sorting inside list
@@ -306,7 +306,10 @@ class SlateWrapper extends Component {
      * Calls release lock API
      */
     releaseSlateLock = (projectUrn, slateId) => {
-        this.props.releaseSlateLock(projectUrn, slateId)
+        this.setState({
+            showReleasePopup: true
+        })
+        // this.props.releaseSlateLock(projectUrn, slateId)
     }
 
     /**
@@ -331,9 +334,9 @@ class SlateWrapper extends Component {
         if (context.props.withinLockPeriod) {
             callback(config.projectUrn, Object.keys(context.props.slateData)[0])
             context.props.setLockPeriodFlag(false)
-            context.setState({
+            /* context.setState({
                 showReleasePopup: true
-            })
+            }) */
         }
     }
 
@@ -369,6 +372,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
+        this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
         //OPEN_AM.logout();
     }
 
@@ -408,6 +412,9 @@ class SlateWrapper extends Component {
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
+        }
+        else{
+            this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
         }
     }
 
@@ -689,7 +696,8 @@ class SlateWrapper extends Component {
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
                     return (
-                        <React.Fragment key={element.id}>
+                        <div key={element.id} onClickCapture={this.checkSlateLockStatus}>
+                        {/* <React.Fragment > */}
                             {
                                 index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                     <ElementSaprator
@@ -738,7 +746,8 @@ class SlateWrapper extends Component {
                                 />
                                 : null
                             }
-                        </React.Fragment>
+                        {/* </React.Fragment> */}
+                        </div>
                     )
                 })
             }
@@ -986,6 +995,7 @@ export default connect(
         releaseSlateLock,
         setActiveElement,
         showWrongAudioPopup,
+        getSlateLockStatus,
         accessDenied
     }
 )(SlateWrapper);
