@@ -53,9 +53,11 @@
 }
 .canvas-header.slate-lock-block{
     display: flex;
+    padding-left: 8px;
+    font-size: 12px;
+    color: #424242;
 }
 .locked-slate-title{
     align-self: center;
-    /* align-self: center; */
     margin-top: 8px;
 }
