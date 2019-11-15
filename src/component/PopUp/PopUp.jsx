@@ -92,8 +92,6 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        
-        console.log("input-----",props)
         if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio){
             return null
         }
@@ -175,8 +173,6 @@ class PopUp extends React.Component {
     
     render() {
         const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
-        console.log("this.props>>>",this.props)
-        console.log(active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation)
         return (
             <div className="model">
                 {

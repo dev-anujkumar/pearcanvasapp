@@ -179,8 +179,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
             }
         }
     ).then(response => {
-        debugger
-        console.log("response>>>>>>>",response)
         let parentData = getState().appStore.slateLevelData;
         let newslateData = JSON.parse(JSON.stringify(parentData));
         let _slateObject = Object.values(newslateData)[0];
@@ -223,7 +221,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
             }
             return element
         })
-        console.log("_slateBodyMatter------------------------->",_slateBodyMatter)
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
         dispatch({
@@ -247,8 +244,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-    // newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figuredata
-    if (typeof (index) == 'number') {
+      if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if(newBodymatter[index].figuretype==="assessment"){
                 newBodymatter[index].figuredata['elementdata'] = figureData
@@ -285,8 +281,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
 
             }
         }
-        console.log("newBodymatter7",newBodymatter)
-    }
+      }
     dispatch({
         type: SET_OLD_IMAGE_PATH,
         payload: {

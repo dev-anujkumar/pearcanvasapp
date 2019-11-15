@@ -433,8 +433,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-    renderElement = (element = {}) => {        
-        debugger
+    renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
         let labelText = fetchElementTag(element, index);
