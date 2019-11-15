@@ -90,7 +90,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             primaryOption: newElementData.primaryOption,
             secondaryOption: newElementData.secondaryOption,
             tag: newElementData.labelText,
-            toolbar: newElementData.toolbar
+            toolbar: newElementData.toolbar,
+            elementWipType: newElementData.elementWipType,
         };
 
         dispatch({

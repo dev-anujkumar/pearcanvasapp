@@ -140,6 +140,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                    config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase()
                     this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;

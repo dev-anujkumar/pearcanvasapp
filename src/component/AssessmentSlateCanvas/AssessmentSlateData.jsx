@@ -22,16 +22,23 @@ export class AssessmentSlateData extends Component {
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
-
+        this.typeRef = React.createRef();
     }
 
-componentDidMount(){
-    if(this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid){
-        this.setState({
-            activeAssessmentType :this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
-        })
-    }    
-}
+    componentDidMount() {
+        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.setState({
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+            })
+        }
+    }
+    componentDidUpdate() {
+        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.setState({
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
+            })
+        }
+    }
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
@@ -53,14 +60,17 @@ componentDidMount(){
     /*** @description - This function is to change the lerning system
     */
     changeLearningApp(usageType, change) {
+        showTocBlocker();
+        disableHeader(true);
+        this.props.showBlocker(true);
         //Call this function to set value of "toggleLT" for conditional based rendering of Learning App Component//
         this.props.openLTFunction(); 
-        this.props.openLtAction();
+        this.props.openLtAction();  
         this.setState({
             dropdownValue: LEARNING_APP_TYPE,
             changeLearningData: true,
             learningToolStatus: change
-        });
+        });            
 }
 
     /*** @description - This function is to handle change in assessment/LT-LA
@@ -68,14 +78,14 @@ componentDidMount(){
     */
     changeAssessment = (e) => {
         let assessmentFormat = this.state.activeAssessmentType;
-        if (assessmentFormat == FULL_ASSESSMENT_PUF) {
+        if (assessmentFormat === FULL_ASSESSMENT_PUF) {
             this.setState({
                 activeAssessmentType: FULL_ASSESSMENT_PUF,
                 showElmComponent: true,
             }, () => {
                     this.mainAddAssessment(e, FULL_ASSESSMENT_PUF);
                 })
-        } else if (assessmentFormat == LEARNOSITY) {
+        } else if (assessmentFormat === LEARNOSITY) {
             this.setState({
                 activeAssessmentType: LEARNOSITY,
                 showElmComponent: true,
@@ -84,8 +94,7 @@ componentDidMount(){
             })
         } else if (assessmentFormat === LEARNING_TEMPLATE) {
             this.changeLearningApp(this.state.activeAssessmentUsageType,'update'); 
-              //this.changeLearningApp(); 
-        } else {
+            } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
     }
@@ -103,11 +112,12 @@ componentDidMount(){
     * @description - This function is to close the LT/LA popup 
     */
     closePopUp = () => {
-        //  window.parent.postMessage({ 'type': 'blockerTOC', 'message': {status: false} }, WRAPPER_URL);
         this.setState({
             changeLearningData: false
         }, () => {
-            // disableHeader(false);
+             disableHeader(false);
+             hideTocBlocker();
+             this.props.showBlocker(false);
         })
     }
     
@@ -125,8 +135,8 @@ componentDidMount(){
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_APP_TYPE:
-                return this.changeLearningApp('Quiz','insert')
-                //return this.changeLearningApp()
+               
+                    return   this.changeLearningApp('Quiz', 'insert')
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -146,6 +156,7 @@ componentDidMount(){
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
     toggleAssessmentTypeDropdown = () => {
+        this.typeRef.current.classList.remove('notselect');
         this.typeDropdownRef.current.classList.remove('notselect')
     }
 
@@ -158,6 +169,7 @@ componentDidMount(){
             activeAssessmentType: type,
         });
         this.typeDropdownRef.current.classList.add('notselect')
+        this.typeRef.current.classList.add('notselect')
     }
 
     /*** @description - This function is to select the Assessment type from dropdown*/
@@ -281,7 +293,7 @@ componentDidMount(){
             }
             assessmentSlateJSX = <div className="slate_initial_selection">
                 <div className="slate_assessment_type_label">Please select an assessment type.</div>
-                <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
+                <div className="slate_assessment_type_dropdown activeDropdown notselect" ref={this.typeRef} onClick={this.toggleAssessmentTypeDropdown}>
                     <span className="slate_assessment_dropdown_label">{this.state.activeAssessmentType}</span>
                     <span className="slate_assessment_dropdown_image"></span>
                     <div className="clr"></div>

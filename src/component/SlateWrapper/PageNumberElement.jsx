@@ -12,7 +12,7 @@ class PageNumber extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputValue: '',
+            inputValue: this.props.element.pageNumberRef && this.props.element.pageNumberRef.pageNumber,
             loader: false
         }
     }

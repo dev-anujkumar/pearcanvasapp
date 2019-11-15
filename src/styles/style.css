@@ -230,6 +230,15 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     /* cursor: not-allowed !important; */
     pointer-events: none !important;
 }
+
+.noSeparatorContainer{
+    margin-bottom: 18px;
+}
+
 #tinymceToolbar {
     min-width: 681px;
+}
+
+P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
+    font-size: 100% !important;
 }

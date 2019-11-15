@@ -43,13 +43,17 @@ class ElementContainer extends Component {
             btnClassName: '',
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
-            showColorPalette: false,
+            showColorPaletteList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false,
             hasError: false
         };
     }
     componentDidMount() {
+         // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
+        if(this.props.element && this.props.element.hasOwnProperty('tcm')){
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': this.props.element.tcm});         
+        }
         this.setState({
             ElementId: this.props.element.id,
             btnClassName : '',
@@ -172,6 +176,7 @@ class ElementContainer extends Component {
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         this.props.updateElement(dataToSend, 0);
     }
     
@@ -229,7 +234,7 @@ class ElementContainer extends Component {
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index),parentUrn,asideData;
+                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData)
                         }
                         break;
 
@@ -263,6 +268,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
+            case elementTypeConstant.ELEMENT_LIST:
+                {
+                    let html = node.innerHTML;
+                    if (previousElementData.html && html !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index);
+                    }
+                    break;
+                }
         }
     }
 
@@ -316,7 +331,8 @@ class ElementContainer extends Component {
         }
     }
     toggleColorPaletteList = () => {
-        const { showColorPaletteList } = this.state
+        const { showColorPaletteList } = this.state;
+        this.handleFocus();
         this.setState({
             showColorPaletteList: !showColorPaletteList
         })
@@ -327,10 +343,15 @@ class ElementContainer extends Component {
      * @param {*} event event object
      */
     selectColor = (event) => {
-        const selectedColor = event.target.getAttribute('data-value')
+        const selectedColor = event.target.getAttribute('data-value');
+        const elementData = this.props.element;
         this.setState({
-            activeColorIndex: config.colors.indexOf(selectedColor)
-        })
+            activeColorIndex: config.colors.indexOf(selectedColor),
+            showColorPaletteList: false
+        });
+
+        elementData.backgroundcolor = selectedColor;
+        this.updateOpenerElement(elementData);
     }
 
     /**
@@ -397,8 +418,8 @@ class ElementContainer extends Component {
      * @param {*} index index of figure element
      * @param {*} cb callback method
      */
-    updateFigureData = (figureData, index, cb) => {
-        this.props.updateFigureData(figureData, index, cb)
+    updateFigureData = (figureData, index, elementId,cb) => {
+        this.props.updateFigureData(figureData, index,elementId, cb)
     }
 
     toolbarHandling = (action = "") => {
@@ -415,7 +436,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-    renderElement = (element = {}) => {
+    renderElement = (element = {}) => {        
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
         let labelText = fetchElementTag(element, index);
@@ -452,11 +473,11 @@ class ElementContainer extends Component {
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo accessDenied={accessDenied} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAudioVideo accessDenied={accessDenied} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment accessDenied={accessDenied} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment accessDenied={accessDenied} updateFigureData = {this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
@@ -538,22 +559,33 @@ class ElementContainer extends Component {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
+        let borderToggle = this.state.borderToggle;
+        let btnClassName = this.state.btnClassName;
+        let bceOverlay = "";
+        if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
+            if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default") {
+                bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
+            }
+             
+            borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
+            btnClassName = '';
+        }
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${this.state.btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${this.state.borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
-                    {editor}
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                    {bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element.tcm && <Button type="tcm" />}
+                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -700,8 +732,8 @@ const mapDispatchToProps = (dispatch) => {
         updateElement: (updatedData, elementIndex,parentUrn,asideData) => {
             dispatch(updateElement(updatedData, elementIndex,parentUrn,asideData))
         },
-        updateFigureData: (figureData, index, cb) => {
-            dispatch(updateFigureData(figureData, index, cb))
+        updateFigureData: (figureData, index, elementId ,cb) => {
+            dispatch(updateFigureData(figureData, index, elementId,cb))
         },
         updatePageNumber: (pagenumber, elementId, asideData, parentUrn) => {
             dispatch(updatePageNumber(pagenumber, elementId, asideData, parentUrn))
