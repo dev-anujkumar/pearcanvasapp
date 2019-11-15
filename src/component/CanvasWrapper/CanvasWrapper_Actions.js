@@ -42,7 +42,7 @@ const findElementType = (element, index) => {
 					case "authoredtext":
 					case "tableasmarkup":
 						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
-						let longDesc = element.figuredata.longdescripton ? element.figuredata.longdescripton : "" 	
+						let longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
