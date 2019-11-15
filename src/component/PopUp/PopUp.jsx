@@ -130,7 +130,6 @@ class PopUp extends React.Component {
     */
     
     renderDialogText = (props) => {
-        console.log("dialog-----",props)
         if(props.showDeleteElemPopup){
             return null
         }
