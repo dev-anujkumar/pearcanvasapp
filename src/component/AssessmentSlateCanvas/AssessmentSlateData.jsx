@@ -32,15 +32,6 @@ export class AssessmentSlateData extends Component {
             })
         }
     }
-    // componentDidUpdate(prevProps,prevState) {
-    //     console.log("prevProps",prevProps)
-    //     console.log("prevState",prevState)
-    //     if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid ) {
-    //         // this.setState({
-    //         //     activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
-    //         // })
-    //     }
-    // }
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
