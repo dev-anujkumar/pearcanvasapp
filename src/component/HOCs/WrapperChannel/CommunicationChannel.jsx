@@ -191,6 +191,14 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
+                case 'onTOCHamburgerClick':
+                    {
+                        /** To close list drop popup */
+                        let _listWrapperDiv = document.querySelector('#listDropWrapper')
+                        if (_listWrapperDiv)
+                            _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
+                        break
+                    }
             }
         }
 
