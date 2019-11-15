@@ -985,9 +985,9 @@ export class TinyMceEditor extends Component {
             lockCondition = true;
         }
 
-        let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
-        let id = 'cypress-' + this.props.index;       
-        classes = this.props.className + " cypress-editable " + this.placeHolderClass;
+        let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
+        let id = 'cypress-' + this.props.index;
+        classes += ' ' + this.placeHolderClass;
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
