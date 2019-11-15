@@ -116,12 +116,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
-            /*    for (let i = 0; i < newParentData[config.slateManifestURN].contents.bodymatter.length; i++) {
-                   let workUrn = newParentData[config.slateManifestURN].contents.bodymatter[i].id;
-                   if (workUrn === elmId) {
-                       newParentData[config.slateManifestURN].contents.bodymatter.splice(i, 1);
-                   }
-               } */
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, index) => {
                 if (element.id === elmId) {

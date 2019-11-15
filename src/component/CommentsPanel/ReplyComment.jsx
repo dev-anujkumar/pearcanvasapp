@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { utils } from '../../js/utils'
-import {config} from '../../config/config';
+import config from '../../config/config';
 class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
