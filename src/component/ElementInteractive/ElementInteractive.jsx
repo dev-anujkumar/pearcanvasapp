@@ -99,7 +99,7 @@ class Interactive extends React.Component {
             }
         }
         
-            that.props.updateFigureData(figureData, that.props.index, this.props.elementId,()=>{                
+            that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
                 that.props.handleFocus("updateFromC2");
                 setTimeout(()=>{
                     that.props.handleBlur()
