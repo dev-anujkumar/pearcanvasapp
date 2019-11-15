@@ -49,7 +49,7 @@ export class CanvasWrapper extends Component {
             return null;    
      }
 
-    componentDidMount() {        
+    componentDidMount() {  
         // To run Canvas Stabilization app as stand alone app //
         if (config.slateManifestURN) {
             this.props.fetchSlateData(config.slateManifestURN);

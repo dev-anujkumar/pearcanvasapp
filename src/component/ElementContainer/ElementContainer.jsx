@@ -50,6 +50,10 @@ class ElementContainer extends Component {
         };
     }
     componentDidMount() {
+         // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
+        if(this.props.element && this.props.element.hasOwnProperty('tcm')){
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': this.props.element.tcm});         
+        }
         this.setState({
             ElementId: this.props.element.id,
             btnClassName : '',
@@ -416,7 +420,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
     */
-    renderElement = (element = {}) => {
+    renderElement = (element = {}) => {        
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber } = this.props;
         let labelText = fetchElementTag(element, index);
@@ -457,7 +461,7 @@ class ElementContainer extends Component {
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment updateFigureData = {this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
@@ -554,7 +558,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element.tcm && <Button type="tcm" />}
+                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}

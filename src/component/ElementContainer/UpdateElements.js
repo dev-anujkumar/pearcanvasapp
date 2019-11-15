@@ -374,7 +374,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']          
+                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                tcm: true          
             }
             break;
 
