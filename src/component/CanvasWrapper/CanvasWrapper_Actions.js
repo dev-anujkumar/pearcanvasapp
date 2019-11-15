@@ -154,10 +154,16 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
 		let contentUrn = slateData.data[manifestURN].contentUrn;
 		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-		sendDataToIframe({
-			'type': "TcmStatusUpdated",
-			'message': JSON.stringify(slateData.data[manifestURN].tcm)
-		})
+		let messageTcmStatus = {
+			TcmStatus:{
+				tc_activated :JSON.stringify(slateData.data[manifestURN].tcm) 
+			}
+            
+        }
+        sendDataToIframe({
+            'type': "TcmStatusUpdated",
+            'message': messageTcmStatus
+        })
 		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,
