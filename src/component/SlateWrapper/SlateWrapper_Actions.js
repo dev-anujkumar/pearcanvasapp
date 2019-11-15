@@ -11,6 +11,7 @@ import {
     UPDATE_PAGENUMBER_FAIL,
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
+    ACCESS_DENIED_POPUP,
     FETCH_SLATE_DATA
     
 } from '../../constants/Action_Constants';
@@ -423,4 +424,12 @@ export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
         type: SET_SLATE_ENTITY,
         payload: setSlateEntity
     }) 
+}
+
+
+export const accessDenied = (value) => (dispatch, getState) => {
+    dispatch({
+        type: ACCESS_DENIED_POPUP,
+        payload: value
+    })
 }

@@ -239,6 +239,9 @@ class Sidebar extends Component {
                     }
                 }
             }
+            else if(primaryOptionList.text && primaryOptionList.text==="MMI" ){
+                primaryOptionList['attributes']={}
+            }
             if(primaryOptionList.attributes) {
                 attributionsObject = primaryOptionList.attributes;
                 attributionsList = Object.keys(attributionsObject);

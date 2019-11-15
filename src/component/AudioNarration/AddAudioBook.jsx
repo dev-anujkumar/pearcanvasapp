@@ -1,5 +1,6 @@
 import React from 'react';
 import { addAudioNarrationForContainer , showWrongAudioPopup } from './AudioNarration_Actions'
+import { accessDenied } from '../SlateWrapper/SlateWrapper_Actions'
 import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader} from '../../js/toggleLoader'
 import { c2MediaModule } from '../../js/c2_media_module';
@@ -74,7 +75,8 @@ class AddAudioBook extends React.Component {
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
 
-        if (alfrescoPath && alfrescoPath.nodeRef) {         //if alfresco location is available
+        if (alfrescoPath && alfrescoPath.nodeRef) {                     //if alfresco location is available
+            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    {    
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -93,6 +95,9 @@ class AddAudioBook extends React.Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
             this.handleC2ExtendedClick(data_1)
+            } else {
+                    this.props.accessDenied(true)
+            }
 
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
@@ -138,7 +143,8 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
     addAudioNarrationForContainer,
-    showWrongAudioPopup
+    showWrongAudioPopup,
+    accessDenied
 }
 
 export default connect(mapStateToProps, mapActionToProps)(AddAudioBook);

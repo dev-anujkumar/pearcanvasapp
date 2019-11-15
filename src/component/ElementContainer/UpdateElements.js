@@ -55,12 +55,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: captionHTML?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: subtitleHTML?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -122,12 +122,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: subtitleHTML?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -196,12 +196,12 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: subtitleHTML?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -279,12 +279,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         },
         html : {
-            captions: captionHTML?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: subtitleHTML?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: document.getElementById(`cypress-${index}-2`).innerHTML,
@@ -309,6 +309,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         html: {
             title: "<p></p>"
         }}
+        
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 

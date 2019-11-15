@@ -29,7 +29,8 @@ export class ElementMetaDataAnchor extends Component {
               model={wipmodel}
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
-              handleBlur={this.props.handleBlur}
+              handleBlur = {this.props.handleBlur}
+              permissions={this.props.permissions}
             />
           </div>
           <div className="Container">
@@ -43,7 +44,8 @@ export class ElementMetaDataAnchor extends Component {
                 model={this.prepareLOData(this.props.currentSlateLOData)}
                 slateLockInfo={slateLockInfo}
                 handleEditorFocus={this.props.handleFocus}
-                handleBlur={this.props.handleBlur}
+                handleBlur = {this.props.handleBlur}
+                permissions={this.props.permissions}
               />
             </div>
           </div>

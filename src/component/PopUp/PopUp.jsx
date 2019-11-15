@@ -70,18 +70,18 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if(props.assessmentAndInteractive)
-        return(
+        if(props.assessmentAndInteractive){
+            return(
             <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
                 <span className={`save-button ${props.splitSlateClass}`} onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Ok</span>
                 <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e,false)}>Cancel</span>
             </div>
-        )
+        )}
         else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
                     <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
-                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false,e)}>Cancel</span>
                 </div>
             )
         } 
