@@ -641,7 +641,9 @@ class SlateWrapper extends Component {
     }
 
     deleteAccepted = () => {
-        sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
+        if(this.props.tocDeleteMessage !== 'singleContainerDelete'){
+            sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
+        }
         this.deleteRejected()
     }
 
@@ -655,18 +657,34 @@ class SlateWrapper extends Component {
 
     showTocDeletePopup = () => {
         if (this.props.toggleTocDelete) {
-            return (
-                <PopUp
-                    togglePopup={this.deleteRejected}
-                    active={true}
-                    saveContent={this.deleteAccepted}
-                    saveButtonText='Yes'
-                    dialogText='Are you sure you want to delete, this action cannot be undone?'
-                    tocDelete={true}
-                    tocDeleteClass='tocDeleteClass'
-                />
-
-            )
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage === 'singleContainerDelete'){
+                return (
+                    <PopUp
+                        togglePopup={this.deleteRejected}
+                        active={true}
+                        saveContent={this.deleteAccepted}
+                        saveButtonText='Okay'
+                        dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
+                        tocDelete={true}
+                        tocDeleteClass='tocDeleteClass'
+                    />
+    
+                )
+            }
+            else{
+                return (
+                    <PopUp
+                        togglePopup={this.deleteRejected}
+                        active={true}
+                        saveContent={this.deleteAccepted}
+                        saveButtonText='Yes'
+                        dialogText='Are you sure you want to delete, this action cannot be undone?'
+                        tocDelete={true}
+                        tocDeleteClass='tocDeleteClass'
+                    />
+    
+                )
+            }
         }
     }
 
