@@ -74,8 +74,7 @@ class Sidebar extends Component {
                 primaryOption: value,
                 secondaryOption: secondaryFirstOption,
                 labelText,
-                toolbar: elementList[this.state.activeElementType][value].toolbar,
-                elementWipType: (value === 'primary-list') && 'element-list' || ''
+                toolbar: elementList[this.state.activeElementType][value].toolbar
             });
         }
     }
@@ -171,8 +170,7 @@ class Sidebar extends Component {
                 primaryOption: this.state.activePrimaryOption,
                 secondaryOption: value,
                 labelText,
-                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar,
-                elementWipType: (this.state.activePrimaryOption === 'primary-list') && 'element-list' || ''
+                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
             });
         }
     }
