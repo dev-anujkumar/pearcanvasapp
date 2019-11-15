@@ -116,10 +116,7 @@ export class CanvasWrapper extends Component {
                 </div>
 
                 <div className='workspace'>
-                    <div className = "sidebar-panel">
-                        {/* pull all sidebar panel */}
-                        <CommentsPanel />
-                    </div>
+                   
                     <div id='canvas' className='canvas'>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
@@ -130,6 +127,10 @@ export class CanvasWrapper extends Component {
                                 </RootContext.Provider>                                
                             </div>
                         </div>
+                    </div>
+                    <div className = "sidebar-panel">
+                        {/* pull all sidebar panel */}
+                        <CommentsPanel />
                     </div>
                     <div id='text-settings-toolbar'>
                         <div className='panel-text-settings'>
