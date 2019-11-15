@@ -34,4 +34,8 @@ h3.moduleName {
 }
 .learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
     display:none;
-  }
+}
+
+.learningObjectiveContainer .container {
+    pointer-events: none;
+}

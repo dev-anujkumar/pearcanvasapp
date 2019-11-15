@@ -34,7 +34,7 @@ export class ElementSingleAssessment extends Component {
     }
     
     handleC2AssessmentClick=(value)=> {
-        console.log("11111111111111")
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -58,6 +58,7 @@ export class ElementSingleAssessment extends Component {
         });
         hideTocBlocker();
     }
+    }
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
@@ -72,39 +73,34 @@ export class ElementSingleAssessment extends Component {
         }
         this.setState({assessmentId: id,assessmentItemId : itemID},
             ()=>{
-                this.saveAssessment({id,itemID,assessmentFormat});
+                this.saveAssessment();
         })
     }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {
-        console.log("value1",value)
         this.props.showBlocker(value);
         disableHeader(value);
-        // console.log("value2",value)
         value ? showTocBlocker(value) : hideTocBlocker(value)
-        // console.log("value1",value)
         this.setState({
             showAssessmentPopup : value
         });
-
-        // console.log("value3",value)
     }
 
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
         const {assessmentid,assessmentitemid,assessmentformat, assessmentitemtype}=this.props.model.figuredata.elementdata;
-       // let assessmentData={assessmentid: assessmentid,assessmentitemid: assessmentitemid, assessmentformat:assessmentformat }
         if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
                 activeAsseessmentUsageType: usageType
+            },()=>{
+                this.saveAssessment();
             });
         }
             this.setState({
                 asseessmentUsageTypeDropdown: false,
             })
-            this.saveAssessment({assessmentid,assessmentitemid,assessmentformat,assessmentitemtype,usageType} );
     }
 
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
@@ -123,11 +119,8 @@ export class ElementSingleAssessment extends Component {
         this.props.handleBlur();
     }
     /*** @description - This function will be called to save the assessment data */
-    saveAssessment = (assessmentData) =>{
-            this.props.updateFigureData(assessmentData, this.props.index,this.props.model.id, ()=>{
-            this.props.handleFocus()
-                this.props.handleBlur(assessmentData)
-            })   
+    saveAssessment = () =>{ 
+            this.props.handleBlur();
     }
 
     /*** @description - This function is for handling the different types of figure-element.

@@ -66,11 +66,11 @@ li.listItemNumeroUnoBullet::before {
     content: counter(item) ". ";
     counter-increment: item;
     font-weight: bold;
-    padding-right: 0.1em;
+    padding-right: 0.5em;
     text-align: right;
     position: absolute;
-    width: 4.5em;
-    margin: 0 0 1em -4.90em;
+    width: 10px;
+    transform: translateX(-100%);
 }
 
 ul li.listItemNumeroUnoBullet::before {
