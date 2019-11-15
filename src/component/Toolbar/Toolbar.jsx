@@ -42,11 +42,9 @@ const _Toolbar = props => {
      * Function for show/hide dropdown
      */
     function _handleLODropdown() {
-        console.log("_handleLODropdown")
         setLODropdown(!lodropdown);
     }
     function closeLODropdown() {
-        console.log("closeLODropdown")
         setLODropdown(!lodropdown);
     }
     /**
@@ -89,7 +87,7 @@ const _Toolbar = props => {
             <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
             {/* ***********************Slate Tag in toolbar******************************************** */}
             {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
-                <div className="leaningobjective-block">
+                <div className={"leaningobjective-block" + accessToolbar}>
                     <div className="learningobjectiveicon">
                         <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
                             {props.isLOExist ? slateTagEnable : slateTagDisable}
@@ -104,7 +102,7 @@ const _Toolbar = props => {
             {/* ***********************Audio Narration in toolbar******************************************** */}
             {
                 props.addAudio ?
-                    <div className="audio-block">
+                    <div className={"audio-block" + accessToolbar}>
                         <div className="audioicon">
                             <div className="audio audioicon" title="Audio Tag" onClick={() => _handleAddDropdown()}>
                                 {audioNarration}
@@ -115,7 +113,7 @@ const _Toolbar = props => {
                     </div> :
 
                     // for Enabling the audio Narration icon
-                    <div className="audio-block">
+                    <div className={"audio-block" + accessToolbar}>
                         <div className="audioicon">
                             <div className="audio audioicon" title="Audio Tag" onClick={() => _handleOpenDropdown()}>
                                 {audioNarrationEnable}
