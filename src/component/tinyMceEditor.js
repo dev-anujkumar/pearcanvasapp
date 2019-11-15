@@ -836,7 +836,7 @@ export class TinyMceEditor extends Component {
          * 3 . etc related to tinymce not in sync issues
          * must code to sync tinymce editor instances ant any moment of time
          */
-        for (let i = tinymce.editors.length - 1; i > 0; i--) {
+        for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                 tinymce.remove(`#${ed_id}`)
