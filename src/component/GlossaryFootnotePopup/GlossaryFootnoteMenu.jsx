@@ -12,13 +12,39 @@ import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
+        //context=this;
+        this.wrapperRef = null;
     }
+
+    handleClickOutside = (event) => {
+        if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            this.saveContent()
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+        //this.setWrapperRef(this);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+    /**
+      * Set the wrapper ref
+      */
+    setWrapperRef = (node) => {
+        this.wrapperRef = node;
+    }
+
 
     render() {
         const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
         console.table(glossaryFootnoteValue);
         return (
-            <GlossaryFootnotePopup showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue = {glossaryFootNoteCurrentValue}/>
+            <div>
+                <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
+            </div>
         )
     }
 

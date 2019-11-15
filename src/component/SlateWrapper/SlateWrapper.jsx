@@ -244,6 +244,8 @@ class SlateWrapper extends Component {
                                         scroll: true, // or HTMLElement
                                         filter: ".ignore-for-drag",
                                         draggable: ".editor",
+                                       // ignoreNextClick : false,
+                                        preventOnFilter: false,
                                         forceFallback: true,
                                         onStart: function (/**Event*/evt) {
                                             // same properties as onEnd
@@ -457,7 +459,7 @@ class SlateWrapper extends Component {
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
-        if (firstOne || type == "opener-elem") {
+        if ((firstOne || type === "opener-elem") && (!config.isCO)) {
             indexToinsert = Number(index)
         } else {
             indexToinsert = Number(index + 1)
@@ -690,7 +692,7 @@ class SlateWrapper extends Component {
                     return (
                         <React.Fragment key={element.id}>
                             {
-                                index === 0 && _slateType !== 'assessment' ?
+                                index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                     <ElementSaprator
                                         firstOne={index === 0}
                                         index={index}
@@ -700,7 +702,7 @@ class SlateWrapper extends Component {
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
                                     />
-                                    : null
+                                    : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                             }
                             <ElementContainer
                                 slateType={_slateType}

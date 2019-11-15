@@ -20,7 +20,7 @@ class GlossaryFootnotePopup extends Component {
         let id = glossaryFootnote === 'Glossary' ? 'glossary-1' : 'footnote-0';
 
         return (
-            <div className="glossary-toolbar-wrapper">
+            <div ref={this.props.setWrapperRef} className="glossary-toolbar-wrapper">
                 <div className="glossary-header">
                     <div className="glossary-title">
                         <Button type="close-container" onClick={saveContent} />
