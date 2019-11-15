@@ -70,13 +70,13 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if(props.assessmentAndInteractive)
-        return(
+        if(props.assessmentAndInteractive){
+            return(
             <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
                 <span className={`save-button ${props.splitSlateClass}`} onClick={()=>{props.handleC2Click(document.getElementById("inputUUID").value)}}>Ok</span>
                 <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e,false)}>Cancel</span>
             </div>
-        )
+        )}
         else {
             return(
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -92,6 +92,8 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
+        
+        console.log("input-----",props)
         if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio){
             return null
         }
@@ -130,6 +132,7 @@ class PopUp extends React.Component {
     */
     
     renderDialogText = (props) => {
+        console.log("dialog-----",props)
         if(props.showDeleteElemPopup){
             return null
         }
@@ -172,6 +175,8 @@ class PopUp extends React.Component {
     
     render() {
         const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
+        console.log("this.props>>>",this.props)
+        console.log(active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation)
         return (
             <div className="model">
                 {

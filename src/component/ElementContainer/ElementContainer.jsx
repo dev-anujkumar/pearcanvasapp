@@ -293,6 +293,21 @@ class ElementContainer extends Component {
         this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
         }
     }
+    /**
+     * Will e called on single assessment element's blur
+     */
+    handleBlurSingleAssessment = (assessmentData)=>{
+        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        let dataToSend = {...this.props.element}
+        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
+        let node = document.getElementById(activeEditorId);
+        dataToSend.figuredata.elementdata.assessmentformat = (assessmentData && assessmentData.assessmentformat ? assessmentData.assessmentformat : this.props.element.figuredata.assessmentformat);
+       // dataToSend.figuredata.elementdata.usagetype = (assessmentData && assessmentData.usageType ? assessmentData.usageType : "");
+        dataToSend.figuredata.elementdata.assessmentid = (assessmentData && assessmentData.assessmentid ? assessmentData.assessmentid : "");
+        dataToSend.figuredata.elementdata.assessmentitemid = (assessmentData && assessmentData.assessmentitemid ? assessmentData.assessmentitemid : "");
+        dataToSend.figuredata.elementdata.assessmentitemtype = (assessmentData && assessmentData.assessmentitemtype ? assessmentData.assessmentitemtype : "");
+        this.handleContentChange(node, dataToSend,  'element-assessment', primaryOption, secondaryOption, activeEditorId)
+    }
 
     /**
      * Will e called on assessment element's blur
@@ -437,6 +452,7 @@ class ElementContainer extends Component {
      * @param {element} 
     */
     renderElement = (element = {}) => {        
+        debugger
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber } = this.props;
         let labelText = fetchElementTag(element, index);
@@ -477,7 +493,7 @@ class ElementContainer extends Component {
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment updateFigureData = {this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment updateFigureData = {this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlurSingleAssessment} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
@@ -570,7 +586,7 @@ class ElementContainer extends Component {
             borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
             btnClassName = '';
         }
-        console.log("bce:::", this.props.activeElement);
+        //console.log("bce:::", this.props.activeElement);
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>

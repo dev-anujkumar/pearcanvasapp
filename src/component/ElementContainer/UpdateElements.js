@@ -309,14 +309,15 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         html: {
             title: "<p></p>"
         }}
+        
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 
-    let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
+    // let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
+    // dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
 
-    let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
+    // let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
+    // dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;

@@ -14,6 +14,7 @@ import elementDataBank from './elementDataBank'
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
+	debugger
 	try {
 		switch (element.type) {
 			case 'element-authoredtext':

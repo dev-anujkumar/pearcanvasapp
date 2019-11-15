@@ -17,16 +17,24 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId: null,
-            assessmentItemId : null,
+            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId : this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? props.model.figuredata.elementdata.assessmentitemid : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: props.model && props.model.figuredata && props.model.figuredata.elementdata &&props.model.figuredata.elementdata.usagetype ? props.model.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? props.model.figuredata.elementdata.usagetype : "Quiz",
 
         };
-    } 
-
+    }
+    componentDidMount() {
+        this.setState({
+            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
+        })
+    }
+    
     handleC2AssessmentClick=(value)=> {
+        console.log("11111111111111")
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -64,34 +72,41 @@ export class ElementSingleAssessment extends Component {
         }
         this.setState({assessmentId: id,assessmentItemId : itemID},
             ()=>{
-            this.saveAssessment();
+                this.saveAssessment({id,itemID,assessmentFormat});
         })
     }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {
+        console.log("value1",value)
         this.props.showBlocker(value);
         disableHeader(value);
+        // console.log("value2",value)
         value ? showTocBlocker(value) : hideTocBlocker(value)
+        // console.log("value1",value)
         this.setState({
             showAssessmentPopup : value
         });
+
+        // console.log("value3",value)
     }
 
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
+        const {assessmentid,assessmentitemid,assessmentformat, assessmentitemtype}=this.props.model.figuredata.elementdata;
+       // let assessmentData={assessmentid: assessmentid,assessmentitemid: assessmentitemid, assessmentformat:assessmentformat }
         if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
                 activeAsseessmentUsageType: usageType
-            }, () => {
-                this.saveAssessment();
             });
         }
             this.setState({
                 asseessmentUsageTypeDropdown: false,
             })
+            this.saveAssessment({assessmentid,assessmentitemid,assessmentformat,assessmentitemtype,usageType} );
     }
+
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
     toggleUsageTypeDropdown = () => {
         this.setState({
@@ -108,8 +123,11 @@ export class ElementSingleAssessment extends Component {
         this.props.handleBlur();
     }
     /*** @description - This function will be called to save the assessment data */
-    saveAssessment = () =>{
-        this.props.handleBlur();
+    saveAssessment = (assessmentData) =>{
+            this.props.updateFigureData(assessmentData, this.props.index,this.props.model.id, ()=>{
+            this.props.handleFocus()
+                this.props.handleBlur(assessmentData)
+            })   
     }
 
     /*** @description - This function is for handling the different types of figure-element.
@@ -159,10 +177,12 @@ export class ElementSingleAssessment extends Component {
     }
     render() {
         const { model, index, elementId } = this.props;
+        console.log("this.state.showAssessmentPopup>",this.state.showAssessmentPopup)
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
+                
             </div>
         );
     }
