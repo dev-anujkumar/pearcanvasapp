@@ -122,6 +122,7 @@ componentDidMount(){
      * @param activeAssessmentType - assessment -type 
     */
     mainAddAssessment = (e, activeAssessmentType) => {
+        if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_APP_TYPE:
                 return this.changeLearningApp('Quiz','insert')
@@ -140,6 +141,7 @@ componentDidMount(){
                 return this.addC2MediaAssessment(activeAssessmentType)
 
         }
+    }
     }
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
@@ -260,7 +262,7 @@ componentDidMount(){
                 <div className="clr"></div>
             </div>
         }
-        else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE) {
+        else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
             return (
                 <div>
                     <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />

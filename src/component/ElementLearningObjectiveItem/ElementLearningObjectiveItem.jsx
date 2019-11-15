@@ -35,6 +35,7 @@ export class ElementLearningObjectiveItem extends Component {
           onClick={this.onClick}
           slateLockInfo={slateLockInfo}
           onListSelect={this.props.onListSelect}
+          permissions={this.props.permissions}
         />
     )
 

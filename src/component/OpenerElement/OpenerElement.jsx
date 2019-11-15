@@ -89,6 +89,7 @@ class OpenerElement extends Component {
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
         if (alfrescoPath && alfrescoPath.nodeRef) {
+            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -105,6 +106,10 @@ class OpenerElement extends Component {
             data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
+            }
+            else{
+                this.props.accessDenied(true)
+            }
         } else {
             if (permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (data_1) {

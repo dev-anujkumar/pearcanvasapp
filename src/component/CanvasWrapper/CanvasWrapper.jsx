@@ -169,6 +169,7 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        permissions: state.appStore.permissions,
         logout
     };
 };

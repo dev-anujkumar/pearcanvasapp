@@ -48,6 +48,7 @@ export class ElementMetaLOList extends Component {
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
               handleBlur={this.props.handleBlur}
+              permissions={this.props.permissions}
             />
           </div>
           <div className="Container">
@@ -64,6 +65,7 @@ export class ElementMetaLOList extends Component {
                     handleEditorFocus={this.props.handleFocus}
                     slateLockInfo={slateLockInfo}
                     handleBlur={this.props.handleBlur}
+                    permissions={this.props.permissions}
                   />
                 </h2>
                 <TinyMceEditor
@@ -76,6 +78,7 @@ export class ElementMetaLOList extends Component {
                   handleEditorFocus={this.props.handleFocus}
                   slateLockInfo={slateLockInfo}
                   handleBlur={this.props.handleBlur}
+                  permissions={this.props.permissions}
                 />
               </div>
             </div>

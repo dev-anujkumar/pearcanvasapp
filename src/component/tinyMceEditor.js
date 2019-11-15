@@ -53,11 +53,13 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             force_p_newlines : false,
             setup: (editor) => {
-                this.setChemistryFormulaIcon(editor);
-                this.setMathmlFormulaIcon(editor);
+                if(this.props.permissions && this.props.permissions.includes('authoring_mathml')){
+                    this.setChemistryFormulaIcon(editor);
+                    this.setMathmlFormulaIcon(editor);
+                    this.addChemistryFormulaButton(editor);
+                    this.addMathmlFormulaButton(editor);
+                }                
                 this.setAssetPopoverIcon(editor);
-                this.addChemistryFormulaButton(editor);
-                this.addMathmlFormulaButton(editor);
                 this.addAssetPopoverIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.addGlossaryIcon(editor);

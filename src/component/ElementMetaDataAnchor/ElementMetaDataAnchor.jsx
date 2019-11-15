@@ -31,6 +31,7 @@ export class ElementMetaDataAnchor extends Component {
               handleEditorFocus={this.props.handleFocus}
               slateLockInfo={slateLockInfo}
               handleBlur = {this.props.handleBlur}
+              permissions={this.props.permissions}
             />
           </div>
           <div className="Container">
@@ -45,6 +46,7 @@ export class ElementMetaDataAnchor extends Component {
                 slateLockInfo={slateLockInfo}
                 handleEditorFocus={this.props.handleFocus}
                 handleBlur = {this.props.handleBlur}
+                permissions={this.props.permissions}
               />
             </div>
           </div>

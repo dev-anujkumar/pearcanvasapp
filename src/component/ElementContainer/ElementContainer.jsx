@@ -31,7 +31,7 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
-import { updatePageNumber } from '../SlateWrapper/SlateWrapper_Actions';
+import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 
 class ElementContainer extends Component {
     constructor(props) {
@@ -417,7 +417,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         /* TODO need better handling with a function and dynamic component rendering with label text*/
@@ -429,7 +429,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex } = this.state
-                    editor = <OpenerElement permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    editor = <OpenerElement accessDenied={accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -447,27 +447,27 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                         case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                            editor = <ElementFigure updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id}/>;
+                            editor = <ElementFigure accessDenied={accessDenied} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} elementId={element.id}/>;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
-                            editor = <ElementAudioVideo updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementAudioVideo accessDenied={accessDenied} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} slateLockInfo={slateLockInfo} />;
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment accessDenied={accessDenied} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
                             switch (element.figuredata.interactiveformat) {
                                 case elementTypeConstant.INTERACTIVE_MMI:
-                                    editor = <ElementInteractive showBlocker={this.props.showBlocker} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    editor = <ElementInteractive accessDenied={accessDenied} showBlocker={this.props.showBlocker} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                     labelText = element.figuredata.interactivetype == 'showhide' ? 'SH' : 'MMI';
                                     break;
                                 case elementTypeConstant.INTERACTIVE_EXTERNAL_LINK:
                                 case elementTypeConstant.INTERACTIVE_NARRATIVE_LINK:
-                                    editor = <ElementInteractive showBlocker={this.props.showBlocker} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
+                                    editor = <ElementInteractive accessDenied={accessDenied} showBlocker={this.props.showBlocker} updateFigureData = {this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} />;
                                     labelText = LABELS[element.figuredata.interactiveformat];
                                     break;
                             }
@@ -530,7 +530,7 @@ class ElementContainer extends Component {
                     labelText = 'LO'
                     break;
                 case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
-                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementMetaLOList showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'MA'
                     break;
             }
@@ -708,7 +708,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetTableDataAction: (isReplaced) => {
             dispatch(resetTableDataAction(isReplaced))
-        } 
+        } ,
+        accessDenied
     }
 }
 

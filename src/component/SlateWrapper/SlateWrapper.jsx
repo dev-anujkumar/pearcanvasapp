@@ -14,7 +14,7 @@ import {
     createElement, swapElement,
     setSplittedElementIndex,
     updatePageNumber,
-    
+    accessDenied
 } from './SlateWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate } from '../../constants/IFrameMessageTypes.js';
@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -789,7 +789,12 @@ class SlateWrapper extends Component {
         this.props.showBlocker(false)
         hideTocBlocker()
         hideBlocker()
+        if(this.props.accesDeniedPopup){
+            this.props.accessDenied(false)
+        }
+        else{
         this.props.showWrongAudioPopup(false)
+        }
     }
 
     /**
@@ -861,6 +866,23 @@ class SlateWrapper extends Component {
         }
         else{
             return null
+        }
+    }
+
+    accessDeniedPopup = () => {
+        if (this.props.accesDeniedPopup ) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={ACCESS_DENIED_CONTACT_ADMIN}
+                    active={true}
+                    wrongAudio={true}
+                    audioRemoveClass={audioRemoveClass}
+                    saveButtonText='OK'
+                    togglePopup={this.toggleWrongAudioPopup}
+                />
+            )
         }
     }
 
@@ -941,7 +963,8 @@ const mapStateToProps = state => {
         openWrongAudioPopup : state.audioReducer.openWrongAudioPopup,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
-        indexSplit : state.audioReducer.indexSplit
+        indexSplit : state.audioReducer.indexSplit,
+        accesDeniedPopup : state.appStore.accesDeniedPopup
     };
 };
 
@@ -961,6 +984,7 @@ export default connect(
         setSlateLock,
         releaseSlateLock,
         setActiveElement,
-        showWrongAudioPopup
+        showWrongAudioPopup,
+        accessDenied
     }
 )(SlateWrapper);

@@ -268,9 +268,16 @@ function WithWrapperCommunication(WrappedComponent) {
             let permissionObj = this.props.currentProject || null;
             if (permissionObj === null) {
                 permissionObj = {};
-                permissionObj.permissions = [
-                    'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
-                ];
+                if (this.props.permissions) {
+                    let tocEditTitle = this.props.permissions.includes('toc_edit_title') ? 'toc_edit_title' : ""
+                    let tocDelete = this.props.permissions.includes('toc_delete_entry') ? 'toc_delete_entry' : ""
+                    let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
+                    let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
+                    permissionObj.permissions = [tocEditTitle , tocDelete , tocRearrage , tocAdd]
+                }
+                // permissionObj.permissions = [
+                //     'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
+                // ];
                 permissionObj.roleId = 'admin';
             }
 
