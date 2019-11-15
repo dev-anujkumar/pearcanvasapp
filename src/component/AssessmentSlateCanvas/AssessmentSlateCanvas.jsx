@@ -81,6 +81,7 @@ export class AssessmentSlateCanvas extends Component {
      * @param  value alfresco locationData
      */
     handleC2AssessmentClick=(value)=> {
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let assessmentType=this.selectAssessmentType();
         let fileName = "";
         let filterType = [assessmentType.toUpperCase()] || ['CITE'];
@@ -105,7 +106,7 @@ export class AssessmentSlateCanvas extends Component {
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
            this.launchAssetBrowserCallBack(assessmentData)   
         });
-
+    }
     }
 
     /*** 
@@ -213,6 +214,7 @@ export class AssessmentSlateCanvas extends Component {
                     // linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
+                    permissions={this.props.permissions}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -220,6 +222,7 @@ export class AssessmentSlateCanvas extends Component {
                     model={this.props.model}
                     handleEditorFocus={this.props.handleFocus}
                     className="addLOdata"
+                    permissions={this.props.permissions}
                 />
                     
                 {this.state.showAssessmentPopup ? <PopUp handleC2Click={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup} assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} /> : ''}
@@ -233,7 +236,8 @@ AssessmentSlateCanvas.displayName = "AssessmentSlateCanvas"
 const mapStateToProps = (state, props) => {
     return {
         toggleLT: state.learningToolReducer.toggleLT,
-        selectedResultFormApi: state.learningToolReducer.selectedResultFormApi
+        selectedResultFormApi: state.learningToolReducer.selectedResultFormApi,
+        permissions: state.appStore.permissions
     }
 }
 const mapActionToProps = {

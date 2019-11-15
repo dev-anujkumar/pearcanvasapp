@@ -24,7 +24,8 @@ import {
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
     UPDATE_FOOTNOTEGLOSSARY, 
-    FETCH_DATA_ON_SLATE_REFRESH
+    FETCH_DATA_ON_SLATE_REFRESH,
+    ACCESS_DENIED_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -39,6 +40,7 @@ const initialState = {
     splittedElementIndex: 0,
     pageNumberData: {},
     permissions: [],
+    accesDeniedPopup: false
 };
 
 /**
@@ -133,6 +135,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                  pageLoading:action.payload.pageLoading
+            }
+        case ACCESS_DENIED_POPUP:
+            return {
+                ...state,
+                accesDeniedPopup : action.payload
             }
         case UPDATE_PAGENUMBER_FAIL: 
         return {

@@ -170,6 +170,7 @@ const mapStateToProps = state => {
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        permissions: state.appStore.permissions,
         logout
     };
 };

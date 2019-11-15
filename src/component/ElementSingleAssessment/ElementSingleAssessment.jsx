@@ -27,6 +27,7 @@ export class ElementSingleAssessment extends Component {
     } 
 
     handleC2AssessmentClick=(value)=> {
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -49,6 +50,7 @@ export class ElementSingleAssessment extends Component {
             this.launchAssetBrowserCallBack(assessmentData) 
         });
         hideTocBlocker();
+    }
     }
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];

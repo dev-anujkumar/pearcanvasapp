@@ -153,7 +153,7 @@ const LowerRomanListIconBox = (props) => {
  * @param {object} props | received props to <ListButtonDrop />
  */
 const NoStyleListIconBox = (props) => {
-    const _listFor = 'no-style';
+    const _listFor = 'none';
     return (
         <div className={`list-options ${props.selectedOption === _listFor ? 'selected' : ''}`} onClick={() => { onListOptionSelect(_listFor, props) }} id={`${_listFor}-1`} tabIndex="-1" data-cmd={_listFor}>
             <span className="list-option-row no-style">None</span>
