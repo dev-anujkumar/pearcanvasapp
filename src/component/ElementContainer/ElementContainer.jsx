@@ -43,7 +43,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             showDeleteElemPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
-            showColorPalette: false,
+            showColorPaletteList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false,
             hasError: false
@@ -264,6 +264,16 @@ class ElementContainer extends Component {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     break;
+            case elementTypeConstant.ELEMENT_LIST:
+                {
+                    let html = node.innerHTML;
+                    if (previousElementData.html && html !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index);
+                    }
+                    break;
+                }
         }
     }
 
@@ -317,7 +327,8 @@ class ElementContainer extends Component {
         }
     }
     toggleColorPaletteList = () => {
-        const { showColorPaletteList } = this.state
+        const { showColorPaletteList } = this.state;
+        this.handleFocus();
         this.setState({
             showColorPaletteList: !showColorPaletteList
         })
@@ -328,10 +339,15 @@ class ElementContainer extends Component {
      * @param {*} event event object
      */
     selectColor = (event) => {
-        const selectedColor = event.target.getAttribute('data-value')
+        const selectedColor = event.target.getAttribute('data-value');
+        const elementData = this.props.element;
         this.setState({
-            activeColorIndex: config.colors.indexOf(selectedColor)
-        })
+            activeColorIndex: config.colors.indexOf(selectedColor),
+            showColorPaletteList: false
+        });
+
+        elementData.backgroundcolor = selectedColor;
+        this.updateOpenerElement(elementData);
     }
 
     /**
@@ -539,20 +555,32 @@ class ElementContainer extends Component {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
         }
 
+        let borderToggle = this.state.borderToggle;
+        let btnClassName = this.state.btnClassName;
+        let bceOverlay = "";
+        if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
+            if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default") {
+                bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
+            }
+             
+            borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
+            btnClassName = '';
+        }
+        console.log("bce:::", this.props.activeElement);
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${this.state.btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
                 </div>
                     : ''}
-                <div className={`element-container ${labelText.toLowerCase()} ${this.state.borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
-                    {editor}
+                <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
+                    {bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={this.state.btnClassName} onClick={() => this.handleCommentPopup(true)} />}
+                    {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
                     {element.tcm && <Button type="tcm" />}
                 </div> : ''}
