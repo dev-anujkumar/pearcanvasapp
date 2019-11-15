@@ -104,11 +104,14 @@ const findElementType = (element, index) => {
 				}
 				break;
 
-			case 'element-list':
+			case 'element-list': {
+				let type = element.type
+				let subtype = element.subtype || element.elementdata.subtype
 				elementType = {
-					...elementDataBank[element.type][element.subtype]
+					...elementDataBank[type][subtype]
 				}
 				break;
+			}
 
 			case 'element-learningobjectivemapping':
 			case 'element-generateLOlist':

@@ -497,7 +497,7 @@ class ElementContainer extends Component {
                 case elementTypeConstant.ELEMENT_LIST:
                     editor = <ListElement permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} />;
                     labelText = 'OL'
-                    if (element.subtype === 'disc')
+                    if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
                     break;
                 case elementTypeConstant.ELEMENT_ASIDE:
