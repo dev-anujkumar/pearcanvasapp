@@ -42,11 +42,9 @@ const _Toolbar = props => {
      * Function for show/hide dropdown
      */
     function _handleLODropdown() {
-        console.log("_handleLODropdown")
         setLODropdown(!lodropdown);
     }
     function closeLODropdown() {
-        console.log("closeLODropdown")
         setLODropdown(!lodropdown);
     }
     /**
