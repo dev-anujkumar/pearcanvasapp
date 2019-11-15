@@ -93,7 +93,7 @@ export class TinyMceEditor extends Component {
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
-                    if (activeElement) { 
+                    if (activeElement) {
                         if(content.trim().length || contentHTML.match(/<math/g)){
                             activeElement.classList.remove('place-holder')
                         }
@@ -101,14 +101,17 @@ export class TinyMceEditor extends Component {
                             activeElement.classList.add('place-holder')
                         }
                     }
-                  });
+                });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
-                    e.preventDefault();                   
-                    e.stopPropagation();                   
-                    })
-                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
-                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+                    e.preventDefault();
+                    e.stopPropagation();
+                })       
+                editor.shortcuts.add('alt+shift+5', "description of the strike through shortcut", function () {
+                    editor.execCommand('Strikethrough', false);
+                });
+                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
+                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
                 revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
                 document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
             }
@@ -168,7 +171,11 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
-                
+                case "FormatBlock":
+                    if (e.value === 'h5'){
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
             }
         })
     }

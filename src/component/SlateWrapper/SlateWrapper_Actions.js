@@ -276,9 +276,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
             }
         }
     ).then(res => {
-        //sendDataToIframe({ 'type': NextSlate, 'message': {} })
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-        console.log("new slate data",slateLevelData)
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: {
