@@ -436,6 +436,14 @@ function WithWrapperCommunication(WrappedComponent) {
             /**
              * TO BE IMPLEMENTED
              *  */
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
+
+            this.setState({
+                toggleTocDelete: true,
+                tocDeleteMessage: "singleContainerDelete"
+            })
         }
 
         updateSlateTitleByID = (messageObj) => {

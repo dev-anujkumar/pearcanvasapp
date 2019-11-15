@@ -116,12 +116,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
-            /*    for (let i = 0; i < newParentData[config.slateManifestURN].contents.bodymatter.length; i++) {
-                   let workUrn = newParentData[config.slateManifestURN].contents.bodymatter[i].id;
-                   if (workUrn === elmId) {
-                       newParentData[config.slateManifestURN].contents.bodymatter.splice(i, 1);
-                   }
-               } */
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, index) => {
                 if (element.id === elmId) {
@@ -244,11 +238,15 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-    // newParentData[config.slateManifestURN].contents.bodymatter[elementIndex].figuredata = figuredata
-    if (typeof (index) == 'number') {
+      if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
-            newBodymatter[index].figuredata = figureData
-            element = newBodymatter[index]
+            if(newBodymatter[index].figuretype==="assessment"){
+                newBodymatter[index].figuredata['elementdata'] = figureData
+                element = newBodymatter[index]
+            }else{
+                newBodymatter[index].figuredata = figureData
+                element = newBodymatter[index]
+            }          
         }
     } else {
         let indexes = index.split('-');
@@ -256,17 +254,28 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == elementId) {
-                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
-                element = condition
+                if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype==="assessment"){
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
+                    element = newBodymatter[index]
+                }else{
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
+                    element = condition
+                }
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == elementId) {
-                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
-                element = condition
+                if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment"){
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
+                    element = condition
+                }else{
+                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                    element = condition
+                }
+
             }
         }
-    }
+      }
     dispatch({
         type: SET_OLD_IMAGE_PATH,
         payload: {
