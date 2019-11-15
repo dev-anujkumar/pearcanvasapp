@@ -53,11 +53,13 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             force_p_newlines : false,
             setup: (editor) => {
-                this.setChemistryFormulaIcon(editor);
-                this.setMathmlFormulaIcon(editor);
+                if(this.props.permissions && this.props.permissions.includes('authoring_mathml')){
+                    this.setChemistryFormulaIcon(editor);
+                    this.setMathmlFormulaIcon(editor);
+                    this.addChemistryFormulaButton(editor);
+                    this.addMathmlFormulaButton(editor);
+                }                
                 this.setAssetPopoverIcon(editor);
-                this.addChemistryFormulaButton(editor);
-                this.addMathmlFormulaButton(editor);
                 this.addAssetPopoverIcon(editor);
                 this.addFootnoteIcon(editor);
                 this.addGlossaryIcon(editor);
@@ -93,7 +95,7 @@ export class TinyMceEditor extends Component {
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
-                    if (activeElement) { 
+                    if (activeElement) {
                         if(content.trim().length || contentHTML.match(/<math/g)){
                             activeElement.classList.remove('place-holder')
                         }
@@ -101,14 +103,17 @@ export class TinyMceEditor extends Component {
                             activeElement.classList.add('place-holder')
                         }
                     }
-                  });
+                });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
-                    e.preventDefault();                   
-                    e.stopPropagation();                   
-                    })
-                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
-                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+                    e.preventDefault();
+                    e.stopPropagation();
+                })       
+                editor.shortcuts.add('alt+shift+5', "description of the strike through shortcut", function () {
+                    editor.execCommand('Strikethrough', false);
+                });
+                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
+                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
                 revertingTempContainerHtml = revertingTempContainerHtml.replace('temp-data-mathml','data-mathml').replace('temp_Wirisformula','Wirisformula');
                 document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
             }
@@ -168,7 +173,11 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                     }
                     break;
-                
+                case "FormatBlock":
+                    if (e.value === 'h5'){
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
             }
         })
     }
@@ -881,6 +890,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+            if(tinymce.activeEditor && tinymce.activeEditor.id){
+                document.getElementById(tinymce.activeEditor.id).contentEditable = false
+                return
+            }
+        }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -971,9 +986,9 @@ export class TinyMceEditor extends Component {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId;
 
-        let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
-        let id = 'cypress-' + this.props.index;       
-        classes = this.props.className + " cypress-editable " + this.placeHolderClass;
+        let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
+        let id = 'cypress-' + this.props.index;
+        classes += ' ' + this.placeHolderClass;
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':

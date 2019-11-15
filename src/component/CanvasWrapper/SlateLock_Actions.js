@@ -9,19 +9,20 @@ import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Con
  * @param {*} slateId Slate manifest URN
  */
 export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) => { 
+    if(config.isSlateLockChecked){
+        return false;
+    }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
     return axios.get(url)
         .then((res) => {
-            //console.log("Slate lock info fetch success:", res)
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: res.data
-                // payload: {}
             })
+            config.isSlateLockChecked = true;
         })
         .catch((err) => {
-            //console.log("Slate lock info fetch failed:", err)
         })
 } 
 
