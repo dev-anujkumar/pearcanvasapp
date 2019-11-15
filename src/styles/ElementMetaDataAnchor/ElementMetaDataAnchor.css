@@ -67,4 +67,10 @@ width:230px;
 .learningObjectiveContainer .container {
     pointer-events: none;
 }
+.learningObjectiveinnerText img{
+    vertical-align:middle;
+}
+.Wirisformula{
+    cursor:pointer;
+}
  

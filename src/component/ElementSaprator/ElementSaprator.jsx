@@ -126,62 +126,86 @@ export function addMediaClickHandler() {
     console.log('add media button clicked')
 }
 
+
+/**
+ * @description: rendering the aside dropdown
+ */
+function asideButton(esProps,sectionBreak){
+    let updatedEsProps = esProps.filter((btnObj) => {
+      let  buttonType = btnObj.buttonType;
+        if (sectionBreak) {
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
+        } else {
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
+        }
+    })
+    return updatedEsProps;
+}
+
 /**
  * @description: rendering the dropdown
  */
 export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown) {
     let updatedEsProps, buttonType;
+    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
+        if (elementType == ELEMENT_ASIDE) {
+            esProps = asideButton(esProps, sectionBreak);
+            updatedEsProps = esProps.filter((btnObj) => {
+                buttonType = btnObj.buttonType;
+                return buttonType !== METADATA_ANCHOR;
+            })
 
-    if (config.slateType == CONTAINER_INTRO && (!config.isCO || config.isLOL)) {
-        // hide the metadata anchor on IS when its once created
-        if (config.isLOL) {
-            let elements = document.getElementsByClassName(METADATA_ANCHOR);
-            for (let key in elements) {
-                if (elements[key].className) { elements[key].className += " disabled"; }
-            }
+        } else {
+            updatedEsProps = esProps.filter((btnObj) => {
+                buttonType = btnObj.buttonType;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER;
+            })
         }
 
-        if (!config.isCO) {
-            updatedEsProps = esProps.filter((btnObj) => {
-                return btnObj.buttonType !== SECTION_BREAK;
-            })
-        } else {
+    }
+    else {
+        if (config.slateType == CONTAINER_INTRO && (!config.isCO || config.isLOL)) {
+            // hide the metadata anchor on IS when its once created
+            if (config.isLOL) {
+                let elements = document.getElementsByClassName(METADATA_ANCHOR);
+                for (let key in elements) {
+                    if (elements[key].className) { elements[key].className += " disabled"; }
+                }
+            }
+
+            if (!config.isCO) {
+                updatedEsProps = esProps.filter((btnObj) => {
+                    return btnObj.buttonType !== SECTION_BREAK;
+                })
+            } else {
+                updatedEsProps = esProps.filter((btnObj) => {
+                    buttonType = btnObj.buttonType;
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER;
+                })
+            }
+            if (elementType == ELEMENT_ASIDE) {
+                esProps = asideButton(esProps, sectionBreak);
+                updatedEsProps = esProps.filter((btnObj) => {
+                    buttonType = btnObj.buttonType;
+                    return buttonType !== METADATA_ANCHOR;
+                })
+            }
+
+        }
+        else if (elementType == ELEMENT_ASIDE) {
+            updatedEsProps = asideButton(esProps, sectionBreak);
+           
+        }
+       
+        else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== SECTION_BREAK && buttonType !== OPENER;
             })
         }
-
-    } else {
-        updatedEsProps = esProps.filter((btnObj) => {
-            buttonType = btnObj.buttonType;
-            return buttonType !== SECTION_BREAK && buttonType !== OPENER;
-        })
     }
 
-    //hide the metadata anchor from frontmatter and backmatter
-    if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER) {
-        updatedEsProps = esProps.filter((btnObj) => {
-            buttonType = btnObj.buttonType;
-            return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER;
-        })
-    }
-
-    if (elementType == ELEMENT_ASIDE ) {
-        updatedEsProps = esProps.filter((btnObj) => {
-            buttonType = btnObj.buttonType;
-            if (sectionBreak && (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER)) {
-                return  buttonType !== WORKED_EXP && buttonType !== CONTAINER && buttonType !== OPENER;
-            } else if(!sectionBreak && (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER)) {
-                return buttonType !== SECTION_BREAK && buttonType !== METADATA_ANCHOR && buttonType !== OPENER && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
-            }else if (sectionBreak && (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER)){
-                return buttonType !== METADATA_ANCHOR && buttonType !== OPENER && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
-            }else{
-                return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER;
-            }
-        })
-        
-    }
+    
 
     return updatedEsProps.map((elem, key) => {
         function buttonHandlerFunc() {
