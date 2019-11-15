@@ -23,6 +23,7 @@ export class ElementAuthoring extends Component {
           handleBlur = {this.props.handleBlur}
           slateLockInfo={slateLockInfo}
           onListSelect={this.props.onListSelect}
+          permissions={this.props.permissions}
         />
     )
 
