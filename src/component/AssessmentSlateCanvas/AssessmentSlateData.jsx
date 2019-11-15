@@ -32,13 +32,6 @@ export class AssessmentSlateData extends Component {
             })
         }
     }
-    componentDidUpdate() {
-        if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
-            this.setState({
-                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : "Quiz",
-            })
-        }
-    }
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
         console.log(selectedLearningType);
@@ -132,6 +125,7 @@ export class AssessmentSlateData extends Component {
      * @param activeAssessmentType - assessment -type 
     */
     mainAddAssessment = (e, activeAssessmentType) => {
+        if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_APP_TYPE:
                
@@ -150,6 +144,7 @@ export class AssessmentSlateData extends Component {
                 return this.addC2MediaAssessment(activeAssessmentType)
 
         }
+    }
     }
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
@@ -272,7 +267,7 @@ export class AssessmentSlateData extends Component {
                 <div className="clr"></div>
             </div>
         }
-        else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE) {
+        else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
             return (
                 <div>
                     <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
