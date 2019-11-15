@@ -42,10 +42,10 @@ class GlossaryFootnoteMenu extends React.Component {
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
-        let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
-        let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
-        let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
-        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementInnerHtml)
+        // let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
+        // let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
+        // let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
         this.props.showGlossaaryFootnote(false);
     }
 }

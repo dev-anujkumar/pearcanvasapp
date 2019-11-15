@@ -27,26 +27,33 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
 
-        if (typeof (index) == 'number') {
-            if (newBodymatter[index].versionUrn == elementWorkId) {
-                glossaryFootElem = newBodymatter[index]
-            }
-        } else {
-            let indexes = index.split('-');
-            let indexesLen = indexes.length, condition;
-            if (indexesLen == 2) {
-                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                if (condition.versionUrn == elementWorkId) {
-                    glossaryFootElem = condition
-                }
-            } else if (indexesLen == 3) {
-                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                if (condition.versionUrn == elementWorkId) {
-                    glossaryFootElem = condition
-                }
-            }
+        if(elementType === "figure"){
+            let updatedIndex = index.split('-')[0];
+            console.log("newBodymatter[updatedIndex ",newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
+            glossaryFootElem = newBodymatter[updatedIndex]
+            console.log('This si index', glossaaryFootnoteValue, index, newBodymatter[updatedIndex])
 
         }
+        // if (typeof (index) == 'number') {
+        //     if (newBodymatter[index].versionUrn == elementWorkId) {
+        //         glossaryFootElem = newBodymatter[index]
+        //     }
+        // } else {
+        //     let indexes = index.split('-');
+        //     let indexesLen = indexes.length, condition;
+        //     if (indexesLen == 2) {
+        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+        //         if (condition.versionUrn == elementWorkId) {
+        //             glossaryFootElem = condition
+        //         }
+        //     } else if (indexesLen == 3) {
+        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+        //         if (condition.versionUrn == elementWorkId) {
+        //             glossaryFootElem = condition
+        //         }
+        //     }
+
+        // }
 
 
         switch (semanticType) {
@@ -79,16 +86,46 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementInnerHtml) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition) => {
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
-    let data = {}
+    let data = {}, figureDataObj
     var index = store.getState().glossaryFootnoteReducer.elementIndex;
     const slateId = config.slateManifestURN;
     const parentData = store.getState().appStore.slateLevelData;
     let newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[slateId].contents.bodymatter;
+    let workEditor, workContainer;
+
+    console.log('thsi si sinner html', workContainer)
+
+    if(elementType == 'figure'){
+        console.log('thsis is index in figure', index)
+
+        let label, title, captions, credits, elementIndex
+        elementIndex = index.split('-')[0]
+        label = document.getElementById('cypress-'+elementIndex+'-0').innerHTML //cypress-1-0
+        title = document.getElementById('cypress-'+elementIndex+'-1').innerHTML //cypress-1-1
+        captions = document.getElementById('cypress-'+elementIndex+'-2').innerHTML //cypress-1-2
+        credits = document.getElementById('cypress-'+elementIndex+'-3').innerHTML //cypress-1-3
+
+        figureDataObj = {
+            "title": label,
+            "subtitle": title,
+            "text": "",
+            "postertext": "",
+            "tableasHTML": "",
+            "captions": captions,
+            "credits": credits
+        }
+    }else{
+        workEditor = document.getElementById('cypress-'+index)
+        workContainer = workEditor.innerHTML;
+        figureDataObj = {
+            "text": workContainer
+        }
+    }
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -98,7 +135,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 versionUrn: null,
                 contentUrn: null,
                 html: {
-                    text: elementInnerHtml,
+                    ...figureDataObj,
                     glossaryentries: {},
                     footnotes: footnoteEntry,
                     assetspopover: {}
@@ -117,7 +154,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 versionUrn: null,
                 contentUrn: null,
                 html: {
-                    text: elementInnerHtml,
+                    ...figureDataObj,
                     glossaryentries: glossaryEntry,
                     footnotes: {},
                     assetspopover: {}
@@ -126,6 +163,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
+    console.log('>>>>>>>>>>>>> data', data)
     let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     axios.put(url, JSON.stringify(data), {
         headers: {
@@ -134,26 +172,32 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }).then(res => {
 
-        if (typeof (index) == 'number') {
-            if (newBodymatter[index].versionUrn == elementWorkId) {
-                newBodymatter[index] = res.data
-            }
-        } else {
-            let indexes = index.split('-');
-            let indexesLen = indexes.length, condition;
-            if (indexesLen == 2) {
-                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                if (condition.versionUrn == elementWorkId) {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
-                }
-            } else if (indexesLen == 3) {
-                condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                if (condition.versionUrn == elementWorkId) {
-                    newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
-                }
-            }
-
+        if(elementType === "figure"){
+            let updatedIndex = index.split('-')[0];
+            newBodymatter[updatedIndex] = res.data;
+            console.log('>>>>>>>>', newBodymatter[updatedIndex])
         }
+
+       
+        // if (typeof (index) == 'number') {
+        //     if (newBodymatter[index].versionUrn == elementWorkId) {
+        //         newBodymatter[index] = res.data
+        //     }
+        // } else {
+        //     let indexes = index.split('-');
+        //     let indexesLen = indexes.length, condition;
+        //     if (indexesLen == 2) {
+        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+        //         if (condition.versionUrn == elementWorkId) {
+        //             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+        //         }
+        //     } else if (indexesLen == 3) {
+        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+        //         if (condition.versionUrn == elementWorkId) {
+        //             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+        //         }
+        //     }
+        // }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {
