@@ -172,6 +172,11 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                     }
+                    else if(selectedText===window.getSelection().anchorNode.nodeValue){
+                        e.target.targetElm.children[0].innerHTML=window.getSelection().toString();
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     break;
                 case "FormatBlock":
                     if (e.value === 'h5'){
