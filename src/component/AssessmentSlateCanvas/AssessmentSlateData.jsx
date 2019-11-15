@@ -13,7 +13,7 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeAssessmentType: 'Select',
+            activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
@@ -35,7 +35,6 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-        console.log(selectedLearningType);
         this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
@@ -53,7 +52,7 @@ export class AssessmentSlateData extends Component {
     
     /*** @description - This function is to change the lerning system
     */
-    changeLearningApp(usageType, change) {
+    changeLearningApp(learningType, change) {
         showTocBlocker();
         disableHeader(true);
         this.props.showBlocker(true);
@@ -61,10 +60,10 @@ export class AssessmentSlateData extends Component {
         this.props.openLTFunction(); 
         this.props.openLtAction();  
         this.setState({
-            dropdownValue: LEARNING_APP_TYPE,
+            activeAssessmentType: learningType,
             changeLearningData: true,
             learningToolStatus: change
-        });            
+        });         
 }
 
     /*** @description - This function is to handle change in assessment/LT-LA
@@ -87,7 +86,8 @@ export class AssessmentSlateData extends Component {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
         } else if (assessmentFormat === LEARNING_TEMPLATE) {
-            this.changeLearningApp(LEARNING_TEMPLATE,'update'); 
+            this.mainAddAssessment(e, LEARNING_TEMPLATE);
+            // this.changeLearningApp(LEARNING_TEMPLATE,'update'); 
             } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
@@ -128,9 +128,11 @@ export class AssessmentSlateData extends Component {
     mainAddAssessment = (e, activeAssessmentType) => {
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
+            case LEARNING_TEMPLATE:
+                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'update')
             case LEARNING_APP_TYPE:
                
-                    return   this.changeLearningApp('Quiz', 'insert')
+                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -189,7 +191,6 @@ export class AssessmentSlateData extends Component {
     */
     handleAssessmentUsageTypeChange = (usageType, e) => {
         this.setState({
-
             activeAssessmentUsageType: usageType,
         });
         let assessmentType ="";
@@ -201,7 +202,7 @@ export class AssessmentSlateData extends Component {
             assessmentType = 'tdx';
         }else if(this.state.activeAssessmentType===FULL_ASSESSMENT_PUF){
             assessmentType = 'puf';
-        }else if(this.state.activeAssessmentType===LEARNING_APP_TYPE || usageType===LEARNING_TEMPLATE ){
+        }else if(this.state.activeAssessmentType===LEARNING_APP_TYPE || this.state.activeAssessmentType===LEARNING_TEMPLATE ){
             assessmentType = LEARNING_TEMPLATE;
         }else{
             assessmentType = 'learnosity';
@@ -237,7 +238,7 @@ export class AssessmentSlateData extends Component {
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
             return <RootElmComponent closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
         }
-        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false ) {
+        if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
                     <div className="slate_assessment_data_content">
@@ -268,7 +269,7 @@ export class AssessmentSlateData extends Component {
                 <div className="clr"></div>
             </div>
         }
-        else if (this.state.changeLearningData && this.state.activeAssessmentType === LEARNING_APP_TYPE && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
+        else if (this.state.changeLearningData && (this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE) && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
             return (
                 <div>
                     <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />

@@ -517,6 +517,7 @@ class ElementContainer extends Component {
                                 type={element.type}
                                 slateLockInfo={slateLockInfo} 
                                 updatePageNumber ={updatePageNumber}
+                                isBlockerActive={this.props.isBlockerActive}
                                 />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
@@ -539,6 +540,7 @@ class ElementContainer extends Component {
                                 type={element.type}
                                 slateLockInfo={slateLockInfo}
                                 updatePageNumber ={updatePageNumber}
+                                isBlockerActive={this.props.isBlockerActive}
                                  />;
                         // labelText = 'AS'
                     }
