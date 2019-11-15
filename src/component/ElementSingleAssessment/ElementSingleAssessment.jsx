@@ -17,11 +17,11 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId : this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentId:  null,
+            assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? props.model.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: "Quiz",
 
         };
     }
@@ -90,8 +90,7 @@ export class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        const {assessmentid,assessmentitemid,assessmentformat, assessmentitemtype}=this.props.model.figuredata.elementdata;
-        if (this.state.activeAsseessmentUsageType !== usageType) {
+       if (this.state.activeAsseessmentUsageType !== usageType) {
             this.setState({
                 activeAsseessmentUsageType: usageType
             },()=>{
@@ -170,7 +169,6 @@ export class ElementSingleAssessment extends Component {
     }
     render() {
         const { model, index, elementId } = this.props;
-        console.log("this.state.showAssessmentPopup>",this.state.showAssessmentPopup)
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
                 {this.renderAssessmentType(model, index)}
