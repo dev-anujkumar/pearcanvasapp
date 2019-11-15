@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import config from '../../config/config';
 
@@ -18,7 +18,9 @@ const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
-
+    useEffect(() => {
+        setLODropdown(false);
+      }, [props.setSlateEntity]); 
     /**
      * Function for show/hide audio Narration dropdown
      */

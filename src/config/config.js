@@ -19,7 +19,7 @@ let config = {
     NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY: process.env.NODE_ENV === 'production' ? process.env.STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     MANIFEST_APIKEY: process.env.NODE_ENV === 'production' ? process.env.MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
-    ssoToken: "cGb1kwFwgwynxV4chQmZirfNrvk.*AAJTSQACMDIAAlNLABxTR1lzYXFWL2VQZGFxeWtGdlREQ2ViM0s3dHM9AAJTMQACMDE.*",
+    ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
     alfrescoMetaData : {},
     slateEntityURN : "urn:pearson:entity:2b03e70f-8730-451b-9f9a-b496b6d91c9e",
     slateManifestURN : null,
