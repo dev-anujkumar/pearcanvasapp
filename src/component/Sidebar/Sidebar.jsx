@@ -325,7 +325,7 @@ class Sidebar extends Component {
         let els = document.getElementsByClassName('moduleContainer');
         let i = 0;
         let groupby ="";
-        if (e.currentTarget.checked == false) {
+        if (this.props.showModule== false) {
             while (i < els.length) {
                 let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
                 if (children.length > 0) {

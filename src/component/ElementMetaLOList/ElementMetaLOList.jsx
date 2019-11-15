@@ -22,6 +22,9 @@ export class ElementMetaLOList extends Component {
         }
       })
     }
+    else{
+      this.props.setCurrentModule(false)
+    };
 
   }
   render() {
@@ -35,7 +38,7 @@ export class ElementMetaLOList extends Component {
     const { slateLockInfo } = this.props
     return (
 
-      <div className="learningObjectiveContainer" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
+      <div className="learningObjectiveContainer" id="introslateLOL" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -114,6 +117,7 @@ export class ElementMetaLOList extends Component {
     * @description - To check is it tinymce current target and click on current element id
     */
     let targetId = '';
+    this.props.handleFocus();
     if (tinymce.$(e.target).parents('.cypress-editable').length) {
       targetId = tinymce.$(e.target).parents('.cypress-editable')[0].id;
     }

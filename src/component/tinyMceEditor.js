@@ -868,20 +868,20 @@ export class TinyMceEditor extends Component {
          * case - if active editor and editor currently being focused is same
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
-            if (this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
-                document.getElementById(tinymce.activeEditor.id).contentEditable = false;
-            }
+            // if (this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+            //     document.getElementById(tinymce.activeEditor.id).contentEditable = false;
+            // }
             this.setToolbarByElementType();
             isSameTarget = true;
         }
         /**
          * case - TO DO
          */
-        if (this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
-            document.getElementById(currentTarget.id).contentEditable = false;
-            this.setToolbarByElementType();
-            isSameTarget = true;
-        }
+        // if (this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+        //     document.getElementById(currentTarget.id).contentEditable = false;
+        //     this.setToolbarByElementType();
+        //     isSameTarget = true;
+        // }
         /**
          * case - if tinymce already has an active editor then...
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
@@ -960,9 +960,9 @@ export class TinyMceEditor extends Component {
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId;
-        if(this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
-            lockCondition = true;
-        }
+        // if(this.props.element && 'type' in this.props.element && (this.props.element.type === "element-generateLOlist" || this.props.element.type === "element-learningobjectivemapping")) {
+        //     lockCondition = true;
+        // }
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + " cypress-editable";
         let id = 'cypress-' + this.props.index;       

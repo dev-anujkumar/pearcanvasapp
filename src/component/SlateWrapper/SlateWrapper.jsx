@@ -666,17 +666,16 @@ class SlateWrapper extends Component {
      * @param {object} _elements
      */
     renderButtonsonCondition(_elements) {
+        config.isCO = false;
+        config.isLOL = false
         if (_elements.filter(element => element.type == "openerelement").length) {
             config.isCO = true
         }
         //set the value in slate when once metadata anchor is created on IS
-        else if (_elements.filter(element => element.type == "element-generateLOlist").length) {
+        if (_elements.filter(element => element.type == "element-generateLOlist").length) {
             config.isLOL = true
         }
-        else {
-            config.isLOL = false;
-            config.isCO = false
-        }
+
     }
     /**
      * renderElement | renders single element according to its type
