@@ -4,8 +4,16 @@
     "description": "Pearson Cypress Canvas Stablization",
     "main": "./src/index.js",
     "scripts": {
-        "build": "rm -rf dist && bash ./build_dist.sh && webpack --env.NODE_ENV=production --config webpack.prod.config.js",
+        "build:test": "env-cmd -f ./env/.env.test webpack --config webpack.prod.config.js",
+        "build:dev": "env-cmd -f ./env/.env.dev webpack --config webpack.prod.config.js",
+        "build:intg": "env-cmd -f ./env/.env.intg webpack --config webpack.prod.config.js",
+        "build:qa": "env-cmd -f ./env/.env.qa webpack --config webpack.prod.config.js",
+        "build:staging": "env-cmd -f ./env/.env.staging webpack --config webpack.prod.config.js",
+        "build:perf": "env-cmd -f ./env/.env.perf webpack --config webpack.prod.config.js",
+        "build:prod": "env-cmd -f ./env/.env.prod webpack --config webpack.prod.config.js",
+        "build:prod2": "env-cmd -f ./env/.env.prod2 webpack --config webpack.prod.config.js",
         "build:watch": "npm run build --watch",
+        "build": "rm -rf dist && bash ./build_dist.sh && webpack --env.NODE_ENV=production --config webpack.prod.config.js",
         "start": "webpack-dev-server --env.NODE_ENV=development --config webpack.dev.config.js",
         "build-dev": "rm -rf dist && bash ./build_dist.sh && webpack --config webpack.dev.config.js",
         "build-prod": "rm -rf dist && bash ./build_dist.sh && webpack --env.NODE_ENV=production --config webpack.prod.config.js",
@@ -84,9 +92,12 @@
         "@babel/runtime": "^7.0.0",
         "@tinymce/tinymce-react": "^3.3.1",
         "axios": "^0.19.0",
+        "env-cmd": "^10.0.1",
         "express": "^4.17.1",
+        "font-awesome": ">=4.4.0",
         "fs": "0.0.1-security",
         "html-to-react": "^1.4.1",
+        "http-proxy-middleware": "^0.19.1",
         "https": "^1.0.0",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
@@ -102,8 +113,6 @@
         "redux-thunk": "^2.3.0",
         "sortablejs": "^1.10.0",
         "tinymce": "^5.0.13",
-        "utils": "^0.3.1",
-        "font-awesome": ">=4.4.0",
-        "http-proxy-middleware": "^0.19.1"
+        "utils": "^0.3.1"
     }
 }
