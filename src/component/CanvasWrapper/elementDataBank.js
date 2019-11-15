@@ -88,7 +88,7 @@ const elementDataBank = {
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-6"
         },
-        "none" : {
+        "no-style" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-7"
@@ -234,6 +234,42 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "hotspot": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "accountingtable": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-video": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-image": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "graph": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "simulation": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "survey": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "timeline": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "fill-in-blank": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            }
         },
         "assessment" : {
             "elementType" : "element-assessment",
