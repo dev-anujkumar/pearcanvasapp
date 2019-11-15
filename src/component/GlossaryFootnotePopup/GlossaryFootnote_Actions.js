@@ -8,53 +8,51 @@ const {
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY } from "./../../constants/Action_Constants";
 
-export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index) => async (dispatch) => {
+export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType) => async (dispatch) => {
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
         elementWorkId,
         elementType,
-        glossaryfootnoteid
+        glossaryfootnoteid,
+        elementSubType
     }
 
     if (status === true) {
-
         let semanticType = glossaaryFootnote.toUpperCase();
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
-
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
 
-        if(elementType === "figure"){
+        if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
-            console.log("newBodymatter[updatedIndex ",newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
+            console.log("newBodymatter[updatedIndex ", newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
             glossaryFootElem = newBodymatter[updatedIndex]
             console.log('This si index', glossaaryFootnoteValue, index, newBodymatter[updatedIndex])
+        } else {
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementWorkId) {
+                    glossaryFootElem = newBodymatter[index]
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == elementWorkId) {
+                        glossaryFootElem = condition
+                    }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementWorkId) {
+                        glossaryFootElem = condition
+                    }
+                }
 
+            }
         }
-        // if (typeof (index) == 'number') {
-        //     if (newBodymatter[index].versionUrn == elementWorkId) {
-        //         glossaryFootElem = newBodymatter[index]
-        //     }
-        // } else {
-        //     let indexes = index.split('-');
-        //     let indexesLen = indexes.length, condition;
-        //     if (indexesLen == 2) {
-        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-        //         if (condition.versionUrn == elementWorkId) {
-        //             glossaryFootElem = condition
-        //         }
-        //     } else if (indexesLen == 3) {
-        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-        //         if (condition.versionUrn == elementWorkId) {
-        //             glossaryFootElem = condition
-        //         }
-        //     }
-
-        // }
-
 
         switch (semanticType) {
             case 'FOOTNOTE':
@@ -86,7 +84,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType) => {
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
@@ -99,17 +97,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
 
     console.log('thsi si sinner html', workContainer)
-
-    if(elementType == 'figure'){
+    //Get updated innerHtml of element for API request 
+    if (elementType == 'figure') {
         console.log('thsis is index in figure', index)
-
         let label, title, captions, credits, elementIndex
         elementIndex = index.split('-')[0]
-        label = document.getElementById('cypress-'+elementIndex+'-0').innerHTML //cypress-1-0
-        title = document.getElementById('cypress-'+elementIndex+'-1').innerHTML //cypress-1-1
-        captions = document.getElementById('cypress-'+elementIndex+'-2').innerHTML //cypress-1-2
-        credits = document.getElementById('cypress-'+elementIndex+'-3').innerHTML //cypress-1-3
+        label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
+        title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
+        if(elementSubType == 'image'){
+            captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+            credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+        }else if (elementSubType == 'interactive'){
+            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+        }
+       
         figureDataObj = {
             "title": label,
             "subtitle": title,
@@ -119,13 +122,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "captions": captions,
             "credits": credits
         }
-    }else{
-        workEditor = document.getElementById('cypress-'+index)
+    } else {
+        workEditor = document.getElementById('cypress-' + index)
         workContainer = workEditor.innerHTML;
         figureDataObj = {
             "text": workContainer
         }
     }
+
     switch (semanticType) {
         case "FOOTNOTE":
             footnoteEntry[glossaryfootnoteid] = definition
@@ -171,33 +175,32 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-
-        if(elementType === "figure"){
+        console.log('this is index in case of any ', index)
+        if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
             console.log('>>>>>>>>', newBodymatter[updatedIndex])
+        } else {
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementWorkId) {
+                    newBodymatter[index] = res.data
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == elementWorkId) {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+                    }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementWorkId) {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                    }
+                }
+            }
         }
-
-       
-        // if (typeof (index) == 'number') {
-        //     if (newBodymatter[index].versionUrn == elementWorkId) {
-        //         newBodymatter[index] = res.data
-        //     }
-        // } else {
-        //     let indexes = index.split('-');
-        //     let indexesLen = indexes.length, condition;
-        //     if (indexesLen == 2) {
-        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-        //         if (condition.versionUrn == elementWorkId) {
-        //             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
-        //         }
-        //     } else if (indexesLen == 3) {
-        //         condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-        //         if (condition.versionUrn == elementWorkId) {
-        //             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
-        //         }
-        //     }
-        // }
         store.dispatch({
             type: UPDATE_FOOTNOTEGLOSSARY,
             payload: {

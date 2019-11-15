@@ -976,7 +976,8 @@ export class TinyMceEditor extends Component {
         let elementId=this.props.element?this.props.element.id:"";
         let elementType = this.props.element?this.props.element.type:"";
         let index = this.props.index;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, callback); 
+        let elementSubType = this.props.element ? this.props.element.figureType : ''
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, callback); 
     }
 
     render() {
