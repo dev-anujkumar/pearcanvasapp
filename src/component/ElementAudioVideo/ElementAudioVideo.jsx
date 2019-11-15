@@ -29,13 +29,13 @@ class ElementAudioVideo extends Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-            let imageData = data;
-            let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-            let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-            let width = imageData['width'] ? imageData['width'] : "";
-            let height = imageData['height'] ? imageData['height'] : "";
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
 
-            if (figureType === "video" || figureType === "audio") {
+        if (figureType === "video" || figureType === "audio") {
 
             let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
             if (figureType === "video" && epsURL === "") {
