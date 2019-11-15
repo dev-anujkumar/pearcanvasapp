@@ -90,7 +90,14 @@ export class TinyMceEditor extends Component {
             },
 
             init_instance_callback: (editor) => {
-                editor.on('Change', function (e) {
+                editor.on('Change', (e) => {
+                    /*
+                        if content is caused by wiris then call blur
+                    */
+                    if( !e.level ){
+                        this.props.handleBlur()
+                    }
+
                     let content = e.target.getContent({format: 'text'}),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -500,13 +507,13 @@ export class TinyMceEditor extends Component {
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
-            /*
-                Enabling chemistry ML
-            */
-            let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
-            wirisChemistryInstance.enable('chemistry');
-            window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
-            //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+                /*
+                    Enabling chemistry ML
+                */
+                let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+                wirisChemistryInstance.enable('chemistry');
+                window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
+                //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
             },
             onSetup: (buttonApi) => {
             /*
@@ -529,9 +536,9 @@ export class TinyMceEditor extends Component {
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
-            var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
-            wirisPluginInstance.core.getCustomEditors().disable();
-            wirisPluginInstance.openNewFormulaEditor();
+                var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
+                wirisPluginInstance.core.getCustomEditors().disable();
+                wirisPluginInstance.openNewFormulaEditor();
             },
             onSetup: (buttonApi) => {
             /*
