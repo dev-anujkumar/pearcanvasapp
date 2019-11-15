@@ -150,6 +150,9 @@ const elementDataBank = {
             "primaryOption" : "primary-editor-table-equation",
             "imageTextWidthTableEditor" : {
                 "secondaryOption" : "secondary-editor-table-equation"
+            },
+            "image50TextEditorTable" : {
+                "secondaryOption" : "secondary-editor-table-equation"
             }
         },
         "table" : {
@@ -234,6 +237,42 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "hotspot": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "accountingtable": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-video": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-image": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "graph": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "simulation": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "survey": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "timeline": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "fill-in-blank": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            }
         },
         "assessment" : {
             "elementType" : "element-assessment",

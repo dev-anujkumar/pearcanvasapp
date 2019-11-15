@@ -12,7 +12,9 @@ import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
-import { releaseSlateLockWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
+import PopUp from '../../PopUp';
+import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -24,6 +26,8 @@ function WithWrapperCommunication(WrappedComponent) {
                 showBlocker: false,
                 toggleTocDelete: false,
                 tocDeleteMessage: null,
+                showLockPopup : false,
+                lockOwner: "",
             };
         }
 
@@ -140,6 +144,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                    config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase()
                     this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
@@ -195,6 +200,14 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'logout':
                     this.props.logout();
                     break;
+                case 'onTOCHamburgerClick':
+                    {
+                        /** To close list drop popup */
+                        let _listWrapperDiv = document.querySelector('#listDropWrapper')
+                        if (_listWrapperDiv)
+                            _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
+                        break
+                    }
             }
         }
 
@@ -257,7 +270,10 @@ function WithWrapperCommunication(WrappedComponent) {
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
-            this.props.handleSlateRefresh(id);
+            this.props.handleSlateRefresh(id,()=>{
+                config.isSlateLockChecked = false;
+                this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+            })
         }
 
         sendDataToIframe = (messageObj) => {
@@ -273,9 +289,16 @@ function WithWrapperCommunication(WrappedComponent) {
             let permissionObj = this.props.currentProject || null;
             if (permissionObj === null) {
                 permissionObj = {};
-                permissionObj.permissions = [
-                    'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
-                ];
+                if (this.props.permissions) {
+                    let tocEditTitle = this.props.permissions.includes('toc_edit_title') ? 'toc_edit_title' : ""
+                    let tocDelete = this.props.permissions.includes('toc_delete_entry') ? 'toc_delete_entry' : ""
+                    let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
+                    let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
+                    permissionObj.permissions = [tocEditTitle , tocDelete , tocRearrage , tocAdd]
+                }
+                // permissionObj.permissions = [
+                //     'toc_edit_title', 'toc_delete_entry', 'toc_rearrange_entry', 'toc_add_pages'
+                // ];
                 permissionObj.roleId = 'admin';
             }
 
@@ -287,6 +310,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setCurrentSlate = (message) => {
+            config.isSlateLockChecked = false;
             let currentSlateObject = {};
             if (message['category'] === 'titleChange') {
                 currentSlateObject = {
@@ -349,9 +373,11 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         slateLockAlert = (userInfo) => {
-            /**
-             * TO BE IMPLEMENTED
-             *  */
+            this.setState({
+                showBlocker: true,
+                showLockPopup : true,
+                lockOwner : userInfo
+            })
         }
 
         deleteTocItem = (message) => {
@@ -374,10 +400,52 @@ function WithWrapperCommunication(WrappedComponent) {
 
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
+            let projectUrn = message.changedValue.projectUrn;
+            let deleteSlateId = message.changedValue.containerUrn;
+            let userName = config.userId
             /**
              * Delete element details for logging
              */
-            that.deleteTocItem(message);
+            getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
+                if (response == "error"){
+                    if(type==='withPendingTrack') {
+                        that.deleteTocItemWithPendingTrack(message);
+                    }
+                    else {
+                        that.deleteTocItem(message);
+                    }
+                    return false;
+                }
+                try{
+                    let status = {
+                        slateLocked : response.isLocked,
+                        userInfo : response.userId    
+                    }
+                    if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
+                        status.slateLocked = false;
+                    }
+                    
+                    if(status.slateLocked){
+                        that.slateLockAlert(status.userInfo);
+                    }
+                    else{
+                        if(type==='withPendingTrack') {
+                            that.deleteTocItemWithPendingTrack(message);
+                        }
+                        else {
+                            that.deleteTocItem(message);
+                        }
+                    }
+                }
+                catch(err){
+                    if(type==='withPendingTrack') {
+                        that.deleteTocItemWithPendingTrack(message);
+                    }
+                    else {
+                        that.deleteTocItem(message);
+                    }
+                }   
+            });
         }
 
         onDeleteTocItem = (message, type) => {
@@ -388,6 +456,14 @@ function WithWrapperCommunication(WrappedComponent) {
             /**
              * TO BE IMPLEMENTED
              *  */
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
+
+            this.setState({
+                toggleTocDelete: true,
+                tocDeleteMessage: "singleContainerDelete"
+            })
         }
 
         updateSlateTitleByID = (messageObj) => {
@@ -422,11 +498,52 @@ function WithWrapperCommunication(WrappedComponent) {
             });
         }
 
+        prohibitPropagation = (event) =>{
+            if(event){
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            return false
+        }
+
+        toggleLockPopup = (toggleValue, event) => {
+            this.setState({
+                showLockPopup: toggleValue,
+                showBlocker : toggleValue
+            }) 
+            hideBlocker()
+            this.prohibitPropagation(event)
+        }
+        
+        showLockPopup = () => {
+            if (this.state.showLockPopup) {
+                const { lockOwner } = this.state
+                showTocBlocker();
+                return (
+                    <PopUp dialogText={ALREADY_USED_SLATE}
+                        rows="1"
+                        cols="1"
+                        active={true}
+                        togglePopup={this.toggleLockPopup}
+                        inputValue={lockOwner}
+                        isLockPopup={true}
+                        isInputDisabled={true}
+                        slateLockClass="lock-message"
+                        withInputBox={true}
+                    />
+                )
+            }
+            else {
+                return null
+            }
+        }
+        
 
         render() {
             return (
                 <React.Fragment>
                     <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} toggleTocDelete={this.state.toggleTocDelete} tocDeleteMessage={this.state.tocDeleteMessage} modifyState={this.modifyState} />
+                    {this.showLockPopup()}
                 </React.Fragment>
             )
         }

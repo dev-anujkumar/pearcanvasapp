@@ -42,7 +42,7 @@ const findElementType = (element, index) => {
 					case "authoredtext":
 					case "tableasmarkup":
 						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
-						let longDesc = element.figuredata.longdescripton ? element.figuredata.longdescripton : "" 	
+						let longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
@@ -104,11 +104,14 @@ const findElementType = (element, index) => {
 				}
 				break;
 
-			case 'element-list':
+			case 'element-list': {
+				let type = element.type
+				let subtype = element.subtype || element.elementdata.subtype
 				elementType = {
-					...elementDataBank[element.type][element.subtype]
+					...elementDataBank[type][subtype]
 				}
 				break;
+			}
 
 			case 'element-learningobjectivemapping':
 			case 'element-generateLOlist':
@@ -154,7 +157,16 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 		sendDataToIframe({'type': HideLoader,'message': { status: false }});
 		let contentUrn = slateData.data[manifestURN].contentUrn;
 		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-		
+		let messageTcmStatus = {
+			TcmStatus:{
+				tc_activated :JSON.stringify(slateData.data[manifestURN].tcm) 
+			}
+            
+        }
+        sendDataToIframe({
+            'type': "TcmStatusUpdated",
+            'message': messageTcmStatus
+        })
 		dispatch(fetchComments(contentUrn, title));
 		dispatch({
 			type: FETCH_SLATE_DATA,

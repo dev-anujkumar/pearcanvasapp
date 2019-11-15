@@ -30,6 +30,7 @@ let config = {
     currentInsertedType : "",
     disableNext : false,
     disablePrev : false,
+    tcmStatus : false,
     //c2 required keys and urls
     CMDS_APIKEY: process.env.NODE_ENV === 'production' ? process.env.CMDS_APIKEY : '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.NODE_ENV === 'production' ? process.env.CMDS_DATA_ENDPOINT : 'https://staging.data.pearson.com',
@@ -77,10 +78,11 @@ let config = {
     asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     labelToolbar:['footnote','decreaseindent'],
     captionToolbar:['decreaseindent'],
-    GET_FIGURES : process.env.NODE_ENV === 'production' ? process.env.GET_FIGURES : 'https://contentapis-qa.pearsoncms.net/',
+    GET_FIGURES : process.env.NODE_ENV === 'production' ? process.env.GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
     GET_ASSETPOPOVER_ID : process.env.NODE_ENV === 'production' ? process.env.GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
     APO_API_KEY : process.env.NODE_ENV === 'production' ? process.env.APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
-    editorRefID:""
+    editorRefID:"",
+    isSlateLockChecked: false
 };
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';

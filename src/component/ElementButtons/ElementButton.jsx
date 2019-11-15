@@ -21,7 +21,8 @@ import {
     lockIcon,
     metaDataAnchor,
     elmCloseWindowIcon,
-    elmAssessmentItem
+    elmAssessmentItem,
+    feedbackIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import forwardNavActive from '../../images/ElementButtons/forwardNavActive.png'
@@ -155,6 +156,11 @@ class Button extends Component {
             case ButtonTypes.ELM_ASSESSMENT_ITEM:
                 buttonJSX = <span className="" onClick={clickHandlerFn}>
                     {elmAssessmentItem}
+                </span>
+                break;
+            case ButtonTypes.FEEDBACK:
+                buttonJSX = <span className={`btn-element small feedback ${btnClassName}`} title="feedback" onClick={clickHandlerFn}>
+                    {feedbackIcon}
                 </span>
                 break;
                 

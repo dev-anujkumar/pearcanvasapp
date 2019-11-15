@@ -55,12 +55,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: `<p>${captionHTML}</p>`,
-            credits: `<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: `<p>${subtitleHTML}</p>` ,
-            title: `<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -122,15 +122,15 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: `<p>${captionHTML}</p>`,
-            credits: `<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: `<p>${subtitleHTML}</p>` ,
-            title: `<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: "",
+            text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
@@ -196,15 +196,15 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             footnotes : [ ]
         },
         html : {
-            captions: `<p>${captionHTML}</p>`,
-            credits: `<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: `<p>${subtitleHTML}</p>` ,
-            title: `<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: "",
+            text: ""
         }, 
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
@@ -279,12 +279,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         },
         html : {
-            captions: `<p>${captionHTML}</p>`,
-            credits: `<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes: {},
             glossaryentries: {},
-            subtitle: `<p>${subtitleHTML}</p>` ,
-            title: `<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: document.getElementById(`cypress-${index}-2`).innerHTML,
@@ -309,6 +309,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         html: {
             title: "<p></p>"
         }}
+        
     dataToSend.figuredata.elementdata;
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
 
@@ -361,7 +362,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
         case elementTypeConstant.BLOCKFEATURE:
-
+        case elementTypeConstant.ELEMENT_LIST:
             let { innerHTML, innerText } = node;
             dataToReturn = {
                 ...previousElementData,
@@ -374,7 +375,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']          
+                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                tcm: true          
             }
             break;
 
