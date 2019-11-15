@@ -30,6 +30,7 @@ let config = {
     currentInsertedType : "",
     disableNext : false,
     disablePrev : false,
+    tcmStatus : false,
     //c2 required keys and urls
     CMDS_APIKEY: process.env.NODE_ENV === 'production' ? process.env.CMDS_APIKEY : '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.NODE_ENV === 'production' ? process.env.CMDS_DATA_ENDPOINT : 'https://staging.data.pearson.com',

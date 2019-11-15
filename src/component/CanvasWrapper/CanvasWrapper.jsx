@@ -49,7 +49,7 @@ export class CanvasWrapper extends Component {
             return null;    
      }
 
-    componentDidMount() {        
+    componentDidMount() {  
         // To run Canvas Stabilization app as stand alone app //
         if (config.slateManifestURN) {
             this.props.fetchSlateData(config.slateManifestURN);
@@ -169,6 +169,7 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        permissions: state.appStore.permissions,
         logout
     };
 };

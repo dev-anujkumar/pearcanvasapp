@@ -60,7 +60,7 @@ export const LIST_TYPE_MAPPINGS = {
         mapType: 'secondary-list-6',
         tag: 'OL'
     },
-    'no-style': {
+    'none': {
         mapType: 'secondary-list-7',
         tag: 'OL'
     },

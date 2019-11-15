@@ -10,6 +10,7 @@ export const METADATA_ANCHOR = "LO";
 export const LO_LIST = "LO_LIST";
 export const OPENER = "OPENER_ELEMENT";
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
+export const ACCESS_DENIED_CONTACT_ADMIN = "Access Denied! You do not have access to the Linked Alfresco site. please contact the Manager for this project"
 
 /*-----------------Pop Dialog text-------------------------- */
 export const ALREADY_USED_SLATE = "The following slate is already in use by another member. In use by: "
