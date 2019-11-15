@@ -512,7 +512,7 @@ class SlateWrapper extends Component {
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,"","","");
+                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,asideData,"","");
                         
                     }
                     else{
