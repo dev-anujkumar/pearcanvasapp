@@ -890,6 +890,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+            if(tinymce.activeEditor && tinymce.activeEditor.id){
+                document.getElementById(tinymce.activeEditor.id).contentEditable = false
+                return
+            }
+        }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -983,6 +989,11 @@ export class TinyMceEditor extends Component {
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
         classes += ' ' + this.placeHolderClass;
+        // if(!(this.props.permissions.includes('access_formatting_bar'))){
+        //     if(tinymce.activeEditor && tinymce.activeEditor.id){
+        //         document.getElementById().contentEditable = false
+        //     }
+        // }
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
