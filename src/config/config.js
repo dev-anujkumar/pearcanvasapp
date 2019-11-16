@@ -84,8 +84,7 @@ let config = {
     GET_FIGURES : process.env.NODE_ENV === 'production' ? process.env.GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
     GET_ASSETPOPOVER_ID : process.env.NODE_ENV === 'production' ? process.env.GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
     APO_API_KEY : process.env.NODE_ENV === 'production' ? process.env.APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
-    editorRefID:"",
-    isSlateLockChecked: false
+    editorRefID:""
 };
 
 console.log("process.env.NODE_ENV >> ", process.env.NODE_ENV)

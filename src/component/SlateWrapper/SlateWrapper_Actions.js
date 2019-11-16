@@ -404,7 +404,34 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
             console.log("UPDATE PAGE NUMBER ERROR : ", error)
         })
     }
-
+    else {
+        return axios.delete(
+            `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        ).then(res => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_SUCCESS,
+                payload: {
+                    pageLoading: false
+                }
+            })
+        }).catch(error => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_FAIL,
+                payload: {
+                    pageLoading: false
+                }
+            })
+            console.log("DELETE PAGE NUMBER ERROR : ", error)
+        })
+    }
 }
 
 export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {

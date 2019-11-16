@@ -40,6 +40,10 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         if(oldElementData.figuredata.interactivetype){
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
         }
+
+        if(oldElementData.figuretype && oldElementData.figuretype === "codelisting") {
+            oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
+        }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],

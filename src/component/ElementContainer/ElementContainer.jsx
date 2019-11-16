@@ -526,6 +526,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo} 
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                 />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
@@ -549,6 +550,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo}
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                  />;
                         // labelText = 'AS'
                     }
@@ -572,10 +574,9 @@ class ElementContainer extends Component {
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default") {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
+                borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
+                btnClassName = '';
             }
-             
-            borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
-            btnClassName = '';
         }
         
         return (
@@ -658,8 +659,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback);
     }
 
     /**
@@ -732,8 +733,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType)).then(() => {
                 if (callback) {
                     callback();
                 }

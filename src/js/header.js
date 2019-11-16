@@ -2,6 +2,7 @@ const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 import {c4PublishObj} from '../js/c4_module.js';
 import { OPEN_AM } from './auth_module';
+import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
 
 var current_slate_urn='';
 /**
@@ -39,5 +40,8 @@ export const publishContent = function (type) {
 * @description - Logout user's session.
 */
 export const logout = function () {
+    let projectURN = config_object.projectUrn;
+    let slateURN = config_object.slateManifestURN;
+    releaseSlateLockWithCallback(projectURN, slateURN)
     OPEN_AM.logout();
 }

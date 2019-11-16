@@ -14,8 +14,9 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
-import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
+import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -323,7 +324,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                if(this.props.withinLockPeriod === true){
+                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                }          
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 currentSlateObject = {
@@ -509,7 +512,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 const { lockOwner } = this.state
                 showTocBlocker();
                 return (
-                    <PopUp dialogText={ALREADY_USED_SLATE}
+                    <PopUp dialogText={ALREADY_USED_SLATE_TOC}
                         rows="1"
                         cols="1"
                         active={true}
@@ -519,6 +522,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         isInputDisabled={true}
                         slateLockClass="lock-message"
                         withInputBox={true}
+                        lockForTOC={true}
                     />
                 )
             }
