@@ -14,6 +14,12 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+.incorrect-data {
+    color: red;
+    display: flex;
+    padding: 15px;
+}
+
 .--hr-loading {
     margin: 25px 0px;
 }
@@ -104,6 +110,32 @@ h1, h2, h3, h4, h5, p {
     position : absolute;
     margin-top : 7px;
 }
+
+.element-container.h1 .cypress-editable.place-holder::before {
+    font-size: 23px !important;
+    margin-top: 2px !important;
+}
+.element-container.h2 .cypress-editable.place-holder::before {
+    font-size: 16px !important;
+    margin-top: 3px !important;
+}
+.element-container.h3 .cypress-editable.place-holder::before {
+    font-size: 15px !important;
+    margin-top: 3px !important;
+}
+.element-container.h4 .cypress-editable.place-holder::before {
+    font-size: 15px !important;
+    margin-top: 3px !important;
+}
+.element-container.h5 .cypress-editable.place-holder::before {
+    font-size: 14px !important;
+    margin-top: 1px !important;
+}
+.element-container.h6 .cypress-editable.place-holder::before {
+    font-size: 14px !important;
+    margin-top: 0px !important;
+}
+
 .definition-editor.place-holder::before{
     content: attr(placeholder);
     color: #ADADAD; 
@@ -187,4 +219,26 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     pointer-events: none;
     visibility: hidden;
     cursor: default;
+}
+
+#tinymceToolbar .tox-toolbar.disable {
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}
+
+#tinymceToolbar .tox-toolbar.disable button.tox-tbtn {
+    /* cursor: not-allowed !important; */
+    pointer-events: none !important;
+}
+
+.noSeparatorContainer{
+    margin-bottom: 18px;
+}
+
+#tinymceToolbar {
+    min-width: 681px;
+}
+
+P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
+    font-size: 100% !important;
 }

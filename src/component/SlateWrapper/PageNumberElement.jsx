@@ -6,13 +6,13 @@
  */
 
 // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React from 'react';
 
 class PageNumber extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputValue: '',
+            inputValue: this.props.element.pageNumberRef && this.props.element.pageNumberRef.pageNumber,
             loader: false
         }
     }
@@ -31,34 +31,22 @@ class PageNumber extends React.Component {
     }
 
     textBoxClicked = (e) => {
-        // ******************************************************************************
-        // if(this.props.slateLockInfo.status){
-        //     this.slateLockAlert(this.props.slateLockInfo.userInfo);
-        //     return false;
-        // }
-        // else{
-        //     $(e.currentTarget).parents('.pageNumberBox').addClass('greenBorder');
-        // }
-        // ******************************************************************************
         e.currentTarget.parents('.pageNumberBox').classList.add('greenBorder');
         /*following will stop event propgation to upside in nested element*/
         e.stopPropagation();
     }
 
     updatePageNumber = (e, currOperation, changedInputValue) => {
-        console.log('loader', this.state.loader)
-        this.setState({ loader: true });
+        const {id} = this.props.element;
+        const {asideData,parentUrn} = this.props
         e.currentTarget.parents('.pageNumberBox').classList.remove('greenBorder');
-
-        setTimeout(() => {
-            this.setState({ loader: false });
-        }, 1000);
+        let pageNumber = e.currentTarget.value;
+        this.props.updatePageNumber(pageNumber,id,asideData,parentUrn)
     }
 
     render() {
-        
         let { element, isHovered, isPageNumberEnabled, activeElement, permissions, _slateType } = this.props;
-        let loader = this.state.loader;
+        let loader = this.props.pageLoading;
         let content = null;
         if (loader)
             content = <div className='pageNumberBoxLoader'><div className='loaderPage'></div></div>

@@ -15,6 +15,22 @@
     border: 1.5px solid #149632;
 }
 
+.element-container.hideBorder *, .element-container.showBorder * {
+    cursor: default !important;
+}
+
+.bce.element-container > .bce-overlay.disabled {
+    cursor: default;
+    background: #444;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
 .showBorder {
     border: 0.5px solid #737373;
 }
@@ -92,6 +108,9 @@ abbr.AssetPopoverTerm{
   button#assetSelectBtn{
       font-size: 14px
   }
-  button.SearchLibraryStyles__btnCancel___1G1qN{
+  button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
     font-size: 14px
+  }
+  .ignore-for-drag{
+      cursor: default!important;
   }

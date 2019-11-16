@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { labelOptions } from './LabelOptions'
+import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
@@ -16,39 +16,53 @@ class OpenerElement extends Component {
 
     constructor(props){
         super(props)
+        const { textsemantics, text } = props.element.title;
+        const bgImage = props.element.backgroundimage.path;
+
+        if (document.querySelector("[name='alt_text']") && props.element.backgroundimage.alttext)
+            document.querySelector("[name='alt_text']").innerHTML = props.element.backgroundimage.alttext;
+        if (document.querySelector("[name='long_description']") && props.element.backgroundimage.longdescripton)
+            document.querySelector("[name='long_description']").innerHTML = props.element.backgroundimage.longdescripton;
 
         this.state = {
-            label: props.model ? props.model.label : "Chapter",
-            number: props.model ? props.model.number : "",
-            title: props.model ? props.model.title : "",
+            label: getOpenerContent(textsemantics, "label", text) || "No Label",
+            number: getOpenerContent(textsemantics, "number", text),
+            title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
-            imgSrc: null,
-            width: null
+            imgSrc: getOpenerImageSource(bgImage),
+            width: null,
+            imageId: props.element.backgroundimage.imageid ? props.element.backgroundimage.imageid : "",
         }
     }
 
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let imageId = imageData['workURN'] ? imageData['workURN'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
-        let height = imageData['height'] ? imageData['height'] : "";
-        let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
         let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-            let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
-            this.setState({ imgSrc: epsURL, width })
+            this.setState({
+                imgSrc: epsURL,
+                imageId: imageId,
+                width
+            });
             if (document.querySelector("[name='alt_text']"))
                 document.querySelector("[name='alt_text']").innerHTML = altText;
             if (document.querySelector("[name='long_description']"))
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
+        
+        this.handleBlur({imgSrc: epsURL, imageId});
+        disableHeader(false)
+        hideTocBlocker()
     }
     handleC2ExtendedClick = (data) => {
         let data_1 = data;
@@ -66,7 +80,7 @@ class OpenerElement extends Component {
      */
     handleC2MediaClick = (e) => {
         const { slateLockInfo , permissions } = this.props
-        if(slateLockInfo.isLocked && config.userId != slateLockInfo.userId)
+        if(checkSlateLock(slateLockInfo))
             return false
 
         if (e.target.tagName.toLowerCase() === "p") {
@@ -77,6 +91,7 @@ class OpenerElement extends Component {
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
         if (alfrescoPath && alfrescoPath.nodeRef) {
+            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -93,6 +108,10 @@ class OpenerElement extends Component {
             data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
             this.handleC2ExtendedClick(data_1)
+            }
+            else{
+                this.props.accessDenied(true)
+            }
         } else {
             if (permissions.includes('alfresco_crud_access')) {
                 c2MediaModule.onLaunchAddAnAsset(function (data_1) {
@@ -114,13 +133,14 @@ class OpenerElement extends Component {
         this.setState({
             label: e.target.innerHTML
         })
+        this.handleBlur(e)
         this.toggleLabelDropdown()
     }
     
     /**
      * Toggles label dropdown
      */
-    toggleLabelDropdown = () => {
+    toggleLabelDropdown = (e) => {
         this.setState({
             showLabelDropdown: !this.state.showLabelDropdown
         })
@@ -198,20 +218,94 @@ class OpenerElement extends Component {
      * Handles Focus on opener element
      * @param {slateLockInfo} Slate lock data
      */
-    handleOpenerClick = (slateLockInfo) => {
+    handleOpenerClick = (slateLockInfo, e) => {
         if(checkSlateLock(slateLockInfo)){
+            e.preventDefault()
             return false
         }
         this.props.onClick()
 
     }
+
+    createSemantics = ({...values}) => {
+        let textSemantics = [];
+        let currentIndex = 0;
+        
+        Object.keys(values).forEach(item => {
+            textSemantics.push({
+                "type": item,
+                "charStart": currentIndex,
+                "charEnd": currentIndex += (values[item]).length
+            });
+            currentIndex++;
+        });
+
+        return textSemantics;
+    }
+
+    /**
+     * Handles blur event for each input box and initiates saving call
+     * @param {*} event blur event object
+     */
+    handleBlur = (event) => {
+        if(checkSlateLock(this.props.slateLockInfo)){
+            event.preventDefault()
+            return false
+        }
+        let element = this.props.element;
+        let { label, number, title, imgSrc, imageId } = this.state;
+        label = event.target && event.target.innerText ? event.target.innerText : label;
+        imgSrc = event.imgSrc || imgSrc;
+        imageId = event.imageId || imageId;
+
+        if(!element.title) {
+            element.title = {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": "",
+                "textsemantics": []
+            };
+        }
+                
+        element.title.text = `${label} ${number}: ${title}`;
+        element.title.textsemantics = this.createSemantics({label, number});
+
+        if(!element.backgroundimage) {
+            element.backgroundimage = {
+                "path": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "",
+                "alttext": "",
+                "longdescripton": "",
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                }
+            };
+        }
+
+        let altText = "";
+        let longDesc = "";
+        if (document.querySelector("[name='alt_text']"))
+            altText = document.querySelector("[name='alt_text']").innerHTML;
+        if (document.querySelector("[name='long_description']"))
+            longDesc = document.querySelector("[name='long_description']").innerHTML;
+
+        element.backgroundimage.path = imgSrc;
+        element.backgroundimage.imageid = imageId;
+        element.backgroundimage.alttext = altText;
+        element.backgroundimage.longdescripton = longDesc;
+        element.backgroundcolor = this.props.backgroundColor;
+
+        this.props.updateElement(element);
+    }
+    
     
     render() {
         const { imgSrc, width } = this.state
         const { element, backgroundColor, slateLockInfo } = this.props
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container" onClick={() => this.handleOpenerClick(slateLockInfo)}>
+            <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
@@ -220,13 +314,13 @@ class OpenerElement extends Component {
                             <span>{dropdownArrow}</span>
                         </div>
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} />
+                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
-                    <div className="opener-label-box">
+                    <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} />
+                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>

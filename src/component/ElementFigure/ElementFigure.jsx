@@ -11,12 +11,14 @@ import {
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 import config from '../../config/config';
+import { sendDataToIframe } from '../../constants/utility';
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 
 
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 
-export class ElementFigure extends Component {
+class ElementFigure extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -29,21 +31,17 @@ export class ElementFigure extends Component {
      * @param {*} data selected asset data
      */
     dataFromAlfresco = (data) => {
+        hideTocBlocker();
+        disableHeader(false);
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";              //commented lines will be used to update the element data
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-        // let width = imageData['width'] ? imageData['width'] : "";
-        // let height = imageData['height'] ? imageData['height'] : "";
-        // let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-        // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
-            // let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            // let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
             if (epsURL !== "") {
@@ -51,9 +49,19 @@ export class ElementFigure extends Component {
             } else {
                 this.setState({ imgSrc: DEFAULT_IMAGE_SOURCE })
             }
-            document.querySelector("[name='alt_text']").innerHTML = altText;
-            document.querySelector("[name='long_description']").innerHTML = longDesc;
-
+            let figureData = {
+                path : epsURL,
+                height : height,
+                width: width,
+                schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                imageid: `urn:pearson:alfresco:${uniqID}`,
+                alttext: altText,
+                longdescription: longDesc
+            }
+            this.props.updateFigureData(figureData, this.props.index, this.props.elementId ,()=>{
+                this.props.handleFocus("updateFromC2")
+                this.props.handleBlur()
+            })   
         }
     }
     /**
@@ -84,6 +92,7 @@ export class ElementFigure extends Component {
         var data_1 = false;
 
         if (alfrescoPath && alfrescoPath.nodeRef) {         //if alfresco location is available
+            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -102,6 +111,10 @@ export class ElementFigure extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
             this.handleC2ExtendedClick(data_1)
+            }
+            else{
+                this.props.accessDenied(true)
+            }
 
         } else {
            if(this.props.permissions.includes('alfresco_crud_access')){ 
@@ -116,17 +129,36 @@ export class ElementFigure extends Component {
         }
 
     }
-    /*** @description - This function is for handling the different types of figure-element.
+    
+
+
+    /**
+     * @description function will be called to launch Table Editor SPA
+     */
+    launchSPA=()=>{
+    sendDataToIframe({'type':'launchTableSPA', 'message':{}, "id" : this.props.elementId, "editable" :true });
+}
+    /**
+     * @description function will be called on image src add and fetch resources based on figuretype
+     */   
+    addFigureResource = (e) => {
+        if (this.props.model.figuretype === "tableasmarkup") {
+            this.launchSPA();
+        }
+         else {
+            this.handleC2MediaClick(e);
+        }      
+    }
+
+/*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     * @param index index of the current element
     * @param slateLockInfo object that defines the slate lock details */
-
-
-    renderFigureType = (model={},index, slateLockInfo) => {
+    renderFigureType = (model,index, slateLockInfo) => {
         const { type } = this.props;
 
         var figureJsx;
-                var divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
+                let divClass = '', figureClass = '', figLabelClass = '', figTitleClass = '', dataType = '', imageDimension = '', figCaptionClass = '', figCreditClass = '';
                 switch (model.subtype) {
                     case "image25Text":
                         divClass = 'divImage25Text';
@@ -138,6 +170,7 @@ export class ElementFigure extends Component {
                         figCaptionClass = 'figcaptionImage25Text';
                         figCreditClass = 'paragraphImage25TextCredit';
                         break;
+                    case "informalfigure":
                     case "image50Text":
                         divClass = 'divImage50Text';
                         figureClass = 'figureImage50Text';
@@ -258,71 +291,47 @@ export class ElementFigure extends Component {
                         figCaptionClass = 'figcaptionImageFullscreenMathImage';
                         figCreditClass = 'paragraphImageFullscreenMathImageCredit';
                         break;
-                        case 'image50TextEditorTable':
-                            divClass = 'divImage50TextTableEditor',
-                                figureClass = 'figureImage50TextEditorTable',
-                                figLabelClass = 'heading4ImageFullscreenTableEditorNumberLabel',
-                                figTitleClass = 'heading4Image50TextEditorTableNumberLabel',
-                                dataType = 'tableasmarkup',
-                                imageDimension = 'image50TextEditorTable',
-                                figCaptionClass = 'figcaptionImage50TextEditorTable',
-                                figCreditClass = 'paragraphImage50TextEditorTableCredit';
-                            break;
-                            case 'imageTextWidthTableEditor':
-                        divClass = 'divImageTextWidthTableEditor',
-                            figureClass = 'figureImageTextWidthTableEditor',
-                            figLabelClass = 'heading4ImageTextWidthTableEditorNumberLabel',
-                            figTitleClass = 'heading4ImageTextWidthEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageTextWidthTableEditor',
-                            figCaptionClass = 'figcaptionImageTextWidthEditorTable',
-                            figCreditClass = 'paragraphImageTextWidthEditorTableCredit';
+                    case 'imageTextWidthTableEditor':
+                        divClass = 'divImageTextWidth';
+                        figureClass = 'figureImageTextWidth';
+                        figLabelClass = 'heading4ImageTextWidthNumberLabel';
+                        figTitleClass = 'heading4ImageTextWidthTitle';
+                        dataType = 'tableasmarkup';
+                        imageDimension = 'imageTextWidth';
+                        figCaptionClass = 'figcaptionImageTextWidth';
+                        figCreditClass = 'paragraphImageTextWidthCredit';
                         break;
-                        case 'imageWiderThanTextEditorTable':
-                        divClass = 'divImageWiderThanTextTableEditor',
-                            figureClass = 'figureImageWiderThanTextEditorTable',
-                            figLabelClass = 'heading4ImageWiderThanTextTableEditorNumberLabel',
-                            figTitleClass = 'heading4ImageWiderThanTextEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageWiderThanTextEditorTable',
-                            figCaptionClass = 'figcaptionImageWiderThanTextEditorTable',
-                            figCreditClass = 'paragraphImageWiderThanTextEditorTableCredit';
-                        break;
-                        case 'imageFullscreenTableEditor':
-                        divClass = 'divImageFullscreenTableEditor',
-                            figureClass = 'figureImageFullscreenEditorTable',
-                            figLabelClass = 'heading4ImageFullscreenEditorTableNumberLabel',
-                            figTitleClass = 'heading4ImageFullscreenEditorTableNumberLabel',
-                            dataType = 'tableasmarkup',
-                            imageDimension = 'imageFullscreenTableEditor',
-                            figCaptionClass = 'figcaptionImageFullscreenEditorTable',
-                            figCreditClass = 'paragraphImageFullscreenEditorTableCredit';
-                        break;
+
                 }
-                /**JSX for Figure Image, Table Image, Math Image*/
+
+                /**JSX for Figure Image, Table Image, Math Image, Table Editor*/
                 figureJsx = <div className={divClass} resource="">
                     <figure className={figureClass} resource="">
                         <header className="figure-header">
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title? model.html.title:"label"} slateLockInfo={slateLockInfo} />
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle? model.html.subtitle:"title"} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="pearson-component image figureData" data-type={dataType} onClick={this.handleC2MediaClick} >
-                            <img src= {this.state.imgSrc? this.state.imgSrc : (model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
-                                data-src={model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
-                                title=""
-                                alt=""
-                                className={imageDimension + ' lazyload'}
-                                draggable="false" />
+                        <div className={`pearson-component image figureData ${this.props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} onClick={this.addFigureResource} >
+                            {this.props.model.figuretype === "tableasmarkup" && (this.props.model.figuredata.tableasHTML && (this.props.model.figuredata.tableasHTML !== "" || this.props.model.figuredata.tableasHTML !== undefined)) ?
+                                <div id={`${index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: this.props.model.figuredata.tableasHTML }} ></div>
+                                :
+                                <img src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" ? model.figuredata.path : DEFAULT_IMAGE_SOURCE)}
+                                    data-src={this.state.imgSrc && this.props.model.figuretype != "tableasmarkup" ? this.state.imgSrc : (model.figuredata.path && model.figuredata.path !== "" || model.figuredata.path !== undefined) ? model.figuredata.path : DEFAULT_IMAGE_DATA_SOURCE}
+                                    title=""
+                                    alt=""
+                                    className={imageDimension + ' lazyload'}
+                                    draggable="false" />
+                            }
                         </div>
                         <figcaption >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div >
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
 
                 </div>
@@ -336,49 +345,56 @@ export class ElementFigure extends Component {
                     <figure className="figureText" resource="">
                         <header>
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} slateLockInfo={slateLockInfo} />
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} />
 
                         </header>
                         <div data-type="mathml">
 
-                            <TinyMceEditor element = {model} currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.mathml} type={type} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} element = {model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.elementdata.text} type={type} slateLockInfo={slateLockInfo} />
 
                         </div>
                         <figcaption className="figcaptionText" >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.caption} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div>
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credit} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
 
                 </div>
                 break;
             case "codelisting":
                 figLabelClass = "heading4CodeSnippetNumberLabel"; figTitleClass = "heading4CodeSnippetTitle"; figCaptionClass = "figcaptionCodeSnippet"; figCreditClass = "paragraphCodeSnippetCredit";
+                let preformattedText = model.figuredata.preformattedtext
+                let processedText = ""
+                preformattedText.forEach(function(item){
+                    let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
+                    let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
+                    processedText+=`${encodedItem2}<br />`            
+                })
                 /**JSX for Block Code Editor*/
                 figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">
                     <figure className="figureCodeSnippet" >
                         <header>
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.title.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className={figLabelClass + " figureLabel "} model={model.html.title} slateLockInfo={slateLockInfo} />
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.subtitle.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className={figTitleClass + " figureTitle "} model={model.html.subtitle} slateLockInfo={slateLockInfo} />
 
                         </header>
                         <div className="pearson-component blockcode codeSnippet blockCodeDiv" data-type="codeSnippet" >
                             <pre className="code-listing" >
-                                <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter block code..." tagName={'code'} className="" model={model.figuredata.preformattedtext} slateLockInfo={slateLockInfo} />
+                                <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Enter block code..." tagName={'code'} className="" model={processedText} slateLockInfo={slateLockInfo} />
                             </pre>
                         </div>
                         <figcaption >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.captions.text} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-3`} placeholder="Enter Caption..." tagName={'p'} className={figCaptionClass + " figureCaption"} model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div>
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.credits.text} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-4`} placeholder="Enter Credit..." tagName={'p'} className={figCreditClass + " figureCredit"} model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
 
                 </div>

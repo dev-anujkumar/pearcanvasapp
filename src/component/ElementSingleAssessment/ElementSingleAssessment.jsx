@@ -17,17 +17,27 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId: null,
-            assessmentItemId : null,
+            assessmentId:  null,
+            assessmentItemId :this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: props.model && props.figuredata && props.figuredata.elementdata ? props.figuredata.elementdata.usagetype : "Quiz",
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
+            assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
 
         };
-    } 
-
+    }
+    componentDidMount() {
+        let title =this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,"");        
+        this.setState({
+            assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
+            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
+        })
+    }
+    
     handleC2AssessmentClick=(value)=> {
-        let that = this;
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -44,18 +54,19 @@ export class ElementSingleAssessment extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.toggleAssessmentPopup(false);
+        this.toggleAssessmentPopup('',false);
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData)=> {
             this.launchAssetBrowserCallBack(assessmentData) 
         });
         hideTocBlocker();
     }
+    }
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
-        let title = assessmentData['title'] ? assessmentData['title'] : assessmentData['itemsTitle'];
-        var assessmentFormat;
+        let title = assessmentData['itemsTitle'] ? assessmentData['itemsTitle']: null ;
+        let assessmentFormat="";
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
         } else if (assessmentData['assessmentData'] && assessmentData['assessmentData']['taxonomicType'] && assessmentData['assessmentData']['taxonomicType'][0] && typeof assessmentData['assessmentData']['taxonomicType'][0] === 'string') {
@@ -64,11 +75,17 @@ export class ElementSingleAssessment extends Component {
             assessmentFormat = "";
             alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
-        this.setState({assessmentId: id,assessmentItemId : itemID,})
+        this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
+            ()=>{
+                this.saveAssessment();
+        })
     }
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
-    toggleAssessmentPopup = (value) => {
+    toggleAssessmentPopup = (e,value) => {
+        this.props.showBlocker(value);
+        disableHeader(value);
+        value ? showTocBlocker(value) : hideTocBlocker(value)
         this.setState({
             showAssessmentPopup : value
         });
@@ -77,11 +94,18 @@ export class ElementSingleAssessment extends Component {
     /**Assessment Dropdown Functions */
     /*** @description - This function is to handle the Assessment type change*/
     handleAssessmentTypeChange = (usageType, e) => {
-        this.setState({
-            asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: usageType,
-        });
+       if (this.state.activeAsseessmentUsageType !== usageType) {
+            this.setState({
+                activeAsseessmentUsageType: usageType
+            },()=>{
+                this.saveAssessment();
+            });
+        }
+            this.setState({
+                asseessmentUsageTypeDropdown: false,
+            })
     }
+
     /*** @description - This function is to toggle the Assessment Dropdown menu*/
     toggleUsageTypeDropdown = () => {
         this.setState({
@@ -97,11 +121,15 @@ export class ElementSingleAssessment extends Component {
     handleAssessmentBlur = () =>{
         this.props.handleBlur();
     }
+    /*** @description - This function will be called to save the assessment data */
+    saveAssessment = () =>{ 
+            this.props.handleBlur();
+    }
 
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
-    renderAssessmentType = (model = {}) => {
+    renderAssessmentType = (model) => {
         var assessmentJSX;
         var assessmentUsageType = ['Quiz', 'Test', 'Practice', 'Homework', 'Diagnostic', 'Journal', 'Shared Writing', 'Concept Check', 'Non-Scored', 'Study Tool']
         if (assessmentUsageType.length > 0) {
@@ -113,7 +141,7 @@ export class ElementSingleAssessment extends Component {
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
-                    <h4 className="heading4ImageTextWidthNumberLabel" >{model.title.text}</h4>
+                    <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{this.state.assessmentTitle}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
@@ -133,7 +161,7 @@ export class ElementSingleAssessment extends Component {
                     ) : null
                 }
 
-                <div className="pearson-component image" data-uri="" data-type="image" onClick={()=>{this.toggleAssessmentPopup(true)}}>
+                <div className="pearson-component image" data-uri="" data-type="image" onClick={(e)=>{this.toggleAssessmentPopup(e,true)}}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
@@ -148,7 +176,8 @@ export class ElementSingleAssessment extends Component {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
+                
             </div>
         );
     }

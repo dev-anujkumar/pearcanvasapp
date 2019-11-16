@@ -16,7 +16,15 @@ import {
     SET_SPLIT_INDEX,
     GET_PAGE_NUMBER,
     SET_UPDATED_SLATE_TITLE,
-    GET_PROJECT_PERMISSIONS
+    SET_SLATE_TYPE,
+    SET_SLATE_ENTITY,
+    GET_PROJECT_PERMISSIONS,
+    SET_OLD_IMAGE_PATH,
+    UPDATE_PAGENUMBER_SUCCESS,
+    UPDATE_PAGENUMBER,
+    UPDATE_PAGENUMBER_FAIL,
+    FETCH_DATA_ON_SLATE_REFRESH,
+    ACCESS_DENIED_POPUP
 } from '../constants/Action_Constants';
 
 /**
@@ -30,7 +38,8 @@ const initialState = {
     activeElement: {},
     splittedElementIndex: 0,
     pageNumberData: {},
-    permissions: []
+    permissions: [],
+    accesDeniedPopup: false
 };
 
 /**
@@ -65,6 +74,11 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
+        case FETCH_DATA_ON_SLATE_REFRESH : 
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
         case SWAP_ELEMENT : 
                 return {
                     ...state,
@@ -85,6 +99,16 @@ export default function (state = initialState, action) {
                         ...state,
                         slateTitleUpdated : action.payload.title
                     }
+        case SET_SLATE_TYPE:
+            return {
+                ...state,
+                slateType: action.payload
+            }
+        case SET_SLATE_ENTITY:
+        return {
+            ...state,
+            setSlateEntity: action.payload
+        }
          case AUTHORING_ELEMENT_UPDATE:
              return {
                  ...state,
@@ -95,6 +119,32 @@ export default function (state = initialState, action) {
                 ...state,
                 permissions: action.payload
             }
+        case SET_OLD_IMAGE_PATH:
+            return {
+                ...state,
+                oldImage: action.payload.oldImage
+            }  
+       case UPDATE_PAGENUMBER_SUCCESS:
+           return{
+               ...state,
+               //slateLevelData: action.payload.slateLevelData,
+               pageLoading:action.payload.pageLoading
+           }
+        case UPDATE_PAGENUMBER:
+            return {
+                ...state,
+                 pageLoading:action.payload.pageLoading
+            }
+        case ACCESS_DENIED_POPUP:
+            return {
+                ...state,
+                accesDeniedPopup : action.payload
+            }
+        case UPDATE_PAGENUMBER_FAIL: 
+        return {
+            ...state,
+            pageLoading:action.payload.pageLoading
+        } 
         default:
             return state;
     }

@@ -9,15 +9,18 @@ import config from '../../config/config';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
+import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
-export class ElementAudioVideo extends Component {
+class ElementAudioVideo extends Component {
     constructor(props) {
         super(props);
         this.state={
             imgSrc: null,
-            assetData : null
+            assetData: null,
+            elementType: this.props.model.figuretype || ""
         }
     }
     /**
@@ -25,34 +28,108 @@ export class ElementAudioVideo extends Component {
      * @param {*} data selected asset data
      */
     dataFromAlfresco = (data) => {
-            let imageData = data;
-            let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-            let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-            // let width = imageData['width'] ? imageData['width'] : "";
-            // let height = imageData['height'] ? imageData['height'] : "";
-            // let smartLinkPath = (imageData.body && imageData.body.results && imageData.body.results[0] && imageData.body.results[0].properties['s.avs:url'].value) ? imageData.body.results[0].properties['s.avs:url'].value : "";
-            // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-            // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-            // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-            if (figureType === "video" || figureType === "audio") {
+        hideTocBlocker();
+        disableHeader(false);
+        let format , path , lang;
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
 
-            //let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
-            if (figureType === "video" && epsURL === "") {
+        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "Video" || smartLinkAssetType == "Audio") {
+
+            if (figureType === "video" || smartLinkAssetType == "Video" && epsURL === "") {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            // let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
-            // // let clipLength=Object.keys(clipInfo).length
-            // let mediaId = imageData['mediaId'] ? imageData['mediaId'] : "";
-            // let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
-            // //let posterURL = imageData['posterImageUrl'] || 'https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png';
-            // let imageId = imageData['workURN'] ? imageData['workURN'] : "";
-            // let previewURL = imageData['previewUrl'] ? imageData['previewUrl'] : "";
-            // let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-            // let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            // let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
+            let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
+            let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
+            let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
+            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['subtitle'] : "";
+            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['subtitle'] : "";
+            if (ensubtitle) {
+                format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = ensubtitle.split("?")[0];
+                lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
+            } else if (frenchSubtitle) {
+                format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = frenchsubtitle.split("?")[0];
+                lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
+            } else if (spanishSubtitle) {
+                format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = spanishsubtitle.split("?")[0];
+                lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
+            }
+            
             this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
+            let figureData = {
+                height : height,
+                width : width,
+                srctype: this.props.model.figuredata.srctype
+            }
+            if (!uniqID) {
+                let uniqIDString = imageData && imageData.req && imageData.req.url;
+                let uniqueIDSmartlink;
+                if (uniqIDString) {
+                    uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1].replace(/\'/g, '');
+                }
+                let uniqueID = imageData['uniqueID'] ? imageData['uniqueID'] : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                if (uniqueID) {
+                    uniqID = uniqueID;
+                }
+            }
 
+            smartLinkAssetType = smartLinkAssetType.toLowerCase();
+            switch(figureType || smartLinkAssetType){
+                case "video":
+                    figureData = {
+                        ...figureData,
+                        videoid: `urn:pearson:alfresco:${uniqID}`,
+                        posterimage: {
+                            imageid: `urn:pearson:alfresco:${uniqID}`,
+                            path: epsURL,
+                        },
+                        videos: [
+                            {
+                                format: videoFormat,
+                                path: smartLinkURl
+                            }
+                        ],
+                        tracks: [
+                            {
+                                format: format,
+                                path: path,
+                                language: lang,
+                                tracktype: "captions"
+                            }
+                        ],
+                        clipinfo : clipInfo,
+                        schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                    }
+                    break;
+                case "audio":
+                    figureData = {
+                        ...figureData,
+                        audioid: `urn:pearson:alfresco:${uniqID}`,
+                        posterimage: {
+                            imageid: `urn:pearson:alfresco:${uniqID}`,
+                            path: epsURL,
+                        },
+                        audio: {
+                            format: videoFormat,
+                            path: smartLinkURl
+                        },
+                        schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
+                    }
+                    break;
+            }
+            this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
+                this.props.handleFocus("updateFromC2")
+                this.props.handleBlur()
+            })
         }
     }
     /**
@@ -83,6 +160,7 @@ export class ElementAudioVideo extends Component {
         var data_1 = false;
 
         if (alfrescoPath && alfrescoPath.nodeRef) {
+            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
             data_1 = alfrescoPath;
             /*
                 data according to new project api 
@@ -101,6 +179,10 @@ export class ElementAudioVideo extends Component {
             data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
             this.handleC2ExtendedClick(data_1)
+            }
+            else{
+                this.props.accessDenied(true)
+            }
 
         } else {
            if(this.props.permissions.includes('alfresco_crud_access')){ 
@@ -120,64 +202,91 @@ export class ElementAudioVideo extends Component {
      * @param index index of the current element
      * @param slateLockInfo object that defines the slate lock details */
 
-    renderAudioVideoType = (model = {},index,slateLockInfo) => {
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if(nextProps.model && 'figuretype' in nextProps.model && nextProps.model.figuretype !== prevState.elementType) {
+            return {
+                imgSrc: null,
+                assetData: null,
+                elementType: nextProps.model.figuretype || ""
+            };
+        }
+
+        return null;
+    }
+
+    renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;
         var assetPath;
         switch (model.figuretype) {
             case AUDIO:
                 /**JSX for Audio-type element*/
-                assetPath=model.figuredata.audio.path;
+                if(model && model.figuredata && model.figuredata.audio && model.figuredata.audio.path){
+                    assetPath=model.figuredata.audio.path;
+                }else{
+                    assetPath= DEFAULT_ASSET
+                }
+                
                 audioVideoJSX = <div className="divAudio">
                     <figure className="figureAudio"  >
                         <header className="figureHeader">
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations}  openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={model.html.title} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4AudioNumberLabel figureLabel " model={model.html.title} slateLockInfo={slateLockInfo} />
 
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4AudioTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} />
 
                         </header>
-                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
-                        <div className="pearson-component audio" data-type="audio">
-                            <audio controls="none" preload="none" className="audio" onClick={this.handleC2MediaClick}>
+                        <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : assetPath}</div>
+                        <div className="pearson-component audio" data-type="audio" onClick={this.handleC2MediaClick}>
+                            <audio controls="none" preload="none" className="audio" >
                                 <source src={this.state.imgSrc?this.state.imgSrc :""} type="audio/mpeg" />
                             </audio>
                         </div>
                         <figcaption className="figcaptionAudio" >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.captions} slateLockInfo={slateLockInfo} />
                         </figcaption>
 
                     </figure>
                     <div >
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credit} slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}  handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphAudioCredit figureCredit" model={model.html.credits} slateLockInfo={slateLockInfo} />
                     </div>
                 </div>
                 break;
             case VIDEO:
                 /**JSX for Video-type element*/
-                assetPath=model.figuredata.videos[0].path;
-                var posterImage=model.figuredata.posterimage.path;
+                var posterImage;
+                if(model && model.figuredata && model.figuredata.videos && model.figuredata.videos[0].path){
+                    assetPath=model.figuredata.videos[0].path;
+                }else{
+                    assetPath= DEFAULT_ASSET
+                }
+                if(model && model.figuredata && model.figuredata.posterimage){
+                    posterImage=model.figuredata.posterimage.path;
+                }else{
+                    posterImage= DEFAULT_VIDEO_POSTER_IMAGE
+                }
+               
                 audioVideoJSX = <div className="divVideo">
                     <figure className="figureVideo" >
 
                         <header className="figureHeader">
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} slateLockInfo={slateLockInfo} />
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-0`} placeholder="Enter Label..." tagName={'h4'} className="heading4VideoNumberLabel figureLabel " model={model.html.title} slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-1`} placeholder="Enter Title..." tagName={'h4'} className="heading4VideoTitle figureTitle" model={model.html.subtitle} slateLockInfo={slateLockInfo} />
                         </header>
                         <div className="assetDiv"><strong>Asset: </strong>{this.state.assetData?this.state.assetData : (assetPath !== "" ? assetPath : DEFAULT_ASSET)}</div>
                         <div className="pearson-component video" data-type="video" >
                             <video className="video" width="640" height="360" controls="none" preload="none" onClick={this.handleC2MediaClick}
-                              poster={this.state.imgSrc?this.state.imgSrc : (posterImage !== "" ? posterImage : DEFAULT_VIDEO_POSTER_IMAGE)}
+                              poster={this.state.imgSrc?this.state.imgSrc : posterImage}
                             >
                                 <source src="" />
                                 <track src="" kind="subtitles" srcLang="en" label="English" />
                             </video>
                         </div>
                         <figcaption className="figcaptionVideo" >
-                            <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.caption}  slateLockInfo={slateLockInfo} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-2`} placeholder="Enter Caption..." tagName={'p'} className="figureCaption" model={model.html.captions}  slateLockInfo={slateLockInfo} />
                         </figcaption>
                     </figure>
                     <div >
-                        <TinyMceEditor currentSlateLOData={this.props.currentSlateLOData} learningObjectiveOperations={this.props.learningObjectiveOperations} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credit}  slateLockInfo={slateLockInfo} />
+                        <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={`${index}-3`} placeholder="Enter Credit..." tagName={'p'} className="paragraphVideoCredit figureCredit" model={model.html.credits}  slateLockInfo={slateLockInfo} />
                     </div>
                 </div>
                 break;

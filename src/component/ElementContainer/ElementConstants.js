@@ -1,5 +1,5 @@
 export default {
-    OPENER : "chapterintro",
+    OPENER : "openerelement",
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",
@@ -10,6 +10,7 @@ export default {
     FIGURE_MATH_IMAGE : "mathImage",
     FIGURE_AUTHORED_TEXT : "authoredtext",
     FIGURE_CODELISTING : "codelisting",
+    FIGURE_TABLE_EDITOR : "tableasmarkup",
     FIGURE_AUDIO : "audio",
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
@@ -32,7 +33,9 @@ export default {
     METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
 
 /****************Assessment Slate Element************************ */  
-    ASSESSMENT_SLATE : "element-assessment"
+    ASSESSMENT_SLATE : "element-assessment",
+    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT "
+    
 }
 
 export const LABELS = {

@@ -60,4 +60,17 @@ width:230px;
     cursor: none;
     opacity: 0.3;
 }
+.learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
+    display:none !important;
+}
+
+.learningObjectiveContainer .container {
+    pointer-events: none;
+}
+.learningObjectiveinnerText img{
+    vertical-align:middle;
+}
+.Wirisformula{
+    cursor:pointer;
+}
  

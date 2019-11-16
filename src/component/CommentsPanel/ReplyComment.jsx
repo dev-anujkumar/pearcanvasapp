@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { utils } from '../../js/utils'
+import config from '../../config/config';
 class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
@@ -8,8 +9,6 @@ class ReplyComment extends React.Component {
             userInfo: {},
             text: ""
         }
-        this.updateCommentText = this.updateCommentText.bind(this);
-        this.replyComment = this.replyComment.bind(this);
     }
 
     /**
@@ -34,7 +33,7 @@ class ReplyComment extends React.Component {
         const reply = {
             commentType: "commentReply",
             commentDateTime: date.toISOString(),
-            commentCreator: "c5test01",//auth.user.userId,
+            commentCreator: config.userName,//auth.user.userId,
             commentString: text,
             commentOnEntity: elementId
         }

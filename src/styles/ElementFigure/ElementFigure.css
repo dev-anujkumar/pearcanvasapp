@@ -50,6 +50,10 @@ h4.figureLabel, h4.figureTitle{
     font-size: 12px!important;
     font-family: Helvetica, sans-serif!important;
 }
+.figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
+    font-weight: 900 !important;
+    font-family: inherit !important;
+}
 .figure-header{
     min-height: 86px;
 }
@@ -64,9 +68,10 @@ h4.figureLabel, h4.figureTitle{
     padding: 10px 0;
     width:100%!important;
     max-width: 100% !important;
+    overflow-x: auto;
 }
 .figureElement .pearson-component.image.figureData {
-    cursor:copy!important ;
+    /* cursor:copy!important ; */
     text-align: center;
 }
 figcaption,.figureCaption{
@@ -127,7 +132,7 @@ figure,.element-container{
 }
 .figureElement .pearson-component.image .image25Text{
     display: block;
-    cursor:copy!important ;
+    /* cursor:copy!important; */
     text-align: center;
     max-width: 170px;
     width: 100%;
@@ -159,3 +164,45 @@ figure,.element-container{
     letter-spacing: 0.02em;
     word-wrap: break-word;
 }
+.image50Text, .image50TextTableImage, .image50TextMathImage{
+    max-width: 340px !important;
+}
+img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage{
+    max-width: 680px !important;
+}
+img.imageWiderThanText, img.imageWiderThanTextTableImage, img.imageWiderThanTextMathImage{
+    max-width: 1080px !important;
+}
+img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage{
+    max-width: 100% !important;
+}
+.pearson-component.image.figureData.table-figure-data ul li{
+    list-style:inherit !important;
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.pearson-component.image.figureData.table-figure-data ol li{
+    list-style:inherit !important; 
+}
+.pearson-component.image.figureData.table-figure-data table{
+    width: inherit !important;
+    max-height: 399px;
+}
+.pearson-component.image.figureData.table-figure-data ul{
+    display: block;
+    /* list-style-type: disc; */
+    margin-block-end: 1em !important; 
+    margin-inline-start: 0px !important; 
+    margin-inline-end: 1em !important; 
+    padding-inline-start: 40px !important; 
+}
+.pearson-component.image.figureData.table-figure-data table a{
+    pointer-events:none !important;
+}
+.pearson-component.image.figureData.table-figure-data table tr{
+    height: 40px !important; 
+ }
+ .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
+     padding: 0px 7px !important; 
+     font: inherit !important; 
+  }

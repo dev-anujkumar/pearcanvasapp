@@ -95,7 +95,8 @@ describe('Testing functions', () => {
         
         tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
         tempWrapper.setProps({
-            toggleSplitSlatePopup : true
+            toggleSplitSlatePopup : true,
+            showAudioSplitPopup: jest.fn()
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
@@ -108,7 +109,8 @@ describe('Testing functions', () => {
         let firstOne = false;
         tempWrapper = mount(<ElementSaprator esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
         tempWrapper.setProps({
-            toggleSplitSlatePopup : jest.fn()
+            toggleSplitSlatePopup : jest.fn(),
+            showAudioSplitPopup: jest.fn()
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })
@@ -128,7 +130,8 @@ describe('Testing functions', () => {
 
         tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
         tempWrapper.setProps({
-            toggleSplitSlatePopup : true
+            toggleSplitSlatePopup : true,
+            showAudioSplitPopup: jest.fn()
         })
         tempWrapper.find(Button).at(0).simulate('click');
     })

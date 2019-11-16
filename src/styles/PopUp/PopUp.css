@@ -189,7 +189,7 @@
   box-shadow: inset 0 0 0 1px #3288e6;
 }
 .dialog-window.lock-message{
-  font-size: 1.2em;
+    font-size: 15px;
     line-height: 2.0em;
     font-weight: 100;
     font-family: "Helvetica Neue", sans-serif;
@@ -225,4 +225,30 @@
 .tocDeleteClass {
   font-family: "Helvetica Neue", sans-serif;
   color: #847676;
+}
+.audioRemoveClass {
+  line-height: 1.22em;
+}
+
+.audioWrongPop{
+  font-family: "Helvetica Neue", sans-serif;
+  color: #847676;
+  padding-top: 0.9em;
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 500px;
+  font-size: 1.0em;
+  line-height: 1.9em;
+  font-weight: normal;
+}
+.lockInputBox{
+  padding-top: 30px;
+  padding-left: 30px;
+  font-size: 15px;
+}
+.lockInputBox>input{
+  border: 0.07px solid darkgray;
+  height: 20px;
+  padding-left: 2px;
 }

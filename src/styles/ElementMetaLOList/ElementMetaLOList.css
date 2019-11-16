@@ -1,0 +1,44 @@
+span.learningObjectiveData {
+    margin-bottom: 10px;
+    display: block;
+}
+h3.moduleName {
+    color: grey;
+    font-style: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 6px;
+}
+
+.moduleContainer.showmodule .moduleName{
+    display:block;
+}
+.moduleContainer .moduleName{
+    display:none;
+    
+}
+.moduleContainer{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.moduleContainer.showmodule{
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+.divLearningObjectives  div >:first-child {
+    margin-top: 0px!important;
+}
+.divLearningObjectives  div >:first-child h3.moduleName {
+    margin-top: 10px;
+}
+.learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
+    display:none;
+}
+
+.learningObjectiveContainer .container {
+    pointer-events: none;
+}
+.learningObjectiveinnerText img{
+    vertical-align:middle;
+}

@@ -1,6 +1,4 @@
 var _ = require("lodash");
-const uuidV4 = require("uuid/v4");
-//import findAndReplaceDOMText from "./findAndReplaceDOMText"
 
 export const utils = {
 
@@ -106,3 +104,16 @@ export const utils = {
         return type;
     },
 };
+
+export const checkforToolbarClick = (classList) =>{
+    let existingToolbarClasses = ["tox-tbtn","tox-tbtn--select","tox-split-button","wrs_focusElement","tox-split-button__chevron"];
+    let isTargetFound = false;
+
+    classList.forEach((val)=>{
+        if(existingToolbarClasses.indexOf(val)>-1){
+            isTargetFound = true;
+            return;
+        }
+    })
+    return isTargetFound;
+}

@@ -3,6 +3,10 @@ export const SET_ACTIVE_ELEMENT = 'SET_ACTIVE_ELEMENT'
 export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
+export const SET_SLATE_TYPE = 'SET_SLATE_TYPE'
+export const SET_SLATE_ENTITY = 'SET_SLATE_ENTITY'
+export const FETCH_DATA_ON_SLATE_REFRESH= 'FETCH_DATA_ON_SLATE_REFRESH'
+export const ACCESS_DENIED_POPUP = 'ACCESS_DENIED_POPUP' 
 /*---------------Comments Panel ----------------------*/
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
 export const TOGGLE_COMMENTS_PANEL = 'TOGGLE_COMMENTS_PANEL'
@@ -25,7 +29,7 @@ export const INTERACTIVE_ELEMENT_CREATED = "INTERACTIVE_ELEMENT_CREATED"
 
 /*---------------Element Updation ----------------------*/
 export const AUTHORING_ELEMENT_UPDATE = "AUTHORING_ELEMENT_UPDATE"
-
+export const SET_OLD_IMAGE_PATH = "SET_OLD_IMAGE_PATH"
 /*---------------Element Container ----------------------*/
 export const ADD_COMMENT = "ADD_COMMENT"
 export const DELETE_ELEMENT = "DELETE_ELEMENT"
@@ -44,8 +48,12 @@ export const SWAP_ELEMENT = 'SWAP_ELEMENT'
 /*--------------- Split Slate -------------------*/
 export const SET_SPLIT_INDEX = 'SET_SPLIT_INDEX'
 
-/*--------------- Slate Tag -------------------*/
+/*--------------- Slate Tag(MetaData Anchor) -------------------*/
 export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
+export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
+export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
+export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
+
 
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'
@@ -71,3 +79,15 @@ export const LT_TYPE_FILTER_SELECTED = "LT_TYPE_FILTER_SELECTED"
 /*--------------- User Role -------------------*/
 export const GET_PROJECT_PERMISSIONS = 'GET_PROJECT_PERMISSIONS'
 
+/*--------------- Page Numbering -------------------*/
+export const UPDATE_PAGENUMBER_SUCCESS = 'UPDATE_PAGENUMBER_SUCCESS'
+export const UPDATE_PAGENUMBER = 'UPDATE_PAGENUMBER'
+export const UPDATE_PAGENUMBER_FAIL = 'UPDATE_PAGENUMBER_FAIL'
+
+/*--------------- Audio Narration -------------------*/
+export const OPEN_AUDIO_NARRATION = 'OPEN_AUDIO_NARRATION'
+export const SHOW_REMOVE_POPUP = 'SHOW_REMOVE_POPUP'
+export const SPLIT_REMOVE_POPUP = 'SPLIT_REMOVE_POPUP'
+export const CURRENT_SLATE_AUDIO_NARRATION = 'CURRENT_SLATE_AUDIO_NARRATION'
+export const ADD_AUDIO_NARRATION = 'ADD_AUDIO_NARRATION'
+export const WRONG_AUDIO_REMOVE_POPUP = 'WRONG_AUDIO_REMOVE_POPUP'

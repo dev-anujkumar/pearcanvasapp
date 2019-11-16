@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import Sidebar from '../../../src/component/Sidebar';
-import { updateElement } from './../../../src/component/Sidebar/Sidebar_Action';
+import { conversionElement } from './../../../src/component/Sidebar/Sidebar_Action';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -25,8 +25,11 @@ describe('Test for Sidebar component', () => {
         appStore: {
             activeElement,
             updateElement,
-            slateLevelData
-        }
+            slateLevelData,
+        },
+        metadataReducer: {
+            showModule: true
+        },
     });
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f'
@@ -106,9 +109,12 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                conversionElement,
                 slateLevelData
-            }
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
@@ -130,13 +136,91 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                conversionElement,
                 slateLevelData
-            }
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
         });
 
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
         </Provider>);
     });
+
+    it("With no activeElement", () => {
+        const activeElement = {}
+        
+        const sidebarWithData = mockStore({
+            appStore: {
+                activeElement,
+                conversionElement,
+                slateLevelData
+            },
+            metadataReducer: {
+                currentSlateLOData: {}
+            },
+        });
+    let sidebar = mount(<Provider store={sidebarWithData}>
+            <Sidebar />
+        </Provider>);
+    })
+
+    describe("Blockquote", () => {
+
+        it("Checking data for pullquote", () => {
+            const activeElement = {
+                elementId: "urn:pearson:work:28493c52-4356-48e5-8328-c24337bb3200",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                index: 0,
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-pullquote",
+                tag: "BQ"
+            }
+            
+            const sidebarWithData = mockStore({
+                appStore: {
+                    activeElement,
+                    conversionElement,
+                    slateLevelData
+                },
+                metadataReducer: {
+                    currentSlateLOData: {}
+                },
+            });
+        let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            expect(sidebar.find('.element-dropdown').length).toBe(2)
+            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
+            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Pullquote")
+        })
+
+        it("Checking data for Marginalia with attribution", () => {
+            const activeElement = {
+                elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e2t",
+                elementType: "element-authoredtext",
+                elementWipType: "element-blockfeature",
+                primaryOption: "primary-blockquote",
+                secondaryOption: "secondary-marginalia-attribution",
+                index: 1,
+                tag: "BQ"
+            }
+            
+            const sidebarWithData = mockStore({
+                appStore: {
+                    activeElement,
+                    conversionElement,
+                    slateLevelData
+                },
+                metadataReducer: {
+                    currentSlateLOData: {}
+                },
+            });
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            expect(sidebar.find('.element-dropdown').length).toBe(2)
+            expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
+            expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
+        }) 
+    })
 });

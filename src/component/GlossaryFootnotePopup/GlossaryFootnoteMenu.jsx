@@ -2,10 +2,9 @@
 * Root Component of Glossary Footnote Component.
 */
 import React from 'react';
-import { connect } from 'react-redux';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
-import {glossaaryFootnotePopup} from './GlossaryFootnote_Actions';
+import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
 * to make a skeleton of Glossary and Footnote.
@@ -13,12 +12,42 @@ import {glossaaryFootnotePopup} from './GlossaryFootnote_Actions';
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
+        //context=this;
+        this.wrapperRef=null;
     }
+
+    handleClickOutside = (event) => {
+        if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+            /** Case - event target is not even wiris modal */
+            if (!document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) {
+                this.saveContent()
+            }
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+        //this.setWrapperRef(this);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+    /**
+      * Set the wrapper ref
+      */
+    setWrapperRef=(node)=> {
+        this.wrapperRef = node;
+    }
+
+
     render() {
-        const { glossaryFootnote,activePopUp,glossaaryFootnotePopup} = this.props;
+        const { showGlossaaryFootnote, glossaryFootnoteValue } = this.props;
+        console.table(glossaryFootnoteValue);
         return (
- 
-           <GlossaryFootnotePopup glossaaryFootnotePopup = {glossaaryFootnotePopup} glossaryFootnote={this.props.glossaryFootnoteValue.type} closePopup={()=>this.closePopup()} saveContent={()=>this.saveContent()} />
+            <div>
+            <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} />
+            </div>
         )
     }
 
@@ -27,17 +56,23 @@ class GlossaryFootnoteMenu extends React.Component {
     * @description - This function is to close the Glossary and Footnote Popup.
     * @param {event} 
     */
-
     closePopup = () => {
-        this.props.glossaaryFootnotePopup(false);
+        this.props.showGlossaaryFootnote(false);
     }
+
     /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 
     */
-
-    saveContent =() => {
-        this.props.glossaaryFootnotePopup(false);
+    saveContent = () => {
+        const { glossaryFootnoteValue } = this.props;
+        let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
+        let term = null;
+        let definition = null;
+        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
+        this.props.showGlossaaryFootnote(false);
     }
 }
 
@@ -53,18 +88,5 @@ GlossaryFootnoteMenu.propTypes = {
     /** Handler to save content of popup on save button click */
     saveContent: PropTypes.func
 }
-const mapStateToProps = state => {
-    return {
-      
-        glossaryFootnoteValue:state.glossaryFootnoteReducer.glossaryFootnoteValue
 
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        glossaaryFootnotePopup:(popUpStatus)=>{
-            dispatch(glossaaryFootnotePopup(popUpStatus))
-        }
-    }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(GlossaryFootnoteMenu);
+export default GlossaryFootnoteMenu;

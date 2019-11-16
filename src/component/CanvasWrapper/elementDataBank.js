@@ -50,10 +50,10 @@ const elementDataBank = {
         "tag" : "MA"
     },
 
-    "chapterintro": {
-        "elementType" : "chapterintro",
-        "primaryOption" : "primary-chapterintro",
-        "secondaryOption" : "secondary-chapterintro",
+    "openerelement": {
+        "elementType" : "openerelement",
+        "primaryOption" : "primary-openerelement",
+        "secondaryOption" : "secondary-openerelement",
         "tag" : "OE"
     },
 
@@ -99,6 +99,9 @@ const elementDataBank = {
         "image" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-figure",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
             "image50Text" : {
                 "secondaryOption" : "secondary-image-figure-half"
             },
@@ -114,22 +117,6 @@ const elementDataBank = {
             "image25Text" : {
                 "secondaryOption" : "secondary-image-figure-quarter"
             }
-        },
-        "table" : {
-            "elementType" : "figure",
-            "primaryOption" : "primary-image-table",
-            "image50TextTableImage" : {
-                "secondaryOption" : "secondary-image-table-half"
-            },
-            "imageTextWidthTableImage" : {
-                "secondaryOption" : "secondary-image-table-width"
-            },
-            "imageWiderThanTextTableImage" : {
-                "secondaryOption" : "secondary-image-table-wider"
-            },
-            "imageFullscreenTableImage" : {
-                "secondaryOption" : "secondary-image-table-full"
-            },
         },
         "mathImage" : {
             "elementType" : "figure",
@@ -162,17 +149,27 @@ const elementDataBank = {
             "elementType" : "figure",
             "primaryOption" : "primary-editor-table-equation",
             "imageTextWidthTableEditor" : {
-                "secondaryOption" : "secondary-editor-table-width"
-            },
-            "imageWiderThanTextEditorTable" : {
-                "secondaryOption" : "secondary-editor-table-wider"
-            },
-            "imageFullscreenTableEditor" : {
-                "secondaryOption" : "secondary-editor-table-full"
+                "secondaryOption" : "secondary-editor-table-equation"
             },
             "image50TextEditorTable" : {
-                "secondaryOption" : "secondary-editor-table-half"
+                "secondaryOption" : "secondary-editor-table-equation"
             }
+        },
+        "table" : {
+            "elementType" : "figure",
+            "primaryOption" : "primary-image-table",
+            "image50TextTableImage" : {
+                "secondaryOption" : "secondary-image-table-half"
+            },
+            "imageTextWidthTableImage" : {
+                "secondaryOption" : "secondary-image-table-width"
+            },
+            "imageWiderThanTextTableImage" : {
+                "secondaryOption" : "secondary-image-table-wider"
+            },
+            "imageFullscreenTableImage" : {
+                "secondaryOption" : "secondary-image-table-full"
+            },
         },
         "video" : {
             "elementType" : "video-audio",
@@ -212,7 +209,7 @@ const elementDataBank = {
                 "primaryOption" : "primary-smartlink",
                 "secondaryOption" : "secondary-interactive-smartlink-pop-up-web-link"
             },
-            "table": {
+            "smartlink-tab": {
                 "primaryOption" : "primary-smartlink",
                 "secondaryOption" : "secondary-interactive-smartlink-tab"
             },
@@ -232,6 +229,50 @@ const elementDataBank = {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
             },
+            "video-mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "mcq": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "hotspot": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "accountingtable": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-video": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "gallery-image": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "graph": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "simulation": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "survey": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "timeline": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
+            "fill-in-blank": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            }
         },
         "assessment" : {
             "elementType" : "element-assessment",
@@ -248,10 +289,6 @@ const elementDataBank = {
     "element-aside" : {
         "sidebar" : {
             "elementType" : "element-aside",
-            "asideTacticBox" : {
-                "primaryOption" : "primary-aside-tactic",
-                "secondaryOption" : "secondary-aside-tactic"
-            },
             "asideSidebar01" : {
                 "primaryOption" : "primary-aside-aside",
                 "secondaryOption" : "secondary-aside-sb1"
@@ -277,8 +314,19 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-aside-feature"
             },
             "asideActivity" : {
-                "primaryOption" : "primary-aside-tactic",
+                "primaryOption" : "primary-aside-activity",
                 "secondaryOption" : "secondary-aside-activity"
+            },
+            "asideLearningObjective" : {
+                "primaryOption" : "primary-aside-lol",
+                "secondaryOption" : "secondary-aside-lol"
+            }
+        },
+        "Tactic" : {
+            "elementType" : "element-aside",
+            "asideTacticBox" : {
+                "primaryOption" : "primary-aside-tactic",
+                "secondaryOption" : "secondary-aside-tactic"
             }
         },
         "workedexample" : {

@@ -9,6 +9,19 @@
 require('./polyfills.js')
 
 /**
+ * insertUoListButton | inserts custom list button for unordered list with icon in existing editor toolbar
+ */
+export const insertUoListButton = (editor, onIconClick) => {
+    editor.ui.registry.addButton('customUoListButton', {
+        text: '<i class="fa fa-list-ul" aria-hidden="true"></i>',
+        tooltip: 'Unordered List',
+        onAction: () => {
+            onIconClick('disc');
+        }
+    });
+}
+
+/**
  * insertListButton | inserts custom list button with icon in existing editor toolbar
  */
 export const insertListButton = (editor) => {
@@ -79,10 +92,10 @@ export const bindKeyDownEvent = (editor, e) => {
              */
             if (anchorNode.nextSibling === undefined || anchorNode.nextSibling === null) {
                 /**
-                 * Case - AND if that last element is at outermost level i.e, data-treelevel == 1
+                 * Case - AND if that last element is at outermost level i.e, 'treelevel' == 1
                  */
-                if ((anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel') === '1') ||
-                    (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('data-treelevel') === '1')) {
+                if ((anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') === '1') ||
+                    (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel') === '1')) {
                     if (anchorNode.children[1] &&
                         (anchorNode.children[1].tagName === "OL" ||
                             anchorNode.children[1].tagName === "UL")) {
@@ -128,7 +141,6 @@ export const bindKeyDownEvent = (editor, e) => {
     /**
      * Facilitate indent feature at end of text on TAB key
      */
-    console.log('key code', e.which)
     if (atEnd && e.which == 9 && !e.shiftKey) {
         editor.editorCommands.commands.exec.indent();
     }
@@ -143,7 +155,7 @@ export const bindKeyDownEvent = (editor, e) => {
      * Facilitate TAB key on list
      */
     if ((e.which == 9) && anchorNode.closest('li')) {
-        let demo = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('data-treelevel'));
+        let demo = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
         let updatelistFlag = true;
 
         // prevent tab indent event at last level of list tree //
@@ -160,7 +172,8 @@ export const bindKeyDownEvent = (editor, e) => {
              * if is is first item then prevent default
              */
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            if (closestLi.closest('ol').findChildren('li').indexOf(closestLi) === 0) {
+            let closestLiOl = closestLi.closest('ol') || closestLi.closest('ul');
+            if (closestLiOl.findChildren('li').indexOf(closestLi) === 0) {
                 prohibitEventBubling(e);
                 return false;
             }
@@ -173,7 +186,7 @@ export const bindKeyDownEvent = (editor, e) => {
          */
         else if (e.shiftKey && !isMultilineSelection) {
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            let closestTreeLevel = anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('data-treelevel');
+            let closestTreeLevel = anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel');
             /**
              * Case - prevent hitting Shift+TAB on very first list tree level
              */
@@ -253,22 +266,25 @@ const updateNestedList = (element) => {
     let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
 
+    let UlClassList = ['disc', 'square', 'circle', 'disc'];
+    let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
+
     let allOlElement = element.querySelectorAll('ol');
     if (allOlElement.length == 0) {
         allOlElement = element.querySelectorAll('ul');
     }
-    let treelevel = parseInt(allOlElement[0].getAttribute('data-treelevel'));
-    let olClass = allOlElement[0].getAttribute('class');
+    let treelevel = parseInt(allOlElement[0].getAttribute('treelevel'));
+    let olClass = allOlElement[0].getAttribute('class') || 'disc';
     for (let i = 0; i < allOlElement.length; i++) {
         allOlElement[i].classList.add(olClass);
-        let parentTreeLevel = allOlElement[i].parents('ol') && allOlElement[i].parents('ol').getAttribute('data-treelevel') || undefined;
+        let parentTreeLevel = allOlElement[i].parents('ol') && allOlElement[i].parents('ol').getAttribute('treelevel') || undefined;
         if (parentTreeLevel == undefined) {
-            parentTreeLevel = allOlElement[i].parents('ul') && allOlElement[i].parents('ul').getAttribute('data-treelevel') || undefined;
+            parentTreeLevel = allOlElement[i].parents('ul') && allOlElement[i].parents('ul').getAttribute('treelevel') || undefined;
         }
         if (parentTreeLevel) {
             treelevel = parseInt(parentTreeLevel) + 1;
         }
-        allOlElement[i].setAttribute('data-treelevel', treelevel);
+        allOlElement[i].setAttribute('treelevel', treelevel);
         if (treelevel > 1) {
             allOlElement[i].style.counterIncrement = null;
         }
@@ -285,12 +301,10 @@ const updateNestedList = (element) => {
         }
 
         switch (olClass) {
-
             case "decimal":
                 allOlElement[i].classList.add(decimalOlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(decimalLiClassList[treelevel - 1]) });
                 break;
-
             case "upper-alpha":
                 allOlElement[i].classList.add(upperAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperAlphaLiClassList[treelevel - 1]) });
@@ -307,16 +321,18 @@ const updateNestedList = (element) => {
                 allOlElement[i].classList.add(lowerRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerRomanLiClassList[treelevel - 1]) });
                 break;
-
             case "none":
                 allOlElement[i].classList.add('none');
                 [...childLielement].forEach((elem) => { elem.removeAllClass() });
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoNone') });
                 childLielement[0].classList.add('reset');
-
                 break;
             case "disc":
+            default:
+                allOlElement[i].classList.add('disc');
+                allOlElement[i].classList.add(UlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add('listItemNumeroUnoBullet') });
+                [...childLielement].forEach((elem) => { elem.classList.add(UlLiClassList[treelevel - 1]) });
                 break;
         }
         treelevel = treelevel + 1;

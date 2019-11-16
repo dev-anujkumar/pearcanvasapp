@@ -100,3 +100,15 @@
     /* visibility: hidden !important; */
 
 }
+.wrs_modal_dialogContainer.wrs_modal_desktop.wrs_maximized{
+    width: 580px!important;
+    height: 483px!important;
+    top: 50%!important;
+    left: 50%!important;
+    transform: translate(-50%, -50%)!important;
+}
+.sidebar-panel{
+    position : fixed;
+    left : 0px;
+    height : 100%;
+}

@@ -35,3 +35,37 @@ export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.co
 export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
+
+export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
+
+/*---------------- List type constants -----------------*/
+export const LIST_TYPE_MAPPINGS = {
+    'disc': {
+        mapType: 'secondary-list-1',
+        tag: 'UL'
+    },
+    'upper-alpha': {
+        mapType: 'secondary-list-3',
+        tag: 'OL'
+    },
+    'lower-alpha': {
+        mapType: 'secondary-list-4',
+        tag: 'OL'
+    },
+    'upper-roman': {
+        mapType: 'secondary-list-5',
+        tag: 'OL'
+    },
+    'lower-roman': {
+        mapType: 'secondary-list-6',
+        tag: 'OL'
+    },
+    'none': {
+        mapType: 'secondary-list-7',
+        tag: 'OL'
+    },
+    'decimal': {
+        mapType: 'secondary-list-2',
+        tag: 'OL'
+    }
+}
