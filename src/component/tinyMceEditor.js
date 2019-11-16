@@ -868,7 +868,7 @@ export class TinyMceEditor extends Component {
          */
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
-            if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && 'type' in this.props.element && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
             }
         }

@@ -37,12 +37,10 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
-            //console.log("Slate lock info fetch success:", res)
             if(callback)
                 callback(res.data)
         })
         .catch((err) => {
-            //console.log("Slate lock info fetch failed:", err)
         })
 }  
 
