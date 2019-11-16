@@ -305,11 +305,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-    let assessmenttitle = document.querySelector(assessmentNodeSelector+'h4.heading4ImageTextWidthNumberLabel').innerText;
+    let assessmenttitle = document.getElementById('single_assessment_title').innerText;
+     
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: assessmenttitle
+            title: `<p>${assessmenttitle}</p>`
         }}
         
     dataToSend.figuredata.elementdata;
