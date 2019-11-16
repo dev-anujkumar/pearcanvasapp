@@ -321,7 +321,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase();
+    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
 
     return dataToSend;
 }

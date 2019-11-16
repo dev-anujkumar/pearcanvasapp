@@ -18,7 +18,10 @@ class GlossaryFootnoteMenu extends React.Component {
 
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-            this.saveContent()
+            /** Case - event target is not even wiris modal */
+            if (!document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) {
+                this.saveContent()
+            }
         }
     }
 

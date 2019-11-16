@@ -25,7 +25,8 @@ class Interactive extends React.Component {
             itemID : this.props.model.figuredata && this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
             posterImage : null,
             imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
-            showAssesmentpopup: false
+            showAssesmentpopup: false,
+            elementType: this.props.model.figuredata.interactivetype || ""
         };
 
     }
@@ -109,6 +110,19 @@ class Interactive extends React.Component {
         }); 
     }
      
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if('figuredata' in nextProps.model && 'interactivetype' in nextProps.model.figuredata && nextProps.model.figuredata.interactivetype !== prevState.elementType) {
+            return {
+                itemID: nextProps.model.figuredata && nextProps.model.figuredata.interactiveid ? nextProps.model.figuredata.interactiveid : "",
+                posterImage: null,
+                imagePath : nextProps.model.figuredata && nextProps.model.figuredata.posterimage && nextProps.model.figuredata.posterimage.path ? nextProps.model.figuredata.posterimage.path : "",
+                elementType: nextProps.model.figuredata.interactivetype || ""
+            };
+        }
+
+        return null;
+    }
+
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
@@ -489,7 +503,7 @@ class Interactive extends React.Component {
                 uniqueIDInteractive = "urn:pearson:alfresco:" + uniqInter
             }
 
-            if (smartLinkType.toLowerCase() === "3rd party interactive" || smartLinkType.toLowerCase() === "metrodigi interactive" || smartLinkType.toLowerCase() === "table") {
+            if (smartLinkType.toLowerCase() === "website" || smartLinkType.toLowerCase() === "pdf" || smartLinkType.toLowerCase() === "3rd party interactive" || smartLinkType.toLowerCase() === "metrodigi interactive" || smartLinkType.toLowerCase() === "table") {
                 let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {
                     epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png";
