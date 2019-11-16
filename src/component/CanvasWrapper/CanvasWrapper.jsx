@@ -65,8 +65,18 @@ export class CanvasWrapper extends Component {
         })
         let { projectUrn } = config,
         slateId = config.slateManifestURN
-        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        this.props.getSlateLockStatus(projectUrn ,slateId) 
+
+        let searchString = window.location.search;
+        let q = new URLSearchParams(searchString);
+        if(q.get('q')){
+            let currentWorkId = q.get('q');
+            setTimeout(() => {
+                this.props.toggleCommentsPanel(true);
+                this.props.fetchCommentByElement(currentWorkId);
+            }, 4000);
         }
+    }
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
@@ -123,7 +133,7 @@ export class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
                                 </RootContext.Provider>                                
                             </div>
                         </div>
@@ -138,7 +148,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -169,9 +179,12 @@ const mapStateToProps = state => {
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
+        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
-        logout
+        logout,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+
     };
 };
 

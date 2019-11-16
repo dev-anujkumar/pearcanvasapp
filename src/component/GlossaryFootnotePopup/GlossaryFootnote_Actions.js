@@ -1,24 +1,83 @@
 import axios from 'axios';
 import config from '../../config/config';
+import store from '../../appstore/store.js'
 
 const {
     REACT_APP_API_URL
 } = config
 
-import { OPEN_GLOSSARY_FOOTNOTE } from "./../../constants/Action_Constants";
+import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY } from "./../../constants/Action_Constants";
 
-export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType) => async (dispatch) => {
+export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType) => async (dispatch) => {
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
         elementWorkId,
         elementType,
-        glossaryfootnoteid
+        glossaryfootnoteid,
+        elementSubType
     }
 
+    if (status === true) {
+        let semanticType = glossaaryFootnote.toUpperCase();
+        const slateId = config.slateManifestURN;
+        const parentData = store.getState().appStore.slateLevelData;
+        let newParentData = JSON.parse(JSON.stringify(parentData));
+        let newBodymatter = newParentData[slateId].contents.bodymatter;
+        var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
+        }else if(tempIndex.length == 3 && elementType == 'figure'){
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+        }else if (elementType === "figure") {
+            let tempUpdatedIndex = index.split('-');
+
+            let updatedIndex = tempUpdatedIndex[0];
+            glossaryFootElem = newBodymatter[updatedIndex]
+        } else {
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementWorkId) {
+                    glossaryFootElem = newBodymatter[index]
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == elementWorkId) {
+                        glossaryFootElem = condition
+                    }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementWorkId) {
+                        glossaryFootElem = condition
+                    }
+                }
+
+            }
+        }
+
+        switch (semanticType) {
+            case 'FOOTNOTE':
+                footnoteContentText = glossaryFootElem && glossaryFootElem.html['footnotes'] && glossaryFootElem.html['footnotes'][glossaryfootnoteid]
+                break;
+            case 'GLOSSARY':
+                tempGlossaryContentText = glossaryFootElem && glossaryFootElem.html['glossaryentries'] && glossaryFootElem.html['glossaryentries'][glossaryfootnoteid]
+                footnoteContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).definition
+                glossaryContentText = tempGlossaryContentText && JSON.parse(tempGlossaryContentText).term
+        }
+    }
     return await dispatch({
         type: OPEN_GLOSSARY_FOOTNOTE,
-        payload: glossaaryFootnoteValue
+        payload: {
+            glossaaryFootnoteValue: glossaaryFootnoteValue,
+            glossaryFootNoteCurrentValue: {
+                footnoteContentText,
+                glossaryContentText,
+            },
+            elementIndex: index
+        }
     });
 }
 
@@ -29,21 +88,68 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType) => {
     let glossaryEntry = Object.create({})
     let footnoteEntry = Object.create({})
     let semanticType = type.toUpperCase()
-    let data = {}
-    switch(semanticType){
+    let data = {}, figureDataObj
+    var index = store.getState().glossaryFootnoteReducer.elementIndex;
+    const slateId = config.slateManifestURN;
+    const parentData = store.getState().appStore.slateLevelData;
+    let newParentData = JSON.parse(JSON.stringify(parentData));
+    let newBodymatter = newParentData[slateId].contents.bodymatter;
+    let workEditor, workContainer;
+
+    //Get updated innerHtml of element for API request 
+    if (elementType == 'figure') {
+        let label, title, captions, credits, elementIndex
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4){//Figure inside a WE
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
+        }else if(tempIndex.length == 3){ //section 2 in WE figure
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        }else{
+            elementIndex = tempIndex[0]
+        }
+        
+        label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
+        title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
+
+        if(elementSubType == 'image'){
+            captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+            credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+        }else if (elementSubType == 'interactive'){
+            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+        }
+       
+        figureDataObj = {
+            "title": label,
+            "subtitle": title,
+            "text": "",
+            "postertext": "",
+            "tableasHTML": "",
+            "captions": captions,
+            "credits": credits
+        }
+    } else {
+        workEditor = document.getElementById('cypress-' + index)
+        workContainer = workEditor.innerHTML;
+        figureDataObj = {
+            "text": workContainer
+        }
+    }
+
+    switch (semanticType) {
         case "FOOTNOTE":
-                footnoteEntry[glossaryfootnoteid] = definition
-                        data = {
+            footnoteEntry[glossaryfootnoteid] = definition
+            data = {
                 id: elementWorkId,
                 type: elementType,
                 versionUrn: null,
                 contentUrn: null,
                 html: {
-                    text: null,
+                    ...figureDataObj,
                     glossaryentries: {},
                     footnotes: footnoteEntry,
                     assetspopover: {}
@@ -52,25 +158,25 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
 
         case "GLOSSARY":
-                glossaryEntry[glossaryfootnoteid] = {
-                    term,
-                    definition
+            glossaryEntry[glossaryfootnoteid] = JSON.stringify({
+                term,
+                definition
+            })
+            data = {
+                id: elementWorkId,
+                type: elementType,
+                versionUrn: null,
+                contentUrn: null,
+                html: {
+                    ...figureDataObj,
+                    glossaryentries: glossaryEntry,
+                    footnotes: {},
+                    assetspopover: {}
                 }
-               data = {
-                    id: elementWorkId,
-                    type: elementType,
-                    versionUrn: null,
-                    contentUrn: null,
-                    html: {
-                        text: null,
-                        glossaryentries: glossaryEntry,
-                        footnotes: {},
-                        assetspopover: {}
-                    }
-                }
+            }
             break;
     }
-    
+
     let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     axios.put(url, JSON.stringify(data), {
         headers: {
@@ -78,7 +184,41 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        console.log("save glossary footnote API success : ", res)
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4){//Figure inside a WE
+            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
+        }else if(tempIndex.length ==3 && elementType =='figure'){//section 2 figure in WE
+            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
+        }else if (elementType === "figure") {
+            let updatedIndex = index.split('-')[0];
+            newBodymatter[updatedIndex] = res.data;
+        } else {
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementWorkId) {
+                    newBodymatter[index] = res.data
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == elementWorkId) {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = res.data
+                    }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementWorkId) {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = res.data
+                    }
+                }
+            }
+        }
+        store.dispatch({
+            type: UPDATE_FOOTNOTEGLOSSARY,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
     }).catch(err => {
         console.log("save glossary footnote API error : ", err)
     })

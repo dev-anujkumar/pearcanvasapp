@@ -14,7 +14,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
-import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -175,6 +175,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
                 break;
+                case 'getAssessmentLOResponse':
+                    console.log("this is assessment response--",message);
+                    let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
+                    this.props.isLOExist(newMessage);
+                   break;    
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
@@ -275,7 +280,7 @@ function WithWrapperCommunication(WrappedComponent) {
             sendDataToIframe(messageObj);
         }
         hanndleSplitSlate = (newSlateObj) => {
-            this.props.handleSplitSlate(newSlateObj)
+            this.props.handleSplitSlate(newSlateObj);
         }
         sendingPermissions = () => {
             /**
@@ -314,7 +319,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                if(this.props.withinLockPeriod === true){
+                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                }          
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 currentSlateObject = {
@@ -338,14 +345,13 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.glossaaryFootnotePopup(false);
-                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
+                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
                 sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys} })
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
                 }
-               
             }
             /**
              * TO BE IMPLEMENTED
@@ -500,7 +506,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 const { lockOwner } = this.state
                 showTocBlocker();
                 return (
-                    <PopUp dialogText={ALREADY_USED_SLATE}
+                    <PopUp dialogText={ALREADY_USED_SLATE_TOC}
                         rows="1"
                         cols="1"
                         active={true}
@@ -510,6 +516,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         isInputDisabled={true}
                         slateLockClass="lock-message"
                         withInputBox={true}
+                        lockForTOC={true}
                     />
                 )
             }
