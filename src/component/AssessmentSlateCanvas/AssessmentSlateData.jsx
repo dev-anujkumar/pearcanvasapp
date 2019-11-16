@@ -159,8 +159,13 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
     toggleAssessmentTypeDropdown = () => {
-        this.typeRef.current.classList.remove('notselect');
-        this.typeDropdownRef.current.classList.remove('notselect')
+        if (this.typeRef.current.classList.contains('notselect')) {
+            this.typeRef.current.classList.remove('notselect');
+            this.typeDropdownRef.current.classList.remove('notselect')
+        } else {
+            this.typeRef.current.classList.add('notselect');
+            this.typeDropdownRef.current.classList.add('notselect')
+        }
     }
 
     /*** @description - This function is to handle the Assessment type change
@@ -188,8 +193,13 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Usage-Type PopUp*/
     toggleUsageTypeDropdown = () => {
-        this.usageTypeDropdownRef.current.classList.remove('notselect')
-        this.usageTypeRef.current.classList.remove('notselect')
+        if (this.usageTypeDropdownRef.current.classList.contains('notselect')) {
+            this.usageTypeDropdownRef.current.classList.remove('notselect')
+            this.usageTypeRef.current.classList.remove('notselect')
+        } else {
+            this.usageTypeDropdownRef.current.classList.add('notselect')
+            this.usageTypeRef.current.classList.add('notselect')
+        }
     }
 
     /*** @description - This function is to handle the Assessment Usage-type change
