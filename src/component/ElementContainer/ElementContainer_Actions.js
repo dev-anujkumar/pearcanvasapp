@@ -172,7 +172,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {
+    ).then(response => {      
         let parentData = getState().appStore.slateLevelData;
         let newslateData = JSON.parse(JSON.stringify(parentData));
         let _slateObject = Object.values(newslateData)[0];

@@ -11,6 +11,7 @@ import {
     audioNarration,
     audioNarrationEnable
 } from '../../images/TinyMce/TinyMce.jsx';
+import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
 
@@ -106,7 +107,14 @@ const _Toolbar = props => {
                 props.addAudio ?
                     <div className={"audio-block" + accessToolbar}>
                         <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => _handleAddDropdown()}>
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                                 if(checkSlateLock(props.slateLockInfo)){
+                                    return false
+                                }
+                                else{
+                                    _handleAddDropdown()
+                                }
+                               }}>
                                 {audioNarration}
                             </div>
 
@@ -117,7 +125,14 @@ const _Toolbar = props => {
                     // for Enabling the audio Narration icon
                     <div className={"audio-block" + accessToolbar}>
                         <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => _handleOpenDropdown()}>
+                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                                if(checkSlateLock(props.slateLockInfo)){
+                                    return false
+                                }
+                                else{
+                                     _handleOpenDropdown()
+                                    }
+                                }}>
                                 {audioNarrationEnable}
                             </div>
                             <span class="openAudioIcon"></span>
@@ -156,12 +171,14 @@ const mapStateToProps = (state) => {
         isLOExist: state.metadataReducer.slateTagEnable,
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
+        slateLockInfo: state.slateLockReducer.slateLockInfo
     }
 }
 
 const mapActionToProps = {
     toggleElemBorders: toggleElemBordersAction,
-    toggleLODropdown: toggleLODropdown
+    toggleLODropdown: toggleLODropdown,
+    checkSlateLock
 }
 
 const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)

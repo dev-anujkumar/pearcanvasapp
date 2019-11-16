@@ -443,7 +443,7 @@ class ElementContainer extends Component {
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} />
+                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist}/>
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
@@ -519,6 +519,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo} 
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                 />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
@@ -542,6 +543,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo}
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                  />;
                         // labelText = 'AS'
                     }
