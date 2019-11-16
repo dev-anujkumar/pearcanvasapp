@@ -519,7 +519,7 @@ class SlateWrapper extends Component {
                 break;
                 case 'metadata-anchor':
                     if(config.slateType == "container-introduction"){
-                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,asideData,"","");
+                        this.props.createElement(LO_LIST, indexToinsert,parentUrn,"","","");
                         
                     }
                     else{
@@ -719,8 +719,7 @@ class SlateWrapper extends Component {
                         return null;
                     } else {
                         return (
-                          //  <React.Fragment key={element.id}>
-                                  <div key={element.id} onClickCapture={this.checkSlateLockStatus}>
+                           <React.Fragment key={element.id}>
                                 {
                                     index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                         <ElementSaprator
@@ -731,6 +730,7 @@ class SlateWrapper extends Component {
                                             permissions={this.props.permissions}
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
+                                            onClickCapture={this.checkSlateLockStatus}
                                         />
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
@@ -743,6 +743,7 @@ class SlateWrapper extends Component {
                                     showBlocker={this.props.showBlocker}
                                     isBlockerActive={this.props.isBlockerActive}
                                     onListSelect={this.props.convertToListElement}
+                                    onClickCapture={this.checkSlateLockStatus}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -766,12 +767,13 @@ class SlateWrapper extends Component {
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
+                                        onClickCapture={this.checkSlateLockStatus}
                                     />
                                     : null
                                 }
                               
-                          {/*   </React.Fragment> */}
-                          </div>
+                            </React.Fragment>
+                          
                         )
                     }
 

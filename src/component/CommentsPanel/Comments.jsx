@@ -20,16 +20,15 @@ class Comments extends React.Component {
         }
     }
     componentDidMount() {
-
         window.addEventListener("click", (event) => {
-            if (event.target.className !== "action-menu-img") {
+            if (!event.target.closest('.comment-action-menu')) {
                 this.toggleActionsMenu(false)
             }
         });
     }
     componentWillUnmount(){
         window.removeEventListener("click", (event) => {
-            if (event.target.className !== "action-menu-img") {
+            if (!event.target.closest('.comment-action-menu')) {
                 this.toggleActionsMenu(false)
             }
         });
@@ -40,7 +39,10 @@ class Comments extends React.Component {
     *@discription - This function is to toggle the Action menu
     @param {String} show - true false value to tgoggle the action menu
     */
-    toggleActionsMenu= (show) =>{
+    toggleActionsMenu= (show, e) =>{
+        if(e)
+            e.stopPropagation()
+
         if (show === undefined) show = !this.state.showActionsMenu
         this.setState({ showActionsMenu: show })
     }
@@ -257,7 +259,7 @@ class Comments extends React.Component {
                             </div>
                         </div>
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
-                            onClick={() => this.toggleActionsMenu()}
+                            onClick={(e) => this.toggleActionsMenu(undefined, e)}
                         >
                             <img className="action-menu-img" src={navigationShowMore} />
                         </span>
