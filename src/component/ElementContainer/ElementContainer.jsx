@@ -443,7 +443,7 @@ class ElementContainer extends Component {
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} />
+                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist}/>
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
