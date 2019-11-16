@@ -15,6 +15,10 @@
     border: 1.5px solid #149632;
 }
 
+.element-container.hideBorder *, .element-container.showBorder * {
+    cursor: default !important;
+}
+
 .bce.element-container > .bce-overlay.disabled {
     cursor: default;
     background: #444;

@@ -130,7 +130,7 @@ export default function (state = initialState, action) {
             }
         case RESOLVE_COMMENT:
 
-            let resolveComment = JSON.parse(JSON.stringify(state.comments))
+            let resolveComment = [...state.comments]
             resolveComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentStatus = payload.resolveOrOpen
@@ -142,7 +142,7 @@ export default function (state = initialState, action) {
             }
         case UPDATE_COMMENT:
 
-            let editComment = JSON.parse(JSON.stringify(state.comments))
+            let editComment = [...state.comments]
             editComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentString = payload.updateComment
@@ -162,7 +162,7 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_ASSIGNEE:
-            let updateComment = JSON.parse(JSON.stringify(state.comments))
+            let updateComment = [...state.comments]
             updateComment.forEach((comment, index) => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentAssignee = payload.newAssignee
@@ -173,8 +173,8 @@ export default function (state = initialState, action) {
                 comments: updateComment
             }
         case DELETE_COMMENT:
-            let deleteComment = JSON.parse(JSON.stringify(state.comments))
-            let deleteAllComment = JSON.parse(JSON.stringify(state.allComments))
+            let deleteComment = [...state.comments]
+            let deleteAllComment = [...state.allComments] //JSON.parse(JSON.stringify(state.allComments))
             deleteComment.forEach((comment, index) => {
                 if (comment.commentUrn === payload) {
                     deleteComment.splice(index, 1)

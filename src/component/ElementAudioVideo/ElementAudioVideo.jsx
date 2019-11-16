@@ -19,7 +19,8 @@ class ElementAudioVideo extends Component {
         super(props);
         this.state={
             imgSrc: null,
-            assetData : null
+            assetData: null,
+            elementType: this.props.model.figuretype || ""
         }
     }
     /**
@@ -29,31 +30,60 @@ class ElementAudioVideo extends Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-            let imageData = data;
-            let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-            let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-            let width = imageData['width'] ? imageData['width'] : "";
-            let height = imageData['height'] ? imageData['height'] : "";
+        let format , path , lang;
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
+        let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
 
-            if (figureType === "video" || figureType === "audio") {
+        if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "Video" || smartLinkAssetType == "Audio") {
 
-            let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
-            if (figureType === "video" && epsURL === "") {
+            if (figureType === "video" || smartLinkAssetType == "Video" && epsURL === "") {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
-            let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
-            let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
+            let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
+            let frenchSubtitle = imageData['frenchsubtitle'] ? imageData['subtitle'] : "";
+            let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['subtitle'] : "";
+            if (ensubtitle) {
+                format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = ensubtitle.split("?")[0];
+                lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
+            } else if (frenchSubtitle) {
+                format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = frenchsubtitle.split("?")[0];
+                lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
+            } else if (spanishSubtitle) {
+                format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
+                path = spanishsubtitle.split("?")[0];
+                lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
+            }
+            
             this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
             let figureData = {
                 height : height,
                 width : width,
                 srctype: this.props.model.figuredata.srctype
             }
-            switch(figureType){
+            if (!uniqID) {
+                let uniqIDString = imageData && imageData.req && imageData.req.url;
+                let uniqueIDSmartlink;
+                if (uniqIDString) {
+                    uniqueIDSmartlink = uniqIDString.split('s.cmis:objectId = ')[1].replace(/\'/g, '');
+                }
+                let uniqueID = imageData['uniqueID'] ? imageData['uniqueID'] : (uniqueIDSmartlink ? uniqueIDSmartlink : '');
+                if (uniqueID) {
+                    uniqID = uniqueID;
+                }
+            }
+
+            smartLinkAssetType = smartLinkAssetType.toLowerCase();
+            switch(figureType || smartLinkAssetType){
                 case "video":
                     figureData = {
                         ...figureData,
@@ -68,7 +98,14 @@ class ElementAudioVideo extends Component {
                                 path: smartLinkURl
                             }
                         ],
-                        tracks: [],
+                        tracks: [
+                            {
+                                format: format,
+                                path: path,
+                                language: lang,
+                                tracktype: "captions"
+                            }
+                        ],
                         clipinfo : clipInfo,
                         schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
                     }
@@ -164,6 +201,18 @@ class ElementAudioVideo extends Component {
      * @param model object that defined the type of element
      * @param index index of the current element
      * @param slateLockInfo object that defines the slate lock details */
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if(nextProps.model && 'figuretype' in nextProps.model && nextProps.model.figuretype !== prevState.elementType) {
+            return {
+                imgSrc: null,
+                assetData: null,
+                elementType: nextProps.model.figuretype || ""
+            };
+        }
+
+        return null;
+    }
 
     renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;

@@ -13,12 +13,15 @@ class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
         //context=this;
-        this.wrapperRef=null;
+        this.wrapperRef = null;
     }
 
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-            this.saveContent()
+            /** Case - event target is not even wiris modal */
+            if (document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && !document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) {
+                this.saveContent()
+            }
         }
     }
 
@@ -33,17 +36,17 @@ class GlossaryFootnoteMenu extends React.Component {
     /**
       * Set the wrapper ref
       */
-    setWrapperRef=(node)=> {
+    setWrapperRef = (node) => {
         this.wrapperRef = node;
     }
 
 
     render() {
-        const { showGlossaaryFootnote, glossaryFootnoteValue } = this.props;
+        const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
         console.table(glossaryFootnoteValue);
         return (
             <div>
-            <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} />
+                <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
             </div>
         )
     }
@@ -63,12 +66,15 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
+        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
-        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
+        // let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
+        // let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
+        // let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
         this.props.showGlossaaryFootnote(false);
     }
 }

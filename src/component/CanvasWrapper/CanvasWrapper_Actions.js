@@ -64,7 +64,7 @@ const findElementType = (element, index) => {
 								break;
 
 							default:
-								elementType.secondaryOption = `secondary-blockcode-language-${element.figuredata.programlanguage}`
+								elementType.secondaryOption = `secondary-blockcode-language-${(element.figuredata.programlanguage).replace(" ", "_")}`
 						}
 						break;
 					case "video":
@@ -173,6 +173,11 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 			payload: {
 				[manifestURN]: JSON.parse(JSON.stringify(slateData.data[manifestURN]))
 			}
+		});
+
+		dispatch({
+			type: SET_ACTIVE_ELEMENT,
+			payload: {}
 		});
 	});
 };
