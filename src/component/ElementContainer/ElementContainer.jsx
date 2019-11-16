@@ -196,10 +196,11 @@ class ElementContainer extends Component {
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.BLOCKFEATURE:
-                let html = node.innerHTML;
+                let currentNode = document.getElementById(`cypress-${this.props.index}`)
+                let html = currentNode.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
