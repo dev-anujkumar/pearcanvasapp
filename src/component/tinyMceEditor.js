@@ -1012,7 +1012,10 @@ export class TinyMceEditor extends Component {
              * Using timeout - init tinymce instance only when default events stack becomes empty
              */
             currentTarget.focus();
-            tinymce.init(this.editorConfig).then(() => { this.editorOnClick(event); });
+            tinymce.init(this.editorConfig).then(() => { 
+                this.editorOnClick(event); 
+                this.setCursorAtEnd(currentTarget, isSameTarget); 
+            });
             this.setToolbarByElementType();
         }
         /**
@@ -1022,10 +1025,30 @@ export class TinyMceEditor extends Component {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
+                this.setCursorAtEnd(currentTarget, isSameTarget);
             })
         });
         if (isSameTarget) {
             this.editorOnClick(event);
+        }
+        this.setCursorAtEnd(currentTarget, isSameTarget);
+    }
+
+    setCursorAtEnd(el, isSameTarget) {
+        
+        if (isSameTarget) {
+            return;
+        }
+        
+        let range, selection;
+        if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+            range = document.createRange();//Create a range (a range is a like the selection but invisible)
+            range.selectNodeContents(el);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();//get the selection object (allows you to change selection)
+            selection.removeAllRanges();//remove any selections already made
+            selection.addRange(range);//make the range you have just created the visible selection
         }
     }
 
