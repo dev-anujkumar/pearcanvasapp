@@ -917,6 +917,14 @@ export class TinyMceEditor extends Component {
         let isSameTarget = false;
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
+        let isSameTargetBasedOnDataId = true;
+
+        /*
+            checking for same target based on data-id not id
+        */
+        if( tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
+            isSameTargetBasedOnDataId = false;
+        }
         /**
          * case - if active editor and editor currently being focused is same
          */
@@ -929,30 +937,51 @@ export class TinyMceEditor extends Component {
          * first remove current tinymce instance then prepare element currently being focused to get tinymce intialized
          */
         let activeEditorId = '';
-        if (!isSameTarget && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ( ( !isSameTargetBasedOnDataId || !isSameTarget ) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
              * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
              */
             let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
+            let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
+            let previousTargetId = '';
+            let currentTargetId = '';
+            if( !isSameTargetBasedOnDataId ){
+                previousTargetId =  tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id');
+                currentTargetId = e.currentTarget.closest('.element-container').getAttribute('data-id');
+                tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
+                tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
+            }
+            
             tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-            document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 
             /*
                 Before entering to new element follow same  procedure
             */
-            let tempNewContainerHtml = tinyMCE.$("#" + currentTarget.id).html()
-            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-            document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
-
+            if( !isSameTargetBasedOnDataId ){
+                document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
+                document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
+            }
+            else{
+                document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+                document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
+            }
         }
+        
         /**
          * case - is this is not the same target then
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
          * then mark current target id as tinymce selector and instantiate tinymce on this target again
          */
-        if (!isSameTarget) {
+        if (!isSameTarget || !isSameTargetBasedOnDataId ) {
+            /*
+                Remove all instaces of wiris on changing element on basis of there data-ids not on id 
+                because on inserting new element id changes
+            */
+            tinymce.$('.wrs_modal_desktop').remove();
+
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
