@@ -84,6 +84,8 @@ let config = {
     editorRefID:"",
     isSlateLockChecked: false
 };
+
+console.log("process.env.NODE_ENV >> ", process.env.NODE_ENV)
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';
     config.userId= 'c5test01';
