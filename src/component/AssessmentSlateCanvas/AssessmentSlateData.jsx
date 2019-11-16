@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // IMPORT - Assets //
+import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
@@ -25,8 +26,25 @@ export class AssessmentSlateData extends Component {
         this.typeRef = React.createRef();
     }
 
+    sendDataAssessment(nextProps){
+        if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+            let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
+            let assessmentId= nextProps.model.elementdata.assessmentid.length>0 ? nextProps.model.elementdata.assessmentid: '' ;
+            if(assessmentId!=""){
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys} });
+            }
+            else{
+               //set tag to grey here 
+               let newMessage = {assessmentResponseMsg:false};
+               this.props.isLOExist(newMessage);
+            }
+            
+        }
+    }
+
     componentDidMount() {
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.sendDataAssessment(this.props);
             this.setState({
                 activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
             })

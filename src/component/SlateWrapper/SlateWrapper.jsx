@@ -746,6 +746,7 @@ class SlateWrapper extends Component {
                                     isBlockerActive={this.props.isBlockerActive}
                                     onListSelect={this.props.convertToListElement}
                                     onClickCapture={this.checkSlateLockStatus}
+                                    isLOExist={this.props.isLOExist}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
