@@ -137,7 +137,7 @@ export class ElementSingleAssessment extends Component {
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
-                    <h4 className="heading4ImageTextWidthNumberLabel" >{model.title.text}</h4>
+                    <h4 className="heading4ImageTextWidthNumberLabel" >{model.html.text}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>

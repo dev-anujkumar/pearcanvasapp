@@ -173,6 +173,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
             }
         }
     ).then(response => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let parentData = getState().appStore.slateLevelData;
         let newslateData = JSON.parse(JSON.stringify(parentData));
         let _slateObject = Object.values(newslateData)[0];

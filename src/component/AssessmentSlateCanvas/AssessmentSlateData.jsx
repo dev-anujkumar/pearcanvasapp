@@ -9,6 +9,7 @@ import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe } from '../../../src/constants/utility.js';
+import {ShowLoader} from '../../constants/IFrameMessageTypes';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ export class AssessmentSlateData extends Component {
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
-            learningToolStatus: ''
+            learningToolStatus: false
         }
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
@@ -35,7 +36,8 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-        this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,'insert',selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
 
@@ -63,6 +65,12 @@ export class AssessmentSlateData extends Component {
             activeAssessmentType: learningType,
             changeLearningData: true,
             learningToolStatus: true
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    learningToolStatus: false
+                })
+            }, 3000)
         });         
 }
 
@@ -128,7 +136,7 @@ export class AssessmentSlateData extends Component {
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
-                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'update')
+                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
             case LEARNING_APP_TYPE:
                
                     return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
@@ -274,7 +282,7 @@ export class AssessmentSlateData extends Component {
                     <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
                 </div>
             )
-        } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) {
+        } else if ((this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) || this.state.learningToolStatus) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
                 <div className="slate_popup_get_title">{"'" + this.props.assessmentItemTitle + "'"}</div>

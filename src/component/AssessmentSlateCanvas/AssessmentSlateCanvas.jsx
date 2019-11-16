@@ -12,7 +12,7 @@ import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { sendDataToIframe } from '../../constants/utility.js';
-import {ShowLoader} from '../../constants/IFrameMessageTypes';
+import {ShowLoader, HideLoader} from '../../constants/IFrameMessageTypes';
 import { FULL_ASSESSMENT_CITE, LEARNING_TEMPLATE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 /*** @description - AssessmentSlateCanvas is a class*/
@@ -30,15 +30,6 @@ export class AssessmentSlateCanvas extends Component {
         }
     }
 
-    /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
-    toggleAssessmentPopup = (e,value) => {
-        this.props.showBlocker(value);
-        disableHeader(value);
-        value ? showTocBlocker(value) : hideTocBlocker(value)
-        this.setState({
-            showAssessmentPopup: value
-        });
-    }
     componentWillReceiveProps(nextProps){   
         this.setState({
             showAssessmentPopup:false,
@@ -50,6 +41,16 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :""
 
               })
+    }
+
+    /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
+    toggleAssessmentPopup = (e,value) => {
+        this.props.showBlocker(value);
+        disableHeader(value);
+        value ? showTocBlocker(value) : hideTocBlocker(value)
+        this.setState({
+            showAssessmentPopup: value
+        });
     }
 
     /*** 
@@ -73,6 +74,7 @@ export class AssessmentSlateCanvas extends Component {
     addPufAssessment = (pufObj) => {
         showTocBlocker();
         disableHeader(true);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
 
@@ -131,6 +133,7 @@ export class AssessmentSlateCanvas extends Component {
         if(usage){
             usagetype=usage.innerText;
         }
+        //sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(id, itemID, title, assessmentFormat, usagetype, "insert");
     }
 
@@ -142,8 +145,9 @@ export class AssessmentSlateCanvas extends Component {
        * @param usageType - usageType of the assessment
        * @param change - type of change - insert/update
     */
-    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{       
-         if(change==='insert'){
+    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype,)=>{                 
+        //sendDataToIframe({'type': HideLoader,'message': { status: false }});           
+        if(change==='insert'){             
             this.setState({
                 getAssessmentDataPopup: true
             }, () => {
@@ -154,18 +158,17 @@ export class AssessmentSlateCanvas extends Component {
                 }, 3000)
             })
         }
-        else {
+        else {           
             this.setState({
                 getAssessmentData: false
-
             })
-        }
-        
+        }        
         this.setState({assessmentId: id,
             assessmentItemId : itemID,
             assessmentItemTitle:title,
-            getAssessmentData:true,},()=>{ 
-             this.handleAssessmentBlur({id : id,itemID : itemID,title :title,usageType : usageType,format : format, learningsystem:learningsystem , templateid:templateid, templatetype:templatetype,templatelabel:title});
+            getAssessmentData: true,
+        }, () => {
+            this.handleAssessmentBlur({ id: id, itemID: itemID, title: title, usageType: usageType, format: format, learningsystem: learningsystem, templateid: templateid, templatetype: templatetype, templatelabel: title });
         })                    
 
     }
@@ -187,6 +190,7 @@ export class AssessmentSlateCanvas extends Component {
     handleAssessmentBlur = (assessmentData) =>{
         this.props.handleBlur(assessmentData);
     }
+
     render() {
         const { showBlocker } = this.props;
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
