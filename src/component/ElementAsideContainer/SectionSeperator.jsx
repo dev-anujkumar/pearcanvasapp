@@ -42,7 +42,7 @@ class SectionSeperator extends React.Component {
     }
     render(){
         const {sectionFocus,btnClassName} = this.state;
-        const {elemBorderToggle,borderToggle} = this.props;
+        const { elemBorderToggle, borderToggle, element } = this.props;
         let showBorder = `section-seperator ${sectionFocus?"section-seperator-focus":""}`
         return (
             <div className = "aside-section-seperator" tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur} 
@@ -52,7 +52,7 @@ class SectionSeperator extends React.Component {
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
-                      {this.props.permissions.includes('elements_add_remove') && <Button  onClick={() => this.props.showDeleteElemPopup(true)} type="delete-element" />}
+                      {this.props.permissions.includes('elements_add_remove') && <Button  onClick={() => this.props.showDeleteElemPopup(true, element)} type="delete-element" />}
                     </div>:""
                  }
                 <hr className="section-break" />

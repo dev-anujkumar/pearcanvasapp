@@ -46,7 +46,8 @@ class ElementContainer extends Component {
             showColorPaletteList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false,
-            hasError: false
+            hasError: false,
+            sectionBreak : null
         };
     }
     componentDidMount() {
@@ -396,12 +397,13 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (popup) => {
+    showDeleteElemPopup = (popup, sectionBreak) => {
         this.props.showBlocker(true);
         showTocBlocker();
         this.setState({
             popup,
-            showDeleteElemPopup: true
+            showDeleteElemPopup: true,
+            sectionBreak : sectionBreak ? sectionBreak : null
         });
     }
 
@@ -409,12 +411,29 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = () => {
-        const { id, type, contentUrn } = this.props.element;
-        const { parentUrn, asideData } = this.props;
+        let { id, type } = this.props.element;
+        let { parentUrn, asideData, element } = this.props;
+        let { contentUrn } = this.props.element
+        
+        if(this.state.sectionBreak){
+            parentUrn = {
+                elementType : element.type,
+                manifestUrn : element.id,
+                contentUrn : element.contentUrn,
+            }
+            contentUrn = this.state.sectionBreak.contentUrn
+            /* parentUrn["elementType"] = element.type
+            parentUrn["manifestUrn"] = element.id
+            parentUrn["contentUrn"] = element.contentUrn */
+            id = this.state.sectionBreak.id
+        }
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
+        this.setState({
+            sectionBreak : null
+        })
     }
 
     /**
@@ -681,7 +700,6 @@ class ElementContainer extends Component {
             }
             return this.renderElement(element);
         } catch (error) {
-            console.log("Catch Element Container Render >>>>", error);
             return (
                 <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
             )
