@@ -40,8 +40,16 @@ class PageNumber extends React.Component {
         const {id} = this.props.element;
         const {asideData,parentUrn} = this.props
         e.currentTarget.parents('.pageNumberBox').classList.remove('greenBorder');
-        let pageNumber = e.currentTarget.value;
+        let pageNumber = this.state.inputValue //e.currentTarget.value;
         this.props.updatePageNumber(pageNumber,id,asideData,parentUrn)
+    }
+
+    removePageNumber = (e) => {
+        const { id } = this.props.element;
+        const { asideData, parentUrn } = this.props;
+        this.setState({ inputValue: "" });
+        let pageNumber = "";
+        this.props.updatePageNumber(pageNumber, id, asideData, parentUrn)
     }
 
     render() {
@@ -56,7 +64,7 @@ class PageNumber extends React.Component {
             <input className="textBox" readOnly={false} onBlur={(e) => { this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={this.state.inputValue} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
                 {
                     (this.state.inputValue !== '') ?
-                        <span className="closeBtn" onMouseDown={(e) => { }}>
+                        <span className="closeBtn" onMouseDown={this.removePageNumber}>
                             <i className="fa fa-close" aria-hidden="true"></i>
                         </span> : ''
                 }
