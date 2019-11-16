@@ -62,7 +62,7 @@ export class AssessmentSlateData extends Component {
         this.setState({
             activeAssessmentType: learningType,
             changeLearningData: true,
-            learningToolStatus: change
+            learningToolStatus: true
         });         
 }
 
