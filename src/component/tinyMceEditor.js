@@ -175,12 +175,8 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
-                    if(selectedText == "") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                    else if(selectedText===window.getSelection().anchorNode.nodeValue){
-                        e.target.targetElm.children[0].innerHTML=window.getSelection().toString();
+                    if (selectedText === document.getElementById(`cypress-${this.props.index}`).innerText) {
+                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         e.preventDefault();
                         e.stopPropagation();
                     }
