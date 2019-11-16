@@ -26,8 +26,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
         console.log('thsi si sinner html', index)
-
-        if (elementType === "figure") {
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
+        }else if(tempIndex.length == 3 && elementType == 'figure'){
+            glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]]
+        }else if (elementType === "figure") {
             let tempUpdatedIndex = index.split('-');
 
             let updatedIndex = tempUpdatedIndex[0];
@@ -103,7 +107,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     if (elementType == 'figure') {
         console.log('thsis is index in figure', index)
         let label, title, captions, credits, elementIndex
-        elementIndex = index.split('-')[0]
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4){//Figure inside a WE
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
+        }else if(tempIndex.length == 3){ //section 2 in WE figure
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        }else{
+            elementIndex = tempIndex[0]
+        }
+        
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
@@ -178,7 +190,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }).then(res => {
         console.log('this is index in case of any ', index)
-        if (elementType === "figure") {
+        let tempIndex = index && index.split('-');
+        if(tempIndex.length == 4){//Figure inside a WE
+            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
+        }else if(tempIndex.length ==3 && elementType =='figure'){//section 2 figure in WE
+            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
+        }else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
             console.log('>>>>>>>>', newBodymatter[updatedIndex])
