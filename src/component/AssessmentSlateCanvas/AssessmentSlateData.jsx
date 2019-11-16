@@ -9,6 +9,7 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLo
 import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
+import { sendDataToIframe } from '../../constants/utility.js';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
