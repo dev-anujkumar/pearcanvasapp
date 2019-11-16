@@ -8,8 +8,6 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLo
 import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import { sendDataToIframe } from '../../../src/constants/utility.js';
-import {ShowLoader} from '../../constants/IFrameMessageTypes';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -36,7 +34,6 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-     //   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,'insert',selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }

@@ -11,9 +11,7 @@ import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
-import { sendDataToIframe } from '../../constants/utility.js';
-import {ShowLoader, HideLoader} from '../../constants/IFrameMessageTypes';
-import { FULL_ASSESSMENT_CITE, LEARNING_TEMPLATE } from './AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -72,7 +70,6 @@ export class AssessmentSlateCanvas extends Component {
     addPufAssessment = (pufObj) => {
         showTocBlocker();
         disableHeader(true);
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
     }
 
@@ -130,7 +127,6 @@ export class AssessmentSlateCanvas extends Component {
         if(usage){
             usagetype=usage.innerText;
         }
-       // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(id, itemID, title, assessmentFormat, usagetype, "insert");
     }
 
@@ -143,8 +139,6 @@ export class AssessmentSlateCanvas extends Component {
        * @param change - type of change - insert/update
     */
     updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype,)=>{ 
-                        
-        //sendDataToIframe({'type': HideLoader,'message': { status: false }});           
         if(change==='insert'){             
             this.setState({
                 getAssessmentDataPopup: true
