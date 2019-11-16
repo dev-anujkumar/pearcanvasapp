@@ -103,7 +103,8 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement) {
-                        if(content.trim().length || contentHTML.match(/<math/g)){
+                        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+                        if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
                             activeElement.classList.remove('place-holder')
                         }
                         else {
@@ -306,7 +307,8 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                if (activeElement.innerText.trim().length) {
+                let isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+                if (activeElement.innerText.trim().length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
@@ -730,7 +732,7 @@ export class TinyMceEditor extends Component {
         /**
          * Defines initial placeholder
          */
-        this.handlePlaceholer()
+        this.handlePlaceholder()
     }
 
     /**
@@ -795,13 +797,15 @@ export class TinyMceEditor extends Component {
     /**
     * Defines initial placeholder
     */
-    handlePlaceholer = () => {
+    handlePlaceholder = () => {
 
         if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length)
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                 this.placeHolderClass = 'place-holder';
+            }
             else {
                 this.placeHolderClass = '';
             }
@@ -827,7 +831,8 @@ export class TinyMceEditor extends Component {
         } else {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length) {
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                 this.placeHolderClass = 'place-holder';
             }
             else {
@@ -851,7 +856,7 @@ export class TinyMceEditor extends Component {
                 tinyMCEInstancesNodes[0].remove()
             }
         }
-        this.handlePlaceholer() 
+        this.handlePlaceholder() 
     }
 
     componentWillUnmount() {
