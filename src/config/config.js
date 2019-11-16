@@ -31,6 +31,9 @@ let config = {
     disableNext : false,
     disablePrev : false,
     tcmStatus : false,
+    staleTitle : "",
+    TCM_DASHBOARD_UI_URL:process.env.TCM_DASHBOARD_UI_URL || "https://test-structuredauthoring.pearson.com/cypress/trackchanges/dist/index.html",
+    TCM_DASHBOARD_URL: process.env.TCM_DASHBOARD_API_BASE_ENDPOINT ||'http://localhost:3000',
     //c2 required keys and urls
     CMDS_APIKEY: process.env.NODE_ENV === 'production' ? process.env.CMDS_APIKEY : '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.NODE_ENV === 'production' ? process.env.CMDS_DATA_ENDPOINT : 'https://staging.data.pearson.com',

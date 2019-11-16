@@ -32,7 +32,7 @@ import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
-
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -180,7 +180,12 @@ class ElementContainer extends Component {
         this.props.updateElement(dataToSend, 0);
     }
     
-    
+    /**
+     * This function opens TCM w.r.t. current Element
+     */
+    handleTCM=()=>{
+        loadTrackChanges(this.props.element.id)
+    }
     /**
      * Calls API for element updation
      * @param {*} node
@@ -299,7 +304,7 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
        
-        dataToSend.elementdata.assessmenttitle = assessmentData.title;
+
         dataToSend.elementdata.assessmentformat = assessmentData.format;
         dataToSend.elementdata.usagetype = assessmentData.usageType;
         dataToSend.elementdata.assessmentid = assessmentData.id;
@@ -308,7 +313,9 @@ class ElementContainer extends Component {
             dataToSend.elementdata["templateid"] = assessmentData.templateid;
             dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
             dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
-        } 
+        } else{
+            dataToSend.elementdata.assessmenttitle = assessmentData.title;
+        }
         this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
     }
 
@@ -586,7 +593,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" />)}
+                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -749,7 +756,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         activeElement: state.appStore.activeElement,

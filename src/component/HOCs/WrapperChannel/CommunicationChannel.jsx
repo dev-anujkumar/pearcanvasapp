@@ -15,7 +15,7 @@ import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
-
+import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -52,7 +52,7 @@ function WithWrapperCommunication(WrappedComponent) {
          * handleIncommingMessages | Listen for any incomming message from wrapper application
          * @param {object} e | received message event from wrapper application
          */
-        handleIncommingMessages = (e) => {
+        handleIncommingMessages = (e) => {            
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
@@ -208,6 +208,10 @@ function WithWrapperCommunication(WrappedComponent) {
                             _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
                         break
                     }
+                case 'trackChanges':{
+                     loadTrackChanges();
+                }
+                break;
             }
         }
 
@@ -326,6 +330,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
                 this.props.setUpdatedSlateTitle(currentSlateObject)
+                config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.disablePrev = message.disablePrev;
