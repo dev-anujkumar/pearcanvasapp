@@ -175,12 +175,8 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
-                    if(selectedText == "") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                    else if(selectedText===window.getSelection().anchorNode.nodeValue){
-                        e.target.targetElm.children[0].innerHTML=window.getSelection().toString();
+                    if (selectedText === document.getElementById(`cypress-${this.props.index}`).innerText) {
+                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         e.preventDefault();
                         e.stopPropagation();
                     }
@@ -1008,7 +1004,9 @@ export class TinyMceEditor extends Component {
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
         let elementId=this.props.element?this.props.element.id:"";
         let elementType = this.props.element?this.props.element.type:"";
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, callback); 
+        let index = this.props.index;
+        let elementSubType = this.props.element ? this.props.element.figuretype : ''
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, callback); 
     }
 
     render() {

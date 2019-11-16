@@ -23,6 +23,7 @@ import {
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
+    UPDATE_FOOTNOTEGLOSSARY, 
     FETCH_DATA_ON_SLATE_REFRESH,
     ACCESS_DENIED_POPUP
 } from '../constants/Action_Constants';
@@ -144,7 +145,12 @@ export default function (state = initialState, action) {
         return {
             ...state,
             pageLoading:action.payload.pageLoading
-        } 
+        }
+        case UPDATE_FOOTNOTEGLOSSARY:
+            return {
+                ...state,
+                slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
+            }
         default:
             return state;
     }
