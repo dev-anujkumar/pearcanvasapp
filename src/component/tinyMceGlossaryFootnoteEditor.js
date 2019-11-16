@@ -9,6 +9,7 @@ import {
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.placeHolderClass = ''
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
     this.editorConfig = {
@@ -165,6 +166,26 @@ export class ReactEditor extends React.Component {
     });
   };
 
+  handlePlaceholer() {
+    let model, tempPlaceHolderclass;
+    model = this.props.glossaryFootNoteCurrentValue;
+    tempPlaceHolderclass = this.props.className;
+
+    if (model) {
+      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {
+        this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
+      } else {
+        this.placeHolderClass = tempPlaceHolderclass;
+      }
+    } else {
+      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {
+        this.placeHolderClass = tempPlaceHolderclass
+      } else {
+        this.placeHolderClass = tempPlaceHolderclass + 'place-holder';
+      }
+    }
+  }
+
   componentDidMount() {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
@@ -178,10 +199,15 @@ export class ReactEditor extends React.Component {
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       tinymce.init(this.editorConfig);
     }
+    this.handlePlaceholer()
   }
 
   componentDidUpdate() {
+    this.handlePlaceholer()
+  }
 
+  componentWillMount() {
+    this.handlePlaceholer()
   }
 
   handleClick = (e) => {
@@ -206,7 +232,7 @@ export class ReactEditor extends React.Component {
   render() {
     return (
       <div>
-        <p ref={this.editorRef} className={this.props.className} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue }}></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue }}></p>
       </div>
     )
   }

@@ -25,7 +25,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let newBodymatter = newParentData[slateId].contents.bodymatter;
         var footnoteContentText, glossaryFootElem, glossaryContentText, tempGlossaryContentText;
-        console.log('thsi si sinner html', index)
         let tempIndex = index && index.split('-');
         if(tempIndex.length == 4 && elementType == 'figure'){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
@@ -35,9 +34,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             let tempUpdatedIndex = index.split('-');
 
             let updatedIndex = tempUpdatedIndex[0];
-            // console.log("newBodymatter[updatedIndex ", newBodymatter[updatedIndex].html.footnotes[elementWorkId]);
             glossaryFootElem = newBodymatter[updatedIndex]
-            // console.log('This si index', glossaaryFootnoteValue, index, newBodymatter[updatedIndex])
         } else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
@@ -105,7 +102,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
-        console.log('thsis is index in figure', index)
         let label, title, captions, credits, elementIndex
         let tempIndex = index && index.split('-');
         if(tempIndex.length == 4){//Figure inside a WE
@@ -181,7 +177,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    console.log('>>>>>>>>>>>>> data', data)
     let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     axios.put(url, JSON.stringify(data), {
         headers: {
@@ -189,7 +184,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
-        console.log('this is index in case of any ', index)
         let tempIndex = index && index.split('-');
         if(tempIndex.length == 4){//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
@@ -198,7 +192,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
-            console.log('>>>>>>>>', newBodymatter[updatedIndex])
         } else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
