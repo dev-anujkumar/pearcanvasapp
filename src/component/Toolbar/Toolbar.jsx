@@ -86,7 +86,7 @@ const _Toolbar = props => {
     return (
 
         <div className='toolbar-container'>
-            <div className={"header" + accessToolbar} id="tinymceToolbar"></div>
+            <div className="header" id="tinymceToolbar"></div>
             {/* ***********************Slate Tag in toolbar******************************************** */}
             {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
                 <div className={"leaningobjective-block" + accessToolbar}>
