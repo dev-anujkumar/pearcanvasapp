@@ -171,7 +171,9 @@ const mapStateToProps = state => {
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
-        logout
+        logout,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+
     };
 };
 
