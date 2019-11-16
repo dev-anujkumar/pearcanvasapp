@@ -42,7 +42,7 @@ html{
 .panel-navigation{
     width: 300px;
     background-color: white;
-    height: calc(100% - -30px);
+    height: calc(100% - -82px);
     border-right: solid 1px #e0e0e0;
     position: relative;
     z-index: 9999;

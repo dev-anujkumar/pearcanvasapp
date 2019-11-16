@@ -108,6 +108,7 @@
     transform: translate(-50%, -50%)!important;
 }
 .sidebar-panel{
-    position:fixed;
-    left:0px;
+    position : fixed;
+    left : 0px;
+    height : 100%;
 }

@@ -101,12 +101,12 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC){
             return null
         }
-        else if(props.isLockPopup && props.withInputBox){
+        else if(props.isLockPopup && props.withInputBox && !props.lockForTOC){
             return (
-                <input type="text" className={`dialog-input-textarea ${props.slateLockClass}`} disabled value={props.inputValue} rows={props.rows} cols={props.cols} />
+                <div className="lockInputBox">{props.addonText}<input disabled value={props.inputValue} /></div>
             )  
         }
         else if(props.assessmentAndInteractive){

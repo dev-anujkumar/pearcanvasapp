@@ -65,8 +65,18 @@ export class CanvasWrapper extends Component {
         })
         let { projectUrn } = config,
         slateId = config.slateManifestURN
-        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        this.props.getSlateLockStatus(projectUrn ,slateId) 
+
+        let searchString = window.location.search;
+        let q = new URLSearchParams(searchString);
+        if(q.get('q')){
+            let currentWorkId = q.get('q');
+            setTimeout(() => {
+                this.props.toggleCommentsPanel(true);
+                this.props.fetchCommentByElement(currentWorkId);
+            }, 4000);
         }
+    }
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
@@ -138,7 +148,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -169,9 +179,12 @@ const mapStateToProps = state => {
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
+        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
-        logout
+        logout,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+
     };
 };
 

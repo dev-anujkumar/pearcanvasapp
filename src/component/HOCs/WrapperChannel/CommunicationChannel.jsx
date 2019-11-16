@@ -14,7 +14,8 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
-import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
+import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
+import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -52,7 +53,7 @@ function WithWrapperCommunication(WrappedComponent) {
          * handleIncommingMessages | Listen for any incomming message from wrapper application
          * @param {object} e | received message event from wrapper application
          */
-        handleIncommingMessages = (e) => {
+        handleIncommingMessages = (e) => {            
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
@@ -208,6 +209,10 @@ function WithWrapperCommunication(WrappedComponent) {
                             _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
                         break
                     }
+                case 'trackChanges':{
+                     loadTrackChanges();
+                }
+                break;
             }
         }
 
@@ -319,13 +324,16 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                if(this.props.withinLockPeriod === true){
+                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                }          
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
                 this.props.setUpdatedSlateTitle(currentSlateObject)
+                config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.disablePrev = message.disablePrev;
@@ -504,7 +512,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 const { lockOwner } = this.state
                 showTocBlocker();
                 return (
-                    <PopUp dialogText={ALREADY_USED_SLATE}
+                    <PopUp dialogText={ALREADY_USED_SLATE_TOC}
                         rows="1"
                         cols="1"
                         active={true}
@@ -514,6 +522,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         isInputDisabled={true}
                         slateLockClass="lock-message"
                         withInputBox={true}
+                        lockForTOC={true}
                     />
                 )
             }
