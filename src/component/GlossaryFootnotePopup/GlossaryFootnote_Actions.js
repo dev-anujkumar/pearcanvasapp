@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
+import { sendDataToIframe } from '../../constants/utility.js';
 
 const {
     REACT_APP_API_URL
@@ -176,6 +177,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
             break;
     }
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
 
     let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     axios.put(url, JSON.stringify(data), {
@@ -219,7 +221,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 slateLevelData: newParentData
             }
         })
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     }).catch(err => {
-        console.log("save glossary footnote API error : ", err)
+        console.log("save glossary footnote API error : ", err);
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     })
 }
