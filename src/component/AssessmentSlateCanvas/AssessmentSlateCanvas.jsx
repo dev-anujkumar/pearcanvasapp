@@ -32,8 +32,6 @@ export class AssessmentSlateCanvas extends Component {
 
     componentWillReceiveProps(nextProps){   
         this.setState({
-            showAssessmentPopup:false,
-            getAssessmentDataPopup:false,
             getAssessmentData:nextProps.model && nextProps.model.elementdata &&  nextProps.model.elementdata.assessmentid? true: false,
             assessmentId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentid ?nextProps.model.elementdata.assessmentid :"",
             assessmentItemId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentitemid ?nextProps.model.elementdata.assessmentitemid :"",
@@ -101,7 +99,6 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-       // this.props.showBlocker(true);
         this.toggleAssessmentPopup('',false);
         
         productId = (value && value !== "") ? value : "Unspecified";
@@ -133,7 +130,7 @@ export class AssessmentSlateCanvas extends Component {
         if(usage){
             usagetype=usage.innerText;
         }
-        //sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+       // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(id, itemID, title, assessmentFormat, usagetype, "insert");
     }
 
@@ -145,7 +142,8 @@ export class AssessmentSlateCanvas extends Component {
        * @param usageType - usageType of the assessment
        * @param change - type of change - insert/update
     */
-    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype,)=>{                 
+    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype,)=>{ 
+                        
         //sendDataToIframe({'type': HideLoader,'message': { status: false }});           
         if(change==='insert'){             
             this.setState({
@@ -172,14 +170,6 @@ export class AssessmentSlateCanvas extends Component {
         })                    
 
     }
-
-    /*** @description - This function is to link learning app*/
-    //  linkLearningApp = (selectedLearningType, usagetype, change) =>{
-    //      console.log(selectedLearningType);
-    //     this.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,usagetype,change,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
-    //     // this.updateAssessment();
-    //      this.props.closeLtAction();
-    //  }
 
     /*** @description - This function is to handle Focus on the Assessment element on click*/
     handleAssessmentFocus = () => {
@@ -213,7 +203,6 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     openLTFunction = {this.props.openLTFunction}
-                    // linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
                     permissions={this.props.permissions}

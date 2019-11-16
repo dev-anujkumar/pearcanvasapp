@@ -36,7 +36,7 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+     //   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,'insert',selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
@@ -54,7 +54,7 @@ export class AssessmentSlateData extends Component {
     
     /*** @description - This function is to change the lerning system
     */
-    changeLearningApp(learningType, change) {
+    changeLearningApp() {
         showTocBlocker();
         disableHeader(true);
         this.props.showBlocker(true);
@@ -62,15 +62,9 @@ export class AssessmentSlateData extends Component {
         this.props.openLTFunction(); 
         this.props.openLtAction();  
         this.setState({
-            activeAssessmentType: learningType,
+            activeAssessmentType: LEARNING_TEMPLATE,
             changeLearningData: true,
             learningToolStatus: true
-        }, () => {
-            setTimeout(() => {
-                this.setState({
-                    learningToolStatus: false
-                })
-            }, 3000)
         });         
 }
 
@@ -114,11 +108,17 @@ export class AssessmentSlateData extends Component {
     */
     closePopUp = () => {
         this.setState({
-            changeLearningData: false
+            changeLearningData: false,
+           
         }, () => {
              disableHeader(false);
              hideTocBlocker();
              this.props.showBlocker(false);
+             setTimeout(() => {
+                this.setState({
+                    learningToolStatus: false
+                })
+            }, 5000)
         })
     }
     
@@ -136,10 +136,8 @@ export class AssessmentSlateData extends Component {
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
-                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
-            case LEARNING_APP_TYPE:
-               
-                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
+            case LEARNING_APP_TYPE:               
+                    return   this.changeLearningApp()
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
