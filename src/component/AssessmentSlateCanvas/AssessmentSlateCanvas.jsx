@@ -209,6 +209,7 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     openLTFunction = {this.props.openLTFunction}
+                    isLOExist={this.props.isLOExist}
                     // linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
