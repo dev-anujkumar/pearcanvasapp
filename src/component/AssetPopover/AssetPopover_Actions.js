@@ -74,13 +74,13 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     time1 = performance.now();
     versionUrn = config.projectUrn;
 
-    return dispatch => fetch(GET_FIGURES + 'manifest-api/v2/' + versionUrn + '/images', {
+    return dispatch => fetch(config.GET_FIGURES + 'manifest-api/v2/' + versionUrn + '/images', {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
         'accept': 'application/json',
         'cache-control': 'no-cache',
-        'apikey': STRUCTURE_APIKEY,
+        'apikey': config.STRUCTURE_APIKEY,
         'pearsonssosession': config.ssoToken
       }
     }).then(res => res.json()).then(
@@ -116,12 +116,12 @@ export const assetPopoverPopup = (args) => {
  */
 export async function getAssetPopoverId(workUrn) {
   try {
-    let response = await fetch(GET_ASSETPOPOVER_ID + 'narrative/v2', {
+    let response = await fetch(config.GET_ASSETPOPOVER_ID + 'narrative/v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'PearsonSSOSession': config.ssoToken,
-        'apikey': APO_API_KEY,
+        'apikey': config.APO_API_KEY,
       }
     })
 

@@ -16,7 +16,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
-
 const plugin = [
     // To cleanup dis folder every time with unwanted assets
     // new CleanWebpackPlugin({ verbose: true }),
