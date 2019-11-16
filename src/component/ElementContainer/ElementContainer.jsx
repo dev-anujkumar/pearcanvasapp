@@ -672,6 +672,7 @@ class ElementContainer extends Component {
             }
             return this.renderElement(element);
         } catch (error) {
+            console.log("Catch Element Container Render >>>>", error);
             return (
                 <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
             )
@@ -693,6 +694,7 @@ class ElementContainer extends Component {
     }
 
     static getDerivedStateFromError(error) {
+        console.log("Catch Derived Error >>>>", error);
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
