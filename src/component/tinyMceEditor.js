@@ -720,6 +720,13 @@ export class TinyMceEditor extends Component {
                 if(activeElementObj.length !== editorRefObj.length && activeElementID === editorRefID) {
                     activeElementObj[1] = parseInt(activeElementID) + 1;
                 }
+                /*
+                    change wiris images to avoid converting to mathml
+                */
+                let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
+                tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+    
                 tinymce.remove('#' + activeElementObj.join("-"));
             }
         }
