@@ -189,6 +189,7 @@ export class AssessmentSlateCanvas extends Component {
     }
     render() {
         const { showBlocker } = this.props;
+        console.log("this is canvas ---slate -asssess",this.props);
         const { getAssessmentDataPopup, getAssessmentData, assessmentId, assessmentItemId, assessmentItemTitle, assessmentSlateElement } = this.state;
         return (
             <div className="AssessmentSlateMenu" onClick={this.handleAssessmentFocus}>  
@@ -209,6 +210,7 @@ export class AssessmentSlateCanvas extends Component {
                     closeLtAction = {this.props.closeLtAction}
                     getDiscipline = {this.props.getDiscipline}
                     openLTFunction = {this.props.openLTFunction}
+                    isLOExist={this.props.isLOExist}
                     // linkLearningApp ={this.linkLearningApp}
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}

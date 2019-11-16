@@ -350,22 +350,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
                 }
-                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
-                    let assessmentDiv = document.querySelector('.slate_assessment_data_id_lo');
-                    let assessmentId= assessmentDiv && assessmentDiv.innerText.length>0 ? assessmentDiv.innerText : "";
-                     //let projectUrn= 'urn:pearson:distributable:4b69a12b-224d-46a4-a0c3-1a00f39c0258'
-                //let assessmentId='urn:pearson:work:29c05611-40d0-4ef9-9148-81dffae4624c'
-                 //   console.log("new elenebbbbb000===",document.querySelector('.slate_assessment_data_id_lo').innerText);
-                    if(assessmentId!=""){
-                        sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys} });
-                    }
-                    else{
-                       //set tag to grey here 
-                       let newMessage = {assessmentResponseMsg:false};
-                       this.props.isLOExist(newMessage);
-                    }
-                    
-                }
             }
             /**
              * TO BE IMPLEMENTED

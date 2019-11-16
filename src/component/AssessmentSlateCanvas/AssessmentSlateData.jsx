@@ -26,8 +26,28 @@ export class AssessmentSlateData extends Component {
         this.typeRef = React.createRef();
     }
 
+    sendDataAssessment(nextProps){
+        if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+            console.log("this is  prps----11111",nextProps);
+            let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
+            let assessmentId= nextProps.model.elementdata.assessmentid.length>0 ? nextProps.model.elementdata.assessmentid: '' ;
+            if(assessmentId!=""){
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys} });
+            }
+            else{
+               //set tag to grey here 
+               let newMessage = {assessmentResponseMsg:false};
+               this.props.isLOExist(newMessage);
+            }
+            
+        }
+    }
+
     componentDidMount() {
+        console.log("this is didmount---123456789");
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            console.log("this is assessment---nwe",this.props.model.elementdata.assessmentid);
+            this.sendDataAssessment(this.props);
             this.setState({
                 activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
             })
@@ -222,6 +242,7 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to render the Assessment Slate Element*/
     assessmentSlateContent = () => {
+        console.log("this is assessment---nwe");
         if (document.getElementsByClassName("slate-tag-icon").length) {
         document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }

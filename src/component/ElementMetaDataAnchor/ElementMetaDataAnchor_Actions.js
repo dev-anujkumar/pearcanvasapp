@@ -35,7 +35,7 @@ export const isLOExist = (message) =>  (dispatch, getState) => {
             payload:  true
         })
     }
-    else if ('assessmentResponseMsg' in message){
+    else if (assessmentResponseMsg in message){
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload:  message.assessmentResponseMsg
