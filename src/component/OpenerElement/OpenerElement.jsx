@@ -218,8 +218,9 @@ class OpenerElement extends Component {
      * Handles Focus on opener element
      * @param {slateLockInfo} Slate lock data
      */
-    handleOpenerClick = (slateLockInfo) => {
+    handleOpenerClick = (slateLockInfo, e) => {
         if(checkSlateLock(slateLockInfo)){
+            e.preventDefault()
             return false
         }
         this.props.onClick()
@@ -247,6 +248,10 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
+        if(checkSlateLock(this.props.slateLockInfo)){
+            event.preventDefault()
+            return false
+        }
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target && event.target.innerText ? event.target.innerText : label;
@@ -300,7 +305,7 @@ class OpenerElement extends Component {
         const { element, backgroundColor, slateLockInfo } = this.props
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container" onClick={() => this.handleOpenerClick(slateLockInfo)}>
+            <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
