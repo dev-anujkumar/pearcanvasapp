@@ -4,8 +4,9 @@ import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility'; 
+import { FETCH_DATA_ON_SLATE_REFRESH } from '../../constants/Action_Constants'
 
-export const handleSlateRefresh = (id) => (dispatch, getState) => { 
+export const handleSlateRefresh = (id,cb) => (dispatch, getState) => { 
     let url = config.SLATE_REFRESH_URL + id
     
      axios.get(url,{ 
@@ -14,9 +15,18 @@ export const handleSlateRefresh = (id) => (dispatch, getState) => {
         "PearsonSSOSession": config.ssoToken
     }
     }).then((res) => {
+        dispatch({
+            type: FETCH_DATA_ON_SLATE_REFRESH,
+            payload: {
+                slateLevelData: {},
+            }
+        })
         dispatch(fetchSlateData(id)); 
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : 'Refreshed a moment ago'} });
-        sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false });  
+        sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
+        if(cb){
+            cb();
+        } 
         })
         .catch((err) => {
             sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false });      

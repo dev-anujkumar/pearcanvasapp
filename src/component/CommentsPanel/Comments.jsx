@@ -20,16 +20,15 @@ class Comments extends React.Component {
         }
     }
     componentDidMount() {
-
         window.addEventListener("click", (event) => {
-            if (event.target.className !== "action-menu-img") {
+            if (!event.target.closest('.comment-action-menu')) {
                 this.toggleActionsMenu(false)
             }
         });
     }
     componentWillUnmount(){
         window.removeEventListener("click", (event) => {
-            if (event.target.className !== "action-menu-img") {
+            if (!event.target.closest('.comment-action-menu')) {
                 this.toggleActionsMenu(false)
             }
         });
@@ -40,7 +39,10 @@ class Comments extends React.Component {
     *@discription - This function is to toggle the Action menu
     @param {String} show - true false value to tgoggle the action menu
     */
-    toggleActionsMenu= (show) =>{
+    toggleActionsMenu= (show, e) =>{
+        if(e)
+            e.stopPropagation()
+
         if (show === undefined) show = !this.state.showActionsMenu
         this.setState({ showActionsMenu: show })
     }
@@ -165,13 +167,19 @@ class Comments extends React.Component {
     @return {String} - returns the jsx code of the action menu
     */
     actionsMenu = () => {
+        let deleteCommentPermission = false;
+        if(this.props.permissions.includes('notes_deleting') ||
+        (this.props.permissions.includes('notes_delete_others_comment'))) {
+            deleteCommentPermission = true;
+        }
+
         return (
             <ul className="comment-action-menu action-menu">
                 {this.props.permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
                 {this.props.permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {this.props.permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {this.props.permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
-                {this.props.permissions.includes('notes_deleting') && <li onClick={this.deleteComment}>Delete</li>}
+                {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
     }
@@ -251,7 +259,7 @@ class Comments extends React.Component {
                             </div>
                         </div>
                         <span className="action-menu-btn icon icon--28 icon--28-square align-middle"
-                            onClick={() => this.toggleActionsMenu()}
+                            onClick={(e) => this.toggleActionsMenu(undefined, e)}
                         >
                             <img className="action-menu-img" src={navigationShowMore} />
                         </span>

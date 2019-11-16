@@ -1,11 +1,11 @@
 /* ---------------------------------*/
         /* Common css*/
 /* ---------------------------------*/
-* {
+
+*{
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
 }
-html {
+html{
     font-size: 12px ;
     font-family: 'Open Sans', sans-serif;
 }
@@ -42,7 +42,7 @@ html {
 .panel-navigation{
     width: 300px;
     background-color: white;
-    height: calc(100% - -30px);
+    height: calc(100% - -82px);
     border-right: solid 1px #e0e0e0;
     position: relative;
     z-index: 9999;
@@ -476,7 +476,7 @@ menu li {
     width: initial;
     height: initial;
 }
-.btn{
+.comments-panel .btn{
     display:flex;
     justify-content: center;
     align-items:center;
@@ -546,4 +546,7 @@ menu li {
 }
 .defaultAssignee{
     margin-left:15px;
+}
+#ext_AddAnAsset{
+    font-family: sans-serif!important;
 }
