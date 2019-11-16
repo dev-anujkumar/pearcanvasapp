@@ -88,7 +88,7 @@ export default function ElementSaprator(props) {
 
     return (
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
-            <div className='elemDiv-split'>
+            <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
                 {permissions && permissions.includes('split_slate') && elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
@@ -164,15 +164,23 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
     }
     else {
-        if (config.slateType == CONTAINER_INTRO && (!config.isCO || config.isLOL)) {
+        if (config.slateType == CONTAINER_INTRO) {
             // hide the metadata anchor on IS when its once created
+            if(document.getElementsByClassName(METADATA_ANCHOR).length > 0){
+                let elements = document.getElementsByClassName(METADATA_ANCHOR);
+                elements = Array.from(elements);
+                elements.map(function(item,index){
+                    if (item.classList && item.classList.contains("disabled")) { item.classList.remove("disabled") }
+                })
+            }
+            
             if (config.isLOL) {
                 let elements = document.getElementsByClassName(METADATA_ANCHOR);
                 for (let key in elements) {
-                    if (elements[key].className) { elements[key].className += " disabled"; }
+                    if (elements[key].className && !elements[key].classList.contains("disabled")) { elements[key].className += " disabled"; }
                 }
             }
-
+            
             if (!config.isCO) {
                 updatedEsProps = esProps.filter((btnObj) => {
                     return btnObj.buttonType !== SECTION_BREAK;

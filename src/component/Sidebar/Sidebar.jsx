@@ -324,6 +324,7 @@ class Sidebar extends Component {
 
     
     showModuleName = (e) => {
+       if(this.props.activeElement.elementId){
         this.props.setCurrentModule(e.currentTarget.checked);
         let els = document.getElementsByClassName('moduleContainer');
         let i = 0;
@@ -356,7 +357,7 @@ class Sidebar extends Component {
         }
         this.props.updateElement(data)
 
-    }
+    }}
     render = () => {
         return (
             <div className="canvas-sidebar">

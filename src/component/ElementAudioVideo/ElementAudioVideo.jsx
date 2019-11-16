@@ -19,7 +19,8 @@ class ElementAudioVideo extends Component {
         super(props);
         this.state={
             imgSrc: null,
-            assetData : null
+            assetData: null,
+            elementType: this.props.model.figuretype || ""
         }
     }
     /**
@@ -29,13 +30,13 @@ class ElementAudioVideo extends Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-            let imageData = data;
-            let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
-            let figureType = imageData['assetType'] ? imageData['assetType'] : "";
-            let width = imageData['width'] ? imageData['width'] : "";
-            let height = imageData['height'] ? imageData['height'] : "";
+        let imageData = data;
+        let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
+        let figureType = imageData['assetType'] ? imageData['assetType'] : "";
+        let width = imageData['width'] ? imageData['width'] : "";
+        let height = imageData['height'] ? imageData['height'] : "";
 
-            if (figureType === "video" || figureType === "audio") {
+        if (figureType === "video" || figureType === "audio") {
 
             let clipInfoData=typeof(imageData['clipinfo'])==="object"?imageData['clipinfo']:JSON.parse(imageData['clipinfo']);
             if (figureType === "video" && epsURL === "") {
@@ -164,6 +165,18 @@ class ElementAudioVideo extends Component {
      * @param model object that defined the type of element
      * @param index index of the current element
      * @param slateLockInfo object that defines the slate lock details */
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if(nextProps.model && 'figuretype' in nextProps.model && nextProps.model.figuretype !== prevState.elementType) {
+            return {
+                imgSrc: null,
+                assetData: null,
+                elementType: nextProps.model.figuretype || ""
+            };
+        }
+
+        return null;
+    }
 
     renderAudioVideoType = (model,index,slateLockInfo) => {
         var audioVideoJSX;
