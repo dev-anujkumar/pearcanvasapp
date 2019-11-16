@@ -24,7 +24,8 @@ import {
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
     FETCH_DATA_ON_SLATE_REFRESH,
-    ACCESS_DENIED_POPUP
+    ACCESS_DENIED_POPUP,
+    SET_PARENT_NODE
 } from '../constants/Action_Constants';
 
 /**
@@ -108,6 +109,11 @@ export default function (state = initialState, action) {
         return {
             ...state,
             setSlateEntity: action.payload
+        }
+        case SET_PARENT_NODE:
+        return {
+            ...state,
+            setSlateParent: action.payload
         }
          case AUTHORING_ELEMENT_UPDATE:
              return {

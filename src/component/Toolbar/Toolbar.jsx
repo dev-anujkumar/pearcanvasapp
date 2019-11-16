@@ -18,9 +18,19 @@ const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
+
     useEffect(() => {
         setLODropdown(false);
-      }, [props.setSlateEntity]); 
+        test()
+      }, [props.setSlateEntity, props.setSlateParent]); 
+
+      function test(){
+          if( document.querySelector(".tox-toolbar") && document.querySelector(".tox-toolbar").length){
+            if (document.getElementsByClassName("slate-tag-icon").length) {
+                console.log("blocked kanika");
+                document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
+          }}
+      }
     /**
      * Function for show/hide audio Narration dropdown
      */
@@ -156,6 +166,7 @@ const mapStateToProps = (state) => {
         isLOExist: state.metadataReducer.slateTagEnable,
         addAudio: state.audioReducer.addAudio,
         openAudio: state.audioReducer.openAudio,
+        setSlateParent: state.appStore.setSlateParent,
     }
 }
 
