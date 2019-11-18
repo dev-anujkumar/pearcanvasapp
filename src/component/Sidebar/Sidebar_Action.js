@@ -74,7 +74,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         inputSubType : inputSubTypeEnum,
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
-        projectUrn : config.projectUrn
+        projectUrn : config.projectUrn,
+        slateUrn:config.slateManifestURN
     }
 
     

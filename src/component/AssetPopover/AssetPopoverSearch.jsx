@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-
+import {updateElement} from '../ElementContainer/ElementContainer_Actions'
 import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction, getAssetPopoverId } from './AssetPopover_Actions.js';
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
@@ -69,6 +69,8 @@ class AssetPopoverSearch extends React.Component {
                 }
             })
         }
+        this.props.handleFocus()
+        this.props.handleBlur()
     }
 
     /**
@@ -212,7 +214,8 @@ const mapStateToProps = (state, props) => {
         searchTerm,
         figureDetails,
         timeByAPI,
-        currentlyLinkedImageData
+        currentlyLinkedImageData,
+        updateElement
     }
 }
 
