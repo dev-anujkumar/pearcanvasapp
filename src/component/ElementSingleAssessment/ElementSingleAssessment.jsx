@@ -18,12 +18,12 @@ export class ElementSingleAssessment extends Component {
 
         this.state = {
             assessmentId:  null,
-            assessmentItemId :this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
-
+            elementType: this.props.model.figuredata.elementdata.assessmentformat || ""
         };
     }
     componentDidMount() {
@@ -36,6 +36,20 @@ export class ElementSingleAssessment extends Component {
         })
     }
     
+static getDerivedStateFromProps(nextProps, prevState) {
+
+    if('figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
+        let title = nextProps.model.html.title? nextProps.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):null;        
+        return {
+            assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
+            assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
+            assessmentTitle :nextProps.model && nextProps.model.html && nextProps.model.html.title? title : null,
+            elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
+        };
+    }
+
+    return null;
+}
     handleC2AssessmentClick=(value)=> {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
@@ -62,6 +76,7 @@ export class ElementSingleAssessment extends Component {
         hideTocBlocker();
     }
     }
+
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];

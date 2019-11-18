@@ -33,7 +33,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+        oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]};
         if(oldElementData.figuredata.srctype){
             oldElementData.figuredata.srctype=outputSubType['wipValue']
         }
@@ -53,6 +53,16 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputPrimaryOptionEnum=outputSubType['enum'],
         outputSubTypeEnum = usageType.toUpperCase(),
         oldElementData.figuredata.elementdata.usagetype=usageType;
+        let assessmentFormat =outputSubType.text.toLowerCase();
+        let assessmentItemType ="";
+        if(assessmentFormat==="cite"){
+            assessmentItemType ="assessmentItem";
+        }else{
+            assessmentItemType = "tdxAssessmentItem";
+        }        
+        oldElementData.html.title = "";
+        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
+        oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
