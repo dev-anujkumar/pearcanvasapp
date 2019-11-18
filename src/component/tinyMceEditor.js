@@ -176,10 +176,13 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
-                    if (selectedText === document.getElementById(`cypress-${this.props.index}`).innerText) {
-                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
+                        if(e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr'))
+                        e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        else
+                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
                     break;
                 case "FormatBlock":
@@ -876,7 +879,7 @@ export class TinyMceEditor extends Component {
          */
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
-            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && 'type' in this.props.element && this.props.element.type==="figure"))) {
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
             }
         }
