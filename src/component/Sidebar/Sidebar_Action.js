@@ -123,8 +123,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             }
         });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-        let altText = res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
-        let longDesc = res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
+        let altText="";
+        let longDesc="";
+        if(res.data.figuredata){
+            altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
+            longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
+        }
         let activeElementObject = {
             elementId: newElementData.elementId,
             index: indexes.join("-"),
