@@ -728,7 +728,10 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById(activeElementObj.join("-")) && (document.getElementById(activeElementObj.join("-")).innerHTML = tempContainerHtml);
+                if( document.getElementById( activeElementObj.join("-"))){
+                    document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                }
+                
     
                 tinymce.remove('#' + activeElementObj.join("-"));
                 tinymce.$('.wrs_modal_desktop').remove();
