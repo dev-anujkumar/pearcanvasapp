@@ -96,7 +96,8 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
         secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
         labelText: LIST_TYPE_MAPPINGS[type].tag,
         toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
-        elementWipType: "element-list"
+        elementWipType: "element-list",
+        startvalue
     }));
 
     // dispatch(updateElementType(activeElement, type));

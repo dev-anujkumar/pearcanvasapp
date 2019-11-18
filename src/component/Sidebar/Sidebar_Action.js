@@ -97,7 +97,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        slateUrn:config.slateManifestURN
+        slateUrn:config.slateManifestURN,
+        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0
     }
 
     
