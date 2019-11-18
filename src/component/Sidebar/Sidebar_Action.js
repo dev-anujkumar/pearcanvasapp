@@ -6,6 +6,7 @@ import {
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
+let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
     
@@ -33,7 +34,10 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
+            console.log("code here")
+            oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+        }
         if(oldElementData.figuredata.srctype){
             oldElementData.figuredata.srctype=outputSubType['wipValue']
         }
@@ -41,7 +45,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
         }
 
-        if(oldElementData.figuretype && oldElementData.figuretype === "codelisting") {
+        if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
     }
@@ -68,6 +72,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.html.text = domHtml
         }
     }
+    console.log("oldElementData>>>>",oldElementData)
     const conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
