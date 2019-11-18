@@ -13,6 +13,8 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -23,8 +25,9 @@ export class AssessmentSlateCanvas extends Component {
             getAssessmentData:props.model && props.model.elementdata &&  props.model.elementdata.assessmentid? true: false,
             assessmentId: props.model && props.model.elementdata && props.model.elementdata.assessmentid ?props.model.elementdata.assessmentid :"",
             assessmentItemId: props.model && props.model.elementdata && props.model.elementdata.assessmentitemid ?props.model.elementdata.assessmentitemid :"",
-            assessmentItemTitle: props.model && props.model.elementdata && props.model.elementdata.assessmenttitle ?props.model.elementdata.assessmenttitle :"",
-            assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :""
+            assessmentItemTitle:props.model && props.model.elementdata && props.model.elementdata.assessmenttitle? props.model.elementdata.assessmenttitle: "",
+            assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :"",
+            learningTemplateLabel: props.model && props.model.elementdata && props.model.elementdata.templatelabel ?props.model.elementdata.templatelabel :""
         }
     }
 
@@ -34,9 +37,9 @@ export class AssessmentSlateCanvas extends Component {
             assessmentId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentid ?nextProps.model.elementdata.assessmentid :"",
             assessmentItemId: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentitemid ?nextProps.model.elementdata.assessmentitemid :"",
             assessmentItemTitle: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmenttitle ?nextProps.model.elementdata.assessmenttitle :"",
-            assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :""
-
-              })
+            assessmentFormat: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.assessmentformat ?nextProps.model.elementdata.assessmentformat :"",
+            learningTemplateLabel: nextProps.model && nextProps.model.elementdata && nextProps.model.elementdata.templatelabel ?nextProps.model.elementdata.templatelabel :"",
+              })             
     }
 
     /*** @description - This function is to toggle the Assessment PopUp for C2 media*/
@@ -97,7 +100,6 @@ export class AssessmentSlateCanvas extends Component {
         showTocBlocker();
         disableHeader(true);
         this.toggleAssessmentPopup('',false);
-        
         productId = (value && value !== "") ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
            this.launchAssetBrowserCallBack(assessmentData)   
@@ -127,6 +129,7 @@ export class AssessmentSlateCanvas extends Component {
         if(usage){
             usagetype=usage.innerText;
         }
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.updateAssessment(id, itemID, title, assessmentFormat, usagetype, "insert");
     }
 
@@ -138,30 +141,33 @@ export class AssessmentSlateCanvas extends Component {
        * @param usageType - usageType of the assessment
        * @param change - type of change - insert/update
     */
-    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype,)=>{ 
-        if(change==='insert'){             
-            this.setState({
-                getAssessmentDataPopup: true
-            }, () => {
-                setTimeout(() => {
-                    this.setState({
-                        getAssessmentDataPopup: false
-                    })
-                }, 3000)
-            })
-        }
-        else {           
-            this.setState({
-                getAssessmentData: false
-            })
-        }        
+    updateAssessment=(id,itemID,title,format,usageType,change,learningsystem,templateid,templatetype)=>{ 
         this.setState({assessmentId: id,
             assessmentItemId : itemID,
             assessmentItemTitle:title,
             getAssessmentData: true,
         }, () => {
             this.handleAssessmentBlur({ id: id, itemID: itemID, title: title, usageType: usageType, format: format, learningsystem: learningsystem, templateid: templateid, templatetype: templatetype, templatelabel: title });
-        })                    
+        })  
+        if(change==='insert'){
+            this.setState({
+                getAssessmentDataPopup: true
+            }, () => {
+                setTimeout(() => {
+                    this.setState({
+                        getAssessmentDataPopup: false
+                    })                    
+                }, 3000)          
+                sendDataToIframe({'type': ShowLoader,'message': { status: false }}); 
+            })           
+      
+    }
+        else {           
+            this.setState({
+                getAssessmentData: false
+            })
+        }        
+                         
 
     }
 
@@ -201,6 +207,8 @@ export class AssessmentSlateCanvas extends Component {
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
                     permissions={this.props.permissions}
+                    handleAssessmentBlur= {this.handleAssessmentBlur}
+                    learningTemplateLabel = {this.state.learningTemplateLabel}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}

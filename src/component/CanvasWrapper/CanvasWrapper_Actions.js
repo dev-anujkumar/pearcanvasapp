@@ -50,6 +50,11 @@ const findElementType = (element, index) => {
 							longDesc,
 							...elementDataBank[element.type][element.figuretype][element.subtype]
 						}
+						if (!elementType.secondaryOption) {
+							if (element.figuretype === "tableasmarkup"){
+								elementType.secondaryOption = "secondary-editor-table-equation";	
+							}
+						}
 						break;
 					case "codelisting":
 						elementType = {

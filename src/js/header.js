@@ -40,8 +40,5 @@ export const publishContent = function (type) {
 * @description - Logout user's session.
 */
 export const logout = function () {
-    let projectURN = config_object.projectUrn;
-    let slateURN = config_object.slateManifestURN;
-    releaseSlateLockWithCallback(projectURN, slateURN)
     OPEN_AM.logout();
 }

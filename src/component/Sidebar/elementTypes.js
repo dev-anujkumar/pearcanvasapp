@@ -699,7 +699,7 @@ export default {
                     text: 'Table',
                     labelText: 'SL',
                     enum: 'TABLE',
-                    wipValue: 'smartlink-tab'
+                    wipValue: 'table'
                 }
             }
         },

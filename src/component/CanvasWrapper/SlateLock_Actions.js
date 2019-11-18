@@ -129,7 +129,6 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
             }
         })
         .catch((err) => {
-            //console.log("API error from release slate>>>>",err)
             if(callback){
                 callback(err)
             }

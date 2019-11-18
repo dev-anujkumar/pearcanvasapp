@@ -65,7 +65,7 @@ export class ElementSingleAssessment extends Component {
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
-        let title = assessmentData['itemsTitle'] ? assessmentData['itemsTitle']: null ;
+        let title = assessmentData['title'] ? assessmentData['title']: null ;
         let assessmentFormat="";
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);

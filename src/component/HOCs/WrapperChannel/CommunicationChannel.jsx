@@ -14,6 +14,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
+import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
@@ -52,7 +53,7 @@ function WithWrapperCommunication(WrappedComponent) {
          * handleIncommingMessages | Listen for any incomming message from wrapper application
          * @param {object} e | received message event from wrapper application
          */
-        handleIncommingMessages = (e) => {
+        handleIncommingMessages = (e) => {            
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
@@ -179,6 +180,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     console.log("this is assessment response--",message);
                     let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
                     this.props.isLOExist(newMessage);
+                    this.props.currentSlateLO(newMessage);
                    break;    
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
@@ -198,7 +200,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.releaseLockAndRedirect()
                     break;
                 case 'logout':
-                    this.props.logout();
+                    this.releaseLockAndLogout()
                     break;
                 case 'onTOCHamburgerClick':
                     {
@@ -208,9 +210,23 @@ function WithWrapperCommunication(WrappedComponent) {
                             _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
                         break
                     }
+                case 'trackChanges':{
+                     loadTrackChanges();
+                }
+                break;
             }
         }
 
+        /**
+         * Releases slate lock and logs user out.
+         */
+        releaseLockAndLogout = () => {
+            const { projectUrn, slateManifestURN} = config
+            releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
+                this.props.logout();
+            })
+        }
+        
         releaseLockAndRedirect = () => { 
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
@@ -234,7 +250,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO();
+                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -328,6 +344,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
                 this.props.setUpdatedSlateTitle(currentSlateObject)
+                config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.disablePrev = message.disablePrev;
@@ -351,6 +368,10 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
+                }
+                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+                    let newMessage = {assessmentResponseMsg:false};
+                    this.props.isLOExist(newMessage);
                 }
             }
             /**

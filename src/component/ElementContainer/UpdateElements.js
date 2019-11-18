@@ -323,7 +323,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
+    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
@@ -339,11 +339,10 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
+        inputSubType : previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
         html: {
             title: "<p></p>"
         }}
-
         return dataToSend;
 }
 

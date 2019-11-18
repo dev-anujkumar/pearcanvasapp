@@ -80,6 +80,30 @@ export class CanvasWrapper extends Component {
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
+
+        var targetNode = document.querySelector('body');
+        // Options for the observer (which mutations to observe)		
+        var config = { attributes: true };
+        // Callback function to execute when mutations are observed		
+        var callbackOb = function (mutationsList, observer) {
+            for (var mutation of mutationsList) {
+                if (mutation.type === 'attributes') {
+                    let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+                    let wirisNodeLength = wirisNodes.length;
+                    if (wirisNodeLength > 1) {
+                        for (let i = 0; i < wirisNodeLength - 1; i++) {
+                            wirisNodes[i].remove();
+                            document.getElementsByClassName('wrs_modal_overlay').remove
+                        }
+                    }
+                }
+            }
+        };
+        // Create an observer instance linked to the callback function		
+        var observer = new MutationObserver(callbackOb);
+        // Start observing the target node for configured mutations	
+        if (targetNode)
+            observer.observe(targetNode, config);
     }
     
     handleCommentspanel = (elementId) => {
@@ -184,7 +208,6 @@ const mapStateToProps = state => {
         permissions: state.appStore.permissions,
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod
-
     };
 };
 

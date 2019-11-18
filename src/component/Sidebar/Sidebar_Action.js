@@ -54,7 +54,20 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubTypeEnum = usageType.toUpperCase(),
         oldElementData.figuredata.elementdata.usagetype=usageType;
     }
-
+    /**
+     * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
+     * then send dom html data instead of sending store data
+     */
+    if (newElementData.primaryOption === "primary-list") {
+        let storeHtml = oldElementData.html && oldElementData.html.text || ''
+        let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
+        let elementContainer = containerDom && containerDom.querySelector('.element-container')
+        let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
+        let domHtml = editableDom.innerHTML
+        if (storeHtml !== domHtml) {
+            oldElementData.html.text = domHtml
+        }
+    }
     const conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
