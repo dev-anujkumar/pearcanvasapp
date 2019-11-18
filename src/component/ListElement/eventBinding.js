@@ -232,8 +232,8 @@ export const bindKeyDownEvent = (editor, e) => {
          * That is a sibling next to it.., then do not perform anything
          */
         if (anchorNode.nextSibling !== null &&
-            (anchorNode.nextSibling.tagName !== "OL" ||
-                anchorNode.nextSibling.tagName !== "UL")) {
+            (anchorNode.nextSibling.tagName === "OL" ||
+                anchorNode.nextSibling.tagName === "UL")) {
             prohibitEventBubling(e);
             return false;
         }
