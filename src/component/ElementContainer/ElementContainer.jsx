@@ -676,7 +676,7 @@ class ElementContainer extends Component {
     saveNewComment = () => {
         const { comment } = this.state;
         const { id } = this.props.element;
-        if (comment !== "" && comment.trim() !== "") {
+        if (comment !== '' && comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
         }
