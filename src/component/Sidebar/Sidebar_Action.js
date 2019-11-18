@@ -35,7 +35,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     if (oldElementData.type === "figure") {
         if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
-            console.log("code here")
             oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
         }
         if(oldElementData.figuredata.srctype){
