@@ -199,7 +199,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.releaseLockAndRedirect()
                     break;
                 case 'logout':
-                    this.props.logout();
+                    this.releaseLockAndLogout()
                     break;
                 case 'onTOCHamburgerClick':
                     {
@@ -216,6 +216,16 @@ function WithWrapperCommunication(WrappedComponent) {
             }
         }
 
+        /**
+         * Releases slate lock and logs user out.
+         */
+        releaseLockAndLogout = () => {
+            const { projectUrn, slateManifestURN} = config
+            releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
+                this.props.logout();
+            })
+        }
+        
         releaseLockAndRedirect = () => { 
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
