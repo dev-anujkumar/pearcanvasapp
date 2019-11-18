@@ -343,7 +343,6 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
         html: {
             title: "<p></p>"
         }}
-
         return dataToSend;
 }
 
