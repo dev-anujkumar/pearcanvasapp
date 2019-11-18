@@ -104,7 +104,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             }
         });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-
+        let altText = res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
+        let longDesc = res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         let activeElementObject = {
             elementId: newElementData.elementId,
             index: indexes.join("-"),
@@ -114,6 +115,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             tag: newElementData.labelText,
             toolbar: newElementData.toolbar,
             elementWipType: newElementData.elementWipType,
+            altText,
+            longDesc
         };
 
         dispatch({
