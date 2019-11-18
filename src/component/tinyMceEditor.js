@@ -179,10 +179,10 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
-                        if(e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr'))
-                        e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
+                            e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         else
-                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
                     break;
                 case "FormatBlock":
