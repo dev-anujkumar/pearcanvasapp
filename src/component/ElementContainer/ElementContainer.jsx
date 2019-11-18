@@ -681,8 +681,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType,glossaryTermText, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback);
     }
 
     /**
@@ -754,8 +754,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText)).then(() => {
                 if (callback) {
                     callback();
                 }
