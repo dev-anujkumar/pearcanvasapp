@@ -21,7 +21,9 @@ import {
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import {checkforToolbarClick} from '../js/utils'
-
+import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
+import { ShowLoader } from '../constants/IFrameMessageTypes';
+import { sendDataToIframe } from '../constants/utility.js';
 let context = {};
 
 export class TinyMceEditor extends Component {
@@ -677,6 +679,7 @@ export class TinyMceEditor extends Component {
                 editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
             }
             this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); }); 
+            this.saveContent()
         })
     }
     learningObjectiveDropdown(text){
@@ -696,13 +699,30 @@ export class TinyMceEditor extends Component {
             }
             else {
                 insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
-            }            
+            }
+
             if(selectedText !== ""){
                 editor.insertContent(insertionText);
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
+            this.saveContent()
         }) 
     }
+
+    /**
+     * Saves glossary/footnote on creation
+     */
+    saveContent = () => {
+        const { glossaryFootnoteValue } = this.props;
+        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let term = null;
+        let definition = null;
+        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+    }
+
 
     /**
      * Called when asset popover button is clicked. Responsible for adding asset popover

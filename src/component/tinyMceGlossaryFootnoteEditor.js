@@ -171,11 +171,15 @@ export class ReactEditor extends React.Component {
     model = this.props.glossaryFootNoteCurrentValue;
     tempPlaceHolderclass = this.props.className;
 
-    if (model) {
-      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {
-        this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
-      } else {
+    let testElem = document.createElement('div');
+    testElem.innerHTML = model;
+
+    if (testElem && model) {
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+      if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
+      } else {
+        this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
       }
     } else {
       if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {

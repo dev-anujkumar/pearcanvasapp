@@ -5,6 +5,9 @@ import React from 'react';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
+import { ShowLoader } from '../../constants/IFrameMessageTypes';
+import { sendDataToIframe } from '../../constants/utility.js';
+
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
 * to make a skeleton of Glossary and Footnote.
@@ -19,7 +22,7 @@ class GlossaryFootnoteMenu extends React.Component {
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && !document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target))) {
                 this.saveContent()
             }
         }
@@ -61,6 +64,24 @@ class GlossaryFootnoteMenu extends React.Component {
     }
 
     /**
+     * Checks difference in glossary/footnote data
+     */
+    glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
+        switch(type){
+            case "glossary":
+                if(newTerm !== oldTerm ||
+                    newDef !== oldDef){
+                        return true
+                    }
+                return false
+            case "footnote":
+                if(newDef !== oldDef){
+                    return true
+                }
+                return false
+        }
+    }
+    /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 
     */
@@ -69,12 +90,12 @@ class GlossaryFootnoteMenu extends React.Component {
         let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
-        // let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
-        // let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
-        // let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
-        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || `<p></p>`
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || `<p></p>`
+        if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        }
         this.props.showGlossaaryFootnote(false);
     }
 }
