@@ -337,12 +337,16 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} secondaryOption 
  */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] div.AssessmentSlateMenu `;
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
         html: {
             title: "<p></p>"
         }}
+        let usageType = document.querySelector(assessmentNodeSelector+'span.slate_assessment_metadata_dropdown_label').innerText;
+        dataToSend.elementdata.usagetype = usageType;
+        dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
 
         return dataToSend;
 }

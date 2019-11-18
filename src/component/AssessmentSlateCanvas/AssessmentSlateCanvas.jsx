@@ -201,6 +201,7 @@ export class AssessmentSlateCanvas extends Component {
                     showBlocker={showBlocker}
                     updateAssessment ={this.updateAssessment}
                     permissions={this.props.permissions}
+                    handleAssessmentBlur= {this.handleAssessmentBlur}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
