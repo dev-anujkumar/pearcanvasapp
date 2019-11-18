@@ -190,10 +190,10 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
-                        if(e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr'))
-                        e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
+                            e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         else
-                        e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
                     break;
                 case "FormatBlock":
@@ -460,13 +460,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addInlineCode = (editor) => {
-        editor.execCommand('mceToggleFormat', false, 'code');
-        let selectedText = window.getSelection().toString();
-        if (selectedText != "") {
-            editor.execCommand('mceToggleFormat', false, 'code');
-            let insertionText = '<code>' + selectedText + '</code>'
-            editor.insertContent(insertionText);
-        }
+        let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
+         if (selectedText != "" && selectedText != "CODE") {
+             editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
+         }
     }
 
     /*
@@ -758,9 +755,13 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                if( document.getElementById( activeElementObj.join("-"))){
+                    document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                }
+                
     
                 tinymce.remove('#' + activeElementObj.join("-"));
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -911,6 +912,7 @@ export class TinyMceEditor extends Component {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -967,7 +969,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if( tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -1031,6 +1033,7 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
                         document.getElementById(`${ed_id}`).contentEditable = true;
                     }

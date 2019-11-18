@@ -9,15 +9,15 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userId,
+        commentCreator: config.userName,
         assignee: config.assignee
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userId,
-        commentCreator: config.userId,
+        commentAssignee: config.userName,
+        commentCreator: config.userName,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
@@ -235,9 +235,11 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
     let parentData = getState().appStore.slateLevelData,
         element,
         interactiveImage = "",
+        oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
+       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
       if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if(newBodymatter[index].figuretype==="assessment"){
@@ -245,6 +247,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
                 element = newBodymatter[index]
             }else{
                 newBodymatter[index].figuredata = figureData
+                oldPath = bodymatter[index].figuredata
                 element = newBodymatter[index]
             }          
         }
@@ -259,6 +262,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
                     element = newBodymatter[index]
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
+                    oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
                     element = condition
                 }
             }
@@ -267,9 +271,11 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
             if (condition.versionUrn == elementId) {
                 if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment"){
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
+                    oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
                     element = condition
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
+                    oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
                     element = condition
                 }
 
@@ -279,7 +285,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
     dispatch({
         type: SET_OLD_IMAGE_PATH,
         payload: {
-            oldImage: element.figuredata.path
+            oldImage: oldPath 
         }
     })
     dispatch({

@@ -165,7 +165,7 @@ class ElementContainer extends Component {
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
             captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits
+            creditsHTML !== previousElementData.html.credits || previousElementData.figuredata.interactiveid
             ){
                 return true
             }
@@ -201,6 +201,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
+            case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
                 let currentNode = document.getElementById(`cypress-${this.props.index}`)
                 let html = currentNode.innerHTML;
@@ -304,7 +305,7 @@ class ElementContainer extends Component {
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
-        if (assessmentData) {
+        if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
             dataToSend.elementdata.assessmentid = assessmentData.id;
@@ -318,6 +319,7 @@ class ElementContainer extends Component {
             }
             this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
         } else{
+            dataToSend.elementdata.usagetype = assessmentData;
             this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+this.props.element.elementdata.assessmentformat)
         }      
 
@@ -598,7 +600,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
-            if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default") {
+            if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';

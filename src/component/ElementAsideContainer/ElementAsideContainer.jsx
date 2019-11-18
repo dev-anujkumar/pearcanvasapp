@@ -31,7 +31,7 @@ class ElementAsideContainer extends Component {
     }
     componentDidMount() {
         this.asideRef.current.addEventListener("focus", this.handleFocus);
-      
+
 
     }
 
@@ -39,7 +39,7 @@ class ElementAsideContainer extends Component {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
     handleFocus = () => {
-        if(checkSlateLock(this.props.slateLockInfo)){
+        if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
         this.props.setActiveElement(this.props.element);
@@ -74,55 +74,55 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
-                    this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index,elementLength)
+                    this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
-                            <Sortable 
-                               options={{
-                                   sort: true,  // sorting inside list
-                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
-                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
-                                   dragoverBubble: false,
+                            <Sortable
+                                options={{
+                                    sort: true,  // sorting inside list
+                                    preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                    animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                                    dragoverBubble: false,
                                     removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                   scrollSpeed: 10,
-                                   handle : '.element-label', //Drag only by element tag name button
-                                   dataIdAttr: 'data-id',
-                                   scroll: true, // or HTMLElement
-                                   filter: ".ignore-for-drag",
-                                   preventOnFilter: false,
-                                   draggable: ".editor",
-                                   forceFallback: true, 
-                                   onStart: function (/**Event*/){
-                                       // same properties as onEnd
-                                   },
-                                   // Element dragging ended
-                                   onUpdate:  (/**Event*/evt) => {
-                                       let swappedElementData;
+                                    fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                                    scrollSpeed: 10,
+                                    handle: '.element-label', //Drag only by element tag name button
+                                    dataIdAttr: 'data-id',
+                                    scroll: true, // or HTMLElement
+                                    filter: ".ignore-for-drag",
+                                    preventOnFilter: false,
+                                    draggable: ".editor",
+                                    forceFallback: true,
+                                    onStart: function (/**Event*/) {
+                                        // same properties as onEnd
+                                    },
+                                    // Element dragging ended
+                                    onUpdate: (/**Event*/evt) => {
+                                        let swappedElementData;
                                         swappedElementData = _bodyMatter[evt.oldDraggableIndex]
                                         let dataObj = {
-                                            oldIndex : evt.oldDraggableIndex,
-                                            newIndex : evt.newDraggableIndex,
-                                            swappedElementData : swappedElementData,
+                                            oldIndex: evt.oldDraggableIndex,
+                                            newIndex: evt.newDraggableIndex,
+                                            swappedElementData: swappedElementData,
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                         }
-                                       this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
-                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                                   },
-                               }}
+                                        this.props.swapElement(dataObj, (bodyObj) => { })
+                                        this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                                    },
+                                }}
                                 ref={(c) => {
-                                   if (c) {
-                                       let sortable = c.sortable;
-                                   }
-                               }}
-                               tag="div"
-                               onChange = {function(items, sortable, evt) { }}
-                           >
-                                    { this['cloneCOSlateControlledSource_2' + random]}
-                           </Sortable>
+                                    if (c) {
+                                        let sortable = c.sortable;
+                                    }
+                                }}
+                                tag="div"
+                                onChange={function (items, sortable, evt) { }}
+                            >
+                                {this['cloneCOSlateControlledSource_2' + random]}
+                            </Sortable>
                         </div>
                     )
                 }
@@ -148,58 +148,58 @@ class ElementAsideContainer extends Component {
         }
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
-        this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+        this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex, elementLength)
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-                <Sortable 
-                               options={{
-                                   sort: true,  // sorting inside list
-                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
-                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
-                                   dragoverBubble: false,
-                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                   scrollSpeed: 10,
-                                   handle : '.element-label', //Drag only by element tag name button
-                                   dataIdAttr: 'data-id',
-                                   scroll: true, // or HTMLElement
-                                   filter: ".ignore-for-drag",
-                                   preventOnFilter: false,
-                                   draggable: ".editor",
-                                   forceFallback: true, 
-                                   onStart: function (/**Event*/){
-                                       // same properties as onEnd
-                                   },
-                                   // Element dragging ended
-                                   onUpdate:  (/**Event*/evt) => {
-                                       let swappedElementData;
-                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
-                                        let dataObj = {
-                                            oldIndex : evt.oldDraggableIndex,
-                                            newIndex : evt.newDraggableIndex,
-                                            swappedElementData : swappedElementData,
-                                            currentSlateEntityUrn: parentUrn.contentUrn,
-                                            containerTypeElem: 'section',
-                                            asideId : this.props.element.id
-                                        }
-                                       this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
-                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                                   },
-                               }}
-                                ref={(c) => {
-                                   if (c) {
-                                       let sortable = c.sortable;
-                                   }
-                               }}
-                               tag="div"
-                               onChange = {function(items, sortable, evt) { }}
+                <Sortable
+                    options={{
+                        sort: true,  // sorting inside list
+                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                        animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                        dragoverBubble: false,
+                        removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                        scrollSpeed: 10,
+                        handle: '.element-label', //Drag only by element tag name button
+                        dataIdAttr: 'data-id',
+                        scroll: true, // or HTMLElement
+                        filter: ".ignore-for-drag",
+                        preventOnFilter: false,
+                        draggable: ".editor",
+                        forceFallback: true,
+                        onStart: function (/**Event*/) {
+                            // same properties as onEnd
+                        },
+                        // Element dragging ended
+                        onUpdate: (/**Event*/evt) => {
+                            let swappedElementData;
+                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            let dataObj = {
+                                oldIndex: evt.oldDraggableIndex,
+                                newIndex: evt.newDraggableIndex,
+                                swappedElementData: swappedElementData,
+                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                containerTypeElem: 'section',
+                                asideId: this.props.element.id
+                            }
+                            this.props.swapElement(dataObj, (bodyObj) => { })
+                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        },
+                    }}
+                    ref={(c) => {
+                        if (c) {
+                            let sortable = c.sortable;
+                        }
+                    }}
+                    tag="div"
+                    onChange={function (items, sortable, evt) { }}
 
-                           >
-                                    { this['cloneCOSlateControlledSource_1' + random]}
-                           </Sortable>
+                >
+                    {this['cloneCOSlateControlledSource_1' + random]}
+                </Sortable>
             </div>
         )
     }
@@ -221,7 +221,7 @@ class ElementAsideContainer extends Component {
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
-        this['cloneCOSlateControlledSource_3' + random]= this.renderElement(_containerBodyMatter, parentUrn, parentIndex,elementLength)
+        this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex, elementLength)
 
         return (
             <div className="aside-section-break" data-id={_elementId}>
@@ -233,53 +233,53 @@ class ElementAsideContainer extends Component {
                     showDeleteElemPopup={this.props.showDeleteElemPopup}
                     permissions={this.props.permissions}
                 />
-                <Sortable 
-                               options={{
-                                   sort: true,  // sorting inside list
-                                   preventOnFilter: true, // Call event.preventDefault() when triggered filter
-                                   animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
-                                   dragoverBubble: false,
-                                    removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
-                                   fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
-                                   scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
-                                   scrollSpeed: 10,
-                                   handle : '.element-label', //Drag only by element tag name button
-                                   dataIdAttr: 'data-id',
-                                   scroll: true, // or HTMLElement
-                                   filter: ".ignore-for-drag",
-                                   draggable: ".editor",
-                                   preventOnFilter: false,
-                                   forceFallback: true, 
-                                   onStart: function (/**Event*/){
-                                       // same properties as onEnd
-                                   },
-                                   // Element dragging ended
-                                   onUpdate:  (/**Event*/evt) => {
-                                       let swappedElementData;
-                                        swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
-                                        let dataObj = {
-                                            oldIndex : evt.oldDraggableIndex,
-                                            newIndex : evt.newDraggableIndex,
-                                            swappedElementData : swappedElementData,
-                                            currentSlateEntityUrn: parentUrn.contentUrn,
-                                            containerTypeElem: 'section',
-                                            asideId : this.props.element.id, 
-                                        }
-                                       this.props.swapElement(dataObj,(bodyObj)=>{})
-                                       this.props.setActiveElement(dataObj.swappedElementData,dataObj.newIndex);
-                                       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                                   },
-                               }}
-                                ref={(c) => {
-                                   if (c) {
-                                       let sortable = c.sortable;
-                                   }
-                               }}
-                               tag="div"
-                               onChange = {function(items, sortable, evt) { }}
-                           >
-                                { this['cloneCOSlateControlledSource_3' + random]}
-                           </Sortable>
+                <Sortable
+                    options={{
+                        sort: true,  // sorting inside list
+                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                        animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
+                        dragoverBubble: false,
+                        removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
+                        fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
+                        scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                        scrollSpeed: 10,
+                        handle: '.element-label', //Drag only by element tag name button
+                        dataIdAttr: 'data-id',
+                        scroll: true, // or HTMLElement
+                        filter: ".ignore-for-drag",
+                        draggable: ".editor",
+                        preventOnFilter: false,
+                        forceFallback: true,
+                        onStart: function (/**Event*/) {
+                            // same properties as onEnd
+                        },
+                        // Element dragging ended
+                        onUpdate: (/**Event*/evt) => {
+                            let swappedElementData;
+                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            let dataObj = {
+                                oldIndex: evt.oldDraggableIndex,
+                                newIndex: evt.newDraggableIndex,
+                                swappedElementData: swappedElementData,
+                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                containerTypeElem: 'section',
+                                asideId: this.props.element.id,
+                            }
+                            this.props.swapElement(dataObj, (bodyObj) => { })
+                            this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                        },
+                    }}
+                    ref={(c) => {
+                        if (c) {
+                            let sortable = c.sortable;
+                        }
+                    }}
+                    tag="div"
+                    onChange={function (items, sortable, evt) { }}
+                >
+                    {this['cloneCOSlateControlledSource_3' + random]}
+                </Sortable>
             </div>
         )
     }
@@ -299,66 +299,104 @@ class ElementAsideContainer extends Component {
             contentUrn: this.props.element.contentUrn
         };
         try {
-            if (_elements !== null && _elements !== undefined) {
-                return _elements.map((element, index) => {
-                    if (element.type == "manifest" && firstSection) {
-                        firstSection = false;
-                        return this.section(element, index);
-                    } else if (element.type == "manifest" && !firstSection) {
-                        return this.sectionBreak(element, index);
-                    }
-                    else {
-                        showSectionBreak = (elementLength == index + 1) ? true : false
-                        return (
-                            <React.Fragment key={element.id}>
-                                {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+            if (_elements !== undefined) {
+                if (_elements.length == 0) {
+                    let index = 0
+                    return(
+                        <ElementSaprator
+                        index= {index}
+                        upperOne={true}
+                        firstOne={index === 0}
+                        esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
+                        elementType="element-aside"
+                        sectionBreak={true}
+                        permissions={this.props.permissions}
+                        onClickCapture={this.props.onClickCapture}
+                    />
+                    ) 
+                 
+                } else {
+                    return _elements.map((element, index) => {
+                        if (element.type == "manifest" && firstSection) {
+                            firstSection = false;
+                            if(index == 0){
+                                return (
+                                    <>
+                                    <ElementSaprator
+                                    index= {0}
                                     upperOne={true}
-                                    firstOne={index === 0}
-                                    index={index}
-                                    esProps={this.props.elementSepratorProps(index, true, parentUrn,asideData,parentIndex)}
-                                    elementType={this.props.element.type}
+                                    firstOne={0}
+                                    esProps={this.props.elementSepratorProps(0, true, parentUrn, asideData, parentIndex)}
+                                    elementType="element-aside"
+                                    sectionBreak={true}
                                     permissions={this.props.permissions}
                                     onClickCapture={this.props.onClickCapture}
                                 />
-                                }
-                                <ElementContainer
-                                    element={element}
-                                    index={`${parentIndex}-${index}`}
-                                    parentUrn={parentUrn}
-                                    showBlocker={this.props.showBlocker}
-                                    asideData={asideData}
-                                    permissions={this.props.permissions}
-                                    handleCommentspanel={this.props.handleCommentspanel}
-                                    isBlockerActive = {this.props.isBlockerActive}
-                                    onClickCapture={this.props.onClickCapture}
-                                >
-                                    {
-                                        (isHovered, isPageNumberEnabled, activeElement) => (
-                                            <PageNumberElement
-                                                updatePageNumber={this.props.updatePageNumber}
-                                                asideData={asideData}
-                                                parentUrn={parentUrn}
-                                                element={element}
-                                                isHovered={isHovered}
-                                                isPageNumberEnabled={isPageNumberEnabled}
-                                                activeElement={activeElement}
-                                                permissions={this.props.permissions} />
-                                        )
+                                {this.section(element, index)}
+                                </>
+                                
+                                )
+                            }else{
+                                return  this.section(element, index);
+                            }
+                           
+                        } else if (element.type == "manifest" && !firstSection) {
+                            return this.sectionBreak(element, index);
+                        }
+                        else {
+                            showSectionBreak = (elementLength == index + 1) ? true : false
+                            return (
+                                <React.Fragment key={element.id}>
+                                    {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+                                        upperOne={true}
+                                        firstOne={index === 0}
+                                        index={index}
+                                        esProps={this.props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
+                                        elementType={this.props.element.type}
+                                        permissions={this.props.permissions}
+                                        onClickCapture={this.props.onClickCapture}
+                                    />
                                     }
-                                </ElementContainer>
-                                <ElementSaprator
-                                    index={index}
-                                    esProps={this.props.elementSepratorProps(index, false, parentUrn,asideData,parentIndex)}
-                                    elementType={this.props.element.type}
-                                    sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
-                                    permissions={this.props.permissions}
-                                    onClickCapture={this.props.onClickCapture}
-                                />
-                            </React.Fragment>
-                        )
-                    }
+                                    <ElementContainer
+                                        element={element}
+                                        index={`${parentIndex}-${index}`}
+                                        parentUrn={parentUrn}
+                                        showBlocker={this.props.showBlocker}
+                                        asideData={asideData}
+                                        permissions={this.props.permissions}
+                                        handleCommentspanel={this.props.handleCommentspanel}
+                                        isBlockerActive={this.props.isBlockerActive}
+                                        onClickCapture={this.props.onClickCapture}
+                                    >
+                                        {
+                                            (isHovered, isPageNumberEnabled, activeElement) => (
+                                                <PageNumberElement
+                                                    updatePageNumber={this.props.updatePageNumber}
+                                                    asideData={asideData}
+                                                    parentUrn={parentUrn}
+                                                    element={element}
+                                                    isHovered={isHovered}
+                                                    isPageNumberEnabled={isPageNumberEnabled}
+                                                    activeElement={activeElement}
+                                                    permissions={this.props.permissions} />
+                                            )
+                                        }
+                                    </ElementContainer>
+                                    <ElementSaprator
+                                        index={index}
+                                        esProps={this.props.elementSepratorProps(index, false, parentUrn, asideData, parentIndex)}
+                                        elementType={this.props.element.type}
+                                        sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
+                                        permissions={this.props.permissions}
+                                        onClickCapture={this.props.onClickCapture}
+                                    />
+                                </React.Fragment>
+                            )
+                        }
 
-                })
+                    })
+                }
+
             }
 
         } catch (error) {
@@ -445,8 +483,8 @@ class ElementAsideContainer extends Component {
      */
     render() {
         const { element } = this.props;
-        let designtype = element.hasOwnProperty("designtype") ?  element.designtype : "",
-            subtype = element.hasOwnProperty("subtype") ?  element.subtype : "";
+        let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
+            subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
             <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
