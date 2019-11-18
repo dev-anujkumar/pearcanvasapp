@@ -942,11 +942,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-<<<<<<< HEAD
-        if( tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
-=======
         if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
->>>>>>> 961e0b2a85aa95c883bf871f31d61d52c28bf7a5
             isSameTargetBasedOnDataId = false;
         }
         /**
