@@ -6,6 +6,7 @@ import {
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
+let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
     
@@ -33,7 +34,9 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
+            oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+        }
         if(oldElementData.figuredata.srctype){
             oldElementData.figuredata.srctype=outputSubType['wipValue']
         }
@@ -41,7 +44,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
         }
 
-        if(oldElementData.figuretype && oldElementData.figuretype === "codelisting") {
+        if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
     }
@@ -53,6 +56,16 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputPrimaryOptionEnum=outputSubType['enum'],
         outputSubTypeEnum = usageType.toUpperCase(),
         oldElementData.figuredata.elementdata.usagetype=usageType;
+        let assessmentFormat =outputSubType.text.toLowerCase();
+        let assessmentItemType ="";
+        if(assessmentFormat==="cite"){
+            assessmentItemType ="assessmentItem";
+        }else{
+            assessmentItemType = "tdxAssessmentItem";
+        }        
+        oldElementData.html.title = "";
+        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
+        oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -74,7 +87,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         inputSubType : inputSubTypeEnum,
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
-        projectUrn : config.projectUrn
+        projectUrn : config.projectUrn,
+        slateUrn:config.slateManifestURN
     }
 
     
@@ -99,7 +113,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             }
         });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-
+        let altText = res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
+        let longDesc = res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         let activeElementObject = {
             elementId: newElementData.elementId,
             index: indexes.join("-"),
@@ -109,6 +124,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             tag: newElementData.labelText,
             toolbar: newElementData.toolbar,
             elementWipType: newElementData.elementWipType,
+            altText,
+            longDesc
         };
 
         dispatch({
