@@ -71,7 +71,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.html.text = domHtml
         }
     }
-    console.log("oldElementData>>>>",oldElementData)
     const conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
