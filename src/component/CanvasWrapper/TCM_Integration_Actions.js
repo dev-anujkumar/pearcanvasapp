@@ -1,6 +1,5 @@
 // // IMPORT - Plugins //
 import React, { Component } from 'react';
-// import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
@@ -23,12 +22,17 @@ export const loadTrackChanges = (elementId) => {
             }
         }
         let currentElementId = elementId ? elementId : "";
+        let currentSlateTitle = config.slateTitle;
+        let currentProjectUrn = config.projectUrn;
+        let currentSlateUrn = config.slateManifestURN;
+        let currentProjectEntityUrn = config.projectEntityUrn;
+        let TCMurl = config.TCM_DASHBOARD_UI_URL;
         var trackChange = (event) => {
             var interval;
             var postmsg = (win) => {
-                sendDataToIframe({ "slateTitle": config.slateTitle, "eURN": currentElementId, "dURN": config.projectUrn, "sURN": config.slateManifestURN, "indexOfElements": list, "entityURN": config.projectEntityUrn }, config.TCM_DASHBOARD_UI_URL);
+                sendDataToIframe({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
             };            
-            let url = config.TCM_DASHBOARD_UI_URL;
+            let url = TCMurl;
             let pathArray = url.split('/');
             let protocol = pathArray[0];
             let host = pathArray[2];
