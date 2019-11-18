@@ -201,6 +201,7 @@ class ElementContainer extends Component {
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
+            case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
                 let currentNode = document.getElementById(`cypress-${this.props.index}`)
                 let html = currentNode.innerHTML;
