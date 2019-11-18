@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -438,6 +438,8 @@ class SlateWrapper extends Component {
                     isInputDisabled={true}
                     slateLockClass="lock-message"
                     withInputBox={true}
+                    addonText={IN_USE_BY}
+                    lockForTOC={false}
                 />
             )
         }
@@ -719,8 +721,7 @@ class SlateWrapper extends Component {
                         return null;
                     } else {
                         return (
-                          //  <React.Fragment key={element.id}>
-                                  <div key={element.id} onClickCapture={this.checkSlateLockStatus}>
+                           <React.Fragment key={element.id}>
                                 {
                                     index === 0 && _slateType !== 'assessment' && config.isCO === false ?
                                         <ElementSaprator
@@ -731,6 +732,7 @@ class SlateWrapper extends Component {
                                             permissions={this.props.permissions}
                                             showAudioSplitPopup={this.props.showAudioSplitPopup}
                                             openAudio={this.props.openAudio}
+                                            onClickCapture={this.checkSlateLockStatus}
                                         />
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
@@ -743,6 +745,8 @@ class SlateWrapper extends Component {
                                     showBlocker={this.props.showBlocker}
                                     isBlockerActive={this.props.isBlockerActive}
                                     onListSelect={this.props.convertToListElement}
+                                    onClickCapture={this.checkSlateLockStatus}
+                                    isLOExist={this.props.isLOExist}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -766,12 +770,13 @@ class SlateWrapper extends Component {
                                         permissions={this.props.permissions}
                                         showAudioSplitPopup={this.props.showAudioSplitPopup}
                                         openAudio={this.props.openAudio}
+                                        onClickCapture={this.checkSlateLockStatus}
                                     />
                                     : null
                                 }
                               
-                          {/*   </React.Fragment> */}
-                          </div>
+                            </React.Fragment>
+                          
                         )
                     }
 

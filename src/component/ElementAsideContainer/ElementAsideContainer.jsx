@@ -14,6 +14,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
+import { checkSlateLock } from "../../js/slateLockUtility.js"
 // IMPORT - Assets //
 
 let random = guid();
@@ -38,6 +39,9 @@ class ElementAsideContainer extends Component {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
     handleFocus = () => {
+        if(checkSlateLock(this.props.slateLockInfo)){
+            return false
+        }
         this.props.setActiveElement(this.props.element);
         let toolbar = config.asideToolbar
         if (toolbar && toolbar.length) {
@@ -314,6 +318,7 @@ class ElementAsideContainer extends Component {
                                     esProps={this.props.elementSepratorProps(index, true, parentUrn,asideData,parentIndex)}
                                     elementType={this.props.element.type}
                                     permissions={this.props.permissions}
+                                    onClickCapture={this.props.onClickCapture}
                                 />
                                 }
                                 <ElementContainer
@@ -325,6 +330,7 @@ class ElementAsideContainer extends Component {
                                     permissions={this.props.permissions}
                                     handleCommentspanel={this.props.handleCommentspanel}
                                     isBlockerActive = {this.props.isBlockerActive}
+                                    onClickCapture={this.props.onClickCapture}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement) => (
@@ -346,6 +352,7 @@ class ElementAsideContainer extends Component {
                                     elementType={this.props.element.type}
                                     sectionBreak={this.props.element.subtype == "workedexample" ? showSectionBreak : false}
                                     permissions={this.props.permissions}
+                                    onClickCapture={this.props.onClickCapture}
                                 />
                             </React.Fragment>
                         )
@@ -441,7 +448,7 @@ class ElementAsideContainer extends Component {
         let designtype = element.hasOwnProperty("designtype") ?  element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ?  element.subtype : "";
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef} >
+            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );

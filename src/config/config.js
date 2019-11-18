@@ -1,16 +1,15 @@
 let config = {
     REACT_APP_API_URL : process.env.NODE_ENV === "development" ? "https://10.11.7.24:8443/cypress-api/" : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://staging.api.pearson.com/",
-    LEARNING_OBJECTIVES_ENDPOINT: process.env.LEARNING_OBJECTIVES_ENDPOINT ||"https://contentapis-staging.pearsoncms.net/lo-api/",
-    ASSET_POPOVER_ENDPOINT: process.env.ASSET_POPOVER_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
-    PRODUCTAPI_ENDPOINT: process.env.PRODUCTAPI_ENDPOINT|| "https://contentapis-staging.pearsoncms.net/product-api/",
-    ELM_ENDPOINT: process.env.ELM_ENDPOINT || "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    LEARNING_OBJECTIVES_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.LEARNING_OBJECTIVES_ENDPOINT : "https://contentapis-staging.pearsoncms.net/lo-api/",
+    ASSET_POPOVER_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.ASSET_POPOVER_ENDPOINT : "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    PRODUCTAPI_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.PRODUCTAPI_ENDPOINT : "https://contentapis-staging.pearsoncms.net/product-api/",
+    ELM_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.ELM_ENDPOINT : "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
-    AUDIO_NARRATION_URL : process.env.STRUCTURE_API_ENDPOINT_URL || 'https://contentapis-staging.pearsoncms.net/structure-api/',
-    PAGE_NUMBER_UPDATE_ENDPOINT :process.env.PAGE_NUMBER_UPDATE_ENDPOINT || "https://contentapis-staging.pearsoncms.net/print-api",
-    OPENER_ELEMENT_COREAPI_KEY:  process.env.OPENER_ELEMENT_COREAPI_KEY|| "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
-    AUDIO_API_KEY : process.env.STRUCTURE_APIKEY|| "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
-    // INTERACTIVE_ENDPOINT: process.env.INTERACTIVE_ENDPOINT || "https://staging.api.pearson.com/content/scapi" ,
+    AUDIO_NARRATION_URL :process.env.NODE_ENV === "production" ? process.env.STRUCTURE_API_ENDPOINT_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
+    PAGE_NUMBER_UPDATE_ENDPOINT : process.env.NODE_ENV === "production" ? process.env.PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-staging.pearsoncms.net/print-api",
+    OPENER_ELEMENT_COREAPI_KEY: process.env.NODE_ENV === "production" ? process.env.OPENER_ELEMENT_COREAPI_KEY : "PAMkIwLGoPIJtNZHc1SzowG7GFlHDZHJ",
+    AUDIO_API_KEY : process.env.NODE_ENV === "production" ? process.env.STRUCTURE_APIKEY : "Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld",
     API_URL: "./api",
     NODE_ENV: process.env.NODE_ENV || 'development',
     COREAPI_ENDPOINT: process.env.NODE_ENV === "production" ? process.env.COREAPI_ENDPOINT : "https://contentapis-staging.pearsoncms.net/core-api",
@@ -31,6 +30,9 @@ let config = {
     disableNext : false,
     disablePrev : false,
     tcmStatus : false,
+    staleTitle : "",
+    TCM_DASHBOARD_UI_URL:process.env.NODE_ENV === 'production' ? process.env.TCM_DASHBOARD_UI_URL : "https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
+    TCM_DASHBOARD_URL: process.env.NODE_ENV === 'production' ?  process.env.TCM_DASHBOARD_API_BASE_ENDPOINT : 'http://localhost:3000',
     //c2 required keys and urls
     CMDS_APIKEY: process.env.NODE_ENV === 'production' ? process.env.CMDS_APIKEY : '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATA_ENDPOINT: process.env.NODE_ENV === 'production' ? process.env.CMDS_DATA_ENDPOINT : 'https://staging.data.pearson.com',
@@ -81,9 +83,10 @@ let config = {
     GET_FIGURES : process.env.NODE_ENV === 'production' ? process.env.GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
     GET_ASSETPOPOVER_ID : process.env.NODE_ENV === 'production' ? process.env.GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
     APO_API_KEY : process.env.NODE_ENV === 'production' ? process.env.APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
-    editorRefID:"",
-    isSlateLockChecked: false
+    editorRefID:""
 };
+
+console.log("process.env.NODE_ENV >> ", process.env.NODE_ENV)
 if (process.env.NODE_ENV === "development") {
     config.userName = 'c5test01';
     config.userId= 'c5test01';

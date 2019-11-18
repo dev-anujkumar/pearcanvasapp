@@ -16,13 +16,25 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
+            if(!res.data.isLocked)
+                config.isSlateLockChecked = true;
+
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: res.data
             })
-            config.isSlateLockChecked = true;
+            
         })
         .catch((err) => {
+            // For local testing purpose
+            /* dispatch({
+                type: SET_SLATE_LOCK_STATUS,
+                payload: {
+                    isLocked: true,
+                    timestamp: "",
+                    userId: "abcd"
+                }
+            }) */
         })
 } 
 
@@ -37,12 +49,10 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
-            //console.log("Slate lock info fetch success:", res)
             if(callback)
                 callback(res.data)
         })
         .catch((err) => {
-            //console.log("Slate lock info fetch failed:", err)
         })
 }  
 

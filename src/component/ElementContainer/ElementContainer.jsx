@@ -32,7 +32,7 @@ import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
-
+import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -46,7 +46,8 @@ class ElementContainer extends Component {
             showColorPaletteList: false,
             activeColorIndex: this.props.element.backgroundcolor ? config.colors.indexOf(this.props.element.backgroundcolor) : 0,
             isHovered: false,
-            hasError: false
+            hasError: false,
+            sectionBreak : null
         };
     }
     componentDidMount() {
@@ -180,7 +181,12 @@ class ElementContainer extends Component {
         this.props.updateElement(dataToSend, 0);
     }
     
-    
+    /**
+     * This function opens TCM w.r.t. current Element
+     */
+    handleTCM=()=>{
+        loadTrackChanges(this.props.element.id)
+    }
     /**
      * Calls API for element updation
      * @param {*} node
@@ -196,10 +202,11 @@ class ElementContainer extends Component {
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.BLOCKFEATURE:
-                let html = node.innerHTML;
+                let currentNode = document.getElementById(`cypress-${this.props.index}`)
+                let html = currentNode.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
@@ -297,18 +304,22 @@ class ElementContainer extends Component {
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
-       
-        dataToSend.elementdata.assessmenttitle = assessmentData.title;
-        dataToSend.elementdata.assessmentformat = assessmentData.format;
-        dataToSend.elementdata.usagetype = assessmentData.usageType;
-        dataToSend.elementdata.assessmentid = assessmentData.id;
-        if (assessmentData.format === 'learningtemplate') {
-            dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
-            dataToSend.elementdata["templateid"] = assessmentData.templateid;
-            dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
-            dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
-        } 
-        this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
+        if (assessmentData) {
+            dataToSend.elementdata.assessmentformat = assessmentData.format;
+            dataToSend.elementdata.assessmentid = assessmentData.id;
+            if (assessmentData.format === 'learningtemplate') {
+                dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
+                dataToSend.elementdata["templateid"] = assessmentData.templateid;
+                dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
+                dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
+            } else {
+                dataToSend.elementdata.assessmenttitle = assessmentData.title;
+            }
+            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
+        } else{
+            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+this.props.element.elementdata.assessmentformat)
+        }      
+
     }
 
     /**
@@ -388,12 +399,13 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (popup) => {
+    showDeleteElemPopup = (popup, sectionBreak) => {
         this.props.showBlocker(true);
         showTocBlocker();
         this.setState({
             popup,
-            showDeleteElemPopup: true
+            showDeleteElemPopup: true,
+            sectionBreak : sectionBreak ? sectionBreak : null
         });
     }
 
@@ -401,12 +413,29 @@ class ElementContainer extends Component {
      * For deleting slate level element
      */
     deleteElement = () => {
-        const { id, type, contentUrn } = this.props.element;
-        const { parentUrn, asideData } = this.props;
+        let { id, type } = this.props.element;
+        let { parentUrn, asideData, element } = this.props;
+        let { contentUrn } = this.props.element
+        
+        if(this.state.sectionBreak){
+            parentUrn = {
+                elementType : element.type,
+                manifestUrn : element.id,
+                contentUrn : element.contentUrn,
+            }
+            contentUrn = this.state.sectionBreak.contentUrn
+            /* parentUrn["elementType"] = element.type
+            parentUrn["manifestUrn"] = element.id
+            parentUrn["contentUrn"] = element.contentUrn */
+            id = this.state.sectionBreak.id
+        }
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
+        this.setState({
+            sectionBreak : null
+        })
     }
 
     /**
@@ -442,7 +471,7 @@ class ElementContainer extends Component {
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} />
+                    editor = <AssessmentSlateCanvas permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist}/>
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
@@ -518,6 +547,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo} 
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                 />;
                             // labelText = LABELS[element.subtype] || 'AS';
                             break;
@@ -541,6 +571,7 @@ class ElementContainer extends Component {
                                 slateLockInfo={slateLockInfo}
                                 updatePageNumber ={updatePageNumber}
                                 isBlockerActive={this.props.isBlockerActive}
+                                onClickCapture={this.props.onClickCapture}
                                  />;
                         // labelText = 'AS'
                     }
@@ -564,14 +595,13 @@ class ElementContainer extends Component {
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default") {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
+                borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
+                btnClassName = '';
             }
-             
-            borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
-            btnClassName = '';
         }
         
         return (
-            <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut}>
+            <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
@@ -585,7 +615,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" />)}
+                    {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -650,8 +680,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback);
     }
 
     /**
@@ -693,6 +723,7 @@ class ElementContainer extends Component {
     }
 
     static getDerivedStateFromError(error) {
+        console.log("Catch Derived Error >>>>", error);
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
     }
@@ -722,8 +753,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, callback) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, callback) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType)).then(() => {
                 if (callback) {
                     callback();
                 }
@@ -746,7 +777,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-
     return {
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
         activeElement: state.appStore.activeElement,

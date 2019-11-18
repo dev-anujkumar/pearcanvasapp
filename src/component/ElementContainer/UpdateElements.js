@@ -304,15 +304,17 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  * @param {*} secondaryOption 
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
+    let assessmenttitle = document.getElementById('single_assessment_title').innerText;
+     
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: "<p></p>"
+            title: `<p>${assessmenttitle}</p>`
         }}
         
     dataToSend.figuredata.elementdata;
-    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-
+  
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
     dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
 
@@ -321,7 +323,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase();
+    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
 
     return dataToSend;
 }
@@ -335,12 +337,16 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} secondaryOption 
  */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] div.AssessmentSlateMenu `;
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
         html: {
             title: "<p></p>"
         }}
+        let usageType = document.querySelector(assessmentNodeSelector+'span.slate_assessment_metadata_dropdown_label').innerText;
+        dataToSend.elementdata.usagetype = usageType;
+        dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
 
         return dataToSend;
 }
