@@ -728,7 +728,10 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                if( document.getElementById( activeElementObj.join("-"))){
+                    document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                }
+                
     
                 tinymce.remove('#' + activeElementObj.join("-"));
             }
@@ -937,7 +940,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if( tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
+        if( tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
             isSameTargetBasedOnDataId = false;
         }
         /**
