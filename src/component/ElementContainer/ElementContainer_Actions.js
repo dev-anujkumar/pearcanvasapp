@@ -9,15 +9,15 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
     let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userId,
-        assignee: config.assignee
+        commentCreator: config.userId || config.userName,
+        assignee: config.assignee || config.userName
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userId,
-        commentCreator: config.userId,
+        commentAssignee: config.assignee || config.userName,//config.userId,
+        commentCreator: config.userId || config.userName,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,
