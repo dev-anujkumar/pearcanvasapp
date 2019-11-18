@@ -75,6 +75,7 @@ h4.figureLabel, h4.figureTitle{
 .figureElement .pearson-component.image.figureData {
     /* cursor:copy!important ; */
     text-align: center;
+    overflow: auto;
 }
 figcaption,.figureCaption{
     font-size: 10.8px!important;
