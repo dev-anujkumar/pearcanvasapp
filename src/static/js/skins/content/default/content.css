@@ -41,6 +41,7 @@ code {
   border-left: 2px solid #ccc;
   margin-left: 1.5rem;
   padding-left: 1rem;
+  min-height:21px;
 }
 .mce-content-body[dir=rtl] blockquote {
   border-right: 2px solid #ccc;
