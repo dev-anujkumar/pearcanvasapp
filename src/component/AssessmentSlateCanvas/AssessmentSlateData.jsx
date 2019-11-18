@@ -223,9 +223,22 @@ export class AssessmentSlateData extends Component {
     handleAssessmentUsageTypeChange = (usageType, e) => {
         this.setState({
             activeAssessmentUsageType: usageType,
-        },this.props.handleAssessmentBlur());
+        });
+        let assessmentType ="";
         this.usageTypeDropdownRef.current.classList.add('notselect')
         this.usageTypeRef.current.classList.add('notselect')
+        if(this.state.activeAssessmentType===FULL_ASSESSMENT_CITE){
+            assessmentType = 'cite';
+        }else if( this.state.activeAssessmentType===FULL_ASSESSMENT_TDX){
+            assessmentType = 'tdx';
+        }else if(this.state.activeAssessmentType===FULL_ASSESSMENT_PUF){
+            assessmentType = 'puf';
+        }else if(this.state.activeAssessmentType===LEARNING_APP_TYPE || this.state.activeAssessmentType===LEARNING_TEMPLATE ){
+            assessmentType = LEARNING_TEMPLATE;
+        }else{
+            assessmentType = 'learnosity';
+        }
+        this.props.updateAssessment(this.props.assessmentId,this.props.assessmentItemId,this.props.assessmentItemTitle,assessmentType,usageType,'update');
     }
 
     /*** @description - This function is to select the Assessment usage-type from dropdown*/
