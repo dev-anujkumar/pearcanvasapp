@@ -728,6 +728,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
     
                 tinymce.remove('#' + activeElementObj.join("-"));
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -878,6 +879,7 @@ export class TinyMceEditor extends Component {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && 'type' in this.props.element && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -998,6 +1000,7 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
                         document.getElementById(`${ed_id}`).contentEditable = true;
                     }

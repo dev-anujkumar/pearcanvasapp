@@ -233,6 +233,7 @@ export class ReactEditor extends React.Component {
       //tinymce.$('.wrs_modal_desktop').remove();
 
       tinymce.remove('#' + tinymce.activeEditor.id)
+      tinymce.$('.wrs_modal_desktop').remove();
       /*
         this line must execute after removing tinymce
       */

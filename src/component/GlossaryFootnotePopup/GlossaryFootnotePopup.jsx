@@ -68,6 +68,7 @@ class GlossaryFootnotePopup extends Component {
                document.getElementById( ed_id ).innerHTML = tempContainerHtml;
    
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
