@@ -32,6 +32,8 @@ code.cypress-editable.language-none{
 }
 .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
     cursor: auto !important;
+    max-height: 85px;
+    overflow-y: hidden;
 }
 .figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
     min-height: 40px!important;
