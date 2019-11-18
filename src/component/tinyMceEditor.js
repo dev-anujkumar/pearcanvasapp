@@ -734,6 +734,7 @@ export class TinyMceEditor extends Component {
                 
     
                 tinymce.remove('#' + activeElementObj.join("-"));
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -884,6 +885,7 @@ export class TinyMceEditor extends Component {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -940,7 +942,11 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
+<<<<<<< HEAD
         if( tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
+=======
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
+>>>>>>> 961e0b2a85aa95c883bf871f31d61d52c28bf7a5
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -1004,6 +1010,7 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
                         document.getElementById(`${ed_id}`).contentEditable = true;
                     }

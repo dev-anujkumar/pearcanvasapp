@@ -143,3 +143,7 @@ span.list-opt-tooltip {
 #listDropWrapper .list-options:hover>.list-opt-tooltip {
     opacity: 1;
 }
+
+.element-container li {
+    min-height: 22px;
+}
