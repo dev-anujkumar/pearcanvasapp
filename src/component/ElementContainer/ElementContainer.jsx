@@ -165,7 +165,7 @@ class ElementContainer extends Component {
         if(titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
             captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits
+            creditsHTML !== previousElementData.html.credits || previousElementData.figuredata.interactiveid
             ){
                 return true
             }
