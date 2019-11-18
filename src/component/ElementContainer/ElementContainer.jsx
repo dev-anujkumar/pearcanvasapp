@@ -306,6 +306,7 @@ class ElementContainer extends Component {
         let dataToSend = {...this.props.element}
         if (assessmentData) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
+            dataToSend.elementdata.usagetype = assessmentData.usageType;
             dataToSend.elementdata.assessmentid = assessmentData.id;
             if (assessmentData.format === 'learningtemplate') {
                 dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
