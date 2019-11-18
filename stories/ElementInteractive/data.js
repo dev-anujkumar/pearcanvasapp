@@ -265,7 +265,7 @@ export const showhide = {
         "figuredata": {
             "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
             "interactiveid": "",
-            "interactivetype": "smartlink-tab",
+            "interactivetype": "table",
             "interactiveformat": "external-link",
             "posterimage": {
                 "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
