@@ -30,7 +30,7 @@ export const loadTrackChanges = (elementId) => {
         var trackChange = function(event) {
             var interval;
             var postmsg = function(win) {
-                win.pospostMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
+                win.postMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
             };            
             let url = TCMurl;
             let pathArray = url.split('/');

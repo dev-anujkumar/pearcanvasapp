@@ -56,10 +56,19 @@ class GlossaryFootnotePopup extends Component {
     }
 
     componentWillUnmount() {
+        
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+                /*
+                    change wiris images to avoid converting to mathml
+                */
+               let tempContainerHtml = tinyMCE.$("#" + ed_id).html();          
+               tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+               document.getElementById( ed_id ).innerHTML = tempContainerHtml;
+   
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }

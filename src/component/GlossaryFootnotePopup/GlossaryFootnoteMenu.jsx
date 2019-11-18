@@ -74,6 +74,11 @@ class GlossaryFootnoteMenu extends React.Component {
         // let workEditor = document.querySelector(`[data-id='${elementWorkId}']`)
         // let workContainer = workEditor && workEditor.findChildren('.element-container')[0]
         // let elementInnerHtml = workContainer && workContainer.findChildren('.cypress-editable')[0] && workContainer.findChildren('.cypress-editable')[0].innerHTML
+
+        /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+        term = term.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+        definition = definition.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
         this.props.showGlossaaryFootnote(false);
     }
