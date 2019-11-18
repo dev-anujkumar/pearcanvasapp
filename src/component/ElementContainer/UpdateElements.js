@@ -1,5 +1,6 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
+import config from '../../config/config';
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -362,6 +363,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
+        case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
             let { innerHTML, innerText } = node;
@@ -377,7 +379,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                tcm: true          
+                tcm: true,
+                slateUrn: config.slateManifestURN      
             }
             break;
 
