@@ -52,22 +52,33 @@ class AssetPopoverSearch extends React.Component {
         let originalText, domNode, assetPopoverDomId;
 
         if (Object.keys(apoObject).length) {
+            document.getElementById(tinymce.activeEditor.id).focus()
             domNode = document.querySelector('abbr[asset-id="' + apoObject.assetId + '"');
             originalText = domNode.innerHTML;
             assetPopoverDomId = apoObject.assetId
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
+           
+            document.getElementById(tinymce.activeEditor.id).blur()
         } else {
             //Hit api for asset popover Id
             getAssetPopoverId(imageObj.versionUrn).then((assetPopoverId) => {
                 if (assetPopoverId) {
+                    document.getElementById(tinymce.activeEditor.id).focus()
                     domNode = document.getElementById('asset-popover-attacher');
                     originalText = domNode.innerHTML;
                     assetPopoverDomId = assetPopoverId
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
+                    setTimeout(()=>{
+                        document.getElementById(tinymce.activeEditor.id).blur()
+                    },100);
+                   
                 }
             })
         }
+        
+          
+
     }
 
     /**
