@@ -27,9 +27,9 @@ export const loadTrackChanges = (elementId) => {
         let currentSlateUrn = config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
         let TCMurl = config.TCM_DASHBOARD_UI_URL;
-        var trackChange = function (event) {
+        var trackChange = function(event) {
             var interval;
-            var postmsg = function (win) {
+            var postmsg = function(win) {
                 win.postMessage({ "slateTitle": currentSlateTitle, "eURN": currentElementId, "dURN": currentProjectUrn, "sURN": currentSlateUrn, "indexOfElements": list, "entityURN": currentProjectEntityUrn }, TCMurl);
             };            
             let url = TCMurl;

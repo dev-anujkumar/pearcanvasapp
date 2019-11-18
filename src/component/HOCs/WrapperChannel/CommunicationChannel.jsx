@@ -180,6 +180,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     console.log("this is assessment response--",message);
                     let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
                     this.props.isLOExist(newMessage);
+                    this.props.currentSlateLO(newMessage);
                    break;    
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
@@ -199,7 +200,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.releaseLockAndRedirect()
                     break;
                 case 'logout':
-                    this.props.logout();
+                    this.releaseLockAndLogout()
                     break;
                 case 'onTOCHamburgerClick':
                     {
@@ -216,6 +217,16 @@ function WithWrapperCommunication(WrappedComponent) {
             }
         }
 
+        /**
+         * Releases slate lock and logs user out.
+         */
+        releaseLockAndLogout = () => {
+            const { projectUrn, slateManifestURN} = config
+            releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
+                this.props.logout();
+            })
+        }
+        
         releaseLockAndRedirect = () => { 
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
@@ -239,7 +250,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO();
+                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -357,6 +368,10 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
+                }
+                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+                    let newMessage = {assessmentResponseMsg:false};
+                    this.props.isLOExist(newMessage);
                 }
             }
             /**

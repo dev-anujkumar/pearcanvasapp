@@ -728,9 +728,10 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                document.getElementById(activeElementObj.join("-")) && (document.getElementById(activeElementObj.join("-")).innerHTML = tempContainerHtml);
     
                 tinymce.remove('#' + activeElementObj.join("-"));
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -881,6 +882,7 @@ export class TinyMceEditor extends Component {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
                 tinymce.remove(`#${ed_id}`)
+                tinymce.$('.wrs_modal_desktop').remove();
             }
         }
     }
@@ -937,7 +939,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if( tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')){
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -1001,6 +1003,7 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
                         document.getElementById(`${ed_id}`).contentEditable = true;
                     }

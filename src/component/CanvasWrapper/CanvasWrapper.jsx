@@ -184,7 +184,6 @@ const mapStateToProps = state => {
         permissions: state.appStore.permissions,
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod
-
     };
 };
 

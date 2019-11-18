@@ -26,6 +26,14 @@ class ElementFigure extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.model.figuretype === 'tableasmarkup' || nextProps.model.figuretype === 'authoredtext' || nextProps.model.figuretype === 'codelisting') {
+            this.setState({
+                imgSrc: null
+            })
+        }
+    }
+
     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data

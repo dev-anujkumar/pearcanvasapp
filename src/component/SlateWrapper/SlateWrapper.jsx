@@ -134,6 +134,7 @@ class SlateWrapper extends Component {
                 for (let i = tinymce.editors.length - 1; i > -1; i--) {
                     let ed_id = tinymce.editors[i].id;
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                 }
                 stateChanged = true;
             }
