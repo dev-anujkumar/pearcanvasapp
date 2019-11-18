@@ -6,9 +6,11 @@ import {
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
+import { sendDataToIframe } from '../../constants/utility.js';
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
-    
+    try {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
@@ -67,6 +69,13 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }
+        /**
+         * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
+         */
+        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC") {
+            outputPrimaryOptionEnum = "AUTHORED_TEXT"
+            outputSubTypeEnum = "NA"
+        }
     }
     const conversionDataToSend = {
         ...oldElementData,
@@ -86,6 +95,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 			"PearsonSSOSession": config.ssoToken
 		}
     }).then(res =>{
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
@@ -123,8 +133,13 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         });
     })
     .catch(err =>{
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         //console.log(err) 
     })
+}
+catch (error) {
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+}
 }
 
 const handleElementConversion = (elementData, store, activeElement) => dispatch => {
