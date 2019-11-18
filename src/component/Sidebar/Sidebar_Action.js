@@ -33,7 +33,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        oldElementData.figuredata = figureDataBank[newElementData['primaryOption']]
+        oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
         if(oldElementData.figuredata.srctype){
             oldElementData.figuredata.srctype=outputSubType['wipValue']
         }
