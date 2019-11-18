@@ -448,13 +448,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addInlineCode = (editor) => {
-        editor.execCommand('mceToggleFormat', false, 'code');
-        let selectedText = window.getSelection().toString();
-        if (selectedText != "") {
-            editor.execCommand('mceToggleFormat', false, 'code');
-            let insertionText = '<code>' + selectedText + '</code>'
-            editor.insertContent(insertionText);
-        }
+        let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
+         if (selectedText != "" && selectedText != "CODE") {
+             editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
+         }
     }
 
     /*
