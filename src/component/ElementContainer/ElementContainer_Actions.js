@@ -6,18 +6,18 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
-    let url = `${config.STRUCTURE_API_URL}/narrative/v2/${elementId}/comment/`
+    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
-        commentCreator: config.userName,
-        assignee: config.assignee
+        commentCreator: config.userName || config.userId,
+        assignee: config.assignee || config.userId
     };
 
     let Comment = {
         commentType: "comment",
         commentDateTime: new Date().toISOString(),
-        commentAssignee: config.userName,
-        commentCreator: config.userName,
+        commentAssignee: config.userName || config.userId,
+        commentCreator: config.userName || config.userId,
         commentString: commentString,
         commentStatus: "OPEN",
         commentOnEntity: elementId,

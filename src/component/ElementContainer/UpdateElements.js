@@ -311,7 +311,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: `<p>${assessmenttitle}</p>`
+            title: assessmenttitle
         }}
         
     dataToSend.figuredata.elementdata;

@@ -146,7 +146,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'projectDetails' :
                     config.tcmStatus = message.tcm.activated;
-                    config.userId = message['x-prsn-user-id'].toLowerCase()
+                    config.userId = message['x-prsn-user-id'].toLowerCase();
+                    config.userName = message['x-prsn-user-id'].toLowerCase();
                     this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
@@ -223,7 +224,7 @@ function WithWrapperCommunication(WrappedComponent) {
         releaseLockAndLogout = () => {
             const { projectUrn, slateManifestURN} = config
             releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
-                this.props.logout();
+                setTimeout(this.props.logout, 500) 
             })
         }
         
@@ -285,6 +286,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
+            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN)
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
             this.props.handleSlateRefresh(id,()=>{
                 config.isSlateLockChecked = false;
