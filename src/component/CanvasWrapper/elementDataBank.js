@@ -209,7 +209,7 @@ const elementDataBank = {
                 "primaryOption" : "primary-smartlink",
                 "secondaryOption" : "secondary-interactive-smartlink-pop-up-web-link"
             },
-            "smartlink-tab": {
+            "table": {
                 "primaryOption" : "primary-smartlink",
                 "secondaryOption" : "secondary-interactive-smartlink-tab"
             },

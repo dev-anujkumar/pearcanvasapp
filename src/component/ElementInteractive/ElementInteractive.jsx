@@ -336,7 +336,7 @@ class Interactive extends React.Component {
                 paragraphCredit = 'paragraphWidgetPUSLCredit';
                 break;
 
-            case "smartlink-tab":
+            case "table":
                 divImage = 'divWidgetTableSL';
                 figureImage = 'figureWidgetTableSL';
                 heading4Label = 'heading4WidgetTableSLNumberLabel';
@@ -516,7 +516,7 @@ class Interactive extends React.Component {
                         interactivetype="3rd-party"
                         break;
                     case "table":
-                        interactivetype="smartlink-tab"
+                        interactivetype="table"
                         break;
                     case "mdpopup":
                         interactivetype="pop-up-web-link"
