@@ -304,20 +304,22 @@ class ElementContainer extends Component {
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
-       
-
-        dataToSend.elementdata.assessmentformat = assessmentData.format;
-        dataToSend.elementdata.usagetype = assessmentData.usageType;
-        dataToSend.elementdata.assessmentid = assessmentData.id;
-        if (assessmentData.format === 'learningtemplate') {
-            dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
-            dataToSend.elementdata["templateid"] = assessmentData.templateid;
-            dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
-            dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
+        if (assessmentData) {
+            dataToSend.elementdata.assessmentformat = assessmentData.format;
+            dataToSend.elementdata.assessmentid = assessmentData.id;
+            if (assessmentData.format === 'learningtemplate') {
+                dataToSend.elementdata["learningsystem"] = assessmentData.learningsystem;
+                dataToSend.elementdata["templateid"] = assessmentData.templateid;
+                dataToSend.elementdata["templatetype"] = assessmentData.templatetype;
+                dataToSend.elementdata["templatelabel"] = assessmentData.templatelabel;
+            } else {
+                dataToSend.elementdata.assessmenttitle = assessmentData.title;
+            }
+            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
         } else{
-            dataToSend.elementdata.assessmenttitle = assessmentData.title;
-        }
-        this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
+            this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+this.props.element.elementdata.assessmentformat)
+        }      
+
     }
 
     /**
@@ -613,7 +615,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback"/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
+                    {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
