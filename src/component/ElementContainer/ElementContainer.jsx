@@ -304,7 +304,7 @@ class ElementContainer extends Component {
     handleBlurAssessmentSlate = (assessmentData)=>{
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
-        if (assessmentData) {
+        if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
             dataToSend.elementdata.assessmentid = assessmentData.id;
@@ -318,6 +318,7 @@ class ElementContainer extends Component {
             }
             this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+assessmentData.format)
         } else{
+            dataToSend.elementdata.usagetype = assessmentData;
             this.handleContentChange('', dataToSend, 'element-assessment', 'primary-assessment-slate', 'secondary-assessment-'+this.props.element.elementdata.assessmentformat)
         }      
 
