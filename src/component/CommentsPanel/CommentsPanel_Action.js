@@ -236,7 +236,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 export const deleteComment = (commentUrn, elementId) => dispatch => {
 
           
-    let url = `${config.JAVA_API_URL}v2/narrative-api/container/${elementId}/comment/${commentUrn}`
+    let url = `${config.JAVA_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
     return axios.delete(url,
         { headers:{
         "Content-Type": "application/json",

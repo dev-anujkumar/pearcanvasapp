@@ -15,7 +15,6 @@ let config = {
     COREAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/core-api",
     CONTENT_SCAPI_ENDPOINT : "https://staging.api.pearson.com/content/scapi",
     JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
-    NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
     ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
@@ -31,7 +30,7 @@ let config = {
     disablePrev : false,
     tcmStatus : false,
     staleTitle : "",
-    TCM_DASHBOARD_UI_URL: "https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
+    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     TCM_DASHBOARD_URL:  'http://localhost:3000',
     //c2 required keys and urls
     CMDS_APIKEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
