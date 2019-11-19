@@ -51,6 +51,15 @@ class ElementContainer extends Component {
         };
     }
     componentDidMount() {
+         // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
+         let trackChangesStatus='false';
+         if(this.props.element && this.props.element.hasOwnProperty('tcm')){
+            trackChangesStatus = JSON.stringify(this.props.element.tcm);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
+         }else if(this.props.element && this.props.element.hasOwnProperty('feedback')){
+            trackChangesStatus = JSON.stringify(this.props.element.feedback);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
+         }   
         this.setState({
             ElementId: this.props.element.id,
             btnClassName : '',
