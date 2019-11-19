@@ -116,7 +116,7 @@ export const assetPopoverPopup = (args) => {
  */
 export async function getAssetPopoverId(workUrn) {
   try {
-    let response = await fetch(config.GET_ASSETPOPOVER_ID + 'narrative/v2', {
+    let response = await fetch(config.GET_ASSETPOPOVER_ID + 'narrative-api/v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

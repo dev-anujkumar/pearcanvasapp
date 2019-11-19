@@ -23,7 +23,7 @@ import {
 */
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
-        url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
+        url = `${config.JAVA_API_URL}v1/narrative-api/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
     return axios.get(url,{
         headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
         comment: reply.commentString,
         commentCreator: reply.commentCreator
     };
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/reply/`
     return axios.post(url, replyDataToSend,
         { headers: {
             "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     let request = {
         status: resolveOrOpen
     };
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         { headers: {
             "Content-Type": "application/json",
@@ -154,7 +154,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 export const updateComment = (commentUrn, updateComment, elementId) => dispatch => {
 
     let request = updateComment
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         { headers: {
             "Content-Type": "application/json",
@@ -205,7 +205,7 @@ export const getProjectUsers = () => dispatch => {
 */
 
 export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch => {
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Assignee/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Assignee/`
     let req = {
         assignee: newAssignee
     };
@@ -236,7 +236,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 export const deleteComment = (commentUrn, elementId) => dispatch => {
 
           
-    let url = `${config.JAVA_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
+    let url = `${config.JAVA_API_URL}v2/narrative-api/container/${elementId}/comment/${commentUrn}`
     return axios.delete(url,
         { headers:{
         "Content-Type": "application/json",

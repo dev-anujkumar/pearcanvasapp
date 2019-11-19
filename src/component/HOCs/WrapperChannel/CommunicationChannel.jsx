@@ -10,6 +10,9 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config';
 import { sendDataToIframe } from '../../../constants/utility.js';
+import localConfig from '../../../env/local';
+import testConfig from '../../../env/test';
+import devConfig from '../../../env/dev';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -145,6 +148,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                    this.getProjectConfig(message.currentOrigin, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -178,7 +182,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.currentSlateLO(message);
                 break;
                 case 'getAssessmentLOResponse':
-                    console.log("this is assessment response--",message);
                     let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
@@ -216,6 +219,33 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 break;
             }
+        }
+
+        modifyObjKeys = (obj, newObj) => {
+            Object.keys(obj).forEach(function(key) {
+              delete obj[key];
+            });
+          
+            Object.keys(newObj).forEach(function(key) {
+              obj[key] = newObj[key];
+            });
+            
+        }
+
+        getProjectConfig = (origin, config) => {
+            switch (origin) {
+                case 'dev':
+                    this.modifyObjKeys(config, devConfig);
+                    break;
+                case 'test':
+                    this.modifyObjKeys(config, testConfig);
+                    break;
+                case 'local':
+                    this.modifyObjKeys(config, localConfig);
+                    break;
+            }
+
+            console.log("getProjectConfig >> ", config);
         }
 
         /**

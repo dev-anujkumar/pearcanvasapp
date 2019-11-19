@@ -6,7 +6,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
     let newComment = {
         comment: commentString,
         commentCreator: config.userName || config.userId,
