@@ -376,12 +376,20 @@ class ElementFigure extends Component {
             case "codelisting":
                 figLabelClass = "heading4CodeSnippetNumberLabel"; figTitleClass = "heading4CodeSnippetTitle"; figCaptionClass = "figcaptionCodeSnippet"; figCreditClass = "paragraphCodeSnippetCredit";
                 let preformattedText = model.figuredata.preformattedtext
-                let processedText = ""
-                preformattedText.forEach(function(item){
-                    let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
-                    let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
-                    processedText+=`${encodedItem2}<br />`            
-                })
+                let processedText = "";
+
+                if(preformattedText.length === 1 && preformattedText[0] === "") {
+                    processedText = `<br />`;
+                } else {
+                    preformattedText.forEach(function(item){
+                        let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
+                        let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
+                        if(encodedItem2 && encodedItem2 !== "") {
+                            processedText += `<p>${encodedItem2}</p>`;
+                        }       
+                    })
+                }
+                
                 /**JSX for Block Code Editor*/
                 figureJsx = <div className="divCodeSnippetFigure blockCodeFigure">
                     <figure className="figureCodeSnippet" >
