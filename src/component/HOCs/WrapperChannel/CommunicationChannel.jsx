@@ -262,7 +262,7 @@ function WithWrapperCommunication(WrappedComponent) {
          * Releases slate lock and logs user out.
          */
         releaseLockAndLogout = () => {
-            const { projectUrn, slateManifestURN} = config
+            const { projectUrn, slateManifestURN} = config;
             releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
                 setTimeout(this.props.logout, 500) 
             })
@@ -325,12 +325,13 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
-            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN)
-            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
-            this.props.handleSlateRefresh(id,()=>{
+            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
+                this.props.handleSlateRefresh(id,()=>{
                 config.isSlateLockChecked = false;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
             })
+            });
         }
 
         sendDataToIframe = (messageObj) => {
