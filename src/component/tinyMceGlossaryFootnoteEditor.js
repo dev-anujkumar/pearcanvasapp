@@ -29,8 +29,10 @@ export class ReactEditor extends React.Component {
         this.addMathmlFormulaButton(editor);
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+          let contentHTML = e.target.innerHTML;
           if (activeElement) {
-            if (activeElement.innerText.trim().length) {
+            let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+            if (activeElement.innerText.trim().length || isContainsMath) {
               activeElement.classList.remove('place-holder')
             }
             else {
