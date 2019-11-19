@@ -385,8 +385,8 @@ class ElementFigure extends Component {
                         let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
                         let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
                         if(encodedItem2 && encodedItem2 !== "") {
-                            processedText += `<p>${encodedItem2}</p>`;
-                        }       
+                            processedText += `${encodedItem2}<br />`;
+                        }    
                     })
                 }
                 
