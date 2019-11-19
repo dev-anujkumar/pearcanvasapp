@@ -24,7 +24,7 @@ class PopUp extends React.Component {
                 document.querySelector(".save-button").click();
             }
         });
-        this.modelRef.current.focus();
+        this.modelRef.current.querySelector("input, textarea").focus();
     }
 
     componentWillUnmount(){
@@ -185,7 +185,7 @@ class PopUp extends React.Component {
             <div className="model">
                 {
                     active ? 
-                        <div tabIndex = "-1" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
+                        <div tabIndex = "0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}
