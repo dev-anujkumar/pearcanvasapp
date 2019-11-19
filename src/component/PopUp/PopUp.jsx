@@ -24,7 +24,9 @@ class PopUp extends React.Component {
                 document.querySelector(".save-button").click();
             }
         });
-        this.modelRef.current.querySelector("input, textarea").focus();
+        if(this.modelRef && this.modelRef.current){
+            this.modelRef.current.querySelector("input, textarea").focus();
+        }
     }
 
     componentWillUnmount(){

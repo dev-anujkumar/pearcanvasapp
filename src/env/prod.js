@@ -38,7 +38,8 @@ let prodConfig = {
     C6PUB_API_KEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     C6REDIS_SERVER_UPDATE: 'api/projects/',
     C4_API_URL: "./api",
-    WRAPPER_URL: `${window.parent.origin}/toc-wrapper/index.html`,
+    // WRAPPER_URL: `${window.parent.origin}/toc-wrapper/index.html`,
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     IDENTITY_URL: "/auth",
     LOCK_API_BASE_URL : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
