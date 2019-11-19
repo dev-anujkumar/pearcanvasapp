@@ -207,8 +207,16 @@ class OpenerElement extends Component {
         let styleObj = {
             "width" : "24%"
         }
-        if(imgSrc){
-            styleObj["width"] = width ? width : "100%"
+        if (imgSrc) {
+            //  styleObj["width"] = width ? width : "100%"
+              styleObj = {
+              "max-width": "605px",
+              "height": "384px",
+              "margin-top": "1.5em",
+              "margin-left": "auto",
+             "margin-right": "auto",
+             "width":"76%"
+          }
         }
 
         return styleObj

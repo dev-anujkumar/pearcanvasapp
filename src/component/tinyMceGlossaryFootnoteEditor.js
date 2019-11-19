@@ -67,6 +67,22 @@ export class ReactEditor extends React.Component {
         //   }
         // }
 
+        editor.on('Change', (e) => {
+          let content = e.target.getContent({format: 'text'}),
+              contentHTML = e.target.getContent(),
+              activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+
+          if (activeElement) {
+              let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+              if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
+                  activeElement.classList.remove('place-holder')
+              }
+              else {
+                  activeElement.classList.add('place-holder')
+              }
+          }
+      });
+
         /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
         let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
         revertingTempContainerHtml = revertingTempContainerHtml.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
@@ -134,7 +150,10 @@ export class ReactEditor extends React.Component {
       icon: "tinymceformulachemistryicon",
       tooltip: "Wiris editor chemistry",
       onAction: function (_) {
-        editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+        //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+        let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+        wirisChemistryInstance.enable('chemistry');
+        window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
       },
       onSetup: (buttonApi) => {
         /*
