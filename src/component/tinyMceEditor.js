@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -199,6 +199,16 @@ export class TinyMceEditor extends Component {
                         }
                         else
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                    }
+                    /**
+                     * In case of list element
+                     */
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        let timeoutInstance = setTimeout(() => {
+                            clearTimeout(timeoutInstance);
+                            updateNestedList(editor.targetElm)
+                            return false;
+                        });
                     }
                     break;
                 case "FormatBlock":
@@ -1089,7 +1099,7 @@ export class TinyMceEditor extends Component {
         /**
          * In case current element is list element
          */
-        if (el.findChildren('ol') || el.findChildren('ul')) {
+        if (el.findChildren('ol').length || el.findChildren('ul').length) {
             return
         }
         if (isSameTarget) {
