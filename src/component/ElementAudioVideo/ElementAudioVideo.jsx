@@ -32,6 +32,7 @@ class ElementAudioVideo extends Component {
         disableHeader(false);
         let format , path , lang , tracktype;
         let imageData = data;
+        let clipInfo;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
@@ -44,7 +45,15 @@ class ElementAudioVideo extends Component {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
+            // let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
+            if(imageData['clipinfo']){
+                if(typeof(imageData['clipinfo'])=="string"){
+                    clipInfo=JSON.parse(imageData['clipinfo'])
+                }
+                else{
+                    clipInfo=imageData['clipinfo']
+                }
+            }
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";

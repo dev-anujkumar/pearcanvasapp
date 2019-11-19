@@ -194,7 +194,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         /*  For Figure type*/                    
-                        else if(blockTag === "SPAN"){
+                        else if(blockTag === "SPAN" || blockTag === "CODE"){
                             e.target.targetElm.innerHTML = window.getSelection().toString()
                         }
                         else
