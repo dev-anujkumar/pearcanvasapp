@@ -67,7 +67,6 @@ class ElementContainer extends Component {
         })
     }
 
-
     componentWillReceiveProps(newProps) {
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if (newProps.elemBorderToggle) {
