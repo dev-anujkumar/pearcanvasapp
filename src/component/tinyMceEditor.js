@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -199,6 +199,16 @@ export class TinyMceEditor extends Component {
                         }
                         else
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                    }
+                    /**
+                     * In case of list element
+                     */
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        let timeoutInstance = setTimeout(() => {
+                            clearTimeout(timeoutInstance);
+                            updateNestedList(editor.targetElm)
+                            return false;
+                        });
                     }
                     break;
                 case "FormatBlock":
@@ -950,12 +960,12 @@ export class TinyMceEditor extends Component {
      */
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
-        tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
+        tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
         if(toolbar.length){
-            tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+            tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
-                    tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                    tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                 }
             });
         }        
@@ -1083,6 +1093,7 @@ export class TinyMceEditor extends Component {
             this.editorOnClick(event);
         }
         this.setCursorAtEnd(currentTarget, isSameTarget);
+        tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
     setCursorAtEnd(el, isSameTarget) {

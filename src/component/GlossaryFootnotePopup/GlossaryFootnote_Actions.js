@@ -183,7 +183,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
     
-    let url = `${REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
+    let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     
     axios.put(url, JSON.stringify(data), {
         headers: {

@@ -126,6 +126,8 @@
 #toolbarGlossaryFootnote .fa {
     font: normal normal normal 14px/1 FontAwesome;
 }
-#glossary-editor-attacher{
-    min-height: 18px;
+#glossary-editor-attacher,#glossary-editor{
+    min-height: 18px !important;
+    max-height: 100px;
+    overflow-x: auto;
 }
