@@ -1000,6 +1000,9 @@ export class TinyMceEditor extends Component {
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
+                let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
                     tinymce.remove(`#${ed_id}`)
                     if (document.getElementById(`${ed_id}`)) {
                         document.getElementById(`${ed_id}`).contentEditable = true;
