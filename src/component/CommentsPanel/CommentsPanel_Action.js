@@ -23,7 +23,7 @@ import {
 */
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
-        url = `${config.JAVA_API_URL}v1/narrative-api/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
+        url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
     return axios.get(url,{
         headers: {
             "Content-Type": "application/json",

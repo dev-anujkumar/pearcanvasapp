@@ -41,7 +41,7 @@ let qaConfig = {
     // WRAPPER_URL: `${window.parent.origin}/toc-wrapper/index.html`,
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     IDENTITY_URL: "/auth",
-    LOCK_API_BASE_URL : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER:'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',
