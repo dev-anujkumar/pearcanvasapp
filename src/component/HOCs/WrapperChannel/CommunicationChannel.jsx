@@ -8,11 +8,13 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
-import config from '../../../config/config';
+import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import localConfig from '../../../env/local';
-import testConfig from '../../../env/test';
-import devConfig from '../../../env/dev';
+import localConfig from '../../../env/local.js';
+import stagingConfig from '../../../env/staging.js';
+import qaConfig from '../../../env/qa.js';
+import perfConfig from '../../../env/perf.js';
+import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import {ShowLoader} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -232,13 +234,21 @@ function WithWrapperCommunication(WrappedComponent) {
             
         }
 
-        getProjectConfig = (origin, config) => {
-            switch (origin) {
-                case 'dev':
-                    this.modifyObjKeys(config, devConfig);
+        getProjectConfig = (currentOrigin, config) => {
+            switch (currentOrigin) {
+                case 'qa':
+                    this.modifyObjKeys(config, qaConfig);
                     break;
-                case 'test':
-                    this.modifyObjKeys(config, testConfig);
+                case 'perf':
+                    this.modifyObjKeys(config, perfConfig);
+                    break;
+                case 'staging':
+                    this.modifyObjKeys(config, stagingConfig);
+                    break;
+                case 'stg':
+                case 'prod':
+                case 'prod2':
+                    this.modifyObjKeys(config, prodConfig);
                     break;
                 case 'local':
                     this.modifyObjKeys(config, localConfig);

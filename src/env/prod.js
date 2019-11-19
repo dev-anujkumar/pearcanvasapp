@@ -1,4 +1,4 @@
-let testConfig = {
+let prodConfig = {
     REACT_APP_API_URL : '/cypress/canvas-srvr/cypress-api/',
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT: "https://contentapis-staging.pearsoncms.net/lo-api/",
@@ -81,4 +81,4 @@ let testConfig = {
     staleTitle : "",
 };
 
-export default testConfig;
+export default prodConfig;
