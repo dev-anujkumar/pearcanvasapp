@@ -187,11 +187,16 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
+                    let blockTag = window.getSelection().anchorNode.parentNode.nodeName
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        /*  For Figure type*/                    
+                        else if(blockTag === "SPAN"){
+                            e.target.targetElm.innerHTML = window.getSelection().toString()
+                        }
                         else
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
@@ -1036,6 +1041,9 @@ export class TinyMceEditor extends Component {
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
+                let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
