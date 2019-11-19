@@ -1089,8 +1089,8 @@ export class TinyMceEditor extends Component {
         /**
          * In case current element is list element
          */
-        if (el.findChildren('ol') || el.findChildren('ul')) {
-            return
+        if (el.findChildren('ol').length || el.findChildren('ul').length) {
+            return;
         }
         if (isSameTarget) {
             return;
