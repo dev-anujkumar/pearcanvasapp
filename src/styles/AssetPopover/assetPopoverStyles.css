@@ -322,7 +322,7 @@
   
   .header__search-icon {
     position: absolute;
-    top: 25px;
+    top: 50px;
     margin-left: 20px;
     cursor: pointer;
   }

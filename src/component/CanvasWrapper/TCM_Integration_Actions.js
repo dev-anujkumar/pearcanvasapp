@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
-import { sendDataToIframe } from '../../constants/utility.js';
+
 export const loadTrackChanges = (elementId) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
@@ -21,8 +21,9 @@ export const loadTrackChanges = (elementId) => {
                 })
             }
         }
+
         let currentElementId = elementId ? elementId : "";
-        let currentSlateTitle = config.slateTitle;
+        let currentSlateTitle = document.querySelector('div.input-text .txt-input').value;
         let currentProjectUrn = config.projectUrn;
         let currentSlateUrn = config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
