@@ -52,9 +52,14 @@ class ElementContainer extends Component {
     }
     componentDidMount() {
          // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
-        if(this.props.element && this.props.element.hasOwnProperty('tcm')){
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': this.props.element.tcm});         
-        }
+         let trackChangesPendingStatus='false';
+         if(this.props.element && this.props.element.hasOwnProperty('tcm')){
+            trackChangesPendingStatus = JSON.stringify(this.props.element.tcm);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});         
+         }else if(this.props.element && this.props.element.hasOwnProperty('feedback')){
+            trackChangesPendingStatus = JSON.stringify(this.props.element.feedback);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});         
+         }    
         this.setState({
             ElementId: this.props.element.id,
             btnClassName : '',
@@ -341,6 +346,7 @@ class ElementContainer extends Component {
             })
         }
     }
+
     toggleColorPaletteList = () => {
         const { showColorPaletteList } = this.state;
         this.handleFocus();
