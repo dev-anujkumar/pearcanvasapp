@@ -15,7 +15,6 @@ let config = {
     COREAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/core-api",
     CONTENT_SCAPI_ENDPOINT : "https://staging.api.pearson.com/content/scapi",
     JAVA_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/",
-    NARRATIVE_API_URL: "https://10.11.7.24:8443/app/toc-javaapp/v1/",
     STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
     MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
     ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
@@ -31,7 +30,7 @@ let config = {
     disablePrev : false,
     tcmStatus : false,
     staleTitle : "",
-    TCM_DASHBOARD_UI_URL: "https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
+    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     TCM_DASHBOARD_URL:  'http://localhost:3000',
     //c2 required keys and urls
     CMDS_APIKEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
@@ -60,7 +59,7 @@ let config = {
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
     book_title:"ELMTEST_StgEnv_Krajewski Test",
     IDENTITY_URL: "/auth",
-    LOCK_API_BASE_URL : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/dashboard-srvr` : 'https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr',
     PATTERNS: {
         PATTERN_ADD_ASSET: 'https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js',
         PATTERN_BROKER: 'https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js',

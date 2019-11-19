@@ -130,7 +130,7 @@ export const bindKeyDownEvent = (editor, e) => {
     if (editor.targetElm.querySelectorAll('li').length == 0) {
         if ((e.metaKey && e.which == 13) || (e.which == 13)) {
             prohibitEventBubling(e);
-            createNewParagraphElement(e, editor);
+            // createNewParagraphElement(e, editor);
             return false;
         }
     }
@@ -260,7 +260,7 @@ export const bindKeyDownEvent = (editor, e) => {
  * updateNestedList | takes care of formatting of list from very top
  * @param {*} element | target element
  */
-const updateNestedList = (element) => {
+export const updateNestedList = (element) => {
     let decimalOlClassList = ['decimal', 'lower-alpha', 'lower-roman', 'decimal'];
     let decimalLiClassList = ['listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber'];
 
