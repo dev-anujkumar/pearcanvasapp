@@ -30,7 +30,7 @@ class ElementAudioVideo extends Component {
     dataFromAlfresco = (data) => {
         hideTocBlocker();
         disableHeader(false);
-        let format , path , lang;
+        let format , path , lang , tracktype;
         let imageData = data;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
@@ -44,7 +44,7 @@ class ElementAudioVideo extends Component {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            let clipInfo = imageData['clipinfo'] ? imageData['clipinfo'] : {};
+            let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
             let uniqID = imageData['uniqueID'] ? imageData['uniqueID'] : "";
             let ensubtitle = imageData['subtitle'] ? imageData['subtitle'] : "";
@@ -54,14 +54,17 @@ class ElementAudioVideo extends Component {
                 format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
                 path = ensubtitle.split("?")[0];
                 lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
+                tracktype = "captions"
             } else if (frenchSubtitle) {
                 format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
                 path = frenchsubtitle.split("?")[0];
                 lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
+                tracktype = "captions"
             } else if (spanishSubtitle) {
                 format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
                 path = spanishsubtitle.split("?")[0];
                 lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
+                tracktype = "captions"
             }
             
             this.setState({ imgSrc: epsURL,assetData :smartLinkURl })
@@ -103,7 +106,7 @@ class ElementAudioVideo extends Component {
                                 format: format,
                                 path: path,
                                 language: lang,
-                                tracktype: "captions"
+                                tracktype: tracktype
                             }
                         ],
                         clipinfo : clipInfo,

@@ -36,10 +36,19 @@ export const authorAssetPopOver = (toggleApoPopup, apoObject = {}) => {
     if (Object.keys(apoObject).length) {
         //api call
         getCurrentlyLinkedImage(apoObject.dataUrn, (resCurrentlyLinkedImageData) => {
-            showApoCurrentlyLinked = true
-            currentlyLinkedImageData = resCurrentlyLinkedImageData[0]
+            if(Object.keys(resCurrentlyLinkedImageData).length){
+                showApoCurrentlyLinked = true
+                setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,resCurrentlyLinkedImageData)
+            }
+            else
+            setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
         })
     }
+    else
+    setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
+}
+
+const setAssetData=(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData)=>{
     store.dispatch({
         type: TOGGLE_APO_SEARCH,
         payload: {
