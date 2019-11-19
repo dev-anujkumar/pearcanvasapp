@@ -103,6 +103,7 @@ class AssetPopoverSearch extends React.Component {
         clearAssetPopoverLink(assetId);
         this.apoSearchClose();
         setTimeout(() => {
+            document.getElementById(tinymce.activeEditor.id).focus()
             document.getElementById(tinymce.activeEditor.id).blur()
         }, 0);
     }
