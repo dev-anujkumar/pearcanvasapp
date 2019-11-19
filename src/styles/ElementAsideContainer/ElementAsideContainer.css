@@ -33,6 +33,9 @@
     top:33px;
     width:0px
 }
+.section-seperator .btn-element.delete-icon img{
+    cursor: pointer!important;
+}
 .section-seperator .section-break{
     margin-left: 0px;
     margin-right: 0px;

@@ -310,14 +310,13 @@ function WithWrapperCommunication(WrappedComponent) {
                     },
                     "metaDataAnchorID": LOElements
                 }
-
+                if(LOElements.length){
                 this.props.updateElement(LOWipData)
+                }
 
             }
         }
-        handleLOStore=()=> {
-            
-        }
+        
         handlePermissioning = (message) => {
             if (message && message.permissions) {
                 this.props.handleUserRole(message.permissions)

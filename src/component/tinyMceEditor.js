@@ -187,11 +187,16 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
+                    let blockTag = window.getSelection().anchorNode.parentNode.nodeName
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        /*  For Figure type*/                    
+                        else if(blockTag === "SPAN"){
+                            e.target.targetElm.innerHTML = window.getSelection().toString()
+                        }
                         else
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
@@ -211,7 +216,8 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) => {
         editor.on('click', (e) => {
-            let selectedText = window.getSelection().toString();
+            let selectedText = editor.selection.getContent({format : "text"});
+            // let selectedText = window.getSelection().toString();
             this.glossaryTermText = selectedText;
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
@@ -718,8 +724,10 @@ export class TinyMceEditor extends Component {
         let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
+        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p></p>"
+        term = term && term.replace(/<br data-mce-bogus="1">/g, "")
+        definition = definition && definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
     }
@@ -1036,6 +1044,9 @@ export class TinyMceEditor extends Component {
             for (let i = tinymce.editors.length - 1; i > -1; i--) {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
+                let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
@@ -1075,7 +1086,12 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        
+        /**
+         * In case current element is list element
+         */
+        if (el.findChildren('ol') || el.findChildren('ul')) {
+            return
+        }
         if (isSameTarget) {
             return;
         }

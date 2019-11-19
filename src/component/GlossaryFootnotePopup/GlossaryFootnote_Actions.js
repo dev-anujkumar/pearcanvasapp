@@ -129,13 +129,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
        
         figureDataObj = {
-            "title": label,
-            "subtitle": title,
+            "title": label.match(/<p>/g) ? label : `<p>${label}</p>`,
+            "subtitle": title.match(/<p>/g) ? title : `<p>${title}</p>`,
             "text": "",
             "postertext": "",
             "tableasHTML": "",
-            "captions": captions,
-            "credits": credits
+            "captions": captions.match(/<p>/g) ? captions : `<p>${captions}</p>`,
+            "credits": credits.match(/<p>/g) ? credits : `<p>${credits}</p>`
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)

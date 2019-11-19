@@ -90,8 +90,10 @@ class GlossaryFootnoteMenu extends React.Component {
         let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || `<p></p>`
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || `<p></p>`
+        term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
+        term = term.match(/<p>/g) ? term : `<p>${term}</p>`
+        definition = definition.match(/<p>/g) ? definition : `<p>${definition}</p>`
         if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
