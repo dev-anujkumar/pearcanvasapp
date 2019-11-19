@@ -1,6 +1,7 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
+import "tinymce/plugins/paste";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,
@@ -14,13 +15,14 @@ export class ReactEditor extends React.Component {
     this.mathMlMenuButton = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
-      plugins: "placeholder tiny_mce_wiris",
+      plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
       selector: '#glossary-0',
       inline: true,
       statusbar: false,
       object_resizing: false,
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
+      paste_preprocess: this.pastePreProcess,
       setup: (editor) => {
         this.onEditorBlur(editor);
         this.setChemistryFormulaIcon(editor);
@@ -45,16 +47,6 @@ export class ReactEditor extends React.Component {
           },
           onSetup: (api) => {
             this.handleFocussingInlineCode(api, editor)
-          }
-        });
-        editor.on('BeforeExecCommand', (e) => {
-          let command = e.command;
-          if(command === "RemoveFormat") {
-            let selectedText = window.getSelection().toString();
-            if(selectedText == "") {
-              e.preventDefault();
-              e.stopPropagation();
-            }
           }
         });
       },
@@ -90,6 +82,21 @@ export class ReactEditor extends React.Component {
       },
     }
     this.editorRef = React.createRef();
+  }
+
+  /**
+     * Called before paste process
+     * @param {*} plugin
+     * @param {*} args
+     */
+    pastePreProcess = (plugin, args) => {
+      let testElement = document.createElement('div');
+      testElement.innerHTML = args.content;
+      if(testElement.innerText.trim().length){
+          args.content = testElement.innerText;
+      }else{
+          args.content = tinymce.activeEditor.selection.getContent();
+      } 
   }
 
   /*
