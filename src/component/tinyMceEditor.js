@@ -1075,7 +1075,12 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        
+        /**
+         * In case current element is list element
+         */
+        if (el.findChildren('ol') || el.findChildren('ul')) {
+            return
+        }
         if (isSameTarget) {
             return;
         }
