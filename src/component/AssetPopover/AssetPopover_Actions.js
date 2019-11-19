@@ -7,7 +7,10 @@ import {
   IMAGES_FROM_API
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES } = config;
+const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES,COREAPI_ENDPOINT } = config;
+import axios from 'axios';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 
 //Action for render currently linked figure data
 export const apoSearchCloseAction = () => {
@@ -51,9 +54,54 @@ export const apoSearchSaveAction = (apoObject, args) => {
 }
 
 export const getCurrentlyLinkedImage = (id, cb) => {
-  return cb(mockData.images.filter((value, key) => {
-    return value.entityUrn == id
-  }))
+
+  let url = COREAPI_ENDPOINT+"/entity/" + id + "/versions";
+  let currentlyLinkedData = {};
+
+  sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+
+  return axios.get(url, {
+    headers: {
+      ApiKey: config.STRUCTURE_APIKEY,
+      PearsonSSOSession: config.ssoToken
+    }
+  }).then((res) => {
+    if (res.data.length) {
+
+      let workId = res.data[res.data.length - 1].versionUrn;
+
+      let workUrl = GET_FIGURES+"narrative-api/v2/" + workId + "/content"
+      axios.get(workUrl, {
+        headers: {
+          ApiKey: config.STRUCTURE_APIKEY,
+          PearsonSSOSession: config.ssoToken
+        }
+      }).then((res) => {
+        sendDataToIframe({'type': HideLoader,'message': { status: false }});
+        currentlyLinkedData.id=res.data.id;
+        currentlyLinkedData.title=res.data.title.text;
+        cb(currentlyLinkedData)
+      }).catch((err) => {
+        sendDataToIframe({'type': HideLoader,'message': { status: false }});
+        cb(currentlyLinkedData);
+        console.log("err from narrative api", err)
+      })
+
+    }
+    else{
+      sendDataToIframe({'type': HideLoader,'message': { status: false }});
+      cb(currentlyLinkedData);
+    }
+
+  }).catch((err) => {
+    sendDataToIframe({'type': HideLoader,'message': { status: false }});
+    cb(currentlyLinkedData);
+    console.log("err from vesion api", err)
+  })
+
+  // return cb(mockData.images.filter((value, key) => {
+  //   return value.entityUrn == id
+  // }))
 }
 
 /**
@@ -116,6 +164,7 @@ export const assetPopoverPopup = (args) => {
  */
 export async function getAssetPopoverId(workUrn) {
   try {
+    sendDataToIframe({'type': ShowLoader,'message': { status: true }});
     let response = await fetch(config.GET_ASSETPOPOVER_ID + 'narrative/v2', {
       method: 'POST',
       headers: {
@@ -126,8 +175,10 @@ export async function getAssetPopoverId(workUrn) {
     })
 
     let data = await response.json()
+    sendDataToIframe({'type': HideLoader,'message': { status: false }});
     return data.id
   } catch (err) {
+    sendDataToIframe({'type': HideLoader,'message': { status: false }});
     console.log('Error in Create assetpopover id Api', err)
   }
 }

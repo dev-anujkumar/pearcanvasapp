@@ -55,10 +55,12 @@ class AssetPopoverSearch extends React.Component {
             document.getElementById(tinymce.activeEditor.id).focus()
             domNode = document.querySelector('abbr[asset-id="' + apoObject.assetId + '"');
             originalText = domNode.innerHTML;
-            assetPopoverDomId = apoObject.assetId
+            assetPopoverDomId = apoObject.assetId;
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
-           
-            document.getElementById(tinymce.activeEditor.id).blur()
+            this.apoSearchClose();
+            setTimeout(() => {
+                document.getElementById(tinymce.activeEditor.id).blur()
+            }, 0);
         } else {
             //Hit api for asset popover Id
             getAssetPopoverId(imageObj.versionUrn).then((assetPopoverId) => {
@@ -69,16 +71,13 @@ class AssetPopoverSearch extends React.Component {
                     assetPopoverDomId = assetPopoverId
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         document.getElementById(tinymce.activeEditor.id).blur()
-                    },100);
-                   
+                    }, 0);
+
                 }
             })
         }
-        
-          
-
     }
 
     /**
@@ -101,8 +100,11 @@ class AssetPopoverSearch extends React.Component {
     */
     removeLink = () => {
         let assetId = this.props.apoObject && this.props.apoObject.assetId;
-        clearAssetPopoverLink(assetId)
+        clearAssetPopoverLink(assetId);
         this.apoSearchClose();
+        setTimeout(() => {
+            document.getElementById(tinymce.activeEditor.id).blur()
+        }, 0);
     }
 
     /**
