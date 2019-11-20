@@ -8,6 +8,9 @@ const middlewares = [thunk];
 import RootElmComponent from '../../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx';
 import {DefaultSlateData} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 const mockStore = configureMockStore(middlewares);
+jest.mock('../../../../src/config/config.js', () => ({
+    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+}))
 let initialState = {
    elmReducer:{ 
         elmData:{
