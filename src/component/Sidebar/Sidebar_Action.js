@@ -25,7 +25,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     if(oldElementData.figuretype==="assessment"){
         inputPrimaryOptionEnum=inputSubType['enum'];
-        inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase();
+        inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase().replace(" ", "_").replace("-", "_");
     }
     
     // Output Element

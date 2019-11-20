@@ -53,10 +53,10 @@ class ElementContainer extends Component {
     componentDidMount() {
          // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
          let trackChangesStatus='false';
-         if(this.props.element && this.props.element.hasOwnProperty('tcm')){
+         if(this.props.element && this.props.element.tcm){
             trackChangesStatus = JSON.stringify(this.props.element.tcm);
             sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
-         }else if(this.props.element && this.props.element.hasOwnProperty('feedback')){
+         }else if(this.props.element && this.props.element.feedback){
             trackChangesStatus = JSON.stringify(this.props.element.feedback);
             sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
          }   
@@ -95,13 +95,13 @@ class ElementContainer extends Component {
         }
         // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
         let trackChangesPendingStatus='false';
-        if(newProps.element && newProps.element.hasOwnProperty('tcm')){
-           trackChangesPendingStatus = JSON.stringify(newProps.element.tcm);
-           sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});         
-        }else if(newProps.element && newProps.element.hasOwnProperty('feedback')){
-           trackChangesPendingStatus = JSON.stringify(newProps.element.feedback);
-           sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});         
-        }   
+        if(this.props.element && newProps.element && (this.props.element.tcm !=newProps.element.tcm )){
+            trackChangesPendingStatus = JSON.stringify(newProps.element.tcm);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});   
+        }else if(this.props.element && newProps.element && (this.props.element.feedback !=newProps.element.feedback)){
+            trackChangesPendingStatus = JSON.stringify(newProps.element.feedback);
+            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});    
+        }
     }
 
     /**

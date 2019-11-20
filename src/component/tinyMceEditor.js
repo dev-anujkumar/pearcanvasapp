@@ -960,12 +960,12 @@ export class TinyMceEditor extends Component {
      */
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
-        tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
+        tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
         if(toolbar.length){
-            tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+            tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
-                    tinyMCE.$('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                    tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                 }
             });
         }        
@@ -1093,6 +1093,7 @@ export class TinyMceEditor extends Component {
             this.editorOnClick(event);
         }
         this.setCursorAtEnd(currentTarget, isSameTarget);
+        tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
     setCursorAtEnd(el, isSameTarget) {
