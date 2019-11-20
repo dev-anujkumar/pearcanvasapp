@@ -77,9 +77,9 @@ export class ReactEditor extends React.Component {
           }
       });
 
-        /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
         let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
-        revertingTempContainerHtml = revertingTempContainerHtml.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+        revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
         document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
       },
     }
@@ -261,7 +261,7 @@ export class ReactEditor extends React.Component {
         Before setting wiris remove the classes to prevent it converting to mathml
       */
       let tempContainerHtml = tinyMCE.$("#" + tinymce.activeEditor.id).html()
-      tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+      tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
       //tinymce.$('.wrs_modal_desktop').remove();
 
       tinymce.remove('#' + tinymce.activeEditor.id)
@@ -283,7 +283,7 @@ export class ReactEditor extends React.Component {
   render() {
     return (
       <div>
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
       </div>
     )
   }

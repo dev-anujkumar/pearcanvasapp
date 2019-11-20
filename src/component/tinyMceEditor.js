@@ -124,9 +124,9 @@ export class TinyMceEditor extends Component {
                 editor.shortcuts.add('alt+shift+5', "description of the strike through shortcut", function () {
                     editor.execCommand('Strikethrough', false);
                 });
-                /* Reverting temp-data-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+                /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
                 let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
-                revertingTempContainerHtml = revertingTempContainerHtml.replace(/temp-data-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+                revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
                 document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
             }
         }
@@ -776,7 +776,7 @@ export class TinyMceEditor extends Component {
                     change wiris images to avoid converting to mathml
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
-                tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                 if( document.getElementById( activeElementObj.join("-"))){
                     document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
                 }
@@ -835,11 +835,11 @@ export class TinyMceEditor extends Component {
                 this.editorConfig.selector = '#' + this.editorRef.current.id;
                
                 /**
-                 * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
+                 * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
                  * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
                  */
                 let tempFirstContainerHtml = tinyMCE.$("#" + this.editorRef.current.id).html()
-                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                 document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
 
                 tinymce.init(this.editorConfig).then((d) => { 
@@ -1009,7 +1009,7 @@ export class TinyMceEditor extends Component {
         if ( ( !isSameTargetBasedOnDataId || !isSameTarget ) && tinymce.activeEditor && document.getElementById(tinyMCE.activeEditor.id) && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
-             * Before removing the current tinymce instance, update wiris image attribute data-mathml to temp-data-mathml and class Wirisformula to temp_Wirisformula
+             * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
              * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
              */
             let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
@@ -1023,8 +1023,8 @@ export class TinyMceEditor extends Component {
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
             }
             
-            tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 
             /*
                 Before entering to new element follow same  procedure
@@ -1055,7 +1055,7 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                 let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
-                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                 document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
