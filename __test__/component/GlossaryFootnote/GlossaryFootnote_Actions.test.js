@@ -27,7 +27,7 @@ describe('Tests commentsPanel action', () => {
    
     afterEach(() => moxios.uninstall());
 
-    it('testing------- glossaaryFootnotePopup  action',()=>{
+    xit('testing------- glossaaryFootnotePopup  action',()=>{
         store = mockStore(() => initialState);
         let glossaaryFootnoteValue = { "type": "Glossary", "popUpStatus": "true" }
         const expectedActions = [{

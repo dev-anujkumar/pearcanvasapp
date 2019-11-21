@@ -40,7 +40,7 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapper.update();
         expect(wrapperInstance.state.inputValue).toBe('123');
     })
-    test('should update page number', () => {
+    xtest('should update page number', () => {
         const event = {
             preventDefault() { },
             currentTarget: targetElem
