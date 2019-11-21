@@ -544,33 +544,29 @@ class ElementContainer extends Component {
                         labelText = 'UL'
                     break;
                 case elementTypeConstant.ELEMENT_ASIDE:
-                    switch (element.subtype) {
-                        case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                        default:
-                            editor = <ElementAsideContainer
-                                handleCommentspanel={handleCommentspanel}
-                                permissions={permissions}
-                                showDeleteElemPopup={this.showDeleteElemPopup}
-                                showBlocker={this.props.showBlocker}
-                                setActiveElement={this.props.setActiveElement}
-                                handleBlur={this.handleBlur}
-                                handleFocus={this.handleFocus}
-                                btnClassName={this.state.btnClassName}
-                                borderToggle={this.state.borderToggle}
-                                elemBorderToggle={this.props.elemBorderToggle}
-                                elementSepratorProps={elementSepratorProps}
-                                index={index}
-                                element={element}
-                                elementId={element.id}
-                                type={element.type}
-                                slateLockInfo={slateLockInfo}
-                                updatePageNumber ={updatePageNumber}
-                                isBlockerActive={this.props.isBlockerActive}
-                                onClickCapture={this.props.onClickCapture}
-                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                />;
-                    }
+                    editor = <ElementAsideContainer
+                        handleCommentspanel={handleCommentspanel}
+                        permissions={permissions}
+                        showDeleteElemPopup={this.showDeleteElemPopup}
+                        showBlocker={this.props.showBlocker}
+                        setActiveElement={this.props.setActiveElement}
+                        handleBlur={this.handleBlur}
+                        handleFocus={this.handleFocus}
+                        btnClassName={this.state.btnClassName}
+                        borderToggle={this.state.borderToggle}
+                        elemBorderToggle={this.props.elemBorderToggle}
+                        elementSepratorProps={elementSepratorProps}
+                        index={index}
+                        element={element}
+                        elementId={element.id}
+                        type={element.type}
+                        slateLockInfo={slateLockInfo}
+                        updatePageNumber ={updatePageNumber}
+                        isBlockerActive={this.props.isBlockerActive}
+                        onClickCapture={this.props.onClickCapture}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
                     editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur} handleFocus={this.handleFocus}  index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
