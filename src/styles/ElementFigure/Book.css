@@ -853,7 +853,7 @@ blockquote.blockquoteMarginalia {
 
 blockquote.blockquoteMarginaliaAttr {
   background: #fff;
-  border-left: 1px solid #047a9c !important;
+  border-left: 1px solid #047a9c;
   margin-left: 0;
   margin-top: 2.5em;
   margin-bottom: 2.25em;
