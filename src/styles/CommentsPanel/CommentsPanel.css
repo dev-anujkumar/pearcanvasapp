@@ -217,8 +217,8 @@ html{
         /*  avatar component  */
 /* ---------------------------------*/
 .avatar {
-    background-size: contain;
     background: no-repeat center center;
+    background-size: contain;
     justify-content: center;
     display: flex;
     align-items: center;

@@ -24,8 +24,8 @@ let props = {
         "label": { en: "test data" }
     }
 }
-//let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
-//let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
+// let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
+// let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
 
 //Rendering component
 xdescribe('Test Rendering of metadaanchor on slate', () => {

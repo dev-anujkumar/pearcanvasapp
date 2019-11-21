@@ -17,8 +17,8 @@ let props={
     },
     currentSlateLOData:""
 }
-    //let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
-    //let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+    // let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
+    // let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
 
 //Rendering component
 xdescribe('Test Rendering of metadaanchor on slate', () => {

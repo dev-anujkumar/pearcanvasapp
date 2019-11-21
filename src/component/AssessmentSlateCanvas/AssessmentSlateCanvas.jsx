@@ -84,7 +84,7 @@ export class AssessmentSlateCanvas extends Component {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let assessmentType=this.selectAssessmentType();
         let fileName = "";
-        let filterType = [assessmentType.toUpperCase()] || ['CITE'];
+        let filterType = [assessmentType.toUpperCase()];
         let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "partial";//"partial";
         let prefix = 'urn:pearson:work:';

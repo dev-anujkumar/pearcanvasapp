@@ -44,7 +44,7 @@ class Interactive extends React.Component {
     handleC2InteractiveClick = (value) => {
         let that = this;
         let fileName = "";
-        let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()] || ['CITE'];
+        let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()];
         let searchMode = "partial";
         let searchSelectAssessmentURN = "";
         let productId = "";
