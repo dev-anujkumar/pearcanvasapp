@@ -193,14 +193,16 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
+                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
-                        /*  For Figure type*/                    
-                        else if(blockTag === "SPAN" || blockTag === "CODE"){
+                        }
+                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
+                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                        }
+                        /*  For Figure type*/
+                        else {
                             e.target.targetElm.innerHTML = window.getSelection().toString()
                         }
-                        else
-                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
                     /**
                      * In case of list element
@@ -693,12 +695,9 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
                 editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-            }
-            else {
-                editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-            }
-            this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); }); 
-            this.saveContent()
+                this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id , () => { this.toggleGlossaryandFootnoteIcon(true); }); 
+                this.saveContent()
+            }  
         })
     }
     learningObjectiveDropdown(text){
@@ -716,10 +715,6 @@ export class TinyMceEditor extends Component {
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            else {
-                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
-            }
-
             if(selectedText !== ""){
                 editor.insertContent(insertionText);
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
@@ -751,7 +746,12 @@ export class TinyMceEditor extends Component {
      * @param {*} selectedText  selected text
      */
     addAssetPopover = (editor, selectedText) => {
-        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>'
+
+        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
+        if(selectedTag!=="LI"&&selectedTag!=="P"&&selectedTag!=="H3"&&selectedTag!=="BLOCKQUOTE"){
+            selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+        }
+        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
         this.props.openAssetPopoverPopUp(true);
     }
@@ -978,6 +978,20 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        /*
+            Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
+        */
+        if( tinymce.$(e.target).find('li').length   ){
+            tinymce.$(e.target).find('li').each(function(a,b){
+                if( this.innerHTML.trim() == '' ){
+                    tinymce.$(this).append('<br/>')
+                } 
+            })
+        }
+        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+            tinymce.$(e.target).closest('li').append('<br/>');
+        }
+
         if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
             if(tinymce.activeEditor && tinymce.activeEditor.id){
                 document.getElementById(tinymce.activeEditor.id).contentEditable = false
@@ -1031,8 +1045,9 @@ export class TinyMceEditor extends Component {
             /*
                 Before entering to new element follow same  procedure
             */
-            if( !isSameTargetBasedOnDataId ){
-                document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
+            if(!isSameTargetBasedOnDataId){
+                if(document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
+                    document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
                 document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
             }
             else{
@@ -1058,7 +1073,9 @@ export class TinyMceEditor extends Component {
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                 let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
+                if(document.getElementById(tinymce.editors[i].id)){
+                    document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
+                }     
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {

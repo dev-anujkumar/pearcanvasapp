@@ -24,11 +24,11 @@ let props = {
         "label": { en: "test data" }
     }
 }
-let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
-let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
+// let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
+// let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
 
 //Rendering component
-describe('Test Rendering of metadaanchor on slate', () => {
+xdescribe('Test Rendering of metadaanchor on slate', () => {
 
     it('render component', () => {
         expect(wrapper.find('ElementMetaDataAnchor')).toHaveLength(1);

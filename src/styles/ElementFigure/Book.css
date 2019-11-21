@@ -3758,7 +3758,7 @@ H1.heading1ChapterNumberLabelNumeroUno {
 
 H1.heading1NumeroUno {
   color: #000;
-  font-family: 'Helvetica Neue', Helvetica, sans;
+  font-family: 'Helvetica Neue', Helvetica, sans, sans-serif;
   font-size: 2.60em;
   font-weight: normal;
   line-height: 1.20em;
@@ -4192,11 +4192,6 @@ td.tableTable01Last {
   padding-right: 0.25em;
   padding-bottom: 0.25em;
   vertical-align: top;
-}
-
-foot th, tfoot td {
-  border-bottom: 0;
-  text-align: center;
 }
 
 th {

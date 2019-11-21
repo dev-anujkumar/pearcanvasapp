@@ -546,58 +546,29 @@ class ElementContainer extends Component {
                         labelText = 'UL'
                     break;
                 case elementTypeConstant.ELEMENT_ASIDE:
-                    switch (element.subtype) {
-                        case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            editor = <ElementAsideContainer
-                                handleCommentspanel={handleCommentspanel}
-                                permissions={permissions}
-                                showDeleteElemPopup={this.showDeleteElemPopup}
-                                showBlocker={this.props.showBlocker}
-                                setActiveElement={this.props.setActiveElement}
-                                handleBlur={this.handleBlur}
-                                handleFocus={this.handleFocus}
-                                btnClassName={this.state.btnClassName}
-                                borderToggle={this.state.borderToggle}
-                                elemBorderToggle={this.props.elemBorderToggle}
-                                elementSepratorProps={elementSepratorProps}
-                                index={index} element={element}
-                                elementId={element.id}
-                                type={element.type}
-                                slateLockInfo={slateLockInfo} 
-                                updatePageNumber ={updatePageNumber}
-                                isBlockerActive={this.props.isBlockerActive}
-                                onClickCapture={this.props.onClickCapture}
-                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                />;
-                            // labelText = LABELS[element.subtype] || 'AS';
-                            break;
-                        default:
-                            editor = <ElementAsideContainer
-                                handleCommentspanel={handleCommentspanel}
-                                permissions={permissions}
-                                showDeleteElemPopup={this.showDeleteElemPopup}
-                                showBlocker={this.props.showBlocker}
-                                setActiveElement={this.props.setActiveElement}
-                                handleBlur={this.handleBlur}
-                                handleFocus={this.handleFocus}
-                                btnClassName={this.state.btnClassName}
-                                borderToggle={this.state.borderToggle}
-                                elemBorderToggle={this.props.elemBorderToggle}
-                                elementSepratorProps={elementSepratorProps}
-                                index={index}
-                                element={element}
-                                elementId={element.id}
-                                type={element.type}
-                                slateLockInfo={slateLockInfo}
-                                updatePageNumber ={updatePageNumber}
-                                isBlockerActive={this.props.isBlockerActive}
-                                onClickCapture={this.props.onClickCapture}
-                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                 />;
-                        // labelText = 'AS'
-                    }
+                    editor = <ElementAsideContainer
+                        handleCommentspanel={handleCommentspanel}
+                        permissions={permissions}
+                        showDeleteElemPopup={this.showDeleteElemPopup}
+                        showBlocker={this.props.showBlocker}
+                        setActiveElement={this.props.setActiveElement}
+                        handleBlur={this.handleBlur}
+                        handleFocus={this.handleFocus}
+                        btnClassName={this.state.btnClassName}
+                        borderToggle={this.state.borderToggle}
+                        elemBorderToggle={this.props.elemBorderToggle}
+                        elementSepratorProps={elementSepratorProps}
+                        index={index}
+                        element={element}
+                        elementId={element.id}
+                        type={element.type}
+                        slateLockInfo={slateLockInfo}
+                        updatePageNumber ={updatePageNumber}
+                        isBlockerActive={this.props.isBlockerActive}
+                        onClickCapture={this.props.onClickCapture}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
                     editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur} handleFocus={this.handleFocus}  index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
@@ -637,7 +608,7 @@ class ElementContainer extends Component {
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                    {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={handleCommentspanel} type="comment-flag" />}
+                    {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
                     {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
