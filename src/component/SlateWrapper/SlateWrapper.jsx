@@ -47,6 +47,7 @@ class SlateWrapper extends Component {
             hasError: false,
             showReleasePopup: false
         }
+        this.isDefaultElementInProgress = false;
     }
 
     componentDidMount() {
@@ -90,6 +91,9 @@ class SlateWrapper extends Component {
 
 
     renderDefaultElement = () => {
+        if(this.isDefaultElementInProgress){
+            return false;
+        }
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
             if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
@@ -97,14 +101,20 @@ class SlateWrapper extends Component {
                 let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent;
                 if (_slateBodyMatter.length == 0) {
+                    this.isDefaultElementInProgress = true;
                     /* For showing the spinning loader send HideLoader message to Wrapper component */
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(TEXT, "0");
+                    this.props.createElement(TEXT, "0", '', '', '','',()=>{
+                        this.isDefaultElementInProgress = false;
+                    });
                 }
             } else if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
+                this.isDefaultElementInProgress = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(ELEMENT_ASSESSMENT, "0");
-            }
+                this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '','',()=>{
+                    this.isDefaultElementInProgress = false;
+                });
+            }            
         }
     }
 
