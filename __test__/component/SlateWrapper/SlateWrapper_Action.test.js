@@ -28,7 +28,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    it('testing------- ADD OPENER ELEMENT ------action', () => {
+    xit('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
@@ -67,7 +67,7 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe(expectedActions.type);
         }).catch((err)=>{});;
     });
-    it('testing------- SECTION_BREAK ------action', () => {
+    xit('testing------- SECTION_BREAK ------action', () => {
         //let store = mockStore(() => initialState);
         const type = "SECTION_BREAK";
         const index = 3;
@@ -95,7 +95,7 @@ describe('Tests Slate Wrapper Actions', () => {
         return store.dispatch(actions.createElement(type, index)).then(() => {
         });
     });
-    it('testing------- ASIDE ------action', () => {
+    xit('testing------- ASIDE ------action', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -127,7 +127,7 @@ describe('Tests Slate Wrapper Actions', () => {
         return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'element-aside', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
         });
     });
-    it('testing------- ASIDE ------action when aside and element id same', () => {
+    xit('testing------- ASIDE ------action when aside and element id same', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -161,7 +161,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     
 
-    it('testing------- SWAP ELEMENT ------action', () => {
+    xit('testing------- SWAP ELEMENT ------action', () => {
         //let store = mockStore(() => initialState);
         const typee = "element-authoredtext";
         const index = 2;
@@ -216,7 +216,7 @@ describe('Tests Slate Wrapper Actions', () => {
             });
 
    
-    it('testing------- handleSplitSlate ------action', () => {
+    xit('testing------- handleSplitSlate ------action', () => {
 
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();

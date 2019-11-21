@@ -27,7 +27,7 @@ describe('Tests commentsPanel action', () => {
    
     afterEach(() => moxios.uninstall());
 
-    it('testing------- glossaaryFootnotePopup  action',()=>{
+    xit('testing------- glossaaryFootnotePopup  action',()=>{
         store = mockStore(() => initialState);
         let glossaaryFootnoteValue = { "type": "Glossary", "popUpStatus": "true" }
         const expectedActions = [{
@@ -36,7 +36,7 @@ describe('Tests commentsPanel action', () => {
         
         }];
     
-         store.dispatch(actions.glossaaryFootnotePopup(true,"Glossary"))
+        store.dispatch(actions.glossaaryFootnotePopup(true,"Glossary"))
         const { type, payload } = store.getActions()[0];
         expect(type).toBe(OPEN_GLOSSARY_FOOTNOTE);
       //  expect(store.getActions()).toEqual(expectedActions);

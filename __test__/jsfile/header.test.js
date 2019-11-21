@@ -18,7 +18,7 @@ describe('Header module testing', () => {
         GET_CURRENT_SLATE()
     })
 
-    it('Testing releaseLockAndRedirect function', () => {
+    xit('Testing releaseLockAndRedirect function', () => {
         releaseLockAndRedirect()
     }) 
 
@@ -39,7 +39,7 @@ describe('Header module testing', () => {
         publishContent(type)
     })
 
-    it('Testing trackChanges function', () => {
+    xit('Testing trackChanges function', () => {
         trackChanges()
     })
 });

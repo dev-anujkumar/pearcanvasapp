@@ -5,6 +5,7 @@ let localConfig = {
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
     PRODUCTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/product-api/",
     ELM_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    LERNOSITY_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
     PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-staging.pearsoncms.net/print-api",

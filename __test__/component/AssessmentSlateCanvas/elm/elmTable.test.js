@@ -8,6 +8,10 @@ import ElmTable from '../../../../src/component/AssessmentSlateCanvas/elm/Compon
 import {DefaultSlateData,mockELMResponse} from '../../../../fixtures/AssessmentSlateCanvasTestingData';
 
 
+jest.mock('../../../../src/config/config.js', () => ({
+    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+}))
+
 const mockStore = configureMockStore(middlewares);
 
 let initialState = {
@@ -15,7 +19,7 @@ let initialState = {
          elmData:{
             numberOfResources: 88,
             contentUrn: "urn:pearson:entity:dfeb8286-217e-40a4-8d40-3ced46e469e0",
-             versionUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
+             versionUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef"
  },
      errFlag:false,
      errorStatu:""
@@ -26,8 +30,11 @@ let initialState = {
  }};
 
 describe('ELM Actions test', () => {
+    let store ={};
+    beforeEach(() => {
+        store = mockStore(initialState);
+    })
     it('renders without crashing', () => {
-        let store = mockStore(initialState);
         let props ={
             errFlag:false,
             errorStatus:"404",
@@ -35,7 +42,7 @@ describe('ELM Actions test', () => {
             navigateBack: function(){},
             hidePufPopup:  function(){},
             usageTypeMetadata: 'Quiz',
-        }
+            }
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
@@ -282,11 +289,19 @@ describe('ELM Actions test', () => {
             expect(spyaddAssessment).toHaveBeenCalled()
             spyaddAssessment.mockClear() 
         })
-        it('TEST-filterData',()=>{
+        it('TEST-filterData case-1',()=>{
             const spyfilterData = jest.spyOn(elmTableInstance, 'filterData')
             elmTableInstance.forceUpdate();
             component.update();  
             elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab",mockELMResponse,"urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f");
+            expect(spyfilterData).toHaveBeenCalled()
+            spyfilterData.mockClear() 
+        })
+        it('TEST-filterData case 2',()=>{
+            const spyfilterData = jest.spyOn(elmTableInstance, 'filterData')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.filterData("urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab",mockELMResponse,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab");
             expect(spyfilterData).toHaveBeenCalled()
             spyfilterData.mockClear() 
         })
@@ -329,6 +344,13 @@ describe('ELM Actions test', () => {
             elmTableInstance.filterSubData(mockELMResponse,"urn:pearson:manifest:3164caea-e288-4a7d-b8f3-d8e99e7df4ab","urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f")
             expect(spyfilterSubData).toHaveBeenCalled()
             spyfilterSubData.mockClear() 
+        })
+        it('TEST-componentWillUnmount',()=>{
+            const spycomponentWillUnmount = jest.spyOn(elmTableInstance, 'componentWillUnmount')
+            elmTableInstance.forceUpdate();
+            component.update();  
+            elmTableInstance.componentWillUnmount()
+            expect(spycomponentWillUnmount.mock.calls.length).toBe(1)
         })
     })
 });

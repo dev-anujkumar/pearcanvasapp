@@ -26,6 +26,12 @@ export class AssessmentSlateData extends Component {
         this.usageTypeRef = React.createRef();
         this.typeRef = React.createRef();
     }
+    
+    componentWillReceiveProps(nextProps){
+     if(this.props!==nextProps && this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
+         this.sendDataAssessment(nextProps);
+     }
+    }
 
     sendDataAssessment(nextProps){
         if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){

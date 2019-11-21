@@ -55,7 +55,7 @@ export const apoSearchSaveAction = (apoObject, args) => {
 
 export const getCurrentlyLinkedImage = (id, cb) => {
 
-  let url = COREAPI_ENDPOINT+"/entity/" + id + "/versions";
+  let url = config.COREAPI_ENDPOINT+"/entity/" + id + "/versions";
   let currentlyLinkedData = {};
 
   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
@@ -70,7 +70,7 @@ export const getCurrentlyLinkedImage = (id, cb) => {
 
       let workId = res.data[res.data.length - 1].versionUrn;
 
-      let workUrl = GET_FIGURES+"narrative-api/v2/" + workId + "/content"
+      let workUrl = config.GET_FIGURES+"narrative-api/v2/" + workId + "/content"
       axios.get(workUrl, {
         headers: {
           ApiKey: config.STRUCTURE_APIKEY,

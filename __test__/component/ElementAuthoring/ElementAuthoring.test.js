@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import ReactDOM from 'react-dom';
 import ElementAuthoring from '../../../src/component/ElementAuthoring/ElementAuthoring'
 
-describe('Testing Element  component with props', () => {
+xdescribe('Testing Element  component with props', () => {
     const div = document.createElement('div');
     let type = "element-authoredtext";
     let props={
