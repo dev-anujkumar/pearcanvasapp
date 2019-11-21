@@ -44,7 +44,7 @@ describe('Tests ElementContainer Actions', () => {
     });
 
     afterEach(() => moxios.uninstall());
-    xit('testing------- ADD COMMENT ------action', () => {
+    it('testing------- ADD COMMENT ------action', () => {
         store = mockStore(() => initialState);
         let newComment = {
             comment: "test",
