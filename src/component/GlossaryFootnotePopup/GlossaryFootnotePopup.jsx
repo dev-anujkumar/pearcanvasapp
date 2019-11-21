@@ -64,7 +64,7 @@ class GlossaryFootnotePopup extends Component {
                     change wiris images to avoid converting to mathml
                 */
                let tempContainerHtml = tinyMCE.$("#" + ed_id).html();          
-               tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' temp-data-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+               tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                document.getElementById( ed_id ).innerHTML = tempContainerHtml;
    
                 tinymce.remove(`#${ed_id}`)
