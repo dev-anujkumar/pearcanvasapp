@@ -748,7 +748,12 @@ export class TinyMceEditor extends Component {
      * @param {*} selectedText  selected text
      */
     addAssetPopover = (editor, selectedText) => {
-        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>'
+
+        let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
+        if(selectedTag!=="LI"&&selectedTag!=="P"&&selectedTag!=="H3"&&selectedTag!=="BLOCKQUOTE"){
+            selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+        }
+        let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
         this.props.openAssetPopoverPopUp(true);
     }
@@ -1028,8 +1033,9 @@ export class TinyMceEditor extends Component {
             /*
                 Before entering to new element follow same  procedure
             */
-            if( !isSameTargetBasedOnDataId ){
-                document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
+            if(!isSameTargetBasedOnDataId){
+                if(document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
+                    document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
                 document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
             }
             else{
@@ -1055,7 +1061,9 @@ export class TinyMceEditor extends Component {
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                 let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
+                if(document.getElementById(tinymce.editors[i].id)){
+                    document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
+                }     
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
