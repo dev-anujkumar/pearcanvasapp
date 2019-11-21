@@ -134,7 +134,7 @@ describe('Testing Element figure component with props', () => {
             expect(spydataFromAlfresco).toHaveBeenCalled()
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  epsURL given', () => {
+        xit('Test- if case workflow-  epsURL given', () => {
             let data = {
                 'assetType': "audio",
                 epsUrl: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",

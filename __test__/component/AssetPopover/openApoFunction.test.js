@@ -73,7 +73,7 @@ describe('Testing openApoFunction files functions', () => {
         document.body.appendChild(samplediv);
         //saveAssetLinkedMedia(apoObject, imageObj);
     }),
-    it('testing clearAssetPopoverLink else part', () => {
+    xit('testing clearAssetPopoverLink else part', () => {
         let samplediv = document.createElement('abbr');
         samplediv.setAttribute('asset-id', 'xyz' );
         samplediv.innerHTML = "test";
