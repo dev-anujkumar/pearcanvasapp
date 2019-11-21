@@ -5,6 +5,7 @@ let qaConfig = {
     ASSET_POPOVER_ENDPOINT: "https://contentapis-qa.pearsoncms.net/manifest-api/",
     PRODUCTAPI_ENDPOINT: "https://contentapis-qa.pearsoncms.net/product-api/",
     ELM_ENDPOINT: "https://contentapis-qa.pearsoncms.net/manifest-api/",
+    LERNOSITY_ENDPOINT:  "https://contentapis-qa.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-qa.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-qa.pearsoncms.net/structure-api/',
     PAGE_NUMBER_UPDATE_ENDPOINT : "https://contentapis-qa.pearsoncms.net/print-api",

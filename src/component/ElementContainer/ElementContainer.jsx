@@ -546,30 +546,6 @@ class ElementContainer extends Component {
                 case elementTypeConstant.ELEMENT_ASIDE:
                     switch (element.subtype) {
                         case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            editor = <ElementAsideContainer
-                                handleCommentspanel={handleCommentspanel}
-                                permissions={permissions}
-                                showDeleteElemPopup={this.showDeleteElemPopup}
-                                showBlocker={this.props.showBlocker}
-                                setActiveElement={this.props.setActiveElement}
-                                handleBlur={this.handleBlur}
-                                handleFocus={this.handleFocus}
-                                btnClassName={this.state.btnClassName}
-                                borderToggle={this.state.borderToggle}
-                                elemBorderToggle={this.props.elemBorderToggle}
-                                elementSepratorProps={elementSepratorProps}
-                                index={index} element={element}
-                                elementId={element.id}
-                                type={element.type}
-                                slateLockInfo={slateLockInfo} 
-                                updatePageNumber ={updatePageNumber}
-                                isBlockerActive={this.props.isBlockerActive}
-                                onClickCapture={this.props.onClickCapture}
-                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                />;
-                            // labelText = LABELS[element.subtype] || 'AS';
-                            break;
                         default:
                             editor = <ElementAsideContainer
                                 handleCommentspanel={handleCommentspanel}
@@ -593,8 +569,7 @@ class ElementContainer extends Component {
                                 onClickCapture={this.props.onClickCapture}
                                 glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                                 glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                 />;
-                        // labelText = 'AS'
+                                />;
                     }
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
