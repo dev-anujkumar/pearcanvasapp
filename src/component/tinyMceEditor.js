@@ -976,6 +976,20 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+        /*
+            Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
+        */
+        if( tinymce.$(e.target).find('li').length   ){
+            tinymce.$(e.target).find('li').each(function(a,b){
+                if( this.innerHTML.trim() == '' ){
+                    tinymce.$(this).append('<br/>')
+                } 
+            })
+        }
+        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+            tinymce.$(e.target).closest('li').append('<br/>');
+        }
+
         if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
             if(tinymce.activeEditor && tinymce.activeEditor.id){
                 document.getElementById(tinymce.activeEditor.id).contentEditable = false
