@@ -106,9 +106,9 @@ export class CanvasWrapper extends Component {
             observer.observe(targetNode, config);
     }
     
-    handleCommentspanel = (elementId) => {
+    handleCommentspanel = (elementId,index) => {
         this.props.toggleCommentsPanel(true);
-        this.props.fetchCommentByElement(elementId);
+        this.props.fetchCommentByElement(elementId,index);
         sendDataToIframe({
             'type': TocToggle,
             'message': {"open":false}
