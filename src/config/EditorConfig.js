@@ -16,8 +16,7 @@ export const EditorConfig = {
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' },
         removeformat: [
-            { selector: 'abbr,dfn,a,strong,em,s,sub,sup,code,span', remove: 'all',split: true, expand: false },
-            //{ selector: 'span', attributes: ['style', 'text-decoration: line-through;'], split: true, expand: false, deep: true }
+            { selector: 'abbr,dfn,a,strong,em,s,sub,sup,code,span', remove: 'all',split: true, expand: false }
           ]
     },
     toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton customUoListButton tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo assetPopoverIcon slateTag ',
