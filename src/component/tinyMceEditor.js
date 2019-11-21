@@ -191,14 +191,16 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia'))
+                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
-                        /*  For Figure type*/                    
-                        else if(blockTag === "SPAN" || blockTag === "CODE"){
+                        }
+                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
+                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                        }
+                        /*  For Figure type*/
+                        else {
                             e.target.targetElm.innerHTML = window.getSelection().toString()
                         }
-                        else
-                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                     }
                     /**
                      * In case of list element
