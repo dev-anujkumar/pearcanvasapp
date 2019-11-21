@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import Sidebar from '../../../src/component/Sidebar';
 import { conversionElement } from './../../../src/component/Sidebar/Sidebar_Action';
+import { updateElement } from './../../../src/component/ElementContainer/ElementContainer_Actions';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -18,13 +19,15 @@ describe('Test for Sidebar component', () => {
         primaryOption: "primary-heading",
         secondaryOption: "secondary-heading-1",
         index: "1-0",
-        tag: "H1"
+        tag: "H1",
+        toolbar: []
     };
     
     const sidebarWithData = mockStore({
         appStore: {
             activeElement,
             updateElement,
+            conversionElement,
             slateLevelData,
         },
         metadataReducer: {
@@ -109,6 +112,7 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
+                sidebarWithData,
                 conversionElement,
                 slateLevelData
             },
@@ -177,7 +181,8 @@ describe('Test for Sidebar component', () => {
                 index: 0,
                 primaryOption: "primary-blockquote",
                 secondaryOption: "secondary-pullquote",
-                tag: "BQ"
+                tag: "BQ",
+                toolbar: []
             }
             
             const sidebarWithData = mockStore({

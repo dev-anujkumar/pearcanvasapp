@@ -693,12 +693,9 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
                 editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-            }
-            else {
-                editor.insertContent(`<sup><a href="#" id = "123" data-uri="' + "123" + data-footnoteelementid=  + "123" + class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
-            }
-            this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); }); 
-            this.saveContent()
+                this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id , () => { this.toggleGlossaryandFootnoteIcon(true); }); 
+                this.saveContent()
+            }  
         })
     }
     learningObjectiveDropdown(text){

@@ -54,7 +54,7 @@ describe('Testing openApoFunction files functions', () => {
         samplediv.setAttribute('asset-id', 'xyz' );
         samplediv.innerHTML = "test"
         document.body.appendChild(samplediv)
-        saveAssetLinkedMedia(apoObject, imageObj)
+        //saveAssetLinkedMedia(apoObject, imageObj)
     })//,
     it('testing saveAssetLinkedMedia function else part', () => {
         let apoObject = {}
@@ -71,7 +71,7 @@ describe('Testing openApoFunction files functions', () => {
         samplediv.setAttribute('id', 'asset-popover-attacher' );
         samplediv.innerHTML = "test";
         document.body.appendChild(samplediv);
-        saveAssetLinkedMedia(apoObject, imageObj);
+        //saveAssetLinkedMedia(apoObject, imageObj);
     }),
     it('testing clearAssetPopoverLink else part', () => {
         let samplediv = document.createElement('abbr');
