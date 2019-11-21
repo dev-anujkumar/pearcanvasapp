@@ -446,7 +446,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 toggleTocDelete: args,
             })
         }
-
+        deleteTocItemWithPendingTrack = (message)=>{
+            this.deleteTocItem(message)
+        }
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
             let projectUrn = message.changedValue.projectUrn;
