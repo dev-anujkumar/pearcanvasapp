@@ -25,6 +25,12 @@ const store = mockStore({
     audioReducer:{
         addAudio: false,
         openAudio: false
+    },
+    slateLockReducer: {
+        slateLockInfo: {
+            isLocked: false,
+            userId: "c5Test01"
+        }
     }
 });
 
