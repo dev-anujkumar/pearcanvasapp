@@ -301,7 +301,7 @@ class OpenerElement extends Component {
         element.backgroundimage.path = imgSrc;
         element.backgroundimage.imageid = imageId;
         element.backgroundimage.alttext = altText;
-        element.backgroundimage.longdescripton = longDesc;
+        element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
 
         this.props.updateElement(element);
