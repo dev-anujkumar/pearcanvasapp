@@ -92,6 +92,7 @@ class SlateWrapper extends Component {
 
     renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
+            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
             return false;
         }
         let _slateData = this.props.slateData;
