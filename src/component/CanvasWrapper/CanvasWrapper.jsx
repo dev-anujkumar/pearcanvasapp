@@ -204,7 +204,7 @@ const mapStateToProps = state => {
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
         glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
-        // currentSlateLOData: state.metadataReducer.currentSlateLOData,
+        currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod
