@@ -713,10 +713,6 @@ export class TinyMceEditor extends Component {
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            else {
-                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
-            }
-
             if(selectedText !== ""){
                 editor.insertContent(insertionText);
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
