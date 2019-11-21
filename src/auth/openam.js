@@ -518,8 +518,8 @@ function openamConfig(options) {
         console.log("response_sir from serverinfo: " + response_sir);
         return response_sir;
     };
-
-    var cookieName = JSON.parse(serverinfo()).cookieName;
+    
+    var cookieName = serverinfo() ? JSON.parse(serverinfo()).cookieName :'';
     debug("openamConfig: Session Cookie Name=" + cookieName);
     this.sessionCookieName = function () {
         return cookieName;
@@ -527,7 +527,7 @@ function openamConfig(options) {
 
     // Taking the first domain
     // ToDo: Use all the domains and restrict as an option
-    var domain = JSON.parse(response_sir).domains[0];
+    var domain = response_sir ? JSON.parse(response_sir).domains[0] :'';
 
     this.domainName = function () {
         return domain;

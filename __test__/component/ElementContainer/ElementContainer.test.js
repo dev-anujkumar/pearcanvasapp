@@ -265,11 +265,11 @@ describe('Test for element container component', () => {
         elementContainerInstance.handleFocus();
          elementContainerInstance.handleBlurAside();
     })
-    it('toggleColorPaletteList ', () => {
+    xit('toggleColorPaletteList ', () => {
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         elementContainerInstance.toggleColorPaletteList();
     })
-    it('selectColor  ', () => {
+    xit('selectColor  ', () => {
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         let event = {
             target: {
