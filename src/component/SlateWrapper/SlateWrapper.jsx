@@ -684,8 +684,7 @@ class SlateWrapper extends Component {
                         dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
-                    />
-                    
+                    />                   
                    
                 )
             }
