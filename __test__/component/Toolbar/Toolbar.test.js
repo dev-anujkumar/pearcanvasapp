@@ -37,7 +37,7 @@ const store = mockStore({
 
 let  wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
 
-xbeforeEach(() => {
+beforeEach(() => {
     wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
 })
 

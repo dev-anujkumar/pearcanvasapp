@@ -115,7 +115,13 @@ const initialState = {
         openSplitPopUp : false
     },
     slateLockReducer: SlateLockMockState,
-    assetPopOverSearch: AssetPopOverMockState
+    assetPopOverSearch: AssetPopOverMockState,
+    metadataReducer : {
+        currentSlateLOData: {
+            id: 1,
+            loUrn: "123"
+        }
+    }
 };
 
 describe('Testing <CanvasWrapper> Component', () => {

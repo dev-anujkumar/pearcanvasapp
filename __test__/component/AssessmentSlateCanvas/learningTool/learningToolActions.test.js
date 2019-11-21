@@ -16,10 +16,11 @@ import {LT_API_RESULT,
     LINK_BUTTON_DISABLE
   } from '../../../../src/constants/Action_Constants';
   import {tempFiguresForResults,disciplines,selectedResult} from '../../../../fixtures/learningTool'
-
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-
+jest.mock('../../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn()
+}))
 
 let  initialState = {
     shouldHitApi : false,
@@ -38,7 +39,7 @@ let  initialState = {
     numberOfRows : 25
 };
 
-describe('Tests Learning Tool  action', () => {
+xdescribe('Tests Learning Tool  action', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
