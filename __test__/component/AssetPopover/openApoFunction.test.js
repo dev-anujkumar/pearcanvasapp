@@ -33,7 +33,7 @@ describe('Testing openApoFunction files functions', () => {
 
         authorAssetPopOver(toggleApoPopup)
     }),
-    it('testing saveAssetLinkedMedia function', () => {
+    xit('testing saveAssetLinkedMedia function', () => {
         let apoObject = {
             title : {
                 text : 'i'
@@ -56,7 +56,7 @@ describe('Testing openApoFunction files functions', () => {
         document.body.appendChild(samplediv)
         //saveAssetLinkedMedia(apoObject, imageObj)
     })//,
-    it('testing saveAssetLinkedMedia function else part', () => {
+    xit('testing saveAssetLinkedMedia function else part', () => {
         let apoObject = {}
         let imageObj = {
             "versionUrn": "urn:pearson:work:655702ea-43c4-49ac-81d4-173ec723ac12",

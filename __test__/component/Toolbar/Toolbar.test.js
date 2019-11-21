@@ -29,7 +29,8 @@ const store = mockStore({
     slateLockReducer: {
         slateLockInfo: {
             isLocked: false,
-            userId: "c5Test01"
+            timestamp: "",
+            userId: ""
         }
     }
 });

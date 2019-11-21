@@ -11,7 +11,7 @@ beforeEach(() => moxios.install() )
 afterEach(() => moxios.uninstall());
 
 const callback = (res) => {}
-describe('Testing tinyMce  component with  props', () => {
+xdescribe('Testing tinyMce  component with  props', () => {
     let props={
         slateLockInfo:{
             isLocked:false

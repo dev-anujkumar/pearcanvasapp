@@ -7,7 +7,7 @@ import {  singleAssessmentCITEDefault} from '../../../fixtures/ElementSingleAsse
 // import config from '../../../src/config/config';
 // import { JestEnvironment } from '@jest/environment';
 
-describe('Testing Element Single Assessment component', () => {
+xdescribe('Testing Element Single Assessment component', () => {
 
     xtest('renders without crashing', () => {
         const component = mount(<ElementSingleAssessment model={singleAssessmentCITEDefault} index="" />)
