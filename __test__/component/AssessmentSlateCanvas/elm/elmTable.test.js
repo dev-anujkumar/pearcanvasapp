@@ -42,9 +42,7 @@ describe('ELM Actions test', () => {
             navigateBack: function(){},
             hidePufPopup:  function(){},
             usageTypeMetadata: 'Quiz',
-            // getParentId : "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
-        // console.log("config",config)
         const component = mount(<Provider store={store}><ElmTable {...props}/></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
