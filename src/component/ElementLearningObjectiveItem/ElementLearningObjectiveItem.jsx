@@ -4,9 +4,9 @@ import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 export class ElementLearningObjectiveItem extends Component {
   render() {
-    const { className, 
-            model, 
-            openGlossaryFootnotePopUp, 
+    const { className,
+            model,
+            openGlossaryFootnotePopUp,
             slateLockInfo,
             openAssetPopoverPopUp } = this.props
 
