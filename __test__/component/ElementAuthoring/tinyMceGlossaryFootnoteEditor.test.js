@@ -37,31 +37,4 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
     it('Editor Click Event -', () => {
         tinyMceEditor.find('p').simulate('click')
     });
-
-    // it("calling API", () =>{
-    //     moxios.wait(() => {
-    //         const request = moxios.requests.mostRecent();
-    //         request.respondWith({
-    //             status: 200,
-    //             response: {id: "123"}
-    //         })
-    //         .then(() => {
-    //             let res = {data : { id: "123"} }
-    //             callback(res)
-    //         })
-    //         .catch(() => {
-    //             let errorRes = {err : "error" }
-    //             callback(errorRes)
-    //         })
-    //     });
-    //     getGlossaryFootnoteId("urn:123", "GLOSSARY", callback)
-    // })
-    // it('Add glossary', () => {
-    //     let editor = {
-    //         selection : {
-    //             getContent : function(){}
-    //         }
-    //     }
-    //     tinyMceEditorInstance.addGlossary(editor)
-    // })
 })
