@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList, preventRemoveAllFormatting } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -205,14 +205,10 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     /**
-                     * In case of list element
+                     * In case remove all formatting is being appied on list element
                      */
-                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-                        let timeoutInstance = setTimeout(() => {
-                            clearTimeout(timeoutInstance);
-                            updateNestedList(editor.targetElm)
-                            return false;
-                        });
+                    if (!preventRemoveAllFormatting(editor)) {
+                        return false
                     }
                     break;
                 case "FormatBlock":
