@@ -45,7 +45,6 @@ describe('Testing Assessment Slate Canvas component', () => {
             timestamp: "",
             userId: ""
         }}
-        console.log("store-------->",store.getState())
         const component = shallow(<Provider store={store}><AssessmentSlateCanvas model={assessmentSlateDefault} {...props}/></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
