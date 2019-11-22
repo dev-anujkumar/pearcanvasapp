@@ -441,14 +441,19 @@ class ElementContainer extends Component {
                 contentUrn : element.contentUrn,
             }
             contentUrn = this.state.sectionBreak.contentUrn
-            /* parentUrn["elementType"] = element.type
-            parentUrn["manifestUrn"] = element.id
-            parentUrn["contentUrn"] = element.contentUrn */
             id = this.state.sectionBreak.id
         }
         this.handleCommentPopup(false);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        // api needs to run from here
+
+        /** This condition to delete whole aside element when only one element in it deleted */
+        if(this.props.parentElement && this.props.parentElement.subtype!== "workedexample" && this.props.parentElement.elementdata.bodymatter.length === 1){
+            id = this.props.parentElement.id
+            type = this.props.parentElement.type
+            contentUrn = this.props.parentElement.contentUrn
+        }
+        
+           // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
         this.setState({
             sectionBreak : null
