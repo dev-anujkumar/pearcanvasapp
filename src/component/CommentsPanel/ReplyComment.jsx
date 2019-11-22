@@ -37,6 +37,7 @@ class ReplyComment extends React.Component {
             commentString: text,
             commentOnEntity: elementId
         }
+        this.setState({text:""})
         this.props.updateReplyComment(commentUrn, reply, elementId);
     }
 
@@ -80,6 +81,7 @@ class ReplyComment extends React.Component {
     replyCommentForm = (props) => {
         if (props.showReplyForm && props.toggleReplyForm) {
             return (
+                <>
                 <div className="reply">
                     <div>
                         <textarea className="new-comment textarea-input"
@@ -98,6 +100,9 @@ class ReplyComment extends React.Component {
                     </button>
                     </div>
                 </div>
+
+                {props.comment.replyComments && props.comment.replyComments.map((reply, index) => this.reply(index, reply))}
+            </>
             )
 
         }

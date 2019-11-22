@@ -24,7 +24,7 @@ import {updateElement}from '../../component/ElementContainer/ElementContainer_Ac
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
-import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import RootContext from './CanvasContexts.js';
@@ -236,6 +236,7 @@ export default connect(
         fetchAudioNarrationForContainer,
         glossaaryFootnotePopup,
         releaseSlateLock,
-        updateElement
+        updateElement,
+        setSlateParent
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

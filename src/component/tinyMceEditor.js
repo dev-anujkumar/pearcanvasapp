@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList, preventRemoveAllFormatting } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -91,9 +91,11 @@ export class TinyMceEditor extends Component {
                         document.querySelector('.openAudioIcon').style.display = "block";
                     }
                 });
+                tinymce.$('.blockquote-editor').attr('contenteditable',false)
             },
 
             init_instance_callback: (editor) => {
+                tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -203,14 +205,10 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     /**
-                     * In case of list element
+                     * In case remove all formatting is being appied on list element
                      */
-                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-                        let timeoutInstance = setTimeout(() => {
-                            clearTimeout(timeoutInstance);
-                            updateNestedList(editor.targetElm)
-                            return false;
-                        });
+                    if (!preventRemoveAllFormatting(editor)) {
+                        return false
                     }
                     break;
                 case "FormatBlock":
@@ -713,10 +711,6 @@ export class TinyMceEditor extends Component {
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            else {
-                insertionText = '<dfn data-uri="' + "123" + '" class="Pearson-Component GlossaryTerm">' + selectedText + '</dfn>'
-            }
-
             if(selectedText !== ""){
                 editor.insertContent(insertionText);
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
@@ -1095,6 +1089,7 @@ export class TinyMceEditor extends Component {
              */
             currentTarget.focus();
             tinymce.init(this.editorConfig).then(() => { 
+                tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 this.setCursorAtEnd(currentTarget, isSameTarget); 
             });
@@ -1183,11 +1178,31 @@ export class TinyMceEditor extends Component {
                 return (
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
+            case 'blockquote':
+                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote" || this.props.element.elementdata.type === "marginalia") {
+                    let temDiv = document.createElement('div');
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
+                    tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
+                    classes = classes + ' blockquote-editor';
+                    return (
+                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    )
+                }
+                else {
+                    return (
+                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    )
+                }
+                
             default:
                 return (
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
+    }
+    componentDidUpdate(){
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)
     }
 }
 

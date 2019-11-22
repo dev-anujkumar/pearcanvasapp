@@ -5,6 +5,7 @@ export const GET_PAGE_NUMBER = 'GET_PAGE_NUMBER'
 export const SET_UPDATED_SLATE_TITLE = 'SET_UPDATED_SLATE_TITLE'
 export const SET_SLATE_TYPE = 'SET_SLATE_TYPE'
 export const SET_SLATE_ENTITY = 'SET_SLATE_ENTITY'
+export const SET_PARENT_NODE = 'SET_PARENT_NODE'
 export const FETCH_DATA_ON_SLATE_REFRESH= 'FETCH_DATA_ON_SLATE_REFRESH'
 export const ACCESS_DENIED_POPUP = 'ACCESS_DENIED_POPUP' 
 /*---------------Comments Panel ----------------------*/
