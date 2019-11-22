@@ -249,7 +249,7 @@ class Comments extends React.Component {
                     <div className="comment-header">
                         <div className="avatar avatar--large">
                             <span className="profile-picture-placeholder green">
-                                C
+                                {comment.commentCreator[0].toUpperCase()}
                           </span>
                         </div>
                         <div className="comment-info">
