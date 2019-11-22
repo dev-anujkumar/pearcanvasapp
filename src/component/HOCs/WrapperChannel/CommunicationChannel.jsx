@@ -8,13 +8,19 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
-import config from '../../../config/config';
+import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
+import localConfig from '../../../env/local.js';
+import stagingConfig from '../../../env/staging.js';
+import qaConfig from '../../../env/qa.js';
+import perfConfig from '../../../env/perf.js';
+import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader} from '../../../constants/IFrameMessageTypes';
+import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
-import { ALREADY_USED_SLATE } from '../../SlateWrapper/SlateWrapperConstants'
+import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
+import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -52,7 +58,7 @@ function WithWrapperCommunication(WrappedComponent) {
          * handleIncommingMessages | Listen for any incomming message from wrapper application
          * @param {object} e | received message event from wrapper application
          */
-        handleIncommingMessages = (e) => {
+        handleIncommingMessages = (e) => {            
             let messageType = e.data.type;
             let message = e.data.message;
             switch (messageType) {
@@ -83,7 +89,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.toggleCommentsPanel(false);
                     break;
                 case 'toggleCommentsPanel':
-                        this.props.toggleCommentsPanel(true);
+                    this.props.toggleCommentsPanel(true);
+                    sendDataToIframe({
+                        'type': TocToggle,
+                        'message': { "open": false }
+                    });
+                    break;
                 case 'enablePrev':
                     // config.disablePrev = message.enablePrev;
                     config.disablePrev = false;//message.enablePrev;
@@ -144,8 +155,10 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
+                    this.getProjectConfig(message.currentOrigin, config);
                     config.tcmStatus = message.tcm.activated;
-                    config.userId = message['x-prsn-user-id'].toLowerCase()
+                    config.userId = message['x-prsn-user-id'].toLowerCase();
+                    config.userName = message['x-prsn-user-id'].toLowerCase();
                     this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
@@ -175,6 +188,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getLOlistResponse':
                     this.props.currentSlateLO(message);
                 break;
+                case 'getAssessmentLOResponse':
+                    let newMessage = {assessmentResponseMsg:message.assessmentResponseMsg};
+                    this.props.isLOExist(newMessage);
+                    this.props.currentSlateLO(newMessage);
+                   break;    
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
@@ -193,7 +211,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.releaseLockAndRedirect()
                     break;
                 case 'logout':
-                    this.props.logout();
+                    this.releaseLockAndLogout()
                     break;
                 case 'onTOCHamburgerClick':
                     {
@@ -203,9 +221,58 @@ function WithWrapperCommunication(WrappedComponent) {
                             _listWrapperDiv.querySelector('.fr-popup').classList.remove('fr-active')
                         break
                     }
+                case 'trackChanges':{
+                     loadTrackChanges();
+                     break;
+                }
             }
         }
 
+        modifyObjKeys = (obj, newObj) => {
+            Object.keys(obj).forEach(function(key) {
+              delete obj[key];
+            });
+          
+            Object.keys(newObj).forEach(function(key) {
+              obj[key] = newObj[key];
+            });
+            
+        }
+
+        getProjectConfig = (currentOrigin, config) => {
+            switch (currentOrigin) {
+                case 'qa':
+                    this.modifyObjKeys(config, qaConfig);
+                    break;
+                case 'perf':
+                    this.modifyObjKeys(config, perfConfig);
+                    break;
+                case 'staging':
+                    this.modifyObjKeys(config, stagingConfig);
+                    break;
+                case 'stg':
+                case 'prod':
+                case 'prod2':
+                    this.modifyObjKeys(config, prodConfig);
+                    break;
+                case 'local':
+                    this.modifyObjKeys(config, localConfig);
+                    break;
+            }
+
+            console.log("getProjectConfig >> ", config);
+        }
+
+        /**
+         * Releases slate lock and logs user out.
+         */
+        releaseLockAndLogout = () => {
+            const { projectUrn, slateManifestURN} = config;
+            releaseSlateLockWithCallback(projectUrn, slateManifestURN, (res) => {
+                setTimeout(this.props.logout, 500) 
+            })
+        }
+        
         releaseLockAndRedirect = () => { 
             let projectUrn = config.projectUrn
             let slateId = config.slateManifestURN
@@ -229,7 +296,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
                 }
-                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO();
+                message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
                 this.props.isLOExist(message);
                 let slateData = this.props.slateLevelData;
                 const newSlateData = JSON.parse(JSON.stringify(slateData));
@@ -248,14 +315,13 @@ function WithWrapperCommunication(WrappedComponent) {
                     },
                     "metaDataAnchorID": LOElements
                 }
-
+                if(LOElements.length){
                 this.props.updateElement(LOWipData)
+                }
 
             }
         }
-        handleLOStore=()=> {
-            
-        }
+        
         handlePermissioning = (message) => {
             if (message && message.permissions) {
                 this.props.handleUserRole(message.permissions)
@@ -264,18 +330,20 @@ function WithWrapperCommunication(WrappedComponent) {
 
         handleRefreshSlate = () => {
             let id = config.slateManifestURN; 
-            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
-            this.props.handleSlateRefresh(id,()=>{
+            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
+                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
+                this.props.handleSlateRefresh(id,()=>{
                 config.isSlateLockChecked = false;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
             })
+            });
         }
 
         sendDataToIframe = (messageObj) => {
             sendDataToIframe(messageObj);
         }
         hanndleSplitSlate = (newSlateObj) => {
-            this.props.handleSplitSlate(newSlateObj)
+            this.props.handleSplitSlate(newSlateObj);
         }
         sendingPermissions = () => {
             /**
@@ -314,13 +382,16 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                if(this.props.withinLockPeriod === true){
+                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                }          
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
                 currentSlateObject = {
                     title: message.node.unformattedTitle ? message.node.unformattedTitle.en : ''
                 }
                 this.props.setUpdatedSlateTitle(currentSlateObject)
+                config.staleTitle = message.node.unformattedTitle ? message.node.unformattedTitle.en : '';
                 config.slateEntityURN = message.node.entityUrn;
                 config.slateManifestURN = message.node.containerUrn;
                 config.disablePrev = message.disablePrev;
@@ -339,14 +410,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
-                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY];
+                let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
                 sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys} })
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
                 }
-               
+                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+                    let newMessage = {assessmentResponseMsg:false};
+                    this.props.isLOExist(newMessage);
+                }
             }
             /**
              * TO BE IMPLEMENTED
@@ -378,7 +452,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 toggleTocDelete: args,
             })
         }
-
+        deleteTocItemWithPendingTrack = (message)=>{
+            this.deleteTocItem(message)
+        }
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
             let projectUrn = message.changedValue.projectUrn;
@@ -501,7 +577,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 const { lockOwner } = this.state
                 showTocBlocker();
                 return (
-                    <PopUp dialogText={ALREADY_USED_SLATE}
+                    <PopUp dialogText={ALREADY_USED_SLATE_TOC}
                         rows="1"
                         cols="1"
                         active={true}
@@ -511,6 +587,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         isInputDisabled={true}
                         slateLockClass="lock-message"
                         withInputBox={true}
+                        lockForTOC={true}
                     />
                 )
             }

@@ -15,7 +15,7 @@ const {
  * @param {*} callback callback method
  */
 export const getGlossaryFootnoteId = (elementId, enumType, callback) => {
-	let url = `${REACT_APP_API_URL}v1/slate/${config.projectUrn}/${elementId}/createWorkId/${enumType}`
+	let url = `${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/${elementId}/createWorkId/${enumType}`
     axios.post(url, null, { 
         headers: {
             "Content-Type": "application/json",

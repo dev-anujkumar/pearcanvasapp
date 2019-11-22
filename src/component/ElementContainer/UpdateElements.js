@@ -1,5 +1,6 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
+import config from '../../config/config';
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -57,8 +58,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -124,8 +125,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -198,8 +199,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -281,8 +282,8 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -304,15 +305,17 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  * @param {*} secondaryOption 
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
+    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
+    let assessmenttitle = document.getElementById('single_assessment_title').innerText;
+     
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: "<p></p>"
+            title: assessmenttitle
         }}
         
     dataToSend.figuredata.elementdata;
-    let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-
+  
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
     dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
 
@@ -321,7 +324,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
-    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_");
+    dataToSend.inputSubType = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
 
     return dataToSend;
 }
@@ -337,11 +340,10 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-        inputSubType : previousElementData.elementdata.usagetype.toUpperCase(),
+        inputSubType : previousElementData.elementdata.usagetype.toUpperCase().replace(" ", "_").replace("-", "_"),
         html: {
             title: "<p></p>"
         }}
-
         return dataToSend;
 }
 
@@ -361,6 +363,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
+        case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
             let { innerHTML, innerText } = node;
@@ -376,7 +379,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                tcm: true          
+                tcm: true,
+                slateUrn: config.slateManifestURN      
             }
             break;
 

@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -47,6 +47,7 @@ class SlateWrapper extends Component {
             hasError: false,
             showReleasePopup: false
         }
+        this.isDefaultElementInProgress = false;
     }
 
     componentDidMount() {
@@ -90,6 +91,10 @@ class SlateWrapper extends Component {
 
 
     renderDefaultElement = () => {
+        if(this.isDefaultElementInProgress){
+            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
+            return false;
+        }
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
             if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
@@ -97,14 +102,20 @@ class SlateWrapper extends Component {
                 let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent;
                 if (_slateBodyMatter.length == 0) {
+                    this.isDefaultElementInProgress = true;
                     /* For showing the spinning loader send HideLoader message to Wrapper component */
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    this.props.createElement(TEXT, "0");
+                    this.props.createElement(TEXT, "0", '', '', '','',()=>{
+                        this.isDefaultElementInProgress = false;
+                    });
                 }
             } else if (Object.values(_slateData).length > 0 && Object.values(_slateData)[0].contents.bodymatter < 1 && config.slateType === 'assessment') {
+                this.isDefaultElementInProgress = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(ELEMENT_ASSESSMENT, "0");
-            }
+                this.props.createElement(ELEMENT_ASSESSMENT, "0", '', '', '','',()=>{
+                    this.isDefaultElementInProgress = false;
+                });
+            }            
         }
     }
 
@@ -134,6 +145,7 @@ class SlateWrapper extends Component {
                 for (let i = tinymce.editors.length - 1; i > -1; i--) {
                     let ed_id = tinymce.editors[i].id;
                     tinymce.remove(`#${ed_id}`)
+                    tinymce.$('.wrs_modal_desktop').remove();
                 }
                 stateChanged = true;
             }
@@ -438,6 +450,8 @@ class SlateWrapper extends Component {
                     isInputDisabled={true}
                     slateLockClass="lock-message"
                     withInputBox={true}
+                    addonText={IN_USE_BY}
+                    lockForTOC={false}
                 />
             )
         }
@@ -656,6 +670,9 @@ class SlateWrapper extends Component {
     }
 
     showTocDeletePopup = () => {
+        /**
+         * Need to refactor these all condition and minimize them
+         */
         if (this.props.toggleTocDelete) {
             if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage === 'singleContainerDelete'){
                 return (
@@ -665,6 +682,20 @@ class SlateWrapper extends Component {
                         saveContent={this.deleteAccepted}
                         saveButtonText='Okay'
                         dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
+                        tocDelete={true}
+                        tocDeleteClass='tocDeleteClass'
+                    />                   
+                   
+                )
+            }
+            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage === 'withPendingTrack'){
+                return (
+                    <PopUp
+                        togglePopup={this.deleteRejected}
+                        active={true}
+                        saveContent={this.deleteAccepted}
+                        saveButtonText='Yes'
+                        dialogText=' Are you sure you want to delete this slate/container with pending changes?'
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />
@@ -744,6 +775,7 @@ class SlateWrapper extends Component {
                                     isBlockerActive={this.props.isBlockerActive}
                                     onListSelect={this.props.convertToListElement}
                                     onClickCapture={this.checkSlateLockStatus}
+                                    isLOExist={this.props.isLOExist}
                                 >
                                     {
                                         (isHovered, isPageNumberEnabled, activeElement, permissions) => (

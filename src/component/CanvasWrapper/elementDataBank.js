@@ -314,7 +314,7 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-aside-feature"
             },
             "asideActivity" : {
-                "primaryOption" : "primary-aside-tactic",
+                "primaryOption" : "primary-aside-activity",
                 "secondaryOption" : "secondary-aside-activity"
             },
             "asideLearningObjective" : {

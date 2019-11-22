@@ -81,7 +81,7 @@ export const bindKeyDownEvent = (editor, e) => {
             }
 
             // creating new paragraph //
-            let getChildSelection = anchorNode.children[0].tagName;
+            let getChildSelection = anchorNode.children.length && anchorNode.children[0].tagName;
             if (getChildSelection === "IMG" || getChildSelection === "STRONG" || getChildSelection === "EM" || getChildSelection === "U") {
                 prohibitEventBubling(e);
                 return;
@@ -113,6 +113,13 @@ export const bindKeyDownEvent = (editor, e) => {
                     return false;
                 });
             }
+            /**
+             * case - if current list item is in middle of row
+             */
+            else if (anchorNode.nextSibling && anchorNode.nextSibling.tagName === 'LI') {
+                prohibitEventBubling(e);
+                return;
+            }
         }
     }
 
@@ -123,7 +130,7 @@ export const bindKeyDownEvent = (editor, e) => {
     if (editor.targetElm.querySelectorAll('li').length == 0) {
         if ((e.metaKey && e.which == 13) || (e.which == 13)) {
             prohibitEventBubling(e);
-            createNewParagraphElement(e, editor);
+            // createNewParagraphElement(e, editor);
             return false;
         }
     }
@@ -232,8 +239,11 @@ export const bindKeyDownEvent = (editor, e) => {
          * That is a sibling next to it.., then do not perform anything
          */
         if (anchorNode.nextSibling !== null &&
-            (anchorNode.nextSibling.tagName !== "OL" ||
-                anchorNode.nextSibling.tagName !== "UL")) {
+            (anchorNode.nextSibling.tagName === "OL" ||
+                anchorNode.nextSibling.tagName === "UL" ||
+                (anchorNode.nextSibling.tagName === 'BR' &&
+                    (anchorNode.nextSibling.nextSibling.tagName === "OL" ||
+                        anchorNode.nextSibling.nextSibling.tagName === "UL")))) {
             prohibitEventBubling(e);
             return false;
         }
@@ -250,7 +260,7 @@ export const bindKeyDownEvent = (editor, e) => {
  * updateNestedList | takes care of formatting of list from very top
  * @param {*} element | target element
  */
-const updateNestedList = (element) => {
+export const updateNestedList = (element) => {
     let decimalOlClassList = ['decimal', 'lower-alpha', 'lower-roman', 'decimal'];
     let decimalLiClassList = ['listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber'];
 
@@ -285,6 +295,7 @@ const updateNestedList = (element) => {
             treelevel = parseInt(parentTreeLevel) + 1;
         }
         allOlElement[i].setAttribute('treelevel', treelevel);
+        allOlElement[i].removeAttribute('data-mce-style');
         if (treelevel > 1) {
             allOlElement[i].style.counterIncrement = null;
         }
@@ -347,7 +358,22 @@ const updateNestedList = (element) => {
     }
 }
 
-const createNewParagraphElement = (e, editor) => { }
+export const removeTinyDefaultAttribute = (element) => {
+    let allOlElement = element.querySelectorAll('ol');
+    if (allOlElement.length == 0) {
+        allOlElement = element.querySelectorAll('ul');
+    }
+    for (let i = 0; i < allOlElement.length; i++) {
+        allOlElement[i].removeAttribute('data-mce-style');
+    }
+}
+
+const createNewParagraphElement = (e, editor) => {
+    let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
+    let nextSaparator = activeEditor.nextSibling;
+    let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
+    textPicker.click();
+}
 
 const prohibitEventBubling = (e) => {
     e.stopImmediatePropagation();

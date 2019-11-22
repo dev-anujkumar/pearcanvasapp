@@ -207,8 +207,16 @@ class OpenerElement extends Component {
         let styleObj = {
             "width" : "24%"
         }
-        if(imgSrc){
-            styleObj["width"] = width ? width : "100%"
+        if (imgSrc) {
+            //  styleObj["width"] = width ? width : "100%"
+              styleObj = {
+              "max-width": "605px",
+              "height": "384px",
+              "margin-top": "1.5em",
+              "margin-left": "auto",
+             "margin-right": "auto",
+             "width":"76%"
+          }
         }
 
         return styleObj
@@ -218,8 +226,9 @@ class OpenerElement extends Component {
      * Handles Focus on opener element
      * @param {slateLockInfo} Slate lock data
      */
-    handleOpenerClick = (slateLockInfo) => {
+    handleOpenerClick = (slateLockInfo, e) => {
         if(checkSlateLock(slateLockInfo)){
+            e.preventDefault()
             return false
         }
         this.props.onClick()
@@ -247,6 +256,10 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
+        if(checkSlateLock(this.props.slateLockInfo)){
+            event.preventDefault()
+            return false
+        }
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target && event.target.innerText ? event.target.innerText : label;
@@ -288,7 +301,7 @@ class OpenerElement extends Component {
         element.backgroundimage.path = imgSrc;
         element.backgroundimage.imageid = imageId;
         element.backgroundimage.alttext = altText;
-        element.backgroundimage.longdescripton = longDesc;
+        element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
 
         this.props.updateElement(element);
@@ -300,7 +313,7 @@ class OpenerElement extends Component {
         const { element, backgroundColor, slateLockInfo } = this.props
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
-            <div className = "opener-element-container" onClick={() => this.handleOpenerClick(slateLockInfo)}>
+            <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>

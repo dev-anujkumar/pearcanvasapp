@@ -10,9 +10,9 @@ import {
     UPDATE_COMMENT,
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    AUTHORING_ELEMENT_UPDATE
 } from '../../constants/Action_Constants';
-
 
 
 /**
@@ -24,7 +24,7 @@ import {
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
         url = `${config.JAVA_API_URL}v1/narrative/v2/${projectUrn}/aggregatedComments/container/${contentUrn}`
-    return axios.get(url,{
+    return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
@@ -44,10 +44,13 @@ export const fetchComments = (contentUrn, title) => dispatch => {
  *@discription - This function is to fetchComments of the element 
   @param {String} elemenetId - elemenetId of element 
 */
-export const fetchCommentByElement = (elemenetId) => dispatch => {
+export const fetchCommentByElement = (elementId, index) => dispatch => {
     return dispatch({
         type: FETCH_COMMENT_BY_ELEMENT,
-        payload: elemenetId
+        payload: {
+            elementId: elementId,
+            index: index
+        }
     })
 };
 
@@ -89,13 +92,15 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
         comment: reply.commentString,
         commentCreator: reply.commentCreator
     };
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/reply/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/reply/`
     return axios.post(url, replyDataToSend,
-        { headers: {
-            "Content-Type": "application/json",
-            ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
-        } }
+        {
+            headers: {
+                "Content-Type": "application/json",
+                ApiKey: config.STRUCTURE_APIKEY,
+                PearsonSSOSession: config.ssoToken
+            }
+        }
     )
         .then(response => {
             dispatch({
@@ -124,13 +129,15 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     let request = {
         status: resolveOrOpen
     };
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers: {
-            "Content-Type": "application/json",
-            ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
-        } }
+        {
+            headers: {
+                "Content-Type": "application/json",
+                ApiKey: config.STRUCTURE_APIKEY,
+                PearsonSSOSession: config.ssoToken
+            }
+        }
     )
         .then(response => {
             dispatch({
@@ -154,13 +161,15 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 export const updateComment = (commentUrn, updateComment, elementId) => dispatch => {
 
     let request = updateComment
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Status/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
-        { headers: {
-            "Content-Type": "application/json",
-            ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
-        } }
+        {
+            headers: {
+                "Content-Type": "application/json",
+                ApiKey: config.STRUCTURE_APIKEY,
+                PearsonSSOSession: config.ssoToken
+            }
+        }
     ).then(response => {
         dispatch({
             type: UPDATE_COMMENT,
@@ -205,7 +214,7 @@ export const getProjectUsers = () => dispatch => {
 */
 
 export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch => {
-    let url = `${config.STRUCTURE_API_URL}narrative/v2/${elementId}/comment/${commentUrn}/Assignee/`
+    let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Assignee/`
     let req = {
         assignee: newAssignee
     };
@@ -233,20 +242,53 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
   @param {String} elementId -elementId of the element
 */
 
-export const deleteComment = (commentUrn, elementId) => dispatch => {
-
-          
+export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => {
     let url = `${config.JAVA_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
     return axios.delete(url,
-        { headers:{
-        "Content-Type": "application/json",
-     //   ApiKey: config.STRUCTURE_APIKEY,
-        PearsonSSOSession: config.ssoToken
-    } }).then(response => {
+        {
+            headers: {
+                "Content-Type": "application/json",
+                PearsonSSOSession: config.ssoToken
+            }
+        }).then(response => {
+            const parentData = getState().appStore.slateLevelData;
+            const newParentData = JSON.parse(JSON.stringify(parentData));
+            let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+            const index = getState().commentsPanelReducer.index;
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == elementId) {
+                    newBodymatter[index].comments = false;
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == elementId) {
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].comments = false
+                    }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == elementId) {
+                        if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
+                        } else {
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
+                        }
+
+                    }
+                }
+            }
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
             });
+            dispatch({
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
         }).catch(error => {
             console.log("error while deleting user", error);
         })

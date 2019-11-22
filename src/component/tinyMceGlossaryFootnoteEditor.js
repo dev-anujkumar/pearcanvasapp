@@ -1,6 +1,7 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
+import "tinymce/plugins/paste";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon,
@@ -9,17 +10,19 @@ import {
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.placeHolderClass = ''
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
-      plugins: "placeholder tiny_mce_wiris",
+      plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
       selector: '#glossary-0',
       inline: true,
       statusbar: false,
       object_resizing: false,
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
+      paste_preprocess: this.pastePreProcess,
       setup: (editor) => {
         this.onEditorBlur(editor);
         this.setChemistryFormulaIcon(editor);
@@ -28,8 +31,10 @@ export class ReactEditor extends React.Component {
         this.addMathmlFormulaButton(editor);
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+          let contentHTML = e.target.innerHTML;
           if (activeElement) {
-            if (activeElement.innerText.trim().length) {
+            let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+            if (activeElement.innerText.trim().length || isContainsMath) {
               activeElement.classList.remove('place-holder')
             }
             else {
@@ -46,16 +51,6 @@ export class ReactEditor extends React.Component {
             this.handleFocussingInlineCode(api, editor)
           }
         });
-        editor.on('BeforeExecCommand', (e) => {
-          let command = e.command;
-          if(command === "RemoveFormat") {
-            let selectedText = window.getSelection().toString();
-            if(selectedText == "") {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }
-        });
       },
       init_instance_callback: function (editor) {
         // editor.fire('focus');
@@ -65,9 +60,45 @@ export class ReactEditor extends React.Component {
         //     activeElement.classList.add('place-holder')
         //   }
         // }
+
+        editor.on('Change', (e) => {
+          let content = e.target.getContent({format: 'text'}),
+              contentHTML = e.target.getContent(),
+              activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
+
+          if (activeElement) {
+              let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+              if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
+                  activeElement.classList.remove('place-holder')
+              }
+              else {
+                  activeElement.classList.add('place-holder')
+              }
+          }
+      });
+
+        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+        let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+        revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+        document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
       },
     }
     this.editorRef = React.createRef();
+  }
+
+  /**
+     * Called before paste process
+     * @param {*} plugin
+     * @param {*} args
+     */
+    pastePreProcess = (plugin, args) => {
+      let testElement = document.createElement('div');
+      testElement.innerHTML = args.content;
+      if(testElement.innerText.trim().length){
+          args.content = testElement.innerText;
+      }else{
+          args.content = tinymce.activeEditor.selection.getContent();
+      } 
   }
 
   /*
@@ -128,7 +159,10 @@ export class ReactEditor extends React.Component {
       icon: "tinymceformulachemistryicon",
       tooltip: "Wiris editor chemistry",
       onAction: function (_) {
-        editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+        //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
+        let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
+        wirisChemistryInstance.enable('chemistry');
+        window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
       },
       onSetup: (buttonApi) => {
         /*
@@ -165,6 +199,30 @@ export class ReactEditor extends React.Component {
     });
   };
 
+  handlePlaceholer() {
+    let model, tempPlaceHolderclass;
+    model = this.props.glossaryFootNoteCurrentValue;
+    tempPlaceHolderclass = this.props.className;
+
+    let testElem = document.createElement('div');
+    testElem.innerHTML = model;
+
+    if (testElem && model) {
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+      if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+        this.placeHolderClass = tempPlaceHolderclass;
+      } else {
+        this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
+      }
+    } else {
+      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes('place-holder')) {
+        this.placeHolderClass = tempPlaceHolderclass
+      } else {
+        this.placeHolderClass = tempPlaceHolderclass + 'place-holder';
+      }
+    }
+  }
+
   componentDidMount() {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
@@ -178,10 +236,15 @@ export class ReactEditor extends React.Component {
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       tinymce.init(this.editorConfig);
     }
+    this.handlePlaceholer()
   }
 
   componentDidUpdate() {
+    this.handlePlaceholer()
+  }
 
+  componentWillMount() {
+    this.handlePlaceholer()
   }
 
   handleClick = (e) => {
@@ -193,7 +256,21 @@ export class ReactEditor extends React.Component {
 
     if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
       let activeEditorId = tinymce.activeEditor.id;
+
+      /*
+        Before setting wiris remove the classes to prevent it converting to mathml
+      */
+      let tempContainerHtml = tinyMCE.$("#" + tinymce.activeEditor.id).html()
+      tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+      //tinymce.$('.wrs_modal_desktop').remove();
+
       tinymce.remove('#' + tinymce.activeEditor.id)
+      tinymce.$('.wrs_modal_desktop').remove();
+      /*
+        this line must execute after removing tinymce
+      */
+      document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+
       if (document.getElementById(activeEditorId)) {
         document.getElementById(activeEditorId).contentEditable = true;
       }
@@ -206,7 +283,7 @@ export class ReactEditor extends React.Component {
   render() {
     return (
       <div>
-        <p ref={this.editorRef} className={this.props.className} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} ></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
       </div>
     )
   }

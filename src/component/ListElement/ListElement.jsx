@@ -48,6 +48,8 @@ export class ListElement extends Component {
                 slateLockInfo={slateLockInfo}
                 onListSelect={this.props.onListSelect}
                 permissions={this.props.permissions}
+                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
             />
         )
     }

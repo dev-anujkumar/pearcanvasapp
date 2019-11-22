@@ -1,6 +1,7 @@
 import { CONTENT_STYLE } from './TinymceDefaultCss';
 import 'tinymce/plugins/charmap';
 export const EditorConfig = {
+    
     formats: {
         // Changes the default format for h1 to have a class of heading
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
@@ -13,7 +14,10 @@ export const EditorConfig = {
         'marginalia': { block: 'blockquote', classes: 'blockquoteMarginalia', wrapper: true},
         'pullquote': { block: 'h3', classes: 'pullQuoteNumeroUno' },
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
-        'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' }
+        'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' },
+        removeformat: [
+            { selector: 'abbr,dfn,a,strong,em,s,sub,sup,code,span', remove: 'all',split: true, expand: false }
+          ]
     },
     toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton customUoListButton tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo assetPopoverIcon slateTag ',
     contentStyle: CONTENT_STYLE,

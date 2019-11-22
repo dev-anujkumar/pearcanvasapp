@@ -24,7 +24,9 @@ class PopUp extends React.Component {
                 document.querySelector(".save-button").click();
             }
         });
-        this.modelRef.current.focus();
+        if(this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")){
+            this.modelRef.current.querySelector("input, textarea").focus();
+        }
     }
 
     componentWillUnmount(){
@@ -101,12 +103,12 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio){
+        if(props.showDeleteElemPopup || props.isLockReleasePopup ||  props.isSplitSlatePopup || props.tocDelete || props.removeConfirmation || props.wrongAudio || props.lockForTOC){
             return null
         }
-        else if(props.isLockPopup && props.withInputBox){
+        else if(props.isLockPopup && props.withInputBox && !props.lockForTOC){
             return (
-                <input type="text" className={`dialog-input-textarea ${props.slateLockClass}`} disabled value={props.inputValue} rows={props.rows} cols={props.cols} />
+                <div className="lockInputBox">{props.addonText}<input disabled value={props.inputValue} /></div>
             )  
         }
         else if(props.assessmentAndInteractive){
@@ -185,7 +187,7 @@ class PopUp extends React.Component {
             <div className="model">
                 {
                     active ? 
-                        <div tabIndex = "-1" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
+                        <div tabIndex = "0" className={`model-popup ${assessmentClass}`} ref={this.modelRef}>
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}

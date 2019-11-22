@@ -14,6 +14,8 @@ import elementDataBank from './elementDataBank'
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
+	let altText="";
+	let longDesc="";
 	try {
 		switch (element.type) {
 			case 'element-authoredtext':
@@ -34,7 +36,6 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'figure':
-					let altText="";
 				switch (element.figuretype){
 					case "image":
 					case "table":
@@ -42,13 +43,18 @@ const findElementType = (element, index) => {
 					case "authoredtext":
 					case "tableasmarkup":
 						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
-						let longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : "" 	
+						longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : "" 	
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
 							altText,
 							longDesc,
 							...elementDataBank[element.type][element.figuretype][element.subtype]
+						}
+						if (!elementType.secondaryOption) {
+							if (element.figuretype === "tableasmarkup"){
+								elementType.secondaryOption = "secondary-editor-table-equation";	
+							}
 						}
 						break;
 					case "codelisting":
@@ -64,7 +70,7 @@ const findElementType = (element, index) => {
 								break;
 
 							default:
-								elementType.secondaryOption = `secondary-blockcode-language-${element.figuredata.programlanguage}`
+								elementType.secondaryOption = `secondary-blockcode-language-${(element.figuredata.programlanguage).replace(" ", "_")}`
 						}
 						break;
 					case "video":
@@ -117,7 +123,14 @@ const findElementType = (element, index) => {
 			case 'element-generateLOlist':
 			case 'element-learningobjectives':
 			case 'openerelement':
-				elementType = {...elementDataBank[element.type]}
+				altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""
+				longDesc = element.backgroundimage.longdescription ? element.backgroundimage.longdescription : "" 	
+						
+				elementType = {
+					altText,
+					longDesc,
+					...elementDataBank[element.type]
+				}
 				break;
 			
 			default:

@@ -16,13 +16,25 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
     
     return axios.get(url)
         .then((res) => {
+            if(!res.data.isLocked)
+                config.isSlateLockChecked = true;
+
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: res.data
             })
-            config.isSlateLockChecked = true;
+            
         })
         .catch((err) => {
+            // For local testing purpose
+            /* dispatch({
+                type: SET_SLATE_LOCK_STATUS,
+                payload: {
+                    isLocked: true,
+                    timestamp: "",
+                    userId: "abcd"
+                }
+            }) */
         })
 } 
 
@@ -117,7 +129,6 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
             }
         })
         .catch((err) => {
-            //console.log("API error from release slate>>>>",err)
             if(callback){
                 callback(err)
             }

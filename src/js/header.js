@@ -2,6 +2,7 @@ const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 import {c4PublishObj} from '../js/c4_module.js';
 import { OPEN_AM } from './auth_module';
+import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
 
 var current_slate_urn='';
 /**

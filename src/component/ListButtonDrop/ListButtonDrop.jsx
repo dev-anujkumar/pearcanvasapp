@@ -33,7 +33,7 @@ const ListButtonDrop = (props) => {
                 <div>
                     <div id="listInputCover" className="">
                         <input ref={props.inputRef} id="listINputBox" defaultValue={props.startValue} maxLength="9" type="text" dir="auto" pattern="\d*" className="list-input-box fr-not-empty" onKeyPress={numberValidatorHandler} onKeyDown={handleCtrlV} onPaste={handleRightClickCtrlV} onKeyUp={(e) => { handleInputSubmit(e, props) }} />
-                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className="fr-command fr-btn fr-btn-font_awesome disabledListBtn" data-cmd="popupGoBtn">
+                        <button id="popupGoBtn-1" type="button" tabIndex="-1" role="button" title="submit" className="fr-command fr-btn fr-btn-font_awesome disabledListBtn" data-cmd="popupGoBtn" onClick={(e) => { handleInputSubmit(e, props, true) }}>
                             <i className="fa fa-check" aria-hidden="true"></i>
                             <span className="fr-sr-only">submit</span>
                         </button>
@@ -200,7 +200,7 @@ const handleRightClickCtrlV = (e) => {
  * @param {object} e | received event of input
  * @param {object} props | received props of parent portal element
  */
-const handleInputSubmit = (e, props) => {
+const handleInputSubmit = (e, props, onClicked) => {
     let value = document.getElementById('listINputBox').value;
     if (value == '') {
         document.getElementById('popupGoBtn-1').classList.add('disabledListBtn')
@@ -209,7 +209,7 @@ const handleInputSubmit = (e, props) => {
         document.getElementById('popupGoBtn-1').classList.remove('disabledListBtn')
     }
     let charCode = (e.which) ? e.which : e.keyCode;
-    if (charCode === 13 && value != '') {
+    if ((charCode === 13 && value != '') || onClicked) {
         let type = document.getElementById('listDropWrapper').querySelector('.list-options.selected').getAttribute('data-cmd');
         onListOptionSelect(type, props);
     }

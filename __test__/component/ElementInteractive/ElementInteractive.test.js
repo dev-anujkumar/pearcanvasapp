@@ -7,7 +7,7 @@ import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivep
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
     Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq } from '../../../fixtures/ElementInteractiveTesting.js'
 
-describe('Testing Interactive element component', () => {
+xdescribe('Testing Interactive element component', () => {
     test('renders without crashing', () => {
         const props = {
             slateLockInfo: {

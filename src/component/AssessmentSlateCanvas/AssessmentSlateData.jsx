@@ -3,12 +3,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // IMPORT - Assets //
+import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import { sendDataToIframe } from '../../../src/constants/utility.js';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -17,16 +19,39 @@ export class AssessmentSlateData extends Component {
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
-            learningToolStatus: ''
+            learningToolStatus: false
         }
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
         this.typeRef = React.createRef();
     }
+    
+    componentWillReceiveProps(nextProps){
+     if(this.props!==nextProps && this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
+         this.sendDataAssessment(nextProps);
+     }
+    }
+
+    sendDataAssessment(nextProps){
+        if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
+            let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
+            let assessmentId= nextProps.model.elementdata.assessmentid.length>0 ? nextProps.model.elementdata.assessmentid: '' ;
+            if(assessmentId!=""){
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys} });
+            }
+            else{
+               //set tag to grey here 
+               let newMessage = {assessmentResponseMsg:false};
+               this.props.isLOExist(newMessage);
+            }
+            
+        }
+    }
 
     componentDidMount() {
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
+            this.sendDataAssessment(this.props);
             this.setState({
                 activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
             })
@@ -35,7 +60,8 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to link learning app*/
     linkLearningApp = (selectedLearningType) =>{
-        this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,this.state.learningToolStatus,selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
+        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+        this.props.updateAssessment(selectedLearningType.learningtemplateUrn,"",selectedLearningType.label.en,LEARNING_TEMPLATE,this.state.activeAssessmentUsageType,'insert',selectedLearningType.learningsystem,selectedLearningType.templateid,selectedLearningType.type);
         this.props.closeLtAction();
     }
 
@@ -52,7 +78,7 @@ export class AssessmentSlateData extends Component {
     
     /*** @description - This function is to change the lerning system
     */
-    changeLearningApp(learningType, change) {
+    changeLearningApp() {
         showTocBlocker();
         disableHeader(true);
         this.props.showBlocker(true);
@@ -60,9 +86,9 @@ export class AssessmentSlateData extends Component {
         this.props.openLTFunction(); 
         this.props.openLtAction();  
         this.setState({
-            activeAssessmentType: learningType,
+            activeAssessmentType: LEARNING_TEMPLATE,
             changeLearningData: true,
-            learningToolStatus: change
+            learningToolStatus: true
         });         
 }
 
@@ -106,11 +132,17 @@ export class AssessmentSlateData extends Component {
     */
     closePopUp = () => {
         this.setState({
-            changeLearningData: false
+            changeLearningData: false,
+           
         }, () => {
              disableHeader(false);
              hideTocBlocker();
              this.props.showBlocker(false);
+             setTimeout(() => {
+                this.setState({
+                    learningToolStatus: false
+                })
+            }, 5000)
         })
     }
     
@@ -128,10 +160,8 @@ export class AssessmentSlateData extends Component {
         if(this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')){
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
-                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'update')
-            case LEARNING_APP_TYPE:
-               
-                    return   this.changeLearningApp(LEARNING_TEMPLATE, 'insert')
+            case LEARNING_APP_TYPE:               
+                    return   this.changeLearningApp()
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -151,8 +181,13 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Type PopUp*/
     toggleAssessmentTypeDropdown = () => {
-        this.typeRef.current.classList.remove('notselect');
-        this.typeDropdownRef.current.classList.remove('notselect')
+        if (this.typeRef.current.classList.contains('notselect')) {
+            this.typeRef.current.classList.remove('notselect');
+            this.typeDropdownRef.current.classList.remove('notselect')
+        } else {
+            this.typeRef.current.classList.add('notselect');
+            this.typeDropdownRef.current.classList.add('notselect')
+        }
     }
 
     /*** @description - This function is to handle the Assessment type change
@@ -180,8 +215,13 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to toggle the Assessment Usage-Type PopUp*/
     toggleUsageTypeDropdown = () => {
-        this.usageTypeDropdownRef.current.classList.remove('notselect')
-        this.usageTypeRef.current.classList.remove('notselect')
+        if (this.usageTypeDropdownRef.current.classList.contains('notselect')) {
+            this.usageTypeDropdownRef.current.classList.remove('notselect')
+            this.usageTypeRef.current.classList.remove('notselect')
+        } else {
+            this.usageTypeDropdownRef.current.classList.add('notselect')
+            this.usageTypeRef.current.classList.add('notselect')
+        }
     }
 
     /*** @description - This function is to handle the Assessment Usage-type change
@@ -192,21 +232,10 @@ export class AssessmentSlateData extends Component {
         this.setState({
             activeAssessmentUsageType: usageType,
         });
-        let assessmentType ="";
         this.usageTypeDropdownRef.current.classList.add('notselect')
         this.usageTypeRef.current.classList.add('notselect')
-        if(this.state.activeAssessmentType===FULL_ASSESSMENT_CITE){
-            assessmentType = 'cite';
-        }else if( this.state.activeAssessmentType===FULL_ASSESSMENT_TDX){
-            assessmentType = 'tdx';
-        }else if(this.state.activeAssessmentType===FULL_ASSESSMENT_PUF){
-            assessmentType = 'puf';
-        }else if(this.state.activeAssessmentType===LEARNING_APP_TYPE || this.state.activeAssessmentType===LEARNING_TEMPLATE ){
-            assessmentType = LEARNING_TEMPLATE;
-        }else{
-            assessmentType = 'learnosity';
-        }
-        this.props.updateAssessment(this.props.assessmentId,this.props.assessmentItemId,this.props.assessmentItemTitle,assessmentType,usageType,'update');
+        this.props.handleAssessmentBlur(usageType)
+    
     }
 
     /*** @description - This function is to select the Assessment usage-type from dropdown*/
@@ -227,6 +256,7 @@ export class AssessmentSlateData extends Component {
         let assessmentSlateJSX;
         let assessmentTypeValue;
         let changeTypeValue;
+        let title = this.props.assessmentItemTitle? this.props.assessmentItemTitle:this.props.learningTemplateLabel;
         if(this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE){
             assessmentTypeValue="Learning App";
             changeTypeValue="Change Learning App"
@@ -243,7 +273,7 @@ export class AssessmentSlateData extends Component {
                     <div className="slate_assessment_data_content">
                         <div className="slate_assessment_data_label">{assessmentTypeValue}</div>
                         <div className="slate_assessment_data_details">
-                            <div className="slate_assessment_data_title">{this.props.assessmentItemTitle}</div>
+                            <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
                             <div className="slate_assessment_change_button" onClick={this.changeAssessment}>{changeTypeValue}</div>
@@ -254,7 +284,7 @@ export class AssessmentSlateData extends Component {
                 <div className="slate_assessment_metadata_container">
                     <div className="slate_assessment_metadata_type_selectlabel">Select usage type</div>
                     <div className="singleAssessment_Dropdown_activeDropdown notselect" ref={this.usageTypeRef} onClick={this.toggleUsageTypeDropdown} >
-                        <span className="slate_assessment_metadata_dropdown_label">{this.state.activeAssessmentUsageType}</span>
+                        <span className="slate_assessment_metadata_dropdown_label" id ="AssessmentSlateUsageType">{this.state.activeAssessmentUsageType}</span>
                         <span className="slate_assessment_metadata_dropdown_image"></span>
                         <div className="clr"></div>
                     </div>
@@ -274,10 +304,10 @@ export class AssessmentSlateData extends Component {
                     <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
                 </div>
             )
-        } else if (this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) {
+        } else if ((this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) || this.state.learningToolStatus) {
             assessmentSlateJSX = <div className="slate_popup_get_selection">
                 <div className="slate_popup_get_image lazyload"></div>
-                <div className="slate_popup_get_title">{"'" + this.props.assessmentItemTitle + "'"}</div>
+                <div className="slate_popup_get_title">{"'" + title + "'"}</div>
                 <div className="slate_popup_get_added">Successfully added</div>
                 <div className="clr"></div>
             </div>

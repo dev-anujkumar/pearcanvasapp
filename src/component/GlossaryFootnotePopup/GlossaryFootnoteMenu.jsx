@@ -5,6 +5,9 @@ import React from 'react';
 import GlossaryFootnotePopup from "./GlossaryFootnotePopup.jsx";
 import PropTypes from 'prop-types'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
+import { ShowLoader } from '../../constants/IFrameMessageTypes';
+import { sendDataToIframe } from '../../constants/utility.js';
+
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
 * to make a skeleton of Glossary and Footnote.
@@ -13,13 +16,13 @@ class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
         //context=this;
-        this.wrapperRef=null;
+        this.wrapperRef = null;
     }
 
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (!document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target))) {
                 this.saveContent()
             }
         }
@@ -36,17 +39,17 @@ class GlossaryFootnoteMenu extends React.Component {
     /**
       * Set the wrapper ref
       */
-    setWrapperRef=(node)=> {
+    setWrapperRef = (node) => {
         this.wrapperRef = node;
     }
 
 
     render() {
-        const { showGlossaaryFootnote, glossaryFootnoteValue } = this.props;
+        const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
         console.table(glossaryFootnoteValue);
         return (
             <div>
-            <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} />
+                <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
             </div>
         )
     }
@@ -61,17 +64,40 @@ class GlossaryFootnoteMenu extends React.Component {
     }
 
     /**
+     * Checks difference in glossary/footnote data
+     */
+    glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
+        switch(type){
+            case "glossary":
+                if(newTerm !== oldTerm ||
+                    newDef !== oldDef){
+                        return true
+                    }
+                return false
+            case "footnote":
+                if(newDef !== oldDef){
+                    return true
+                }
+                return false
+        }
+    }
+    /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 
     */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type } = glossaryFootnoteValue;
+        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
-        term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || null
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || null
-        saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition)
+        term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
+        term = term.match(/<p>/g) ? term : `<p>${term}</p>`
+        definition = definition.match(/<p>/g) ? definition : `<p>${definition}</p>`
+        if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        }
         this.props.showGlossaaryFootnote(false);
     }
 }

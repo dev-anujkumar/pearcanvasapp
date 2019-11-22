@@ -63,7 +63,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     localStorage.setItem('newElement', 1);
@@ -120,6 +120,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
+        if(cb){
+            cb();
+        }
     }).catch(error => {
         // Opener Element mock creation
         if (type == "OPENER") {
@@ -137,6 +140,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("create Api fail", error);
+        if(cb){
+            cb();
+        }
     })
 }
 
@@ -406,7 +412,34 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
             console.log("UPDATE PAGE NUMBER ERROR : ", error)
         })
     }
-
+    else {
+        return axios.delete(
+            `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }
+        ).then(res => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_SUCCESS,
+                payload: {
+                    pageLoading: false
+                }
+            })
+        }).catch(error => {
+            dispatch({
+                type: UPDATE_PAGENUMBER_FAIL,
+                payload: {
+                    pageLoading: false
+                }
+            })
+            console.log("DELETE PAGE NUMBER ERROR : ", error)
+        })
+    }
 }
 
 export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {

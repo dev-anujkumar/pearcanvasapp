@@ -17,26 +17,43 @@ export class ElementSingleAssessment extends Component {
         super(props);
 
         this.state = {
-            assessmentId:  this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId :this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentId:  null,
+            assessmentItemId : null,
             showAssessmentPopup: false,
             asseessmentUsageTypeDropdown: false,
-            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
-
+            activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
+            assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
+            elementType: this.props.model.figuredata.elementdata.assessmentformat || ""
         };
     }
     componentDidMount() {
+        let title =this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,"");        
         this.setState({
+            assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
             assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
         })
     }
     
+static getDerivedStateFromProps(nextProps, prevState) {
+
+    if('figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
+        let title = nextProps.model.html.title? nextProps.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):null;        
+        return {
+            assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
+            assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
+            assessmentTitle :nextProps.model && nextProps.model.html && nextProps.model.html.title? title : null,
+            elementType: nextProps.model.figuredata.elementdata.assessmentformat || ""
+        };
+    }
+
+    return null;
+}
     handleC2AssessmentClick=(value)=> {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
-        let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
+        let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "partial";//"partial";
         let prefix = 'urn:pearson:work:';
@@ -59,9 +76,11 @@ export class ElementSingleAssessment extends Component {
         hideTocBlocker();
     }
     }
+
     launchAssetBrowserCallBack = (assessmentData) => {
         let id = assessmentData['id'] ? assessmentData['id'] : assessmentData.assessmentData['id'];
         let itemID = assessmentData['itemID'];
+        let title = assessmentData['title'] ? assessmentData['title']: null ;
         let assessmentFormat="";
         if (assessmentData['itemsData'] && assessmentData['itemsData']['taxonomicType'] && assessmentData['itemsData']['taxonomicType'][0] && typeof assessmentData['itemsData']['taxonomicType'][0] === 'string') {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['itemsData']['taxonomicType'][0]);
@@ -71,7 +90,7 @@ export class ElementSingleAssessment extends Component {
             assessmentFormat = "";
             alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
-        this.setState({assessmentId: id,assessmentItemId : itemID},
+        this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
             ()=>{
                 this.saveAssessment();
         })
@@ -137,7 +156,7 @@ export class ElementSingleAssessment extends Component {
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
-                    <h4 className="heading4ImageTextWidthNumberLabel" >{model.title.text}</h4>
+                    <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{this.state.assessmentTitle}</h4>
                 </header>
                 <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
                 <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>

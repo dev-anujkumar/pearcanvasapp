@@ -10,13 +10,8 @@ export class ElementLearningObjectiveItem extends Component {
   
 
   render() {
-    let wipModel = null;
-    if (!model) {
-        wipModel = {
-            "text": `<h2 class=\"heading2learningObjectiveItem\">sdas</h2>`
-        }
-    }
     const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp} = this.props
+    
      return (
         <TinyMceEditor
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
@@ -26,7 +21,7 @@ export class ElementLearningObjectiveItem extends Component {
           element={this.props.element}
           placeholder="Type Something..."
           className={className}
-          model={wipModel || model}
+          model={model}
           handleEditorFocus={this.props.handleFocus}
           onFocus={this.onFocus}
           handleBlur = {this.props.handleBlur}

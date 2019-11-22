@@ -65,16 +65,50 @@ export class CanvasWrapper extends Component {
         })
         let { projectUrn } = config,
         slateId = config.slateManifestURN
-        this.props.getSlateLockStatus(projectUrn ,slateId)     
+        this.props.getSlateLockStatus(projectUrn ,slateId) 
+
+        let searchString = window.location.search;
+        let q = new URLSearchParams(searchString);
+        if(q.get('q')){
+            let currentWorkId = q.get('q');
+            setTimeout(() => {
+                this.props.toggleCommentsPanel(true);
+                this.props.fetchCommentByElement(currentWorkId);
+            }, 4000);
         }
+    }
 
     componentDidUpdate(prevProps, prevState){
         this.countTimer =  Date.now();
+
+        var targetNode = document.querySelector('body');
+        // Options for the observer (which mutations to observe)		
+        var config = { attributes: true };
+        // Callback function to execute when mutations are observed		
+        var callbackOb = function (mutationsList, observer) {
+            for (var mutation of mutationsList) {
+                if (mutation.type === 'attributes') {
+                    let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
+                    let wirisNodeLength = wirisNodes.length;
+                    if (wirisNodeLength > 1) {
+                        for (let i = 0; i < wirisNodeLength - 1; i++) {
+                            wirisNodes[i].remove();
+                            document.getElementsByClassName('wrs_modal_overlay').remove
+                        }
+                    }
+                }
+            }
+        };
+        // Create an observer instance linked to the callback function		
+        var observer = new MutationObserver(callbackOb);
+        // Start observing the target node for configured mutations	
+        if (targetNode)
+            observer.observe(targetNode, config);
     }
     
-    handleCommentspanel = (elementId) => {
+    handleCommentspanel = (elementId,index) => {
         this.props.toggleCommentsPanel(true);
-        this.props.fetchCommentByElement(elementId);
+        this.props.fetchCommentByElement(elementId,index);
         sendDataToIframe({
             'type': TocToggle,
             'message': {"open":false}
@@ -123,7 +157,7 @@ export class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} />
+                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
                                 </RootContext.Provider>                                
                             </div>
                         </div>
@@ -138,7 +172,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     () => {
                                         if (this.props.glossaryFootnoteValue.popUpStatus) {
-                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} />)
+                                            return (<GlossaryFootnoteMenu glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue}/>)
                                         }
                                         else {
                                             return (<Sidebar showPopUp={this.showPopUp} />)
@@ -169,9 +203,11 @@ const mapStateToProps = state => {
         showApoSearch : state.assetPopOverSearch.showApoSearch,
         openRemovePopUp: state.audioReducer.openRemovePopUp,
         openSplitPopUp: state.audioReducer.openSplitPopUp,
+        glossaryFootNoteCurrentValue : state.glossaryFootnoteReducer.glossaryFootNoteCurrentValue,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
-        logout
+        logout,
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod
     };
 };
 
