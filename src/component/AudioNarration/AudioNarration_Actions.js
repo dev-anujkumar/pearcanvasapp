@@ -7,17 +7,6 @@ import {
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
 } from '../../constants/Action_Constants.js'
 
-// const axiosInstance = axios.create({
-//     baseURL: config.AUDIO_NARRATION_URL,
-//      withCredentials: false,
-//     headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json',
-//         'ApiKey': config.AUDIO_API_KEY,
-//         'PearsonSSOSession': config.ssoToken,
-//     }
-// })
-
 /**
  * 
  * @param {*} value 
