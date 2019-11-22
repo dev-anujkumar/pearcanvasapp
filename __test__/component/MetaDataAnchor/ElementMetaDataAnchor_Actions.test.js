@@ -1,4 +1,4 @@
-import { currentSlateLO, isLOExist, setCurrentModule } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO, isLOExist, setCurrentModule, currentSlateLOMath } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 
@@ -16,6 +16,18 @@ describe('Testing Actions', () => {
       }]
     let store = mockStore();
     store.dispatch(currentSlateLO(currentSlateLOData));
+    expect(store.getActions()).toEqual(expectedActions);
+  })
+
+  it('testing currentSlateLOMath function', () => {
+    const currentSlateLODataMath = 'Finish docs'
+    const expectedActions =
+      [{
+        'payload': { currentSlateLODataMath },
+        'type': "CURRENT_SLATE_LO_DATA_MATH",
+      }]
+    let store = mockStore();
+    store.dispatch(currentSlateLOMath(currentSlateLODataMath));
     expect(store.getActions()).toEqual(expectedActions);
   })
 
