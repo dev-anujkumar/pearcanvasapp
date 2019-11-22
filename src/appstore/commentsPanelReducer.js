@@ -81,7 +81,8 @@ const initialState = {
     togglePanel: false,
     users: [],
     slateTitle: "",
-    comments: []
+    comments: [],
+    index:null
 }
 
 /**
@@ -100,10 +101,11 @@ export default function (state = initialState, action) {
             };
         case FETCH_COMMENT_BY_ELEMENT:
             let commentList = state.allComments
-            let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload)
+            let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload.elementId)
             return {
                 ...state,
-                comments: comments
+                comments: comments,
+                index:payload.index
             }
         case TOGGLE_COMMENTS_PANEL:
             return {

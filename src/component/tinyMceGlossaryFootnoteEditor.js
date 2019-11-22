@@ -44,6 +44,7 @@ export class ReactEditor extends React.Component {
         });
         editor.ui.registry.addToggleButton('code', {
           text: '<i class="fa fa-code" aria-hidden="true"></i>',
+          tooltip: "Inline code",
           onAction: () => {
             this.addInlineCode(editor)
           },

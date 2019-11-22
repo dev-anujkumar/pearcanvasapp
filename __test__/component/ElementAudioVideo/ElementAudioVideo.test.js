@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { ElementAudioVideo } from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
 import config from '../../../src/config/config';
 import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault } from '../../../fixtures/ElementAudioVideoTestingData.js'
-describe('Testing Element Audio-Video component', () => {
+xdescribe('Testing Element Audio-Video component', () => {
 
     test('renders without crashing', () => {
         let props = {

@@ -13,7 +13,7 @@ const store = mockStore({
   
   
 });
-describe('Testing GlossaryFootnote component with props', () => {
+xdescribe('Testing GlossaryFootnote component with props', () => {
     const div = document.createElement('div');
     const wrapper = mount( <GlossaryFootnotePopup   />)
     let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();

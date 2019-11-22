@@ -17,11 +17,11 @@ let props={
     },
     currentSlateLOData:""
 }
-    let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
-    let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+    // let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
+    // let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
 
 //Rendering component
-describe('Test Rendering of metadaanchor on slate', () => {
+xdescribe('Test Rendering of metadaanchor on slate', () => {
    
     it('render component', () => {
         expect(wrapper.find('ElementMetaLOList')).toHaveLength(1);

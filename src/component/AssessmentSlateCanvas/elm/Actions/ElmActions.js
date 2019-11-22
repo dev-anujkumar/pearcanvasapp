@@ -6,7 +6,7 @@ import axios from 'axios';
  * This action creator is used to fetch ELM resources added to the project
  */
 export const insertElmResourceAction = (assessmentType) => (dispatch) => {
-    let url =`${assessmentType === FULL_ASSESSMENT_PUF ?`${config.ELM_ENDPOINT}`:`${config.ELM_ENDPOINT}`}v2/${config.projectUrn}/alignments/resources`;
+    let url =`${assessmentType === FULL_ASSESSMENT_PUF ?`${config.ELM_ENDPOINT}`:`${config.LERNOSITY_ENDPOINT}`}v2/${config.projectUrn}/alignments/resources`;
     return axios.get(url, {
           headers:  {
             ApiKey: config.STRUCTURE_APIKEY,

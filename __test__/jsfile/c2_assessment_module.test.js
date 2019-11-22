@@ -4,7 +4,7 @@ const configOBJ = require('../../src/config/config.js');
 import {c2AssessmentModule } from '../../src/js/c2_assessment_module.js';
 
 describe('testing function', () => {
-    it('Test searchAndSelectCallBack function', () => {
+    xit('Test searchAndSelectCallBack function', () => {
         c2AssessmentModule.searchAndSelectCallBack()
     })
 

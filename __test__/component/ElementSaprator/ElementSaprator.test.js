@@ -102,7 +102,7 @@ describe('Testing functions', () => {
     })
 
     
-    it('splitSlateClickHandler else testing', () => {
+    xit('splitSlateClickHandler else testing', () => {
         let tempWrapper;
         let permissions = ['split_slate', 'elements_add_remove']
         let elementType  = 'test';
