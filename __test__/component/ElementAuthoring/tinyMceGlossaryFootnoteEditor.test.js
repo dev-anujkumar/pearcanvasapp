@@ -5,7 +5,6 @@ import ReactEditor from '../../../src/component/tinyMceGlossaryFootnoteEditor'
 import { getGlossaryFootnoteId } from "../../../src/js/glossaryFootnote"
 import moxios from 'moxios';
 
-
 beforeEach(() => moxios.install() )
     
 afterEach(() => moxios.uninstall());
@@ -15,8 +14,8 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
     let props = {
         placeholder: "Type Something...",
         id: 0,
-        glossaryFootNoteCurrentValue: "<p>Sample Data</p>",
-        className: ""
+        glossaryFootNoteCurrentValue: "",
+        className: "place-holder"
     }
     const tinyMceEditor = mount( <ReactEditor {...props}  />, {attachTo: window.domNode} )
     // let tinyMceEditorInstance = tinyMceEditor.find('TinyMceEditor').instance();
@@ -29,8 +28,8 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
 
     it('Handle Place-Holder event -', () => {
         tinyMceEditor.setProps({
-            glossaryFootNoteCurrentValue: "",
-            className: "place-holder"
+            glossaryFootNoteCurrentValue: "<p>Sample Data</p>",
+            className: ""
         });
     });
 
