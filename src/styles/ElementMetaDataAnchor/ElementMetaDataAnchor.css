@@ -15,7 +15,7 @@
 .learningObjectiveinnerText.cypress-editable.place-holder{
     font-style:italic;
 }
-.element-container.active .matadata_anchor p{
+.element-container.active > .learningObjectiveContainer .container > .matadata_anchor p{
     background-color: green;
 }
 .tox-tbtn--active .tox-collection--list{
