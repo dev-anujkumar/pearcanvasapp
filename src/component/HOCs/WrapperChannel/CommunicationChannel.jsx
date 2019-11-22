@@ -8,6 +8,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
+import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import localConfig from '../../../env/local.js';
@@ -235,6 +236,10 @@ function WithWrapperCommunication(WrappedComponent) {
           
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
+            });
+
+            Object.keys(cypressConfig).forEach(function(key) {
+                obj[key] = cypressConfig[key];
             });
             
         }
