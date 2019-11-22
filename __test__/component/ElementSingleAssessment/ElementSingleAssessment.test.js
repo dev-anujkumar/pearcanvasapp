@@ -112,24 +112,6 @@ test('renders without crashing', () => {
         expect(spyhandleAssessmentBlur).toHaveBeenCalled()
         spyhandleAssessmentBlur.mockClear()
     });
-    it('onClick C2 media', () => {
-        let props = {
-            handleFocus: function(){},
-            handleBlur : jest.fn(),
-            model : singleAssessmentCITEDefault,
-            onClick : ()=>{},
-        }
-        let assessmentData={
-            id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
-            itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
-            title: "Open response question updated",
-            itemsData: {taxonomicType:["cite"]}
-
-        }
-        const singleAssessment = mount(<ElementSingleAssessment {...props}/>);
-        const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
-        singleAssessmentInstance.launchAssetBrowserCallBack(assessmentData);
-    })
     it('Test-C2 media handling',()=>{
         let props = {
             handleFocus: function(){},
