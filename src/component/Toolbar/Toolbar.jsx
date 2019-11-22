@@ -21,13 +21,15 @@ const _Toolbar = props => {
 
     useEffect(() => {
         setLODropdown(false);
-        test()
+        hideSlateTagIcon()
       }, [props.setSlateEntity, props.setSlateParent]); 
 
-      function test(){
-          if( document.querySelector(".tox-toolbar") && document.querySelector(".tox-toolbar").length){
+       /**
+     * Function for show/hide slate tag icon
+     */
+      function hideSlateTagIcon(){
+          if( document.querySelector(".tox-toolbar")){
             if (document.getElementsByClassName("slate-tag-icon").length) {
-                console.log("blocked kanika");
                 document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
           }}
       }
