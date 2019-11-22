@@ -4,12 +4,16 @@ import { mount } from 'enzyme';
 import { ElementSingleAssessment } from '../../../src/component/ElementSingleAssessment/ElementSingleAssessment';
 import { c2AssessmentModule } from '../../../src/js/c2_assessment_module';
 import {  singleAssessmentCITEDefault} from '../../../fixtures/ElementSingleAssessmentTestData'
-// import config from '../../../src/config/config';
-// import { JestEnvironment } from '@jest/environment';
+jest.mock('../../../src/js/toggleLoader', () => ({
+    hideTocBlocker: jest.fn(),
+    disableHeader: jest.fn(),
+    showTocBlocker: ()=>{
+        return false
+    }
+}))
+describe('Testing Element Single Assessment component', () => {
 
-xdescribe('Testing Element Single Assessment component', () => {
-
-    xtest('renders without crashing', () => {
+test('renders without crashing', () => {
         const component = mount(<ElementSingleAssessment model={singleAssessmentCITEDefault} index="" />)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
@@ -23,7 +27,8 @@ xdescribe('Testing Element Single Assessment component', () => {
         handleFocus: function(){},
         onClick : ()=>{},
         handleBlur: function(){},
-     
+        showBlocker: jest.fn(),
+        
     };
 
     let singleAssessment = mount(<ElementSingleAssessment {...props}  />);
@@ -72,10 +77,10 @@ xdescribe('Testing Element Single Assessment component', () => {
         });
         singleAssessmentInstance.forceUpdate();
         const spytoggleAssessmentPopup = jest.spyOn(singleAssessmentInstance, 'toggleAssessmentPopup')
-        singleAssessmentInstance.toggleAssessmentPopup(false);
+        singleAssessmentInstance.toggleAssessmentPopup({},false);
         singleAssessmentInstance.forceUpdate();
         singleAssessment.update();
-        expect(spytoggleAssessmentPopup).toHaveBeenCalledWith(false) 
+        expect(spytoggleAssessmentPopup).toHaveBeenCalledWith({},false) 
         expect(singleAssessmentInstance.state.showAssessmentPopup).toBe(false)
         spytoggleAssessmentPopup.mockClear()
     });
@@ -132,6 +137,14 @@ xdescribe('Testing Element Single Assessment component', () => {
             handleBlur : jest.fn(),
             model : singleAssessmentCITEDefault,
             onClick : ()=>{},
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: ()=>{
+                return false
+            }
         }
         const singleAssessment = mount(<ElementSingleAssessment {...props}/>);
         const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
@@ -148,7 +161,7 @@ xdescribe('Testing Element Single Assessment component', () => {
             handleFocus: function(){},
             handleBlur : jest.fn(),
             model : singleAssessmentCITEDefault,
-            onClick : ()=>{},
+            onClick : ()=>{},                    
         }
         const singleAssessment = mount(<ElementSingleAssessment {...props}/>);
         const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
