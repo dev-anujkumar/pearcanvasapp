@@ -207,6 +207,9 @@ export class ReactEditor extends React.Component {
 
     let testElem = document.createElement('div');
     testElem.innerHTML = model;
+    if(!testElem.innerText) {
+      testElem.innerText = "Test Value";
+    }
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
