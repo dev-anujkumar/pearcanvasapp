@@ -74,6 +74,7 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
+                    
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
@@ -100,7 +101,14 @@ class ElementAsideContainer extends Component {
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
                                         let swappedElementData;
-                                        swappedElementData = _bodyMatter[evt.oldDraggableIndex]
+                                        let bodyMatterObj = [];
+                                        if(this.props.element.contents){
+                                            bodyMatterObj = this.props.element.contents.bodymatter;
+                                        }
+                                        else{
+                                            bodyMatterObj = this.props.element.elementdata.bodymatter;
+                                        }
+                                        swappedElementData = bodyMatterObj[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex: evt.oldDraggableIndex,
                                             newIndex: evt.newDraggableIndex,
