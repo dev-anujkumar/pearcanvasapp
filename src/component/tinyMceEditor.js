@@ -481,8 +481,11 @@ export class TinyMceEditor extends Component {
      */
     addInlineCode = (editor) => {
         let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-         if (selectedText != "" && selectedText != "CODE") {
+         if (editor.selection.getContent() != "" && selectedText != "CODE") {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
+         }
+         else{
+            editor.selection.setContent('');
          }
     }
 
@@ -915,6 +918,12 @@ export class TinyMceEditor extends Component {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
         }
+        this.removeMultiTinyInstance();
+        this.handlePlaceholder() 
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)
+    }
+
+    removeMultiTinyInstance = ()=>{
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
         if(tinyMCEInstancesNodes.length>1){
@@ -922,7 +931,6 @@ export class TinyMceEditor extends Component {
                 tinyMCEInstancesNodes[0].remove()
             }
         }
-        this.handlePlaceholder() 
     }
 
     componentWillUnmount() {
@@ -1210,9 +1218,6 @@ export class TinyMceEditor extends Component {
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
-    }
-    componentDidUpdate(){
-        tinymce.$('.blockquote-editor').attr('contenteditable',false)
     }
 }
 
