@@ -90,6 +90,12 @@ export class TinyMceEditor extends Component {
                     if(document.querySelector('.openAudioIcon')){
                         document.querySelector('.openAudioIcon').style.display = "block";
                     }
+                     /**
+                     * This code is written to remove lagging in typing and move cursor at end on focus
+                     */
+                    editor.focus();
+                    editor.selection.select(editor.getBody(), true);
+                    editor.selection.collapse(false);
                 });
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
             },
@@ -133,6 +139,7 @@ export class TinyMceEditor extends Component {
             }
         }
         this.editorRef  = React.createRef();
+        this.currentCursorBookmark = {};
     };
 
     editorOndblClick = (editor) =>{
@@ -168,6 +175,9 @@ export class TinyMceEditor extends Component {
 
                 case "outdent":
                     this.handleOutdent(e, editor, content)
+                    break;
+                case "updateFormula":
+                    editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
             }
         });
@@ -214,6 +224,12 @@ export class TinyMceEditor extends Component {
                             return false;
                         });
                     }
+                    break;
+                case "mceShowCharmap":
+                    this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
+                    break;
+                case "mceInsertContent":
+                    editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
                 case "FormatBlock":
                     if (e.value === 'h5'){
@@ -537,6 +553,7 @@ export class TinyMceEditor extends Component {
             icon: "tinymceformulachemistryicon",
             tooltip: "WIRIS EDITOR chemistry",
             onAction: function (_) {
+                this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 /*
                     Enabling chemistry ML
                 */
@@ -566,6 +583,7 @@ export class TinyMceEditor extends Component {
             icon: "tinymceformulaicon",
             tooltip: "WIRIS EDITOR math",
             onAction: function (_) {
+                this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                 var wirisPluginInstance = window.WirisPlugin.instances[editor.id];
                 wirisPluginInstance.core.getCustomEditors().disable();
                 wirisPluginInstance.openNewFormulaEditor();
@@ -854,6 +872,8 @@ export class TinyMceEditor extends Component {
                             this.editorRef.current.blur();
                         }
                     }
+                   
+ 
                 })
             }
         }    
