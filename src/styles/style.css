@@ -250,6 +250,8 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 
 P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
     font-size: 100% !important;
+    margin-top: .5em!important;
+    margin-bottom: .5em!important;
 }
 
 .learningobjectivedropdown li:hover {
