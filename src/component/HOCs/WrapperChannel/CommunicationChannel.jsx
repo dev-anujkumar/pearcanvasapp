@@ -8,6 +8,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
+import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import localConfig from '../../../env/local.js';
@@ -236,6 +237,10 @@ function WithWrapperCommunication(WrappedComponent) {
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
             });
+
+            Object.keys(cypressConfig).forEach(function(key) {
+                obj[key] = cypressConfig[key];
+            });
             
         }
 
@@ -408,6 +413,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
+                this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){

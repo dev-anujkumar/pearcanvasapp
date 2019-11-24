@@ -231,6 +231,15 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     pointer-events: none !important;
 }
 
+#toolbarGlossaryFootnote .tox-toolbar.disable {
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}
+
+#toolbarGlossaryFootnote .tox-toolbar.disable button.tox-tbtn {
+    pointer-events: none !important;
+}
+
 .noSeparatorContainer{
     margin-bottom: 18px;
 }
@@ -241,4 +250,9 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 
 P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
     font-size: 100% !important;
+}
+
+.learningobjectivedropdown li:hover {
+    background: #D9E9FF;
+    cursor: pointer;
 }

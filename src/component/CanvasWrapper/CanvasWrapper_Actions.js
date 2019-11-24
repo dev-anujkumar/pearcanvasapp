@@ -122,6 +122,8 @@ const findElementType = (element, index) => {
 			case 'element-learningobjectivemapping':
 			case 'element-generateLOlist':
 			case 'element-learningobjectives':
+				elementType = {...elementDataBank[element.type]}
+				break;
 			case 'openerelement':
 				altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""
 				longDesc = element.backgroundimage.longdescription ? element.backgroundimage.longdescription : "" 	

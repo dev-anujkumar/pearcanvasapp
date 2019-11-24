@@ -12,7 +12,9 @@ import {
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
     ACCESS_DENIED_POPUP,
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    SET_PARENT_NODE
+
     
 } from '../../constants/Action_Constants';
 
@@ -465,4 +467,10 @@ export const accessDenied = (value) => (dispatch, getState) => {
         type: ACCESS_DENIED_POPUP,
         payload: value
     })
+}
+export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_PARENT_NODE,
+        payload: setSlateParent
+    }) 
 }

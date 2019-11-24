@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList, preventRemoveAllFormatting } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -74,7 +74,6 @@ export class TinyMceEditor extends Component {
                 this.editorBeforeExecCommand(editor);
                 this.editorExecCommand(editor);
                 this.insertListButtonIcon(editor);
-                this.editorOndblClick(editor);
                 editor.on('init', function (e) {
                     if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType !== "container-introduction") {
                         if (document.getElementsByClassName("slate-tag-icon").length) {
@@ -142,13 +141,6 @@ export class TinyMceEditor extends Component {
         this.currentCursorBookmark = {};
     };
 
-    editorOndblClick = (editor) =>{
-        editor.on("DblClick", (e) => {
-            let selectedText = window.getSelection().toString();
-            this.glossaryTermText = selectedText;
-        })
-    }
-
     /**
      * Adds custon list button to the editor toolbar
      * @param {*} editor  editor instance
@@ -190,17 +182,31 @@ export class TinyMceEditor extends Component {
     editorBeforeExecCommand = (editor) =>{
         editor.on('BeforeExecCommand', (e) => {
             let content = e.target.getContent()
+            let keyDownEvent = null
             switch(e.command){
                 case "indent":
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        e.preventDefault()
+                        /** EVENT - Tab keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: false, keyCode: 9, metaKey: false, shiftKey: false, which: 9 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
                     this.onBeforeIndent(e, content)
                     break;
                 case "outdent":
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        e.preventDefault()
+                        /** EVENT - Shift + Tab keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: false, keyCode: 9, metaKey: false, shiftKey: true, which: 9 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
                     this.onBeforeOutdent(e, content)
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
-                    let blockTag = window.getSelection().anchorNode.parentNode.nodeName
-                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
+                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
@@ -215,14 +221,10 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     /**
-                     * In case of list element
+                     * In case remove all formatting is being appied on list element
                      */
-                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-                        let timeoutInstance = setTimeout(() => {
-                            clearTimeout(timeoutInstance);
-                            updateNestedList(editor.targetElm)
-                            return false;
-                        });
+                    if (!preventRemoveAllFormatting(editor)) {
+                        return false
                     }
                     break;
                 case "mceShowCharmap":
@@ -247,8 +249,6 @@ export class TinyMceEditor extends Component {
     editorClick = (editor) => {
         editor.on('click', (e) => {
             let selectedText = editor.selection.getContent({format : "text"});
-            // let selectedText = window.getSelection().toString();
-            this.glossaryTermText = selectedText;
             let elemClassList = editor.targetElm.classList;
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
 
@@ -497,8 +497,11 @@ export class TinyMceEditor extends Component {
      */
     addInlineCode = (editor) => {
         let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-         if (selectedText != "" && selectedText != "CODE") {
+         if (editor.selection.getContent() != "" && selectedText != "CODE") {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
+         }
+         else{
+            editor.selection.setContent('');
          }
     }
 
@@ -727,7 +730,8 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance 
      */
     addGlossary = (editor) => {
-        let selectedText = editor.selection.getContent({format: 'text'})
+        let selectedText = window.getSelection().toString()
+        this.glossaryTermText = selectedText;
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
@@ -751,8 +755,8 @@ export class TinyMceEditor extends Component {
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p></p>"
-        term = term && term.replace(/<br data-mce-bogus="1">/g, "")
-        definition = definition && definition.replace(/<br data-mce-bogus="1">/g, "")
+        term = term.replace(/<br data-mce-bogus="1">/g, "")
+        definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
     }
@@ -934,6 +938,12 @@ export class TinyMceEditor extends Component {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
         }
+        this.removeMultiTinyInstance();
+        this.handlePlaceholder() 
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)
+    }
+
+    removeMultiTinyInstance = ()=>{
         let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
 
         if(tinyMCEInstancesNodes.length>1){
@@ -941,7 +951,6 @@ export class TinyMceEditor extends Component {
                 tinyMCEInstancesNodes[0].remove()
             }
         }
-        this.handlePlaceholder() 
     }
 
     componentWillUnmount() {
@@ -1146,8 +1155,13 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             return;
         }
-        
-        let range, selection;
+
+        //Commented these lines as glossary toolbar was not getting initialized, replaced it with more specific code to achieve the same.
+        if(tinymce.activeEditor){
+            tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+            tinymce.activeEditor.selection.collapse(false);
+        }
+       /*  let range, selection;
         if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
         {
             range = document.createRange();//Create a range (a range is a like the selection but invisible)
@@ -1156,7 +1170,7 @@ export class TinyMceEditor extends Component {
             selection = window.getSelection();//get the selection object (allows you to change selection)
             selection.removeAllRanges();//remove any selections already made
             selection.addRange(range);//make the range you have just created the visible selection
-        }
+        } */
     }
 
     /**
@@ -1224,9 +1238,6 @@ export class TinyMceEditor extends Component {
                     <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
-    }
-    componentDidUpdate(){
-        tinymce.$('.blockquote-editor').attr('contenteditable',false)
     }
 }
 

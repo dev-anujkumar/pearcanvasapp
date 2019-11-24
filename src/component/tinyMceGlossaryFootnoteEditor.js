@@ -1,5 +1,4 @@
 import React from 'react';
-import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
 import "tinymce/plugins/paste";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
@@ -44,6 +43,7 @@ export class ReactEditor extends React.Component {
         });
         editor.ui.registry.addToggleButton('code', {
           text: '<i class="fa fa-code" aria-hidden="true"></i>',
+          tooltip: "Inline code",
           onAction: () => {
             this.addInlineCode(editor)
           },
@@ -240,6 +240,13 @@ export class ReactEditor extends React.Component {
   }
 
   componentDidUpdate() {
+    let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
+
+    if(tinyMCEInstancesNodes.length>1){
+      if(tinyMCEInstancesNodes[1].parentElement.id!=="tinymceToolbar"){
+        tinyMCEInstancesNodes[0].remove()
+      }
+    }
     this.handlePlaceholer()
   }
 
