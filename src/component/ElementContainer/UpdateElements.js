@@ -17,7 +17,6 @@ let indivisualData = {
  * @param {*} secondaryOption 
  */
 export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    console.log(elementType,"elem", primaryOption,"sed", secondaryOption)
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -32,9 +31,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-
-        console.log("FIGURE DATA UPDATED TITLE INNERhtml>>>:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-        console.log("FIGURE DATA UPDATED TITLE INNERtext>>>:",titleDOM.innerText, "SUBTITLE:", subtitleDOM.innerText, "CAPTION:", captionDOM.innerText, "CREDITS:", creditsDOM.innerText)
     let data = {
         ...previousElementData,
         title :{
