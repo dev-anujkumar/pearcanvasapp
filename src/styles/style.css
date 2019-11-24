@@ -242,3 +242,8 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
 P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphNumeroUnoIndentLevel3{
     font-size: 100% !important;
 }
+
+.learningobjectivedropdown li:hover {
+    background: #D9E9FF;
+    cursor: pointer;
+}
