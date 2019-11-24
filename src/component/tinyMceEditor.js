@@ -1158,6 +1158,19 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             return;
         }
+        if(tinymce.activeEditor.getBody().tagName==="CODE"){
+            let selection;
+            if (document.selection) {
+                selection = document.selection.createRange();
+                selection.moveStart('character', sel.rangeCount);
+                selection.select();
+            }
+            else {
+                selection = window.getSelection();
+                selection.collapse(el, selection.rangeCount);
+            }
+            return;
+        }
 
         //Commented these lines as glossary toolbar was not getting initialized, replaced it with more specific code to achieve the same.
         if(tinymce.activeEditor){
