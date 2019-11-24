@@ -979,7 +979,7 @@ class SlateWrapper extends Component {
                         this.renderSlateHeader(this.props)
                     }
                 </div>
-                <div className='slate-wrapper'>
+                <div id="slateWrapper" className='slate-wrapper'>
                     {
                         this.renderSlate(this.props)
                     }
