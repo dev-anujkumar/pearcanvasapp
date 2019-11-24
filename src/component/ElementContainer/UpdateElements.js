@@ -17,6 +17,7 @@ let indivisualData = {
  * @param {*} secondaryOption 
  */
 export const generateCommonFigureData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+    console.log(elementType,"elem", primaryOption,"sed", secondaryOption)
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         captionDOM = document.getElementById(`cypress-${index}-2`),
@@ -65,8 +66,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             postertext: "",
             text: ""
         },
-        inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
+        inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
     return data
 }
