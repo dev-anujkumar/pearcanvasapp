@@ -164,7 +164,11 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
-    return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+    if(tinyMCE && tinyMCE.activeEditor){
+        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        tinyMCE.activeEditor.selection.collapse(false);
+    }
+    axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
             headers: {
@@ -173,62 +177,77 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
             }
         }
     ).then(response => {      
-        let parentData = getState().appStore.slateLevelData;
-        let newslateData = JSON.parse(JSON.stringify(parentData));
-        let _slateObject = Object.values(newslateData)[0];
-        let { contents: _slateContent } = _slateObject;
-        let { bodymatter: _slateBodyMatter } = _slateContent;
-        let elementId = updatedData.id
-
-        _slateBodyMatter = _slateBodyMatter.map(element => {
-            if (element.id === elementId) {
-                element  = {
-                    ...element,
-                    ...response.data
-                };
-            }else if(asideData && asideData.type == 'element-aside'){
-                if(element.id == asideData.id){
-                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
-                        /*This condition add object of element in existing element  in aside */
-                        if(nestedEle.id == elementId){
-                            nestedEle  = {
-                                ...nestedEle,
-                                ...response.data
-                            };
-                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
-                              /*This condition add object of element in existing element  in section of aside */
-                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
-                                if(ele.id == elementId){
-                                    ele = {
-                                        ...ele,
-                                        ...response.data
-                                    };
-                                }
-                                return ele
-                            })
-                            nestedEle.contents.bodymatter = ele;
-                        }
-                        return nestedEle;
-                    })
-                    element.elementdata.bodymatter = nestedBodyMatter;
-                }
-            }
-            return element
-        })
-        _slateContent.bodymatter = _slateBodyMatter
-        _slateObject.contents = _slateContent
-        dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+        //console.log("success saving")
+        if(tinyMCE && tinyMCE.activeEditor){
+            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+            tinyMCE.activeEditor.selection.collapse(false);
+        }
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        if(tinyMCE && tinyMCE.activeEditor){
+            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+            tinyMCE.activeEditor.selection.collapse(false);
+        }
     })
+
+    //direct dispatching in store
+
+    let parentData = getState().appStore.slateLevelData;
+    let newslateData = JSON.parse(JSON.stringify(parentData));
+    let _slateObject = Object.values(newslateData)[0];
+    let { contents: _slateContent } = _slateObject;
+    let { bodymatter: _slateBodyMatter } = _slateContent;
+    let elementId = updatedData.id
+
+    _slateBodyMatter = _slateBodyMatter.map(element => {
+        if (element.id === elementId) {
+            element  = {
+                ...element,
+                ...updatedData
+            };
+        }else if(asideData && asideData.type == 'element-aside'){
+            if(element.id == asideData.id){
+               let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                    /*This condition add object of element in existing element  in aside */
+                    if(nestedEle.id == elementId){
+                        nestedEle  = {
+                            ...nestedEle,
+                            ...updatedData
+                        };
+                    }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                          /*This condition add object of element in existing element  in section of aside */
+                       let ele =  nestedEle.contents.bodymatter.map((ele)=>{
+                            if(ele.id == elementId){
+                                ele = {
+                                    ...ele,
+                                    ...updatedData
+                                };
+                            }
+                            return ele
+                        })
+                        nestedEle.contents.bodymatter = ele;
+                    }
+                    return nestedEle;
+                })
+                element.elementdata.bodymatter = nestedBodyMatter;
+            }
+        }
+        return element
+    })
+    _slateContent.bodymatter = _slateBodyMatter
+    _slateObject.contents = _slateContent
+    
+    //console.log("saving new data dispatched")
+    return dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
+        }
+    })
+//diret dispatching in store
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {

@@ -1,10 +1,15 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import ElementMetaDataAnchor from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+jest.mock('../../../src/component/tinyMceEditor.js', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     metadataReducer: {
@@ -18,11 +23,14 @@ let props = {
     slateLockInfo: {
         isLocked: false
     },
-    permissions:['lo_edit_metadata'],
-    currentSlateLOData:{
+    permissions: ['lo_edit_metadata'],
+    currentSlateLOData: {
         "lourn": "urn:5567809876",
         "label": { en: "test data" }
-    }
+    },
+    model: { text: "<p>Meatada</p>" },
+    handleFocus: jest.fn(),
+    showBlocker: jest.fn()
 }
 // let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
 // let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
@@ -39,9 +47,8 @@ xdescribe('Test Rendering of metadaanchor on slate', () => {
             "lourn": "urn:5567809876",
             "label": { en: "test data" }
         }
-
-        //wrapper.find('.learningObjectiveContainer').simulate('click');
-        elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData)
+        let event = { target: { id: "aefeqrwq" } }
+        elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
 

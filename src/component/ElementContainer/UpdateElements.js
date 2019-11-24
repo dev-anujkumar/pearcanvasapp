@@ -31,9 +31,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-
-        console.log("FIGURE DATA UPDATED TITLE INNERhtml>>>:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-        console.log("FIGURE DATA UPDATED TITLE INNERtext>>>:",titleDOM.innerText, "SUBTITLE:", subtitleDOM.innerText, "CAPTION:", captionDOM.innerText, "CREDITS:", creditsDOM.innerText)
     let data = {
         ...previousElementData,
         title :{
@@ -65,8 +62,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             postertext: "",
             text: ""
         },
-        inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
+        inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
     return data
 }
