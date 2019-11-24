@@ -180,17 +180,31 @@ export class TinyMceEditor extends Component {
     editorBeforeExecCommand = (editor) =>{
         editor.on('BeforeExecCommand', (e) => {
             let content = e.target.getContent()
+            let keyDownEvent = null
             switch(e.command){
                 case "indent":
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        e.preventDefault()
+                        /** EVENT - Tab keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: false, keyCode: 9, metaKey: false, shiftKey: false, which: 9 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
                     this.onBeforeIndent(e, content)
                     break;
                 case "outdent":
+                    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+                        e.preventDefault()
+                        /** EVENT - Shift + Tab keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: false, keyCode: 9, metaKey: false, shiftKey: true, which: 9 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
                     this.onBeforeOutdent(e, content)
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
-                    let blockTag = window.getSelection().anchorNode.parentNode.nodeName
-                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim()) {
+                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
