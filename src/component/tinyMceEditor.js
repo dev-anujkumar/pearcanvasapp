@@ -846,6 +846,9 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
+                if(!newElement){
+                    document.getElementById('slateWrapper').scrollTop=0;
+                }
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
@@ -1153,6 +1156,19 @@ export class TinyMceEditor extends Component {
             return
         }
         if (isSameTarget) {
+            return;
+        }
+        if(tinymce.activeEditor.getBody().tagName==="CODE"){
+            let selection;
+            if (document.selection) {
+                selection = document.selection.createRange();
+                selection.moveStart('character', sel.rangeCount);
+                selection.select();
+            }
+            else {
+                selection = window.getSelection();
+                selection.collapse(el, selection.rangeCount);
+            }
             return;
         }
 
