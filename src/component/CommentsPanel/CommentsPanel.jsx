@@ -243,7 +243,6 @@ class CommentsPanel extends React.Component {
    @return {String} - returns the final filterd comment
    */
     filterComments = (comment, filters) => {
-        let { id } = this.props
         let elementWiseComments = comment;
         let statusFilteredComments = [],
             chronoFilteredComments = [],
@@ -271,15 +270,32 @@ class CommentsPanel extends React.Component {
         return finalFilteredComments;
     }
 
+    /**
+     * Closses the comments panel
+     */
+    togglePanel = () => {
+        const { toggleCommentsPanel } = this.props;
+        toggleCommentsPanel(false)
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.elmenIndex !== this.props.elmenIndex || prevProps.togglePanel !== this.props.togglePanel){
+            const rejectAssigneeButton = document.getElementsByClassName('reject-assignee-button')
+            if(rejectAssigneeButton.length){
+                rejectAssigneeButton[0].click()
+            }
+        }
+    }
+
     render() {
-        const { toggleCommentsPanel , permissions } = this.props;
+        const { permissions } = this.props;
         return (
             <div id="comments-panel" className={`comments-panel ${(this.props.togglePanel ? 'comments-panel-open' : "")}`}>
                 <div className="root-width root-height">
                     <div className="panel-navigation">
                         <div className="panel-navigation__header">
                             <div className="panel-navigation__header-title">Comments</div>
-                            <label onClick={() => toggleCommentsPanel(false)} className="modal__close_Panel"></label>
+                            <label onClick={this.togglePanel} className="modal__close_Panel"></label>
                             {permissions.includes('note_search_comment') && <SearchComponent handleSearchInput={this.handleSearchInput} filters={this.state.filters} />}
                             {permissions.includes('notes_access_manager') &&
                                 <div className="add-structure">
@@ -388,7 +404,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = state => {
     return {
-
+        elmenIndex: state.commentsPanelReducer.index,
         comments: state.commentsPanelReducer.comments,
         togglePanel: state.commentsPanelReducer.togglePanel,
         toggleReplyForm: state.commentsPanelReducer.toggleReplyForm,
