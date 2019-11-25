@@ -38,7 +38,7 @@ class ElementAsideContainer extends Component {
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
-    handleFocus = () => {
+    handleFocus = (e) => {
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
@@ -72,8 +72,8 @@ class ElementAsideContainer extends Component {
                         contentUrn: _containerData.contentUrn,
                         elementType: _containerType
                     }
-                    let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
-                    let elementLength = _bodyMatter.length - filterElement.length;
+                    let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest"),
+                     elementLength = _bodyMatter.length - filterElement.length;
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
@@ -367,6 +367,7 @@ class ElementAsideContainer extends Component {
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
+                                        parentElement = {this.props.element}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement) => (
