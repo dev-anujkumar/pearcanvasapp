@@ -1,5 +1,4 @@
 import { loadTrackChanges } from '../../../src/component/CanvasWrapper/TCM_Integration_Actions';
-import { slateData } from '../../../fixtures/slateTestingData';
 jest.mock('../../../src/js/slateLockUtility', () => ({
     checkSlateLock: () => {
         return false;
@@ -90,21 +89,19 @@ jest.mock('../../../src/appstore/store', () => {
     }
 }
 })
+
+
 describe('Testing TCM_Integration function', () => {
     test('renders without crashing', () => {
-        let slateTitleBlock = document.createElement('div')
-        slateTitleBlock.className= 'input-text';
-        slateTitleBlock.innerHTML = '<input className="txt-input"/>';
-        document.body.appendChild(slateTitleBlock)
-        console.log("slateTitleBlock",slateTitleBlock)
-        loadTrackChanges();
+        loadTrackChanges("urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464");
     })
-    xtest('Test-trackChange -if case', () => {
+    test('Test-trackChange -if case', () => {
         loadTrackChanges();
-        let myevent = new MessageEvent({
+        let event = new CustomEvent("message",{
             data: "ready",
-            origin: "https://test-structuredauthoring.pearson.com"
-        })
-        window.dispatchEvent('message',myevent)
+            origin: "https://test-structuredauthoring.pearson.com",
+            },
+            false)
+        window.dispatchEvent(event)
     })
 });
