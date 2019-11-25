@@ -8,6 +8,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
+import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import localConfig from '../../../env/local.js';
@@ -16,7 +17,7 @@ import qaConfig from '../../../env/qa.js';
 import perfConfig from '../../../env/perf.js';
 import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader} from '../../../constants/IFrameMessageTypes';
+import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
@@ -89,7 +90,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.toggleCommentsPanel(false);
                     break;
                 case 'toggleCommentsPanel':
-                        this.props.toggleCommentsPanel(true);
+                    this.props.toggleCommentsPanel(true);
+                    sendDataToIframe({
+                        'type': TocToggle,
+                        'message': { "open": false }
+                    });
+                    break;
                 case 'enablePrev':
                     // config.disablePrev = message.enablePrev;
                     config.disablePrev = false;//message.enablePrev;
@@ -218,8 +224,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                 case 'trackChanges':{
                      loadTrackChanges();
+                     break;
                 }
-                break;
             }
         }
 
@@ -230,6 +236,10 @@ function WithWrapperCommunication(WrappedComponent) {
           
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
+            });
+
+            Object.keys(cypressConfig).forEach(function(key) {
+                obj[key] = cypressConfig[key];
             });
             
         }
@@ -403,6 +413,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 this.props.fetchSlateData(message.node.containerUrn);
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
+                this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
                 let apiKeys = [config.ASSET_POPOVER_ENDPOINT,config.STRUCTURE_APIKEY,config.PRODUCTAPI_ENDPOINT];
                 if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="section"){
@@ -446,7 +457,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 toggleTocDelete: args,
             })
         }
-
+        deleteTocItemWithPendingTrack = (message)=>{
+            this.deleteTocItem(message)
+        }
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
             let projectUrn = message.changedValue.projectUrn;

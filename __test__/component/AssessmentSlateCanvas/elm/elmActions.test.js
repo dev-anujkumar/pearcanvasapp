@@ -8,7 +8,11 @@ import moxios from 'moxios';
 import {config} from '../../../../src/config/config';
 const mockStore = configureMockStore(middlewares);
 let initialState = {};
-describe('ELM Actions test', () => {
+jest.mock('../../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn()
+}))
+
+xdescribe('ELM Actions test', () => {
     let store = mockStore(() => initialState);
     beforeEach(() => {
         initialState = {

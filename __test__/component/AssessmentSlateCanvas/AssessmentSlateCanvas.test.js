@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
-import  AssessmentSlateCanvas  from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateCanvas';
+import  {AssessmentSlateCanvas}  from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateCanvas';
 import {assessmentSlateDefault} from "./../../../fixtures/AssessmentSlateCanvasTestingData";
 import { c2AssessmentModule } from '../../../src/js/c2_assessment_module';
 import {selectedResult} from '../../../fixtures/learningTool';
@@ -25,13 +25,16 @@ let initialState = {
     },
     appStore: {
         pageNumberData: {},
-        slateLevelData: {}
+        slateLevelData: {},
+        permissions: [
+            'quad_linking_assessment'
+        ]
     },
     learningToolReducer:{
         learningTypeSelected:""
     }
 };
-xdescribe('Testing Assessment Slate Canvas component', () => {
+describe('Testing Assessment Slate Canvas component', () => {
     let store = {};
     beforeEach(() => {
         store = mockStore(initialState);
@@ -42,12 +45,12 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             timestamp: "",
             userId: ""
         }}
-        const component = mount(<Provider store={store}><AssessmentSlateCanvas model={assessmentSlateDefault} {...props}/></Provider>)
+        const component = shallow(<Provider store={store}><AssessmentSlateCanvas model={assessmentSlateDefault} {...props}/></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();
     })
-    xit('onClick - launch c2AssessmentModule function', () => {
+    it('onClick - launch c2AssessmentModule function', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -56,10 +59,16 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
                 isLocked: false,
                 timestamp: "",
                 userId: ""
-            }
+            },
+            
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ]
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spyhandleC2AssessmentClick = jest.spyOn(assessmentSlateInstance, 'handleC2AssessmentClick')
         assessmentSlateInstance.handleC2AssessmentClick("");
         c2AssessmentModule.launchAssetBrowser('','','','','','',()=>{});
@@ -68,7 +77,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
         expect(spyhandleC2AssessmentClick).toHaveBeenCalled()
         spyhandleC2AssessmentClick.mockClear() 
     }) 
-    xit('Test- toggleAssessmentPopup function', () => {
+    it('Test- toggleAssessmentPopup function', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -80,8 +89,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
                 userId: ""
             }
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spytoggleAssessmentPopup = jest.spyOn(assessmentSlateInstance, 'toggleAssessmentPopup')
         assessmentSlateInstance.toggleAssessmentPopup(false);
         assessmentSlateInstance.forceUpdate();
@@ -89,7 +98,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
         expect(spytoggleAssessmentPopup).toHaveBeenCalledWith(false)
         spytoggleAssessmentPopup.mockClear() 
     })
-    xit ('Set getAssessmentDataPopup', () => {
+    it ('Set getAssessmentDataPopup', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -102,15 +111,15 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             model : assessmentSlateDefault
         }
 
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         assessmentSlateInstance.setState({
             getAssessmentDataPopup:true,
         })
         assessmentSlateInstance.forceUpdate();
         expect(assessmentSlateInstance.state.getAssessmentDataPopup).toBe(true);
     })
-    xit ('Set getAssessmentDataPopup', () => {
+    it ('Set getAssessmentDataPopup', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -123,8 +132,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             }
         }
   
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();      
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();      
             assessmentSlateInstance.setState({assessmentId: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
             assessmentItemId : "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
             assessmentItemTitle:"Open response question updated",
@@ -137,7 +146,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             expect(assessmentSlateInstance.state.getAssessmentData).toBe(true);
 
     })   
-    xdescribe('Test- launchAssetBrowserCallBack function', () => {
+    describe('Test- launchAssetBrowserCallBack function', () => {
         let props = {
             handleFocus: function () { },
             handleBlur: function () { },
@@ -147,10 +156,15 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
                 isLocked: false,
                 timestamp: "",
                 userId: ""
-            }
+            },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ]
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props} />);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props} />);
+        const assessmentSlateInstance = assessmentSlate.instance();
         assessmentSlate.find('div.AssessmentSlateMenu').simulate('click');
         assessmentSlateInstance.handleAssessmentFocus();
         it('Test- launchAssetBrowserCallBack if-case', () => {
@@ -196,7 +210,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             spylaunchAssetBrowserCallBack.mockClear()
         })
     })
-    xit('Test- onBlur', () => {
+    it('Test- onBlur', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -208,8 +222,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
                 userId: ""
             }
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spyhandleAssessmentBlur = jest.spyOn(assessmentSlateInstance, 'handleAssessmentBlur')
         assessmentSlateInstance.handleAssessmentBlur();
         assessmentSlateInstance.forceUpdate();
@@ -218,7 +232,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
         spyhandleAssessmentBlur.mockClear() 
     
     })
-    xit('Test- Add Assessment', () => {
+    it('Test- Add Assessment', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -230,8 +244,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
                 userId: ""
             }
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spyupdateAssessment = jest.spyOn(assessmentSlateInstance, 'updateAssessment')
         assessmentSlateInstance.updateAssessment("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5","","Open response question updated","puf","","insert");
         assessmentSlateInstance.forceUpdate();
@@ -240,7 +254,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
         expect(spyupdateAssessment).toHaveBeenCalledWith("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5","","Open response question updated","puf","","insert")        
         spyupdateAssessment.mockClear() 
     });
-    xit('Test- Update Assessment', () => {
+    it('Test- Update Assessment', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -258,8 +272,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             assessmentFormat:"puf",
             usagetype:"Quiz"
         }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props}/>);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props}/>);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spyupdateAssessment = jest.spyOn(assessmentSlateInstance, 'updateAssessment')
         const spyaddPufAssessment = jest.spyOn(assessmentSlateInstance, 'addPufAssessment')
         assessmentSlateInstance.updateAssessment("urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5","","Open response question updated","puf","","update");
@@ -274,7 +288,7 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
         expect(spyaddPufAssessment).toHaveBeenCalledWith(pufObj)
         spyaddPufAssessment.mockClear()
     });
-    xit('Test- Select assessment type ', () => {
+    it('Test- Select assessment type ', () => {
         let props = {
             handleFocus: function(){},
             handleBlur : function(){},
@@ -287,8 +301,8 @@ xdescribe('Testing Assessment Slate Canvas component', () => {
             }
         }
         const expectedValue = { assessmentType: "CITE" }
-        const assessmentSlate = mount(<AssessmentSlateCanvas {...props} />);
-        const assessmentSlateInstance = assessmentSlate.find('AssessmentSlateCanvas').instance();
+        const assessmentSlate = shallow(<AssessmentSlateCanvas {...props} />);
+        const assessmentSlateInstance = assessmentSlate.instance();
         const spyselectAssessmentType = jest.spyOn(assessmentSlateInstance, 'selectAssessmentType')
         const returnvalue = assessmentSlateInstance.selectAssessmentType("Full Assessment CITE");
         assessmentSlateInstance.forceUpdate();

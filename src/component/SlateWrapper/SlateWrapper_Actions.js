@@ -12,7 +12,9 @@ import {
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
     ACCESS_DENIED_POPUP,
-    FETCH_SLATE_DATA
+    FETCH_SLATE_DATA,
+    SET_PARENT_NODE
+
     
 } from '../../constants/Action_Constants';
 
@@ -61,7 +63,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref) => (dispatch, getState) => {
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     localStorage.setItem('newElement', 1);
@@ -118,6 +120,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
+        if(cb){
+            cb();
+        }
     }).catch(error => {
         // Opener Element mock creation
         if (type == "OPENER") {
@@ -135,6 +140,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("create Api fail", error);
+        if(cb){
+            cb();
+        }
     })
 }
 
@@ -459,4 +467,10 @@ export const accessDenied = (value) => (dispatch, getState) => {
         type: ACCESS_DENIED_POPUP,
         payload: value
     })
+}
+export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
+    return dispatch({
+        type: SET_PARENT_NODE,
+        payload: setSlateParent
+    }) 
 }

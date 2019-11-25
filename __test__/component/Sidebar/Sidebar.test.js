@@ -9,7 +9,7 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
 
-describe('Test for Sidebar component', () => {
+xdescribe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
 
     const activeElement = {

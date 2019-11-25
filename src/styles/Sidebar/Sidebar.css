@@ -120,3 +120,11 @@
 .alt-Text-LineNumber input[type="number"] {
     -moz-appearance: textfield;
 }
+
+.lang-lbl {
+    height: 0;
+}
+
+.lang-lbl label {
+    color: red;
+}

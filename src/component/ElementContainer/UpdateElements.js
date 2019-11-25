@@ -31,9 +31,6 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-
-        console.log("FIGURE DATA UPDATED TITLE INNERhtml>>>:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-        console.log("FIGURE DATA UPDATED TITLE INNERtext>>>:",titleDOM.innerText, "SUBTITLE:", subtitleDOM.innerText, "CAPTION:", captionDOM.innerText, "CREDITS:", creditsDOM.innerText)
     let data = {
         ...previousElementData,
         title :{
@@ -58,15 +55,15 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
-        inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+        inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
+        inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
     return data
 }
@@ -125,8 +122,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -199,8 +196,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
@@ -282,8 +279,8 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         html : {
             captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            footnotes: {},
-            glossaryentries: {},
+            footnotes : previousElementData.html.footnotes || {},
+            glossaryentries : previousElementData.html.glossaryentries || {},
             subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",

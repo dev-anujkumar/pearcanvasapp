@@ -8,6 +8,7 @@
 // IMPORT - dependencies
 require('./polyfills.js')
 
+/* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
  * insertUoListButton | inserts custom list button for unordered list with icon in existing editor toolbar
  */
@@ -49,7 +50,11 @@ export const positionListDrop = (event) => {
         _listWrapperDiv.querySelector('.fr-popup').classList.add('fr-active');
     }
 }
+/* ------------------------------ END - List toolbar button methods ----------------------------- */
 
+
+
+/* ------------------------------ START - List customized events method ----------------------------- */
 /**
  * bindKeyDownEvent | binds keydown event on editor instance and handles various scenarios
  */
@@ -58,6 +63,13 @@ export const bindKeyDownEvent = (editor, e) => {
     let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
+    let listUpdatedOnce = false;
+    let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
+
+    if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
+        prohibitEventBubling(e);
+        return false;
+    }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
@@ -110,6 +122,7 @@ export const bindKeyDownEvent = (editor, e) => {
                 let timeoutInstance = setTimeout(() => {
                     clearTimeout(timeoutInstance);
                     updateNestedList(e.target);
+                    listUpdatedOnce = true;
                     return false;
                 });
             }
@@ -158,19 +171,32 @@ export const bindKeyDownEvent = (editor, e) => {
         editor.editorCommands.commands.exec.outdent();
     }
 
+    let isBackspaceOnStart = false
+    if (isOnlyListElement && (e.which === 8) && (editor.selection.getSel().focusOffset === 0)) {
+        let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+        let closestLiOl = closestLi.closest('ol') || closestLi.closest('ul');
+        if (closestLiOl.findChildren('li').indexOf(closestLi) === 0) {
+            isBackspaceOnStart = true
+        }
+    }
     /**
      * Facilitate TAB key on list
      */
-    if ((e.which == 9) && anchorNode.closest('li')) {
-        let demo = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
+    if ((e.which == 9 || isBackspaceOnStart) && anchorNode.closest('li')) {
+        if (isFullRangeSelected(editor)) {
+            prohibitEventBubling(e)
+            return false
+        }
+
+        let currentLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
         let updatelistFlag = true;
 
         // prevent tab indent event at last level of list tree //
-        if (!e.shiftKey) {
+        if (!e.shiftKey && e.which !== 8) {
             /**
              * Case - cursor at last level
              */
-            if (demo == 4) {
+            if (currentLevel == 4) {
                 prohibitEventBubling(e);
                 return false;
             }
@@ -191,9 +217,9 @@ export const bindKeyDownEvent = (editor, e) => {
          * Then shift this level one level up along with all its child
          * finally perform updateNestedList
          */
-        else if (e.shiftKey && !isMultilineSelection) {
+        else if ((e.shiftKey || e.which === 8) && !isMultilineSelection) {
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            let closestTreeLevel = anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel');
+            let closestTreeLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') || anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
             /**
              * Case - prevent hitting Shift+TAB on very first list tree level
              */
@@ -203,21 +229,25 @@ export const bindKeyDownEvent = (editor, e) => {
                 return false;
             }
 
-            if (closestLi.findChildren('ol').length > 0) {
+            if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {
                 closestLi.classList.add('shfTabEvnt');
                 updatelistFlag = false;
                 let timeoutInstance = setTimeout(() => {
                     clearTimeout(timeoutInstance);
-                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol');
+                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
+                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
+                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
-                    let levelUpOL = firstLi.findChildren('ol')[0];
+                    let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
+                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
+                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
                     document.querySelector('li.shfTabEvnt').append(levelUpOL);
                     document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
                     updateNestedList(e.target);
+                    listUpdatedOnce = true;
                 });
             }
         }
@@ -225,14 +255,13 @@ export const bindKeyDownEvent = (editor, e) => {
         if (updatelistFlag) {
             let timeoutInstance = setTimeout(() => {
                 clearTimeout(timeoutInstance);
-                updateNestedList(e.target);
-                return false;
+                reformatting(editor)
             });
         }
     }
 
     let firstChild = editor.targetElm.childNodes[0];
-    if ((e.which === 13 && firstChild.nodeName !== "PRE")) {
+    if (isOnlyListElement && e.which === 13 && firstChild.nodeName !== "PRE") {
         // prohibitEventBubling(e);
         /**
          * Case - hit enter on last element of list
@@ -251,8 +280,61 @@ export const bindKeyDownEvent = (editor, e) => {
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
             updateNestedList(e.target);
+            listUpdatedOnce = true;
             return false;
         });
+    }
+    if (isOnlyListElement && !listUpdatedOnce) {
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance);
+            updateNestedList(e.target);
+            return false;
+        });
+    }
+    if (isOnlyListElement && e.keyCode == 90 && e.ctrlKey) {
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance);
+            reformatting(editor)
+        });
+    }
+
+}
+
+const reformatting = (editor) => {
+    let allLiElement = editor.targetElm.querySelectorAll('li')
+    let getSelfInnerText = (elememt) => {
+        return [].reduce.call(elememt.childNodes, function (a, b) {
+            return a + (b.nodeType === 3 ? b.textContent : '');
+        }, '');
+    }
+    for (let i = 0; i < allLiElement.length; i++) {
+        let currentLi = allLiElement[i]
+        if ((currentLi.findChildren('ol').length > 0) || (currentLi.findChildren('ul').length > 0)) {
+
+            let selfInnerText = getSelfInnerText(currentLi)
+            let firstChildTag = currentLi.children[0].tagName
+
+            if (selfInnerText === "" && firstChildTag !== "BR") {
+                let parentOl = currentLi.parentNode
+                let closestLi = parentOl.closest('li')
+                if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {
+                    closestLi.classList.add('shfTabEvnt');
+                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
+                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
+                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
+                    let firstOlElem = allOlElems[0];
+                    let firstLi = [...firstOlElem.children].slice(0, 1)[0];
+                    let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
+                    let liSiblings = [...firstOlElem.children].slice(1);
+                    levelUpOL.append(...liSiblings);
+                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
+                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
+                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
+                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
+                    updateNestedList(editor.targetElm);
+                }
+            }
+        }
     }
 }
 
@@ -380,3 +462,31 @@ const prohibitEventBubling = (e) => {
     e.stopPropagation();
     e.preventDefault();
 }
+
+export const preventRemoveAllFormatting = (editor) => {
+    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+        if (isFullRangeSelected(editor)) {
+            return false
+        }
+        let timeoutInstance = setTimeout(() => {
+            clearTimeout(timeoutInstance)
+            updateNestedList(editor.targetElm)
+            return false
+        });
+    }
+    return true
+}
+
+const isFullRangeSelected = (editor) => {
+    let range = editor.selection.getRng()
+    let starLiElem = (range.startContainer.tagName === 'LI') ? range.startContainer : range.startContainer.closest('li')
+    let endLiElem = (range.endContainer.tagName === 'LI') ? range.endContainer : range.endContainer.closest('li')
+    let allLiElements = editor.targetElm.querySelectorAll('li')
+    let isSelectedFullRange = ([].indexOf.call(allLiElements, starLiElem) === 0 && [].indexOf.call(allLiElements, endLiElem) === allLiElements.length - 1) ||
+        ([].indexOf.call(allLiElements, endLiElem) === 0 && [].indexOf.call(allLiElements, starLiElem) === allLiElements.length - 1)
+    if (isSelectedFullRange) {
+        return true
+    }
+    return false
+}
+/* ------------------------------ END - List customized events method ----------------------------- */

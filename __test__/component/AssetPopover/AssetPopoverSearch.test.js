@@ -115,7 +115,7 @@ describe('Interaction functions test cases', () => {
         instance.hideAPOOnOuterClick()
     }) 
 
-    it('Testing apoSearchSave function', () => {
+    xit('Testing apoSearchSave function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.apoSearchClose = jest.fn()
         let apoObject = {}

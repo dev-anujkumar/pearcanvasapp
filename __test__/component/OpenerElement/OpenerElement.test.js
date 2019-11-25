@@ -29,7 +29,7 @@ describe('Testing Opener component with props', () => {
         onClick : ()=>{},
         permissions: []
     }
-    it('Simulating click event to open label dropdown', () => {
+    xit('Simulating click event to open label dropdown', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         const OpenerInstance = openerComponent.find('OpenerElement').instance()
         openerComponent.find('div.element-dropdown-title.label-content').simulate('click');
@@ -58,16 +58,16 @@ describe('Testing Opener component with props', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
     })
-    it('Simulating alfresco click with alfresco location', () =>{
+    xit('Simulating alfresco click with alfresco location', () =>{
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         config.alfrescoMetaData = {nodeRef : {}}
         openerComponent.find('OpenerElement').instance().handleC2MediaClick({target : {tagName : 'b'}}) 
     })
-    it('Alfresco Data Handling', () => {
+    xit('Alfresco Data Handling', () => {
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>, { attachTo: document.body })
         openerComponent.find('OpenerElement').instance().dataFromAlfresco({ assetType: "image" })
     })
-    it("Clicking on opener element with locked slate", () => {
+    xit("Clicking on opener element with locked slate", () => {
         const props = {
             slateLockInfo: {
                 isLocked: true,

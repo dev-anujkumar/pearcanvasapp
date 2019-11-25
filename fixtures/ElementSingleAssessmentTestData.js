@@ -46,7 +46,9 @@ export const singleAssessmentCITEDefault= {
     "usagetype": "Diagnostic"
     }
     },
-    
+    "html":{
+        "title":"Open response question updated"
+    },
     "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
 }

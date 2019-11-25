@@ -1,5 +1,4 @@
 import React from 'react';
-import { Editor } from '@tinymce/tinymce-react';
 import tinymce from 'tinymce/tinymce';
 import "tinymce/plugins/paste";
 import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
@@ -29,6 +28,9 @@ export class ReactEditor extends React.Component {
         this.setMathmlFormulaIcon(editor);
         this.addChemistryFormulaButton(editor);
         this.addMathmlFormulaButton(editor);
+        editor.on('init', e => {
+          this.setCursorAtEnd(editor);
+        })
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           let contentHTML = e.target.innerHTML;
@@ -241,6 +243,13 @@ export class ReactEditor extends React.Component {
   }
 
   componentDidUpdate() {
+    let tinyMCEInstancesNodes = document.getElementsByClassName('tox tox-tinymce tox-tinymce-inline');
+
+    if(tinyMCEInstancesNodes.length>1){
+      if(tinyMCEInstancesNodes[1].parentElement.id!=="tinymceToolbar"){
+        tinyMCEInstancesNodes[0].remove()
+      }
+    }
     this.handlePlaceholer()
   }
 
@@ -278,7 +287,20 @@ export class ReactEditor extends React.Component {
     }
 
     this.editorConfig.selector = '#' + currentTarget.id;
-    tinymce.init(this.editorConfig);
+    tinymce.init(this.editorConfig).then((d)=>{
+      this.setCursorAtEnd();
+  })
+  }
+
+  setCursorAtEnd = (editor) => {
+    if(editor){
+      editor.selection.select(tinymce.activeEditor.getBody(), true);
+      editor.selection.collapse(false);
+    }
+    else if(tinymce.activeEditor){
+      tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+      tinymce.activeEditor.selection.collapse(false);
+    }
   }
 
   render() {
