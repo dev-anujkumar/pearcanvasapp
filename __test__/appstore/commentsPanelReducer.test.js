@@ -167,7 +167,7 @@ const initialState2 = {
 
 describe('testing slateLock Reducer cases -->', () => {
 
-    it('should return the initial state', () => {
+    xit('should return the initial state', () => {
         expect(reducer(undefined, {})).toEqual(initialState);
     });
     it('Test 1- FETCH_COMMENTS', () => {
@@ -179,7 +179,7 @@ describe('testing slateLock Reducer cases -->', () => {
             }
         })
     })
-    it('Test 2- FETCH_COMMENT_BY_ELEMENT', () => {
+    xit('Test 2- FETCH_COMMENT_BY_ELEMENT', () => {
         reducer(initialState, {
             type: FETCH_COMMENT_BY_ELEMENT,
             payload: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
