@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
+import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 
 class SectionSeperator extends React.Component {
@@ -25,6 +26,15 @@ class SectionSeperator extends React.Component {
             btnClassName: 'activeTagBgColor'
         }) 
         this.props.setActiveElement(this.props.element)
+        let toolbar = config.asideToolbar
+        if (toolbar && toolbar.length) {
+            tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
+                .each((index) => {
+                    if (config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1) {
+                        tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
+                    }
+                });
+        }
     }
 
      /**

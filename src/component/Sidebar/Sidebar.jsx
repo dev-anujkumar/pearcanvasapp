@@ -358,11 +358,20 @@ class Sidebar extends Component {
         this.props.updateElement(data)
 
     }}
+
+    renderLanguageLabel = (tag) => {
+        if (tag === 'BCE') {
+            return <div className='lang-lbl'>Language<label>*</label></div>
+        }
+        return null
+    }
+
     render = () => {
         return (
             <div className="canvas-sidebar">
                 <div className="canvas-sidebar-heading">Settings</div>
                 {this.primaryOption()}
+                {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                 {this.secondaryOption()}
                 {this.attributions()}
             </div>
