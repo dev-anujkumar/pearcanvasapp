@@ -38,7 +38,7 @@ class ElementAsideContainer extends Component {
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
-    handleFocus = () => {
+    handleFocus = (e) => {
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
@@ -375,6 +375,7 @@ class ElementAsideContainer extends Component {
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
+                                        parentElement = {this.props.element}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement) => (
