@@ -573,6 +573,7 @@ class ElementContainer extends Component {
                         onClickCapture={this.props.onClickCapture}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        onListSelect={this.props.onListSelect}
                         />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
