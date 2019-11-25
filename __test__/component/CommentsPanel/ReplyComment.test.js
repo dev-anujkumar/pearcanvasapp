@@ -16,7 +16,7 @@ describe('Testing CommentsPanel component with props', () => {
         {...props} />)
     const instance = wrapper.instance();
     
-    it('tests the function  replyCommentForm with if condition', () => {
+    xit('tests the function  replyCommentForm with if condition', () => {
         let replyForm = instance.replyCommentForm(props);
         expect(replyForm.props.className).toEqual('reply');
     })
