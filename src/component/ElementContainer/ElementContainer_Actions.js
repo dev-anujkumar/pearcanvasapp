@@ -179,18 +179,18 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
     ).then(response => {      
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         //console.log("success saving")
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
     })
 
     //direct dispatching in store
