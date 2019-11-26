@@ -270,12 +270,7 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == elementId) {
-                        if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
-                        } else {
-                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
-                        }
-
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
                     }
                 }
             }

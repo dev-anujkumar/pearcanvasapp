@@ -81,7 +81,7 @@ class ElementAsideContainer extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
-                                    preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                    //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
                                     removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -163,7 +163,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
-                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                       // preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -244,7 +244,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
-                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                        //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
