@@ -291,11 +291,13 @@ class ElementContainer extends Component {
                     break;
             case elementTypeConstant.ELEMENT_LIST:
                 {
-                    let html = node.innerHTML;
+                    // let html = node.innerHTML;
+                    let currentNode = document.getElementById(`cypress-${this.props.index}`)
+                    let html = currentNode.innerHTML;
                     if (previousElementData.html && html !== previousElementData.html.text) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index);
+                        this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     }
                     break;
                 }
@@ -573,6 +575,7 @@ class ElementContainer extends Component {
                         onClickCapture={this.props.onClickCapture}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        onListSelect={this.props.onListSelect}
                         />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:

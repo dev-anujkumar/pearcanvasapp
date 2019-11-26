@@ -206,7 +206,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         if (element.id === elementId) {
             element  = {
                 ...element,
-                ...updatedData
+                ...updatedData,
+                elementdata : {
+                    ...element.elementdata,
+                    text : updatedData.elementdata?updatedData.elementdata.text:null
+                },
+                html : updatedData.html
             };
         }else if(asideData && asideData.type == 'element-aside'){
             if(element.id == asideData.id){

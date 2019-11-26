@@ -376,6 +376,7 @@ class ElementAsideContainer extends Component {
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
                                         parentElement = {this.props.element}
+                                        onListSelect={this.props.onListSelect}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement) => (
