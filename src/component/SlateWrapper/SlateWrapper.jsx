@@ -121,9 +121,6 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-
-
-        
         /**
          * updateTimer is for updating Time for slate refresh
          */
