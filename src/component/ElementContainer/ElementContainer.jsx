@@ -565,6 +565,7 @@ class ElementContainer extends Component {
                         borderToggle={this.state.borderToggle}
                         elemBorderToggle={this.props.elemBorderToggle}
                         elementSepratorProps={elementSepratorProps}
+                        deleteElement={this.deleteElement}
                         index={index}
                         element={element}
                         elementId={element.id}
@@ -647,7 +648,8 @@ class ElementContainer extends Component {
     handleCommentPopup(popup) {
         this.setState({
             popup,
-            showDeleteElemPopup: false
+            showDeleteElemPopup: false,
+            comment: ""
         });
         if (this.props.isBlockerActive) {
             this.props.showBlocker(false)
@@ -671,7 +673,7 @@ class ElementContainer extends Component {
     saveNewComment = () => {
         const { comment } = this.state;
         const { id } = this.props.element;
-        if (comment !== '' && comment.trim() !== '') {
+        if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
         }
