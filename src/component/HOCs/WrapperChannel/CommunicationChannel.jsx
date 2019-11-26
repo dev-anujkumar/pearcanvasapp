@@ -264,8 +264,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.modifyObjKeys(config, localConfig);
                     break;
             }
-
-            console.log("getProjectConfig >> ", config);
         }
 
         /**
@@ -329,7 +327,7 @@ function WithWrapperCommunication(WrappedComponent) {
         
         handlePermissioning = (message) => {
             if (message && message.permissions) {
-                this.props.handleUserRole(message.permissions)
+                this.props.handleUserRole(message.permissions , message.roleId)
             }
         }
 

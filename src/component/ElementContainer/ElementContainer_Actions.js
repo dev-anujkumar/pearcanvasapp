@@ -82,7 +82,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 
 
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (type) => {
         switch (type) {
@@ -102,6 +102,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
     }
 
     let _requestData = prepareDeleteRequestData(type)
+    let indexToBeSent = index || "0"
+    _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -179,18 +181,18 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
     ).then(response => {      
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         //console.log("success saving")
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
     })
 
     //direct dispatching in store
@@ -220,7 +222,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                     if(nestedEle.id == elementId){
                         nestedEle  = {
                             ...nestedEle,
-                            ...updatedData
+                            ...updatedData,
+                            elementdata : {
+                                ...nestedEle.elementdata,
+                                text : updatedData.elementdata?updatedData.elementdata.text:null
+                            },
+                            html : updatedData.html
                         };
                     }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
                           /*This condition add object of element in existing element  in section of aside */
@@ -228,7 +235,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                             if(ele.id == elementId){
                                 ele = {
                                     ...ele,
-                                    ...updatedData
+                                    ...updatedData,
+                                    elementdata : {
+                                        ...ele.elementdata,
+                                        text : updatedData.elementdata?updatedData.elementdata.text:null
+                                    },
+                                    html : updatedData.html
                                 };
                             }
                             return ele
