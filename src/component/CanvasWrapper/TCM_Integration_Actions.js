@@ -23,7 +23,7 @@ export const loadTrackChanges = (elementId) => {
         }
 
         let currentElementId = elementId ? elementId : "";
-        let currentSlateTitle = document.querySelector('div.input-text .txt-input').value;
+        let currentSlateTitle = document.querySelector('div.input-text .txt-input')? document.querySelector('div.input-text .txt-input').value: "";
         let currentProjectUrn = config.projectUrn;
         let currentSlateUrn = config.slateManifestURN;
         let currentProjectEntityUrn = config.projectEntityUrn;
