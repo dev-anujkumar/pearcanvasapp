@@ -220,7 +220,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                     if(nestedEle.id == elementId){
                         nestedEle  = {
                             ...nestedEle,
-                            ...updatedData
+                            ...updatedData,
+                            elementdata : {
+                                ...nestedEle.elementdata,
+                                text : updatedData.elementdata?updatedData.elementdata.text:null
+                            },
+                            html : updatedData.html
                         };
                     }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
                           /*This condition add object of element in existing element  in section of aside */
@@ -228,7 +233,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                             if(ele.id == elementId){
                                 ele = {
                                     ...ele,
-                                    ...updatedData
+                                    ...updatedData,
+                                    elementdata : {
+                                        ...ele.elementdata,
+                                        text : updatedData.elementdata?updatedData.elementdata.text:null
+                                    },
+                                    html : updatedData.html
                                 };
                             }
                             return ele
