@@ -49,6 +49,5 @@ export const hasReviewerRole = (value) => {
     const authStore = store.getState();
     let hasRole = authStore.appStore && (authStore.appStore.roleId === "comment_only"
         && (hasProjectPermission('note_viewer'))) ? true : false;
-        console.log("hasRole", hasRole)
     return hasRole;
 }
