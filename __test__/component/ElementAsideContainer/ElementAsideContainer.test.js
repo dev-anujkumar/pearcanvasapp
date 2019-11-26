@@ -114,7 +114,7 @@ describe('Testing ElementAside component with props', () => {
             let renderAside = instance.renderAside(designType)
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
-        it('should render  handle focus function correctly', () => {
+        xit('should render  handle focus function correctly', () => {
 
             instance.handleFocus()
          //   expect(sectiondata.props.className).toEqual('section');
@@ -175,7 +175,7 @@ describe('Testing ElementAside component with props', () => {
             expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
         })
 
-    it(' handleFocus function testing', () => {
+    xit(' handleFocus function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('ElementAsideContainer').instance();
         instance.handleFocus();

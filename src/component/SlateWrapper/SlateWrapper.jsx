@@ -92,6 +92,7 @@ class SlateWrapper extends Component {
 
     renderDefaultElement = () => {
         if(this.isDefaultElementInProgress){
+            // condition added to detect if element creationis already in progress and to avoid multiple default element creation
             return false;
         }
         let _slateData = this.props.slateData;
@@ -669,6 +670,9 @@ class SlateWrapper extends Component {
     }
 
     showTocDeletePopup = () => {
+        /**
+         * Need to refactor these all condition and minimize them
+         */
         if (this.props.toggleTocDelete) {
             if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage === 'singleContainerDelete'){
                 return (
@@ -678,6 +682,20 @@ class SlateWrapper extends Component {
                         saveContent={this.deleteAccepted}
                         saveButtonText='Okay'
                         dialogText='A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
+                        tocDelete={true}
+                        tocDeleteClass='tocDeleteClass'
+                    />                   
+                   
+                )
+            }
+            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage === 'withPendingTrack'){
+                return (
+                    <PopUp
+                        togglePopup={this.deleteRejected}
+                        active={true}
+                        saveContent={this.deleteAccepted}
+                        saveButtonText='Yes'
+                        dialogText=' Are you sure you want to delete this slate/container with pending changes?'
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />
@@ -961,7 +979,7 @@ class SlateWrapper extends Component {
                         this.renderSlateHeader(this.props)
                     }
                 </div>
-                <div className='slate-wrapper'>
+                <div id="slateWrapper" className='slate-wrapper'>
                     {
                         this.renderSlate(this.props)
                     }

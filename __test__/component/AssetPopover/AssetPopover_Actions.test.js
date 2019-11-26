@@ -24,7 +24,7 @@ describe('Testing Actions', () => {
     it('testing assetPopoverPopup function', () => {
         assetPopoverPopup();
     }),
-    it('testing getAssetPopoverId function', () => {
+    xit('testing getAssetPopoverId function', () => {
         let cb = jest.fn();
         getAssetPopoverId(cb);
     })

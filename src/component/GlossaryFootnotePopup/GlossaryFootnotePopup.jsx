@@ -6,12 +6,27 @@ import React, { Component } from 'react';
 import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
-
+import { checkforToolbarClick } from '../../js/utils'
 class GlossaryFootnotePopup extends Component {
     constructor() {
         super();
         this.state = {}
 
+    }
+
+    toolbarHandling = (e, action = "") => {
+        let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
+        if(e && checkforToolbarClick(relatedTargets)){
+            e.stopPropagation();
+            return;
+        }
+        if(document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar')) {
+            if(action === "add") {
+                document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar').classList.add("disable");
+            } else if(action === "remove") {
+                document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar').classList.remove("disable");
+            }
+        }
     }
 
     render() {
@@ -35,14 +50,14 @@ class GlossaryFootnotePopup extends Component {
                         (glossaryFootnote === 'Glossary') &&
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
-                            <div className="glossary-word-name glossary-word-description" id='glossary-editor'>
+                            <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                                 <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.glossaryContentText} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }
                     <div className="glossary-definition-header">
                         <div className="glossary-definition-label">{(glossaryFootnote === 'Glossary') ? 'Definition:' : 'Note:'}</div>
-                        <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher">
+                        <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                             <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
                     </div>

@@ -15,6 +15,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 //const WRAPPER_URL = config.WRAPPER_URL;
 import config from '../../config/config.js'
 const { REACT_APP_API_URL, API_URL, projectUrn, STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY } = config;
+import searchIcon from './asset_popover_search_icon.svg';
 
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
@@ -67,8 +68,8 @@ class AssetPopoverSearch extends React.Component {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
                     domNode = document.getElementById('asset-popover-attacher');
-                    originalText = domNode.innerHTML;
-                    assetPopoverDomId = assetPopoverId
+                    originalText = domNode.innerText;
+                    assetPopoverDomId = assetPopoverId;
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
                     setTimeout(() => {
@@ -174,9 +175,7 @@ class AssetPopoverSearch extends React.Component {
             <div>
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
-                        <svg className="icon--16 header__search-icon">
-                            <use xlinkHref="#search" />
-                        </svg>
+                        <img className="seach_icon" src={searchIcon}/>
                         <input className="searchBarApo" placeholder="Search for images..." type="text" onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <label className="modal__close" onClick={this.apoSearchClose}></label>
                     </section>

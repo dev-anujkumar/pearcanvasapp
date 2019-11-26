@@ -38,7 +38,7 @@ class ElementAsideContainer extends Component {
     componentWillUnmount() {
         this.asideRef.current.removeEventListener("focus", this.handleFocus);
     }
-    handleFocus = () => {
+    handleFocus = (e) => {
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
@@ -103,7 +103,14 @@ class ElementAsideContainer extends Component {
                                     // Element dragging ended
                                     onUpdate: (/**Event*/evt) => {
                                         let swappedElementData;
-                                        swappedElementData = _bodyMatter[evt.oldDraggableIndex]
+                                        let bodyMatterObj = [];
+                                        if(this.props.element.contents){
+                                            bodyMatterObj = this.props.element.contents.bodymatter;
+                                        }
+                                        else{
+                                            bodyMatterObj = this.props.element.elementdata.bodymatter;
+                                        }
+                                        swappedElementData = bodyMatterObj[evt.oldDraggableIndex]
                                         let dataObj = {
                                             oldIndex: evt.oldDraggableIndex,
                                             newIndex: evt.newDraggableIndex,
@@ -370,6 +377,8 @@ class ElementAsideContainer extends Component {
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
+                                        parentElement = {this.props.element}
+                                        onListSelect={this.props.onListSelect}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement) => (

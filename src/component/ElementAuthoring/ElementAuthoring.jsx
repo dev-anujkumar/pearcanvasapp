@@ -19,6 +19,7 @@ export class ElementAuthoring extends Component {
           placeholder="Type Something..."
           className={className}
           model={model}
+          tagName={this.props.tagName}
           handleEditorFocus={this.props.handleFocus}
           handleBlur = {this.props.handleBlur}
           slateLockInfo={slateLockInfo}

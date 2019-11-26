@@ -6,33 +6,24 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+jest.mock('../../../src/component/tinyMceEditor.js', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({});
-let props={
-    slateLockInfo:{
-        isLocked:false
+let props = {
+    slateLockInfo: {
+        isLocked: false
     }
 }
-    let wrapper = mount(<Provider store={store}><ElementLearningObjectiveItem  {...props}/> </Provider>)
-    let elementLOItemInstance = wrapper.find('ElementLearningObjectiveItem').instance();
+let wrapper = mount(<Provider store={store}><ElementLearningObjectiveItem  {...props} /> </Provider>)
 
 //Rendering component
 describe('Test Rendering of metadaanchor on slate', () => {
-   
+
     it('render component', () => {
         expect(wrapper.find('ElementLearningObjectiveItem')).toHaveLength(1);
-    })
-    it('onClick', () => {
-        elementLOItemInstance.onClick();
-    })
-    it('onBlur', () => {
-        elementLOItemInstance.onBlur();
-    })
-    it('onKeyup', () => {
-        elementLOItemInstance.onKeyup();
-    })
-
-    it('onFocus', () => {
-        elementLOItemInstance.onFocus();
     })
 });

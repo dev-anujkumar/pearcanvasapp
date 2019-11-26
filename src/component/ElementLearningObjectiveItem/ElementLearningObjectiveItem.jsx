@@ -3,56 +3,36 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 export class ElementLearningObjectiveItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  
-
   render() {
-    const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp} = this.props
-    
-     return (
-        <TinyMceEditor
-          openAssetPopoverPopUp ={openAssetPopoverPopUp}
-          openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
-          index={this.props.index}
-          elementId={this.props.elementId}
-          element={this.props.element}
-          placeholder="Type Something..."
-          className={className}
-          model={model}
-          handleEditorFocus={this.props.handleFocus}
-          onFocus={this.onFocus}
-          handleBlur = {this.props.handleBlur}
-          onKeyup={this.onKeyup}
-          onBlur={this.onBlur}
-          onClick={this.onClick}
-          slateLockInfo={slateLockInfo}
-          onListSelect={this.props.onListSelect}
-          permissions={this.props.permissions}
-        />
+    const { className,
+            model,
+            openGlossaryFootnotePopUp,
+            slateLockInfo,
+            openAssetPopoverPopUp } = this.props
+
+    return (
+      <TinyMceEditor
+        openAssetPopoverPopUp={openAssetPopoverPopUp}
+        openGlossaryFootnotePopUp={openGlossaryFootnotePopUp}
+        index={this.props.index}
+        elementId={this.props.elementId}
+        element={this.props.element}
+        placeholder="Type Something..."
+        className={className}
+        model={model}
+        handleEditorFocus={this.props.handleFocus}
+        handleBlur={this.props.handleBlur}
+        slateLockInfo={slateLockInfo}
+        onListSelect={this.props.onListSelect}
+        permissions={this.props.permissions}
+      />
     )
-
-    
-  }
-  onClick = () => {
-
-  }
-  onBlur = () =>  {
-
-  }
-  onKeyup = () =>  {
-
-  }
-  onFocus = () =>  {
-
   }
 }
 
 ElementLearningObjectiveItem.displayName = "ElementLearningObjectiveItem"
 ElementLearningObjectiveItem.defaultProps = {
-  type: "element-authoredtext"
+  type: "element-learningobjectives"
 }
 
 ElementLearningObjectiveItem.propTypes = {

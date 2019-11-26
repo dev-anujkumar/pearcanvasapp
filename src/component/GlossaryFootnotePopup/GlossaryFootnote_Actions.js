@@ -120,10 +120,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
-        if(elementSubType == 'image'){
+        if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video"){
             captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
             credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-        }else if (elementSubType == 'interactive'){
+        }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
             captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
         }
@@ -134,8 +134,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "text": "",
             "postertext": "",
             "tableasHTML": "",
-            "captions": captions.match(/<p>/g) ? captions : `<p>${captions}</p>`,
-            "credits": credits.match(/<p>/g) ? credits : `<p>${credits}</p>`
+            "captions": captions ? captions.match(/<p>/g) ? captions : `<p>${captions}</p>` : "<p></p>",
+            "credits": credits ? credits.match(/<p>/g) ? credits : `<p>${credits}</p>` : "<p></p>"
         }
     } else {
         workEditor = document.getElementById('cypress-' + index)

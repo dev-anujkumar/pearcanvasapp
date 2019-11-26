@@ -38,9 +38,6 @@ class SlateTagDropdown extends React.Component {
     }
     return el;
 }
- closest = function(el, fn) {
-        return el && (fn(el) ? el : closest(el.parentNode, fn));
-    }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClick, false)
     }
@@ -48,7 +45,7 @@ class SlateTagDropdown extends React.Component {
     learningObjectiveDropdown = (e) => {
         let currentSlateLOData = this.props.currentSlateLOData;
         let assessmentuRN="";
-        if(config.slateType === 'assessment'){
+        if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         }
         let isLOExist= this.props.slateTagEnable;

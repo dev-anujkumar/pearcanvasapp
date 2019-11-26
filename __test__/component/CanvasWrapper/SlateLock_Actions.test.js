@@ -7,7 +7,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import { spy, stub } from 'sinon';
 
-const callback = new stub();
+const callback = jest.fn();
 let initialState = {
     slateLockInfo: {
         isLocked: false,
@@ -34,7 +34,7 @@ describe('Tests slateLock  action', () => {
     });
 
     afterEach(() => moxios.uninstall());
-    xit('testing-- getSlateLockStatus  action', () => {
+    it('testing-- getSlateLockStatus  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
             slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
@@ -50,7 +50,11 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        return store.dispatch(actions.getSlateLockStatus(projectUrn, slateId)).then(() => {})
+        return store.dispatch(actions.getSlateLockStatus(projectUrn, slateId)).then(() => {
+            const { type, payload } = store.getActions()[0];
+            expect(type).toBe(SET_SLATE_LOCK_STATUS);
+
+        })
     })
     it('testing-- getSlateLockStatusWithCallback  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
@@ -68,8 +72,8 @@ describe('Tests slateLock  action', () => {
             });
         });
 
-        actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback).then(()=>{
-            callback(response)
+        return actions.getSlateLockStatusWithCallback(projectUrn, slateId, callback).then(() => {
+            expect(callback).toBeCalled();
         })
     })
 
@@ -90,6 +94,8 @@ describe('Tests slateLock  action', () => {
         });
 
         return store.dispatch(actions.setSlateLock(projectUrn, slateId)).then(() => {
+            const { type, payload } = store.getActions()[0];
+            expect(type).toBe(SET_LOCK_FLAG);
 
         });
     })
@@ -115,7 +121,7 @@ describe('Tests slateLock  action', () => {
 
         });
     })
-    xit('testing-- releaseSlateLockWithCallback  action', () => {
+    it('testing-- releaseSlateLockWithCallback  action', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
             slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
@@ -127,12 +133,12 @@ describe('Tests slateLock  action', () => {
                     slateStatus: false,
                     timestamp: "",
                     userId: ""
-                    
+
                 }
             });
         });
-        actions.releaseSlateLockWithCallback(projectUrn, slateId, callback).then(()=>{
-            callback(response);
+        return actions.releaseSlateLockWithCallback(projectUrn, slateId, callback).then(() => {
+            expect(callback).toBeCalled();
         })
     })
 

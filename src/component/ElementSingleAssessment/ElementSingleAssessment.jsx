@@ -53,7 +53,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     handleC2AssessmentClick=(value)=> {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
         let fileName = "";
-        let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()] || ['CITE'];
+        let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "partial";//"partial";
         let prefix = 'urn:pearson:work:';

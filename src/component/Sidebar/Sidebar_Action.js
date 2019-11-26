@@ -90,6 +90,38 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             outputSubTypeEnum = "NA"
         }
     }
+    if (oldElementData.subtype && oldElementData.subtype === "workedexample") {
+        if (outputSubTypeEnum && outputSubTypeEnum === "WORK_EXAMPLE_2") {
+            oldElementData.designtype = "workedexample2"
+        }
+    }
+    if (oldElementData.subtype && oldElementData.subtype === "sidebar") {
+        let elemDesigntype = "asideSidebar01"
+        switch (outputSubTypeEnum) {
+            case "SIDEBAR_01":
+                elemDesigntype = "asideSidebar01"
+                break;
+            case "SIDEBAR_02":
+                elemDesigntype = "asideSidebar02"
+                break;
+            case "SIDEBAR_03":
+                elemDesigntype = "asideSidebar03"
+                break;
+            case "SIDEBAR_04":
+                elemDesigntype = "asideSidebar04"
+                break;
+            case "SIDEBAR_05":
+                elemDesigntype = "asideSidebar05"
+                break;
+            case "SIDEBAR_06":
+                elemDesigntype = "asideSidebar06"
+                break;
+            default:
+                elemDesigntype = "asideSidebar01"
+                break;
+        }
+        oldElementData.designtype = elemDesigntype
+    }
     const conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
@@ -100,7 +132,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         slateUrn:config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0
     }
-
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 

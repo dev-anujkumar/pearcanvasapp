@@ -27,7 +27,8 @@ export class AssessmentSlateCanvas extends Component {
             assessmentItemId: props.model && props.model.elementdata && props.model.elementdata.assessmentitemid ?props.model.elementdata.assessmentitemid :"",
             assessmentItemTitle:props.model && props.model.elementdata && props.model.elementdata.assessmenttitle? props.model.elementdata.assessmenttitle: "",
             assessmentFormat: props.model && props.model.elementdata && props.model.elementdata.assessmentformat ?props.model.elementdata.assessmentformat :"",
-            learningTemplateLabel: props.model && props.model.elementdata && props.model.elementdata.templatelabel ?props.model.elementdata.templatelabel :""
+            learningTemplateLabel: props.model && props.model.elementdata && props.model.elementdata.templatelabel ?props.model.elementdata.templatelabel :"",
+            assessmentFormatType:"cite"
         }
     }
 
@@ -56,14 +57,17 @@ export class AssessmentSlateCanvas extends Component {
      * @description - This function is to select the Assessment type
      * @param type - type of assessment
     */
-    selectAssessmentType=(type)=>{
-        var assessmentType;
-        if(type===FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE" ){
-            assessmentType="CITE"
-        }else{
-            assessmentType="TDX"
+    selectAssessmentType = (type) => {
+        let assessmentType = "CITE";
+        if (type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
+            assessmentType = "CITE"
+        } else {
+            assessmentType = "TDX"
         }
-        return assessmentType
+        this.setState({
+            assessmentFormatType: assessmentType
+        })
+        //return assessmentType
     }
 
     /*** 
@@ -82,18 +86,21 @@ export class AssessmentSlateCanvas extends Component {
      */
     handleC2AssessmentClick=(value)=> {
         if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
-        let assessmentType=this.selectAssessmentType();
+        //let assessmentType=this.selectAssessmentType();
+        let assessmentType=this.state.assessmentFormatType
         let fileName = "";
-        let filterType = [assessmentType.toUpperCase()] || ['CITE'];
+        let filterType = [assessmentType.toUpperCase()];
         let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
-        let searchMode = "partial";//"partial";
+        let searchMode = "full";
         let prefix = 'urn:pearson:work:';
         let startIndex = prefix.length;
         let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
         var searchSelectAssessmentURN = "";
+        /*
         if (searchMode == "partial") {
             searchSelectAssessmentURN = UUID || "";
         }
+        */
 
         let productId = "";
         let searchTypeOptVal = "";

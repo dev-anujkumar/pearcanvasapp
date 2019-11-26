@@ -249,7 +249,7 @@ class Comments extends React.Component {
                     <div className="comment-header">
                         <div className="avatar avatar--large">
                             <span className="profile-picture-placeholder green">
-                                C
+                                {comment.commentCreator[0].toUpperCase()}
                           </span>
                         </div>
                         <div className="comment-info">
@@ -266,13 +266,15 @@ class Comments extends React.Component {
                         {this.state.showActionsMenu && this.actionsMenu()}
                     </div>
                     <div className="comment-body">
-                        <div className="text-medium color-gray-71 mb-4">
-
-                            <p className="hyphens">
-                                {comment.commentString}
-                            </p>
-                            {this.state.mode == "edit" && this.editForm()}
-                        </div>
+                        {
+                            this.state.mode == "edit" ? this.editForm() 
+                            :
+                            <div className="text-medium color-gray-71 mb-4">
+                                <p className="hyphens">
+                                    {comment.commentString}
+                                </p>
+                            </div>
+                        }         
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>

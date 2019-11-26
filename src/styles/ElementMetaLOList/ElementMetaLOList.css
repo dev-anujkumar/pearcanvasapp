@@ -42,3 +42,6 @@ h3.moduleName {
 .learningObjectiveinnerText img{
     vertical-align:middle;
 }
+.divLearningObjectiveListHeaderLabel .learningObjectiveinnerText.cypress-editable{
+    margin:0;
+}

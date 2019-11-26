@@ -81,7 +81,8 @@ const initialState = {
     togglePanel: false,
     users: [],
     slateTitle: "",
-    comments: []
+    comments: [],
+    index:null
 }
 
 /**
@@ -100,10 +101,11 @@ export default function (state = initialState, action) {
             };
         case FETCH_COMMENT_BY_ELEMENT:
             let commentList = state.allComments
-            let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload)
+            let comments = commentList && commentList.filter(comment => comment.commentOnEntity === payload.elementId)
             return {
                 ...state,
-                comments: comments
+                comments: comments,
+                index:payload.index
             }
         case TOGGLE_COMMENTS_PANEL:
             return {
@@ -191,19 +193,19 @@ export default function (state = initialState, action) {
                 allComments:deleteAllComment
             }
         case ADD_NEW_COMMENT:
-            let addComment = JSON.parse(JSON.stringify(state.allComments))
-            let addnewComment = JSON.parse(JSON.stringify(state.comments))
+            let addComment = [...state.allComments] //JSON.parse(JSON.stringify(state.allComments))
+            let addnewComment = [...state.comments]//JSON.parse(JSON.stringify(state.comments))
             let addedComment;
-            if(state.comments.length!=0 && state.comments[0].commentOnEntity == payload.commentOnEntity){
+            /** Comments in comments panel was not showing after clicking from header for the first time */
+            // if(state.comments.length!=0 && state.comments[0].commentOnEntity == payload.commentOnEntity){
                 addedComment = [
                     ...addnewComment,payload
-                 ]
-                
-            }
+                ]  
+            // }
             return {
                 ...state,
                 allComments: [...addComment, payload],
-                comments: addedComment ? addedComment: addnewComment
+                comments: addedComment
             }
         default:
             return state;

@@ -351,4 +351,8 @@
     transform: rotate(0deg) scale(0.973453, 1);
     transform-origin: 0% 0%;
   }
-  
+
+  img.seach_icon{
+    position: absolute;
+    margin: 22px;
+  }

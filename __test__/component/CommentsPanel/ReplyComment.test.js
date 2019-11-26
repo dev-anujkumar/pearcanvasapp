@@ -16,9 +16,10 @@ describe('Testing CommentsPanel component with props', () => {
         {...props} />)
     const instance = wrapper.instance();
     
-    it('tests the function  replyCommentForm with if condition', () => {
+    xit('tests the function  replyCommentForm with if condition', () => {
         let replyForm = instance.replyCommentForm(props);
-        expect(replyForm.props.className).toEqual('reply');
+        expect(wrapper.find(".reply").first()).toHaveLength(1);
+
     })
     it('tests the function replyCommentForm with else condition', () => {
         let props = {
@@ -26,7 +27,9 @@ describe('Testing CommentsPanel component with props', () => {
             toggleReplyForm: false,
             comment: commentWithReply
         }
+        wrapper.setProps(props);
         instance.replyCommentForm(props);
+        expect(wrapper.find(".reply")).toHaveLength(1);
     })
 
     it('tests the function  replyComment with if condition', () => {
@@ -35,6 +38,8 @@ describe('Testing CommentsPanel component with props', () => {
             NODE_ENV: "development"
         }
         instance.replyComment(props);
+        const text = wrapper.state().text;
+        expect(text).toEqual("");
     })
 
     it('tests the function  updateComment with if condition', () => {
