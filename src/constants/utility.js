@@ -7,6 +7,7 @@
 
 // IMPORT - Module dependencies
 import config from '../config/config';
+import store from '../appstore/store'
 
 // DECLARATION - const or variables 
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
@@ -25,4 +26,23 @@ export const guid = () => {
 
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
+}
+
+export const hasProjectPermission = (value) => {
+    const authStore = store.getState();
+    let permissions = authStore && authStore.appStore.permissions;
+    let hasPermissions = permissions && permissions.includes(value)
+    return hasPermissions;
+}
+
+
+export const hasReviewerRole = (value) => {
+    if (value) {
+        return !(hasProjectPermission('note_viewer'))
+    }
+    const authStore = store.getState();
+    let hasRole = authStore.appStore && (authStore.appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) ? true : false;
+        console.log("hasRole", hasRole)
+    return hasRole;
 }

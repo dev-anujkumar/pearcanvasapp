@@ -9,6 +9,7 @@ import PopUp from './../PopUp';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -51,7 +52,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     return null;
 }
     handleC2AssessmentClick=(value)=> {
-        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:

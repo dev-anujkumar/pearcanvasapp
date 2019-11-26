@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { showTocBlocker, hideTocBlocker, disableHeader} from '../../js/toggleLoader'
 import { c2MediaModule } from '../../js/c2_media_module';
 import config from '../../config/config';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /**
 * @description - AddAudioBook is a class based component. It is defined simply for adding audio Narration.
@@ -60,7 +61,7 @@ class AddAudioBook extends React.Component {
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -71,6 +72,9 @@ class AddAudioBook extends React.Component {
      * @description function will be called on image src add and fetch resources from Alfresco
      */
     handleC2MediaClick = (e) => {
+        if(hasReviewerRole()){
+            return true
+        }
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         var data_1 = false;
