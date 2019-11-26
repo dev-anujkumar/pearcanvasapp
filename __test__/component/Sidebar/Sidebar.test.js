@@ -9,17 +9,7 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
 
-jest.mock('./../../../src/config/config.js', () => {
-    return {
-        slateManifestURN: 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'
-    }
-});
-
-jest.mock('./../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
-}))
-
-describe('Test for Sidebar component', () => {
+xdescribe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
 
     const activeElement = {
@@ -51,11 +41,8 @@ describe('Test for Sidebar component', () => {
     let sidebar = mount(<Provider store={sidebarWithData}>
         <Sidebar />
     </Provider>);
-    expect(sidebar.find('.element-dropdown').length).toBe(2)
-    expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Headings")
-    expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Heading 1")
 
-    it('Convert functionality', () => {
+    it('onClick Event', () => {
         const sidebarInstance = sidebar.find('Sidebar').instance();
         sidebarInstance.setState({
             elementDropdown: 'primary',
@@ -84,7 +71,7 @@ describe('Test for Sidebar component', () => {
         target = {
             target: {
                 getAttribute: function(dataValue) {
-                    return 'secondary-heading-3';
+                    return 'secondary-heading-1';
                 }
             }
         }
@@ -92,46 +79,23 @@ describe('Test for Sidebar component', () => {
         sidebar.find('ul.element-dropdown-content.secondary-options').simulate('click');
         sidebarInstance.handleSecondaryOptionChange(target);
 
-        // sidebarInstance.attributions();
+        // Attribution for secondary element type
+        sidebarInstance.setState({
+            elementDropdown: 'primary',
+            activePrimaryOption: 'primary-blockquote',
+            activeSecondaryOption: 'secondary-marginalia-attribution'
+        });
+
+        sidebarInstance.attributions();
 
         // Attribution for primary element type
-        // sidebarInstance.setState({
-        //     activeElementType: 'figure',
-        //     activePrimaryOption: 'primary-image-figure',
-        //     activeSecondaryOption: 'secondary-image-figure-half'
-        // });
-
-        // sidebarInstance.attributions();
-    });
-
-    describe('Test case for BCE', () => {
-        const activeElement = {
-            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e2w",
-            elementType: "figure",
-            elementWipType: "figure",
-            primaryOption: "primary-blockcode-equation",
-            secondaryOption: "secondary-blockcode-language-Java",
-            index: 1,
-            tag: "BCE",
-            numbered: true,
-            startNumber : 2
-        }
-        
-        const sidebarWithData = mockStore({
-            appStore: {
-                activeElement,
-                updateElement,
-                conversionElement,
-                slateLevelData
-            },
-            metadataReducer: {
-                currentSlateLOData: {}
-            },
+        sidebarInstance.setState({
+            activeElementType: 'figure',
+            activePrimaryOption: 'primary-image-figure',
+            activeSecondaryOption: 'secondary-image-figure-half'
         });
-        // let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>, {attachTo: document.body});
-        // expect(sidebar.find('.element-dropdown').length).toBe(2)
-        // expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Block Code Editor")
-        // expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Java")
+
+        sidebarInstance.attributions();
     });
 
     it('Test Case for Metadata Anchor LO', () => {
@@ -148,7 +112,7 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
+                sidebarWithData,
                 conversionElement,
                 slateLevelData
             },
@@ -176,7 +140,6 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
                 conversionElement,
                 slateLevelData
             },
@@ -196,7 +159,6 @@ describe('Test for Sidebar component', () => {
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
-                updateElement,
                 conversionElement,
                 slateLevelData
             },
@@ -209,7 +171,7 @@ describe('Test for Sidebar component', () => {
         </Provider>);
     })
 
-    describe("Blockquote and attributions", () => {
+    describe("Blockquote", () => {
 
         it("Checking data for pullquote", () => {
             const activeElement = {
@@ -226,7 +188,6 @@ describe('Test for Sidebar component', () => {
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
-                    updateElement,
                     conversionElement,
                     slateLevelData
                 },
@@ -254,7 +215,6 @@ describe('Test for Sidebar component', () => {
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
-                    updateElement,
                     conversionElement,
                     slateLevelData
                 },
@@ -263,10 +223,6 @@ describe('Test for Sidebar component', () => {
                 },
             });
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
-            const sidebarInstance = sidebar.find('Sidebar').instance();
-
-            sidebarInstance.attributions();
-
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
