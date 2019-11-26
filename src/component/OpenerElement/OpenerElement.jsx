@@ -4,7 +4,7 @@ import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerCo
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
-
+import { hasReviewerRole } from '../../constants/utility';
 import noImage from '../../images/OpenerElement/no-image.png'
 import { c2MediaModule } from './../../js/c2_media_module';
 
@@ -67,7 +67,7 @@ class OpenerElement extends Component {
     handleC2ExtendedClick = (data) => {
         let data_1 = data;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -79,6 +79,9 @@ class OpenerElement extends Component {
      * @param {e} event
      */
     handleC2MediaClick = (e) => {
+        if(hasReviewerRole()){
+            return true
+        }
         const { slateLockInfo , permissions } = this.props
         if(checkSlateLock(slateLockInfo))
             return false

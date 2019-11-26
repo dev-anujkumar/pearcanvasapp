@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import {checkforToolbarClick} from '../js/utils'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 let context = {};
 
 export class TinyMceEditor extends Component {
@@ -115,7 +115,7 @@ export class TinyMceEditor extends Component {
 
                     if (activeElement) {
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
-                        if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
+                        if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
                             activeElement.classList.remove('place-holder')
                         }
                         else {
@@ -359,7 +359,7 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 let isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-                if (activeElement.innerText.trim().length || isContainsMath) {
+                if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
@@ -377,6 +377,14 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+
+            if(hasReviewerRole()){
+                let evt = (e) ? e : window.event;
+                if(evt.ctrlKey && evt.which == 88){ 
+                    evt.preventDefault();
+                }
+             }
+
             if(this.isTabPressed(e)){
                 e.preventDefault()
             }
@@ -890,8 +898,10 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-
-        if (this.props.model && this.props.model.text) {
+        if (this.props.element && this.props.element.type === "element-list") {
+            this.placeHolderClass = '';
+        }
+        else if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
@@ -1013,6 +1023,12 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
+       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+        if(tinymce.activeEditor && tinymce.activeEditor.id){
+            document.getElementById(tinymce.activeEditor.id).contentEditable = false
+            return
+        }
+    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){
@@ -1022,13 +1038,6 @@ export class TinyMceEditor extends Component {
         }
         else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
             tinymce.$(e.target).closest('li').append('<br/>');
-        }
-
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
-            if(tinymce.activeEditor && tinymce.activeEditor.id){
-                document.getElementById(tinymce.activeEditor.id).contentEditable = false
-                return
-            }
         }
         this.props.handleEditorFocus();
         let isSameTarget = false;

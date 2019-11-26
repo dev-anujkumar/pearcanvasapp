@@ -63,7 +63,7 @@ export default {
         },
         'primary-blockquote': {
             text: 'Blockquotes',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent', 'glossary','slatetag'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag'],
             enum: 'BLOCKFEATURE',
             subtype: {
                 'secondary-pullquote': {

@@ -47,3 +47,8 @@ global.MutationObserver = function () {
         observe: function () { }
     }
 }
+global.window.getSelection=()=>{
+    return {
+        removeAllRanges: ()=>{}
+    }
+}

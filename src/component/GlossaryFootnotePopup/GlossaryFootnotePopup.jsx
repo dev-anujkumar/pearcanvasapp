@@ -7,6 +7,7 @@ import Button from '../ElementButtons/ElementButton.jsx';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 import { checkforToolbarClick } from '../../js/utils'
+import { hasReviewerRole } from '../../constants/utility.js'
 class GlossaryFootnotePopup extends Component {
     constructor() {
         super();
@@ -51,19 +52,19 @@ class GlossaryFootnotePopup extends Component {
                         <div className="glossary-word-header">
                             <div className="glossary-word-title">Term:</div>
                             <div className="glossary-word-name glossary-word-description" id='glossary-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                                <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.glossaryContentText} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
+                                <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.glossaryContentText} className='definition-editor place-holder' placeholder="Type Something" id='glossary-0' />
                             </div>
                         </div>
                     }
                     <div className="glossary-definition-header">
                         <div className="glossary-definition-label">{(glossaryFootnote === 'Glossary') ? 'Definition:' : 'Note:'}</div>
                         <div className="glossary-editor glossary-definition-description" id="glossary-editor-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
-                            <ReactEditor glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
+                            <ReactEditor permissions={this.props.permissions} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue.footnoteContentText} className='definition-editor place-holder' placeholder="Type Something" id={id} />
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">
                         <span className="glossary-cancel-button" onClick={closePopup}>Cancel</span>
-                        <span className="glossary-save-button" onClick={saveContent}>Save</span>
+                        <span className="glossary-save-button" disabled={hasReviewerRole('elements_add_remove')} onClick={saveContent}>Save</span>
                     </div>
                 </div>
             </div>
