@@ -11,7 +11,7 @@ import {
 DEFAULT_IMAGE_DATA_SOURCE,
 DEFAULT_IMAGE_SOURCE} from '../../constants/Element_Constants';
 import config from '../../config/config';
-import { sendDataToIframe } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 
 
@@ -79,7 +79,7 @@ class ElementFigure extends Component {
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -91,6 +91,9 @@ class ElementFigure extends Component {
      */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
+        if(hasReviewerRole()){
+            return true
+        }
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;
@@ -144,7 +147,11 @@ class ElementFigure extends Component {
      * @description function will be called to launch Table Editor SPA
      */
     launchSPA=()=>{
-    sendDataToIframe({'type':'launchTableSPA', 'message':{}, "id" : this.props.elementId, "editable" :true });
+        let editable = true;
+        if(hasReviewerRole()){           
+            editable = false;
+        }
+    sendDataToIframe({'type':'launchTableSPA', 'message':{}, "id" : this.props.elementId, editable });
 }
     /**
      * @description function will be called on image src add and fetch resources based on figuretype

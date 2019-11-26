@@ -10,6 +10,7 @@ import config from '../../config/config';
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+import { hasReviewerRole } from '../../constants/utility.js'
 
 
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
@@ -151,7 +152,7 @@ class ElementAudioVideo extends Component {
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -163,6 +164,9 @@ class ElementAudioVideo extends Component {
      */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
+        if(hasReviewerRole()){
+            return true
+        }
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;

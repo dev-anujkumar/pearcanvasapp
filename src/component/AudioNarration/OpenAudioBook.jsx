@@ -4,6 +4,7 @@ import { deleteAudioNarrationForContainer, showAudioRemovePopup } from './AudioN
 import { hideTocBlocker } from '../../js/toggleLoader';
 import { audioNarrationCloseIcon } from '../../images/TinyMce/TinyMce.jsx'
 import '../../styles/AudioNarration/AudioNarration.css'
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /**
 * @description - OpenAudioBook is a class based component. It is defined simply for opening the already Narrative audio popup.
@@ -82,7 +83,7 @@ class OpenAudioBook extends React.Component {
                     </audio>
                 </figure>
                 <div className="remove-button">
-                    {
+                    { !hasReviewerRole() &&
                         <button className="remove-text" onClick={() => this.openConfirmationBox()} className="audioRemoveButton audioRemoveRound">Remove</button>
                     }
                 </div>

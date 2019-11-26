@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -443,7 +443,8 @@ class ElementContainer extends Component {
         let { id, type } = this.props.element;
         let { parentUrn, asideData, element } = this.props;
         let { contentUrn } = this.props.element
-        
+        let index = this.props.index
+
         if(this.state.sectionBreak){
             parentUrn = {
                 elementType : element.type,
@@ -464,7 +465,7 @@ class ElementContainer extends Component {
         }
         
            // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
         this.setState({
             sectionBreak : null
         })
@@ -616,7 +617,7 @@ class ElementContainer extends Component {
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
-                    {permissions && permissions.includes('elements_add_remove') && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
                 </div>
@@ -764,8 +765,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index) => {
             dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText)).then(() => {
