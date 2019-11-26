@@ -185,6 +185,9 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
+            if(this.state.activeSecondaryOption!=="secondary-blockcode-language-Default"){
+                secondaryOptionList.splice(0,1)
+            }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
                     return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
