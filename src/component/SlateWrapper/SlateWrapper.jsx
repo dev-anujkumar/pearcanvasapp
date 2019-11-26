@@ -33,6 +33,7 @@ import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, show
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
+import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -120,6 +121,9 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+
+
+        
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -154,7 +158,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked } } = props
+        const { slateLockInfo: { isLocked, userId} } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -165,9 +169,17 @@ class SlateWrapper extends Component {
         if (stateChanged) {
             return _state;
         }
+        if(props.showSlateLockPopup1){
+           return _state = {
+            ..._state,
+            showLockPopup: true,
+            lockOwner: userId
+        }
+    }
         else {
             return null
         }
+        
     }
 
     /**
@@ -467,7 +479,8 @@ class SlateWrapper extends Component {
         this.setState({
             showLockPopup: toggleValue
         })
-        this.props.showBlocker(toggleValue)
+        this.props.showBlocker(toggleValue);
+        this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
     }
@@ -1035,7 +1048,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
-        accesDeniedPopup : state.appStore.accesDeniedPopup
+        accesDeniedPopup : state.appStore.accesDeniedPopup,
+        showSlateLockPopup1: state.metadataReducer.showSlateLockPopup
     };
 };
 
@@ -1057,6 +1071,7 @@ export default connect(
         setActiveElement,
         showWrongAudioPopup,
         getSlateLockStatus,
-        accessDenied
+        accessDenied,
+        showSlateLockPopup
     }
 )(SlateWrapper);

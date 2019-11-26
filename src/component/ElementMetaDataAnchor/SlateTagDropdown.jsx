@@ -1,5 +1,8 @@
 import React from 'react';
 import config from '../../config/config';
+import { checkSlateLock } from '../../js/slateLockUtility.js';
+import PopUp from '../PopUp';
+import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
@@ -9,13 +12,18 @@ import {
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
 }
     from '../../constants/IFrameMessageTypes';
+import { ALREADY_USED_SLATE, IN_USE_BY } from '../../component/SlateWrapper/SlateWrapperConstants';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showLockPopup: false
+        }
     }
+   
     componentWillMount() {
         document.addEventListener('mousedown', this.handleClick, false)
     }
@@ -41,6 +49,25 @@ class SlateTagDropdown extends React.Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClick, false)
     }
+    togglePopup = (toggleValue, event) => {
+        this.setState({
+            showLockPopup: toggleValue
+        })
+        //this.props.showBlocker(toggleValue)
+        //hideBlocker()
+        this.prohibitPropagation(event)
+    }
+    /**
+     * Prevents event propagation and default behaviour
+     * @param {*} event event object
+     */
+    prohibitPropagation = (event) => {
+        if (event) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+        return false
+    }
 
     learningObjectiveDropdown = (e) => {
         let currentSlateLOData = this.props.currentSlateLOData;
@@ -53,10 +80,13 @@ class SlateTagDropdown extends React.Component {
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
-        if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
+        else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN } });
         }
-        // else if( !this.state.slateLockSatus){
+        else if(checkSlateLock(this.props.slateLockInfo)){
+            this.props.showSlateLockPopup(true);
+        }
+        else{
         if (e.target.innerText == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys } })
         }
@@ -71,11 +101,8 @@ class SlateTagDropdown extends React.Component {
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
         }
+    }
         this.props.closeLODropdown();
-        //  }
-        //  else(
-        //      this.slateLockAlert(this.state.SlatelockUserInfo)
-        //  )
 
     }
     render = () => {
@@ -98,8 +125,13 @@ class SlateTagDropdown extends React.Component {
 }
 const mapStateToProps = (state) => {
     return {
-        isLOExist: state.metadataReducer.slateTagEnable
+        isLOExist: state.metadataReducer.slateTagEnable,
+        slateLockInfo: state.slateLockReducer.slateLockInfo
     }
 }
+const mapActionToProps = {
+    checkSlateLock,
+    showSlateLockPopup
+}
 
-export default connect(mapStateToProps)(SlateTagDropdown);
+export default connect(mapStateToProps, mapActionToProps)(SlateTagDropdown);
