@@ -746,9 +746,9 @@ class SlateWrapper extends Component {
             if (_elements !== null && _elements !== undefined) {
                 this.renderButtonsonCondition(_elements);
                 return _elements.map((element, index) => {
-                    if (element.type === "element-aside" && element.subtype !== "workedexample" && element.elementdata.bodymatter && element.elementdata.bodymatter.length === 0) {
-                        return null;
-                    } else {
+                    // if (element.type === "element-aside" && element.subtype !== "workedexample" && element.elementdata.bodymatter && element.elementdata.bodymatter.length === 0) {
+                    //     return null;
+                    // } else {
                         return (
                            <React.Fragment key={element.id}>
                                 {
@@ -807,7 +807,7 @@ class SlateWrapper extends Component {
                             </React.Fragment>
                           
                         )
-                    }
+                   // }
 
 
                 })
