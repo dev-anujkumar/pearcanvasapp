@@ -583,6 +583,7 @@ class ElementContainer extends Component {
                                 borderToggle={this.state.borderToggle}
                                 elemBorderToggle={this.props.elemBorderToggle}
                                 elementSepratorProps={elementSepratorProps}
+                                deleteElement={this.deleteElement}
                                 index={index}
                                 element={element}
                                 elementId={element.id}

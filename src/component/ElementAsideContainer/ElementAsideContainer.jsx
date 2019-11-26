@@ -74,6 +74,9 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
+                    if(!_bodyMatter.length && this.props.deleteElement){
+                        this.props.deleteElement();
+                    }
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
