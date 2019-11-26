@@ -82,7 +82,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 
 
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (type) => {
         switch (type) {
@@ -102,6 +102,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
     }
 
     let _requestData = prepareDeleteRequestData(type)
+    let indexToBeSent = index || "0"
+    _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
