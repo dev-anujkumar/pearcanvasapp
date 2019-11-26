@@ -88,7 +88,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
         } else {
             assessmentFormat = "";
-            alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+            this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
         this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
             ()=>{

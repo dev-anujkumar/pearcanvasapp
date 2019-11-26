@@ -169,7 +169,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             if(document.getElementsByClassName(METADATA_ANCHOR).length > 0){
                 let elements = document.getElementsByClassName(METADATA_ANCHOR);
                 elements = Array.from(elements);
-                elements.map(function(item,index){
+                elements.forEach(function(item,index){
                     if (item.classList && item.classList.contains("disabled")) { item.classList.remove("disabled") }
                 })
             }
