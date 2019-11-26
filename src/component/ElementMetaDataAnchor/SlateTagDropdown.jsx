@@ -1,7 +1,6 @@
 import React from 'react';
 import config from '../../config/config';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
-import PopUp from '../PopUp';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import {
     AddLearningObjectiveSlateDropdown,
@@ -12,16 +11,12 @@ import {
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
 }
     from '../../constants/IFrameMessageTypes';
-import { ALREADY_USED_SLATE, IN_USE_BY } from '../../component/SlateWrapper/SlateWrapperConstants';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { connect } from 'react-redux';
 
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            showLockPopup: false
-        }
     }
    
     componentWillMount() {
@@ -49,26 +44,7 @@ class SlateTagDropdown extends React.Component {
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClick, false)
     }
-    togglePopup = (toggleValue, event) => {
-        this.setState({
-            showLockPopup: toggleValue
-        })
-        //this.props.showBlocker(toggleValue)
-        //hideBlocker()
-        this.prohibitPropagation(event)
-    }
-    /**
-     * Prevents event propagation and default behaviour
-     * @param {*} event event object
-     */
-    prohibitPropagation = (event) => {
-        if (event) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
-        return false
-    }
-
+    
     learningObjectiveDropdown = (e) => {
         let currentSlateLOData = this.props.currentSlateLOData;
         let assessmentuRN="";
