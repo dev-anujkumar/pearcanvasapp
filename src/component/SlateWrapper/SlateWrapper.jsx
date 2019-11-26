@@ -166,7 +166,7 @@ class SlateWrapper extends Component {
         if (stateChanged) {
             return _state;
         }
-        if(props.showSlateLockPopup1){
+        if(props.showSlateLockPopupValue){
            return _state = {
             ..._state,
             showLockPopup: true,
@@ -1046,7 +1046,7 @@ const mapStateToProps = state => {
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
         accesDeniedPopup : state.appStore.accesDeniedPopup,
-        showSlateLockPopup1: state.metadataReducer.showSlateLockPopup
+        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup
     };
 };
 
