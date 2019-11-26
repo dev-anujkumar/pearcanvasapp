@@ -23,10 +23,11 @@ import {
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
-    UPDATE_FOOTNOTEGLOSSARY, 
+    UPDATE_FOOTNOTEGLOSSARY,
     FETCH_DATA_ON_SLATE_REFRESH,
     ACCESS_DENIED_POPUP,
-    SET_PARENT_NODE
+    SET_PARENT_NODE,
+    OPEN_POPUP_SLATE
 } from '../constants/Action_Constants';
 
 /**
@@ -41,7 +42,8 @@ const initialState = {
     splittedElementIndex: 0,
     pageNumberData: {},
     permissions: [],
-    accesDeniedPopup: false
+    accesDeniedPopup: false,
+    popupSlateData:null
 };
 
 /**
@@ -71,56 +73,56 @@ export default function (state = initialState, action) {
                 ...state,
                 slateLevelData: action.payload
             };
-        case DELETE_ELEMENT : 
+        case DELETE_ELEMENT:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case FETCH_DATA_ON_SLATE_REFRESH : 
+        case FETCH_DATA_ON_SLATE_REFRESH:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
             };
-        case SWAP_ELEMENT : 
-                return {
-                    ...state,
-                    slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
-                }
+        case SWAP_ELEMENT:
+            return {
+                ...state,
+                slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
+            }
         case SET_SPLIT_INDEX:
             return {
                 ...state,
-                splittedElementIndex : action.payload
+                splittedElementIndex: action.payload
             }
         case GET_PAGE_NUMBER:
             return {
                 ...state,
                 pageNumberData: action.payload
             }
-         case SET_UPDATED_SLATE_TITLE:
-                    return {
-                        ...state,
-                        slateTitleUpdated : action.payload.title
-                    }
+        case SET_UPDATED_SLATE_TITLE:
+            return {
+                ...state,
+                slateTitleUpdated: action.payload.title
+            }
         case SET_SLATE_TYPE:
             return {
                 ...state,
                 slateType: action.payload
             }
         case SET_SLATE_ENTITY:
-        return {
-            ...state,
-            setSlateEntity: action.payload
-        }
+            return {
+                ...state,
+                setSlateEntity: action.payload
+            }
         case SET_PARENT_NODE:
-        return {
-            ...state,
-            setSlateParent: action.payload
-        }
-         case AUTHORING_ELEMENT_UPDATE:
-             return {
-                 ...state,
-                 slateLevelData: action.payload.slateLevelData
-             }
+            return {
+                ...state,
+                setSlateParent: action.payload
+            }
+        case AUTHORING_ELEMENT_UPDATE:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            }
         case GET_PROJECT_PERMISSIONS:
             return {
                 ...state,
@@ -130,32 +132,37 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 oldImage: action.payload.oldImage
-            }  
-       case UPDATE_PAGENUMBER_SUCCESS:
-           return{
-               ...state,
-               //slateLevelData: action.payload.slateLevelData,
-               pageLoading:action.payload.pageLoading
-           }
+            }
+        case UPDATE_PAGENUMBER_SUCCESS:
+            return {
+                ...state,
+                //slateLevelData: action.payload.slateLevelData,
+                pageLoading: action.payload.pageLoading
+            }
         case UPDATE_PAGENUMBER:
             return {
                 ...state,
-                 pageLoading:action.payload.pageLoading
+                pageLoading: action.payload.pageLoading
             }
         case ACCESS_DENIED_POPUP:
             return {
                 ...state,
-                accesDeniedPopup : action.payload
+                accesDeniedPopup: action.payload
             }
-        case UPDATE_PAGENUMBER_FAIL: 
-        return {
-            ...state,
-            pageLoading:action.payload.pageLoading
-        }
+        case UPDATE_PAGENUMBER_FAIL:
+            return {
+                ...state,
+                pageLoading: action.payload.pageLoading
+            }
         case UPDATE_FOOTNOTEGLOSSARY:
             return {
                 ...state,
                 slateLevelData: JSON.parse(JSON.stringify(action.payload.slateLevelData))
+            }
+        case OPEN_POPUP_SLATE:
+            return {
+                ...state,
+               popupSlateData:action.payload
             }
         default:
             return state;

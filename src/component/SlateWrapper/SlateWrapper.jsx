@@ -31,7 +31,7 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
 
 let random = guid();
@@ -100,7 +100,7 @@ class SlateWrapper extends Component {
             if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
                 let _slateObject = Object.values(_slateData)[0];
                 let { contents: _slateContent } = _slateObject;
-                let { bodymatter: _slateBodyMatter } = _slateContent;
+                let { bodymatter: _slateBodyMatter } = _slateContent || _slateData.popupdata;
                 if (_slateBodyMatter.length == 0) {
                     this.isDefaultElementInProgress = true;
                     /* For showing the spinning loader send HideLoader message to Wrapper component */
@@ -230,12 +230,13 @@ class SlateWrapper extends Component {
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
+        console.log("slateData",_slateData)
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = Object.values(_slateData)[0];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
+                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent || _slateData.popupdata;
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -956,6 +957,9 @@ class SlateWrapper extends Component {
             )
         }
     }
+    closePopup = () =>{
+        this.props.openPopupSlate()
+    }
 
     /**
      * render | renders title and slate wrapper
@@ -975,9 +979,11 @@ class SlateWrapper extends Component {
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
-                    {
-                        this.renderSlateHeader(this.props)
-                    }
+                     {
+                        this.props.slateData.type == 'popup' ?
+                          <button className="popup-button" onClick={this.closePopup}>SAVE & CLOSE</button>
+                          :this.renderSlateHeader(this.props)
+                    } 
                 </div>
                 <div id="slateWrapper" className='slate-wrapper'>
                     {
@@ -1057,6 +1063,7 @@ export default connect(
         setActiveElement,
         showWrongAudioPopup,
         getSlateLockStatus,
-        accessDenied
+        accessDenied,
+        openPopupSlate
     }
 )(SlateWrapper);

@@ -3,6 +3,7 @@ import config from '../../config/config';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
+	OPEN_POPUP_SLATE
 } from '../../constants/Action_Constants';
 import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -220,4 +221,11 @@ export const fetchAuthUser = () => dispatch=> {
             console.log('axios Error', err);
             //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
         })
+}
+
+export const openPopupSlate = (element) => dispatch => {
+	dispatch({
+		type: OPEN_POPUP_SLATE,
+		payload: element
+	});
 }

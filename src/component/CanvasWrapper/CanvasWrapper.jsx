@@ -8,7 +8,7 @@ import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
-    fetchSlateData,fetchAuthUser
+    fetchSlateData,fetchAuthUser,openPopupSlate
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
@@ -140,6 +140,7 @@ export class CanvasWrapper extends Component {
     }
     
     render() {
+        let slateData = this.props.popupSlateData? this.props.popupSlateData:this.props.slateLevelData
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -157,7 +158,7 @@ export class CanvasWrapper extends Component {
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
+                                    <SlateWrapper  handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
                                 </RootContext.Provider>                                
                             </div>
                         </div>
@@ -207,7 +208,8 @@ const mapStateToProps = state => {
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
         logout,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        popupSlateData:state.appStore.popupSlateData
     };
 };
 
@@ -237,6 +239,7 @@ export default connect(
         glossaaryFootnotePopup,
         releaseSlateLock,
         updateElement,
-        setSlateParent
+        setSlateParent,
+        openPopupSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
