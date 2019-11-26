@@ -509,7 +509,7 @@ export class TinyMceEditor extends Component {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
-            editor.selection.setContent('');
+            editor.selection.getContent() === "" && editor.selection.setContent('');
          }
     }
 
