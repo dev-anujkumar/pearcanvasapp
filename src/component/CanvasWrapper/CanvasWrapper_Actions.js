@@ -109,6 +109,12 @@ const findElementType = (element, index) => {
 					...elementDataBank[element.type][element.subtype][element.designtype]
 				}
 				break;
+			
+			case 'showhide':
+				elementType = {
+					...elementDataBank[element.type]
+				}
+				break;
 
 			case 'element-list': {
 				let type = element.type

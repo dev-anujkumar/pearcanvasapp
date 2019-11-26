@@ -1,5 +1,28 @@
 export default {
-    "paragraph" : {
+    'aside-showhide': {
+        "id": "urn:pearson:manifest:55e2ba3f-632a-41e1-9197-2aa58c9966b3",
+        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+        "type": "showhide",
+        "contentUrn": "urn:pearson:entity:452a92e5-42ee-426d-a318-efeafacd2af8",
+        "versionUrn": "urn:pearson:manifest:55e2ba3f-632a-41e1-9197-2aa58c9966b3",
+        "interactivedata": {
+            "show": [{
+                "id": "urn:pearson:work:55e2ba3f-632a-41e1-9197-2aa58c9987e3",
+                "type": "element-authoredtext",
+                "html" : "<p><br></p>"
+            }],
+            "hide": [{
+                "id": "urn:pearson:work:55e2ba3f-632a-41e1-9197-2aa58c9994u2",
+                "type": "element-authoredtext",
+                "html" : "<p><br></p>"
+            }],
+            "postertextobject": {
+                "id": "urn:pearson:work:55e2ba3f-632a-41e1-9197-2aa58c9975e2",
+                "type": "element-authoredtext"
+            }
+        }
+    },
+    "paragraph": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
         "type": "element-authoredtext",
         "subtype": "",
@@ -14,9 +37,9 @@ export default {
         "comments": true,
         "tcm": true,
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527" 
+        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-1" :{
+    "heading-1": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
         "type": "element-authoredtext",
         "subtype": "",
@@ -40,7 +63,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-2":{
+    "heading-2": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1c",
         "type": "element-authoredtext",
         "subtype": "",
@@ -64,7 +87,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-3":{
+    "heading-3": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1d",
         "type": "element-authoredtext",
         "subtype": "",
@@ -88,7 +111,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-4":{
+    "heading-4": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1e",
         "type": "element-authoredtext",
         "subtype": "",
@@ -112,7 +135,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-5":{
+    "heading-5": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1f",
         "type": "element-authoredtext",
         "subtype": "",
@@ -136,7 +159,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "heading-6":{
+    "heading-6": {
         "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1g",
         "type": "element-authoredtext",
         "subtype": "",
@@ -160,7 +183,7 @@ export default {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
     },
-    "pullquote" :{
+    "pullquote": {
         "id": "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
         "type": "element-blockfeature",
         "subtype": "quote",
@@ -170,9 +193,9 @@ export default {
             "type": "pullquote",
             "headers": [
                 {
-                "charStart": 0,
-                "charEnd": -1,
-                "level": 3
+                    "charStart": 0,
+                    "charEnd": -1,
+                    "level": 3
                 }
             ],
             "authoredtext": {
@@ -186,7 +209,7 @@ export default {
         "versionUrn": "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
         "contentUrn": "urn:pearson:entity:d13f2640-15ef-4e91-94e0-fd0f3c685a2a"
     },
-    "marginalia":{
+    "marginalia": {
         "id": "urn:pearson:work:3a87a270-5d35-4714-877e-9bca2eb25271",
         "type": "element-blockfeature",
         "subtype": "quote",
@@ -205,7 +228,7 @@ export default {
         "versionUrn": "urn:pearson:work:3a87a270-5d35-4714-877e-9bca2eb25271",
         "contentUrn": "urn:pearson:entity:147d4454-b7cd-41b1-aaba-3f5f8735d870"
     },
-    "marginalia-attribution":{
+    "marginalia-attribution": {
         "id": "urn:pearson:work:9c2d0567-c24d-44f5-8e8e-5b7d9859a26d",
         "type": "element-blockfeature",
         "subtype": "quote",

@@ -7,6 +7,7 @@ import {
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
@@ -103,6 +104,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
+    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
 			"Content-Type": "application/json",
@@ -155,7 +157,41 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     })
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        //console.log(err) 
+        let storeElement = store[config.slateManifestURN];
+        let bodymatter = storeElement.contents.bodymatter;
+        let focusedElement = bodymatter;
+        indexes.forEach(index => {
+            if(newElementData.elementId === focusedElement[index].id) {
+                focusedElement[index] = ElementWipData[newElementData['secondaryOption'].replace('secondary-','')];
+            } else {
+                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
+                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
+                }
+            }
+        });
+        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
+        let activeElementObject = {
+            elementId: "urn:pearson:manifest:55e2ba3f-632a-41e1-9197-2aa58c9966b3",
+            index: indexes.join("-"),
+            elementType: newElementData.elementType,
+            primaryOption: newElementData.primaryOption,
+            secondaryOption: newElementData.secondaryOption,
+            tag: newElementData.labelText,
+            toolbar: newElementData.toolbar,
+            elementWipType: newElementData.elementWipType,
+        };
+
+        dispatch({
+            type: FETCH_SLATE_DATA,
+            payload: store
+        });
+
+        dispatch({
+            type: SET_ACTIVE_ELEMENT,
+            payload: activeElementObject
+        });
+        console.log("Conversion Error >> ",err) 
     })
 }
 catch (error) {
