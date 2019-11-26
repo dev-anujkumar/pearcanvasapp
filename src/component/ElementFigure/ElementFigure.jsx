@@ -200,6 +200,7 @@ class ElementFigure extends Component {
                         figCreditClass = 'paragraphImage50TextTableImageCredit';
                         break;
                     case 'image50TextMathImage':
+                        divClass = 'divImage50TextMathImage';
                         figureClass = 'figureImage50TextMathImage';
                         figLabelClass = 'heading4Image50TextMathImageNumberLabel';
                         figTitleClass = 'heading4Image50TextMathImageTitle';
