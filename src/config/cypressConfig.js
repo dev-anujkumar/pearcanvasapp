@@ -27,7 +27,8 @@ let cypressConfig = {
     labelToolbar:['footnote','decreaseindent','glossary'],
     captionToolbar:['decreaseindent','glossary'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
-    editorRefID:""
+    editorRefID:"",
+    releaseCallCount: 0
 }
 
 

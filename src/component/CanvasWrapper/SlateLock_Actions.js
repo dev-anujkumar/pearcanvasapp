@@ -73,6 +73,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
     }
     return axios.post(url, data)
         .then((res) => {
+            config.releaseCallCount = 0
             console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             dispatch({
                 type : SET_LOCK_FLAG,

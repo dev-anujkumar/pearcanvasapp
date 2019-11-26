@@ -33,6 +33,7 @@ import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import {loadTrackChanges} from '../CanvasWrapper/TCM_Integration_Actions';
+import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -65,6 +66,13 @@ class ElementContainer extends Component {
             btnClassName : '',
             isOpener : this.props.element.type===elementTypeConstant.OPENER
         })
+    }
+    
+    componentWillUnmount(){
+        if(config.releaseCallCount === 0){
+            this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+            config.releaseCallCount += 1
+        }
     }
 
     componentWillReceiveProps(newProps) {
@@ -488,9 +496,10 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied, allComments } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
+        let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -602,7 +611,7 @@ class ElementContainer extends Component {
                 btnClassName = '';
             }
         }
-        
+
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
@@ -617,7 +626,7 @@ class ElementContainer extends Component {
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                    {permissions && permissions.includes('note_viewer') && element.comments && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
                     {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
@@ -777,7 +786,8 @@ const mapDispatchToProps = (dispatch) => {
         resetTableDataAction: (isReplaced) => {
             dispatch(resetTableDataAction(isReplaced))
         } ,
-        accessDenied
+        accessDenied,
+        releaseSlateLock
     }
 }
 
@@ -788,7 +798,8 @@ const mapStateToProps = (state) => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         permissions: state.appStore.permissions,
         oldImage: state.appStore.oldImage,
-        glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue
+        glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
+        allComments : state.commentsPanelReducer.allComments
     }
 }
 
