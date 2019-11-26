@@ -130,7 +130,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
         slateUrn:config.slateManifestURN,
-        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0
+        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
+        index: indexes[indexes.length - 1]
     }
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
