@@ -14,6 +14,7 @@ import {
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
+import { hasReviewerRole } from '../../constants/utility.js'
 
 const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
