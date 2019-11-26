@@ -121,7 +121,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
        projectUrn,
        slateId
     }
-    axios.post(url, data)
+    return axios.post(url, data)
        .then((res) => {
             if(callback){
                 callback(res.data)
