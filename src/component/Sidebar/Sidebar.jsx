@@ -186,7 +186,7 @@ class Sidebar extends Component {
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
             if(this.state.activeSecondaryOption!=="secondary-blockcode-language-Default"){
-                secondaryOptionList.splice(0,1)
+               secondaryOptionList.splice(0,1)
             }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
