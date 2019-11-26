@@ -435,7 +435,8 @@ class ElementContainer extends Component {
         let { id, type } = this.props.element;
         let { parentUrn, asideData, element } = this.props;
         let { contentUrn } = this.props.element
-        
+        let index = this.props.index
+
         if(this.state.sectionBreak){
             parentUrn = {
                 elementType : element.type,
@@ -456,7 +457,7 @@ class ElementContainer extends Component {
         }
         
            // api needs to run from here
-        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn);
+        this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
         this.setState({
             sectionBreak : null
         })
@@ -565,6 +566,7 @@ class ElementContainer extends Component {
                         borderToggle={this.state.borderToggle}
                         elemBorderToggle={this.props.elemBorderToggle}
                         elementSepratorProps={elementSepratorProps}
+                        deleteElement={this.deleteElement}
                         index={index}
                         element={element}
                         elementId={element.id}
@@ -647,7 +649,8 @@ class ElementContainer extends Component {
     handleCommentPopup(popup) {
         this.setState({
             popup,
-            showDeleteElemPopup: false
+            showDeleteElemPopup: false,
+            comment: ""
         });
         if (this.props.isBlockerActive) {
             this.props.showBlocker(false)
@@ -671,7 +674,7 @@ class ElementContainer extends Component {
     saveNewComment = () => {
         const { comment } = this.state;
         const { id } = this.props.element;
-        if (comment !== '' && comment.trim() !== '') {
+        if (comment.trim() !== '') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             this.props.addComment(comment, id, this.props.asideData, this.props.parentUrn);
         }
@@ -753,8 +756,8 @@ const mapDispatchToProps = (dispatch) => {
         setActiveElement: (element, index) => {
             dispatch(setActiveElement(element, index))
         },
-        deleteElement: (id, type, parentUrn, asideData, contentUrn) => {
-            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn))
+        deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
+            dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
         },
         glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback) => {
             dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText)).then(() => {

@@ -12,6 +12,12 @@ import config from '../config/config';
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const sendDataToIframe = (messageObj) => {
+    if(messageObj.type==='ShowLoader'){
+        /**
+         * This code has been written to prevent typing while loader is on
+         */
+        window.getSelection().removeAllRanges();
+    }
     window.parent.postMessage(messageObj, WRAPPER_URL)
 }
 
