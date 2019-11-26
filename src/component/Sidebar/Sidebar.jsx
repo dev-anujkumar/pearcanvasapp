@@ -8,6 +8,7 @@ import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx'
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -80,6 +81,9 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
+        if(hasReviewerRole()){
+            return true
+        }
         const { activePrimaryOption } = this.state
         if(e.target.dataset && e.target.dataset.element !== "secondary"){
             if(activePrimaryOption === "primary-openerelement" || activePrimaryOption === "primary-single-assessment"){
@@ -255,6 +259,7 @@ class Sidebar extends Component {
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
                 attributions = attributionsList.map(item => {
+                    let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
                     if(item==="alt_text"){
                         attrValue=this.props.activeElement.altText?this.props.activeElement.altText:""
                     }
@@ -263,7 +268,7 @@ class Sidebar extends Component {
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={!attributionsObject[item].isEditable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
@@ -275,13 +280,13 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={this.handleBceToggle}/>
+                        <label className="switch"><input type="checkbox" checked={this.state.bceToggleValue} onClick={ !hasReviewerRole() && this.handleBceToggle}/>
                         <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
                         <input type="number" id="line-number" className="line-number" min="1" onChange={this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                        disabled={!this.state.bceToggleValue} onBlur={this.handleBceBlur}/>
+                        disabled={!this.state.bceToggleValue || hasReviewerRole()} onBlur={this.handleBceBlur}/>
                     </div>
                 </div>
                     return attributions;

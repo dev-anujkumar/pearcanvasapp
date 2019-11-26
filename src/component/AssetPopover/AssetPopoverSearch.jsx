@@ -11,7 +11,7 @@ import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import { clearAssetPopoverLink } from './openApoFunction.js';
 // const config = require('../../config/config.js')
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 //const WRAPPER_URL = config.WRAPPER_URL;
 import config from '../../config/config.js'
 const { REACT_APP_API_URL, API_URL, projectUrn, STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY } = config;
@@ -146,7 +146,7 @@ class AssetPopoverSearch extends React.Component {
                         </section>
                     } else {
                         return <section className="modalFooter">
-                            <button disabled={!shouldOpenCurrentlyLinked} className="myButton" onClick={() => this.removeLink()}>Remove Link</button>
+                            <button disabled={!shouldOpenCurrentlyLinked || hasReviewerRole()} className="myButton" onClick={() => this.removeLink()}>Remove Link</button>
                             <button disabled={!isFigureSelected} className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     }
@@ -176,7 +176,7 @@ class AssetPopoverSearch extends React.Component {
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon}/>
-                        <input className="searchBarApo" placeholder="Search for images..." type="text" onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <input className="searchBarApo" placeholder="Search for images..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <label className="modal__close" onClick={this.apoSearchClose}></label>
                     </section>
 

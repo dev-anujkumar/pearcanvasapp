@@ -13,7 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -85,7 +85,7 @@ export class AssessmentSlateCanvas extends Component {
      * @param  value alfresco locationData
      */
     handleC2AssessmentClick=(value)=> {
-        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole() ){
         //let assessmentType=this.selectAssessmentType();
         let assessmentType=this.state.assessmentFormatType
         let fileName = "";

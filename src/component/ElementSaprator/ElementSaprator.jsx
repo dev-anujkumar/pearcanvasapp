@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-
+import { hasReviewerRole } from '../../constants/utility.js'
 import '../../styles/ElementSaprator/ElementSaprator.css'
 
 const METADATA_ANCHOR = 'metadata-anchor',
@@ -90,7 +90,7 @@ export default function ElementSaprator(props) {
         <div className={showClass ? 'elementSapratorContainer opacityClassOn ignore-for-drag' : 'elementSapratorContainer ignore-for-drag'}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
                 {permissions && permissions.includes('split_slate') && elementType !== 'element-aside' && !props.firstOne ? <Tooltip direction='right' tooltipText='Split Slate'>
-                    {permissions && permissions.includes('elements_add_remove') && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
+                    {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
@@ -98,7 +98,7 @@ export default function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='left' tooltipText='Element Picker'>
-                        {permissions.includes('elements_add_remove') && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
+                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={toggleElementList} className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>

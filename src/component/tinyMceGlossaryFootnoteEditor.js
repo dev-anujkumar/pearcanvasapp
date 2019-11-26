@@ -6,6 +6,7 @@ import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
 }  from '../images/TinyMce/TinyMce.jsx';
+import { hasReviewerRole } from '../constants/utility.js'
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -263,6 +264,12 @@ export class ReactEditor extends React.Component {
   handleClick = (e) => {
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
+    if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+      if(tinymce.activeEditor && tinymce.activeEditor.id){
+          document.getElementById(tinymce.activeEditor.id).contentEditable = false
+          return
+      }
+  }
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
       return false;
     }
