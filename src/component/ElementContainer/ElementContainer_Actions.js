@@ -182,6 +182,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         }
     }
 
+    updatedData.projectUrn = config.projectUrn;
+    updatedData.slateEntity = config.slateEntityURN;
+
     if(tinyMCE && tinyMCE.activeEditor){
         tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
         tinyMCE.activeEditor.selection.collapse(false);
