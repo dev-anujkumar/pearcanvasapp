@@ -336,6 +336,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
+            localStorage.removeItem('newElement');
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
