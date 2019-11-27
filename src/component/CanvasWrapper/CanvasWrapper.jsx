@@ -76,6 +76,7 @@ export class CanvasWrapper extends Component {
                 this.props.fetchCommentByElement(currentWorkId);
             }, 4000);
         }
+        localStorage.removeItem('newElement');
     }
 
     componentDidUpdate(prevProps, prevState){
