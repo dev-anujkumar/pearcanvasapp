@@ -110,7 +110,6 @@
   }
  
   .learningobjectivedropdown {
-    font-weight: bold;
     color: black;
     position: absolute;
     background-color: white;
@@ -198,7 +197,6 @@
 }
 
 .audiodropdown{
-  font-weight: bold;
   color: black;
   position: absolute;
   background-color: white;

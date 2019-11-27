@@ -39,13 +39,13 @@ export const authorAssetPopOver = (toggleApoPopup, apoObject = {}) => {
             if(Object.keys(resCurrentlyLinkedImageData).length){
                 showApoCurrentlyLinked = true
                 setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,resCurrentlyLinkedImageData)
+            } else{
+                setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
             }
-            else
-            setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
         })
+    } else {
+        setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
     }
-    else
-    setAssetData(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData);
 }
 
 const setAssetData=(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLinkedImageData)=>{

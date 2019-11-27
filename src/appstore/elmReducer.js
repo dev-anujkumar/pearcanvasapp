@@ -1,6 +1,11 @@
 const INITIAL_STATE = {}
 
-export default function reducer (state = INITIAL_STATE, action) {
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
+export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch(action.type){
         case 'GET_ELM_RESOURCES' :
             return {

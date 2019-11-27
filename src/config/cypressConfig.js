@@ -28,7 +28,13 @@ let cypressConfig = {
     captionToolbar:['decreaseindent','glossary'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
-    releaseCallCount: 0
+    releaseCallCount: 0,
+    exemptedElementClass : "heading1NummerEins heading2NummerEins heading3NummerEins heading4NummerEins heading5NummerEins heading6NummerEins paragraphNumeroUno pullQuoteNumeroUno",
+    page : 0,
+    scrolling : true,
+    totalPageCount : 0,
+    pageLimit : 0,
+    fromTOC : false
 }
 
 

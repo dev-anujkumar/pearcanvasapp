@@ -21,7 +21,7 @@ import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -133,6 +133,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         this.props.fetchSlateData(config.slateManifestURN);
                     }
+                    break;
                 case 'canvasBlocker':
                     {
                         if (message.status) {
@@ -165,7 +166,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
-                    config.alfrescoMetaData = message.alfresco;
+                    config.alfrescoMetaData = message;
                     config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
@@ -177,7 +178,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
                     if(message){
-                    message.label.en= message.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>")}
+                        const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g;
+                        message.label.en= message.label.en.replace(regex, "<img src='$1'></img>")
+                    }
                     this.props.currentSlateLO(message);
                     this.props.isLOExist(message);
                 break;
@@ -297,7 +300,8 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                    const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g
+                    message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
                 this.props.isLOExist(message);
@@ -403,13 +407,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.slateType = message.node.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
+                config.page = 0;
+                config.scrolling = true;
+                config.totalPageCount = 0;
+                config.fromTOC = true;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn);
+                this.props.fetchSlateData(message.node.containerUrn, config.page);
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
