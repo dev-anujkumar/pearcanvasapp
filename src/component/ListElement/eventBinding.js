@@ -469,7 +469,7 @@ const prohibitEventBubling = (e) => {
 
 export const preventRemoveAllFormatting = (editor) => {
     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-        if (isFullRangeSelected(editor)) {
+        if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
             return false
         }
         let timeoutInstance = setTimeout(() => {

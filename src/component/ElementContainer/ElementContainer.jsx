@@ -300,10 +300,10 @@ class ElementContainer extends Component {
             case elementTypeConstant.ELEMENT_LIST:
                 {
                     // let html = node.innerHTML;
-                    let currentNode = document.getElementById(`cypress-${this.props.index}`)
-                    let html = currentNode.innerHTML;
-                    if (previousElementData.html && html !== previousElementData.html.text) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    let currentListNode = document.getElementById(`cypress-${this.props.index}`)
+                    let nodehtml = currentListNode.innerHTML;
+                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     }
