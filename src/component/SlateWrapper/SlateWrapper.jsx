@@ -290,7 +290,7 @@ class SlateWrapper extends Component {
                                     }}
                                     ref={(c) => {
                                         if (c) {
-                                            let sortable = c.sortable;
+                                            //let sortable = c.sortable;
                                         }
                                     }}
                                     tag="div"

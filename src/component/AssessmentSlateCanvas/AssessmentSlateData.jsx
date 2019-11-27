@@ -343,7 +343,7 @@ export class AssessmentSlateData extends Component {
         return assessmentSlateJSX
     }
     render() {
-        const { type } = this.props;
+        // const { type } = this.props;
         return (
             <div className="AssessmentSlateCanvas">
                 {this.assessmentSlateContent()}
