@@ -181,7 +181,7 @@ describe('Testing Assessment Slate Canvas component', () => {
             expect(spylaunchAssetBrowserCallBack).toHaveBeenCalled()
             spylaunchAssetBrowserCallBack.mockClear()
         })
-        it('Test- launchAssetBrowserCallBack if-else-case', () => {
+        xit('Test- launchAssetBrowserCallBack if-else-case', () => {
             let assessmentData = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
                 itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
@@ -195,7 +195,7 @@ describe('Testing Assessment Slate Canvas component', () => {
             expect(spylaunchAssetBrowserCallBack).toHaveBeenCalled()
             spylaunchAssetBrowserCallBack.mockClear()
         })
-        it('Test- launchAssetBrowserCallBack if-else-case', () => {
+        xit('Test- launchAssetBrowserCallBack if-else-case', () => {
             let assessmentData = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
                 itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
