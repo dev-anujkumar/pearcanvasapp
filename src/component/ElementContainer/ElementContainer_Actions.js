@@ -166,10 +166,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
-    if(tinyMCE && tinyMCE.activeEditor){
-        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        tinyMCE.activeEditor.selection.collapse(false);
-    }
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
