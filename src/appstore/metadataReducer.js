@@ -10,8 +10,13 @@ const INIT_STATE = {
     showSlateLockPopup:false
 }
 
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
 //Save data in store for LO and LOLIST
-export default function (state = INIT_STATE, action) {
+export default function (state = INIT_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case CURRENT_SLATE_LO_DATA:
             return {

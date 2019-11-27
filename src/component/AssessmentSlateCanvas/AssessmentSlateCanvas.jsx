@@ -58,7 +58,7 @@ export class AssessmentSlateCanvas extends Component {
      * @param type - type of assessment
     */
     selectAssessmentType = (type) => {
-        let assessmentType = "CITE";
+        let assessmentType;
         if (type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
             assessmentType = "CITE"
         } else {
@@ -90,11 +90,11 @@ export class AssessmentSlateCanvas extends Component {
         let assessmentType=this.state.assessmentFormatType
         let fileName = "";
         let filterType = [assessmentType.toUpperCase()];
-        let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
+        // let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "full";
-        let prefix = 'urn:pearson:work:';
-        let startIndex = prefix.length;
-        let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
+        // let prefix = 'urn:pearson:work:';
+        // let startIndex = prefix.length;
+        // let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
         var searchSelectAssessmentURN = "";
         /*
         if (searchMode == "partial") {
@@ -106,8 +106,8 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.toggleAssessmentPopup('',false);
-        productId = (value && value !== "") ? value : "Unspecified";
+        this.toggleAssessmentPopup('', false);
+        productId = value ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
            this.launchAssetBrowserCallBack(assessmentData)   
         });
