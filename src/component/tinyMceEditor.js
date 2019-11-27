@@ -101,6 +101,13 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
+
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                    if (editor && editor.id) {
+                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                    }
+                }
+
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -212,7 +219,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
+                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno') || e.target.targetElm.children[0].classList.contains('pullQuoteNumeroUno')) {
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         }
                         /*  For Figure type*/
@@ -767,6 +774,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        this.handleBlur();
     }
 
 
@@ -1023,12 +1031,6 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
-        if(tinymce.activeEditor && tinymce.activeEditor.id){
-            document.getElementById(tinymce.activeEditor.id).contentEditable = false
-            return
-        }
-    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){
@@ -1203,7 +1205,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
             return;
