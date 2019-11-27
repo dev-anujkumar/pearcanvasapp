@@ -53,26 +53,6 @@ export const c2AssessmentModule = {
       _interactivePattern.unmount();
     }
 
-    var libConfig = {
-      'locale': 'en_US',
-      'headers': {
-        'Content-Type': 'application/json',
-        'Accept': 'application/ld+json',
-        'X-Roles-Test': 'ContentMetadataEditor',
-        'Prefer': 'annotation=true',
-        'Apikey': CMDS_APIKEY,
-        'X-APIKey': CMDS_APIKEY,
-        'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'Authorization': CMDS_AUTHORIZATION
-      },
-      'database': CMDS_DATABASE,
-      'server': CMDS_DATA_ENDPOINT,
-      'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-      'searchselectserver': CMDS_DATA_ENDPOINT,
-      'userId': uname || config_object['userId']
-    };
-
     patternBroker.setup(libConfig);
 
     _interactivePatternConfig = { 'selector': renderderedTagSelector };
