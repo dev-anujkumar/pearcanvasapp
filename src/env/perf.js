@@ -4,7 +4,7 @@ let perfConfig = {
     LEARNING_OBJECTIVES_ENDPOINT: "https://contentapis-staging.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
     PRODUCTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/product-api/",
-    PROJECTAPI_ENDPOINT: "https://staging.api.pearson.com/project/distributable/v2",
+    PROJECTAPI_ENDPOINT: "https://contentapis-perf.pearsoncms.net/project-api/distributable/v2",
     ELM_ENDPOINT: "https://contentapis-staging.pearsoncms.net/manifest-api/",
     LERNOSITY_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
