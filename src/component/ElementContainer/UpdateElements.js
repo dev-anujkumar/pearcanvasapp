@@ -144,7 +144,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+export const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
 
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
@@ -226,7 +226,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+export const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
