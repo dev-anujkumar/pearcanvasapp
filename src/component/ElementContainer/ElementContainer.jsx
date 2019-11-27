@@ -619,6 +619,7 @@ class ElementContainer extends Component {
                     rows={COMMENTS_POPUP_ROWS}
                     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
+                    sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
                 {

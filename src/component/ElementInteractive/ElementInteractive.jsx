@@ -290,17 +290,6 @@ class Interactive extends React.Component {
                 break;
 
             case "video-mcq":
-                divImage = 'divWidgetVideoMcq';
-                figureImage = 'figureWidgetVideoMcq';
-                heading4Label = 'heading4WidgetVideoMcqNumberLabel';
-                heading4Title = 'heading4WidgetVideoMcqTitle';
-                dataType = 'videoMcq';
-                id = 'id-info';
-                imageDimension = 'imageWidgetVideoMcq';
-                figcaptionClass = 'figcaptionWidgetVideoMcq';
-                paragraphCredit = 'paragraphWidgetVideoMcqCredit';
-                break;
-
             case "mcq":
                 divImage = 'divWidgetVideoMcq';
                 figureImage = 'figureWidgetVideoMcq';
@@ -313,19 +302,19 @@ class Interactive extends React.Component {
                 paragraphCredit = 'paragraphWidgetVideoMcqCredit';
                 break;
 
-            case "pop-up-web-link":
-                divImage = 'divWidgetPUSL';
-                figureImage = 'figureWidgetPUSL';
-                heading4Label = 'heading4WidgetPUSLNumberLabel';
-                heading4Title = 'heading4WidgetPUSLTitle';
-                dataType = 'pusl';
-                id = 'id-info';
-                imageDimension = '';
-                hyperlinkClass = 'buttonWidgetPUSL';
-                figcaptionClass = 'figcaptionWidgetPUSL';
-                paragraphCredit = 'paragraphWidgetPUSLCredit';
-                break;
+            // case "mcq":
+            //     divImage = 'divWidgetVideoMcq';
+            //     figureImage = 'figureWidgetVideoMcq';
+            //     heading4Label = 'heading4WidgetVideoMcqNumberLabel';
+            //     heading4Title = 'heading4WidgetVideoMcqTitle';
+            //     dataType = 'videoMcq';
+            //     id = 'id-info';
+            //     imageDimension = 'imageWidgetVideoMcq';
+            //     figcaptionClass = 'figcaptionWidgetVideoMcq';
+            //     paragraphCredit = 'paragraphWidgetVideoMcqCredit';
+            //     break;
 
+            case "pop-up-web-link":
             case "web-link":
                 divImage = 'divWidgetPUSL';
                 figureImage = 'figureWidgetPUSL';
@@ -338,6 +327,19 @@ class Interactive extends React.Component {
                 figcaptionClass = 'figcaptionWidgetPUSL';
                 paragraphCredit = 'paragraphWidgetPUSLCredit';
                 break;
+
+            // case "web-link":
+            //     divImage = 'divWidgetPUSL';
+            //     figureImage = 'figureWidgetPUSL';
+            //     heading4Label = 'heading4WidgetPUSLNumberLabel';
+            //     heading4Title = 'heading4WidgetPUSLTitle';
+            //     dataType = 'pusl';
+            //     id = 'id-info';
+            //     imageDimension = '';
+            //     hyperlinkClass = 'buttonWidgetPUSL';
+            //     figcaptionClass = 'figcaptionWidgetPUSL';
+            //     paragraphCredit = 'paragraphWidgetPUSLCredit';
+            //     break;
 
             case "table":
                 divImage = 'divWidgetTableSL';
