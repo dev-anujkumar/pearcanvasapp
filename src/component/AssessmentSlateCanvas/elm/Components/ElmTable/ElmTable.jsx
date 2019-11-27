@@ -25,8 +25,8 @@ class ElmTable extends Component {
             currentAssessmentSelected: {},
             sortIcon: elmSortDown,
             sortFlag: true
-        },
-            this.preparedData = [];
+        };
+        this.preparedData = [];
         this.renderTableData(this.props);
         this.timer = null;
         this.setSort();
@@ -134,8 +134,8 @@ class ElmTable extends Component {
             })
         }
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
-            data.contents.bodyMatter.forEach((data) => {
-                this.preparedData.push({ "type": data.label, "urn": data.versionUrn, "title": data.unformattedTitle ? data.unformattedTitle.en : data.versionUrn })
+            data.contents.bodyMatter.forEach((item) => {
+                this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
             })
         }
 
