@@ -173,13 +173,13 @@ class ElementContainer extends Component {
     figureDifferenceInteractive = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            interactiveDOM = document.getElementById(`cypress-${index}-2`),
+            // interactiveDOM = document.getElementById(`cypress-${index}-2`),
             captionsDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
-            interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
+            // interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
@@ -240,15 +240,11 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:   
-                        if(this.figureDifference(this.props.index, previousElementData)){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
-                        }
-                        break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
+                    case elementTypeConstant.FIGURE_CODELISTING:
+                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
+                        if(this.figureDifference(this.props.index, previousElementData)) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
@@ -266,21 +262,6 @@ class ElementContainer extends Component {
                             this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData)
                         }
                         break;
-
-                    case elementTypeConstant.FIGURE_CODELISTING:
-                            if(this.figureDifference(this.props.index, previousElementData)){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
-                            }
-                            break;
-                    case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                            if(this.figureDifference(this.props.index, previousElementData)){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
-                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
-                            }
-                            break;
                 }
                 break;
 
@@ -326,7 +307,7 @@ class ElementContainer extends Component {
      * Will e called on assessment element's blur
      */
     handleBlurAssessmentSlate = (assessmentData)=>{
-        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
@@ -497,7 +478,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0

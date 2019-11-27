@@ -54,7 +54,7 @@ class Interactive extends React.Component {
         // showTocBlocker();
         // disableHeader(true);
         this.togglePopup(false);
-        productId = (value && value !== "") ? value : "Unspecified";
+        productId = value ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
@@ -71,16 +71,16 @@ class Interactive extends React.Component {
                 interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
             }
             let posterImage = {};
-            let itemsData = interactiveData['itemsData'];
-            let id = interactiveData['id'] ? interactiveData['id'] : "";
+            // let itemsData = interactiveData['itemsData'];
+            // let id = interactiveData['id'] ? interactiveData['id'] : "";
             let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
-            let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
+            // let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
             let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
-            let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
-            let imageId = "";
-            let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
+            // let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
+            // let imageId = "";
+            // let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
             that.setState({itemID : itemId,
                 imagePath:posterImage.path })
             let figureData={}

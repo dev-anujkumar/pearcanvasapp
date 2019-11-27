@@ -43,7 +43,8 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
             let { contents: _slateContent } = _slateObject;
             let { bodymatter: _slateBodyMatter } = _slateContent;
             Comment.commentUrn = response.data.commentUrn
-            const element = _slateBodyMatter.map(element => {
+            //const elementBM = _slateBodyMatter.map(element => {
+            _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['comments'] = true
                 } else if (asideData && asideData.type == 'element-aside') {
@@ -84,8 +85,8 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
-    const prepareDeleteRequestData = (type) => {
-        switch (type) {
+    const prepareDeleteRequestData = (elementType) => {
+        switch (elementType) {
             case "element-workedexample":
             case "element-aside":
                 return {
@@ -119,9 +120,9 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-            bodymatter.forEach((element, index) => {
+            bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
-                    bodymatter.splice(index, 1);
+                    bodymatter.splice(key, 1);
                 } else if (parentUrn && parentUrn.elementType == "element-aside") {
                     if (element.id === parentUrn.manifestUrn) {
                         element.elementdata.bodymatter.forEach((ele, indexInner) => {
@@ -231,8 +232,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                         };
                     }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
                           /*This condition add object of element in existing element  in section of aside */
-                       let ele =  nestedEle.contents.bodymatter.map((ele)=>{
-                            if(ele.id == elementId){
+                       let element =  nestedEle.contents.bodymatter.map((ele)=>{
+                            if(ele.id == elementId) {
                                 ele = {
                                     ...ele,
                                     ...updatedData,
@@ -243,9 +244,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                                     html : updatedData.html
                                 };
                             }
-                            return ele
+                            return ele;
                         })
-                        nestedEle.contents.bodymatter = ele;
+                        nestedEle.contents.bodymatter = element;
                     }
                     return nestedEle;
                 })
@@ -268,23 +269,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
 }
 
 export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {
-    let parentData = getState().appStore.slateLevelData,
-        element,
-        interactiveImage = "",
-        oldPath,
+    let parentData = getState().appStore.slateLevelData;
+    // let element,
+        // interactiveImage = "",
+    let oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
-       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
-      if (typeof (index) == 'number') {
+    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+    let bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if(newBodymatter[index].figuretype==="assessment"){
                 newBodymatter[index].figuredata['elementdata'] = figureData
-                element = newBodymatter[index]
+                // element = newBodymatter[index]
             }else{
                 newBodymatter[index].figuredata = figureData
                 oldPath = bodymatter[index].figuredata
-                element = newBodymatter[index]
+                // element = newBodymatter[index]
             }          
         }
     } else {
@@ -295,11 +296,11 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
             if (condition.versionUrn == elementId) {
                 if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype==="assessment"){
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
-                    element = newBodymatter[index]
+                    // element = newBodymatter[index]
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
                     oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
-                    element = condition
+                    // element = condition
                 }
             }
         } else if (indexesLen == 3) {
@@ -308,11 +309,11 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
                 if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment"){
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
                     oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
-                    element = condition
+                    // element = condition
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
                     oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
-                    element = condition
+                    // element = condition
                 }
 
             }

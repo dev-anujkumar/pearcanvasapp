@@ -82,7 +82,7 @@ const findElementType = (element, index) => {
 						}
 						break;
 					case "interactive":
-						altText = element.figuredata.alttext ? element.figuredata.alttext : "",
+						altText = element.figuredata.alttext ? element.figuredata.alttext : "";
 						elementType = {
 							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
 							primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
