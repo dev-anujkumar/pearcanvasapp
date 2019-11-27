@@ -42,6 +42,8 @@ class SlateWrapper extends Component {
         this.state = {
             previousSlateId: null,
             showLockPopup: false,
+            showCustomPopup: false,
+            customPopupMessage: '',
             lockOwner: "",
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
@@ -439,6 +441,37 @@ class SlateWrapper extends Component {
         }
     }
 
+    openCustomPopup = (message) => {
+        this.setState({
+            showCustomPopup: true,
+            customPopupMessage: message
+        })
+    }
+
+    showCustomPopup = () => {
+
+        if (this.state.showCustomPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={this.state.customPopupMessage}
+                    rows="1"
+                    cols="1"
+                    active={true}
+                    togglePopup={this.toggleCustomPopup}
+                    isLockPopup={true}
+                    isInputDisabled={true}
+                    slateLockClass="lock-message"
+                    withInputBox={true}
+                    lockForTOC={false}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
     /**
      * Shows 'slate locked' popup
      */
@@ -467,6 +500,16 @@ class SlateWrapper extends Component {
         else {
             return null
         }
+    }
+
+
+    toggleCustomPopup = (toggleValue, event) => {
+        this.setState({
+            showCustomPopup: toggleValue
+        })
+        this.props.showBlocker(toggleValue)
+        hideBlocker()
+        this.prohibitPropagation(event)
     }
 
     /**
@@ -776,6 +819,7 @@ class SlateWrapper extends Component {
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
                                 <ElementContainer
+                                    openCustomPopup = {this.openCustomPopup}
                                     slateType={_slateType}
                                     element={element}
                                     index={index}
@@ -1008,6 +1052,7 @@ class SlateWrapper extends Component {
                     }
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
+                {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
                 {this.showTocDeletePopup()}
                 {/* ***************Audio Narration remove Popup **************** */}
