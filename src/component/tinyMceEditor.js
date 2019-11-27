@@ -101,6 +101,13 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
+
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                    if (editor && editor.id) {
+                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                    }
+                }
+
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -1023,12 +1030,6 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
-        if(tinymce.activeEditor && tinymce.activeEditor.id){
-            document.getElementById(tinymce.activeEditor.id).contentEditable = false
-            return
-        }
-    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){

@@ -64,7 +64,7 @@ class GlossaryFootnotePopup extends Component {
                     </div>
                     <div className="glossary-definition-buttons">
                         <span className="glossary-cancel-button" onClick={closePopup}>Cancel</span>
-                        <span className="glossary-save-button" disabled={hasReviewerRole('elements_add_remove')} onClick={saveContent}>Save</span>
+                        <span className="glossary-save-button" disabled={hasReviewerRole()} onClick={saveContent}>Save</span>
                     </div>
                 </div>
             </div>

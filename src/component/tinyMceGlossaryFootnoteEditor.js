@@ -56,7 +56,7 @@ export class ReactEditor extends React.Component {
           }
         });
       },
-      init_instance_callback: function (editor) {
+      init_instance_callback: (editor) => {
         // editor.fire('focus');
         // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
         // if (activeElement) {
@@ -64,7 +64,11 @@ export class ReactEditor extends React.Component {
         //     activeElement.classList.add('place-holder')
         //   }
         // }
-
+        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+          if (editor && editor.id) {
+            document.getElementById(editor.id).setAttribute('contenteditable', false)
+          }
+        }
         editor.on('Change', (e) => {
           let content = e.target.getContent({format: 'text'}),
               contentHTML = e.target.getContent(),
@@ -264,12 +268,6 @@ export class ReactEditor extends React.Component {
   handleClick = (e) => {
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
-    if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
-      if(tinymce.activeEditor && tinymce.activeEditor.id){
-          document.getElementById(tinymce.activeEditor.id).contentEditable = false
-          return
-      }
-  }
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
       return false;
     }
