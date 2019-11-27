@@ -305,6 +305,7 @@ class ElementAsideContainer extends Component {
         let showSectionBreak;
         let asideData = {
             type: "element-aside",
+            subtype :this.props.element.subtype, 
             id: this.props.element.id,
             contentUrn: this.props.element.contentUrn
         };

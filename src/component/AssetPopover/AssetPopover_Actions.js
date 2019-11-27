@@ -76,10 +76,10 @@ export const getCurrentlyLinkedImage = (id, cb) => {
           ApiKey: config.STRUCTURE_APIKEY,
           PearsonSSOSession: config.ssoToken
         }
-      }).then((res) => {
+      }).then((res1) => {
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
-        currentlyLinkedData.id=res.data.id;
-        currentlyLinkedData.title=res.data.title.text;
+        currentlyLinkedData.id=res1.data.id;
+        currentlyLinkedData.title=res1.data.title.text;
         cb(currentlyLinkedData)
       }).catch((err) => {
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
