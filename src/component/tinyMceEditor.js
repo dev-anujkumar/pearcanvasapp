@@ -101,6 +101,13 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
+
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                    if (editor && editor.id) {
+                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                    }
+                }
+
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -212,7 +219,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
+                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno') || e.target.targetElm.children[0].classList.contains('pullQuoteNumeroUno')) {
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         }
                         /*  For Figure type*/
@@ -509,7 +516,7 @@ export class TinyMceEditor extends Component {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
-            editor.selection.setContent('');
+            editor.selection.getContent() === "" && editor.selection.setContent('');
          }
     }
 
@@ -767,6 +774,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        this.handleBlur();
     }
 
 
@@ -991,7 +999,7 @@ export class TinyMceEditor extends Component {
         else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){
             toolbar = config.captionToolbar;
 
-        }else if (this.props.placeholder === "Enter the Block Code...") {
+        }else if (this.props.placeholder === "Enter block code...") { 
             toolbar =  config.codeListingToolbar;
         }else{
             toolbar = config.elementToolbar;
@@ -1023,12 +1031,6 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
-        if(tinymce.activeEditor && tinymce.activeEditor.id){
-            document.getElementById(tinymce.activeEditor.id).contentEditable = false
-            return
-        }
-    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){
@@ -1203,7 +1205,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
             return;
@@ -1257,10 +1259,13 @@ export class TinyMceEditor extends Component {
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
-                
+            case 'figureCredit':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                )
             default:
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

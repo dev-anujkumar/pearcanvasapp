@@ -185,6 +185,9 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
+            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-Default"){
+               secondaryOptionList.splice(0,1)
+            }
             if(secondaryOptionList.length > 1) {
                 secondaryOptions = secondaryOptionList.map(item => {
                     return <li key={item} data-value={item} onClick={this.handleSecondaryOptionChange}>
@@ -193,7 +196,7 @@ class Sidebar extends Component {
                 });
     
                 let display = '';
-                if(!(secondaryOptionList.length > 1)) {
+                if(secondaryOptionList.length <= 1) {
                     display = 'hidden';
                 }
     
@@ -275,8 +278,10 @@ class Sidebar extends Component {
             if(this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId){
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockCodeFigure") : null
-                attrNode.setAttribute("numbered", this.state.bceToggleValue)
-                attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                if( attrNode ){
+                    attrNode.setAttribute("numbered", this.state.bceToggleValue)
+                    attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                }
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
@@ -320,7 +325,7 @@ class Sidebar extends Component {
     * handleBceNumber function responsible for handling Number start from field value in BCE element
     */
     handleBceNumber = (e) => {
-        let regex = /^[0-9]*(?:\.\d{1,2})?$/
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
             })

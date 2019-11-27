@@ -52,3 +52,8 @@ global.window.getSelection=()=>{
         removeAllRanges: ()=>{}
     }
 }
+global.window.crypto={
+    getRandomValues: ()=>{
+        return [12,23,34]
+    }
+}

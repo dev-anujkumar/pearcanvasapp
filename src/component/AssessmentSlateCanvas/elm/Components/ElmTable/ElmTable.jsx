@@ -204,7 +204,7 @@ class ElmTable extends Component {
                 result = (first < second) ? -1 : (first > second) ? 1 : 0;
             }
             else {
-                result = (first > second) ? -1 : (first > second) ? 1 : 0;
+                result = (first > second) ? -1 : 0;
             }
             return result * sortOrder;
         }
