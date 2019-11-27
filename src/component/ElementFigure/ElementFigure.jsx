@@ -107,7 +107,7 @@ class ElementFigure extends Component {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
         var data_1 = false;
-        if('alfresco' in alfrescoPath && Object.keys(alfrescoPath.alfresco).length > 0 ) {
+        if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                 data_1 = alfrescoPath.alfresco;
