@@ -6,7 +6,7 @@ import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
 }  from '../images/TinyMce/TinyMce.jsx';
-import { hasReviewerRole } from '../constants/utility.js'
+import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -64,7 +64,7 @@ export class ReactEditor extends React.Component {
         //     activeElement.classList.add('place-holder')
         //   }
         // }
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+        if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
           if (editor && editor.id) {
             document.getElementById(editor.id).setAttribute('contenteditable', false)
           }
