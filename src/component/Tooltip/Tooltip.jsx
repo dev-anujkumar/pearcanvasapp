@@ -11,7 +11,7 @@ export default function Tooltip(props) {
      * Hooks declearation
      */
     const {direction, tooltipText, children} = props
-    const [setDirectionState] = useState('')
+    const [directionState, setDirectionState] = useState('')
 
     useEffect(() => {
         setDirectionState(direction)
