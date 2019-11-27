@@ -275,8 +275,8 @@ class Sidebar extends Component {
             if(this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId){
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockCodeFigure") : null
-                attrNode.setAttribute("numbered", this.state.bceToggleValue)
-                attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
+                attrNode && attrNode.setAttribute("numbered", this.state.bceToggleValue)
+                attrNode && attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
