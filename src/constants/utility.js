@@ -25,7 +25,11 @@ export const sendDataToIframe = (messageObj) => {
 //Generate random number
 export const guid = () => {
     function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
+        const crypto = window.crypto || window.msCrypto;
+        let array = new Uint32Array(1);
+        const randomValue = crypto.getRandomValues(array);
+
+        return Math.floor((1 + randomValue[0]) * 0x10000)
             .toString(16)
             .substring(1);
     }

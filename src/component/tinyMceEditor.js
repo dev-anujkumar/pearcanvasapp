@@ -219,7 +219,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
+                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         }
                         /*  For Figure type*/
@@ -774,6 +774,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        this.handleBlur();
     }
 
 
@@ -1204,7 +1205,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
             return;

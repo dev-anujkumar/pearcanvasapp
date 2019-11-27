@@ -414,7 +414,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_ASIDE:
                 switch (previousElementData.subtype) {
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            console.log("Worked example new data::>>", node.innerHTML)
                     default:
                         dataToReturn = { 
                             ...previousElementData,
