@@ -116,6 +116,10 @@ export const bindKeyDownEvent = (editor, e) => {
                         return false;
                     }
                     prohibitEventBubling(e);
+                    /** case - remove last created blank list row before creating new paragraph */
+                    if (editor.targetElm.querySelectorAll('li').length > 1) {
+                        anchorNode && anchorNode.remove();
+                    }
                     createNewParagraphElement(e, editor);
                     return false;
                 }
@@ -465,7 +469,7 @@ const prohibitEventBubling = (e) => {
 
 export const preventRemoveAllFormatting = (editor) => {
     if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-        if (isFullRangeSelected(editor)) {
+        if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
             return false
         }
         let timeoutInstance = setTimeout(() => {

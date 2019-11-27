@@ -60,6 +60,18 @@ class SlateWrapper extends Component {
 
         // binds handleClickOutside to document mousedown //
         document.addEventListener("mousedown", this.handleClickOutside);
+        window.addEventListener('scroll',this.handleScroll)
+    }
+
+    handleScroll = (e) =>{
+        if(config.totalPageCount <= config.page) return false;
+        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
+        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
+        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
+            config.scrolling = false;
+            config.fromTOC = false;
+            this.props.loadMorePages();
+        }
     }
 
     /**
@@ -299,7 +311,7 @@ class SlateWrapper extends Component {
                                     {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
-                            <SlateFooter />
+                            <SlateFooter elements={_slateBodyMatter} />
                         </div>
                     )
                 }
@@ -1033,7 +1045,7 @@ class SlateWrapper extends Component {
                         this.renderSlateHeader(this.props)
                     }
                 </div>
-                <div id="slateWrapper" className='slate-wrapper'>
+                <div id="slateWrapper" className='slate-wrapper' onScroll={this.handleScroll}>
                     {
                         this.renderSlate(this.props)
                     }
