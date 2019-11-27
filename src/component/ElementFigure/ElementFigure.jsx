@@ -368,7 +368,7 @@ class ElementFigure extends Component {
                         </header>
                         <div data-type="mathml">
 
-                            <TinyMceEditor permissions={this.props.permissions} element = {model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.figuredata.elementdata.text} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                            <TinyMceEditor permissions={this.props.permissions} element = {model} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur}  index={`${index}-2`} placeholder="Type Something..." tagName={'p'} className="paragraphNumeroUno mathml figureData mathmlDiv" model={model.html.text} type={type} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
 
                         </div>
                         <figcaption className="figcaptionText" >
