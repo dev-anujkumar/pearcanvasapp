@@ -301,14 +301,14 @@ export class ReactEditor extends React.Component {
   }
 
   setCursorAtEnd = (editor) => {
-    // if(editor){
-    //   editor.selection.select(tinymce.activeEditor.getBody(), true);
-    //   editor.selection.collapse(false);
-    // }
-    // else if(tinymce.activeEditor){
-    //   tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
-    //   tinymce.activeEditor.selection.collapse(false);
-    // }
+    if(editor){
+      editor.selection.select(tinymce.activeEditor.getBody(), true);
+      editor.selection.collapse(false);
+    }
+    else if(tinymce.activeEditor){
+      tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+      tinymce.activeEditor.selection.collapse(false);
+    }
   }
 
   render() {
