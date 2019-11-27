@@ -174,17 +174,11 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
-    if(asideData.type === "element-aside"){
-        let newIndex = elementIndex.split("-")[0]
-        let slateLevelData = getState().appStore.slateLevelData;
-        let newParentData = JSON.parse(JSON.stringify(slateLevelData));
-        let parentObj = Object.values(newParentData)[0];
-        let { contents: _slateContent } = parentObj;
-        let { bodymatter: _slateBodyMatter } = _slateContent;
-        if(_slateBodyMatter[newIndex].subtype === "workedexample"){
-            updatedData.parentType = _slateBodyMatter[newIndex].subtype;
+    if(asideData && asideData.type === "element-aside"){
+        if(asideData.subtype === "workedexample"){
+            updatedData.parentType = "workedexample";
         }else{
-            updatedData.parentType = asideData.type;
+            updatedData.parentType = "element-aside";
         }
     }
 
