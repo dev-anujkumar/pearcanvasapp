@@ -29,7 +29,7 @@ let cypressConfig = {
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,
-    exemptedElementClass : "heading1NummerEins heading2NummerEins heading3NummerEins heading4NummerEins heading5NummerEins heading6NummerEins paragraphNumeroUno pullQuoteNumeroUno",
+    exemptedElementClass : "heading1NummerEins heading2NummerEins heading3NummerEins heading4NummerEins heading5NummerEins heading6NummerEins paragraphNumeroUno pullQuoteNumeroUno heading2learningObjectiveItem",
     page : 0,
     scrolling : true,
     totalPageCount : 0,
