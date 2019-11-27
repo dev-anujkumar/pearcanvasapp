@@ -28,7 +28,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    xit('testing------- ADD OPENER ELEMENT ------action', () => {
+    it('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
@@ -67,8 +67,8 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe(expectedActions.type);
         }).catch((err)=>{});;
     });
-    xit('testing------- SECTION_BREAK ------action', () => {
-        //let store = mockStore(() => initialState);
+    it('testing------- SECTION_BREAK ------action', () => {
+        let store = mockStore(() => initialState);
         const type = "SECTION_BREAK";
         const index = 3;
         const _requestData = {
@@ -81,7 +81,7 @@ describe('Tests Slate Wrapper Actions', () => {
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
         const axiosPayload = createstoreWithFigure.slateLevelData;
         const expectedActions = {
-            type: AUTHORING_ELEMENT_CREATED,
+            type: "SECTION_BREAK",
             payload: { axiosPayload }
 
         };
@@ -92,10 +92,10 @@ describe('Tests Slate Wrapper Actions', () => {
                 response: axiosPayload
             });
         });
-        return store.dispatch(actions.createElement(type, index)).then(() => {
-        });
+         store.dispatch(actions.createElement(type, index));
+         expect(type).toBe(expectedActions.type);
     });
-    xit('testing------- ASIDE ------action', () => {
+    it('testing------- ASIDE ------action', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -109,7 +109,7 @@ describe('Tests Slate Wrapper Actions', () => {
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
         const axiosPayload = createstoreWithFigure.slateLevelData;
         const expectedActions = {
-            type: AUTHORING_ELEMENT_CREATED,
+            type: "FIGURE",
             payload: { axiosPayload }
 
         };
@@ -121,13 +121,13 @@ describe('Tests Slate Wrapper Actions', () => {
             });
         });
         let  parentUrn= {
-            
             manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7"
         }
         return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'element-aside', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
+            expect(type).toBe(expectedActions.type);
         });
     });
-    xit('testing------- ASIDE ------action when aside and element id same', () => {
+    it('testing------- ASIDE ------action when aside and element id same', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -139,17 +139,17 @@ describe('Tests Slate Wrapper Actions', () => {
             "index": index
         };
         config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
-        const axiosPayload = createstoreWithFigure.slateLevelData;
+        const slateLevelData = createstoreWithFigure.slateLevelData;
         const expectedActions = {
             type: AUTHORING_ELEMENT_CREATED,
-            payload: { axiosPayload }
+            payload: { slateLevelData }
 
         };
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
                 status: 200,
-                response: axiosPayload
+                response: slateLevelData
             });
         });
         let  parentUrn= {
@@ -157,11 +157,14 @@ describe('Tests Slate Wrapper Actions', () => {
             manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b700"
         }
         return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'element-aside', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
+            let { type, payload } = store.getActions()[0];
+            expect(type).toBe(expectedActions.type);
+            expect(payload).toStrictEqual(expectedActions.payload);
         });
     });
     
 
-    xit('testing------- SWAP ELEMENT ------action', () => {
+    it('testing------- SWAP ELEMENT ------action', () => {
         //let store = mockStore(() => initialState);
         const typee = "element-authoredtext";
         const index = 2;
@@ -211,12 +214,8 @@ describe('Tests Slate Wrapper Actions', () => {
         const { type } = store.getActions()[0];
         expect(type).toBe(SET_SPLIT_INDEX);
         });
-        it('testing------- getElementPageNumber  ------action', () => {
-            store.dispatch(actions.getElementPageNumber ())
-            });
-
    
-    xit('testing------- handleSplitSlate ------action', () => {
+    it('testing------- handleSplitSlate ------action', () => {
 
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
@@ -226,6 +225,8 @@ describe('Tests Slate Wrapper Actions', () => {
         });
 
         return store.dispatch(actions.handleSplitSlate({contentUrn : '',entityUrn : ''})).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe('FETCH_SLATE_DATA');
         });
     });
     it('testing------- setElementPageNumber ------action', () => {
