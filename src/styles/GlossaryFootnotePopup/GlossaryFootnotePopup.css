@@ -134,7 +134,7 @@
     padding: 1px 4px 2px 4px !important;
 }
 #toolbarGlossaryFootnote .fa {
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 FontAwesome sans-serif;
 }
 #glossary-editor-attacher,#glossary-editor{
     min-height: 18px !important;
