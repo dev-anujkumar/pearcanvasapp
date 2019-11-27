@@ -116,6 +116,10 @@ export const bindKeyDownEvent = (editor, e) => {
                         return false;
                     }
                     prohibitEventBubling(e);
+                    /** case - remove last created blank list row before creating new paragraph */
+                    if (editor.targetElm.querySelectorAll('li').length > 1) {
+                        anchorNode && anchorNode.remove();
+                    }
                     createNewParagraphElement(e, editor);
                     return false;
                 }
