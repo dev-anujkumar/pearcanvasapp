@@ -147,7 +147,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -454,10 +454,10 @@ export const setSlateType = (slateType) => (dispatch, getState) =>{
         payload: slateType
     }) 
 }
-export const setSlateEntity = (setSlateEntityArg) => (dispatch, getState) =>{
+export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
     return dispatch({
         type: SET_SLATE_ENTITY,
-        payload: setSlateEntityArg
+        payload: setSlateEntity
     }) 
 }
 
@@ -468,9 +468,9 @@ export const accessDenied = (value) => (dispatch, getState) => {
         payload: value
     })
 }
-export const setSlateParent = (setSlateParentArg) => (dispatch, getState) =>{
+export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
     return dispatch({
         type: SET_PARENT_NODE,
-        payload: setSlateParentArg
+        payload: setSlateParent
     }) 
 }

@@ -8,13 +8,18 @@ div.cypress-editable ol li, div.cypress-editable ul li {
     /* font-size: 1em !important; */
     list-style-type: none !important;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
-    font-size: 1em !important;
+    font-size: 1.080em;
     font-weight: normal;
     line-height: 1.90em;
     letter-spacing: 0.01em;
     margin-left: 0em !important;
     margin-bottom: .65em !important;
     color: black !important;
+}
+
+div.cypress-editable ol li, div.cypress-editable ul li {
+    list-style-type: none !important;
+    font-size: 1em !important;
 }
 
 div.cypress-editable ol, li ol, div.cypress-editable ul, li ul {

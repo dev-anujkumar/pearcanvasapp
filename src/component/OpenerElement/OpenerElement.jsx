@@ -45,7 +45,7 @@ class OpenerElement extends Component {
         let width = imageData['width'] ? imageData['width'] : "";
         let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
         let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        //let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
@@ -68,8 +68,8 @@ class OpenerElement extends Component {
         let data_1 = data;
         let that = this;
         !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-            c2MediaModule.AddanAssetCallBack(data_2, function (dataArg) {
-                that.dataFromAlfresco(dataArg);
+            c2MediaModule.AddanAssetCallBack(data_2, function (data) {
+                that.dataFromAlfresco(data);
             })
         })
     }
@@ -117,8 +117,8 @@ class OpenerElement extends Component {
             }
         } else {
             if (permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (data_1_arg) {
-                    c2MediaModule.productLinkOnsaveCallBack(data_1_arg, function (data_2) {
+                c2MediaModule.onLaunchAddAnAsset(function (data_1) {
+                    c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                         c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                             that.dataFromAlfresco(data);
                         })
@@ -313,7 +313,7 @@ class OpenerElement extends Component {
     
     render() {
         const { imgSrc, width } = this.state
-        const { backgroundColor, slateLockInfo } = this.props
+        const { element, backgroundColor, slateLockInfo } = this.props
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
             <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>

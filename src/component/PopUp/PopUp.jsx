@@ -182,7 +182,7 @@ class PopUp extends React.Component {
  
     
     render() {
-        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction } = this.props;
+        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
         return (
             <div className="model">
                 {
