@@ -22,7 +22,8 @@ class ElementAudioVideo extends Component {
         this.state={
             imgSrc: null,
             assetData: null,
-            elementType: this.props.model.figuretype || ""
+            elementType: this.props.model.figuretype || "",
+            projectMetadata: false,
         }
     }
     /**
