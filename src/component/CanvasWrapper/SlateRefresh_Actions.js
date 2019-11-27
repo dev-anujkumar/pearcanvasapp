@@ -21,7 +21,7 @@ export const handleSlateRefresh = (id,cb) => (dispatch, getState) => {
                 slateLevelData: {},
             }
         })
-        dispatch(fetchSlateData(id)); 
+        dispatch(fetchSlateData(id,config.page)); 
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : 'Refreshed a moment ago'} });
         sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
         if(cb){
