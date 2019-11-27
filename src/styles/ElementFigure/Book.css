@@ -89,6 +89,10 @@ div.container {
   color: #ffffff;
 }
 
+.item header a {
+  color: inherit;
+}
+
 .item header a:hover {
   color: #EF6480 !important;
 }
@@ -128,7 +132,6 @@ div.container {
   width: 100%;
   height: 100%;
   display: block;
-  color: inherit;
 }
 
 .item header a:before {
@@ -649,6 +652,51 @@ a.paragraphNumeroUnoFootnote:hover {
 
 
  /* SANS-SERIF */
+
+p.paragraphNummerEins {
+  color: #000;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.025em;
+  font-weight: 400;
+  line-height: 1.60em;
+}
+
+a.paragraphNummerEins {
+  color: #007FA3;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+a.paragraphNummerEins:hover {
+  text-decoration: underline;
+}
+
+P.paragraphNummerEinsIndentLevel1 {
+  color: #000;
+  margin-left: 0em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.65em;
+}
+
+P.paragraphNummerEinsIndentLevel2 {
+  color: #000;
+  margin-left: 4em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.65em;
+}
+
+P.paragraphNummerEinsIndentLevel3 {
+  color: #000;
+  margin-left: 6em;
+  font-family: Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.65em;
+}
   
 
 
@@ -964,6 +1012,12 @@ aside.asideSidebar03 {
          margin-left: -2em;
          margin-right: -2em;
         }
+
+      div.asideSidebar04BorderBottom {
+        margin-left: -2em;
+        margin-right: -2em;
+      }
+
       
       H5.heading5NummerEinsSidebar04 {
          padding-top: 0.40em;
@@ -1051,8 +1105,6 @@ div.asideActivityBorderBottom  {
 
 div.asideSidebar04BorderBottom {
   border-bottom: 3px solid #eaeaea;
-  margin-left: -2em;
-  margin-right: -2em;
 }
 
 div.asideSidebar02BorderBottom { border-bottom-color: #007FA3; }
@@ -1293,6 +1345,15 @@ div.divTacticBoxTransBGborderTop {
       /* Span */
       /* Footnote */
 
+span.spanNumeroUnoFootnote {
+  color: #007FA3;
+  font-family: serif;
+  font-size: 0.5em;
+  vertical-align: baseline;
+  position: relative;
+  top: -1em;
+} 
+
 
 
 
@@ -1312,9 +1373,6 @@ a.paragraphNummerEins {
   color: #007FA3;
   font-family: sans-serif;
   text-decoration: none;
-  font-size: 1.025em;
-  font-weight: 400;
-  line-height: 1.60em;
 }
 
 a.paragraphNummerEins:hover {
@@ -3437,13 +3495,46 @@ figcaption.figcaptionTableImage {
 }
 
      /* image fill to 100% */
-  
+img.imageTable100 {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  margin-top: 0.45em;
+  margin-left: auto;
+  margin-right: auto;
+}
+       
        
        /* image fill to 75% and center */
-   
+img.imageTable75 {
+  display: block;
+  max-width: 75%;
+  width: auto;
+  margin-top: 0.45em;
+  margin-left: auto;
+  margin-right: auto;
+}
+       
        /* image fill to 50% and center*/
+img.imageTable50 {
+  display: block;
+  max-width: 50%;
+  width: auto;
+  margin-top: 0.45em;
+  margin-left: auto;
+  margin-right: auto;
+}
        
         /* image fill to 25% and center */
+img.imageTable25 {
+  display: block;
+  max-width: 25%;
+  width: auto;
+  margin-top: 0.45em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
   
   /*  image copyright, credit or source attribution text */
@@ -3586,6 +3677,24 @@ p.paragraphMathImageCredit {
 
 
 
+
+
+
+
+/* Print Page and Digital Page Numbers */
+
+div.PrintPageNumber {
+}
+
+div.DigitalPageNumber {
+}
+
+
+
+/*  Print Page Number */
+  
+div.divPrintPageNumber {
+}
 
 
 
@@ -3764,12 +3873,29 @@ Span.spanMath {
     /* MATH TEXT */
     /* SANS-SERIF */
 
+p.paragraphMath {
+  color: #000;
+  margin: 0 0 1em 0;
+  font-family: sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.75em;
+}
+  
 
   
     /* PARAGRAPH */
     /* MONO */
   
-
+  
+p.paragraphMono {
+  color: #000;
+  margin: 0 0 1em 0;
+  font-family: monospace;
+  font-size: 1.5em;
+  font-weight: 400;
+  line-height: 1.75em;
+}
 
 
 /*  MathML in Desktop/Laptop web browsers! */ 
@@ -4029,6 +4155,9 @@ th.tableTable01Last {
   color: #fff;
   padding: 1em;
   vertical-align: top;
+}
+
+table.tableTable01 tbody tr {
 }
 
 table.tableTable01 tbody tr:nth-child(even) {

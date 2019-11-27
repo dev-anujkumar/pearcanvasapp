@@ -16,7 +16,7 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, model, element, slateLockInfo } = this.props
+        const { className, placeholder, model, element, slateLockInfo } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { c2MediaModule } from './../../js/c2_media_module';
 import config from '../../config/config';
+import axios from 'axios';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
@@ -173,43 +174,94 @@ class ElementAudioVideo extends Component {
         }
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
+        if (alfrescoPath && this.state.projectMetadata) {
+            alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
+        }
         var data_1 = false;
+        if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
+            if (alfrescoPath.alfresco.nodeRef) {
+                if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
+                    data_1 = alfrescoPath.alfresco;
+                    /*
+                        data according to new project api 
+                    */
+                    data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
+                    data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
+                    data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
+                    data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
 
-        if (alfrescoPath && alfrescoPath.nodeRef) {
-            if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
-            data_1 = alfrescoPath;
-            /*
-                data according to new project api 
-            */
-            data_1['repositoryName'] = data_1['repoName'] ? data_1['repoName'] : data_1['repositoryName']
-            data_1['repositoryFolder'] = data_1['name'] ? data_1['name'] : data_1['repositoryFolder']
-            data_1['repositoryUrl'] = data_1['repoInstance'] ? data_1['repoInstance'] : data_1['repositoryUrl']
-            data_1['visibility'] = data_1['siteVisibility'] ? data_1['siteVisibility'] : data_1['visibility']
+                    /*
+                        data according to old core api and c2media
+                    */
+                    data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
+                    data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
+                    data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
+                    data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
 
-            /*
-                data according to old core api and c2media
-            */
-            data_1['repoName'] = data_1['repositoryName'] ? data_1['repositoryName'] : data_1['repoName']
-            data_1['name'] = data_1['repositoryFolder'] ? data_1['repositoryFolder'] : data_1['name']
-            data_1['repoInstance'] = data_1['repositoryUrl'] ? data_1['repositoryUrl'] : data_1['repoInstance']
-            data_1['siteVisibility'] = data_1['visibility'] ? data_1['visibility'] : data_1['siteVisibility']
+                    this.handleC2ExtendedClick(data_1)
+                }
+                else {
+                    this.props.accessDenied(true)
+                }
 
-            this.handleC2ExtendedClick(data_1)
             }
-            else{
+        }
+        else {
+            if (this.props.permissions.includes('alfresco_crud_access')) {
+                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                    data_1 = { ...alfrescoData };
+                    let request = {
+                        eTag: alfrescoPath.etag,
+                        projectId: alfrescoPath.id,
+                        ...alfrescoPath,
+                        additionalMetadata: { ...alfrescoData },
+                        alfresco: { ...alfrescoData }
+                    };
+
+                    /*
+                        preparing data according to Project api
+                    */
+
+                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+
+                    request.alfresco['repositoryName'] = data_1['repoName'];
+                    request.alfresco['repositoryFolder'] = data_1['name'];
+                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                    request.alfresco['visibility'] = data_1['siteVisibility'];
+
+                    that.handleC2ExtendedClick(data_1)
+                    /*
+                        API to set alfresco location on dashboard
+                    */
+                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                    let SSOToken = request.ssoToken;
+                    return axios.patch(url, request.alfresco,
+                        {
+                            headers: {
+                                'Accept': 'application/json',
+                                'ApiKey': config.STRUCTURE_APIKEY,
+                                'Content-Type': 'application/json',
+                                'PearsonSSOSession': SSOToken,
+                                'If-Match': request.eTag
+                            }
+                        })
+                        .then(function (response) {
+                            let tempData = { alfresco: alfrescoData };
+                            that.setState({
+                                projectMetadata: tempData
+                            })
+                        })
+                        .catch(function (error) {
+                            console.log("error", error)
+                        });
+                })
+            }
+            else {
                 this.props.accessDenied(true)
             }
-
-        } else {
-           if(this.props.permissions.includes('alfresco_crud_access')){ 
-               c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                        that.dataFromAlfresco(data);
-                    })
-                })
-            })
-        }
         }
 
     }

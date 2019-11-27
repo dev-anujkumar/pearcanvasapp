@@ -185,7 +185,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.isLOExist(message);
                 break;
                 case 'loEditResponse':
-                case 'cancelCEPopup':
                     this.setState({
                         showBlocker: false
                     });
@@ -201,6 +200,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
+                case 'cancelCEPopup':
+                    this.setState({
+                        showBlocker: false
+                    });
+                 break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;

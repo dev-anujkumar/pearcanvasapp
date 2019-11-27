@@ -71,16 +71,16 @@ class Interactive extends React.Component {
                 interactiveData['alttext'] = responseData['data']["thumbnail"]['alt'];
             }
             let posterImage = {};
-            //let itemsData = interactiveData['itemsData'];
-            //let id = interactiveData['id'] ? interactiveData['id'] : "";
+            let itemsData = interactiveData['itemsData'];
+            let id = interactiveData['id'] ? interactiveData['id'] : "";
             let itemId = interactiveData['itemID'] ? interactiveData['itemID'] : "";
-            //let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
+            let totalduration = interactiveData['totalduration'] ? interactiveData['totalduration'] : '';
             posterImage['imageid'] = interactiveData['imageId'] ? interactiveData['imageId'] : '';
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
             let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
-            //let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
-            //let imageId = "";
-            //let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
+            let workExample = (interactiveData['itemsData']['workExample'] && interactiveData['itemsData']['workExample'][0]) ? interactiveData['itemsData']['workExample'][0] : "";
+            let imageId = "";
+            let epsURL = interactiveData['EpsUrl'] ? interactiveData['EpsUrl'] : "";
             that.setState({itemID : itemId,
                 imagePath:posterImage.path })
             let figureData={}
@@ -290,6 +290,17 @@ class Interactive extends React.Component {
                 break;
 
             case "video-mcq":
+                divImage = 'divWidgetVideoMcq';
+                figureImage = 'figureWidgetVideoMcq';
+                heading4Label = 'heading4WidgetVideoMcqNumberLabel';
+                heading4Title = 'heading4WidgetVideoMcqTitle';
+                dataType = 'videoMcq';
+                id = 'id-info';
+                imageDimension = 'imageWidgetVideoMcq';
+                figcaptionClass = 'figcaptionWidgetVideoMcq';
+                paragraphCredit = 'paragraphWidgetVideoMcqCredit';
+                break;
+
             case "mcq":
                 divImage = 'divWidgetVideoMcq';
                 figureImage = 'figureWidgetVideoMcq';
@@ -302,20 +313,7 @@ class Interactive extends React.Component {
                 paragraphCredit = 'paragraphWidgetVideoMcqCredit';
                 break;
 
-            // case "mcq":
-            //     divImage = 'divWidgetVideoMcq';
-            //     figureImage = 'figureWidgetVideoMcq';
-            //     heading4Label = 'heading4WidgetVideoMcqNumberLabel';
-            //     heading4Title = 'heading4WidgetVideoMcqTitle';
-            //     dataType = 'videoMcq';
-            //     id = 'id-info';
-            //     imageDimension = 'imageWidgetVideoMcq';
-            //     figcaptionClass = 'figcaptionWidgetVideoMcq';
-            //     paragraphCredit = 'paragraphWidgetVideoMcqCredit';
-            //     break;
-
             case "pop-up-web-link":
-            case "web-link":
                 divImage = 'divWidgetPUSL';
                 figureImage = 'figureWidgetPUSL';
                 heading4Label = 'heading4WidgetPUSLNumberLabel';
@@ -328,18 +326,18 @@ class Interactive extends React.Component {
                 paragraphCredit = 'paragraphWidgetPUSLCredit';
                 break;
 
-            // case "web-link":
-            //     divImage = 'divWidgetPUSL';
-            //     figureImage = 'figureWidgetPUSL';
-            //     heading4Label = 'heading4WidgetPUSLNumberLabel';
-            //     heading4Title = 'heading4WidgetPUSLTitle';
-            //     dataType = 'pusl';
-            //     id = 'id-info';
-            //     imageDimension = '';
-            //     hyperlinkClass = 'buttonWidgetPUSL';
-            //     figcaptionClass = 'figcaptionWidgetPUSL';
-            //     paragraphCredit = 'paragraphWidgetPUSLCredit';
-            //     break;
+            case "web-link":
+                divImage = 'divWidgetPUSL';
+                figureImage = 'figureWidgetPUSL';
+                heading4Label = 'heading4WidgetPUSLNumberLabel';
+                heading4Title = 'heading4WidgetPUSLTitle';
+                dataType = 'pusl';
+                id = 'id-info';
+                imageDimension = '';
+                hyperlinkClass = 'buttonWidgetPUSL';
+                figcaptionClass = 'figcaptionWidgetPUSL';
+                paragraphCredit = 'paragraphWidgetPUSLCredit';
+                break;
 
             case "table":
                 divImage = 'divWidgetTableSL';
@@ -530,7 +528,7 @@ class Interactive extends React.Component {
                         interactivetype="3rd-party"
                         break;
                 }
-                //let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
+                let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {
                     epsURL = imageData['posterImageUrl'] ? imageData['posterImageUrl'] : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png";
                 }
@@ -619,8 +617,8 @@ class Interactive extends React.Component {
 
         } else {
            if(this.props.permissions.includes('alfresco_crud_access')){ 
-               c2MediaModule.onLaunchAddAnAsset(function (data_1_arg) {                                                                           // alfresco location is not assigned to project
-                c2MediaModule.productLinkOnsaveCallBack(data_1_arg, function (data_2) {
+               c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
+                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                         that.dataFromAlfresco(data);
                     })

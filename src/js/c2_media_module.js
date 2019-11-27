@@ -150,6 +150,25 @@ export const c2MediaModule = {
             addAnAsset.unmount();
         }
 
+        var libConfig = {
+            'locale': 'en_US',
+            'headers': {
+                'Content-Type': 'application/json',
+                'Accept': 'application/ld+json',
+                'X-Roles-Test': 'ContentMetadataEditor',
+                'Prefer': 'annotation=true',
+                'Apikey': CMDS_APIKEY,
+                'x-apikey': CMDS_APIKEY,
+                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+            },
+            'database': CMDS_DATABASE,
+            'server': CMDS_DATA_ENDPOINT,
+            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+            'userId': uname || config_object['userId']
+        };
+
+
         addAnAssetConfig = { 'selector': renderderedTagSelector };
         addAnAssetConfig.language = 'en';// YS
         addAnAssetConfig.nodeRef = productRef;
@@ -244,6 +263,23 @@ export const c2MediaModule = {
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {
+                        var libConfig = {
+                            'locale': 'en_US',
+                            'headers': {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/ld+json',
+                                'X-Roles-Test': 'ContentMetadataEditor',
+                                'Prefer': 'annotation=true',
+                                'Apikey': CMDS_APIKEY,
+                                'x-apikey': CMDS_APIKEY,
+                                'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
+                                'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
+                            },
+                            'database': CMDS_DATABASE,
+                            'server': CMDS_DATA_ENDPOINT,
+                            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                            'userId': uname || config_object['userId']
+                        };
                         var productLinkConfig = { 'selector': renderderedTagSelector };
                         productLinkConfig.repoList = cmisRepo;
                         productLinkConfig.language = 'en';  // YS
