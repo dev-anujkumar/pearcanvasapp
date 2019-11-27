@@ -4,13 +4,16 @@ const INIT_STATE = {
     currentSlateLOData: "",
     slateTagEnable: false,
     showModule:false,
-    currentSlateLODataMath:""
+    currentSlateLODataMath:"",
+    showSlateLockPopup: false
+
 }
 
 const currentSlateLOData = { currentSlateLOData: "",
 slateTagEnable: false,
 showModule:false,
-currentSlateLODataMath:""
+currentSlateLODataMath:"",
+showSlateLockPopup: false,
 }
 
 describe('testing meta data Reducer cases --', () => {

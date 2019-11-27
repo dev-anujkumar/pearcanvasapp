@@ -20,7 +20,8 @@ jest.mock('../../../src/config/config.js', () => ({
     slateType: "assessment"
 }))
 jest.mock('../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole: jest.fn()
 }))
 jest.mock('../../../src/js/toggleLoader', () => ({
     hideTocBlocker: jest.fn(),
@@ -70,8 +71,8 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentItemTitle: "1.1 Homework",
             model: assessmentSlateWithData,
             getAssessmentData: true,
-            handleAssessmentBlur: jest.fn()
-
+            handleAssessmentBlur: jest.fn(),
+            selectAssessmentType: jest.fn()
         }
         const component = mount(<AssessmentSlateData {...props} />);
         const assessmentSlateDataInstance = component.instance();
@@ -95,6 +96,7 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentItemTitle: "1.1 Homework",
             model: assessmentSlateWithData,
             getAssessmentData: true,
+            selectAssessmentType: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -110,6 +112,7 @@ describe('Testing Assessment Slate Data component', () => {
         let props = {
             getAssessmentData: true,
             getAssessmentDataPopup: false,
+            selectAssessmentType: jest.fn()
         }
         const component = mount(<AssessmentSlateData {...props} />);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();

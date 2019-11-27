@@ -13,6 +13,7 @@ import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
 import axios from 'axios';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -42,6 +43,7 @@ class Interactive extends React.Component {
      */
 
     handleC2InteractiveClick = (value) => {
+        if( this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
         let that = this;
         let fileName = "";
         let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()];
@@ -108,6 +110,7 @@ class Interactive extends React.Component {
                
             })
         }); 
+      }
     }
      
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -563,7 +566,7 @@ class Interactive extends React.Component {
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -576,6 +579,9 @@ class Interactive extends React.Component {
      */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
+        if(hasReviewerRole()){
+            return true
+        }
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;

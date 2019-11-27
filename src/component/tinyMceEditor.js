@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import {checkforToolbarClick} from '../js/utils'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 let context = {};
 
 export class TinyMceEditor extends Component {
@@ -377,6 +377,14 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+
+            if(hasReviewerRole()){
+                let evt = (e) ? e : window.event;
+                if(evt.ctrlKey && evt.which == 88){ 
+                    evt.preventDefault();
+                }
+             }
+
             if(this.isTabPressed(e)){
                 e.preventDefault()
             }
@@ -501,7 +509,7 @@ export class TinyMceEditor extends Component {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
-            editor.selection.setContent('');
+            editor.selection.getContent() === "" && editor.selection.setContent('');
          }
     }
 
@@ -983,7 +991,7 @@ export class TinyMceEditor extends Component {
         else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){
             toolbar = config.captionToolbar;
 
-        }else if (this.props.placeholder === "Enter the Block Code...") {
+        }else if (this.props.placeholder === "Enter block code...") { 
             toolbar =  config.codeListingToolbar;
         }else{
             toolbar = config.elementToolbar;
@@ -1015,6 +1023,12 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
+       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+        if(tinymce.activeEditor && tinymce.activeEditor.id){
+            document.getElementById(tinymce.activeEditor.id).contentEditable = false
+            return
+        }
+    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){
@@ -1024,13 +1038,6 @@ export class TinyMceEditor extends Component {
         }
         else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
             tinymce.$(e.target).closest('li').append('<br/>');
-        }
-
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
-            if(tinymce.activeEditor && tinymce.activeEditor.id){
-                document.getElementById(tinymce.activeEditor.id).contentEditable = false
-                return
-            }
         }
         this.props.handleEditorFocus();
         let isSameTarget = false;
@@ -1250,10 +1257,13 @@ export class TinyMceEditor extends Component {
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
-                
+            case 'figureCredit':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                )
             default:
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

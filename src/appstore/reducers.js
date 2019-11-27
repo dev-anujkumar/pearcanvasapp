@@ -41,7 +41,8 @@ const INITIAL_STATE = {
     splittedElementIndex: 0,
     pageNumberData: {},
     permissions: [],
-    accesDeniedPopup: false
+    accesDeniedPopup: false,
+    roleId: ''
 };
 
 const INITIAL_ACTION = {
@@ -118,7 +119,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case GET_PROJECT_PERMISSIONS:
             return {
                 ...state,
-                permissions: action.payload
+                permissions: action.payload.permissions,
+                roleId : action.payload.roleId
             }
         case SET_OLD_IMAGE_PATH:
             return {

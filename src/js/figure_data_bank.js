@@ -72,7 +72,6 @@ export default {
 
     },
     "primary-mmi": {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveformat": "mmi",
         "interactivetype": "fpo",
         "numbered": false,
