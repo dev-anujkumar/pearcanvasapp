@@ -21,7 +21,7 @@ import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE, IN_USE_BY, ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 
 function WithWrapperCommunication(WrappedComponent) {
     class CommunicationWrapper extends Component {
@@ -133,6 +133,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         this.props.fetchSlateData(config.slateManifestURN);
                     }
+                    break;
                 case 'canvasBlocker':
                     {
                         if (message.status) {
@@ -177,7 +178,9 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
                     if(message){
-                    message.label.en= message.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>")}
+                        const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g;
+                        message.label.en= message.label.en.replace(regex, "<img src='$1'></img>")
+                    }
                     this.props.currentSlateLO(message);
                     this.props.isLOExist(message);
                 break;
@@ -297,7 +300,8 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    message.loObj.label.en = message.loObj.label.en.replace(/<math.*?data-src=\'(.*?)\'.*?<\/math>/g, "<img src='$1'></img>");
+                    const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g
+                    message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
                 this.props.isLOExist(message);

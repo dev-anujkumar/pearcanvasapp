@@ -193,7 +193,7 @@ class Sidebar extends Component {
                 });
     
                 let display = '';
-                if(!(secondaryOptionList.length > 1)) {
+                if(secondaryOptionList.length <= 1) {
                     display = 'hidden';
                 }
     
@@ -322,7 +322,7 @@ class Sidebar extends Component {
     * handleBceNumber function responsible for handling Number start from field value in BCE element
     */
     handleBceNumber = (e) => {
-        let regex = /^[0-9]*(?:\.\d{1,2})?$/
+        const regex = /^[0-9]*(?:\.\d{1,2})?$/
         if(regex.test(e.target.value)){                              // applying regex that will validate the value coming is only number
             this.setState({ bceNumberStartFrom: e.target.value }, () => {
             })
