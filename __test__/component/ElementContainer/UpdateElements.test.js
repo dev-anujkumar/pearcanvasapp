@@ -4,8 +4,6 @@ import config from '../../../src/config/config';
 import  * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
 
 describe('Test for UpdateElements Functions', () => {
-
-    describe('Test for createUpdatedData Function',()=>{
         it('Test for ELEMENT-TYPE----->element-authoredtext',()=>{
             let type="element-authoredtext",
             previousElementData = {
@@ -643,5 +641,4 @@ describe('Test for UpdateElements Functions', () => {
             updateFunction.createOpenerElementData(elementData, elementType, primaryOption, secondaryOption);
             expect(updateFunction.createOpenerElementData).toHaveBeenCalled()
         })
-    })
 })
