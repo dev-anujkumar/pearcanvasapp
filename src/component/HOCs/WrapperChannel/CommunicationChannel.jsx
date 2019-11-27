@@ -166,7 +166,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
-                    config.alfrescoMetaData = message.alfresco;
+                    config.alfrescoMetaData = message;
                     config.book_title =  message.name;                  
                     break;
                 case 'permissionsDetails':
@@ -336,6 +336,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
+            localStorage.removeItem('newElement');
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
@@ -406,13 +407,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.slateType = message.node.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
+                config.page = 0;
+                config.scrolling = true;
+                config.totalPageCount = 0;
+                config.fromTOC = true;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn);
+                this.props.fetchSlateData(message.node.containerUrn, config.page);
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);

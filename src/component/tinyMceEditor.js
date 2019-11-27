@@ -219,7 +219,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno') || e.target.targetElm.children[0].classList.contains('pullQuoteNumeroUno')) {
+                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         }
                         /*  For Figure type*/
@@ -1177,16 +1177,16 @@ export class TinyMceEditor extends Component {
                 selection.select();
             }
             else {
-                selection = window.getSelection();
-                selection.collapse(el, selection.rangeCount);
+                // selection = window.getSelection();
+                // selection.collapse(el, selection.rangeCount);
             }
             return;
         }
 
         //Commented these lines as glossary toolbar was not getting initialized, replaced it with more specific code to achieve the same.
         if(tinymce.activeEditor){
-            tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
-            tinymce.activeEditor.selection.collapse(false);
+            // tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
+            // tinymce.activeEditor.selection.collapse(false);
         }
        /*  let range, selection;
         if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+

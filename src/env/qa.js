@@ -4,6 +4,7 @@ let qaConfig = {
     LEARNING_OBJECTIVES_ENDPOINT: "https://contentapis-qa.pearsoncms.net/lo-api/",
     ASSET_POPOVER_ENDPOINT: "https://contentapis-qa.pearsoncms.net/manifest-api/",
     PRODUCTAPI_ENDPOINT: "https://contentapis-qa.pearsoncms.net/product-api/",
+    PROJECTAPI_ENDPOINT: "https://contentapis-qa.pearsoncms.net/project-api/distributable/v2",
     ELM_ENDPOINT: "https://contentapis-qa.pearsoncms.net/manifest-api/",
     LERNOSITY_ENDPOINT:  "https://contentapis-qa.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-qa.pearsoncms.net/structure-api/container/v2/",
