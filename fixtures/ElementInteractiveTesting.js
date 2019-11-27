@@ -6,7 +6,7 @@ export const Interactivefpo = {
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
         "interactiveid": "",
-        "interactivetype": "flashcards",
+        "interactivetype": "fpo",
         "interactiveformat": "mmi"
     },
     "html": {

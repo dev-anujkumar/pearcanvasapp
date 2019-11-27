@@ -56,7 +56,7 @@ export const CURRENT_SLATE_LO_DATA = 'CURRENT_SLATE_LO_DATA'
 export const SLATE_TAG_ENABLE = 'SLATE_TAG_ENABLE'
 export const SHOW_MODULE_NAME = 'SHOW_MODULE_NAME'
 export const CURRENT_SLATE_LO_DATA_MATH = 'CURRENT_SLATE_LO_DATA_MATH'
-
+export const SHOW_SLATE_LOCK_POPUP = 'SHOW_SLATE_LOCK_POPUP'
 
 /*--------------- Asset Popover -------------------*/
 export const APO_SEARCH_SAVE = 'APO_SEARCH_SAVE'

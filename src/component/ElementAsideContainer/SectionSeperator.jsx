@@ -4,6 +4,7 @@ import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 class SectionSeperator extends React.Component {
     constructor(props) {
@@ -62,7 +63,7 @@ class SectionSeperator extends React.Component {
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button btnClassName={btnClassName} type="element-label" labelText="SB" />
-                      {this.props.permissions.includes('elements_add_remove') && <Button  onClick={() => this.props.showDeleteElemPopup(true, element)} type="delete-element" />}
+                      {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={() => this.props.showDeleteElemPopup(true, element)} type="delete-element" />}
                     </div>:""
                  }
                 <hr className="section-break" />

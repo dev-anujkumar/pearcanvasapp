@@ -14,7 +14,7 @@ export class ElementMetaLOList extends Component {
       this.props.setCurrentModule(true);
       let els = document.getElementsByClassName('moduleContainer');
       els = Array.from(els);
-      els.map((item, i) => {
+      els.forEach((item, i) => {
         let children = els[i].querySelectorAll('.moduleContainer .learningObjectiveData');
         if (children.length > 0) {
           els[i].classList.add('showmodule');

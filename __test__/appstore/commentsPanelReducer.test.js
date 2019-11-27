@@ -70,6 +70,7 @@ const initialState = {
     togglePanel: false,
     users: [],
     slateTitle: "",
+    index: null,
     comments: []
 }
 const initialState2 = {
@@ -167,40 +168,53 @@ const initialState2 = {
 
 describe('testing slateLock Reducer cases -->', () => {
 
-    xit('should return the initial state', () => {
+    it('should return the initial state', () => {
         expect(reducer(undefined, {})).toEqual(initialState);
     });
     it('Test 1- FETCH_COMMENTS', () => {
-        reducer(initialState, {
+        initialState.slateTitle = 'ELMTEST_StgEnv_Krajewski Test';
+        expect(reducer(initialState, {
             type: FETCH_COMMENTS,
             payload: {
-                allComments: initialState.allComments,
-                slateTitle: 'ELMTEST_StgEnv_Krajewski Test'
+                comments: initialState.allComments,
+                title: 'ELMTEST_StgEnv_Krajewski Test'
             }
-        })
+        })).toEqual(initialState)
     })
-    xit('Test 2- FETCH_COMMENT_BY_ELEMENT', () => {
-        reducer(initialState, {
+    it('Test 2- FETCH_COMMENT_BY_ELEMENT', () => {
+        let stateObj1 = initialState;
+        stateObj1.index= 1;
+        stateObj1.comments = [];
+
+        expect(reducer(initialState, {
             type: FETCH_COMMENT_BY_ELEMENT,
-            payload: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
-        })
+            payload: {elementId:"urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5",index:1}
+        })).toEqual(stateObj1);
     })
     it('Test 3- TOGGLE_COMMENTS_PANEL', () => {
-        reducer(initialState, {
+        let stateObj2 = initialState;
+        stateObj2.togglePanel = true;
+        expect(reducer(initialState, {
             type: TOGGLE_COMMENTS_PANEL,
             payload: true
-        })
+        })).toEqual(stateObj2);
     })
     it('Test 4- TOGGLE_REPLY', () => {
-        reducer(initialState, {
+        let stateObj3 = initialState;
+        stateObj3.toggleReplyForm = {toggleReplyForm:true};
+        expect(reducer(initialState, {
             type: TOGGLE_REPLY,
             payload: {
                 toggleReplyForm: true
             }
-        })
+        })).toEqual(stateObj3);
     })
     it('Test 5- REPLY_COMMENT', () => {
-        reducer(initialState2, {
+        let stateObj4 = initialState;
+        stateObj4.toggleReplyForm = false;
+        stateObj4.comments=[];
+
+        expect(reducer(initialState, {
             type: REPLY_COMMENT,
             payload: {
                 commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
@@ -213,50 +227,80 @@ describe('testing slateLock Reducer cases -->', () => {
                     commentType: "commentReply",
                 }
             }
-        })
+        })).toEqual(stateObj4);
     })
     it('Test 6- RESOLVE_COMMENT', () => {
-        reducer(initialState2, {
+        let stateObj5 = initialState;
+        stateObj5.comments =[];
+        expect(reducer(initialState, {
             type: RESOLVE_COMMENT,
             payload: {
                 commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
                 resolveOrOpen: "RESOLVED"
             }
-        })
+        })).toEqual(stateObj5)
     })
     it('Test 7- UPDATE_COMMENT', () => {
-        reducer(initialState2, {
+        let stateObj6 = initialState;
+        expect(reducer(initialState, {
             type: UPDATE_COMMENT,
             payload: {
-                commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
+                commentUrn: "urn:pearson:comment:90a27123456e87-9630-47e5-a5d8-ef2fe0e362612c",
                 updateComment: "comment updated"
             }
-        })
+        })).toEqual(stateObj6);
     })
     it('Test 8- GET_PROJECT_USER', () => {
-        reducer(initialState, {
+        let stateObj7 = initialState;
+        expect(reducer(initialState, {
             type: GET_PROJECT_USER,
             payload: users
 
-        })
+        })).toEqual(stateObj7);
     })
     it('Test 9- UPDATE_ASSIGNEE', () => {
-        reducer(initialState2, {
+        let stateObj8 = initialState;
+        stateObj8.comments =[];
+        expect(reducer(initialState, {
             type: UPDATE_ASSIGNEE,
             payload: {
                 commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
                 newAssignee: "test"
             }
-        })
+        })).toEqual(stateObj8);
     })
     it('Test 10- DELETE_COMMENT', () => {
-        reducer(initialState2, {
+        let stateObj9 = initialState;
+        expect(reducer(initialState, {
             type: DELETE_COMMENT,
-            payload: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
-        })
+            payload: "urn:pearson:comment:90a27e87-9630-47e32435-a5d8-ef2fe0e3626c"
+        })).toEqual(stateObj9);
     })
     it('Test 11- ADD_NEW_COMMENT', () => {
-        reducer(initialState2, {
+        let stateObj10 = initialState;
+        stateObj10.allComments.push({
+            commentAssignee: "c5test01",
+            commentCreator: "c5test01",
+            commentDateTime: "2019-10-31T04:44:35.708Z",
+            commentOnEntity: "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            commentStatus: "OPEN",
+            commentString: "new comment added",
+            commentType: "comment",
+            commentUrn: "urn:pearson:comment:96222dd8-48a4-4678-9c84-b397b0485565",
+            replyComments: [],
+        });
+        stateObj10.comments = [{
+                  "commentAssignee": "c5test01",
+                   "commentCreator": "c5test01",
+                  "commentDateTime": "2019-10-31T04:44:35.708Z",
+                   "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                  "commentStatus": "OPEN",
+                  "commentString": "new comment added",
+                   "commentType": "comment",
+                 "commentUrn": "urn:pearson:comment:96222dd8-48a4-4678-9c84-b397b0485565",
+                  "replyComments": [],
+                 }];
+        expect(reducer(initialState, {
             type: ADD_NEW_COMMENT,
             payload: {
                 commentAssignee: "c5test01",
@@ -269,7 +313,7 @@ describe('testing slateLock Reducer cases -->', () => {
                 commentUrn: "urn:pearson:comment:96222dd8-48a4-4678-9c84-b397b0485565",
                 replyComments: [],
             }
-        })
+        })).not.toEqual(stateObj10)
     })
 
 });
