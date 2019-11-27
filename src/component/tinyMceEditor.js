@@ -212,7 +212,7 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno') || e.target.targetElm.children[0].classList.contains('pullQuoteNumeroUno')) {
+                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
                             e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
                         }
                         /*  For Figure type*/
