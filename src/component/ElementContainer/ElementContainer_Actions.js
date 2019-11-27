@@ -105,6 +105,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let indexToBeSent = index || "0"
     _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
 
+    if(asideData && asideData.type === "element-aside"){
+        if(asideData.subtype === "workedexample"){
+            _requestData.parentType = "workedexample";
+        }else{
+            _requestData.parentType = "element-aside";
+        }
+    }
+
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
@@ -166,6 +174,20 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
+    if(asideData.type === "element-aside"){
+        let newIndex = elementIndex.split("-")[0]
+        let slateLevelData = getState().appStore.slateLevelData;
+        let newParentData = JSON.parse(JSON.stringify(slateLevelData));
+        let parentObj = Object.values(newParentData)[0];
+        let { contents: _slateContent } = parentObj;
+        let { bodymatter: _slateBodyMatter } = _slateContent;
+        if(_slateBodyMatter[newIndex].subtype === "workedexample"){
+            updatedData.parentType = _slateBodyMatter[newIndex].subtype;
+        }else{
+            updatedData.parentType = asideData.type;
+        }
+    }
+
     if(tinyMCE && tinyMCE.activeEditor){
         tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
         tinyMCE.activeEditor.selection.collapse(false);
