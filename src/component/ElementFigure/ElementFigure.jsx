@@ -129,8 +129,8 @@ class ElementFigure extends Component {
 
         } else {
            if(this.props.permissions.includes('alfresco_crud_access')){ 
-               c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
-                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+               c2MediaModule.onLaunchAddAnAsset(function (data_1_arg) {                                                                           // alfresco location is not assigned to project
+                c2MediaModule.productLinkOnsaveCallBack(data_1_arg, function (data_2) {
                     c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                         that.dataFromAlfresco(data);
                     })

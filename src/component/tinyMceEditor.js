@@ -101,6 +101,13 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
+
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                    if (editor && editor.id) {
+                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                    }
+                }
+
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -392,16 +399,8 @@ export class TinyMceEditor extends Component {
             bindKeyDownEvent(editor, e);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
-                if (!activeElement.children.length) {
+                if ( (!activeElement.children.length) || (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") ) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
-                    let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]){
-                        div.children[0].innerHTML = '<br/>';
-                        activeElement.innerHTML = div.children[0].outerHTML;
-                    }
-                }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
                     if(div.children && div.children[0]){
@@ -1024,12 +1023,6 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-       if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
-        if(tinymce.activeEditor && tinymce.activeEditor.id){
-            document.getElementById(tinymce.activeEditor.id).contentEditable = false
-            return
-        }
-    }
         if( tinymce.$(e.target).find('li').length   ){
             tinymce.$(e.target).find('li').each(function(a,b){
                 if( this.innerHTML.trim() == '' ){

@@ -106,8 +106,8 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.toggleAssessmentPopup('',false);
-        productId = (value && value !== "") ? value : "Unspecified";
+        this.toggleAssessmentPopup('', false);
+        productId = value ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
            this.launchAssetBrowserCallBack(assessmentData)   
         });
