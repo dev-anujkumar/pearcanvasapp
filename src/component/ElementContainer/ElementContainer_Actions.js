@@ -162,7 +162,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 }
 
 function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
-    let indexes = elementIndex ? elementIndex.split('-') : 0;
+    let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
@@ -193,10 +193,6 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    if(tinyMCE && tinyMCE.activeEditor){
-        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        tinyMCE.activeEditor.selection.collapse(false);
-    }
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
