@@ -81,7 +81,7 @@ class Sidebar extends Component {
     }
 
     toggleElementDropdown = e => {
-        if(hasReviewerRole()){
+        if(hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('access_formatting_bar'))){
             return true
         }
         const { activePrimaryOption } = this.state
@@ -401,7 +401,8 @@ Sidebar.propTypes = {
 const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
-        showModule:state.metadataReducer.showModule
+        showModule:state.metadataReducer.showModule,
+        permissions : state.appStore.permissions
     };
 };
 

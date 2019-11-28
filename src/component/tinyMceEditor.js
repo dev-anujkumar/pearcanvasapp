@@ -1018,7 +1018,7 @@ export class TinyMceEditor extends Component {
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
-        if(toolbar.length){
+        if(toolbar && toolbar.length){
             tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
