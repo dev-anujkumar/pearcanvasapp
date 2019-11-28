@@ -30,7 +30,7 @@ class ElementAsideContainer extends Component {
         this.asideRef = React.createRef();
     }
     componentDidMount() {
-        this.asideRef.current.addEventListener("focus", this.handleFocus);
+            this.asideRef.current.addEventListener("focus", this.handleFocus);
 
 
     }

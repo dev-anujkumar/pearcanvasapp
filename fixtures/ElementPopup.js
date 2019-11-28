@@ -7,16 +7,25 @@ export const popup = {
     "popupdata": {
         "postertextobject": {
             "id": "urn:pearson:work:55e2ba3f-632a-41e1-9197-2aa58c9978y5",
-            "type": "element-authoredtext"
+            "type": "element-authoredtext",
+            "html": {
+                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+            },
         },
         "titles": [
             {
                 "type": "element-title",
-                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073u642"
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073u642",
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
             },
             {
                 "type": "element-subtitle",
-                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073y653"
+                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21073y653",
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
             }
         ],
         "bodymatter": [{

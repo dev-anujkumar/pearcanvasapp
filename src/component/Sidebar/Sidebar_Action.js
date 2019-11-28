@@ -7,6 +7,7 @@ import {
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import {popup} from '../../../fixtures/ElementPopup'
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
@@ -103,7 +104,51 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    axios.post(url, JSON.stringify(conversionDataToSend), { 
+
+
+    let storeElement = store[config.slateManifestURN];
+        let bodymatter = storeElement.contents.bodymatter;
+        let focusedElement = bodymatter;
+        indexes.forEach(index => {
+            if(newElementData.elementId === focusedElement[index].id) {
+                focusedElement[index] = popup //res.data;
+            } else {
+                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
+                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
+                }
+            }
+        });
+        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
+        let altText="";
+        let longDesc="";
+    /*     if(res.data.figuredata){
+            altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
+            longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
+        } */
+        let activeElementObject = {
+            elementId: newElementData.elementId,
+            index: indexes.join("-"),
+            elementType: newElementData.elementType,
+            primaryOption: newElementData.primaryOption,
+            secondaryOption: newElementData.secondaryOption,
+            tag: newElementData.labelText,
+            toolbar: newElementData.toolbar,
+            elementWipType: newElementData.elementWipType,
+            altText,
+            longDesc
+        };
+
+        dispatch({
+            type: FETCH_SLATE_DATA,
+            payload: store
+        });
+
+        dispatch({
+            type: SET_ACTIVE_ELEMENT,
+            payload: activeElementObject
+        });
+/*     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -156,9 +201,10 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         //console.log(err) 
-    })
+    }) */
 }
 catch (error) {
+    console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
 }
 }
