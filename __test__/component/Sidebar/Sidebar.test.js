@@ -8,10 +8,13 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
+import { JestEnvironment } from '@jest/environment';
+jest.mock('../../../src/constants/utility.js', () => ({
+    hasReviewerRole: jest.fn()
+}))
 
-xdescribe('Test for Sidebar component', () => {
+describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
-
     const activeElement = {
         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
         elementType: "element-authoredtext",
@@ -35,7 +38,8 @@ xdescribe('Test for Sidebar component', () => {
         },
     });
     let props = {
-        slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f'
+        slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
+        activeElement : {elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b"}
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -96,6 +100,9 @@ xdescribe('Test for Sidebar component', () => {
         });
 
         sidebarInstance.attributions();
+        expect(sidebar.find('.element-dropdown').length).toBe(2)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
     });
 
     it('Test Case for Metadata Anchor LO', () => {
@@ -124,6 +131,9 @@ xdescribe('Test for Sidebar component', () => {
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
         </Provider>);
+        expect(sidebar.find('.element-dropdown').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Learning Objective")
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(0)
     });
 
     it('Test Case for Metadata Anchor MA', () => {
@@ -151,6 +161,9 @@ xdescribe('Test for Sidebar component', () => {
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
         </Provider>);
+        expect(sidebar.find('.element-dropdown').length).toBe(0)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(0)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(0)
     });
 
     it("With no activeElement", () => {
@@ -170,6 +183,9 @@ xdescribe('Test for Sidebar component', () => {
             <Sidebar />
         </Provider>);
     })
+    expect(sidebar.find('.element-dropdown').length).toBe(2)
+    expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe('Headings')
+    expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe('Heading 1')
 
     describe("Blockquote", () => {
 
@@ -226,6 +242,37 @@ xdescribe('Test for Sidebar component', () => {
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
-        }) 
+        }),
+        it("Checking toggleElementDropdown function for elementDropdown", () => {
+            let e = { target: {dataset : {element : "Primary"}, getAttribute : jest.fn()},stopPropagation : jest.fn()}
+            const activeElement = {
+                primaryOption: "primary-single-assessment",
+                secondaryOption: "secondary-single-assessment"
+            };
+            const sidebarWithData = mockStore({
+                appStore: {
+                    activeElement
+                },
+                metadataReducer: {
+                    currentSlateLOData: {}
+                },
+            });
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.toggleElementDropdown(e);
+            expect(sidebarInstance.state.activePrimaryOption).toBe("primary-single-assessment");
+        }),
+        it("Checking showModuleName function for elementDropdown", () => {
+            let e = {currentTarget: {checked: true}}
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+        it("Checking showModuleName function If Condition for checked", () => {
+            let tag = 'BCE'
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.renderLanguageLabel(tag);
+        })
     })
 });
