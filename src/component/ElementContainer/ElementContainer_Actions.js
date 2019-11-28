@@ -105,6 +105,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
+    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -161,16 +162,39 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         console.log("delete Api fail", error);
     })
 }
+
+function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
+    let indexes = elementIndex ? elementIndex.split('-') : 0;
+    let storeData = getState().appStore.slateLevelData;
+    let slateData = JSON.parse(JSON.stringify(storeData));
+    let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
+    if(indexes.length === 2){
+        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id){
+            updatedData.isHead = true;
+        }
+    }else if(indexes.length === 3){
+        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id){
+            updatedData.isHead = false;
+        }
+    }
+    if(asideData && asideData.type === "element-aside"){
+        if(asideData.subtype === "workedexample"){
+            updatedData.parentType = "workedexample";
+        }else{
+            updatedData.parentType = "element-aside";
+        }
+    }
+    updatedData.projectURN = config.projectUrn;
+    updatedData.slateEntity = config.slateEntityURN;
+}
+
 /**
  * API to update the element data
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
-    if(tinyMCE && tinyMCE.activeEditor){
-        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        tinyMCE.activeEditor.selection.collapse(false);
-    }
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {

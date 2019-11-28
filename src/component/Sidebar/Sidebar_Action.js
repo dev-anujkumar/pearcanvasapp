@@ -10,7 +10,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes) => dispatch => {
+const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
     try {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     // Input Element
@@ -48,9 +48,15 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         }
 
         /* on Conversion removing the tinymce instance for BCE element*/
-        if(outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData['primaryOption'] === 'primary-blockcode-equation'){
-            if(tinymce && tinymce.activeEditor.id){
-                tinymce.remove('#' + tinymce.activeEditor.id)               
+        if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
+            newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+            }
+        }
+        else {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
             }
         }
 
@@ -93,7 +99,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
          */
-        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC") {
+        if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC" && fromToolbar) {
             outputPrimaryOptionEnum = "AUTHORED_TEXT"
             outputSubTypeEnum = "NA"
         }
@@ -203,7 +209,7 @@ catch (error) {
 }
 }
 
-const handleElementConversion = (elementData, store, activeElement) => dispatch => {
+const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];
@@ -213,7 +219,7 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
         
         indexes.forEach(index => {
             if(elementData.elementId === bodymatter[index].id) {
-                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes));
+                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar));
             } else {
                 if(('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents))  {
                     bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||  bodymatter[index].contents.bodymatter
@@ -226,7 +232,12 @@ const handleElementConversion = (elementData, store, activeElement) => dispatch 
     return store;
 }
 
-export const conversionElement = (elementData) => (dispatch, getState) => {
+/**
+ * 
+ * @param {Object} elementData | element's data which is being converted
+ * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
+ */
+export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
     let appStore =  getState().appStore;
-    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement));
+    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
 }
