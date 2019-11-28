@@ -48,9 +48,15 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         }
 
         /* on Conversion removing the tinymce instance for BCE element*/
-        if(outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData['primaryOption'] === 'primary-blockcode-equation'){
-            if(tinymce && tinymce.activeEditor.id){
-                tinymce.remove('#' + tinymce.activeEditor.id)               
+        if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
+            newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+            }
+        }
+        else {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
             }
         }
 

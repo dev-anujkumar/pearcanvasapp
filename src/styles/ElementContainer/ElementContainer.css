@@ -40,6 +40,7 @@
 }
 .element-container .cypress-editable{
     padding:10px !important;
+    overflow-x: auto;
 }
 .element-container{
     padding: 1px 8px !important; 
