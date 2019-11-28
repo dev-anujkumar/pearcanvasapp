@@ -384,7 +384,6 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
-
             if(hasReviewerRole()){
                 let evt = (e) ? e : window.event;
                 if(evt.ctrlKey && evt.which == 88){ 
@@ -466,11 +465,11 @@ export class TinyMceEditor extends Component {
      */
     isTabPressed = (keydownEvent) => {
         const keyCode = keydownEvent.keyCode || keydownEvent.which
-        if(this.props.element != "element-list" && keyCode == 9){
-            return true
+        if(this.props.element.type !== "element-list" && keyCode === 9){
+            return 1
         }
         else{
-            return false
+            return 0
         }
     }
 
@@ -707,6 +706,9 @@ export class TinyMceEditor extends Component {
      * @param {*} content  content inside editor
      */
     onBeforeIndent = (e, content) => {
+        if(!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            e.preventDefault() 
+        }
         if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
             e.preventDefault()
         }
@@ -718,6 +720,9 @@ export class TinyMceEditor extends Component {
      * @param {*} content  content inside editor 
      */
     onBeforeOutdent = (e, content) => {
+        if(!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            e.preventDefault() 
+        }
         if(content.match(/paragraphNumeroUno\b/)){
             e.preventDefault()
         }
@@ -1244,11 +1249,22 @@ export class TinyMceEditor extends Component {
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote" || this.props.element.elementdata.type === "marginalia") {
+                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
+                    classes = classes + ' blockquote-editor';
+                    return (
+                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    )
+                }
+                else if(this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote"){
+                    let temDiv = document.createElement('div');
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
+                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     classes = classes + ' blockquote-editor';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
