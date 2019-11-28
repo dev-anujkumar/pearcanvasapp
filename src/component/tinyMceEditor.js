@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -826,7 +826,7 @@ export class TinyMceEditor extends Component {
                     document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
                 }
                 
-    
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove('#' + activeElementObj.join("-"));
                 tinymce.$('.wrs_modal_desktop').remove();
             }
@@ -990,6 +990,7 @@ export class TinyMceEditor extends Component {
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
             }
@@ -1018,7 +1019,7 @@ export class TinyMceEditor extends Component {
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
-        if(toolbar.length){
+        if(toolbar && toolbar.length){
             tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
@@ -1123,7 +1124,8 @@ export class TinyMceEditor extends Component {
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                 if(document.getElementById(tinymce.editors[i].id)){
                     document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
-                }     
+                }   
+                    removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {

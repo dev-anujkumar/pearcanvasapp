@@ -66,10 +66,11 @@ export const bindKeyDownEvent = (editor, e) => {
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
 
-    if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-        prohibitEventBubling(e);
-        return false;
-    }
+    // [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace //
+    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
+    //     prohibitEventBubling(e);
+    //     return false;
+    // }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
@@ -445,9 +446,9 @@ export const updateNestedList = (element) => {
 }
 
 export const removeTinyDefaultAttribute = (element) => {
-    let allOlElement = element.querySelectorAll('ol');
+    let allOlElement = element && element.querySelectorAll('ol') || [];
     if (allOlElement.length == 0) {
-        allOlElement = element.querySelectorAll('ul');
+        allOlElement = element && element.querySelectorAll('ul') || [];
     }
     for (let i = 0; i < allOlElement.length; i++) {
         allOlElement[i].removeAttribute('data-mce-style');

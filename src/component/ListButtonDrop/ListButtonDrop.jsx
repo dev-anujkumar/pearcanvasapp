@@ -223,7 +223,7 @@ ListButtonDrop.propTypes = {
     /** selectedOption is the pre-selected list option */
     selectedOption: PropTypes.string,
     /** startValue is selcted input value */
-    startValue: PropTypes.number
+    startValue: PropTypes.any
 }
 
 const MemoizedListButtonDrop = React.memo(ListButtonDrop);
