@@ -162,7 +162,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 }
 
 function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
-    let indexes = elementIndex ? elementIndex.split('-') : 0;
+    let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
