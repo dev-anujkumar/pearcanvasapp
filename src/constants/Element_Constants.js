@@ -36,7 +36,7 @@ export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
 /*---------------Section Break PopUp----------------------*/ 
-export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section, the whole section will get deleted?"
+export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section break, elements beneath it will also get deleted?"
 
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
 
