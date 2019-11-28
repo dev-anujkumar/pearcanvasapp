@@ -104,7 +104,7 @@ describe('Test for element container component', () => {
     expect(elementContainerInstance).toBeDefined();
     })
 
-    describe('Render element container for different elements ', () => {
+    describe('Test- renderElement function for Different Elements ', () => {
         let props = {
             element: wipData.opener,
             permissions: [],
@@ -278,6 +278,36 @@ describe('Test for element container component', () => {
         it('Render Element Container ----->WorkedExample', () => {
             let props = {
                 element: wipData.workedExample,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Learning Objective Item', () => {
+            let props = {
+                element: wipData.elementLO,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Metadata Anchor', () => {
+            let props = {
+                element: wipData.lo,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Metadata Anchor-LO list', () => {
+            let props = {
+                element: wipData.ma,
                 permissions: []
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);

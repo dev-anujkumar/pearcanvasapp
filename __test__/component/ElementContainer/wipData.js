@@ -1663,5 +1663,38 @@ export default {
         },
         "contentUrn": "urn:pearson:entity:ae197a50-0c0f-4ef6-918e-2973b42e4afb",
         "versionUrn": "urn:pearson:work:00b85f90-0ee8-4898-b3b3-d55102873512"
+    },
+    "elementLO": {
+        "comments": false,
+        "contentUrn": "urn:pearson:entity:39a7a694-d342-42d4-9171-8649de19f0d4",
+        "designtype": "",
+        "id": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "status": "wip",
+        "subtype": "",
+        "tcm": true,
+        "type": "element-learningobjectives",
+        "versionUrn": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+        "feedback": false,
+        "html": {
+            "text": '<h2 class="heading2learningObjectiveItem"><br></h2>'
+        },
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/learningobjectives/1#/definitions/learningobjectives",
+            "headers": [{
+                "charEnd": -1,
+                "charStart": 0,
+                "level": 2
+            }
+            ],
+            "objectives": [{
+                "objectiveid": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+                "referenceid": "urn:pearson:manifest:26709b4c-4e2b-4ca0-8da4-d00d8341f14c",
+                "authoredtext": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
+                }
+            }
+            ]
+        }
     }
 }
