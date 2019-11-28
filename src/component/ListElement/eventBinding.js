@@ -66,10 +66,11 @@ export const bindKeyDownEvent = (editor, e) => {
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
 
-    if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-        prohibitEventBubling(e);
-        return false;
-    }
+    // [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace //
+    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
+    //     prohibitEventBubling(e);
+    //     return false;
+    // }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
