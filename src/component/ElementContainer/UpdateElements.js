@@ -376,7 +376,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                tcm: true,
                 slateUrn: config.slateManifestURN      
             }
             break;
