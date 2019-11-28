@@ -226,9 +226,13 @@ class ElementContainer extends Component {
             case elementTypeConstant.BLOCKFEATURE:
                 let currentNode = document.getElementById(`cypress-${this.props.index}`)
                 let html = currentNode.innerHTML;
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;               
+                tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+                html = tempDiv.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
