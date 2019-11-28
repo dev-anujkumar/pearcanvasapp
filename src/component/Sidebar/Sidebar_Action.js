@@ -46,14 +46,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         if(oldElementData.figuredata.interactivetype){
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
         }
-
-        /* on Conversion removing the tinymce instance for BCE element*/
-        if(outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData['primaryOption'] === 'primary-blockcode-equation'){
-            if(tinymce && tinymce.activeEditor.id){
-                tinymce.remove('#' + tinymce.activeEditor.id)               
-            }
-        }
-
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
