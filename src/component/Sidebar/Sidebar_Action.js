@@ -46,6 +46,20 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         if(oldElementData.figuredata.interactivetype){
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
         }
+
+        /* on Conversion removing the tinymce instance for BCE element*/
+        if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
+            newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+            }
+        }
+        else {
+            if (tinymce && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
+            }
+        }
+
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
