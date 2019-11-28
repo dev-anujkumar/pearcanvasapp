@@ -19,7 +19,7 @@ import {
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 
 
@@ -147,7 +147,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {

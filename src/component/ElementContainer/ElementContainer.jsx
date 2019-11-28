@@ -152,17 +152,24 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     previousElementData.figuredata.path !== this.props.oldImage
+        //     ){
+        //         return true
+        //     }
+        //     else {
+        //         return false
+        //     }
+        return (
+            titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             previousElementData.figuredata.path !== this.props.oldImage
-            ){
-                return true
-            }
-            else {
-                return false
-            }
+        )
     }
 
     /**
@@ -183,16 +190,23 @@ class ElementContainer extends Component {
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        if(titleHTML !== previousElementData.html.title ||
+        // if(titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle || 
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits || previousElementData.figuredata.interactiveid
+        //     ){
+        //         return true
+        //     }
+        //     else {
+        //         return false
+        //     }
+        return (
+            titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle || 
             captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits || previousElementData.figuredata.interactiveid
-            ){
-                return true
-            }
-            else {
-                return false
-            }
+            creditsHTML !== previousElementData.html.credits || 
+            previousElementData.figuredata.interactiveid
+        )
     }
 
     updateOpenerElement = (dataToSend) => {

@@ -23,7 +23,7 @@ export class ElementMetaLOList extends Component {
     }
     else {
       this.props.setCurrentModule(false)
-    };
+    }
 
   }
   render() {
