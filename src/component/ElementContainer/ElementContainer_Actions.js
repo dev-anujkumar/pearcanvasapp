@@ -193,10 +193,6 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    if(tinyMCE && tinyMCE.activeEditor){
-        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        tinyMCE.activeEditor.selection.collapse(false);
-    }
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
