@@ -163,6 +163,15 @@ export const fetchElementTag = (element, index = 0) => {
 }
 
 export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
+	if(config.isFetchSlateInProgress){
+		return false;
+	}
+	sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+	config.isFetchSlateInProgress = true;
+	if(config.totalPageCount <= page){
+		page = config.totalPageCount;		
+	} 
+	config.page = page;
 	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
 		headers: {
 			"Content-Type": "application/json",
@@ -209,6 +218,7 @@ export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
 			type: SET_ACTIVE_ELEMENT,
 			payload: {}
 		});
+		config.isFetchSlateInProgress = false;
 	});
 };
 

@@ -1079,6 +1079,9 @@ class SlateWrapper extends Component {
         console.log("ERROR::", error)
         return { hasError: true };
     }
+    componentWillUnmount(){
+        window.removeEventListener('scroll',this.handleScroll)
+    }
 }
 SlateWrapper.displayName = "SlateWrapper"
 
