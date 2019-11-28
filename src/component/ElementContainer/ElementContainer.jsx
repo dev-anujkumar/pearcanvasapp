@@ -76,6 +76,9 @@ class ElementContainer extends Component {
     }
 
     componentWillReceiveProps(newProps) {
+        if(!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+            return true
+        }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if (newProps.elemBorderToggle) {
                 this.setState({
@@ -116,6 +119,9 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
+        if(!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+            return true
+        }
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
