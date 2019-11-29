@@ -30,7 +30,11 @@ jest.mock('./../../../src/constants/utility.js', () => ({
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
+    releaseCallCount :0
 }))
+jest.mock('./../../../src/component/CanvasWrapper/TCM_Integration_Actions.js', () => {
+    return { loadTrackChanges: jest.fn()}
+})
 jest.mock('./../../../src/component/AssetPopover/openApoFunction.js', () => {
 return  { 
     authorAssetPopOver: jest.fn()
@@ -39,16 +43,11 @@ return  {
 jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
     return { createOpenerElementData: jest.fn()}
 })
-// jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
-//     return { 
-//         addComment: ()=>{
-//             return 
-//         },
-//         deleteElement: jest.fn(),
-//         updateFigureData: jest.fn(),
-//         updateElement: jest.fn()    
-//     }
-// })
+jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
+    return { 
+        prepareDataForTcmUpdate: jest.fn() 
+    }
+})
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     appStore: {
@@ -379,6 +378,20 @@ describe('Test for element container component', () => {
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             const spysaveNewComment  = jest.spyOn(elementContainerInstance, 'saveNewComment')
+            elementContainerInstance.props = {
+                element: wipData.paragraph,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                addComment: jest.fn(),
+                deleteElement: jest.fn(),
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+            };
             elementContainerInstance.saveNewComment();
             expect(spysaveNewComment).toHaveBeenCalled()
             expect(elementContainerInstance.state.popup).toBe(false)
@@ -454,12 +467,8 @@ describe('Test for element container component', () => {
             ],
             showBlocker: jest.fn(),
             isBlockerActive: true,
-            addComment: jest.fn(),
             index: 0,
             elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
-            updateElement: ()=>{
-                return openerData;
-            }
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -510,7 +519,7 @@ describe('Test for element container component', () => {
             spyupdateOpenerElement.mockClear()
         })
     })
-    xdescribe('Test-Other Functions', () => {
+    describe('Test-Other Functions', () => {
         let props = {
             element: wipData.paragraph,
             permissions: [
@@ -520,19 +529,122 @@ describe('Test for element container component', () => {
             ],
             showBlocker: jest.fn(),
             isBlockerActive: true,
-            addComment: jest.fn(),
             asideData: {},
             parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-            index:0
+            index:0,
+            deleteElement: jest.fn()
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        it('Test-deleteElement   Function', () => {
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();     
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute('id', "tinymceToolbar");
+        const elementDivChild = document.createElement('div');
+        elementDivChild.setAttribute('className','tox-toolbar');
+        elementDiv.appendChild(elementDivChild);
+        document.body.appendChild(elementDiv);
+        it('Test-handleFocus Function- for paragraph element', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        }) 
+        it('Test-handleFocus Function- for c2mdeia update', () => {
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus(true);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        }) 
+        it('Test-handleTCM Function', () => {
+            const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
+            elementContainerInstance.handleTCM();
+            expect(spyhandleTCM).toHaveBeenCalled()
+            spyhandleTCM.mockClear()
+        }) 
+        it('Test-toolbarHandling Function-add', () => {
+            const spytoolbarHandling  = jest.spyOn(elementContainerInstance, 'toolbarHandling')
+            elementContainerInstance.toolbarHandling("add");
+            expect(spytoolbarHandling).toHaveBeenCalled()
+            spytoolbarHandling.mockClear()
+        })        
+        it('Test-toolbarHandling Function-remove', () => {
+            const spytoolbarHandling  = jest.spyOn(elementContainerInstance, 'toolbarHandling')
+            elementContainerInstance.toolbarHandling("remove");
+            expect(spytoolbarHandling).toHaveBeenCalled()
+            spytoolbarHandling.mockClear()
+        }) 
+        xit('Test-deleteElement Function', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
             elementContainerInstance.deleteElement();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
             expect(spydeleteElement).toHaveBeenCalled()
             spydeleteElement.mockClear()
+        })       
+    })
+    describe('Test-Lifecycle Functions', () => {
+        let props = {
+            element: wipData.paragraph,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            index:0,
+            deleteElement: jest.fn()
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
+        it('Test-componentDidMount Function- for paragraph element', () => {
+            elementContainerInstance.componentDidMount();
+            expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a")
         })
-
+        it('Test-componentWillUnmount Function- for paragraph element', () => {
+            const spycomponentWillUnmount  = jest.spyOn(elementContainerInstance, 'componentWillUnmount')
+            elementContainerInstance.componentWillUnmount();
+            expect(spycomponentWillUnmount).toHaveBeenCalled()
+            spycomponentWillUnmount.mockClear()
+        })
+        it('Test-componentWillReceiveProps Function- for paragraph element', () => {
+            let newProps = {
+                element: wipData.paragraphUpdate,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                index:0,
+                deleteElement: jest.fn(),
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-paragraph",
+                    secondaryOption: "secondary-paragraph",
+                    index: "1",
+                    tag: "P",
+                },
+                elemBorderToggle : "showBorder"
+            };
+            elementContainerInstance.componentWillReceiveProps(newProps);
+            expect(elementContainerInstance.state.borderToggle).toBe("showBorder")
+        })  
     })
 });
