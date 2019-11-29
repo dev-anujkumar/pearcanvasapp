@@ -8,10 +8,13 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
+import { JestEnvironment } from '@jest/environment';
+jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', () => ({
+    prepareDataForTcmUpdate: jest.fn()
+}))
 
-xdescribe('Test for Sidebar component', () => {
+describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
-
     const activeElement = {
         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
         elementType: "element-authoredtext",
@@ -22,7 +25,7 @@ xdescribe('Test for Sidebar component', () => {
         tag: "H1",
         toolbar: []
     };
-    
+
     const sidebarWithData = mockStore({
         appStore: {
             activeElement,
@@ -35,11 +38,13 @@ xdescribe('Test for Sidebar component', () => {
         },
     });
     let props = {
-        slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f'
+        slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
+        activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b" },
+        updateElement: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
-        <Sidebar />
+        <Sidebar  />
     </Provider>);
 
     it('onClick Event', () => {
@@ -96,6 +101,9 @@ xdescribe('Test for Sidebar component', () => {
         });
 
         sidebarInstance.attributions();
+        expect(sidebar.find('.element-dropdown').length).toBe(2)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
     });
 
     it('Test Case for Metadata Anchor LO', () => {
@@ -124,6 +132,9 @@ xdescribe('Test for Sidebar component', () => {
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
         </Provider>);
+        expect(sidebar.find('.element-dropdown').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Learning Objective")
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(0)
     });
 
     it('Test Case for Metadata Anchor MA', () => {
@@ -151,11 +162,14 @@ xdescribe('Test for Sidebar component', () => {
         let sidebar = mount(<Provider store={sidebarWithData}>
             <Sidebar />
         </Provider>);
+        expect(sidebar.find('.element-dropdown').length).toBe(0)
+        expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(0)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(0)
     });
 
     it("With no activeElement", () => {
         const activeElement = {}
-        
+
         const sidebarWithData = mockStore({
             appStore: {
                 activeElement,
@@ -166,10 +180,13 @@ xdescribe('Test for Sidebar component', () => {
                 currentSlateLOData: {}
             },
         });
-    let sidebar = mount(<Provider store={sidebarWithData}>
-            <Sidebar />
+        let sidebar = mount(<Provider store={sidebarWithData}>
+            <Sidebar {...props}/>
         </Provider>);
     })
+    expect(sidebar.find('.element-dropdown').length).toBe(2)
+    expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe('Headings')
+    expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe('Heading 1')
 
     describe("Blockquote", () => {
 
@@ -184,7 +201,7 @@ xdescribe('Test for Sidebar component', () => {
                 tag: "BQ",
                 toolbar: []
             }
-            
+
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
@@ -195,7 +212,7 @@ xdescribe('Test for Sidebar component', () => {
                     currentSlateLOData: {}
                 },
             });
-        let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Pullquote")
@@ -211,7 +228,7 @@ xdescribe('Test for Sidebar component', () => {
                 index: 1,
                 tag: "BQ"
             }
-            
+
             const sidebarWithData = mockStore({
                 appStore: {
                     activeElement,
@@ -222,10 +239,70 @@ xdescribe('Test for Sidebar component', () => {
                     currentSlateLOData: {}
                 },
             });
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
-        }) 
+        }),
+
+            it("Checking toggleElementDropdown function for Else Condition", () => {
+                let e = { target: { dataset: { element: "Primary" }, getAttribute: jest.fn() }, stopPropagation: jest.fn() }
+                const activeElement = {
+                    primaryOption: "primary-single-assessment",
+                    secondaryOption: "secondary-single-assessment"
+                };
+                const sidebarWithData = mockStore({
+                    appStore: {
+                        activeElement
+                    },
+                    metadataReducer: {
+                        currentSlateLOData: {}
+                    },
+                });
+                let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                sidebarInstance.props = {
+                    slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
+                    activeElement:
+                        { elementId: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b' },
+                    permissions: ['access_formatting_bar']
+                };
+                sidebarInstance.toggleElementDropdown(e);
+                expect(sidebarInstance.state.activePrimaryOption).toBe("primary-single-assessment");
+            })
+
+        it("Checking showModuleName function for checked value true if condition", () => {
+            let e = { currentTarget: { checked: true } }
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+
+        it("Checking showModuleName function for checked value false", () => {
+            let e = { currentTarget: { checked: false } }
+            const elementIdInfo = document.createElement('div');
+            elementIdInfo.className = "moduleContainer learningObjectiveData showmodule";
+            document.body.appendChild(elementIdInfo);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+
+        it("Checking showModuleName function for checked value true else condition", () => {
+            let e = { currentTarget: { checked: true } }
+            const elementIdInfo = document.createElement('div');
+            elementIdInfo.className = "moduleContainer learningObjectiveData";
+            document.body.appendChild(elementIdInfo);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+
+        it("Checking renderLanguageLabel function If Condition", () => {
+            let tag = 'BCE'
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.renderLanguageLabel(tag);
+        })
     })
 });
