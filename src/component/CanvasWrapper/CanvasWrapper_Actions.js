@@ -163,7 +163,6 @@ export const fetchElementTag = (element, index = 0) => {
 }
 
 export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
-	console.log("config.slateManifestURN >> ", config.slateManifestURN)
 	// if(config.isFetchSlateInProgress){
 	// 	return false;
 	// }
