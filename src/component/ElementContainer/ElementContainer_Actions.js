@@ -201,7 +201,17 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {      
+    ).then(response => {   
+        let parentData = getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+		let currentSlateData = currentParentData[config.slateManifestURN];
+        if(response.data.id !== updatedData.id){
+            if(currentSlateData.status === 'wip'){
+                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex)
+            }else if(currentSlateData.status === 'approved'){
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }) 
+            }
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         //console.log("success saving")
         // if(tinyMCE && tinyMCE.activeEditor){
@@ -218,75 +228,88 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         // }
     })
 
-    //direct dispatching in store
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
 
+}
+
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ){
+    //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
-    let elementId = updatedData.id
-
-    _slateBodyMatter = _slateBodyMatter.map(element => {
-        if (element.id === elementId) {
-            element  = {
-                ...element,
-                ...updatedData,
-                elementdata : {
-                    ...element.elementdata,
-                    text : updatedData.elementdata?updatedData.elementdata.text:null
-                },
-                html : updatedData.html
-            };
-        }else if(asideData && asideData.type == 'element-aside'){
-            if(element.id == asideData.id){
-               let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
-                    /*This condition add object of element in existing element  in aside */
-                    if(nestedEle.id == elementId){
-                        nestedEle  = {
-                            ...nestedEle,
-                            ...updatedData,
-                            elementdata : {
-                                ...nestedEle.elementdata,
-                                text : updatedData.elementdata?updatedData.elementdata.text:null
-                            },
-                            html : updatedData.html
-                        };
-                    }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
-                          /*This condition add object of element in existing element  in section of aside */
-                       let ele =  nestedEle.contents.bodymatter.map((ele)=>{
-                            if(ele.id == elementId){
-                                ele = {
-                                    ...ele,
-                                    ...updatedData,
-                                    elementdata : {
-                                        ...ele.elementdata,
-                                        text : updatedData.elementdata?updatedData.elementdata.text:null
-                                    },
-                                    html : updatedData.html
-                                };
-                            }
-                            return ele
-                        })
-                        nestedEle.contents.bodymatter = ele;
-                    }
-                    return nestedEle;
-                })
-                element.elementdata.bodymatter = nestedBodyMatter;
+    let elementId = updatedData.id;
+    if(!versionedData){
+        _slateBodyMatter = _slateBodyMatter.map(element => {
+            if (element.id === elementId) {
+                element  = {
+                    ...element,
+                    ...updatedData,
+                    elementdata : {
+                        ...element.elementdata,
+                        text : updatedData.elementdata?updatedData.elementdata.text:null
+                    },
+                    html : updatedData.html
+                };
+            }else if(asideData && asideData.type == 'element-aside'){
+                if(element.id == asideData.id){
+                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                        /*This condition add object of element in existing element  in aside */
+                        if(nestedEle.id == elementId){
+                            nestedEle  = {
+                                ...nestedEle,
+                                ...updatedData,
+                                elementdata : {
+                                    ...nestedEle.elementdata,
+                                    text : updatedData.elementdata?updatedData.elementdata.text:null
+                                },
+                                html : updatedData.html
+                            };
+                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                              /*This condition add object of element in existing element  in section of aside */
+                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
+                                if(ele.id == elementId){
+                                    ele = {
+                                        ...ele,
+                                        ...updatedData,
+                                        elementdata : {
+                                            ...ele.elementdata,
+                                            text : updatedData.elementdata?updatedData.elementdata.text:null
+                                        },
+                                        html : updatedData.html
+                                    };
+                                }
+                                return ele
+                            })
+                            nestedEle.contents.bodymatter = ele;
+                        }
+                        return nestedEle;
+                    })
+                    element.elementdata.bodymatter = nestedBodyMatter;
+                }
             }
-        }
-        return element
-    })
-    _slateContent.bodymatter = _slateBodyMatter
-    _slateObject.contents = _slateContent
-    
-    //console.log("saving new data dispatched")
-    return dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: newslateData
-        }
-    })
+            return element
+        })
+        _slateContent.bodymatter = _slateBodyMatter
+        _slateObject.contents = _slateContent
+        
+        //console.log("saving new data dispatched")
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }else if(versionedData){
+        newslateData[config.slateManifestURN].contents.bodymatter.splice(elementIndex, 0, versionedData);
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }
 //diret dispatching in store
 }
 
