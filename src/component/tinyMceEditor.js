@@ -752,15 +752,16 @@ export class TinyMceEditor extends Component {
     addGlossary = (editor) => {
         let selectedText = window.getSelection().toString()
         this.glossaryTermText = selectedText;
+        if(selectedText.trim() === ""){
+            return false
+        }
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            if(selectedText !== ""){
-                editor.insertContent(insertionText);
-                this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
-            }
+            editor.insertContent(insertionText);
+            this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         }) 
     }
