@@ -1,16 +1,53 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import ElementContainer from './../../../src/component/ElementContainer';
-import PageNumberElement from './../../../src/component/SlateWrapper/PageNumberElement';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { comments } from '../../../fixtures/commentPanelData.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import wipData from './wipData';
-import config from '../../../src/config/config';
-import { fn } from 'moment';
-
+jest.mock('./../../../src/component/SlateWrapper/PageNumberElement', () => {
+    return (<div>null</div>)
+})
+jest.mock('./../../../src/component/ElementSaprator', () => {
+    return (<div>null</div>)
+})
+jest.mock('./../../../src/js/c2_assessment_module', () => {
+    return function (){
+        return (<div>null</div>)
+    }
+})
+jest.mock('./../../../src/js/c2_media_module', () => {
+    return function (){
+        return (<div>null</div>)
+    }
+})
+jest.mock('./../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole: jest.fn(),
+    guid: jest.fn()
+}))
+jest.mock('./../../../src/config/config.js', () => ({
+    colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
+    releaseCallCount :0
+}))
+jest.mock('./../../../src/component/CanvasWrapper/TCM_Integration_Actions.js', () => {
+    return { loadTrackChanges: jest.fn()}
+})
+jest.mock('./../../../src/component/AssetPopover/openApoFunction.js', () => {
+return  { 
+    authorAssetPopOver: jest.fn()
+}
+})
+jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
+    return { createOpenerElementData: jest.fn()}
+})
+jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
+    return { 
+        prepareDataForTcmUpdate: jest.fn() 
+    }
+})
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
     appStore: {
@@ -64,28 +101,10 @@ const store = mockStore({
     },
     glossaryFootnoteReducer:{
         glossaryFootnoteValue: { "type": "", "popUpStatus": false }
-    }
+    },
 });
 describe('Test for element container component', () => {
-    // let pageNumber = function(isHovered, isPageNumberEnabled, activeElement) {
-    //     return <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />;
-    // }
-
-    let isHovered = true;
-    let isPageNumberEnabled = true;
-    let permissions = [];
-
-    const activeElement = {
-        elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-        elementType: "element-authoredtext",
-        elementWipType: "element-authoredtext",
-        primaryOption: "primary-heading",
-        secondaryOption: "secondary-heading-1",
-        index: "1",
-        tag: "H1",
-        toolbar: ['bold']
-    };
-
+    it('Render Element Container without crashing ', () => {      
     let props = {
         element: wipData.paragraph,
          permissions:  [
@@ -96,237 +115,536 @@ describe('Test for element container component', () => {
         showBlocker: jest.fn()
     };
 
-    let pageNumber = (isHovered, isPageNumberEnabled, activeElement) => {
-        return <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} permissions={props.permissions}/>;
-    }
+    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+    expect(elementContainer).toHaveLength(1);
+    const elementContainerInstance = elementContainer.instance();
+    expect(elementContainerInstance).toBeDefined();
+    })
 
-    let seprator = (index, firstOne, parentUrn, asideData, outerAsideIndex) => {
-        return []
-    }
-
-    let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-            {/* (isHovered, isPageNumberEnabled, activeElement) => (
-                <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-            ) */}
-        </ElementContainer></Provider>);
-    xit('Render element container ', () => {
-
-        props = {
+    describe('Test- renderElement function for Different Elements ', () => {
+        let props = {
             element: wipData.opener,
-            permissions: []
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
         };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.pullquote,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.list,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.figure,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.table,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.mathImage,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.equation,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.codeEditor,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.video,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        // props = {
-        //     element: wipData.audio
-        // };
-        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" children={pageNumber}>
-        // </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.assessment,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.interactive,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.smartLink,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.showHide,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.popUp,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.assessmentSlate,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.aside,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        props = {
-            element: wipData.workedExample,
-            permissions: []
-        };
-        elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-
-        // props = {
-        //     element: wipData.lo,
-        //     permissions: []
-        // };
-        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        // </ElementContainer></Provider>);
-
-        // props = {
-        //     element: wipData.ma,
-        //     permissions: []
-        // };
-        // elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false" elementSepratorProps={seprator} children={pageNumber}>
-        // </ElementContainer></Provider>);
-    })
-
-    // elementContainer.setState({
-    //     popup: true
-    // });
-
-    const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-
-    it('delete element', () => {
-        elementContainerInstance.deleteElement();
-    });
-
-    it('onClick Event', () => {
-        elementContainerInstance.handleFocus();
-         elementContainerInstance.handleBlurAside();
-    })
-    xit('toggleColorPaletteList ', () => {
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        elementContainerInstance.toggleColorPaletteList();
+        it('Render Element Container ----->Opener Element', () => {
+            expect(elementContainer).toHaveLength(1);
+            elementContainerInstance.setState({
+                activeColorIndex: 0,
+                isOpener: true
+
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->BlockQuote-Pullquote', () => {
+            let props = {
+                element: wipData.pullquote,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->List Element', () => {
+            let props = {
+                element: wipData.list,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Figure Element-Image', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Figure Element-TableImage', () => {
+            let props = {
+                element: wipData.table,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Figure Element-MathImage', () => {
+            let props = {
+                element: wipData.mathImage,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Figure Element-MathML', () => {
+            let props = {
+                element: wipData.equation,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Figure Element-BlockCodeEditor', () => {
+            let props = {
+                element: wipData.codeEditor,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        xit('Render Element Container ----->Figure Element-TableEditor', () => {
+            let props = {
+                element: wipData.list,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->AudioVideo Element', () => {
+            let props = {
+                element: wipData.video,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->SingleAssessment Element', () => {
+            let props = {
+                element: wipData.assessment,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Interactive Element-MMI', () => {
+            let props = {
+                element: wipData.interactive,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Interactive Element-SmartLink', () => {
+            let props = {
+                element: wipData.smartLink,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Interactive Element-ShowHide', () => {
+            let props = {
+                element: wipData.showHide,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->AssessmentSlate', () => {
+            let props = {
+                element: wipData.assessmentSlate,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->AsideContainer', () => {
+            let props = {
+                element: wipData.aside,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->WorkedExample', () => {
+            let props = {
+                element: wipData.workedExample,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Learning Objective Item', () => {
+            let props = {
+                element: wipData.elementLO,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Metadata Anchor', () => {
+            let props = {
+                element: wipData.lo,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Metadata Anchor-LO list', () => {
+            let props = {
+                element: wipData.ma,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
     })
-    xit('selectColor  ', () => {
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        let event = {
-            target: {
-                getAttribute: function(dataValue) {
-                    return 'primary-heading';
-                }
-            }
-        }
-        elementContainerInstance.selectColor(event);
-    })
-    it('showelementpopup  ', () => {
+    describe('Test- Add Comment Functions', () => {
         let props = {
             element: wipData.paragraph,
-            showBlocker: jest.fn()
-        };
-       let  elementContainer = mount(<Provider store={store}><ElementContainer {...props} elementSepratorProps={seprator} children={pageNumber}>
-        </ElementContainer></Provider>);
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-         elementContainerInstance.showDeleteElemPopup("event");
-    })
-    describe('Testing action function with props', () => {
-        // let elementContainer = mount(<Provider store={store}><ElementContainer {...props} showBlocker="false">
-        //     (isHovered, isPageNumberEnabled, activeElement) => (
-        //         <PageNumberElement element={props.element} isHovered={isHovered} isPageNumberEnabled={isPageNumberEnabled} activeElement={activeElement} />
-        //     )
-        // </ElementContainer></Provider>);
-        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-        it('renders saveNewComment ', () => {
-            elementContainerInstance.saveNewComment();
-        });
-        it('renders handleCommentChange  ', () => {
-            elementContainerInstance.handleCommentChange("test");
-            let props={isBlockerActive:true}
-        });
-        it('handle handleOnMouseOver   ', () => {
-            elementContainerInstance.handleOnMouseOver();
-        });
-        it('handle handleOnMouseOut   ', () => {
-            elementContainerInstance.handleOnMouseOut();
-        });
-        xit('handle openGlossaryFootnotePopUp', () => {
-            elementContainerInstance.openGlossaryFootnotePopUp("","");
-        });
-        it('handle openAssetPopoverPopUp ', () => {
-            elementContainerInstance.openAssetPopoverPopUp("");
-        });
-
-         it('renders handle popup toggle ', () => {
-        let props = {
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
             isBlockerActive: true,
-            showBlocker: jest.fn()
+            addComment: jest.fn(),
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
         };
-        let  elementContainer = mount(<Provider store={store}><ElementContainer {...props} elementSepratorProps={seprator} children={pageNumber}>
-            </ElementContainer></Provider>);
-            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        it('Test-handleCommentPopup Function', () => {
+            const spyhandleCommentPopup = jest.spyOn(elementContainerInstance, 'handleCommentPopup')
             elementContainerInstance.handleCommentPopup(true);
-         });
-
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyhandleCommentPopup).toHaveBeenCalledWith(true)
+            expect(elementContainerInstance.state.popup).toBe(true)
+            expect(elementContainerInstance.state.showDeleteElemPopup).toBe(false)
+            expect(elementContainerInstance.state.comment).toBe("")
+            spyhandleCommentPopup.mockClear()
+        })
+        it('Test-handleCommentChange  Function', () => {
+            let newComment = "sampleComment";
+            const spyhandleCommentChange = jest.spyOn(elementContainerInstance, 'handleCommentChange')
+            elementContainerInstance.handleCommentChange(newComment);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyhandleCommentChange).toHaveBeenCalledWith(newComment)
+            expect(elementContainerInstance.state.comment).toBe(newComment)
+            spyhandleCommentChange.mockClear()
+        })
+        it('Test-saveNewComment   Function', () => {
+            let newComment = "sampleComment";
+            elementContainerInstance.setState({
+                comment : newComment
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            const spysaveNewComment  = jest.spyOn(elementContainerInstance, 'saveNewComment')
+            elementContainerInstance.props = {
+                element: wipData.paragraph,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                addComment: jest.fn(),
+                deleteElement: jest.fn(),
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+            };
+            elementContainerInstance.saveNewComment();
+            expect(spysaveNewComment).toHaveBeenCalled()
+            expect(elementContainerInstance.state.popup).toBe(false)
+            spysaveNewComment .mockClear()
+        })
+    })
+    describe('Test- Popup Functions', () => {
+        let props = {
+            element: wipData.paragraph,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            addComment: jest.fn(),
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        it('Test-openGlossaryFootnotePopUp  Function', () => {
+            let callback=jest.fn();
+            const spyopenGlossaryFootnotePopUp  = jest.spyOn(elementContainerInstance, 'openGlossaryFootnotePopUp')
+            elementContainerInstance.openGlossaryFootnotePopUp(true, "Footnote", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyopenGlossaryFootnotePopUp ).toHaveBeenCalledWith(true, "Footnote", "urn:pearson:work:2fde62a2-b24e-4823-9188-0756b87f5fb5", "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a", "element-authoredtext", 1, undefined,"", callback)
+            spyopenGlossaryFootnotePopUp .mockClear()
+        })
+        it('Test-openAssetPopoverPopUp  Function', () => {
+            const spyopenAssetPopoverPopUp = jest.spyOn(elementContainerInstance, 'openAssetPopoverPopUp')
+            elementContainerInstance.openAssetPopoverPopUp(true);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
+            spyopenAssetPopoverPopUp.mockClear()
+        })
+        it('Test-showDeleteElemPopup  Function', () => {
+            const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
+            elementContainerInstance.showDeleteElemPopup(true);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyshowDeleteElemPopup).toHaveBeenCalledWith(true)
+            expect(elementContainerInstance.state.showDeleteElemPopup).toBe(true)
+            expect(elementContainerInstance.state.popup).toBe(true)
+            spyshowDeleteElemPopup.mockClear()
+        })
+        it('Test-handleOnMouseOver  Function', () => {
+            const spyhandleOnMouseOver = jest.spyOn(elementContainerInstance, 'handleOnMouseOver')
+            elementContainerInstance.handleOnMouseOver();
+            expect(spyhandleOnMouseOver).toHaveBeenCalled()
+            expect(elementContainerInstance.state.isHovered).toBe(true)
+            spyhandleOnMouseOver.mockClear()
+        })
+        it('Test-handleOnMouseOut  Function', () => {
+            const spyhandleOnMouseOut = jest.spyOn(elementContainerInstance, 'handleOnMouseOut')
+            elementContainerInstance.handleOnMouseOut();
+            expect(spyhandleOnMouseOut).toHaveBeenCalled()
+            expect(elementContainerInstance.state.isHovered).toBe(false)
+            spyhandleOnMouseOut.mockClear()
+        })
+    })
+    describe('Test- OpenerElement-Functions', () => {
+        let openerData=wipData.opener
+        let props = {
+            element: wipData.opener,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            index: 0,
+            elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        it('Test-toggleColorPaletteList  Function', () => {
+            elementContainerInstance.setState({
+                showColorPaletteList: false
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            const spytoggleColorPaletteList  = jest.spyOn(elementContainerInstance, 'toggleColorPaletteList')
+            elementContainerInstance.toggleColorPaletteList();
+            expect(spytoggleColorPaletteList).toHaveBeenCalled()
+            expect(elementContainerInstance.state.showColorPaletteList).toBe(true)
+            spytoggleColorPaletteList.mockClear()
+        })
+        it('Test-renderPaletteList  Function', () => {
+            const spyrenderPaletteList = jest.spyOn(elementContainerInstance, 'renderPaletteList')
+            elementContainerInstance.renderPaletteList();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyrenderPaletteList).toHaveBeenCalled()
+            spyrenderPaletteList.mockClear()
+        })
+        xit('Test-selectColor  Function', () => {
+            let e = {
+                target: {
+                    getAttribute:  ()=> {
+                        return 'primary';
+                    }
+                }
+            }
+            const spyselectColor = jest.spyOn(elementContainerInstance, 'selectColor')
+            elementContainerInstance.selectColor(e);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyselectColor).toHaveBeenCalledWith(e)
+            spyselectColor.mockClear()
+        })
+        xit('Test-updateOpenerElement  Function', () => {
+            let openerData=wipData.opener
+            let dataToSend ={openerData}
+            //openerData ,"openerelement","primary-openerelement","secondary-openerelement",
+            const spyupdateOpenerElement = jest.spyOn(elementContainerInstance, 'updateOpenerElement')
+            elementContainerInstance.updateOpenerElement(wipData.opener);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyupdateOpenerElement).toHaveBeenCalled()
+            spyupdateOpenerElement.mockClear()
+        })
+    })
+    describe('Test-Other Functions', () => {
+        let props = {
+            element: wipData.paragraph,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            index:0,
+            deleteElement: jest.fn()
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();     
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute('id', "tinymceToolbar");
+        const elementDivChild = document.createElement('div');
+        elementDivChild.setAttribute('className','tox-toolbar');
+        elementDiv.appendChild(elementDivChild);
+        document.body.appendChild(elementDiv);
+        it('Test-handleFocus Function- for paragraph element', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        }) 
+        it('Test-handleFocus Function- for c2mdeia update', () => {
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus(true);
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        }) 
+        it('Test-handleTCM Function', () => {
+            const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
+            elementContainerInstance.handleTCM();
+            expect(spyhandleTCM).toHaveBeenCalled()
+            spyhandleTCM.mockClear()
+        }) 
+        it('Test-toolbarHandling Function-add', () => {
+            const spytoolbarHandling  = jest.spyOn(elementContainerInstance, 'toolbarHandling')
+            elementContainerInstance.toolbarHandling("add");
+            expect(spytoolbarHandling).toHaveBeenCalled()
+            spytoolbarHandling.mockClear()
+        })        
+        it('Test-toolbarHandling Function-remove', () => {
+            const spytoolbarHandling  = jest.spyOn(elementContainerInstance, 'toolbarHandling')
+            elementContainerInstance.toolbarHandling("remove");
+            expect(spytoolbarHandling).toHaveBeenCalled()
+            spytoolbarHandling.mockClear()
+        }) 
+        xit('Test-deleteElement Function', () => {
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
+            elementContainerInstance.deleteElement();
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spydeleteElement).toHaveBeenCalled()
+            spydeleteElement.mockClear()
+        })       
+    })
+    describe('Test-Lifecycle Functions', () => {
+        let props = {
+            element: wipData.paragraph,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            showBlocker: jest.fn(),
+            isBlockerActive: true,
+            asideData: {},
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            index:0,
+            deleteElement: jest.fn()
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
+        it('Test-componentDidMount Function- for paragraph element', () => {
+            elementContainerInstance.componentDidMount();
+            expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a")
+        })
+        it('Test-componentWillUnmount Function- for paragraph element', () => {
+            const spycomponentWillUnmount  = jest.spyOn(elementContainerInstance, 'componentWillUnmount')
+            elementContainerInstance.componentWillUnmount();
+            expect(spycomponentWillUnmount).toHaveBeenCalled()
+            spycomponentWillUnmount.mockClear()
+        })
+        it('Test-componentWillReceiveProps Function- for paragraph element', () => {
+            let newProps = {
+                element: wipData.paragraphUpdate,
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
+                showBlocker: jest.fn(),
+                isBlockerActive: true,
+                asideData: {},
+                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                index:0,
+                deleteElement: jest.fn(),
+                activeElement: {
+                    elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-authoredtext",
+                    primaryOption: "primary-paragraph",
+                    secondaryOption: "secondary-paragraph",
+                    index: "1",
+                    tag: "P",
+                },
+                elemBorderToggle : "showBorder"
+            };
+            elementContainerInstance.componentWillReceiveProps(newProps);
+            expect(elementContainerInstance.state.borderToggle).toBe("showBorder")
+        })  
     })
 });

@@ -143,6 +143,7 @@ export class CanvasWrapper extends Component {
 
     loadMorePages = () => {
         config.page++;
+        if(config.totalPageCount <= config.page) return false;
         this.props.fetchSlateData(config.slateManifestURN, config.page);
     }
     

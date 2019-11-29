@@ -446,9 +446,9 @@ export const updateNestedList = (element) => {
 }
 
 export const removeTinyDefaultAttribute = (element) => {
-    let allOlElement = element.querySelectorAll('ol');
+    let allOlElement = element && element.querySelectorAll('ol') || [];
     if (allOlElement.length == 0) {
-        allOlElement = element.querySelectorAll('ul');
+        allOlElement = element && element.querySelectorAll('ul') || [];
     }
     for (let i = 0; i < allOlElement.length; i++) {
         allOlElement[i].removeAttribute('data-mce-style');

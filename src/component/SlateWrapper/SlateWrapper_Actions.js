@@ -26,6 +26,23 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
+function prepareDataForTcmUpdate (updatedData,parentData, asideData) {
+    if(parentData && parentData.elementType === "element-aside"){
+        updatedData.isHead = true;
+    }else if(parentData && parentData.elementType === "manifest"){
+        updatedData.isHead = false;
+    }
+    if(asideData && asideData.type === "element-aside"){
+        if(asideData.subtype === "workedexample"){
+            updatedData.parentType = "workedexample";
+        }else{
+            updatedData.parentType = "element-aside";
+        }
+    }
+    updatedData.projectURN = config.projectUrn;
+    updatedData.slateEntity = config.slateEntityURN;
+}
+
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref,cb) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
@@ -42,14 +59,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         _requestData.loref = loref?loref:""
     }
 
-    if(asideData && asideData.type === "element-aside"){
-        if(asideData.subtype === "workedexample"){
-            _requestData.parentType = "workedexample";
-        }else{
-            _requestData.parentType = "element-aside";
-        }
-    }
-    
+    prepareDataForTcmUpdate(_requestData,parentUrn,asideData)
     return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
