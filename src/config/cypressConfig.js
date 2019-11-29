@@ -35,7 +35,7 @@ let cypressConfig = {
     totalPageCount : 0,
     pageLimit : 0,
     fromTOC : false,
-    isFetchSlateInProgress:false
+    // isFetchSlateInProgress:false
 }
 
 
