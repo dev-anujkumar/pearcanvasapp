@@ -9,6 +9,9 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
 import { JestEnvironment } from '@jest/environment';
+jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', () => ({
+    prepareDataForTcmUpdate: jest.fn()
+}))
 
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
@@ -37,6 +40,7 @@ describe('Test for Sidebar component', () => {
     let props = {
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b" },
+        updateElement: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -177,7 +181,7 @@ describe('Test for Sidebar component', () => {
             },
         });
         let sidebar = mount(<Provider store={sidebarWithData}>
-            <Sidebar />
+            <Sidebar {...props}/>
         </Provider>);
     })
     expect(sidebar.find('.element-dropdown').length).toBe(2)
@@ -208,7 +212,7 @@ describe('Test for Sidebar component', () => {
                     currentSlateLOData: {}
                 },
             });
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Pullquote")
@@ -235,7 +239,7 @@ describe('Test for Sidebar component', () => {
                     currentSlateLOData: {}
                 },
             });
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             expect(sidebar.find('.element-dropdown').length).toBe(2)
             expect(sidebar.find('.element-dropdown-title[data-element="primary"]').text()).toBe("Blockquotes")
             expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').text()).toBe("Marginalia with Attribution")
@@ -269,7 +273,7 @@ describe('Test for Sidebar component', () => {
 
         it("Checking showModuleName function for checked value true if condition", () => {
             let e = { currentTarget: { checked: true } }
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);
         })
@@ -279,7 +283,7 @@ describe('Test for Sidebar component', () => {
             const elementIdInfo = document.createElement('div');
             elementIdInfo.className = "moduleContainer learningObjectiveData showmodule";
             document.body.appendChild(elementIdInfo);
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);
         })
@@ -289,14 +293,14 @@ describe('Test for Sidebar component', () => {
             const elementIdInfo = document.createElement('div');
             elementIdInfo.className = "moduleContainer learningObjectiveData";
             document.body.appendChild(elementIdInfo);
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);
         })
 
         it("Checking renderLanguageLabel function If Condition", () => {
             let tag = 'BCE'
-            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar /></Provider>);
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.renderLanguageLabel(tag);
         })
