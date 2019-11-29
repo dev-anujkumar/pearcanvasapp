@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import CanvasWrapper from '../../../src/component/CanvasWrapper';
 import {
-    listMockData,
+    communicationMockData,
     GlossaryMockState,
     SlateLockMockState,
     AssetPopOverMockState
@@ -13,7 +13,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = {
     appStore: {
-        slateLevelData: listMockData,
+        slateLevelData: communicationMockData,
         permissions: []
     },
     glossaryFootnoteReducer: {
@@ -142,7 +142,7 @@ jest.mock('../../../src/config/config.js', () => ({
     disablePrev: false,
     WRAPPER_URL: 'https://localhost:4000',
     disableNext: false,
-    slateManifestURN: "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i",
+    slateManifestURN: "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4",
     ssoToken: "IZaFs6qIbKAo1yX0WaRCz6fagzA.*AAJTSQACMDIAAlNLABw5WUNuT3h6MEN0OHRFRUlEZUxFamxQa1EyNm89AAJTMQACMDE.*",
     projectUrn: "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d",
     citeUrn: "urn:pearson:manifestation:7fa4ae52-fabc-4a7f-8876-6054f33d36c4",
@@ -157,7 +157,7 @@ describe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
         slateLevelData: {
-            "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i": {
+            "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4": {
                 contents: {
                     bodymatter: [
                         {
@@ -456,14 +456,14 @@ describe('Testing communication channel', () => {
     })
     test('Test for titleChanging case', () => {
         channelInstance.setState({
-            project_urn: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i'
+            project_urn: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
         })
         let currentSlate1 = {
             category: "titleChange",
             container: "chapter",
             entityUrn: "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",
             id: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
-            parentId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i',
+            parentId: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4',
             parentType: "chapter",
             title: "blank",
             type: "assessment",
@@ -480,7 +480,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
         spysetCurrentSlate.mockClear()
     })
-    xtest('Test for newSplitedSlate case', () => {
+    test('Test for newSplitedSlate case', () => {
         let event = {
             data: {
                 type: "newSplitedSlate",
@@ -498,7 +498,7 @@ describe('Testing communication channel', () => {
             container: "chapter",
             entityUrn: "urn:pearson:entity:c8240c45-ba81-4a8a-8f9e-32b68108eb4e",
             id: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
-            parentId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i',
+            parentId: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4',
             parentType: "chapter",
             title: "blank",
             type: "assessment",
@@ -529,7 +529,7 @@ describe('Testing communication channel', () => {
         }
         let props2 = {
             slateLevelData: {
-                'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i': {}
+                'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4': {}
             },
             glossaryFootnoteValue: { type: 'Glossary', popUpStatus: false },
             withinLockPeriod: false,
@@ -560,7 +560,7 @@ describe('Testing communication channel', () => {
         };
         let props3 = {
             slateLevelData: {
-                'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i': {}
+                'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4': {}
             },
             glossaryFootnoteValue: { type: 'Glossary', popUpStatus: false },
             withinLockPeriod: false,
@@ -746,7 +746,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    xtest('Test for statusForSave case', () => {
+    test('Test for statusForSave case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
