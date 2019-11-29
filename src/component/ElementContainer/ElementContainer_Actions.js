@@ -302,7 +302,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     }else if(versionedData){
-        newslateData[config.slateManifestURN].contents.bodymatter.splice(elementIndex, 0, versionedData);
+        newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
