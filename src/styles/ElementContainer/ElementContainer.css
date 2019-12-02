@@ -41,6 +41,8 @@
 .element-container .cypress-editable{
     padding:10px !important;
     overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 64px;
 }
 .element-container{
     padding: 1px 8px !important; 
