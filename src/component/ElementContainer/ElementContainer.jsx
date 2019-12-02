@@ -142,6 +142,12 @@ class ElementContainer extends Component {
         }
     }
 
+    replaceUnwantedtags = (html) => {
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = html;
+        tinyMCE.$(tempDiv).find('br').remove();
+        return tempDiv.innerHTML;
+    }
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -158,16 +164,71 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
+        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        console.log("OLD FIGURE DATA UPDATED TITLE:> ",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+        console.log("NEW FIGURE DATA UPDATED TITLE:> ",previousElementData.html.title, "SUBTITLE:",  previousElementData.html.subtitle, "CAPTION:", previousElementData.html.captions, "CREDITS:", previousElementData.html.credits)
+        if (titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle ||
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits 
+            ){
+                return 1
+            }
+            else {
+                return 0
+            }
+    }
+
+    figureDifferenceBlockCode = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            preformattedText = document.getElementById(`cypress-${index}-2`).innerText,
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+        let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
+        let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+
+        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        console.log("OLD FIGURE DATA UPDATED TITLE:> ",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+        console.log("NEW FIGURE DATA UPDATED TITLE:> ",previousElementData.html.title, "SUBTITLE:",  previousElementData.html.subtitle, "CAPTION:", previousElementData.html.captions, "CREDITS:", previousElementData.html.credits)
+
         if (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
-            previousElementData.figuredata.path !== this.props.oldImage
+            preformattedText !== previousElementData.figuredata.preformattedtext.join('\n') ||
+            startNumber !== previousElementData.figuredata.startNumber ||
+            isNumbered !== previousElementData.figuredata.numbered
             ){
-                return true
+                return 1
             }
             else {
-                return false
+                return 0
             }
     }
 
@@ -198,6 +259,44 @@ class ElementContainer extends Component {
             }
             else {
                 return false
+            }
+    }
+
+    figureDifferenceAT = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            text = document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""),
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        console.log("OLD FIGURE DATA UPDATED TITLE:> ",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+        console.log("NEW FIGURE DATA UPDATED TITLE:> ",previousElementData.html.title, "SUBTITLE:",  previousElementData.html.subtitle, "CAPTION:", previousElementData.html.captions, "CREDITS:", previousElementData.html.credits)
+
+        if (titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle ||
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits ||
+            text !== previousElementData.figuredata.elementdata.text
+            ){
+                return 1
+            }
+            else {
+                return 0
             }
     }
 
@@ -278,14 +377,14 @@ class ElementContainer extends Component {
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
-                            if(this.figureDifference(this.props.index, previousElementData)){
+                            if(this.figureDifferenceBlockCode(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                            if(this.figureDifference(this.props.index, previousElementData)){
+                            if(this.figureDifferenceAT(this.props.index, previousElementData)){
                                 dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);

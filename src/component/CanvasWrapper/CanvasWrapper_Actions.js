@@ -3,6 +3,7 @@ import config from '../../config/config';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
+	SET_OLD_IMAGE_PATH
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -236,6 +237,13 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement, index)
 	});
+	/* dispatch({
+        type: SET_OLD_IMAGE_PATH,
+        payload: {
+            oldImage: oldPath 
+        }
+    }) */
+
 }
 
 

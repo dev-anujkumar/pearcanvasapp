@@ -8,6 +8,12 @@ let indivisualData = {
     mathml: [ ]
 }
 
+const replaceUnwantedtags = (html) => {
+    let tempDiv = document.createElement('div'); 
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('br').remove();
+    return tempDiv.innerHTML;
+}
 /**
  * Generates updated element data for figure element
  * @param {*} index 
@@ -31,6 +37,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+    captionHTML = replaceUnwantedtags(captionHTML)
+    creditsHTML = replaceUnwantedtags(creditsHTML)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML)
+    titleHTML = replaceUnwantedtags(titleHTML)
+
     let data = {
         ...previousElementData,
         title :{
@@ -91,6 +103,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+        captionHTML = replaceUnwantedtags(captionHTML)
+        creditsHTML = replaceUnwantedtags(creditsHTML)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML)
+        titleHTML = replaceUnwantedtags(titleHTML)
 
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
@@ -166,7 +183,12 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-        
+
+        captionHTML = replaceUnwantedtags(captionHTML)
+        creditsHTML = replaceUnwantedtags(creditsHTML)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML)
+        titleHTML = replaceUnwantedtags(titleHTML)
+
         console.log("FIGURE DATA UPDATED TITLE BLOCKCODE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
         console.log("preformattedText HTML BLOCKCODE::", preformattedText)
         preformattedText = preformattedText.replace(/&lt;/g, "<")
@@ -243,6 +265,10 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+    captionHTML = replaceUnwantedtags(captionHTML)
+    creditsHTML = replaceUnwantedtags(creditsHTML)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML)
+    titleHTML = replaceUnwantedtags(titleHTML)
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
     
     let data = {
@@ -285,7 +311,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: document.getElementById(`cypress-${index}-2`).innerHTML,
+            text: document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""),
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
