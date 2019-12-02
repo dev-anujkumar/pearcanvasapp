@@ -238,5 +238,5 @@
 }
 
 .disableToolbar{
-  display: none;
+  visibility: hidden;
 }
