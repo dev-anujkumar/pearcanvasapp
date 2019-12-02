@@ -29,16 +29,12 @@ class ElementAsideContainer extends Component {
         }
         this.asideRef = React.createRef();
     }
-    componentDidMount() {
-        this.asideRef.current.addEventListener("focus", this.handleFocus);
 
-
-    }
-
-    componentWillUnmount() {
-        this.asideRef.current.removeEventListener("focus", this.handleFocus);
-    }
     handleFocus = (e) => {
+        if(e.target && !(e.target.classList.contains('elemDiv-hr') || e.target.classList.contains('aside-container'))){
+            return false;
+        }
+
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
@@ -51,9 +47,10 @@ class ElementAsideContainer extends Component {
                         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                     }
                 });
-        }
-        this.props.handleFocus()
+        }     
+        this.props.handleFocus();
     }
+    
     /**
      * 
      * @discription - renderSlate | renders slate editor area with all elements it contain
@@ -502,7 +499,7 @@ class ElementAsideContainer extends Component {
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
+            <aside onMouseUp = {this.handleFocus} className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );
