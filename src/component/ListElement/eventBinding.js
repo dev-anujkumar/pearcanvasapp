@@ -66,10 +66,14 @@ export const bindKeyDownEvent = (editor, e) => {
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
 
-    if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-        prohibitEventBubling(e);
-        return false;
-    }
+    /**
+     * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
+     * keep this commented code for reference
+     */
+    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
+    //     prohibitEventBubling(e);
+    //     return false;
+    // }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
@@ -116,6 +120,10 @@ export const bindKeyDownEvent = (editor, e) => {
                         return false;
                     }
                     prohibitEventBubling(e);
+                    /** case - remove last created blank list row before creating new paragraph */
+                    if (editor.targetElm.querySelectorAll('li').length > 1) {
+                        anchorNode && anchorNode.remove();
+                    }
                     createNewParagraphElement(e, editor);
                     return false;
                 }
@@ -441,9 +449,9 @@ export const updateNestedList = (element) => {
 }
 
 export const removeTinyDefaultAttribute = (element) => {
-    let allOlElement = element.querySelectorAll('ol');
+    let allOlElement = element && element.querySelectorAll('ol') || [];
     if (allOlElement.length == 0) {
-        allOlElement = element.querySelectorAll('ul');
+        allOlElement = element && element.querySelectorAll('ul') || [];
     }
     for (let i = 0; i < allOlElement.length; i++) {
         allOlElement[i].removeAttribute('data-mce-style');
@@ -464,16 +472,20 @@ const prohibitEventBubling = (e) => {
 }
 
 export const preventRemoveAllFormatting = (editor) => {
-    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-        if (isFullRangeSelected(editor)) {
-            return false
-        }
-        let timeoutInstance = setTimeout(() => {
-            clearTimeout(timeoutInstance)
-            updateNestedList(editor.targetElm)
-            return false
-        });
-    }
+    /**
+     * [BG-784] - to allow multilevel remove formatting and keeping default tiny behavior
+     * keep this commented code for reference
+     */
+    // if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+    //     if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
+    //         return false
+    //     }
+    //     let timeoutInstance = setTimeout(() => {
+    //         clearTimeout(timeoutInstance)
+    //         updateNestedList(editor.targetElm)
+    //         return false
+    //     });
+    // }
     return true
 }
 

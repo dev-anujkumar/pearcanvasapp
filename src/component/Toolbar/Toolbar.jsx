@@ -14,6 +14,7 @@ import {
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx'
+import { hasReviewerRole } from '../../constants/utility.js'
 
 const _Toolbar = props => {
     const [lodropdown, setLODropdown] = useState(false);
@@ -115,42 +116,45 @@ const _Toolbar = props => {
             }
 
             {/* ***********************Audio Narration in toolbar******************************************** */}
-            {
-                props.addAudio ?
-                    <div className={"audio-block" + accessToolbar}>
-                        <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
-                                 if(checkSlateLock(props.slateLockInfo)){
-                                    return false
-                                }
-                                else{
-                                    _handleAddDropdown()
-                                }
-                               }}>
-                                {audioNarration}
-                            </div>
-
-                            {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
+            {   /* Add Audio if there is no audio exists in slate */
+                (props.addAudio && (!hasReviewerRole())) &&
+                <div className={"audio-block" + accessToolbar}>
+                    <div className="audioicon">
+                        <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                            if (checkSlateLock(props.slateLockInfo)) {
+                                return false
+                            }
+                            else {
+                                _handleAddDropdown()
+                            }
+                        }}>
+                            {audioNarration}
                         </div>
-                    </div> :
 
-                    // for Enabling the audio Narration icon
-                    <div className={"audio-block" + accessToolbar}>
-                        <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
-                                if(checkSlateLock(props.slateLockInfo)){
-                                    return false
-                                }
-                                else{
-                                     _handleOpenDropdown()
-                                    }
-                                }}>
-                                {audioNarrationEnable}
-                            </div>
-                            <span class="openAudioIcon"></span>
-                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
-                        </div>
+                        {addDropDown && <AddAudioBook closeAddAudioBook={closeAddAudioBook} />}
                     </div>
+                </div>
+            }
+            {
+                // for Enabling the audio Narration icon
+                /* Open Audio if already exists in slate */
+                (props.openAudio) &&
+                <div className={"audio-block" + accessToolbar}>
+                    <div className="audioicon">
+                        <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                            if (checkSlateLock(props.slateLockInfo)) {
+                                return false
+                            }
+                            else {
+                                _handleOpenDropdown()
+                            }
+                        }}>
+                            {audioNarrationEnable}
+                        </div>
+                        <span class="openAudioIcon"></span>
+                        {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} />}
+                    </div>
+                </div>
             }
             {/* *****end**** */}
 

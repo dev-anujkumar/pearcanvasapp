@@ -376,7 +376,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                tcm: true,
                 slateUrn: config.slateManifestURN      
             }
             break;
@@ -414,7 +413,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ELEMENT_ASIDE:
                 switch (previousElementData.subtype) {
                     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                            console.log("Worked example new data::>>", node.innerHTML)
                     default:
                         dataToReturn = { 
                             ...previousElementData,
@@ -428,6 +426,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
     }
+    dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }
 

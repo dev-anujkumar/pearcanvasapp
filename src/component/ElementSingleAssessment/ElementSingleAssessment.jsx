@@ -9,6 +9,7 @@ import PopUp from './../PopUp';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -27,7 +28,7 @@ export class ElementSingleAssessment extends Component {
         };
     }
     componentDidMount() {
-        let title =this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,"");        
+        let title =this.props.model.html.title?this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
         this.setState({
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
@@ -51,7 +52,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     return null;
 }
     handleC2AssessmentClick=(value)=> {
-        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
         let fileName = "";
         let filterType = [this.props.model.figuredata.elementdata.assessmentformat.toUpperCase()];
         let existingURN = this.props.model.figuredata.elementdata.assessmentid || "";//urn:pearson:work:
@@ -88,7 +89,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
         } else {
             assessmentFormat = "";
-            alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+            this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
         this.setState({assessmentId: id,assessmentItemId : itemID, assessmentTitle: title},
             ()=>{

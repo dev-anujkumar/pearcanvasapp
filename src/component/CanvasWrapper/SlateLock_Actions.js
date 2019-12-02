@@ -73,6 +73,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
     }
     return axios.post(url, data)
         .then((res) => {
+            config.releaseCallCount = 0
             console.log("API call successful. Slate lock status>>>>",res.data.slateStatus)
             dispatch({
                 type : SET_LOCK_FLAG,
@@ -98,7 +99,6 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
     }
     return axios.post(url, data)
        .then((res) => {
-            console.log("Slate release API success>>Slalte release status", res.data)
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
@@ -123,7 +123,6 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     }
     return axios.post(url, data)
        .then((res) => {
-            console.log("Slate release API success>>Slalte release status", res.data)
             if(callback){
                 callback(res.data)
             }

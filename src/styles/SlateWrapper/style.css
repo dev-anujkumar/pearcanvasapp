@@ -166,3 +166,83 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     cursor: pointer;
     width: 771px;
    }
+}
+.moreloader,
+.moreloader:before,
+.moreloader:after {
+    background: #2188c9;
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 1em;
+    height: 4em;
+}
+
+.moreloader {
+    color: #2188c9;
+    text-indent: -9999em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    font-size: 11px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+
+.moreloader:before,
+.moreloader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+}
+
+.moreloader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+
+.moreloader:after {
+    left: 1.5em;
+}
+
+.loaderContainer {
+    height: 120px;
+    position: relative;
+    background: #fff;
+    width: 100%;
+    /* margin: -10px 0px 0px; */
+}
+
+@-webkit-keyframes load1 {
+
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}
+
+@keyframes load1 {
+
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 0;
+        height: 4em;
+    }
+
+    40% {
+        box-shadow: 0 -2em;
+        height: 5em;
+    }
+}

@@ -13,7 +13,12 @@ const INITIAL_STATE = {
     currentlyLinkedImageData : {}
 };
 
-export default function reducer (state = INITIAL_STATE, action) {
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
+export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION) {
     switch (action.type) {
         case 'TOGGLE_APO_SEARCH': {              //Toggle APO search
             return {

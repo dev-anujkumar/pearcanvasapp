@@ -45,7 +45,26 @@ export default {
             "text": "<p class=\"paragraphNumeroUno\">Paragraph</p>"
         },
         "comments": true,
+        "tcm": false,
+        "feedback": true,
+        "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+        "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527" 
+    },
+    "paragraphUpdate" : {
+        "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+        "type": "element-authoredtext",
+        "subtype": "",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "Paragraph"
+        },
+        "html": {
+            "text": "<p class=\"paragraphNumeroUno\">Paragraph</p>"
+        },
+        "comments": true,
         "tcm": true,
+        "feedback": true,
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527" 
     },
@@ -1663,5 +1682,38 @@ export default {
         },
         "contentUrn": "urn:pearson:entity:ae197a50-0c0f-4ef6-918e-2973b42e4afb",
         "versionUrn": "urn:pearson:work:00b85f90-0ee8-4898-b3b3-d55102873512"
+    },
+    "elementLO": {
+        "comments": false,
+        "contentUrn": "urn:pearson:entity:39a7a694-d342-42d4-9171-8649de19f0d4",
+        "designtype": "",
+        "id": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "status": "wip",
+        "subtype": "",
+        "tcm": true,
+        "type": "element-learningobjectives",
+        "versionUrn": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+        "feedback": false,
+        "html": {
+            "text": '<h2 class="heading2learningObjectiveItem"><br></h2>'
+        },
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/learningobjectives/1#/definitions/learningobjectives",
+            "headers": [{
+                "charEnd": -1,
+                "charStart": 0,
+                "level": 2
+            }
+            ],
+            "objectives": [{
+                "objectiveid": "urn:pearson:work:b1468edb-1fe1-464e-9e2c-90885e2882d0",
+                "referenceid": "urn:pearson:manifest:26709b4c-4e2b-4ca0-8da4-d00d8341f14c",
+                "authoredtext": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
+                }
+            }
+            ]
+        }
     }
 }

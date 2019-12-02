@@ -2,7 +2,7 @@ import React from 'react';
 import SlateHeader from '../../../src/component/CanvasSlateHeader';
 
 
-describe('Testing SlateHeader component with props', () => {
+xdescribe('Testing SlateHeader component with props', () => {
     
     it('render SlateHeader component ', () => {
         const component = mount(<SlateHeader />);
