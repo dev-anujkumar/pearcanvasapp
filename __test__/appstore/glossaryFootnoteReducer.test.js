@@ -19,7 +19,7 @@ describe('testing glossary Footnote Reducer cases --', () => {
 
         })).toEqual(initialState);
     });
-    it('get glossaryFootnoteValue', () => {
+    xit('get glossaryFootnoteValue', () => {
         let expectedState = {
             ...initialState,
             glossaryFootnoteValue: 'testing footnote value',
