@@ -24,6 +24,7 @@ jest.mock('../../../src/config/config.js', () => ({
     parentEntityUrn : "bodyMatter",
     slateType: "assessment"
 }));
+let responseData = {};
 jest.mock('../../../src/appstore/store', () => {
     return {
         getState: () => {
@@ -32,7 +33,9 @@ jest.mock('../../../src/appstore/store', () => {
                 glossaryFootnoteReducer:{elementIndex:1}
             }
         },
-        dispatch:()=>{
+        dispatch:(obj)=>{
+            responseData = obj;
+            console.log("object123456---",obj);
             return jest.fn();
         }
     }
@@ -52,21 +55,34 @@ describe('Tests commentsPanel action', () => {
 
    it('glossaaryFootnotePopup glossary---', async() => {
         let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','01-21-1-23','image','term text--');
-        result(store.dispatch);
-
+        result(store.dispatch).then((item)=>{
+            expect(typeof(item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        });
    });
    it('glossaaryFootnotePopup glossary---if element type not defined', async() => {
     let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','',0,'image','term text--');
-    result(store.dispatch);
-
-});
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual(0)
+    });
+   });
    it('await functionalityglossaaryFootnotePopup Footnote---', async() => {
     let result = await actions.glossaaryFootnotePopup(true,"Footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','0-1-2223','image','term text--');
-    result(store.dispatch);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual(0-1-2223)
+    });
    });
    it('await functionalityglossaaryFootnotePopup Footnote---', async() => {
     let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','',0,'image','term text--');
-    result(store.dispatch);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual(0)
+    });
    });
    describe('testing saveGlossaryAndFootnote ',() => {
     xit('testing new func', () => {
@@ -75,14 +91,6 @@ describe('Tests commentsPanel action', () => {
                 return {innerHTML:'tests'}
             }
         });
-        document.body.innerHTML =
-            '<div>' +
-            '  <div id="cypress-1-0" >Hello</div>' +
-            '</div>';
-        let el = document.getElementById('cypress-1-0');
-        let newText = 'new inner text';
-        el.innerText = newText;
-        expect(el.innerText).toEqual(newText);
         actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','image'); 
        });
    })
