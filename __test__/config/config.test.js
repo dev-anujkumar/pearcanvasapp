@@ -21,7 +21,10 @@ describe('Testing config----->', () => {
         test('will receive process.env variables', () => {
             process.env.NODE_ENV = 'development';
             const testedModule = require('../../src/config/config').default
-          
+            expect(testedModule.userName).toBe('c5test01')
+            expect(testedModule.userId).toBe('c5test01')
+            expect(testedModule.userEmail).toBe('c5test01@mctest.local')
+            expect(testedModule.assignee).toBe('c5test01')
         });
     });
 });
