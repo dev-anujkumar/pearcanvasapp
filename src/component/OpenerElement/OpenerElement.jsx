@@ -316,6 +316,19 @@ class OpenerElement extends Component {
             event.preventDefault()
             return false
         }
+
+        /**
+         * [BG-411]|7 - validate before making blur call as discussed with Abhishek Pal 
+         */
+        const { textsemantics, text } = this.props.element.title;
+        const classList = event.currentTarget.classList;
+        let flag = true;
+        if ((classList.contains("opener-title") || classList.contains("opener-number"))
+            && (this.state.number === getOpenerContent(textsemantics, "number", text))
+            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
+            flag = false;
+        }
+
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target && event.target.innerText ? event.target.innerText : label;
@@ -360,7 +373,7 @@ class OpenerElement extends Component {
         element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
 
-        this.props.updateElement(element);
+        flag && this.props.updateElement(element);
     }
     
     
