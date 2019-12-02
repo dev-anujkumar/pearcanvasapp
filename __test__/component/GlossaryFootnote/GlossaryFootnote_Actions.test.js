@@ -42,7 +42,13 @@ jest.mock('../../../src/appstore/store', () => {
 })
 
 describe('Tests commentsPanel action', () => {
-
+    beforeAll(() => {
+        Object.defineProperty(global, 'document', {
+            getElementById:()=>{
+                return {innerHTML:'tests'}
+            }
+        });
+      })
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
@@ -54,18 +60,22 @@ describe('Tests commentsPanel action', () => {
  
 
    it('glossaaryFootnotePopup glossary---', async() => {
-        let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','01-21-1-23','image','term text--');
+        let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','figure','01-21-1-23-21','image','term text--');
         result(store.dispatch).then((item)=>{
             expect(typeof(item)).toEqual('object');
             expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err)=>{
+            expect(err).toEqual(err)
         });
    });
    it('glossaaryFootnotePopup glossary---if element type not defined', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','',0,'image','term text--');
+    let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','',0,'image','term text--');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual(0)
+        expect(item.payload.elementIndex).toEqual('image')
+    }).catch((err) =>{
+        expect(err).toEqual(err)
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote---', async() => {
@@ -73,7 +83,9 @@ describe('Tests commentsPanel action', () => {
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual(0-1-2223)
+        expect(item.payload.elementIndex).toEqual('image')
+    }).catch((err)=>{
+        expect(err).toEqual(err)
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote---', async() => {
@@ -81,17 +93,48 @@ describe('Tests commentsPanel action', () => {
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual(0)
+        expect(item.payload.elementIndex).toEqual('image');
+    }).catch((err)=>{
+        expect(err).toEqual(err)
     });
    });
+   it('await functionalityglossaaryFootnotePopup Footnote- when index in less than3 and element type image  --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','12-12-121-2','image','term text--');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("12-12-121-2-12")
+    }).catch((err)=>{
+        expect(err).toEqual(err)
+    });
+   });
+   it('await functionalityglossaaryFootnotePopup Footnote- when index in less than3 and element type image  --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','12-12-121-2-12-32','image','term text--');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual(0)
+    }).catch((err) =>{
+     expect(err).toEqual(err)
+    });
+   });
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 and element type image  --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','12-12-121-2','image','term text--');
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual(0)
+    }).catch((err) =>{
+     expect(err).toEqual(err)
+    });
+   });
+
    describe('testing saveGlossaryAndFootnote ',() => {
     xit('testing new func', () => {
-        Object.defineProperty(global, 'document', {
-            getElementById:()=>{
-                return {innerHTML:'tests'}
-            }
-        });
         actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','image'); 
+       });
+       xit('glossaryfootnoteid undefined', () => {
+        actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure',undefined,'FOOTNOTE','apple','fruit','image'); 
        });
    })
 
