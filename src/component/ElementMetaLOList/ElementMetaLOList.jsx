@@ -23,7 +23,7 @@ export class ElementMetaLOList extends Component {
     }
     else {
       this.props.setCurrentModule(false)
-    };
+    }
 
   }
   render() {
@@ -96,12 +96,18 @@ export class ElementMetaLOList extends Component {
      * @param {object} loldata | object of data and lourn 
   */
   prepareLOLData = (lolData) => {
+    if (document.getElementsByClassName('learningObjectiveinnerText').length) {
+      document.getElementsByClassName('learningObjectiveinnerText')[0].classList.add("place-holder");
+    }
     let jsx, finalloldata = "";
     if (lolData !== "" && lolData.length > 0) {
       lolData.forEach((value, index) => {
         finalloldata += value.loContent ? value.loContent : value;
       })
       jsx = "<div>" + finalloldata + "</div>";
+      if (document.getElementsByClassName('learningObjectiveinnerText').length) {
+        document.getElementsByClassName('learningObjectiveinnerText')[0].classList.remove("place-holder");
+      }
     }
 
     let currentLOLData = {
