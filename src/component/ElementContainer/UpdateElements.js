@@ -231,17 +231,20 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         subtitleDOM = document.getElementById(`cypress-${index}-1`),
         captionDOM = document.getElementById(`cypress-${index}-3`),
-        creditsDOM = document.getElementById(`cypress-${index}-4`)
+        creditsDOM = document.getElementById(`cypress-${index}-4`),
+        textDOM = document.getElementById(`cypress-${index}-2`)
 
     let titleHTML = titleDOM ? titleDOM.innerHTML : "",
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
-        creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+        creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
+        textHTML = textDOM ? textDOM.innerHTML : ""
 
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
-        creditsText = creditsDOM ? creditsDOM.innerText : ""
+        creditsText = creditsDOM ? creditsDOM.innerText : "",
+        eleText = textDOM ? textDOM.innerText : ""
 
         console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
     
@@ -271,7 +274,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             schema: "http://schemas.pearson.com/wip-authoring/element/1",
             elementdata: {
                 schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                text: document.getElementById(`cypress-${index}-2`).innerText,
+                text: eleText,
                 textsemantics: [],
                 mathml: []
             }
@@ -285,7 +288,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: document.getElementById(`cypress-${index}-2`).innerHTML,
+            text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`,
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
