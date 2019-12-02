@@ -53,12 +53,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -120,12 +120,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -194,12 +194,12 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -277,12 +277,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: document.getElementById(`cypress-${index}-2`).innerHTML,
