@@ -380,24 +380,25 @@ class OpenerElement extends Component {
     render() {
         const { imgSrc, width } = this.state
         const { element, backgroundColor, slateLockInfo } = this.props
+        let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
             <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
-                        <div className="element-dropdown-title label-content" onClick={this.toggleLabelDropdown}>{this.state.label}
+                        <div className={"element-dropdown-title label-content" + isDisable} onClick={this.toggleLabelDropdown}>{this.state.label}
                             {this.renderLabelDropdown()}
                             <span>{dropdownArrow}</span>
                         </div>
                     </div>
                     <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>
