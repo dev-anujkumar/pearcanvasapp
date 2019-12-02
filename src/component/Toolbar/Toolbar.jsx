@@ -26,6 +26,10 @@ const _Toolbar = props => {
         hideSlateTagIcon()
       }, [props.setSlateEntity, props.setSlateParent]); 
 
+    useEffect(() => {
+        changeAudioNarration() 
+    }, [props.openAudio ,props.addAudio])
+
        /**
      * Function for show/hide slate tag icon
      */
@@ -35,6 +39,19 @@ const _Toolbar = props => {
                 document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
           }}
       }
+
+    /**
+  * Function for show/hide audio Narration icon
+  */
+
+    function changeAudioNarration() {
+        if (document.querySelector(".tox-toolbar")) {
+            if (document.querySelector('.audio')) {
+                document.querySelector('.audio').style.display = "block";
+            }
+        }
+    }
+
     /**
      * Function for show/hide audio Narration dropdown
      */
