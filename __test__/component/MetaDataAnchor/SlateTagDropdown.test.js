@@ -12,6 +12,9 @@ const store = mockStore({
     metadataReducer: {
         slateTagEnable: false
     },
+    slateLockReducer:{
+        slateLockInfo:''
+    },
     appStore: {
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -27,11 +30,11 @@ let props = {
     permissions: ["lo_edit_metadata"],
     closeLODropdown: function () { },
 }
-//let wrapper = mount(<Provider store={store}><SlateTagDropdown {...props} /> </Provider>)
-//let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
+let wrapper = mount(<Provider store={store}><SlateTagDropdown {...props} /> </Provider>)
+let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
 
 //Rendering component
-xdescribe('Test Rendering of metadaanchor on slate', () => {
+describe('Test Rendering of metadaanchor on slate', () => {
     it('render component', () => {
         expect(wrapper.find('SlateTagDropdown')).toHaveLength(1);
     })
@@ -47,7 +50,7 @@ xdescribe('Test Rendering of metadaanchor on slate', () => {
         slateTagInstance.learningObjectiveDropdown(event);
         expect(event.target.innerText).toEqual(data);
     })
-    xit('on slate tag normal', () => {
+    it('on slate tag normal', () => {
         config.slateType = 'assessment'
         let event = { target: { innerText: "VIEW ASSESSMENT ITEM LO TAGGING" } };
         let data = "VIEW ASSESSMENT ITEM LO TAGGING";
@@ -56,7 +59,9 @@ xdescribe('Test Rendering of metadaanchor on slate', () => {
     })
     it('handleclick', () => {
         let event = { target: "leaningobjective-block" };
+        let data = "leaningobjective-block";
         slateTagInstance.handleClick(event);
+        expect(event.target).toEqual(data);
     })
 
 

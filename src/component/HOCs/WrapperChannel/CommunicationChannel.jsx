@@ -336,8 +336,18 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
+            // if(config.isFetchSlateInProgress){
+            //     sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
+            //     return false;
+            // }
+            localStorage.removeItem('newElement');
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
+                config.page = 0;
+                config.scrolling = true;
+                config.totalPageCount = 0;
+                config.pageLimit = 0;
+                config.fromTOC = false;
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
                 this.props.handleSlateRefresh(id,()=>{
                 config.isSlateLockChecked = false;
@@ -406,13 +416,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 config.slateType = message.node.nodeLabel;
                 config.parentContainerUrn = message.node.ParentContainerUrn;
                 config.parentEntityUrn=message.node.ParentEntityUrn;
+                config.page = 0;
+                config.scrolling = true;
+                config.totalPageCount = 0;
+                config.fromTOC = true;
                 this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn);
+                this.props.fetchSlateData(message.node.containerUrn, config.page);
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);

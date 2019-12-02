@@ -76,6 +76,9 @@ class ElementContainer extends Component {
     }
 
     componentWillReceiveProps(newProps) {
+        if(!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+            return true
+        }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if (newProps.elemBorderToggle) {
                 this.setState({
@@ -116,6 +119,9 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
+        if(!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+            return true
+        }
         if (updateFromC2Flag) {
             this.props.setActiveElement(this.props.element, this.props.index);
         }
@@ -226,9 +232,13 @@ class ElementContainer extends Component {
             case elementTypeConstant.BLOCKFEATURE:
                 let currentNode = document.getElementById(`cypress-${this.props.index}`)
                 let html = currentNode.innerHTML;
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;               
+                tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+                html = tempDiv.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                 }
@@ -300,10 +310,10 @@ class ElementContainer extends Component {
             case elementTypeConstant.ELEMENT_LIST:
                 {
                     // let html = node.innerHTML;
-                    let currentNode = document.getElementById(`cypress-${this.props.index}`)
-                    let html = currentNode.innerHTML;
-                    if (previousElementData.html && html !== previousElementData.html.text) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    let currentListNode = document.getElementById(`cypress-${this.props.index}`)
+                    let nodehtml = currentListNode.innerHTML;
+                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
                     }
@@ -638,6 +648,7 @@ class ElementContainer extends Component {
                     rows={COMMENTS_POPUP_ROWS}
                     dialogText={COMMENTS_POPUP_DIALOG_TEXT}
                     showDeleteElemPopup={this.state.showDeleteElemPopup}
+                    sectionBreak={this.state.sectionBreak}
                     deleteElement={this.deleteElement}
                 />}
                 {

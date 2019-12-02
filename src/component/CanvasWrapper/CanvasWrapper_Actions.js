@@ -4,18 +4,18 @@ import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
 } from '../../constants/Action_Constants';
-import {fetchComments} from '../CommentsPanel/CommentsPanel_Action';
+import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 
 
 const findElementType = (element, index) => {
 	let elementType = {};
 	elementType['tag'] = '';
-	let altText="";
-	let longDesc="";
+	let altText = "";
+	let longDesc = "";
 	try {
 		switch (element.type) {
 			case 'element-authoredtext':
@@ -36,35 +36,35 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'figure':
-				switch (element.figuretype){
+				switch (element.figuretype) {
 					case "image":
 					case "table":
 					case "mathImage":
 					case "authoredtext":
 					case "tableasmarkup":
 						altText = element.figuredata.alttext ? element.figuredata.alttext : ""
-						longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : "" 	
+						longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
 						elementType = {
-							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
 							altText,
 							longDesc,
 							...elementDataBank[element.type][element.figuretype][element.subtype]
 						}
 						if (!elementType.secondaryOption) {
-							if (element.figuretype === "tableasmarkup"){
-								elementType.secondaryOption = "secondary-editor-table-equation";	
+							if (element.figuretype === "tableasmarkup") {
+								elementType.secondaryOption = "secondary-editor-table-equation";
 							}
 						}
 						break;
 					case "codelisting":
 						elementType = {
-							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-							numbered : element.figuredata.numbered,
-							startNumber : element.figuredata.startNumber
+							elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+							numbered: element.figuredata.numbered,
+							startNumber: element.figuredata.startNumber
 						}
-						switch (element.figuredata.programlanguage){
+						switch (element.figuredata.programlanguage) {
 							case "Select":
 								elementType.secondaryOption = `secondary-blockcode-language-Default`
 								break;
@@ -74,26 +74,26 @@ const findElementType = (element, index) => {
 						}
 						break;
 					case "video":
-					case "audio" :
+					case "audio":
 						elementType = {
-							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
-							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype||'externallink']
+							elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+							...elementDataBank[element.type][element.figuretype][element.figuredata.srctype || 'externallink']
 						}
 						break;
 					case "interactive":
 						altText = element.figuredata.alttext ? element.figuredata.alttext : "",
-						elementType = {
-							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-							primaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-							secondaryOption : elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-							altText
-						}
+							elementType = {
+								elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+								primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
+								secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
+								altText
+							}
 						break;
 					case "assessment":
 						elementType = {
-							elementType : elementDataBank[element.type][element.figuretype]["elementType"],
-							primaryOption : elementDataBank[element.type][element.figuretype]["primaryOption"],
+							elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
 							...elementDataBank[element.type][element.figuretype][element.figuredata.elementdata.assessmentformat]
 						}
 						break;
@@ -101,11 +101,11 @@ const findElementType = (element, index) => {
 				break;
 
 			case 'element-aside':
-				if(element.designtype == ""){
+				if (element.designtype == "") {
 					element.designtype = "asideLearningObjective";
 				}
 				elementType = {
-					elementType : elementDataBank[element.type][element.subtype]["elementType"],
+					elementType: elementDataBank[element.type][element.subtype]["elementType"],
 					...elementDataBank[element.type][element.subtype][element.designtype]
 				}
 				break;
@@ -122,23 +122,23 @@ const findElementType = (element, index) => {
 			case 'element-learningobjectivemapping':
 			case 'element-generateLOlist':
 			case 'element-learningobjectives':
-				elementType = {...elementDataBank[element.type]}
+				elementType = { ...elementDataBank[element.type] }
 				break;
 			case 'openerelement':
 				altText = element.backgroundimage.alttext ? element.backgroundimage.alttext : ""
-				longDesc = element.backgroundimage.longdescription ? element.backgroundimage.longdescription : "" 	
-						
+				longDesc = element.backgroundimage.longdescription ? element.backgroundimage.longdescription : ""
+
 				elementType = {
 					altText,
 					longDesc,
 					...elementDataBank[element.type]
 				}
 				break;
-			
+
 			default:
-				elementType = {...elementDataBank["element-authoredtext"]}
+				elementType = { ...elementDataBank["element-authoredtext"] }
 		}
-	} catch(err) {
+	} catch (err) {
 		elementType = {
 			elementType: ''
 		}
@@ -149,7 +149,7 @@ const findElementType = (element, index) => {
 	elementType['elementWipType'] = element.type;
 
 	elementType['toolbar'] = [];
-	if(elementType.elementType && elementType.elementType !== '') {
+	if (elementType.elementType && elementType.elementType !== '') {
 		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
 		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
 	}
@@ -162,38 +162,72 @@ export const fetchElementTag = (element, index = 0) => {
 	}
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {
-	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}`, {
+export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
+	// if(config.isFetchSlateInProgress){
+	// 	return false;
+	// }
+	// sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+	config.isFetchSlateInProgress = true;
+	if (config.totalPageCount <= page) {
+		page = config.totalPageCount;
+	}
+	config.page = page;
+	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
 		}
 	}).then(slateData => {
-		sendDataToIframe({'type': HideLoader,'message': { status: false }});
-		let contentUrn = slateData.data[manifestURN].contentUrn;
-		let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-		let messageTcmStatus = {
-			TcmStatus:{
-				tc_activated :JSON.stringify(slateData.data[manifestURN].tcm) 
-			}
-            
-        }
-        sendDataToIframe({
-            'type': "TcmStatusUpdated",
-            'message': messageTcmStatus
-        })
-		dispatch(fetchComments(contentUrn, title));
-		dispatch({
-			type: FETCH_SLATE_DATA,
-			payload: {
-				[manifestURN]: JSON.parse(JSON.stringify(slateData.data[manifestURN]))
-			}
-		});
+		if (Object.values(slateData.data).length > 0) {
+			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+				sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+				let contentUrn = slateData.data[manifestURN].contentUrn;
+				let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+				let messageTcmStatus = {
+					TcmStatus: {
+						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+					}
 
-		dispatch({
-			type: SET_ACTIVE_ELEMENT,
-			payload: {}
-		});
+				}
+				sendDataToIframe({
+					'type': "TcmStatusUpdated",
+					'message': messageTcmStatus
+				})
+				dispatch(fetchComments(contentUrn, title));
+				config.totalPageCount = slateData.data[manifestURN].pageCount;
+				config.pageLimit = slateData.data[manifestURN].pageLimit;
+				let parentData = getState().appStore.slateLevelData;
+				let currentParentData;
+				if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
+					currentParentData = JSON.parse(JSON.stringify(parentData));
+					let currentContent = currentParentData[config.slateManifestURN].contents
+					let oldbodymatter = currentContent.bodymatter;
+					let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+					currentParentData = currentParentData[manifestURN];
+					config.scrolling = true;
+				} else {
+					currentParentData = slateData.data[manifestURN];
+				}
+				dispatch({
+					type: FETCH_SLATE_DATA,
+					payload: {
+						[manifestURN]: currentParentData
+					}
+				});
+
+				dispatch({
+					type: SET_ACTIVE_ELEMENT,
+					payload: {}
+				});
+				//}
+				// config.isFetchSlateInProgress = false;
+			}else{
+				console.log("incorrect data comming...")
+			}
+		}
+
+
 	});
 };
 
@@ -205,19 +239,19 @@ export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
 }
 
 
-export const fetchAuthUser = () => dispatch=> {
-    
-    return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
+export const fetchAuthUser = () => dispatch => {
+
+	return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
 		headers: {
-            "Content-Type": "application/json",
-			"PearsonSSOSession":  config.ssoToken
+			"Content-Type": "application/json",
+			"PearsonSSOSession": config.ssoToken
 		}
 	}).then((response) => {
-            let userInfo = response.data;
-            config.userEmail = userInfo.email;
-        })
-        .catch(err => {
-            console.log('axios Error', err);
-            //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
-        })
+		let userInfo = response.data;
+		config.userEmail = userInfo.email;
+	})
+		.catch(err => {
+			console.log('axios Error', err);
+			//dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
+		})
 }

@@ -98,7 +98,7 @@ export const convertToListElement = (type, startvalue) => (dispatch, getState) =
         toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
         elementWipType: "element-list",
         startvalue
-    }));
+    }, true));
 
     // dispatch(updateElementType(activeElement, type));
     // dispatch({
