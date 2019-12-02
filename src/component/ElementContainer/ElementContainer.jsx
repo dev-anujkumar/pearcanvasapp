@@ -615,6 +615,10 @@ class ElementContainer extends Component {
         let borderToggle = this.state.borderToggle;
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
+        let elementOverlay = ''
+        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+            elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
+        }
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
@@ -633,7 +637,7 @@ class ElementContainer extends Component {
                 </div>
                     : ''}
                 <div className={`element-container ${labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')}>
-                    {bceOverlay}{editor}
+                    {elementOverlay}{bceOverlay}{editor}
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}

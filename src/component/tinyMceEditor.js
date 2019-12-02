@@ -36,6 +36,7 @@ export class TinyMceEditor extends Component {
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
         this.lastContent = '';
+        this.clearFormateText = '';
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -85,9 +86,6 @@ export class TinyMceEditor extends Component {
                     }
                     if(document.querySelector('.audio')){
                         document.querySelector('.audio').style.display = "block";
-                    }
-                    if(document.querySelector('.openAudioIcon')){
-                        document.querySelector('.openAudioIcon').style.display = "block";
                     }
                      /**
                      * This code is written to remove lagging in typing and move cursor at end on focus
@@ -156,6 +154,27 @@ export class TinyMceEditor extends Component {
         insertListButton(editor);
         insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
+
+    /**
+     * function to remove formatting of whole element excluding Math/Chem
+     */
+    innerTextWithMathMl = (node) => {
+        if (node.childNodes.length) {
+            node.childNodes.forEach((innerNode) => {
+                if (innerNode.childNodes.length) {
+                    this.innerTextWithMathMl(innerNode)
+                } else {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                        this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
+                    } else {
+                        this.clearFormateText = this.clearFormateText + innerNode.textContent
+                    }
+                }
+            })
+            return this.clearFormateText;
+        }
+    }
+
     onUnorderedListButtonClick = (type) => {
         this.props.onListSelect(type, "");
     }
@@ -216,15 +235,24 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
+                        let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
+                        let textToReplace = window.getSelection().toString()
+
+                        if(isWirisIncluded){
+                            if(isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')){
+                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`),'')
+                                this.clearFormateText='';
+                            }
+                        }
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
-                            e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
                         else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
-                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         /*  For Figure type*/
                         else {
-                            e.target.targetElm.innerHTML = window.getSelection().toString()
+                            e.target.targetElm.innerHTML = textToReplace;
                         }
                     }
                     /**
