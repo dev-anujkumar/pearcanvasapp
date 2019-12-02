@@ -8,20 +8,36 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({
-    glossaryFootnoteReducer:{glossaryFootnoteValue:{"type":"","popUpStatus":false}
+// const store = mockStore({
+//     glossaryFootnoteReducer:{glossaryFootnoteValue:{"type":"","popUpStatus":false}
+//     }
+  
+  
+// });
+let props = {
+    glossaryFootnoteValue : {type: "Glossary"},
+    glossaryFootNoteCurrentValue: {"glossaryContentText": ""},
+    showGlossaaryFootnote : ()=>{
+    return;
     }
-  
-  
-});
-xdescribe('Testing GlossaryFootnote menu component with props', () => {
-    let wrapper = mount(<Provider store={store}>< GlossaryFootnoteMenu  /> </Provider>)
+};
+describe('Testing GlossaryFootnote menu component with props', () => {
+    let wrapper = mount(< GlossaryFootnoteMenu {...props} />)
     const instance = wrapper.find('GlossaryFootnoteMenu').instance();
-
-    it('renders closePopup function correctly', () => {
-         instance.closePopup ()
-      });
-      it('renders saveContent function correctly', () => {
-        instance.saveContent  ()
+    it('componentWillMount Event', () => {
+        instance.componentWillMount()
+     })
+    it('componentWillUnmount Event', () => {
+        instance.componentWillUnmount()
+     })
+      it('renders closePopup function correctly', () => {
+        instance.closePopup ()
+     });
+     it('renders saveContent function correctly', () => {
+        instance.saveContent ()
+     });
+     it('renders handleClickOutside  function correctly', () => {
+         let event = {target : ''}
+        instance.handleClickOutside(event)
      });
 })
