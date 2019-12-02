@@ -98,6 +98,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.html.text = domHtml
         }
         /**
+         * case - if list is being converted from sidepanel then pick counterIncrement value from element data
+         */
+        if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber)
+        }
+        /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
          */
         if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC" && fromToolbar) {
