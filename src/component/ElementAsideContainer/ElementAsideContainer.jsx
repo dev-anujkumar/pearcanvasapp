@@ -156,6 +156,7 @@ class ElementAsideContainer extends Component {
             contentUrn: element.contentUrn,
             elementType: _elementType
         }
+        this.sectionBodyMatter = _containerBodyMatter;
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
         this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex, elementLength)
@@ -185,7 +186,7 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
@@ -223,6 +224,7 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
@@ -266,7 +268,7 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
