@@ -158,11 +158,14 @@ export class TinyMceEditor extends Component {
         insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
 
-    innerT = (node) => {
+    /**
+     * function to remove formatting of whole element excluding Math/Chem
+     */
+    innerTextWithMathMl = (node) => {
         if (node.childNodes.length) {
             node.childNodes.forEach((innerNode) => {
                 if (innerNode.childNodes.length) {
-                    this.innerT(innerNode)
+                    this.innerTextWithMathMl(innerNode)
                 } else {
                     if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
                         this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
@@ -240,7 +243,7 @@ export class TinyMceEditor extends Component {
 
                         if(isWirisIncluded){
                             if(isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')){
-                                textToReplace = this.innerT(document.getElementById(`cypress-${this.props.index}`),'')
+                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`),'')
                                 this.clearFormateText='';
                             }
                         }
