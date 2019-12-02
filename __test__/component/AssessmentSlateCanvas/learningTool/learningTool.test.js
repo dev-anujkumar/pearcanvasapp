@@ -15,6 +15,7 @@ const store = mockStore({
 });
 const linkLearningApp = new stub();
 const closePopUp = new stub();
+const closelearningPopup = new stub();
 const selectedFigure = new stub();
 const learningAppType = new stub();
 describe('Testing Learning tool component with props', () => {
@@ -22,6 +23,7 @@ describe('Testing Learning tool component with props', () => {
         < LearningTool
             linkLearningApp={linkLearningApp}
             closePopUp = {closePopUp}
+            closelearningPopup= {closelearningPopup}
             selectedFigure = {selectedFigure}
             learningAppType = {learningAppType}
         /> </Provider>)

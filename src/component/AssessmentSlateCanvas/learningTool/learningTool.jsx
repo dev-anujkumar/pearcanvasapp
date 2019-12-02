@@ -81,7 +81,8 @@ class LearningTool extends React.Component {
     * @description - This function close the Popup by despatching an action
     */
     closeLt = () => {
-        this.props.closePopUp();
+        //this.props.closePopUp();
+        this.props.closelearningPopup();
         this.props.closeLt();
         this.props.removeSelectedData();
 
@@ -342,7 +343,8 @@ LearningTool.propTypes = {
     /** This function is called when saving of data */
     linkLearningApp: PropTypes.func,
      /** This function is called to close the popup */
-     closePopUp: PropTypes.func
+     closePopUp: PropTypes.func,
+     closelearningPopup:PropTypes.func
 }
 
 /** 
