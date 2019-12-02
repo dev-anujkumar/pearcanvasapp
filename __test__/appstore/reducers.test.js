@@ -214,7 +214,8 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: GET_PROJECT_PERMISSIONS,
             payload: {
-                permissionsData
+                permissions: permissionsData,
+                roleId: 10
             }
         })).toEqual(output)
     });
@@ -257,7 +258,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
     it('case 14- SET SLATE TYPE', () => {
         let output = {
             ...initialState,
-            slateLevelData: 'chapter-opener'
+            slateType: 'chapter-opener'
         };
         expect(reducer(initialState, {
             type: SET_SLATE_TYPE,
