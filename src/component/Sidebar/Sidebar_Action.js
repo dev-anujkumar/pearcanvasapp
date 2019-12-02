@@ -101,7 +101,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
          * case - if list is being converted from sidepanel then pick counterIncrement value from element data
          */
         if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
-            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber)
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber) + 1 
         }
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
