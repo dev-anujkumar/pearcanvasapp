@@ -87,9 +87,6 @@ export class TinyMceEditor extends Component {
                     if(document.querySelector('.audio')){
                         document.querySelector('.audio').style.display = "block";
                     }
-                    if(document.querySelector('.openAudioIcon')){
-                        document.querySelector('.openAudioIcon').style.display = "block";
-                    }
                      /**
                      * This code is written to remove lagging in typing and move cursor at end on focus
                      */
