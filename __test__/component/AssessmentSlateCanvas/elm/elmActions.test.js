@@ -12,7 +12,7 @@ jest.mock('../../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
 }))
 
-xdescribe('ELM Actions test', () => {
+describe('ELM Actions test', () => {
     let store = mockStore(() => initialState);
     beforeEach(() => {
         initialState = {
@@ -36,14 +36,6 @@ xdescribe('ELM Actions test', () => {
                 response: mockELMResponse
             });
         });
-        let expectedActions = [{
-            type: 'GET_ELM_RESOURCES',
-            payload: {
-                data: [],
-                errFlag: false,
-                apiStatus: "200"
-            }
-        }]
         return store.dispatch(selectActions.insertElmResourceAction('Full Assessment PUF')).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe('GET_ELM_RESOURCES');
@@ -76,14 +68,6 @@ xdescribe('ELM Actions test', () => {
                 response: mockELMResponse
             });
         });
-        let expectedActions = [{
-            type: 'GET_ELM_RESOURCES',
-            payload: {
-                data: [],
-                errFlag: false,
-                apiStatus: "200"
-            }
-        }]
         return store.dispatch(selectActions.insertElmResourceAction('Learnosity')).then(() => {
             const { type, payload } = store.getActions()[0];
             expect(type).toBe('GET_ELM_RESOURCES');
