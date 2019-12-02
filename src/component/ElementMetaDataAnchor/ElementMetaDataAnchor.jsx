@@ -9,7 +9,6 @@ export class ElementMetaDataAnchor extends Component {
   constructor(props) {
     super(props);
   }
-
   render() {
     let wipmodel = {
       "text": `<p>Metadata Anchor</p>`
@@ -60,9 +59,25 @@ export class ElementMetaDataAnchor extends Component {
      * @param {object} lodata | object of lo data 
   */
   prepareLOData = (loData) => {
+    if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
+      let element = document.getElementsByClassName('learningObjectiveinnerText');
+      element = Array.from(element);
+      element.forEach((item) => {
+        item.classList.add("place-holder");
+      })
+
+
+    }
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
       jsx = loData.label.en;
+      if (document.getElementsByClassName('learningObjectiveinnerText').length > 0 && (loData.id != "" || loData.loUrn != "")) {
+        let element = document.getElementsByClassName('learningObjectiveinnerText');
+        element = Array.from(element);
+        element.forEach((item) => {
+          item.classList.remove("place-holder");
+        })
+      }
     }
     let currentLOData = {
       "text": jsx ? jsx : "<p></p>"
