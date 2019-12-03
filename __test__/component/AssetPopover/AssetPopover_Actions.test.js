@@ -3,7 +3,6 @@ import { mount, shallow } from 'enzyme';
 import { spy, stub } from 'sinon';
 import configureMockStore from 'redux-mock-store'
 import axios from 'axios';
-const fetchMock = require('fetch-mock');
 const middlewares = [thunk]
 import thunk from 'redux-thunk'
 const mockStore = configureMockStore(middlewares)

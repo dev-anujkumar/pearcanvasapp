@@ -1,18 +1,31 @@
 import glossaryFootnoteReducer from '../../src/appstore/glossaryFootnoteReducer';
 
 const initialState = {
-    glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+    glossaryFootnoteValue: '',
+    glossaryFootNoteCurrentValue : '',
+    elementIndex :  0
 };
 
-const glossaryFootnoteData = { "type": "Glossary", "popUpStatus": "true" }
-const expectedState = {    glossaryFootnoteValue: { "type": "Glossary", "popUpStatus": "true" }}
+const glossaryFootnoteData = { 
+    glossaryFootnoteValue: 'testing footnote value',
+    glossaryFootNoteCurrentValue : 'checking footnote current value',
+    elementIndex :  2 
+}
 
-xdescribe('testing glossary Footnote Reducer cases --', () => {
+describe('testing glossary Footnote Reducer cases --', () => {
 
     it('should return the initial state', () => {
-        expect(glossaryFootnoteReducer(undefined, {})).toEqual(initialState);
+        expect(glossaryFootnoteReducer(initialState, {
+
+        })).toEqual(initialState);
     });
-    it('get glossaryFootnoteValue', () => {
+    xit('get glossaryFootnoteValue', () => {
+        let expectedState = {
+            ...initialState,
+            glossaryFootnoteValue: 'testing footnote value',
+            glossaryFootNoteCurrentValue : 'checking footnote current value',
+            elementIndex :  2 
+        }
         expect(glossaryFootnoteReducer(initialState, {
             type: "OPEN_GLOSSARY_FOOTNOTE",
             payload: glossaryFootnoteData            
@@ -20,4 +33,3 @@ xdescribe('testing glossary Footnote Reducer cases --', () => {
     })
 
 });
-

@@ -7,9 +7,9 @@ import { sendDataToIframe } from '../../constants/utility';
 import { FETCH_DATA_ON_SLATE_REFRESH } from '../../constants/Action_Constants'
 
 export const handleSlateRefresh = (id,cb) => (dispatch, getState) => { 
-    if(config.isFetchSlateInProgress){
-        return false;
-    }
+    // if(config.isFetchSlateInProgress){
+    //     return false;
+    // }
     
     let url = config.SLATE_REFRESH_URL + id
     
