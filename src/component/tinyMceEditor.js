@@ -679,9 +679,8 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         if(this.props.element && this.props.element.type === 'element-list'){
-            args.content = tinymce.activeEditor.selection.getContent();
-            return
-        };
+            args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
+        }
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if(testElement.innerText.trim().length){
