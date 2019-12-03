@@ -168,8 +168,17 @@ export const fetchElementTag = (element, index = 0) => {
 	}
 }
 
-export const fetchSlateData = (manifestURN) => dispatch => {
-	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}`, {
+export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
+	if(config.isFetchSlateInProgress){
+		return false;
+	}
+	sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+	config.isFetchSlateInProgress = true;
+	if(config.totalPageCount <= page){
+		page = config.totalPageCount;		
+	} 
+	config.page = page;
+	return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -189,10 +198,25 @@ export const fetchSlateData = (manifestURN) => dispatch => {
             'message': messageTcmStatus
         })
 		dispatch(fetchComments(contentUrn, title));
+		config.totalPageCount = slateData.data[manifestURN].pageCount;
+		config.pageLimit = slateData.data[manifestURN].pageLimit;
+		let parentData = getState().appStore.slateLevelData;
+		let currentParentData;
+		if((Object.keys(parentData).length !== 0) && (!config.fromTOC)){
+			currentParentData = JSON.parse(JSON.stringify(parentData));
+			let currentContent = currentParentData[config.slateManifestURN].contents
+			let oldbodymatter = currentContent.bodymatter;
+			let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+			currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+			currentParentData = currentParentData[manifestURN];
+			config.scrolling = true;
+		}else{
+			currentParentData = slateData.data[manifestURN];
+		}
 		dispatch({
 			type: FETCH_SLATE_DATA,
 			payload: {
-				[manifestURN]: JSON.parse(JSON.stringify(slateData.data[manifestURN]))
+				[manifestURN]: currentParentData
 			}
 		});
 
@@ -200,6 +224,7 @@ export const fetchSlateData = (manifestURN) => dispatch => {
 			type: SET_ACTIVE_ELEMENT,
 			payload: {}
 		});
+		config.isFetchSlateInProgress = false;
 	});
 };
 

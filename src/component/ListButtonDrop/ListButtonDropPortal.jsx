@@ -69,7 +69,12 @@ class ListButtonDropPortal extends Component {
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
                 const listElement = bodymatter.length && bodymatter.find((element) => element.id === activeElement.elementId && element.type === 'element-list');
-                this.startValue = listElement.elementdata && listElement.elementdata.startNumber || null;
+                let counter = listElement.elementdata && listElement.elementdata.startNumber
+                if(!isNaN(parseInt(counter)))
+                {
+                    counter = parseInt(counter) + 1
+                }
+                this.startValue = counter || null
                 this.selectedOption = listElement.subtype || null;
             }
         } catch (error) {

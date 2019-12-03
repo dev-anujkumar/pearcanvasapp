@@ -6,6 +6,7 @@ import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
 }  from '../images/TinyMce/TinyMce.jsx';
+import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -55,7 +56,7 @@ export class ReactEditor extends React.Component {
           }
         });
       },
-      init_instance_callback: function (editor) {
+      init_instance_callback: (editor) => {
         // editor.fire('focus');
         // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
         // if (activeElement) {
@@ -63,7 +64,11 @@ export class ReactEditor extends React.Component {
         //     activeElement.classList.add('place-holder')
         //   }
         // }
-
+        if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
+          if (editor && editor.id) {
+            document.getElementById(editor.id).setAttribute('contenteditable', false)
+          }
+        }
         editor.on('Change', (e) => {
           let content = e.target.getContent({format: 'text'}),
               contentHTML = e.target.getContent(),

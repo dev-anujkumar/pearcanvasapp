@@ -54,3 +54,9 @@ export const setCurrentModule = (moduleName) => (dispatch, getState) => {
         payload: moduleName
     })
 }
+export const showSlateLockPopup = (showPopup) => (dispatch, getState) => {
+    dispatch({
+        type: 'SHOW_SLATE_LOCK_POPUP',
+        payload: showPopup
+    })
+}

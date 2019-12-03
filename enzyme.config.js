@@ -47,3 +47,13 @@ global.MutationObserver = function () {
         observe: function () { }
     }
 }
+global.window.getSelection=()=>{
+    return {
+        removeAllRanges: ()=>{}
+    }
+}
+global.window.crypto={
+    getRandomValues: ()=>{
+        return [12,23,34]
+    }
+}

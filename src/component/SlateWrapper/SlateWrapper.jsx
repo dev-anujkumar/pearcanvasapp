@@ -33,6 +33,7 @@ import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, show
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { OPEN_AM } from '../../js/auth_module';
+import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
 class SlateWrapper extends Component {
@@ -41,6 +42,8 @@ class SlateWrapper extends Component {
         this.state = {
             previousSlateId: null,
             showLockPopup: false,
+            showCustomPopup: false,
+            customPopupMessage: '',
             lockOwner: "",
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
@@ -57,6 +60,18 @@ class SlateWrapper extends Component {
 
         // binds handleClickOutside to document mousedown //
         document.addEventListener("mousedown", this.handleClickOutside);
+        window.addEventListener('scroll',this.handleScroll)
+    }
+
+    handleScroll = (e) =>{
+        if(config.totalPageCount <= config.page) return false;
+        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
+        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
+        if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
+            config.scrolling = false;
+            config.fromTOC = false;
+            this.props.loadMorePages();
+        }
     }
 
     /**
@@ -154,7 +169,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked } } = props
+        const { slateLockInfo: { isLocked, userId} } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -165,9 +180,17 @@ class SlateWrapper extends Component {
         if (stateChanged) {
             return _state;
         }
+        if(props.showSlateLockPopupValue){
+           return _state = {
+            ..._state,
+            showLockPopup: true,
+            lockOwner: userId
+        }
+    }
         else {
             return null
         }
+        
     }
 
     /**
@@ -244,7 +267,7 @@ class SlateWrapper extends Component {
                                 <Sortable
                                     options={{
                                         sort: true,  // sorting inside list
-                                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                        //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
                                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -288,7 +311,7 @@ class SlateWrapper extends Component {
                                     {this['cloneCOSlateControlledSource_' + random]}
                                 </Sortable>
                             </div>
-                            <SlateFooter />
+                            <SlateFooter elements={_slateBodyMatter} />
                         </div>
                     )
                 }
@@ -430,6 +453,37 @@ class SlateWrapper extends Component {
         }
     }
 
+    openCustomPopup = (message) => {
+        this.setState({
+            showCustomPopup: true,
+            customPopupMessage: message
+        })
+    }
+
+    showCustomPopup = () => {
+
+        if (this.state.showCustomPopup) {
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={this.state.customPopupMessage}
+                    rows="1"
+                    cols="1"
+                    active={true}
+                    togglePopup={this.toggleCustomPopup}
+                    isLockPopup={true}
+                    isInputDisabled={true}
+                    slateLockClass="lock-message"
+                    withInputBox={true}
+                    lockForTOC={false}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
     /**
      * Shows 'slate locked' popup
      */
@@ -460,6 +514,16 @@ class SlateWrapper extends Component {
         }
     }
 
+
+    toggleCustomPopup = (toggleValue, event) => {
+        this.setState({
+            showCustomPopup: toggleValue
+        })
+        this.props.showBlocker(toggleValue)
+        hideBlocker()
+        this.prohibitPropagation(event)
+    }
+
     /**
      * Toggles popup
      */
@@ -467,7 +531,8 @@ class SlateWrapper extends Component {
         this.setState({
             showLockPopup: toggleValue
         })
-        this.props.showBlocker(toggleValue)
+        this.props.showBlocker(toggleValue);
+        this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
     }
@@ -766,6 +831,7 @@ class SlateWrapper extends Component {
                                         : index === 0 && config.isCO === true ? <div className="noSeparatorContainer"></div> : null
                                 }
                                 <ElementContainer
+                                    openCustomPopup = {this.openCustomPopup}
                                     slateType={_slateType}
                                     element={element}
                                     index={index}
@@ -979,7 +1045,7 @@ class SlateWrapper extends Component {
                         this.renderSlateHeader(this.props)
                     }
                 </div>
-                <div id="slateWrapper" className='slate-wrapper'>
+                <div id="slateWrapper" className='slate-wrapper' onScroll={this.handleScroll}>
                     {
                         this.renderSlate(this.props)
                     }
@@ -998,6 +1064,7 @@ class SlateWrapper extends Component {
                     }
                 </ListButtonDropPortal>
                 {this.showLockPopup()}
+                {this.showCustomPopup()}
                 {this.showSplitSlatePopup()}
                 {this.showTocDeletePopup()}
                 {/* ***************Audio Narration remove Popup **************** */}
@@ -1012,6 +1079,9 @@ class SlateWrapper extends Component {
         console.log("ERROR::", error)
         return { hasError: true };
     }
+    componentWillUnmount(){
+        window.removeEventListener('scroll',this.handleScroll)
+    }
 }
 SlateWrapper.displayName = "SlateWrapper"
 
@@ -1023,8 +1093,6 @@ SlateWrapper.propTypes = {
 const mapStateToProps = state => {
     return {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        slateTitleUpdated: state.appStore.slateTitleUpdated,
-        permissions: state.appStore.permissions,
         pageLoading: state.appStore.pageLoading,
         slateTitleUpdated: state.appStore.slateTitleUpdated,
         permissions: state.appStore.permissions,
@@ -1035,7 +1103,8 @@ const mapStateToProps = state => {
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
         openAudio: state.audioReducer.openAudio,
         indexSplit : state.audioReducer.indexSplit,
-        accesDeniedPopup : state.appStore.accesDeniedPopup
+        accesDeniedPopup : state.appStore.accesDeniedPopup,
+        showSlateLockPopupValue: state.metadataReducer.showSlateLockPopup
     };
 };
 
@@ -1057,6 +1126,7 @@ export default connect(
         setActiveElement,
         showWrongAudioPopup,
         getSlateLockStatus,
-        accessDenied
+        accessDenied,
+        showSlateLockPopup
     }
 )(SlateWrapper);

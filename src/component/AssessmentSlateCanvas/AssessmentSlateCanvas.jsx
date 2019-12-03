@@ -13,7 +13,7 @@ import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
 import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
@@ -58,7 +58,7 @@ export class AssessmentSlateCanvas extends Component {
      * @param type - type of assessment
     */
     selectAssessmentType = (type) => {
-        let assessmentType = "CITE";
+        let assessmentType;
         if (type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
             assessmentType = "CITE"
         } else {
@@ -85,16 +85,16 @@ export class AssessmentSlateCanvas extends Component {
      * @param  value alfresco locationData
      */
     handleC2AssessmentClick=(value)=> {
-        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment')){
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole() ){
         //let assessmentType=this.selectAssessmentType();
         let assessmentType=this.state.assessmentFormatType
         let fileName = "";
         let filterType = [assessmentType.toUpperCase()];
-        let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
+        // let existingURN = this.props.model.elementdata.assessmentid || "";//urn:pearson:work:
         let searchMode = "full";
-        let prefix = 'urn:pearson:work:';
-        let startIndex = prefix.length;
-        let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
+        // let prefix = 'urn:pearson:work:';
+        // let startIndex = prefix.length;
+        // let UUID = (existingURN && existingURN !== "") ? existingURN.substring(startIndex, existingURN.length) : "";
         var searchSelectAssessmentURN = "";
         /*
         if (searchMode == "partial") {
@@ -106,8 +106,8 @@ export class AssessmentSlateCanvas extends Component {
         let searchTypeOptVal = "";
         showTocBlocker();
         disableHeader(true);
-        this.toggleAssessmentPopup('',false);
-        productId = (value && value !== "") ? value : "Unspecified";
+        this.toggleAssessmentPopup('', false);
+        productId = value ? value : "Unspecified";
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal,  (assessmentData) =>{    
            this.launchAssetBrowserCallBack(assessmentData)   
         });
@@ -129,7 +129,7 @@ export class AssessmentSlateCanvas extends Component {
             assessmentFormat = utils.getTaxonomicFormat(assessmentData['assessmentData']['taxonomicType'][0]);
         } else {
             assessmentFormat = "";
-            alert("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
+            this.props.openCustomPopup("There was an error loading asset due to malformed 'taxonomicType' data.  Please contact the helpdesk and reference id: " + id);
         }
         let usagetype="Quiz"
         let usage = document.getElementsByClassName('span.slate_assessment_metadata_dropdown_label')[0];

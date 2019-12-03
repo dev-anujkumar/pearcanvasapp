@@ -46,10 +46,9 @@ class GlossaryFootnoteMenu extends React.Component {
 
     render() {
         const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
-        console.table(glossaryFootnoteValue);
         return (
             <div>
-                <GlossaryFootnotePopup setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
+                <GlossaryFootnotePopup permissions={this.props.permissions} setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
             </div>
         )
     }
