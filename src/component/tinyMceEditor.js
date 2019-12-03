@@ -36,6 +36,7 @@ export class TinyMceEditor extends Component {
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
         this.lastContent = '';
+        this.clearFormateText = '';
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -85,9 +86,6 @@ export class TinyMceEditor extends Component {
                     }
                     if(document.querySelector('.audio')){
                         document.querySelector('.audio').style.display = "block";
-                    }
-                    if(document.querySelector('.openAudioIcon')){
-                        document.querySelector('.openAudioIcon').style.display = "block";
                     }
                      /**
                      * This code is written to remove lagging in typing and move cursor at end on focus
@@ -156,6 +154,27 @@ export class TinyMceEditor extends Component {
         insertListButton(editor);
         insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
+
+    /**
+     * function to remove formatting of whole element excluding Math/Chem
+     */
+    innerTextWithMathMl = (node) => {
+        if (node.childNodes.length) {
+            node.childNodes.forEach((innerNode) => {
+                if (innerNode.childNodes.length) {
+                    this.innerTextWithMathMl(innerNode)
+                } else {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                        this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
+                    } else {
+                        this.clearFormateText = this.clearFormateText + innerNode.textContent
+                    }
+                }
+            })
+            return this.clearFormateText;
+        }
+    }
+
     onUnorderedListButtonClick = (type) => {
         this.props.onListSelect(type, "");
     }
@@ -216,15 +235,24 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
+                        let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
+                        let textToReplace = window.getSelection().toString()
+
+                        if(isWirisIncluded){
+                            if(isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')){
+                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`),'')
+                                this.clearFormateText='';
+                            }
+                        }
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
-                            e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
                         else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
-                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                            e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         /*  For Figure type*/
                         else {
-                            e.target.targetElm.innerHTML = window.getSelection().toString()
+                            e.target.targetElm.innerHTML = textToReplace;
                         }
                     }
                     /**
@@ -752,15 +780,16 @@ export class TinyMceEditor extends Component {
     addGlossary = (editor) => {
         let selectedText = window.getSelection().toString()
         this.glossaryTermText = selectedText;
+        if(selectedText.trim() === ""){
+            return false
+        }
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            if(selectedText !== ""){
-                editor.insertContent(insertionText);
-                this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
-            }
+            editor.insertContent(insertionText);
+            this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         }) 
     }
@@ -1036,17 +1065,17 @@ export class TinyMceEditor extends Component {
     handleClick = (e) => {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
-        */
-        if( tinymce.$(e.target).find('li').length   ){
-            tinymce.$(e.target).find('li').each(function(a,b){
-                if( this.innerHTML.trim() == '' ){
-                    tinymce.$(this).append('<br/>')
-                } 
-            })
-        }
-        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-            tinymce.$(e.target).closest('li').append('<br/>');
-        }
+        */        
+        // if( tinymce.$(e.target).find('li').length   ){
+        //     tinymce.$(e.target).find('li').each(function(a,b){
+        //         if( this.innerHTML.trim() == '' ){
+        //             tinymce.$(this).append('<br/>')
+        //         } 
+        //     })
+        // }
+        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+        //     tinymce.$(e.target).closest('li').append('<br/>');
+        // }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -1146,6 +1175,14 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 this.setCursorAtEnd(currentTarget, isSameTarget); 
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                } 
             });
             this.setToolbarByElementType();
         }
@@ -1157,6 +1194,14 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
                 this.setCursorAtEnd(currentTarget, isSameTarget);
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                }  
             })
         });
         if (isSameTarget) {
@@ -1167,12 +1212,6 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        /**
-         * In case current element is list element
-         */
-        if (el.findChildren('ol').length || el.findChildren('ul').length) {
-            return
-        }
         if (isSameTarget) {
             return;
         }

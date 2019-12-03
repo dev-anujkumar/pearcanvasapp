@@ -28,7 +28,7 @@ export class ElementSingleAssessment extends Component {
         };
     }
     componentDidMount() {
-        let title =this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,"");        
+        let title =this.props.model.html.title?this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
         this.setState({
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
@@ -163,7 +163,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
-                    <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={this.toggleUsageTypeDropdown} >
+                    <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
                         <span className="singleAssessment_Dropdown_currentLabel">{model.figuredata.elementdata ? this.state.activeAsseessmentUsageType : "Quiz"}</span>
                         <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                     </div>

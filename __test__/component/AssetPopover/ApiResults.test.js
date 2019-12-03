@@ -2,6 +2,7 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { spy, stub } from 'sinon';
 import ApiResults from '../../../src/component/AssetPopover/ApiResults';
+import { exportAllDeclaration } from '@babel/types';
 
 
 
@@ -99,10 +100,13 @@ describe('Test ApiResults', () => {
     it('Have ApiResults function', () => {
         wrapper.setState({
             figureDataLength : 2
-        })
+        });
+        expect(wrapper.find('FigureCard').length).toEqual(6); 
     }),
     it('cover else case', () => {
-        let tempWrapper = mount(<ApiResults  figures = {figures} ValueToBeSearch = 'ioioioi' selectedFigure = {selectedFigure}/>)
-        
+        let tempWrapper = mount(<ApiResults  figures = {figures} ValueToBeSearch = 'ioioioi' selectedFigure = {selectedFigure}/>);
+        expect(tempWrapper.find('FigureCard').length).toEqual(0); 
+        expect(tempWrapper.find('h3.figureCount').length).toEqual(1); 
+        expect(tempWrapper.find('ErrorComp').length).toEqual(1);
     })
 });
