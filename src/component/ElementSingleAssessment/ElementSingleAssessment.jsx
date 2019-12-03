@@ -28,7 +28,7 @@ export class ElementSingleAssessment extends Component {
         };
     }
     componentDidMount() {
-        let title =this.props.model.html.title?this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
+        let title = this.props.model && this.props.model.html && this.props.model.html.title ? this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
         this.setState({
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
