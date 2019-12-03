@@ -90,7 +90,7 @@ export class AssessmentSlateData extends Component {
             changeLearningData: true,
             learningToolStatus: true
         });         
-}
+    }
 
     /*** @description - This function is to handle change in assessment/LT-LA
      * @param e- event triggered
@@ -148,6 +148,15 @@ export class AssessmentSlateData extends Component {
             }, 5000)
         })
     }
+    closelearningPopup = () => {
+        disableHeader(false);
+        hideTocBlocker();
+        this.props.showBlocker(false);
+        this.setState({
+            changeLearningData: false,
+            learningToolStatus: false
+        })
+    }
     
     /*** @description - This is the function to add C2-Media to Assessment Slate 
     * @param pufObj - The object contains data about PUF Assessment 
@@ -164,7 +173,8 @@ export class AssessmentSlateData extends Component {
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
             case LEARNING_APP_TYPE:               
-                    return   this.changeLearningApp()
+                this.changeLearningApp()
+                break;
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -176,7 +186,8 @@ export class AssessmentSlateData extends Component {
                 break;
 
             default:
-                return this.addC2MediaAssessment(activeAssessmentType)
+                this.addC2MediaAssessment(activeAssessmentType)
+                break;
 
         }
     }
@@ -307,7 +318,7 @@ export class AssessmentSlateData extends Component {
         else if (this.state.changeLearningData && (this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE) && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
             return (
                 <div>
-                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
+                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup}/>
                 </div>
             )
         } else if ((this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) || this.state.learningToolStatus) {

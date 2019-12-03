@@ -34,7 +34,8 @@ let cypressConfig = {
     scrolling : true,
     totalPageCount : 0,
     pageLimit : 0,
-    fromTOC : false
+    fromTOC : false,
+    // isFetchSlateInProgress:false
 }
 
 

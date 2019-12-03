@@ -81,3 +81,8 @@
 .opener-label-box.oe-title-box{
     width: 49%;
 }
+
+.disable-role{
+    pointer-events: none;
+    opacity: 0.6;
+}

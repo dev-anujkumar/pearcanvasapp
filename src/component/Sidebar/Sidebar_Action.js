@@ -13,6 +13,7 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
     try {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+        let conversionDataToSend = {};
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
@@ -97,6 +98,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             oldElementData.html.text = domHtml
         }
         /**
+         * case - if list is being converted from sidepanel then pick counterIncrement value from element data
+         */
+        if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber) + 1 
+        }
+        /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
          */
         if (inputPrimaryOptionEnum === outputPrimaryOptionEnum && inputSubTypeEnum === outputSubTypeEnum && outputSubTypeEnum === "DISC" && fromToolbar) {
@@ -136,7 +143,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         }
         oldElementData.designtype = elemDesigntype
     }
-    const conversionDataToSend = {
+    conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
         inputSubType : inputSubTypeEnum,
@@ -145,9 +152,25 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         projectUrn : config.projectUrn,
         slateUrn:config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
-        index: indexes[indexes.length - 1]
+        index: indexes[indexes.length - 1],
+        projectURN : config.projectUrn,
+        slateEntity : config.slateEntityURN
     }
-    
+
+    let elmIndexes = indexes ? indexes : 0;
+    let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
+    if(elmIndexes.length === 2){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = true;
+            conversionDataToSend.parentType = "workedexample";
+        }
+    }else if(elmIndexes.length === 3){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = false;
+            conversionDataToSend.parentType = "element-aside";
+        }
+    }
+
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {

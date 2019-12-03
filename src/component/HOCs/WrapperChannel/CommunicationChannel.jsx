@@ -336,9 +336,18 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
+            // if(config.isFetchSlateInProgress){
+            //     sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
+            //     return false;
+            // }
             localStorage.removeItem('newElement');
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
+                config.page = 0;
+                config.scrolling = true;
+                config.totalPageCount = 0;
+                config.pageLimit = 0;
+                config.fromTOC = false;
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshing'} });
                 this.props.handleSlateRefresh(id,()=>{
                 config.isSlateLockChecked = false;

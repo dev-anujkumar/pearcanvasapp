@@ -32,11 +32,11 @@ let props = {
     handleFocus: jest.fn(),
     showBlocker: jest.fn()
 }
-// let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
-// let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
+let wrapper = mount(<Provider store={store}><ElementMetaDataAnchor  {...props} /> </Provider>)
+let elementMetaAnchorInstance = wrapper.find('ElementMetaDataAnchor').instance();
 
 //Rendering component
-xdescribe('Test Rendering of metadaanchor on slate', () => {
+describe('Test Rendering of metadaanchor on slate', () => {
 
     it('render component', () => {
         expect(wrapper.find('ElementMetaDataAnchor')).toHaveLength(1);
@@ -50,6 +50,16 @@ xdescribe('Test Rendering of metadaanchor on slate', () => {
         let event = { target: { id: "aefeqrwq" } }
         elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
+    })
+    it('on call of prepareLOData',()=>{
+        let loData={
+            "lourn": "urn:5567809876",
+            "label": { en: "test data" }
+        };
+        let div = document.createElement('div');
+        div.setAttribute('class','learningObjectiveinnerText');
+        document.body.appendChild(div);
+        elementMetaAnchorInstance.prepareLOData(loData);
     })
 
 });

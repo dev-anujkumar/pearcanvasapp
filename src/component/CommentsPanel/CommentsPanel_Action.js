@@ -255,25 +255,27 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
             const index = getState().commentsPanelReducer.index;
-            if (typeof (index) == 'number') {
-                if (newBodymatter[index].versionUrn == elementId) {
-                    newBodymatter[index].comments = false;
-                }
-            } else {
-                let indexes = index.split('-');
-                let indexesLen = indexes.length, condition;
-                if (indexesLen == 2) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                    if (condition.versionUrn == elementId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].comments = false
+            if(index){
+                if (typeof (index) == 'number') {
+                    if (newBodymatter[index].versionUrn == elementId) {
+                        newBodymatter[index].comments = false;
                     }
-                } else if (indexesLen == 3) {
-                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                    if (condition.versionUrn == elementId) {
-                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
+                } else {
+                    let indexes = index.split('-');
+                    let indexesLen = indexes.length, condition;
+                    if (indexesLen == 2) {
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                        if (condition.versionUrn == elementId) {
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].comments = false
+                        }
+                    } else if (indexesLen == 3) {
+                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                        if (condition.versionUrn == elementId) {
+                            newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].comments = false;
+                        }
                     }
                 }
-            }
+            }   
             dispatch({
                 type: DELETE_COMMENT,
                 payload: commentUrn
