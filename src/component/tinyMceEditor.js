@@ -12,7 +12,7 @@ import "tinymce/plugins/paste";
 // IMPORT - Components & Dependencies //
 import { EditorConfig } from '../config/EditorConfig';
 import config from '../config/config';
-import { insertListButton, bindKeyDownEvent, insertUoListButton, updateNestedList, preventRemoveAllFormatting } from './ListElement/eventBinding.js';
+import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute } from './ListElement/eventBinding.js';
 import { authorAssetPopOver} from './AssetPopover/openApoFunction.js';
 import {
     tinymceFormulaIcon,
@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import {checkforToolbarClick} from '../js/utils'
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
 let context = {};
 
 export class TinyMceEditor extends Component {
@@ -36,6 +36,7 @@ export class TinyMceEditor extends Component {
         this.assetPopoverButtonState = null;
         this.glossaryTermText = '';
         this.lastContent = '';
+        this.clearFormateText = '';
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -86,9 +87,6 @@ export class TinyMceEditor extends Component {
                     if(document.querySelector('.audio')){
                         document.querySelector('.audio').style.display = "block";
                     }
-                    if(document.querySelector('.openAudioIcon')){
-                        document.querySelector('.openAudioIcon').style.display = "block";
-                    }
                      /**
                      * This code is written to remove lagging in typing and move cursor at end on focus
                      */
@@ -101,6 +99,13 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
+
+                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+                    if (editor && editor.id) {
+                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                    }
+                }
+
                 editor.on('Change', (e) => {
                     /*
                         if content is caused by wiris then call blur
@@ -115,7 +120,7 @@ export class TinyMceEditor extends Component {
 
                     if (activeElement) {
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
-                        if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
+                        if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
                             activeElement.classList.remove('place-holder')
                         }
                         else {
@@ -149,6 +154,27 @@ export class TinyMceEditor extends Component {
         insertListButton(editor);
         insertUoListButton(editor, this.onUnorderedListButtonClick);
     }
+
+    /**
+     * function to remove formatting of whole element excluding Math/Chem
+     */
+    innerTextWithMathMl = (node) => {
+        if (node.childNodes.length) {
+            node.childNodes.forEach((innerNode) => {
+                if (innerNode.childNodes.length) {
+                    this.innerTextWithMathMl(innerNode)
+                } else {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                        this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
+                    } else {
+                        this.clearFormateText = this.clearFormateText + innerNode.textContent
+                    }
+                }
+            })
+            return this.clearFormateText;
+        }
+    }
+
     onUnorderedListButtonClick = (type) => {
         this.props.onListSelect(type, "");
     }
@@ -209,15 +235,24 @@ export class TinyMceEditor extends Component {
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
-                            e.target.targetElm.children[0].children[0].innerHTML = window.getSelection().toString();
+                        let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
+                        let textToReplace = window.getSelection().toString()
+
+                        if(isWirisIncluded){
+                            if(isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')){
+                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`),'')
+                                this.clearFormateText='';
+                            }
                         }
-                        else if (e.target.targetElm.children[0].classList.contains('paragraphNumeroUno')) {
-                            e.target.targetElm.children[0].innerHTML = window.getSelection().toString();
+                        if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
+                            e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
+                        }
+                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
+                            e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         /*  For Figure type*/
                         else {
-                            e.target.targetElm.innerHTML = window.getSelection().toString()
+                            e.target.targetElm.innerHTML = textToReplace;
                         }
                     }
                     /**
@@ -359,7 +394,7 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 let isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-                if (activeElement.innerText.trim().length || isContainsMath) {
+                if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
                 else {
@@ -377,6 +412,13 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+            if(hasReviewerRole()){
+                let evt = (e) ? e : window.event;
+                if(evt.ctrlKey && evt.which == 88){ 
+                    evt.preventDefault();
+                }
+             }
+
             if(this.isTabPressed(e)){
                 e.preventDefault()
             }
@@ -451,11 +493,11 @@ export class TinyMceEditor extends Component {
      */
     isTabPressed = (keydownEvent) => {
         const keyCode = keydownEvent.keyCode || keydownEvent.which
-        if(this.props.element != "element-list" && keyCode == 9){
-            return true
+        if(this.props.element.type !== "element-list" && keyCode === 9){
+            return 1
         }
         else{
-            return false
+            return 0
         }
     }
 
@@ -501,7 +543,7 @@ export class TinyMceEditor extends Component {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
-            editor.selection.setContent('');
+            editor.selection.getContent() === "" && editor.selection.setContent('');
          }
     }
 
@@ -692,6 +734,9 @@ export class TinyMceEditor extends Component {
      * @param {*} content  content inside editor
      */
     onBeforeIndent = (e, content) => {
+        if(!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            e.preventDefault() 
+        }
         if(content.match(/paragraphNumeroUnoIndentLevel3\b/)){
             e.preventDefault()
         }
@@ -703,6 +748,9 @@ export class TinyMceEditor extends Component {
      * @param {*} content  content inside editor 
      */
     onBeforeOutdent = (e, content) => {
+        if(!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/)){
+            e.preventDefault() 
+        }
         if(content.match(/paragraphNumeroUno\b/)){
             e.preventDefault()
         }
@@ -732,15 +780,16 @@ export class TinyMceEditor extends Component {
     addGlossary = (editor) => {
         let selectedText = window.getSelection().toString()
         this.glossaryTermText = selectedText;
+        if(selectedText.trim() === ""){
+            return false
+        }
         getGlossaryFootnoteId(this.props.elementId, "GLOSSARY", res => {
             let insertionText = ""
             if(res.data && res.data.id){
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
-            if(selectedText !== ""){
-                editor.insertContent(insertionText);
-                this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
-            }
+            editor.insertContent(insertionText);
+            this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         }) 
     }
@@ -759,6 +808,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+        this.handleBlur();
     }
 
 
@@ -805,7 +855,7 @@ export class TinyMceEditor extends Component {
                     document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
                 }
                 
-    
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove('#' + activeElementObj.join("-"));
                 tinymce.$('.wrs_modal_desktop').remove();
             }
@@ -890,8 +940,10 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-
-        if (this.props.model && this.props.model.text) {
+        if (this.props.element && this.props.element.type === "element-list") {
+            this.placeHolderClass = '';
+        }
+        else if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
@@ -967,6 +1019,7 @@ export class TinyMceEditor extends Component {
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element &&this.props.element.type && this.props.element.type==="figure"))) {
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
             }
@@ -981,7 +1034,7 @@ export class TinyMceEditor extends Component {
         else if(this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit..."){
             toolbar = config.captionToolbar;
 
-        }else if (this.props.placeholder === "Enter the Block Code...") {
+        }else if (this.props.placeholder === "Enter block code...") { 
             toolbar =  config.codeListingToolbar;
         }else{
             toolbar = config.elementToolbar;
@@ -995,7 +1048,7 @@ export class TinyMceEditor extends Component {
     setToolbarByElementType = () => {
         let toolbar = this.setInstanceToolbar();
         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').removeClass('toolbar-disabled')
-        if(toolbar.length){
+        if(toolbar && toolbar.length){
             tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
             .each((index) => {
                 if(config.toolBarList[index] && toolbar.indexOf(config.toolBarList[index]) > -1){
@@ -1012,24 +1065,17 @@ export class TinyMceEditor extends Component {
     handleClick = (e) => {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
-        */
-        if( tinymce.$(e.target).find('li').length   ){
-            tinymce.$(e.target).find('li').each(function(a,b){
-                if( this.innerHTML.trim() == '' ){
-                    tinymce.$(this).append('<br/>')
-                } 
-            })
-        }
-        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-            tinymce.$(e.target).closest('li').append('<br/>');
-        }
-
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
-            if(tinymce.activeEditor && tinymce.activeEditor.id){
-                document.getElementById(tinymce.activeEditor.id).contentEditable = false
-                return
-            }
-        }
+        */        
+        // if( tinymce.$(e.target).find('li').length   ){
+        //     tinymce.$(e.target).find('li').each(function(a,b){
+        //         if( this.innerHTML.trim() == '' ){
+        //             tinymce.$(this).append('<br/>')
+        //         } 
+        //     })
+        // }
+        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+        //     tinymce.$(e.target).closest('li').append('<br/>');
+        // }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -1107,7 +1153,8 @@ export class TinyMceEditor extends Component {
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                 if(document.getElementById(tinymce.editors[i].id)){
                     document.getElementById(tinymce.editors[i].id).innerHTML = tempFirstContainerHtml;
-                }     
+                }   
+                    removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                     tinymce.remove(`#${ed_id}`)
                     tinymce.$('.wrs_modal_desktop').remove();
                     if (document.getElementById(`${ed_id}`)) {
@@ -1128,6 +1175,14 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 this.setCursorAtEnd(currentTarget, isSameTarget); 
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                } 
             });
             this.setToolbarByElementType();
         }
@@ -1139,6 +1194,14 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
                 this.setCursorAtEnd(currentTarget, isSameTarget);
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                }  
             })
         });
         if (isSameTarget) {
@@ -1152,14 +1215,14 @@ export class TinyMceEditor extends Component {
         /**
          * In case current element is list element
          */
-        if (el.findChildren('ol').length || el.findChildren('ul').length) {
+        if (el.findChildren('ol').length || el.findChildren('ul').length || el.innerText==="") {
             return
         }
         if (isSameTarget) {
             return;
         }
+        let selection;
         if(tinymce.activeEditor.getBody().tagName==="CODE"){
-            let selection;
             if (document.selection) {
                 selection = document.selection.createRange();
                 selection.moveStart('character', sel.rangeCount);
@@ -1169,6 +1232,11 @@ export class TinyMceEditor extends Component {
                 selection = window.getSelection();
                 selection.collapse(el, selection.rangeCount);
             }
+            return;
+        }
+        else if(el.findChildren('blockquote').length){
+            selection = window.getSelection();
+            selection.collapse(el.children[0].children[0], selection.rangeCount);
             return;
         }
 
@@ -1194,7 +1262,7 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e) => {
-        let relatedTargets = (e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
+        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
             return;
@@ -1233,11 +1301,22 @@ export class TinyMceEditor extends Component {
                     <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</code>
                 )
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote" || this.props.element.elementdata.type === "marginalia") {
+                if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
+                    classes = classes + ' blockquote-editor';
+                    return (
+                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    )
+                }
+                else if(this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote"){
+                    let temDiv = document.createElement('div');
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
+                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     classes = classes + ' blockquote-editor';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
@@ -1248,10 +1327,13 @@ export class TinyMceEditor extends Component {
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
-                
+            case 'figureCredit':
+                return (
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                )
             default:
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: '<p class="paragraphNumeroUno"><br/></p>'}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

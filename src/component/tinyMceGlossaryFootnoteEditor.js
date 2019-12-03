@@ -6,6 +6,7 @@ import {
   tinymceFormulaIcon,
   tinymceFormulaChemistryIcon
 }  from '../images/TinyMce/TinyMce.jsx';
+import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
 export class ReactEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -28,9 +29,6 @@ export class ReactEditor extends React.Component {
         this.setMathmlFormulaIcon(editor);
         this.addChemistryFormulaButton(editor);
         this.addMathmlFormulaButton(editor);
-        editor.on('init', e => {
-          this.setCursorAtEnd(editor);
-        })
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           let contentHTML = e.target.innerHTML;
@@ -55,7 +53,7 @@ export class ReactEditor extends React.Component {
           }
         });
       },
-      init_instance_callback: function (editor) {
+      init_instance_callback: (editor) => {
         // editor.fire('focus');
         // let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
         // if (activeElement) {
@@ -63,7 +61,11 @@ export class ReactEditor extends React.Component {
         //     activeElement.classList.add('place-holder')
         //   }
         // }
-
+        if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
+          if (editor && editor.id) {
+            document.getElementById(editor.id).setAttribute('contenteditable', false)
+          }
+        }
         editor.on('Change', (e) => {
           let content = e.target.getContent({format: 'text'}),
               contentHTML = e.target.getContent(),
@@ -209,9 +211,6 @@ export class ReactEditor extends React.Component {
 
     let testElem = document.createElement('div');
     testElem.innerHTML = model;
-    if(!testElem.innerText) {
-      testElem.innerText = "Test Value";
-    }
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
@@ -291,18 +290,14 @@ export class ReactEditor extends React.Component {
 
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
-      this.setCursorAtEnd();
-  })
+      this.setCursorAtEnd(tinymce.activeEditor);
+    })
   }
 
   setCursorAtEnd = (editor) => {
     if(editor){
       editor.selection.select(tinymce.activeEditor.getBody(), true);
       editor.selection.collapse(false);
-    }
-    else if(tinymce.activeEditor){
-      tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
-      tinymce.activeEditor.selection.collapse(false);
     }
   }
 

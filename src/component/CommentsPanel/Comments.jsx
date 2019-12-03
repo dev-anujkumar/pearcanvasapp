@@ -4,6 +4,7 @@ import ReplyComment from './ReplyComment.jsx';
 import navigationShowMore from '../../images/CommentsPanel/navigation-show-more.svg'
 import PropTypes from 'prop-types';
 import {utils} from '../../js/utils'
+import config from '../../config/config.js'
 class Comments extends React.Component {
     constructor(props) {
         super(props)
@@ -168,17 +169,18 @@ class Comments extends React.Component {
     */
     actionsMenu = () => {
         let deleteCommentPermission = false;
-        if(this.props.permissions.includes('notes_deleting') ||
-        (this.props.permissions.includes('notes_delete_others_comment'))) {
+        const { comment ,permissions} = this.props
+        if ((config.userId === comment.commentCreator && permissions.includes('notes_deleting')) ||
+            (config.userId !== comment.commentCreator && permissions.includes('notes_delete_others_comment'))) {
             deleteCommentPermission = true;
         }
 
         return (
             <ul className="comment-action-menu action-menu">
-                {this.props.permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
-                {this.props.permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
-                {this.props.permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
-                {this.props.permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
+                {permissions.includes('notes_relpying') && <li onClick={() => this.toggleReplyForm(true)}>Reply</li>}
+                {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
+                {config.userId === comment.commentCreator && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )

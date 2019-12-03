@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
@@ -82,8 +82,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
 
 
 
-export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => (dispatch, getState) => {
-
+export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
     const prepareDeleteRequestData = (type) => {
         switch (type) {
             case "element-workedexample":
@@ -102,6 +101,9 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
     }
 
     let _requestData = prepareDeleteRequestData(type)
+    let indexToBeSent = index || "0"
+    _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
+    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -158,16 +160,39 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn) => 
         console.log("delete Api fail", error);
     })
 }
+
+function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
+    let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
+    let storeData = getState().appStore.slateLevelData;
+    let slateData = JSON.parse(JSON.stringify(storeData));
+    let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
+    if(indexes.length === 2){
+        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id){
+            updatedData.isHead = true;
+        }
+    }else if(indexes.length === 3){
+        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id){
+            updatedData.isHead = false;
+        }
+    }
+    if(asideData && asideData.type === "element-aside"){
+        if(asideData.subtype === "workedexample"){
+            updatedData.parentType = "workedexample";
+        }else{
+            updatedData.parentType = "element-aside";
+        }
+    }
+    updatedData.projectURN = config.projectUrn;
+    updatedData.slateEntity = config.slateEntityURN;
+}
+
 /**
  * API to update the element data
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
-    if(tinyMCE && tinyMCE.activeEditor){
-        tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        tinyMCE.activeEditor.selection.collapse(false);
-    }
+    prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -176,77 +201,115 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {      
+    ).then(response => {   
+        let parentData = getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+		let currentSlateData = currentParentData[config.slateManifestURN];
+        if(response.data.id !== updatedData.id){
+            if(currentSlateData.status === 'wip'){
+                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex)
+            }else if(currentSlateData.status === 'approved'){
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }) 
+            }
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         //console.log("success saving")
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-        if(tinyMCE && tinyMCE.activeEditor){
-            tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-        }
+        // if(tinyMCE && tinyMCE.activeEditor){
+        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        //     tinyMCE.activeEditor.selection.collapse(false);
+        // }
     })
 
-    //direct dispatching in store
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
 
+}
+
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ){
+    //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
-    let elementId = updatedData.id
-
-    _slateBodyMatter = _slateBodyMatter.map(element => {
-        if (element.id === elementId) {
-            element  = {
-                ...element,
-                ...updatedData
-            };
-        }else if(asideData && asideData.type == 'element-aside'){
-            if(element.id == asideData.id){
-               let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
-                    /*This condition add object of element in existing element  in aside */
-                    if(nestedEle.id == elementId){
-                        nestedEle  = {
-                            ...nestedEle,
-                            ...updatedData
-                        };
-                    }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
-                          /*This condition add object of element in existing element  in section of aside */
-                       let ele =  nestedEle.contents.bodymatter.map((ele)=>{
-                            if(ele.id == elementId){
-                                ele = {
-                                    ...ele,
-                                    ...updatedData
-                                };
-                            }
-                            return ele
-                        })
-                        nestedEle.contents.bodymatter = ele;
-                    }
-                    return nestedEle;
-                })
-                element.elementdata.bodymatter = nestedBodyMatter;
+    let elementId = updatedData.id;
+    if(!versionedData){
+        _slateBodyMatter = _slateBodyMatter.map(element => {
+            if (element.id === elementId) {
+                element  = {
+                    ...element,
+                    ...updatedData,
+                    elementdata : {
+                        ...element.elementdata,
+                        text : updatedData.elementdata?updatedData.elementdata.text:null
+                    },
+                    html : updatedData.html
+                };
+            }else if(asideData && asideData.type == 'element-aside'){
+                if(element.id == asideData.id){
+                   let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{
+                        /*This condition add object of element in existing element  in aside */
+                        if(nestedEle.id == elementId){
+                            nestedEle  = {
+                                ...nestedEle,
+                                ...updatedData,
+                                elementdata : {
+                                    ...nestedEle.elementdata,
+                                    text : updatedData.elementdata?updatedData.elementdata.text:null
+                                },
+                                html : updatedData.html
+                            };
+                        }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
+                              /*This condition add object of element in existing element  in section of aside */
+                           let ele =  nestedEle.contents.bodymatter.map((ele)=>{
+                                if(ele.id == elementId){
+                                    ele = {
+                                        ...ele,
+                                        ...updatedData,
+                                        elementdata : {
+                                            ...ele.elementdata,
+                                            text : updatedData.elementdata?updatedData.elementdata.text:null
+                                        },
+                                        html : updatedData.html
+                                    };
+                                }
+                                return ele
+                            })
+                            nestedEle.contents.bodymatter = ele;
+                        }
+                        return nestedEle;
+                    })
+                    element.elementdata.bodymatter = nestedBodyMatter;
+                }
             }
-        }
-        return element
-    })
-    _slateContent.bodymatter = _slateBodyMatter
-    _slateObject.contents = _slateContent
-    
-    //console.log("saving new data dispatched")
-    return dispatch({
-        type: AUTHORING_ELEMENT_UPDATE,
-        payload: {
-            slateLevelData: newslateData
-        }
-    })
+            return element
+        })
+        _slateContent.bodymatter = _slateBodyMatter
+        _slateObject.contents = _slateContent
+        
+        //console.log("saving new data dispatched")
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }else if(versionedData){
+        newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }
 //diret dispatching in store
 }
 
@@ -316,4 +379,51 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
     setTimeout(() => {
         cb();
     }, 300)
+}
+
+export const getTableEditorData = (elementId) => (dispatch, getState) => {
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(response => {
+        let parentData = getState().appStore.slateLevelData
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+
+        newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementId, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
+    }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.log("getTableEditorData Api fail", error);
+    })
+}
+
+const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
+
+    return slateBodyMatter = slateBodyMatter.map(elm => {
+        if (elm.id === elementId) {
+            elm = {
+                ...elm,
+                ...tableData
+            }
+        }
+        else if (elm.elementdata && elm.elementdata.bodymatter) {
+            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter)
+        }
+        else if (elm.contents && elm.contents.bodymatter) {
+            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+        }
+        return elm;
+    })
 }

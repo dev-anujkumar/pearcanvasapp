@@ -5,6 +5,7 @@
 import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
+import {SECTION_BREAK_DELETE_TEXT} from '../../constants/Element_Constants'
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -142,7 +143,16 @@ class PopUp extends React.Component {
     
     renderDialogText = (props) => {
         if(props.showDeleteElemPopup){
-            return null
+            if(props.sectionBreak){
+                return(
+                    <div className="delete-element-text">{SECTION_BREAK_DELETE_TEXT}</div>
+                )
+            }
+            else{
+                return (
+                <div className="delete-element-text">{props.deleteInstruction}</div>
+                )
+            }
         }
         else if(props.tocDelete){
             //jsx dialog text
@@ -182,7 +192,7 @@ class PopUp extends React.Component {
  
     
     render() {
-        const { active, assessmentClass, showDeleteElemPopup, deleteInstruction, removeConfirmation } = this.props;
+        const { active, assessmentClass } = this.props;
         return (
             <div className="model">
                 {
@@ -191,7 +201,6 @@ class PopUp extends React.Component {
                         <div className={`modal-content ${assessmentClass}`}>
                             {this.renderCloseSymbol(this.props)}
                             {this.renderDialogText(this.props)}
-                            {showDeleteElemPopup ? <div className="delete-element-text">{deleteInstruction}</div> : '' }
                             <div className={`dialog-input ${assessmentClass}`}>
                                 {this.renderInputBox(this.props)}
                             </div>

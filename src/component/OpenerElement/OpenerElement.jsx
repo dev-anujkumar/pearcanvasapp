@@ -4,13 +4,14 @@ import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerCo
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
-
+import { hasReviewerRole } from '../../constants/utility';
 import noImage from '../../images/OpenerElement/no-image.png'
 import { c2MediaModule } from './../../js/c2_media_module';
 
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
+import axios from 'axios';
 
 class OpenerElement extends Component {
 
@@ -32,6 +33,7 @@ class OpenerElement extends Component {
             imgSrc: getOpenerImageSource(bgImage),
             width: null,
             imageId: props.element.backgroundimage.imageid ? props.element.backgroundimage.imageid : "",
+            projectMetadata: false
         }
     }
 
@@ -67,7 +69,7 @@ class OpenerElement extends Component {
     handleC2ExtendedClick = (data) => {
         let data_1 = data;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -79,6 +81,9 @@ class OpenerElement extends Component {
      * @param {e} event
      */
     handleC2MediaClick = (e) => {
+        if(hasReviewerRole()){
+            return true
+        }
         const { slateLockInfo , permissions } = this.props
         if(checkSlateLock(slateLockInfo))
             return false
@@ -89,10 +94,14 @@ class OpenerElement extends Component {
         }
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
+        if (alfrescoPath && this.state.projectMetadata) {
+            alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
+        }
         var data_1 = false;
-        if (alfrescoPath && alfrescoPath.nodeRef) {
+        if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
+        if (alfrescoPath.alfresco.nodeRef) {
             if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
-            data_1 = alfrescoPath;
+            data_1 = alfrescoPath.alfresco;
             /*
                 data according to new project api 
             */
@@ -112,15 +121,62 @@ class OpenerElement extends Component {
             else{
                 this.props.accessDenied(true)
             }
+        }
         } else {
-            if (permissions.includes('alfresco_crud_access')) {
-                c2MediaModule.onLaunchAddAnAsset(function (data_1) {
-                    c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                        c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                            that.dataFromAlfresco(data);
+            if (this.props.permissions.includes('alfresco_crud_access')) {
+                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                    data_1 = { ...alfrescoData };
+                    let request = {
+                        eTag: alfrescoPath.etag,
+                        projectId: alfrescoPath.id,
+                        ...alfrescoPath,
+                        additionalMetadata: { ...alfrescoData },
+                        alfresco: { ...alfrescoData }
+                    };
+
+                    /*
+                        preparing data according to Project api
+                    */
+
+                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+
+                    request.alfresco['repositoryName'] = data_1['repoName'];
+                    request.alfresco['repositoryFolder'] = data_1['name'];
+                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                    request.alfresco['visibility'] = data_1['siteVisibility'];
+
+                    that.handleC2ExtendedClick(data_1)
+                    /*
+                        API to set alfresco location on dashboard
+                    */
+                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                    let SSOToken = request.ssoToken;
+                    return axios.patch(url, request.alfresco,
+                        {
+                            headers: {
+                                'Accept': 'application/json',
+                                'ApiKey': config.STRUCTURE_APIKEY,
+                                'Content-Type': 'application/json',
+                                'PearsonSSOSession': SSOToken,
+                                'If-Match': request.eTag
+                            }
                         })
-                    })
-                });
+                        .then(function (response) {
+                            let tempData = { alfresco: alfrescoData };
+                            that.setState({
+                                projectMetadata: tempData
+                            })
+                        })
+                        .catch(function (error) {
+                            console.log("error", error)
+                        });
+                })
+            }
+            else {
+                this.props.accessDenied(true)
             }
         }
     }
@@ -260,6 +316,20 @@ class OpenerElement extends Component {
             event.preventDefault()
             return false
         }
+
+        /**
+         * [BG-411]|7 - validate before making blur call
+         */
+        const { textsemantics, text } = this.props.element.title;
+        const classList = event.currentTarget && event.currentTarget.classList || [];
+        let flag = true;
+        if (classList.length > 0 
+            && (classList.contains("opener-title") || classList.contains("opener-number"))
+            && (this.state.number === getOpenerContent(textsemantics, "number", text))
+            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
+            flag = false;
+        }
+
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target && event.target.innerText ? event.target.innerText : label;
@@ -304,31 +374,32 @@ class OpenerElement extends Component {
         element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
 
-        this.props.updateElement(element);
+        flag && this.props.updateElement(element);
     }
     
     
     render() {
         const { imgSrc, width } = this.state
         const { element, backgroundColor, slateLockInfo } = this.props
+        let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
             <div className = "opener-element-container" onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
                 <div className = "input-box-container">
                     <div className="opener-label-box">
                         <div className="opener-label-text">Label</div>
-                        <div className="element-dropdown-title label-content" onClick={this.toggleLabelDropdown}>{this.state.label}
+                        <div className={"element-dropdown-title label-content" + isDisable} onClick={this.toggleLabelDropdown}>{this.state.label}
                             {this.renderLabelDropdown()}
                             <span>{dropdownArrow}</span>
                         </div>
                     </div>
                     <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
-                        <input className="element-dropdown-title opener-number" maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className="element-dropdown-title opener-title" value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>

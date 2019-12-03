@@ -6,10 +6,11 @@ import PropTypes from 'prop-types'
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, 
+    FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE , PUF } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 export class AssessmentSlateData extends Component {
     constructor(props) {
@@ -90,21 +91,24 @@ export class AssessmentSlateData extends Component {
             changeLearningData: true,
             learningToolStatus: true
         });         
-}
+    }
 
     /*** @description - This function is to handle change in assessment/LT-LA
      * @param e- event triggered
     */
     changeAssessment = (e) => {
+        if(hasReviewerRole()){
+            return true
+        }
         let assessmentFormat = this.state.activeAssessmentType;
-        if (assessmentFormat === FULL_ASSESSMENT_PUF) {
+        if (assessmentFormat === FULL_ASSESSMENT_PUF || assessmentFormat == PUF ) {
             this.setState({
                 activeAssessmentType: FULL_ASSESSMENT_PUF,
                 showElmComponent: true,
             }, () => {
                     this.mainAddAssessment(e, FULL_ASSESSMENT_PUF);
                 })
-        } else if (assessmentFormat === LEARNOSITY) {
+        } else if (assessmentFormat === LEARNOSITY || assessmentFormat == LEARNOSITY.toLowerCase()) {
             this.setState({
                 activeAssessmentType: LEARNOSITY,
                 showElmComponent: true,
@@ -145,6 +149,16 @@ export class AssessmentSlateData extends Component {
             }, 5000)
         })
     }
+    closelearningPopup = () => {
+        disableHeader(false);
+        hideTocBlocker();
+        this.props.showBlocker(false);
+        this.setState({
+            activeAssessmentType: LEARNING_APP_TYPE,
+            changeLearningData: false,
+            learningToolStatus: false
+        })
+    }
     
     /*** @description - This is the function to add C2-Media to Assessment Slate 
     * @param pufObj - The object contains data about PUF Assessment 
@@ -161,7 +175,8 @@ export class AssessmentSlateData extends Component {
         switch (activeAssessmentType) {
             case LEARNING_TEMPLATE:
             case LEARNING_APP_TYPE:               
-                    return   this.changeLearningApp()
+                this.changeLearningApp()
+                break;
             case FULL_ASSESSMENT_PUF:
             case LEARNOSITY:
                 this.setState({
@@ -173,7 +188,8 @@ export class AssessmentSlateData extends Component {
                 break;
 
             default:
-                return this.addC2MediaAssessment(activeAssessmentType)
+                this.addC2MediaAssessment(activeAssessmentType)
+                break;
 
         }
     }
@@ -204,6 +220,9 @@ export class AssessmentSlateData extends Component {
 
     /*** @description - This function is to select the Assessment type from dropdown*/
     selectAssessmentType = () => {
+        if(hasReviewerRole()){
+            return true
+        }
         let assessmentTypeValue;
         if (assessmentType.length > 0) {
             assessmentTypeValue = assessmentType.map((type, i) =>
@@ -242,7 +261,7 @@ export class AssessmentSlateData extends Component {
     selectAssessmentUsageType = () => {
         if (assessmentUsageType.length > 0) {
             var usageTypeValue = assessmentUsageType.map((usageType, i) =>
-                <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
+                <li key={i} className="slate_assessment_metadata_dropdown_name" onClick={(e) => !hasReviewerRole() && this.handleAssessmentUsageTypeChange(usageType, e)}>{usageType}</li>
             )
         }
         return usageTypeValue
@@ -276,14 +295,14 @@ export class AssessmentSlateData extends Component {
                             <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
-                            <div className="slate_assessment_change_button" onClick={this.changeAssessment}>{changeTypeValue}</div>
+                            <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
                     </div>
                 </div>
                 <div className="slate_assessment_metadata_container">
                     <div className="slate_assessment_metadata_type_selectlabel">Select usage type</div>
-                    <div className="singleAssessment_Dropdown_activeDropdown notselect" ref={this.usageTypeRef} onClick={this.toggleUsageTypeDropdown} >
+                    <div className="singleAssessment_Dropdown_activeDropdown notselect" ref={this.usageTypeRef} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
                         <span className="slate_assessment_metadata_dropdown_label" id ="AssessmentSlateUsageType">{this.state.activeAssessmentUsageType}</span>
                         <span className="slate_assessment_metadata_dropdown_image"></span>
                         <div className="clr"></div>
@@ -301,7 +320,7 @@ export class AssessmentSlateData extends Component {
         else if (this.state.changeLearningData && (this.state.activeAssessmentType === LEARNING_APP_TYPE || this.state.activeAssessmentType === LEARNING_TEMPLATE) && this.props.permissions && this.props.permissions.includes('quad_create_edit_ia')) {
             return (
                 <div>
-                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} />
+                    <LearningTool closePopUp={this.closePopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup}/>
                 </div>
             )
         } else if ((this.props.getAssessmentData && this.props.getAssessmentDataPopup == true) || this.state.learningToolStatus) {
@@ -337,7 +356,7 @@ export class AssessmentSlateData extends Component {
         return assessmentSlateJSX
     }
     render() {
-        const { type } = this.props;
+        // const { type } = this.props;
         return (
             <div className="AssessmentSlateCanvas">
                 {this.assessmentSlateContent()}

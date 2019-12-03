@@ -15,13 +15,24 @@
     border: 1.5px solid #149632;
 }
 
-.element-container.hideBorder *, .element-container.showBorder * {
+.element-container.hideBorder:not(.as):not(.we) *, .element-container.showBorder:not(.as):not(.we) * {
     cursor: default !important;
 }
 
 .bce.element-container > .bce-overlay.disabled {
     cursor: default;
     background: #444;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
+.element-Overlay.disabled {
+    cursor: default;
     position: absolute;
     width: 100%;
     left: 0;
@@ -40,6 +51,9 @@
 }
 .element-container .cypress-editable{
     padding:10px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 64px;
 }
 .element-container{
     padding: 1px 8px !important; 

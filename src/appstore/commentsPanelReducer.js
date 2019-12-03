@@ -85,12 +85,17 @@ const initialState = {
     index:null
 }
 
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
 /**
  * This method actually updates app store as per incoming payload
  * @param {Object} state | current state
  * @param {String} action | incoming action with payload
  */
-export default function (state = initialState, action) {
+export default function (state = initialState, action = INITIAL_ACTION) {
     const { type, payload } = action;
     switch (type) {
         case FETCH_COMMENTS:

@@ -13,6 +13,7 @@ import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
 import axios from 'axios';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -26,7 +27,8 @@ class Interactive extends React.Component {
             posterImage : null,
             imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false,
-            elementType: this.props.model.figuredata.interactivetype || ""
+            elementType: this.props.model.figuredata.interactivetype || "",
+            projectMetadata: false
         };
 
     }
@@ -42,6 +44,7 @@ class Interactive extends React.Component {
      */
 
     handleC2InteractiveClick = (value) => {
+        if( this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
         let that = this;
         let fileName = "";
         let filterType = [this.props.model.figuredata.interactiveformat.toUpperCase()];
@@ -108,6 +111,7 @@ class Interactive extends React.Component {
                
             })
         }); 
+      }
     }
      
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -563,7 +567,7 @@ class Interactive extends React.Component {
     handleC2ExtendedClick = (locationData) => {
         let data_1 = locationData;
         let that = this;
-        c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
+        !hasReviewerRole() && c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
             c2MediaModule.AddanAssetCallBack(data_2, function (data) {
                 that.dataFromAlfresco(data);
             })
@@ -576,17 +580,23 @@ class Interactive extends React.Component {
      */
     handleC2MediaClick = (e) => {
         this.props.handleFocus();
+        if(hasReviewerRole()){
+            return true
+        }
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
             return;
         }
         let that = this;
         let alfrescoPath = config.alfrescoMetaData;
+        if (alfrescoPath && this.state.projectMetadata) {
+            alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
+        }
         var data_1 = false;
-
-        if (alfrescoPath && alfrescoPath.nodeRef) {         //if alfresco location is available
+        if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
+        if (alfrescoPath.alfresco.nodeRef) {         //if alfresco location is available
             if(this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco'))    { 
-            data_1 = alfrescoPath;
+            data_1 = alfrescoPath.alfresco;
             /*
                 data according to new project api 
             */
@@ -608,16 +618,62 @@ class Interactive extends React.Component {
             else{
                 this.props.accessDenied(true)
             }
-
+        }
         } else {
-           if(this.props.permissions.includes('alfresco_crud_access')){ 
-               c2MediaModule.onLaunchAddAnAsset(function (data_1) {                                                                           // alfresco location is not assigned to project
-                c2MediaModule.productLinkOnsaveCallBack(data_1, function (data_2) {
-                    c2MediaModule.AddanAssetCallBack(data_2, function (data) {
-                        that.dataFromAlfresco(data);
-                    })
+            if (this.props.permissions.includes('alfresco_crud_access')) {
+                c2MediaModule.onLaunchAddAnAsset(function (alfrescoData) {
+                    data_1 = { ...alfrescoData };
+                    let request = {
+                        eTag: alfrescoPath.etag,
+                        projectId: alfrescoPath.id,
+                        ...alfrescoPath,
+                        additionalMetadata: { ...alfrescoData },
+                        alfresco: { ...alfrescoData }
+                    };
+
+                    /*
+                        preparing data according to Project api
+                    */
+
+                    request.additionalMetadata['repositoryName'] = data_1['repoName'];
+                    request.additionalMetadata['repositoryFolder'] = data_1['name'];
+                    request.additionalMetadata['repositoryUrl'] = data_1['repoInstance'];
+                    request.additionalMetadata['visibility'] = data_1['siteVisibility'];
+
+                    request.alfresco['repositoryName'] = data_1['repoName'];
+                    request.alfresco['repositoryFolder'] = data_1['name'];
+                    request.alfresco['repositoryUrl'] = data_1['repoInstance'];
+                    request.alfresco['visibility'] = data_1['siteVisibility'];
+
+                    that.handleC2ExtendedClick(data_1)
+                    /*
+                        API to set alfresco location on dashboard
+                    */
+                    let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
+                    let SSOToken = request.ssoToken;
+                    return axios.patch(url, request.alfresco,
+                        {
+                            headers: {
+                                'Accept': 'application/json',
+                                'ApiKey': config.STRUCTURE_APIKEY,
+                                'Content-Type': 'application/json',
+                                'PearsonSSOSession': SSOToken,
+                                'If-Match': request.eTag
+                            }
+                        })
+                        .then(function (response) {
+                            let tempData = { alfresco: alfrescoData };
+                            that.setState({
+                                projectMetadata: tempData
+                            })
+                        })
+                        .catch(function (error) {
+                            console.log("error", error)
+                        });
                 })
-            })
+            }
+            else {
+                this.props.accessDenied(true)
             }
         }
 

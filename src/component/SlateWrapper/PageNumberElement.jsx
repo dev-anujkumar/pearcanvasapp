@@ -7,6 +7,7 @@
 
 // IMPORT - Plugins //
 import React from 'react';
+import { hasReviewerRole } from '../../constants/utility.js'
 
 class PageNumber extends React.Component {
     constructor(props) {
@@ -61,7 +62,7 @@ class PageNumber extends React.Component {
         else {
             content = <div className={'pageNumberBox' + (permissions.includes('edit_print_page_no') ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>
                 Page #
-            <input className="textBox" readOnly={false} onBlur={(e) => { this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={this.state.inputValue} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
+            <input className="textBox" readOnly={hasReviewerRole()} onBlur={(e) => { !hasReviewerRole() && this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={this.state.inputValue} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
                 {
                     (this.state.inputValue && this.state.inputValue !== '') ?
                         <span className="closeBtn" onMouseDown={this.removePageNumber}>

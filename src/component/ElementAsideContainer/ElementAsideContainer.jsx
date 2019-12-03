@@ -29,16 +29,12 @@ class ElementAsideContainer extends Component {
         }
         this.asideRef = React.createRef();
     }
-    componentDidMount() {
-            this.asideRef.current.addEventListener("focus", this.handleFocus);
 
-
-    }
-
-    componentWillUnmount() {
-        this.asideRef.current.removeEventListener("focus", this.handleFocus);
-    }
     handleFocus = (e) => {
+        if(e.target && !(e.target.classList.contains('elemDiv-hr') || e.target.classList.contains('aside-container'))){
+            return false;
+        }
+
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
         }
@@ -51,9 +47,10 @@ class ElementAsideContainer extends Component {
                         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                     }
                 });
-        }
-        this.props.handleFocus()
+        }     
+        this.props.handleFocus();
     }
+    
     /**
      * 
      * @discription - renderSlate | renders slate editor area with all elements it contain
@@ -74,14 +71,16 @@ class ElementAsideContainer extends Component {
                     }
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
-                    
+                    if(!_bodyMatter.length && this.props.deleteElement){
+                        this.props.deleteElement();
+                    }
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className="container-aside" data-id={_containerId} container-type={_containerType}>
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
-                                    preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                                    //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
                                     removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -154,6 +153,7 @@ class ElementAsideContainer extends Component {
             contentUrn: element.contentUrn,
             elementType: _elementType
         }
+        this.sectionBodyMatter = _containerBodyMatter;
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
         this['cloneCOSlateControlledSource_1' + random] = this.renderElement(_containerBodyMatter, parentUrn, parentIndex, elementLength)
@@ -163,7 +163,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
-                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                       // preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -183,7 +183,7 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
@@ -221,6 +221,7 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
+        this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
@@ -244,7 +245,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
-                        preventOnFilter: true, // Call event.preventDefault() when triggered filter
+                        //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
                         removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
@@ -264,7 +265,7 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = _containerBodyMatter[evt.oldDraggableIndex]
+                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
@@ -303,8 +304,10 @@ class ElementAsideContainer extends Component {
         let showSectionBreak;
         let asideData = {
             type: "element-aside",
+            subtype :this.props.element.subtype, 
             id: this.props.element.id,
-            contentUrn: this.props.element.contentUrn
+            contentUrn: this.props.element.contentUrn,
+            element : this.props.element
         };
         try {
             if (_elements !== undefined) {
@@ -376,6 +379,7 @@ class ElementAsideContainer extends Component {
                                         isBlockerActive={this.props.isBlockerActive}
                                         onClickCapture={this.props.onClickCapture}
                                         parentElement = {this.props.element}
+                                        onListSelect={this.props.onListSelect}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement) => (
@@ -495,7 +499,7 @@ class ElementAsideContainer extends Component {
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         return (
-            <aside className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
+            <aside onMouseUp = {this.handleFocus} className={`${designtype} aside-container`} tabIndex="0" onBlur={this.props.handleBlur} ref={this.asideRef}>
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype)}
             </aside>
         );

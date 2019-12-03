@@ -3,7 +3,7 @@ import {
     SET_LOCK_FLAG
 } from '../constants/Action_Constants'
 
-let initialState = {
+let INITIAL_STATE = {
     slateLockInfo : {
         isLocked: false,
         timestamp: "",
@@ -12,7 +12,12 @@ let initialState = {
     withinLockPeriod: false
 }
 
-export default (state = initialState, action) => {
+const INITIAL_ACTION = {
+    type: '',
+    payload: {}
+}
+
+export default (state = INITIAL_STATE, action = INITIAL_ACTION) => {
     switch(action.type){
         case SET_SLATE_LOCK_STATUS:
             return {

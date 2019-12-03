@@ -120,7 +120,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
         title = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
 
-        if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video"){
+        if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
             captions = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
             credits = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
