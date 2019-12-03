@@ -20,7 +20,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import {updateElement}from '../../component/ElementContainer/ElementContainer_Actions'
+import {updateElement,getTableEditorData}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import {publishContent,logout} from '../../js/header'
@@ -245,6 +245,7 @@ export default connect(
         glossaaryFootnotePopup,
         releaseSlateLock,
         updateElement,
-        setSlateParent
+        setSlateParent,
+        getTableEditorData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

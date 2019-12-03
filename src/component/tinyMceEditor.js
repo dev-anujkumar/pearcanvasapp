@@ -1212,11 +1212,17 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
+        /**
+         * In case current element is list element
+         */
+        if (el.findChildren('ol').length || el.findChildren('ul').length || el.innerText==="") {
+            return
+        }
         if (isSameTarget) {
             return;
         }
+        let selection;
         if(tinymce.activeEditor.getBody().tagName==="CODE"){
-            let selection;
             if (document.selection) {
                 selection = document.selection.createRange();
                 selection.moveStart('character', sel.rangeCount);
@@ -1226,6 +1232,11 @@ export class TinyMceEditor extends Component {
                 selection = window.getSelection();
                 selection.collapse(el, selection.rangeCount);
             }
+            return;
+        }
+        else if(el.findChildren('blockquote').length){
+            selection = window.getSelection();
+            selection.collapse(el.children[0].children[0], selection.rangeCount);
             return;
         }
 
