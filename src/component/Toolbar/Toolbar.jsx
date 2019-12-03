@@ -45,11 +45,9 @@ const _Toolbar = props => {
   */
 
     function changeAudioNarration() {
-        if (document.querySelector(".tox-toolbar")) {
             if (document.querySelector('.audio')) {
                 document.querySelector('.audio').style.display = "block";
             }
-        }
     }
 
     /**
