@@ -65,12 +65,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -113,8 +113,6 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             delete previousElementData.figuredata.posterimage;
         }
 
-        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-
     let data = {
         ...previousElementData,
         title :{
@@ -137,12 +135,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/<p>/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/<p>/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/<p>/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/<p>/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -187,12 +185,10 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         creditsHTML = replaceUnwantedtags(creditsHTML)
         subtitleHTML = replaceUnwantedtags(subtitleHTML)
         titleHTML = replaceUnwantedtags(titleHTML)
-
-        console.log("FIGURE DATA UPDATED TITLE BLOCKCODE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-        console.log("preformattedText HTML BLOCKCODE::", preformattedText)
+    
         preformattedText = preformattedText.replace(/&lt;/g, "<")
         preformattedText = preformattedText.replace(/&gt;/g, ">")
-        console.log("preformattedText HTML BLOCKCODE PROCESSED::", preformattedText.split("\n"))
+
     let data = {
         ...previousElementData,
         title :{
@@ -272,7 +268,6 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     subtitleHTML = replaceUnwantedtags(subtitleHTML)
     titleHTML = replaceUnwantedtags(titleHTML)
     textHTML = replaceUnwantedtags(textHTML)
-        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
     
     let data = {
         ...previousElementData,
