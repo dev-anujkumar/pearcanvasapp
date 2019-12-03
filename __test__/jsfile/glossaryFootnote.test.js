@@ -41,4 +41,11 @@ describe("Testing glossaryFootnote.js file",() => {
             expect(booleanValue).toEqual(false);
         },1000)
     }) 
+    it('testing for getGlossaryFootnoteId function and expecting response in catch',() =>{
+        axios.post.mockImplementation(() => Promise.reject(false));
+        getGlossaryFootnoteId(elementId,enumType,callback);
+        setTimeout(()=>{
+            expect(booleanValue).toEqual(false);
+        },1000)
+    }) 
 })
