@@ -42,7 +42,8 @@ const INITIAL_STATE = {
     pageNumberData: {},
     permissions: [],
     accesDeniedPopup: false,
-    roleId: ''
+    roleId: '',
+    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 };
 
 const INITIAL_ACTION = {
