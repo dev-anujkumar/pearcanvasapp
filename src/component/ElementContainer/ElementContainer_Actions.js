@@ -2,7 +2,6 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
-
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -239,6 +238,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
+    if(_slateObject.tcm){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});
+    }
     if(!versionedData){
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
@@ -249,6 +251,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         ...element.elementdata,
                         text : updatedData.elementdata?updatedData.elementdata.text:null
                     },
+                    tcm : _slateObject.tcm?true:false,
                     html : updatedData.html
                 };
             }else if(asideData && asideData.type == 'element-aside'){
@@ -263,6 +266,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     ...nestedEle.elementdata,
                                     text : updatedData.elementdata?updatedData.elementdata.text:null
                                 },
+                                tcm : _slateObject.tcm?true:false,
                                 html : updatedData.html
                             };
                         }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
@@ -276,6 +280,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             ...ele.elementdata,
                                             text : updatedData.elementdata?updatedData.elementdata.text:null
                                         },
+                                        tcm : _slateObject.tcm?true:false,
                                         html : updatedData.html
                                     };
                                 }
@@ -348,7 +353,6 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
     let parentData = getState().appStore.slateLevelData,
         element,
         interactiveImage = "",
-        oldPath,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
@@ -360,7 +364,6 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
                 element = newBodymatter[index]
             }else{
                 newBodymatter[index].figuredata = figureData
-                oldPath = bodymatter[index].figuredata
                 element = newBodymatter[index]
             }          
         }
@@ -375,7 +378,6 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
                     element = newBodymatter[index]
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
-                    oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
                     element = condition
                 }
             }
@@ -384,23 +386,15 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
             if (condition.versionUrn == elementId) {
                 if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment"){
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
-                    oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
                     element = condition
                 }else{
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
-                    oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
                     element = condition
                 }
 
             }
         }
       }
-    dispatch({
-        type: SET_OLD_IMAGE_PATH,
-        payload: {
-            oldImage: oldPath 
-        }
-    })
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
