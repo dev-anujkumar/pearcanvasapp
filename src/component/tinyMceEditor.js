@@ -540,7 +540,8 @@ export class TinyMceEditor extends Component {
      */
     addInlineCode = (editor) => {
         let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-         if (editor.selection.getContent() != "" && selectedText != "CODE") {
+        let hasCodeTag = window.getSelection().anchorNode.parentNode.innerHTML.includes('<code data-mce-selected="inline-boundary">') 
+         if (editor.selection.getContent() != "" && selectedText != "CODE" && !hasCodeTag) {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
