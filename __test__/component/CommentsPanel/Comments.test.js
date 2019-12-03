@@ -1,8 +1,8 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Comments from '../../../src/component/CommentsPanel/Comments';
-import { comment, filters, users ,permissions} from '../../../fixtures/commentPanelData.js'
-import { spy, stub } from 'sinon';
+import { comment, users ,permissions} from '../../../fixtures/commentPanelData.js'
+import { stub } from 'sinon';
 
 describe('Testing CommentsPanel component with props', () => {
   const updateElementComment = new stub();
@@ -54,15 +54,20 @@ describe('Testing CommentsPanel component with props', () => {
   describe('Testing functions with props', () => {
     
     it('renders update assignee function correctly', () => {
-      instance.updateAssignee()
+      const spy = jest.spyOn(instance, 'updateAssignee');
+      instance.updateAssignee();
+      expect(spy).toHaveBeenCalledTimes(1);
 
     });
     it('renders remove assinee function correctly', () => {
-      instance.removeAssigneePopup()
+      const spy = jest.spyOn(instance, 'setMode');
+      instance.removeAssigneePopup();
+      expect(spy).toHaveBeenCalledTimes(1);
 
     });
     it('renders edit from correctly', () => {
-      instance.editForm()
+      let jsx = instance.editForm();
+      expect(jsx.type).toEqual('div');
 
     });
     it('render action menu from correctly', () => {
@@ -72,15 +77,18 @@ describe('Testing CommentsPanel component with props', () => {
     });
 
     it('render remove comment from correctly', () => {
-
-      instance.resolveComment()
-
+      const spy = jest.spyOn(instance, 'toggleActionsMenu');
+      instance.resolveComment();
+      expect(spy).toHaveBeenCalledTimes(1);
     });
     it('render edit comment from correctly', () => {
-      instance.editComment()
+      const spy = jest.spyOn(instance, 'toggleActionsMenu');
+      instance.editComment();
+      expect(spy).toHaveBeenCalledTimes(1);
     });
     it('render UpdateComment comment from correctly', () => {
-      instance.updateComment('paragraph')
+      instance.updateComment('this is comment');
+      expect(instance.state.updatedFields.text).toEqual('this is comment');
 
     });
 
@@ -146,7 +154,9 @@ describe('Testing CommentsPanel component with props', () => {
     });
 
     it('test delete comment  function ', () => {
-      instance.deleteComment()
+      const spy = jest.spyOn(instance, 'deleteComment');
+      instance.deleteComment();
+      expect(spy).toHaveBeenCalledTimes(1);
     });
     it('test toggle action menu function with true',() => {
       instance.toggleActionsMenu(true);
