@@ -67,7 +67,7 @@ const initialState3 = {
             elementId: "urn:pearson:work:be34d78e-1638-4fcc-8511-5db7a3d4b395",
             elementType: "figure",
             elementWipType: "figure",
-            index: 0,
+            index: 4,
             longDesc: "",
             primaryOption: "primary-image-figure",
             secondaryOption: "secondary-image-figure-width",
