@@ -159,6 +159,7 @@ export class TinyMceEditor extends Component {
      * function to remove formatting of whole element excluding Math/Chem
      */
     innerTextWithMathMl = (node) => {
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         if (node.childNodes.length) {
             node.childNodes.forEach((innerNode) => {
                 if (innerNode.childNodes.length) {
