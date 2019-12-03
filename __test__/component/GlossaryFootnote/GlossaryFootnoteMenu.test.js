@@ -8,12 +8,7 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 
 const mockStore = configureMockStore(middlewares);
-// const store = mockStore({
-//     glossaryFootnoteReducer:{glossaryFootnoteValue:{"type":"","popUpStatus":false}
-//     }
-  
-  
-// });
+
 let props = {
     glossaryFootnoteValue : {type: "Glossary"},
     glossaryFootNoteCurrentValue: {"glossaryContentText": ""},
@@ -34,10 +29,16 @@ describe('Testing GlossaryFootnote menu component with props', () => {
         instance.closePopup ()
      });
      it('renders saveContent function correctly', () => {
-        instance.saveContent ()
+        instance.saveContent()
      });
-     it('renders handleClickOutside  function correctly', () => {
-         let event = {target : ''}
-        instance.handleClickOutside(event)
-     });
+    it('renders glossaryFootnoteDifference function correctly', () => {
+        let newTerm = 'abc'
+        let oldTerm = 'cde'
+        let newDef = 'aaa'
+        let oldDef = 'bbb'
+        let type = 'glossary'
+        instance.glossaryFootnoteDifference(newTerm, newDef, oldTerm, oldDef, type)
+        type = 'footnote'
+        instance.glossaryFootnoteDifference(newTerm, newDef, oldTerm, oldDef, type)
+    });
 })
