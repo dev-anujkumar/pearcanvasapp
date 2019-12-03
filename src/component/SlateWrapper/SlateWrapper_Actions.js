@@ -238,27 +238,14 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         "versionUrn": newSlateObj.containerUrn
     }
 
-    let slateLevelData = getState().appStore.slateLevelData[config.slateManifestURN];
-    let oldSlateBodymatter = slateLevelData.contents.bodymatter;
-    let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
-
-    oldSlateBodymatter.forEach((oldSlateBody) => {
-        oldSlateData.contents.bodymatter.push({
-            type: oldSlateBody.type,
-            id: oldSlateBody.id
-        })
-    })
-    newSlateBodymatter.forEach((newSlateBody) => {
-        newSlateData.contents.bodymatter.push({
-            type: newSlateBody.type,
-            id: newSlateBody.id
-        })
-    })
-    slateLevelData.contents.bodymatter=oldSlateBodymatter;
     slateDataList.push(oldSlateData, newSlateData)
+    let slateLevelData = getState().appStore.slateLevelData[config.slateManifestURN];
+    let oldSlateBodymatterLocal = slateLevelData.contents.bodymatter;
+    oldSlateBodymatterLocal.splice(splitIndex)
+    slateLevelData.contents.bodymatter = oldSlateBodymatterLocal;
 
     return axios.put(
-        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}`,
+        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}/${config.slateEntityURN}/${splitIndex}`,
         JSON.stringify({ slateDataList }),
         {
             headers: {
