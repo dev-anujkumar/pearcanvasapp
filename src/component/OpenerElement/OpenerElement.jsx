@@ -318,12 +318,13 @@ class OpenerElement extends Component {
         }
 
         /**
-         * [BG-411]|7 - validate before making blur call as discussed with Abhishek Pal 
+         * [BG-411]|7 - validate before making blur call
          */
         const { textsemantics, text } = this.props.element.title;
-        const classList = event.currentTarget.classList;
+        const classList = event.currentTarget && event.currentTarget.classList || [];
         let flag = true;
-        if ((classList.contains("opener-title") || classList.contains("opener-number"))
+        if (classList.length > 0 
+            && (classList.contains("opener-title") || classList.contains("opener-number"))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
             && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
             flag = false;

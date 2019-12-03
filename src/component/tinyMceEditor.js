@@ -1065,17 +1065,17 @@ export class TinyMceEditor extends Component {
     handleClick = (e) => {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
-        */
-        if( tinymce.$(e.target).find('li').length   ){
-            tinymce.$(e.target).find('li').each(function(a,b){
-                if( this.innerHTML.trim() == '' ){
-                    tinymce.$(this).append('<br/>')
-                } 
-            })
-        }
-        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-            tinymce.$(e.target).closest('li').append('<br/>');
-        }
+        */        
+        // if( tinymce.$(e.target).find('li').length   ){
+        //     tinymce.$(e.target).find('li').each(function(a,b){
+        //         if( this.innerHTML.trim() == '' ){
+        //             tinymce.$(this).append('<br/>')
+        //         } 
+        //     })
+        // }
+        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+        //     tinymce.$(e.target).closest('li').append('<br/>');
+        // }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -1175,6 +1175,14 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 this.setCursorAtEnd(currentTarget, isSameTarget); 
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                } 
             });
             this.setToolbarByElementType();
         }
@@ -1186,6 +1194,14 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
                 this.setCursorAtEnd(currentTarget, isSameTarget);
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                }  
             })
         });
         if (isSameTarget) {
@@ -1196,12 +1212,6 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        /**
-         * In case current element is list element
-         */
-        if (el.findChildren('ol').length || el.findChildren('ul').length) {
-            return
-        }
         if (isSameTarget) {
             return;
         }
