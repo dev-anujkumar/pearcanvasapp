@@ -12,6 +12,9 @@
 .element-container .learningObjectiveContainer .learningObjectiveinner{
     padding: 10px 0px 0px 10px!important;
 }
+.learningObjectiveContainer .cypress-editable{
+    min-height: inherit!important;
+}
 .element-container .learningObjectiveContainer .learningObjectiveinnerText.cypress-editable.place-holder::before
 { content: attr(placeholder);
     position: inherit;

@@ -153,6 +153,7 @@ export class AssessmentSlateData extends Component {
         hideTocBlocker();
         this.props.showBlocker(false);
         this.setState({
+            activeAssessmentType: LEARNING_APP_TYPE,
             changeLearningData: false,
             learningToolStatus: false
         })
