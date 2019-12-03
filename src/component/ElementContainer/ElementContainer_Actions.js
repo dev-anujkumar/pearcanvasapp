@@ -357,3 +357,22 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         cb();
     }, 300)
 }
+
+export const getTableEditorData = (elementId) => (dispatch, getState) =>{
+    axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(response => {      
+        console.log("response",response.data)
+        updateFigureData(response.data.figuredata,0,elementId)
+
+    }).catch(error => {
+
+        console.log("getTableEditorData Api fail", error);
+
+    })
+}

@@ -128,10 +128,11 @@ function WithWrapperCommunication(WrappedComponent) {
                     break;
                 case 'refreshElementWithTable':
                     {
-                        this.showCanvasBlocker(true);
-                        showHeaderBlocker();
-                        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-                        this.props.fetchSlateData(config.slateManifestURN);
+                        // this.showCanvasBlocker(true);
+                        // showHeaderBlocker();
+                        // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
+                        // this.props.fetchSlateData(config.slateManifestURN);
+                        this.setTableData(message.elementId);
                     }
                     break;
                 case 'canvasBlocker':
@@ -615,6 +616,10 @@ function WithWrapperCommunication(WrappedComponent) {
             else {
                 return null
             }
+        }
+
+        setTableData = (elementId) => {
+            this.props.getTableEditorData(elementId, elementIndex, parentUrn, asideData);
         }
         
 
