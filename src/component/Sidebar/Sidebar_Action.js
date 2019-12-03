@@ -25,7 +25,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 console.log("oldElementData",oldElementData)
-console.log("indexes",indexes)
     if(oldElementData.figuretype==="assessment"){
         inputPrimaryOptionEnum=inputSubType['enum'];
         inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase().replace(" ", "_").replace("-", "_");
@@ -41,12 +40,15 @@ console.log("indexes",indexes)
     if (oldElementData.type === "figure") {
         if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
             oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
+            console.log("oldElementData.figuredata1",oldElementData.figuredata)
         }
         if(oldElementData.figuredata.srctype){
             oldElementData.figuredata.srctype=outputSubType['wipValue']
+            console.log("oldElementData.figuredata2",oldElementData.figuredata)
         }
         if(oldElementData.figuredata.interactivetype){
             oldElementData.figuredata.interactivetype=outputSubType['wipValue'];
+            console.log("oldElementData.figuredata3",oldElementData.figuredata)
         }
 
         /* on Conversion removing the tinymce instance for BCE element*/
