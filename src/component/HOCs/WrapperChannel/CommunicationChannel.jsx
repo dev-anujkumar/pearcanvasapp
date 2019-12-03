@@ -337,10 +337,10 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         handleRefreshSlate = () => {
-            if(config.isFetchSlateInProgress){
-                sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
-                return false;
-            }
+            // if(config.isFetchSlateInProgress){
+            //     sendDataToIframe({ 'type': 'stopRefreshSpin', 'message': false }); 
+            //     return false;
+            // }
             localStorage.removeItem('newElement');
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {

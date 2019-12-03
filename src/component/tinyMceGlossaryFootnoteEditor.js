@@ -29,9 +29,6 @@ export class ReactEditor extends React.Component {
         this.setMathmlFormulaIcon(editor);
         this.addChemistryFormulaButton(editor);
         this.addMathmlFormulaButton(editor);
-        editor.on('init', e => {
-          this.setCursorAtEnd(editor);
-        })
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           let contentHTML = e.target.innerHTML;
@@ -214,9 +211,6 @@ export class ReactEditor extends React.Component {
 
     let testElem = document.createElement('div');
     testElem.innerHTML = model;
-    if(!testElem.innerText) {
-      testElem.innerText = "Test Value";
-    }
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
@@ -296,18 +290,14 @@ export class ReactEditor extends React.Component {
 
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
-      this.setCursorAtEnd();
-  })
+      this.setCursorAtEnd(tinymce.activeEditor);
+    })
   }
 
   setCursorAtEnd = (editor) => {
     if(editor){
       editor.selection.select(tinymce.activeEditor.getBody(), true);
       editor.selection.collapse(false);
-    }
-    else if(tinymce.activeEditor){
-      tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
-      tinymce.activeEditor.selection.collapse(false);
     }
   }
 

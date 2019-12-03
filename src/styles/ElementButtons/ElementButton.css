@@ -144,6 +144,7 @@
     cursor: not-allowed !important;
     color: gray !important;
     background: transparent;
+    pointer-events: none;
 }
 
 .activeTagBgColor {

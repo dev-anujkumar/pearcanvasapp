@@ -66,7 +66,10 @@ export const bindKeyDownEvent = (editor, e) => {
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
 
-    // [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace //
+    /**
+     * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
+     * keep this commented code for reference
+     */
     // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
     //     prohibitEventBubling(e);
     //     return false;
@@ -469,16 +472,20 @@ const prohibitEventBubling = (e) => {
 }
 
 export const preventRemoveAllFormatting = (editor) => {
-    if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
-        if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
-            return false
-        }
-        let timeoutInstance = setTimeout(() => {
-            clearTimeout(timeoutInstance)
-            updateNestedList(editor.targetElm)
-            return false
-        });
-    }
+    /**
+     * [BG-784] - to allow multilevel remove formatting and keeping default tiny behavior
+     * keep this commented code for reference
+     */
+    // if (editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length) {
+    //     if (isFullRangeSelected(editor) && editor.targetElm.querySelectorAll('li').length > 1) {
+    //         return false
+    //     }
+    //     let timeoutInstance = setTimeout(() => {
+    //         clearTimeout(timeoutInstance)
+    //         updateNestedList(editor.targetElm)
+    //         return false
+    //     });
+    // }
     return true
 }
 
