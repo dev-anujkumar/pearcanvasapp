@@ -159,6 +159,7 @@ export class TinyMceEditor extends Component {
      * function to remove formatting of whole element excluding Math/Chem
      */
     innerTextWithMathMl = (node) => {
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         if (node.childNodes.length) {
             node.childNodes.forEach((innerNode) => {
                 if (innerNode.childNodes.length) {
@@ -896,9 +897,12 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
-                if(!newElement){
-                    document.getElementById('slateWrapper').scrollTop=0;
-                }
+                /**
+                 * This particular logic is now moved at SlateWrapper
+                 */
+                // if(!newElement){
+                //     document.getElementById('slateWrapper').scrollTop=0;
+                // }
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
