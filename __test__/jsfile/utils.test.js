@@ -1,6 +1,6 @@
 var _ = require("lodash");
 const uuidV4 = require("uuid/v4");
-import { utils } from '../../src/js/utils.js';
+import { utils, checkforToolbarClick } from '../../src/js/utils.js';
 
 describe('Utils file function testing', () => {
     it('Testing getMonthName function', () => {
@@ -21,9 +21,9 @@ describe('Utils file function testing', () => {
 
     })
 
-    xit('Testing buildCommentDate function', () => {
+    it('Testing buildCommentDate function', () => {
         let result = utils.buildCommentDate('2015-03-25')
-        expect(result).toBe('Mar. 24, 2015 @05:30 AM')
+        expect(result).toBe('Mar. 25, 2015 @05:30 AM')
     })
 
     it('Testing toTitleCase function', () => {
@@ -38,10 +38,16 @@ describe('Utils file function testing', () => {
         expect(format).toBe(data)
     })
 
-    it('Testing getTaxonomicType function', () => {
-        let data = 'cite-interactive-slideshow-video'
+    it('Testing cite-interactive-slideshow-video param in taxonomic function',()=>{
+        let data = 'cite-interactive-video-with-interactive'
         let format = utils.getTaxonomicType(data)
-        expect(format).toBe('gallery-video')
+        expect(format).toBe("video-mcq")
+    })
+
+    it('Testing checkforToolbarClick function', () => {
+        let classList = ["tox-tbtn","tox-tbtn--select","tox-split-button"];
+        let format = checkforToolbarClick(classList);
+        expect(format).toEqual(true)
 
     })
 

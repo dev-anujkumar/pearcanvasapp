@@ -100,8 +100,24 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevprops) {
         this.renderDefaultElement();
+        if(Object.keys(this.props.slateData).length > 0){
+            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
+                let currentSlateId = Object.keys(this.props.slateData)[0];
+                let tcmCount = 0;
+                this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
+                    if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
+                        tcmCount++;
+                    }
+                });
+                if(tcmCount > 0){
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
+                } else {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+                }
+            }
+        }
     }
 
 

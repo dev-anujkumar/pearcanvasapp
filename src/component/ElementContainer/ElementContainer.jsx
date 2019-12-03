@@ -51,16 +51,7 @@ class ElementContainer extends Component {
             sectionBreak : null
         };
     }
-    componentDidMount() {
-         // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
-         let trackChangesStatus='false';
-         if(this.props.element && this.props.element.tcm){
-            trackChangesStatus = JSON.stringify(this.props.element.tcm);
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
-         }else if(this.props.element && this.props.element.feedback){
-            trackChangesStatus = JSON.stringify(this.props.element.feedback);
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesStatus});         
-         }   
+    componentDidMount() { 
         this.setState({
             ElementId: this.props.element.id,
             btnClassName : '',
@@ -103,15 +94,6 @@ class ElementContainer extends Component {
                 borderToggle: 'active',
                 btnClassName: 'activeTagBgColor'
             })
-        }
-        // ** This post message is require to enable red marker on tcm icon in wrapper when element is updated and tcm status is pending **/
-        let trackChangesPendingStatus='false';
-        if(this.props.element && newProps.element && (this.props.element.tcm !=newProps.element.tcm )){
-            trackChangesPendingStatus = JSON.stringify(newProps.element.tcm);
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});   
-        }else if(this.props.element && newProps.element && (this.props.element.feedback !=newProps.element.feedback)){
-            trackChangesPendingStatus = JSON.stringify(newProps.element.feedback);
-            sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': trackChangesPendingStatus});    
         }
     }
 
