@@ -201,16 +201,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {   
-        let parentData = getState().appStore.slateLevelData;
-        let currentParentData = JSON.parse(JSON.stringify(parentData));
-		let currentSlateData = currentParentData[config.slateManifestURN];
+    ).then(response => {           
         if(response.data.id !== updatedData.id){
             if(currentSlateData.status === 'wip'){
-                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex)
+                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, 'Directupdate');
             }else if(currentSlateData.status === 'approved'){
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }) 
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
             }
+        }else{
+            updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         //console.log("success saving")
@@ -232,7 +231,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
 
 }
 
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ){
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ,Directupdate ){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -302,7 +301,39 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     }else if(versionedData){
-        newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+        let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
+        if(Directupdate === 'Directupdate'){
+            if(indexes.length === 2){
+                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
+            }else if(indexes.length === 3){
+                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+            }
+        }else if(asideData && asideData.type == 'element-aside' && updatedData.status === 'approved'){
+           axios.get(`${config.ASSET_POPOVER_ENDPOINT}context/v2/${config.projectUrn}/ancestors/${updatedData.id}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "PearsonSSOSession": config.ssoToken
+                }
+            }).then(ancestorData => {
+                if(indexes.length === 2){
+                    if(ancestorData.ancestor.versionUrn !== parentUrn.manifestUrn){
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    }
+                }else if(indexes.length === 3){
+                    if(ancestorData.ancestor.ancestor.versionUrn !== asideData.id){
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    }
+                }
+                 
+            }).catch(err => {
+                console.log('axios Error', err);
+            })
+
+            
+            
+        }else{
+            newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+        }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
