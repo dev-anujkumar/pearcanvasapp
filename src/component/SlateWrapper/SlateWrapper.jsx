@@ -65,7 +65,6 @@ class SlateWrapper extends Component {
 
     handleScroll = (e) =>{
         if(config.totalPageCount <= config.page) return false;
-        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
             config.scrolling = false;

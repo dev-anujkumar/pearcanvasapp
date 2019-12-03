@@ -332,10 +332,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                  
             }).catch(err => {
                 console.log('axios Error', err);
-            })
-
-            
-            
+            })         
         }else{
             newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
         }
