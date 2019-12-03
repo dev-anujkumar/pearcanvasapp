@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import CurrentProjectUser from '../../../src/component/CommentsPanel/CurrentProjectUsers';
-import { comment, filters,users } from '../../../fixtures/commentPanelData.js'
+import { users } from '../../../fixtures/commentPanelData.js'
 
 describe('Testing CommentsPanel component with props', () => {
     let props = {
@@ -14,8 +14,15 @@ describe('Testing CommentsPanel component with props', () => {
   describe('Testing rendering component with props', () => {
     it('test get User function', () => {
         let event = {target:{className:'assign-user-list-items asignee-selected'}}
-        instance.getUser('c5test',event)
-      //expect(wrapper.find(".assignee-content")).toHaveLength(1)
+        instance.getUser('c5test',event);
+        expect(wrapper.find("ul.assign-user-list-popup-container")).toHaveLength(1);
+    })
+    it('simulating click function on li',() =>{
+    const instance = wrapper.instance()
+    const spy = jest.spyOn(instance, 'getUser');
+    let event = {target:{className:'assign-user-list-items asignee-selected'}};
+    wrapper.find("li.assign-user-list-items").at(0).simulate('click',event);
+    expect(spy).toHaveBeenCalledTimes(1)
     })
 
   })
