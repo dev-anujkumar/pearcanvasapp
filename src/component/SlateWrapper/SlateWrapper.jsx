@@ -181,11 +181,12 @@ class SlateWrapper extends Component {
             return _state;
         }
         if(props.showSlateLockPopupValue){
-           return _state = {
+            _state = {
             ..._state,
             showLockPopup: true,
             lockOwner: userId
         }
+        return _state;
     }
         else {
             return null
