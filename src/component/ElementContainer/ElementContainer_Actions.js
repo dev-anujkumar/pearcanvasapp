@@ -240,6 +240,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
+    if(_slateObject.tcm){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});
+    }
     if(!versionedData){
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
@@ -250,6 +253,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         ...element.elementdata,
                         text : updatedData.elementdata?updatedData.elementdata.text:null
                     },
+                    tcm : _slateObject.tcm?true:false,
                     html : updatedData.html
                 };
             }else if(asideData && asideData.type == 'element-aside'){
@@ -264,6 +268,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     ...nestedEle.elementdata,
                                     text : updatedData.elementdata?updatedData.elementdata.text:null
                                 },
+                                tcm : _slateObject.tcm?true:false,
                                 html : updatedData.html
                             };
                         }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
@@ -277,6 +282,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             ...ele.elementdata,
                                             text : updatedData.elementdata?updatedData.elementdata.text:null
                                         },
+                                        tcm : _slateObject.tcm?true:false,
                                         html : updatedData.html
                                     };
                                 }
