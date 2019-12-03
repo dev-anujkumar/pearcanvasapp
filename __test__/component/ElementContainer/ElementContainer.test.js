@@ -41,11 +41,24 @@ return  {
 }
 })
 jest.mock('./../../../src/component/ElementContainer/UpdateElements.js', () => {
-    return { createOpenerElementData: jest.fn()}
+    return {
+        createOpenerElementData: () => {
+            return jest.fn()
+        },
+        createUpdatedData: () => {
+            return jest.fn()
+        }
+    }
 })
 jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
     return { 
-        prepareDataForTcmUpdate: jest.fn() 
+        prepareDataForTcmUpdate: jest.fn() ,
+        deleteElement: ()=>{
+            return jest.fn()
+        },
+        updateElement: () => {
+            return jest.fn()
+        }
     }
 })
 const mockStore = configureMockStore(middlewares);
@@ -112,7 +125,7 @@ describe('Test for element container component', () => {
             "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ],
-        showBlocker: jest.fn()
+        showBlocker: jest.fn(),
     };
 
     let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
@@ -120,7 +133,7 @@ describe('Test for element container component', () => {
     const elementContainerInstance = elementContainer.instance();
     expect(elementContainerInstance).toBeDefined();
     })
-
+     
     describe('Test- renderElement function for Different Elements ', () => {
         let props = {
             element: wipData.opener,
@@ -128,9 +141,11 @@ describe('Test for element container component', () => {
             showBlocker: jest.fn(),
             index: 0,
             elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
+            updateElement: jest.fn()
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+
         it('Render Element Container ----->Opener Element', () => {
             expect(elementContainer).toHaveLength(1);
             elementContainerInstance.setState({
@@ -141,16 +156,35 @@ describe('Test for element container component', () => {
             elementContainerInstance.forceUpdate();
             elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
-        })
+        }) 
         it('Render Element Container ----->BlockQuote-Pullquote', () => {
+
             let props = {
                 element: wipData.pullquote,
-                permissions: []
-            };
+                permissions: [],
+                activeElement: {
+                    elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-blockfeature",
+                    index: 2,
+                    primaryOption: "primary-blockquote",
+                    secondaryOption: "secondary-pullquote",
+                    tag: "BQ",
+                    toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+                }
+            }; 
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            // const elementDiv1 = document.createElement('div');
+            // elementDiv1.setAttribute('id', "cypress-2");
+            // elementDiv1.innerHTML='<h3 class="pullQuoteNumeroUno">Hello Test</h3>' ;
+            // elementDiv1.innerText="Hello Test"
+            // document.body.appendChild(elementDiv1)
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            // elementContainerInstance.handleBlur();
+            // expect(spyhandleBlur).toHaveBeenCalled()
+            // spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->List Element', () => {
             let props = {
@@ -171,6 +205,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->Figure Element-TableImage', () => {
             let props = {
@@ -201,6 +239,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->Figure Element-BlockCodeEditor', () => {
             let props = {
@@ -211,8 +253,12 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
-        xit('Render Element Container ----->Figure Element-TableEditor', () => {
+        it('Render Element Container ----->Element-AuthoredText-List', () => {
             let props = {
                 element: wipData.list,
                 permissions: []
@@ -231,6 +277,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->SingleAssessment Element', () => {
             let props = {
@@ -241,6 +291,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->Interactive Element-MMI', () => {
             let props = {
@@ -251,6 +305,10 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->Interactive Element-SmartLink', () => {
             let props = {
@@ -275,22 +333,39 @@ describe('Test for element container component', () => {
         it('Render Element Container ----->AssessmentSlate', () => {
             let props = {
                 element: wipData.assessmentSlate,
-                permissions: []
+                permissions: [],
+                updateElement: jest.fn()
             };
+            let assessmentData = {
+                id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
+                format: 'tdx',
+                usageType: 'Quiz',
+                title: 'Assessment-Title',
+            }
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
+            elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
+            expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
+            spyhandleBlurAssessmentSlate.mockClear()
         })
-        it('Render Element Container ----->AsideContainer', () => {
+        it('Render Element Container ----->AsideContainer-elemBorderToggle-true', () => {
             let props = {
                 element: wipData.aside,
-                permissions: []
+                permissions: [],
+                elemBorderToggle: true
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlurAside  = jest.spyOn(elementContainerInstance, 'handleBlurAside')
             expect(elementContainer).toHaveLength(1);
-            expect(elementContainerInstance).toBeDefined();
+            expect(elementContainerInstance).toBeDefined(); 
+            elementContainerInstance.handleBlurAside();
+            expect(spyhandleBlurAside).toHaveBeenCalled()
+            expect(elementContainerInstance.state.borderToggle).toBe('showBorder')
+            spyhandleBlurAside.mockClear()
         })
         it('Render Element Container ----->WorkedExample', () => {
             let props = {
@@ -492,7 +567,7 @@ describe('Test for element container component', () => {
             expect(spyrenderPaletteList).toHaveBeenCalled()
             spyrenderPaletteList.mockClear()
         })
-        xit('Test-selectColor  Function', () => {
+        it('Test-selectColor  Function', () => {
             let e = {
                 target: {
                     getAttribute:  ()=> {
@@ -507,7 +582,7 @@ describe('Test for element container component', () => {
             expect(spyselectColor).toHaveBeenCalledWith(e)
             spyselectColor.mockClear()
         })
-        xit('Test-updateOpenerElement  Function', () => {
+        it('Test-updateOpenerElement  Function', () => {
             let openerData=wipData.opener
             let dataToSend ={openerData}
             //openerData ,"openerelement","primary-openerelement","secondary-openerelement",
@@ -579,7 +654,7 @@ describe('Test for element container component', () => {
             expect(spytoolbarHandling).toHaveBeenCalled()
             spytoolbarHandling.mockClear()
         }) 
-        xit('Test-deleteElement Function', () => {
+        it('Test-deleteElement Function', () => {
             elementContainerInstance.setState({
                 sectionBreak: true
             })
@@ -646,5 +721,58 @@ describe('Test for element container component', () => {
             elementContainerInstance.componentWillReceiveProps(newProps);
             expect(elementContainerInstance.state.borderToggle).toBe("showBorder")
         })  
+    })
+    describe('Test-Update Element Functions', () => {
+        let props = {
+            element: wipData.aside,
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+                updateElement: jest.fn()
+        };
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        xit('Render Element Container ----->AsideContainer-elemBorderToggle-false', () => {
+            elementContainerInstance.handleBlurAside();
+            expect(elementContainerInstance.state.borderToggle).toBe('hideBorder')
+        })
+        it('Render Element Container ----->AssessmentSlate-update-LT/LA', () => {
+            let props = {
+                element: wipData.assessmentSlate,
+                permissions: [],
+                updateElement: jest.fn()
+            };
+            let assessmentData = {
+                id: "urn:pearson:learningtemplate:802c9a49-b5cb-4278-a330-edb4048bcc7f",
+                format: 'learningtemplate',
+                usageType: 'Quiz',
+                learningsystem:"knowdl",
+                templateid: "2019-09-13-006",
+                templatetype:"criminal-justice-sims",
+                templatelabel:"How Does Barbara Corcoran Pick Her Investments on Shark Tank? - 9/13",
+            }
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
+            elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
+            expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
+            spyhandleBlurAssessmentSlate.mockClear()
+        })
+        it('Render Element Container ----->AssessmentSlate-update-usageType update', () => {
+            let props = {
+                element: wipData.assessmentSlate,
+                permissions: [],
+                updateElement: jest.fn()
+            };
+            let assessmentData = 'Homework'
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlurAssessmentSlate  = jest.spyOn(elementContainerInstance, 'handleBlurAssessmentSlate') 
+            elementContainerInstance.handleBlurAssessmentSlate(assessmentData);
+            expect(spyhandleBlurAssessmentSlate).toHaveBeenCalledWith(assessmentData)
+            spyhandleBlurAssessmentSlate.mockClear()
+        })
     })
 });

@@ -163,7 +163,7 @@ describe('Testing Opener component with props', () => {
         let openerElementInstance = openerComponent.find('OpenerElement').instance()
         const spydataFromAlfresco = jest.spyOn(openerElementInstance, 'dataFromAlfresco')
         const defaultPath = "https://d12m40tknrppbi.cloudfront.net/cite/images/ch11_chapter_header.jpg";
-        it('Test- if case workflow', () => {
+        xit('Test- if case workflow', () => {
             let data = {
                 'assetType': "image",
                 'EpsUrl': "",
@@ -178,7 +178,7 @@ describe('Testing Opener component with props', () => {
 
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  epsURL given', () => {
+        xit('Test- if case workflow-  epsURL given', () => {
             let data = {
                 'assetType': "image",
                 'EpsUrl': "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
@@ -196,7 +196,7 @@ describe('Testing Opener component with props', () => {
             expect(openerElementInstance.state.width).toBe("440px")
             spydataFromAlfresco.mockClear()
         })
-        it('Test- else case workflow', () => {
+        xit('Test- else case workflow', () => {
             let data = {
                 'assetType': "figure",
                 'epsUrl': "",

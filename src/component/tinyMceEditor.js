@@ -87,9 +87,6 @@ export class TinyMceEditor extends Component {
                     if(document.querySelector('.audio')){
                         document.querySelector('.audio').style.display = "block";
                     }
-                    if(document.querySelector('.openAudioIcon')){
-                        document.querySelector('.openAudioIcon').style.display = "block";
-                    }
                      /**
                      * This code is written to remove lagging in typing and move cursor at end on focus
                      */
@@ -1068,17 +1065,17 @@ export class TinyMceEditor extends Component {
     handleClick = (e) => {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
-        */
-        if( tinymce.$(e.target).find('li').length   ){
-            tinymce.$(e.target).find('li').each(function(a,b){
-                if( this.innerHTML.trim() == '' ){
-                    tinymce.$(this).append('<br/>')
-                } 
-            })
-        }
-        else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
-            tinymce.$(e.target).closest('li').append('<br/>');
-        }
+        */        
+        // if( tinymce.$(e.target).find('li').length   ){
+        //     tinymce.$(e.target).find('li').each(function(a,b){
+        //         if( this.innerHTML.trim() == '' ){
+        //             tinymce.$(this).append('<br/>')
+        //         } 
+        //     })
+        // }
+        // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
+        //     tinymce.$(e.target).closest('li').append('<br/>');
+        // }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -1178,6 +1175,14 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 this.setCursorAtEnd(currentTarget, isSameTarget); 
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                } 
             });
             this.setToolbarByElementType();
         }
@@ -1189,6 +1194,14 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
                 this.setCursorAtEnd(currentTarget, isSameTarget);
+
+                if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
+                    currentTarget.querySelectorAll('li').forEach((li) => {
+                        if (li.innerHTML.trim() == '') {
+                            li.append(document.createElement('br'))
+                        }
+                    })
+                }  
             })
         });
         if (isSameTarget) {
@@ -1202,14 +1215,14 @@ export class TinyMceEditor extends Component {
         /**
          * In case current element is list element
          */
-        if (el.findChildren('ol').length || el.findChildren('ul').length) {
+        if (el.findChildren('ol').length || el.findChildren('ul').length || el.innerText==="") {
             return
         }
         if (isSameTarget) {
             return;
         }
+        let selection;
         if(tinymce.activeEditor.getBody().tagName==="CODE"){
-            let selection;
             if (document.selection) {
                 selection = document.selection.createRange();
                 selection.moveStart('character', sel.rangeCount);
@@ -1219,6 +1232,11 @@ export class TinyMceEditor extends Component {
                 selection = window.getSelection();
                 selection.collapse(el, selection.rangeCount);
             }
+            return;
+        }
+        else if(el.findChildren('blockquote').length){
+            selection = window.getSelection();
+            selection.collapse(el.children[0].children[0], selection.rangeCount);
             return;
         }
 
