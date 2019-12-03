@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
@@ -358,7 +358,8 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
     }, 300)
 }
 
-export const getTableEditorData = (elementId) => (dispatch, getState) =>{
+export const getTableEditorData = (elementId) => (dispatch, getState) => {
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
     axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
@@ -366,13 +367,40 @@ export const getTableEditorData = (elementId) => (dispatch, getState) =>{
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {      
-        console.log("response",response.data)
-        updateFigureData(response.data.figuredata,0,elementId)
+    ).then(response => {
+        let parentData = getState().appStore.slateLevelData
+        const newParentData = JSON.parse(JSON.stringify(parentData));
 
+        newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementId, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter)
+
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newParentData
+            }
+        })
     }).catch(error => {
-
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("getTableEditorData Api fail", error);
+    })
+}
 
+const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
+
+    return slateBodyMatter = slateBodyMatter.map(elm => {
+        if (elm.id === elementId) {
+            elm = {
+                ...elm,
+                ...tableData
+            }
+        }
+        else if (elm.elementdata && elm.elementdata.bodymatter) {
+            elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter)
+        }
+        else if (elm.contents && elm.contents.bodymatter) {
+            elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
+        }
+        return elm;
     })
 }

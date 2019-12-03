@@ -619,7 +619,7 @@ function WithWrapperCommunication(WrappedComponent) {
         }
 
         setTableData = (elementId) => {
-            this.props.getTableEditorData(elementId, elementIndex, parentUrn, asideData);
+            this.props.getTableEditorData(elementId);
         }
         
 
