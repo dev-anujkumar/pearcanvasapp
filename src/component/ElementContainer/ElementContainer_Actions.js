@@ -250,6 +250,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         ...element.elementdata,
                         text : updatedData.elementdata?updatedData.elementdata.text:null
                     },
+                    tcm : _slateObject.tcm?true:false,
                     html : updatedData.html
                 };
             }else if(asideData && asideData.type == 'element-aside'){
@@ -264,6 +265,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     ...nestedEle.elementdata,
                                     text : updatedData.elementdata?updatedData.elementdata.text:null
                                 },
+                                tcm : _slateObject.tcm?true:false,
                                 html : updatedData.html
                             };
                         }else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn){
@@ -277,6 +279,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             ...ele.elementdata,
                                             text : updatedData.elementdata?updatedData.elementdata.text:null
                                         },
+                                        tcm : _slateObject.tcm?true:false,
                                         html : updatedData.html
                                     };
                                 }
