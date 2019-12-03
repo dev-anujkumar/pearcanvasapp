@@ -37,13 +37,12 @@ export class ElementSingleAssessment extends Component {
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
         })
         let newElement = localStorage.getItem('newElement');
-            if(newElement) {
-                setTimeout(() => {
-                    this.handleAssessmentFocus();
-                    localStorage.removeItem('newElement');
-                  }, 0)
-                
-            }
+        if (newElement) {
+            setTimeout(() => {
+                this.handleAssessmentFocus();
+                localStorage.removeItem('newElement');
+            }, 0)
+        }
     }
     
 static getDerivedStateFromProps(nextProps, prevState) {
@@ -205,9 +204,6 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 
             </div>
         );
-    }
-    componentDidUpdate(){
-        
     }
 }
 
