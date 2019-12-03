@@ -1,2 +1,2 @@
-import Interactive from './ElementInteractive.jsx';
-export default Interactive;
+import ElementShowHide from './ElementShowHide.jsx';
+export default ElementShowHide;
