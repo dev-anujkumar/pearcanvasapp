@@ -31,10 +31,8 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
-import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
-import { popup } from '../../../fixtures/ElementPopup'
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 class ElementContainer extends Component {

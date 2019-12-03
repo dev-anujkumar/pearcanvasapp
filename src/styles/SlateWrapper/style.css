@@ -153,7 +153,7 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     pointer-events:none;            
    }
 
-   .title-head-wrapper .popup-button{
+.title-head-wrapper .popup-button{
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -165,8 +165,8 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
     margin: 4px 2px;
     cursor: pointer;
     width: 771px;
-   }
 }
+
 .moreloader,
 .moreloader:before,
 .moreloader:after {

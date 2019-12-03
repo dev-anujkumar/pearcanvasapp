@@ -43,7 +43,7 @@ const INITIAL_STATE = {
     pageNumberData: {},
     permissions: [],
     accesDeniedPopup: false,
-    popupSlateData:null,
+    popupSlateData: null,
     roleId: ''
 };
 
@@ -93,10 +93,10 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 pageNumberData: action.payload
             }
-         case SET_UPDATED_SLATE_TITLE:
+        case SET_UPDATED_SLATE_TITLE:
             return {
                 ...state,
-                slateTitleUpdated : action.payload.title
+                slateTitleUpdated: action.payload.title
             }
         case SET_SLATE_TYPE:
             return {
@@ -113,7 +113,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 setSlateParent: action.payload
             }
-         case AUTHORING_ELEMENT_UPDATE:
+        case AUTHORING_ELEMENT_UPDATE:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
@@ -122,25 +122,30 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 permissions: action.payload.permissions,
-                roleId : action.payload.roleId
+                roleId: action.payload.roleId
             }
         case SET_OLD_IMAGE_PATH:
             return {
                 ...state,
                 oldImage: action.payload.oldImage
-            } ;
+            };
         case UPDATE_PAGENUMBER:
         case UPDATE_PAGENUMBER_SUCCESS:
         case UPDATE_PAGENUMBER_FAIL:
-            return{
-               ...state,
-               pageLoading:action.payload.pageLoading
+            return {
+                ...state,
+                pageLoading: action.payload.pageLoading
             };
         case ACCESS_DENIED_POPUP:
             return {
                 ...state,
-                accesDeniedPopup : action.payload
+                accesDeniedPopup: action.payload
             };
+        case OPEN_POPUP_SLATE:
+            return {
+                ...state,
+                popupSlateData: action.payload
+            }
         default:
             return state;
     }
