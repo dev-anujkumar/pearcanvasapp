@@ -80,8 +80,6 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
         })
 }
 
-
-
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
     const prepareDeleteRequestData = (type) => {
         switch (type) {
