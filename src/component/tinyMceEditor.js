@@ -494,7 +494,7 @@ export class TinyMceEditor extends Component {
      */
     isTabPressed = (keydownEvent) => {
         const keyCode = keydownEvent.keyCode || keydownEvent.which
-        if(this.props.element.type !== "element-list" && keyCode === 9){
+        if(this.props.element && this.props.element.type !== "element-list" && keyCode === 9){
             return 1
         }
         else{
@@ -808,8 +808,8 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+      	this.handleBlur();
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
-        this.handleBlur();
     }
 
 
