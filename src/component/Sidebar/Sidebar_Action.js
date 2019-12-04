@@ -159,13 +159,18 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     let elmIndexes = indexes ? indexes : 0;
     let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
-    if(elmIndexes.length === 2){
+    if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
         if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
             conversionDataToSend.isHead = true;
             conversionDataToSend.parentType = "workedexample";
         }
-    }else if(elmIndexes.length === 3){
+    }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
         if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = false;
+            conversionDataToSend.parentType = "workedexample";
+        }
+    }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
             conversionDataToSend.isHead = false;
             conversionDataToSend.parentType = "element-aside";
         }
