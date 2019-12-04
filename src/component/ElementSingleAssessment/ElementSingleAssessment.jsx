@@ -11,6 +11,7 @@ import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { hasReviewerRole } from '../../constants/utility.js'
 
+
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 export class ElementSingleAssessment extends Component {
@@ -28,13 +29,20 @@ export class ElementSingleAssessment extends Component {
         };
     }
     componentDidMount() {
-        let title =this.props.model.html.title?this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
+        let title = this.props.model && this.props.model.html && this.props.model.html.title ? this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
         this.setState({
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? title : null,
             assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
             assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz"
         })
+        let newElement = localStorage.getItem('newElement');
+        if (newElement) {
+            setTimeout(() => {
+                this.handleAssessmentFocus();
+                localStorage.removeItem('newElement');
+            }, 0)
+        }
     }
     
 static getDerivedStateFromProps(nextProps, prevState) {

@@ -284,6 +284,13 @@ export const bindKeyDownEvent = (editor, e) => {
             prohibitEventBubling(e);
             return false;
         }
+        if (anchorNode.nextSibling !== null) {
+            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+            if (closestLi.findChildren('ol').length > 0 || closestLi.findChildren('ul').length > 0) {
+                prohibitEventBubling(e);
+                return false;
+            }
+        }
         // else update list content //
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);

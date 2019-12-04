@@ -65,7 +65,6 @@ class SlateWrapper extends Component {
 
     handleScroll = (e) =>{
         if(config.totalPageCount <= config.page) return false;
-        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
             config.scrolling = false;
@@ -100,8 +99,24 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevprops) {
         this.renderDefaultElement();
+        if(Object.keys(this.props.slateData).length > 0){
+            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
+                let currentSlateId = Object.keys(this.props.slateData)[0];
+                let tcmCount = 0;
+                this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
+                    if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
+                        tcmCount++;
+                    }
+                });
+                if(tcmCount > 0){
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
+                } else {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+                }
+            }
+        }
     }
 
 
@@ -153,6 +168,7 @@ class SlateWrapper extends Component {
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
+                document.getElementById('slateWrapper').scrollTop = 0;
                 _state = {
                     ..._state,
                     previousSlateId: _slateId
