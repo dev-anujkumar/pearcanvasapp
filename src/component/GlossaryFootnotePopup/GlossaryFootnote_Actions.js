@@ -106,8 +106,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
 
     /** Feedback status from elementData */
-    const result = newBodymatter.find( ({ id }) => id == elementWorkId );
-    let tcmFeedback = result.feedback || false;
+    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback')
+    let tcmFeedback =  elementNodeData;
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {

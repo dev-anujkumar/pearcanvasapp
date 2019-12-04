@@ -250,7 +250,9 @@ class ElmTable extends Component {
     }
 
     render() {
-        let buttonText = (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK"
+        let buttonText = (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK";
+        let errorMessage = (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ?
+            <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>No Results Found</i>
         if (this.props.errFlag) {
             return (
                 <div>
@@ -261,7 +263,7 @@ class ElmTable extends Component {
                     </div>
                     <div className="elm-error-div">
                         <p className="elm-error-line">
-                            {this.props.errorStatus == 404 ? <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>**Error occured, Please try again!!!</i>}
+                            {this.props.errorStatus == 404 ? errorMessage : <i>**Error occured, Please try again!!!</i>}
                         </p>
                     </div>
                 </div>
