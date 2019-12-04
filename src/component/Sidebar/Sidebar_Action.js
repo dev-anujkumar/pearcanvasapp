@@ -22,7 +22,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
         inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]
 
-   // console.log("oldElementData",oldElementData)
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
     if(oldElementData.figuretype==="assessment"){
@@ -92,7 +91,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
-        let domHtml = editableDom.innerHTML
+        let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }
@@ -177,7 +176,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 			"PearsonSSOSession": config.ssoToken
 		}
     }).then(res =>{
-        console.log('res-->',res)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
@@ -211,7 +209,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
-
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -228,7 +225,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     })
 }
 catch (error) {
-    console.log('in the catch block')
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
 }
 }

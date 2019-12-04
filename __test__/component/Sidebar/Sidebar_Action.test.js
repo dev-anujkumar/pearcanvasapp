@@ -2,13 +2,12 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 const middlewares = [thunk];
+import axios from 'axios';
 const mockStore = configureMockStore(middlewares);
-// import slateLevelData from './slateData';
 import slateData from '../../../fixtures/SidebarTestData'
+import activeElementData from './SidebarInitialState';
 import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
-import { spy, stub } from 'sinon';
-// import config from '../../../src/config/config';
-const callback = new stub();
+jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
 }))
@@ -24,145 +23,67 @@ jest.mock('../../../src/config/config.js', () => ({
 const initialState = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
-            elementType: "element-authoredtext",
-            elementWipType: "element-authoredtext",
-            index: 1,
-            primaryOption: "primary-paragraph",
-            secondaryOption: "secondary-paragraph",
-            tag: "P",
-            toolbar: []
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
-    },
+        activeElement: activeElementData.paragraph
+    }
 }
 const initialState2 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
-            elementType: "element-assessment",
-            elementWipType: "figure",
-            index: 3,
-            primaryOption: "primary-single-assessment",
-            secondaryOption: "secondary-single-assessment-cite",
-            tag: "Qu",
-            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        activeElement: activeElementData.assessment
     },
 }
 const initialState3 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            elementId: "urn:pearson:work:be34d78e-1638-4fcc-8511-5db7a3d4b395",
-            elementType: "figure",
-            elementWipType: "figure",
-            index: 4,
-            longDesc: "",
-            primaryOption: "primary-image-figure",
-            secondaryOption: "secondary-image-figure-width",
-            tag: "Fg",
-            toolbar: ["assetpopover", "decreaseindent", "glossary"]
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        activeElement:activeElementData.image
     },
 }
 const initialState4 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
-            elementType: "video-audio",
-            elementWipType: "figure",
-            index: 5,
-            primaryOption: "primary-video",
-            secondaryOption: "secondary-video-alfresco",
-            tag: "VID",
-            toolbar: ["assetpopover", "glossary"]
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        activeElement: activeElementData.video
     },
 }
 const initialState5 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            altText: "",
-            elementId: "urn:pearson:work:180226f6-ba40-406c-8b20-7842071ae4e3",
-            elementType: "element-interactive",
-            elementWipType: "figure",
-            index: 6,
-            primaryOption: "primary-mmi",
-            secondaryOption: "secondary-interactive-mmi",
-            tag: "MMI",
-            toolbar: ["assetpopover", "glossary"]
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
-    },
+        activeElement:activeElementData.interactive
+    }
 }
 const initialState6 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            altText: "",
-            elementId: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
-            elementType: "figure",
-            elementWipType: undefined,
-            index: 7,
-            longDesc: "",
-            primaryOption: "primary-blockcode-equation",
-            secondaryOption: "secondary-blockcode-language-Python",
-            tag: "BCE",
-            toolbar: ["assetpopover", "decreaseindent", "glossary"]
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        activeElement:activeElementData.blockcode
     },
 }
 const initialState7 = {
     appStore: {
         slateLevelData: slateData,
-        activeElement: {
-            elementId: "urn:pearson:work:b922acc4-3ee7-4e77-bd6a-55b7bbe36d90",
-            elementType: "element-authoredtext",
-            elementWipType: "element-list",
-            index: 8,
-            primaryOption: "primary-list",
-            secondaryOption: "secondary-list-2",
-            tag: "OL",
-            toolbar: []
-        },
-        permissions: [
-            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-        ]
+        activeElement:activeElementData.list
+    },
+}
+const initialState8 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: activeElementData.workedexample
+    },
+}
+const initialState9 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement:activeElementData.aside 
+    },
+}
+const initialState10 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement:activeElementData.aside_authoredtext
+    },
+}
+const initialState11 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: activeElementData.we_authoredtext
     },
 }
 describe('Test convertElement- paragraph', () => {
@@ -439,7 +360,7 @@ describe('Test convertElement- PARAGRAPH to LIST', () => {
 
     });
 });
-xdescribe('Test convertElement- UL to NUMBERED LIST', () => {
+describe('Test convertElement- UL to NUMBERED LIST', () => {
     let store = mockStore(() => initialState7);
     it('Test convertElement  -UL to NUMBERED LIST', () => {
         store = mockStore(() => initialState7);
@@ -456,15 +377,79 @@ xdescribe('Test convertElement- UL to NUMBERED LIST', () => {
 
     });
 });
-xdescribe('Test convertElement- MOCK API CALL', () => {
-    let store = mockStore(() => initialState4);
+describe('Test convertElement- WORKED-EXAMPLE 1 TO 2', () => {
+    let store = mockStore(() => initialState8);
+    it('Test convertElement  -WORKED-EXAMPLE 1 TO 2', () => {
+        store = mockStore(() => initialState8);
+        let elementData = {
+            elementId: "urn:pearson:manifest:f74c018e-16f1-4a3e-831c-d7e9c239610f",
+            elementType: "element-workedexample",
+            labelText: "WE",
+            primaryOption: "primary-workedexample-we2",
+            secondaryOption: "secondary-workedexample-we2",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
 
-    beforeEach(() => {
+        }
+        let store = mockStore(() => initialState8);
+        store.dispatch(sidebarAction.conversionElement(elementData));
 
-        moxios.install();
     });
-    afterEach(() => moxios.uninstall());
-    it('Test convertElement  -MOCK API CALL', () => {
+});
+describe('Test convertElement- WORKED-EXAMPLE -internal conversion', () => {
+    let store = mockStore(() => initialState11);
+    it('Test convertElement  -WORKED-EXAMPLE 1 TO 2', () => {
+        store = mockStore(() => initialState11);
+        let elementData = {
+            elementId: "urn:pearson:work:fcba4843-df9e-491a-a144-b6a22fa5177a",
+            elementType: "element-authoredtext",
+            labelText: "H1",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
+        }
+        let store = mockStore(() => initialState11);
+        store.dispatch(sidebarAction.conversionElement(elementData));
+
+    });
+});
+describe('Test convertElement- ASIDE-CONTAINER', () => {
+    let store = mockStore(() => initialState9);
+    it('Test convertElement  - ASIDE-CONTAINER', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb2",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        store.dispatch(sidebarAction.conversionElement(elementData));
+
+    });
+});
+describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
+    let store = mockStore(() => initialState10);
+    it('Test convertElement  - ASIDE-CONTAINER', () => {
+        store = mockStore(() => initialState10);
+        let elementData = {
+            elementId: "urn:pearson:work:9ced8f63-da04-44a6-8ef1-19ecd1af77b1",
+            elementType: "element-authoredtext",
+            labelText: "H1",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            toolbar:  ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
+        }
+        let store = mockStore(() => initialState10);
+        store.dispatch(sidebarAction.conversionElement(elementData));
+
+    });
+});
+describe('Test convertElement- MOCK API CALL', () => {
+    let store = mockStore(() => initialState4);
+    it('Test convertElement  -MOCK API CALL',async () => {
         store = mockStore(() => initialState4);
         let elementData = {
             elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
@@ -622,16 +607,141 @@ xdescribe('Test convertElement- MOCK API CALL', () => {
             }
         }
         let store = mockStore(() => initialState4);
-        moxios.wait(() => {
-            const request = moxios.requests.mostRecent();
-            request.respondWith({
-                status: 200,
-                response: expectedRes
-            });
-        });
-        store.dispatch(sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"])).then((res) => {
-            expect(res).toBe(expectedRes)
-        });
+        let expectedRess= {
+            elementId: 'urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75',
+            index: '5',
+            elementType: 'video-audio',
+            primaryOption: 'primary-video',
+            secondaryOption: 'secondary-video-smartlink',
+            tag: 'VID',
+            toolbar: [ 'assetpopover', 'glossary' ],
+            elementWipType: undefined,
+            altText: '',
+            longDesc: ''
+          }
+      
+        axios.post.mockImplementation(() => Promise.resolve(expectedRes));
+        let elemData={}
+        let dispatch=(obj)=>{
+            if(obj.type==='FETCH_SLATE_DATA'){
+                expect(obj.type).toEqual('FETCH_SLATE_DATA');
+                elemData=obj
+            }
+            else{
+                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                elemData=obj
+            }
+        }
+         let result = await sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"]);
+         result(dispatch);
+         setTimeout(()=>{
+            if(elemData.type==='FETCH_SLATE_DATA'){
+                expect(elemData.type).toEqual('FETCH_SLATE_DATA')
+
+            }
+            else{
+                expect(elemData.type).toEqual('SET_ACTIVE_ELEMENT');
+               
+            }
+         },1000)
     });
 });
-
+describe('Test convertElement- MOCK API CALL-catch', () => {
+    let store = mockStore(() => initialState4);
+    it('Test convertElement  -MOCK API CALL',async () => {
+        store = mockStore(() => initialState4);
+        let elementData = {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            labelText: "VID",
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-smartlink",
+            toolbar: ["assetpopover", "glossary"],
+            altText: "",
+            longDesc: "",
+            tag: "VID"
+        }
+        let activeElement = {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            elementWipType: "figure",
+            index: 5,
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-alfresco",
+            tag: "VID",
+            toolbar: ["assetpopover", "glossary"]
+        }
+        let oldData = {
+            captions: {
+                footnotes: [],
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: []
+            },
+            comments: false,
+            contentUrn: "urn:pearson:entity:a3838838-ad6a-4061-907a-c2dd9165d9b8",
+            credits: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            elementdata: {
+                text: null
+            },
+            feedback: false,
+            figuredata: {
+                clipinfo: {},
+                height: "399",
+                posterimage: { path: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png" },
+                schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                srctype: "internal",
+                videos: [{
+                    path: "",
+                    format: ""
+                }
+                ],
+                width: "600",
+            },
+            figuretype: "video",
+            html: {
+                captions: "<p><br></p>",
+                credits: "<p><br></p>",
+                footnotes: {},
+                glossaryentries: {},
+                postertext: "",
+                subtitle: "<p><br></p>",
+                text: "",
+                title: "<p><br></p>",
+            },
+            id: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            subtitle: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            subtype: "figureVideo",
+            status: "wip",
+            title: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            type: "figure",
+            versionUrn: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+        }
+        let error= 'TypeError: dispatch is not a function at dispatch (D:\Canvas Stabilization\canvas-stabilization\src\component\Sidebar\Sidebar_Action.js:215:9) at processTicksAndRejections (internal/process/task_queues.js:89:5)'
+        axios.post.mockImplementation(() => Promise.reject(error));
+         let result = await sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"]);
+        result();
+        setTimeout(() => {
+            expect(sendDataToIframe).toHaveBeenCalled()
+        }, 1000)
+    });
+});
