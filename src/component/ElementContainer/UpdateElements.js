@@ -148,6 +148,18 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
+
+    if(previousElementData.figuredata.interactivetype === "pdf"){
+        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+        let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+        let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
+        data.html.postertext = posterTextHTML
+        data.figuredata.postertext = {
+            schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text : posterText,
+            textsemantics : [ ]
+        }
+    }
     return data
 }
 
