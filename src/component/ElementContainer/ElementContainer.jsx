@@ -489,7 +489,7 @@ class ElementContainer extends Component {
      * Will e called on assessment element's blur
      */
     handleBlurAssessmentSlate = (assessmentData)=>{
-        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
