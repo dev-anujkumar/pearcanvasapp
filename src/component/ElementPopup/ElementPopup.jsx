@@ -56,16 +56,5 @@ class ElementPopup extends React.Component {
     }
 }
 ElementPopup.displayName = "ElementPopup"
-const mapStateToProps = state => {
-    return {
- 
-    };
-};
 
-
-export default connect(
-    mapStateToProps,
-    {
-        openPopupSlate
-    }
-)(ElementPopup);
+export default ElementPopup

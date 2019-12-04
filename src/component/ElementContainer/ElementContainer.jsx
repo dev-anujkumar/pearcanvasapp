@@ -18,7 +18,7 @@ import { addComment, deleteElement, updateElement } from './ElementContainer_Act
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag,openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
@@ -600,7 +600,9 @@ class ElementContainer extends Component {
                         element={element}
                         model={element.html}
                         slateLockInfo={slateLockInfo}
-                        onClick={this.handleFocus} />;
+                        onClick={this.handleFocus} 
+                        openPopupSlate = {this.props.openPopupSlate}
+                        />;
                     labelText = 'Pop'
                     break;
             }
@@ -798,6 +800,9 @@ const mapDispatchToProps = (dispatch) => {
         resetTableDataAction: (isReplaced) => {
             dispatch(resetTableDataAction(isReplaced))
         } ,
+        openPopupSlate:(element) => {
+            dispatch(openPopupSlate(element))
+        },
         accessDenied,
         releaseSlateLock
     }
