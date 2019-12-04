@@ -265,14 +265,14 @@ class OpenerElement extends Component {
         }
         if (imgSrc) {
             //  styleObj["width"] = width ? width : "100%"
-              styleObj = {
-              "max-width": "605px",
-              "height": "384px",
-              "margin-top": "1.5em",
-              "margin-left": "auto",
-             "margin-right": "auto",
-             "width":"76%"
-          }
+            styleObj = {
+                "maxWidth": "605px",
+                "height": "384px",
+                "marginTop": "1.5em",
+                "marginLeft": "auto",
+                "marginRight": "auto",
+                "width":"76%"
+            }
         }
 
         return styleObj
@@ -414,7 +414,7 @@ class OpenerElement extends Component {
 
 OpenerElement.propTypes = {
     /** Model */
-    model : PropTypes.object.isRequired,
+    element : PropTypes.object.isRequired,
 }
 
 OpenerElement.displayName = 'OpenerElement'

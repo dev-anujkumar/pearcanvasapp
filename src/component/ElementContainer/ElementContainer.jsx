@@ -243,21 +243,39 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        if(titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle || 
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits || 
-            this.props.oldImage !== newInteractiveid
-            ){
-                return 1
-            }
-            else {
-                return 0
+        if(previousElementData.figuredata.interactivetype === "pdf"){
+            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+            let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+
+            if(titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
+                captionHTML !== previousElementData.html.captions ||
+                creditsHTML !== previousElementData.html.credits || 
+                posterTextHTML !== previousElementData.html.postertext
+                ){
+                    return 1
+                }
+                else {
+                    return 0
+                }
+        }
+        else {
+            if(titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
+                captionHTML !== previousElementData.html.captions ||
+                creditsHTML !== previousElementData.html.credits || 
+                this.props.oldImage !== newInteractiveid
+                ){
+                    return 1
+                }
+                else {
+                    return 0
+                }
             }
     }
 
@@ -273,10 +291,10 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
         creditsHTML = this.replaceUnwantedtags(creditsHTML)
@@ -471,7 +489,7 @@ class ElementContainer extends Component {
      * Will e called on assessment element's blur
      */
     handleBlurAssessmentSlate = (assessmentData)=>{
-        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let dataToSend = {...this.props.element}
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
