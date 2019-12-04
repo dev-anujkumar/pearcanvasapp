@@ -18,12 +18,70 @@ let initialState = {
     splittedElementIndex: 0,
     pageNumberData: {}
 };
-xdescribe('action file test', () => {
+describe('action file test', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
         initialState = {
             slateLevelData: {},
+            appStore:{
+                slateLevelData: {
+                    "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                        "id": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "type": "manifest",
+                        contents: {
+                            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                            "title": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "sample slate"
+                            },
+                            "frontmatter": [],
+                            bodymatter: [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": true,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": true,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                }
+                            ]
+                        }
+                    }, 
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ]
+            }
+        },
             // elementsTag: {},
             activeElement: {},
             splittedElementIndex: 0,
@@ -34,7 +92,7 @@ xdescribe('action file test', () => {
     });
 
     afterEach(() => moxios.uninstall());
-    it('testing---Fetch comment action', () => {
+    xit('testing---Fetch comment action', () => {
         store = mockStore(() => initialState);
         let manifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         const expectedActions = [{
@@ -85,7 +143,7 @@ xdescribe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-authoredtext',
                 'tag': 'P',
-                'toolbar': ["undo", "redo"]
+                'toolbar': []
 
             }
         }]
@@ -126,7 +184,7 @@ xdescribe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-blockfeature',
                 'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent', 'glossary','slatetag']
+                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
             }
         }]
 
@@ -147,7 +205,7 @@ xdescribe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-blockfeature',
                 'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent', 'glossary','slatetag']
+                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
             }
         }]
 
@@ -169,7 +227,7 @@ xdescribe('action file test', () => {
                 'index': 1,
                 'elementWipType': 'element-blockfeature',
                 'tag': 'BQ',
-                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent', 'glossary','slatetag']
+                'toolbar': ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag']
             }
         }]
 
@@ -179,7 +237,7 @@ xdescribe('action file test', () => {
     describe('action file test casses for figure', () => {
 
 
-        it('setActiveElement test cases------------- figure', () => {
+        xit('setActiveElement test cases------------- figure', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.figure, 1));
     
@@ -201,7 +259,7 @@ xdescribe('action file test', () => {
     
         });
 
-        it('setActiveElement test cases------------- figure image50Text', () => {
+        xit('setActiveElement test cases------------- figure image50Text', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["figure-image50Text"], 1));
     
@@ -223,7 +281,7 @@ xdescribe('action file test', () => {
     
         });
 
-        it('setActiveElement test cases------------- figure imageWiderThanText', () => {
+        xit('setActiveElement test cases------------- figure imageWiderThanText', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["figure-imageWiderThanText"], 1));
     
@@ -245,7 +303,7 @@ xdescribe('action file test', () => {
     
         });
 
-        it('setActiveElement test cases------------- figure imageFullscreen', () => {
+        xit('setActiveElement test cases------------- figure imageFullscreen', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["figure-imageFullscreen"], 1));
     
@@ -268,7 +326,7 @@ xdescribe('action file test', () => {
         });
 
         
-        it('setActiveElement test cases------------- figure image25Text', () => {
+        xit('setActiveElement test cases------------- figure image25Text', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["figure-image25Text"], 1));
     
@@ -293,7 +351,7 @@ xdescribe('action file test', () => {
 
 
     describe('action file test casses for table', () => {
-        it('setActiveElement  with table', () => {
+        xit('setActiveElement  with table', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.table, 1));
     
@@ -314,7 +372,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement  with table imageTextWidthTableImage', () => {
+        xit('setActiveElement  with table imageTextWidthTableImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["table-imageTextWidthTableImage"], 1));
     
@@ -336,7 +394,7 @@ xdescribe('action file test', () => {
     
         });
 
-        it('setActiveElement  with table imageWiderThanTextTableImage', () => {
+        xit('setActiveElement  with table imageWiderThanTextTableImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["table-imageWiderThanTextTableImage"], 1));
     
@@ -358,7 +416,7 @@ xdescribe('action file test', () => {
     
         });
 
-        it('setActiveElement  with table imageFullscreenTableImage', () => {
+        xit('setActiveElement  with table imageFullscreenTableImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["table-imageFullscreenTableImage"], 1));
     
@@ -383,7 +441,7 @@ xdescribe('action file test', () => {
     })
     
     describe('action file test casses for mathImage', () => {
-        it('setActiveElement for   ------------------mathImage', () => {
+        xit('setActiveElement for   ------------------mathImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.mathImage, 1));
     
@@ -404,7 +462,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for  -------------- mathImage imageTextWidthMathImage', () => {
+        xit('setActiveElement for  -------------- mathImage imageTextWidthMathImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["mathImage-imageTextWidthMathImage"], 1));
     
@@ -425,7 +483,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for  -------------- mathImage imageWiderThanTextMathImage', () => {
+        xit('setActiveElement for  -------------- mathImage imageWiderThanTextMathImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["mathImage-imageWiderThanTextMathImage"], 1));
     
@@ -446,7 +504,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for  -------------- mathImage imageFullscreenMathImage', () => {
+        xit('setActiveElement for  -------------- mathImage imageFullscreenMathImage', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip["mathImage-imageFullscreenMathImage"], 1));
     
@@ -482,9 +540,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-mathml-equation',
                     'elementId': 'urn:pearson:work:46a8d1a5-e664-4d6e-928a-a86e951d03bb',
                     'index': 1,
+                    "longDesc": "",
                     'elementWipType': 'figure',
+                    "altText": "",
                     'tag': 'MML',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -506,9 +566,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Default',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -543,9 +605,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-C++',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -580,9 +644,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Java',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "startNumber": "1",
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -615,11 +681,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-C',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -654,9 +722,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Python',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -692,9 +762,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Javascript',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent', "glossary"]
                 }
             }]
     
@@ -729,9 +801,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-HTML',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
+                    "startNumber": "1",
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -764,11 +838,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-CSS',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -801,11 +877,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-Apache',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -838,11 +916,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-C#',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -875,11 +955,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-JSON',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent',"glossary",]
                 }
             }]
     
@@ -914,9 +996,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Makefile',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "startNumber": "1",
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -949,11 +1033,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-Kotlin',
+                    "startNumber": "1",
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent', "glossary"]
                 }
             }]
     
@@ -988,9 +1074,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-R',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1025,9 +1113,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Perl',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent',"glossary",]
                 }
             }]
     
@@ -1062,9 +1152,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-PHP',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1099,9 +1191,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-GO',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1136,9 +1230,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Ruby',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1173,9 +1269,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Lisp',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1210,9 +1308,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Objective_C',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1247,9 +1347,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Scala',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1284,9 +1386,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Shell_Session',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1321,9 +1425,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-SQL',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1358,9 +1464,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-Swift',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1395,9 +1503,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-XML',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1430,11 +1540,13 @@ xdescribe('action file test', () => {
                     'elementType': 'figure',
                     'primaryOption': 'primary-blockcode-equation',
                     'secondaryOption': 'secondary-blockcode-language-Matlab',
+                    "startNumber": "1",
+                    "numbered": true,
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1469,9 +1581,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-GLSL',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "numbered": true,
+                    "startNumber": "1",
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1506,9 +1620,11 @@ xdescribe('action file test', () => {
                     'secondaryOption': 'secondary-blockcode-language-SML',
                     'elementId': 'urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1',
                     'index': 1,
+                    "startNumber": "1",
+                    "numbered": true,
                     'elementWipType': 'figure',
                     'tag': 'BCE',
-                    'toolbar': ['assetpopover','decreaseindent']
+                    'toolbar': ['assetpopover','decreaseindent','glossary']
                 }
             }]
     
@@ -1518,7 +1634,7 @@ xdescribe('action file test', () => {
 
     })
     describe('action file test casses for video', () => {
-        it('setActiveElement for with video', () => {
+        xit('setActiveElement for with video', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.video, 1));
     
@@ -1539,7 +1655,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with src internal', () => {
+        xit('setActiveElement for with src internal', () => {
             let store = mockStore();
             let element= {
                 "video":{
@@ -1588,7 +1704,7 @@ xdescribe('action file test', () => {
         });
     })
     describe('action file test casses for audio', () => {
-        it('setActiveElement for with audio', () => {
+        xit('setActiveElement for with audio', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.audio, 1));
     
@@ -1609,7 +1725,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with internal src', () => {
+        xit('setActiveElement for with internal src', () => {
             let store = mockStore();
             let element= {
                 "audio":{
@@ -1661,7 +1777,7 @@ xdescribe('action file test', () => {
         });
     })
     describe('action file test casses for interactive', () => {
-        it('setActiveElement for with interavtive', () => {
+        xit('setActiveElement for with interavtive', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.interactive, 1));
     
@@ -1682,7 +1798,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with interavtive', () => {
+        xit('setActiveElement for with interavtive', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.smartLink, 1));
     
@@ -1703,7 +1819,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with show hide', () => {
+        xit('setActiveElement for with show hide', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.showHide, 1));
     
@@ -1724,7 +1840,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with show popup', () => {
+        xit('setActiveElement for with show popup', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.popUp, 1));
     
@@ -1745,7 +1861,7 @@ xdescribe('action file test', () => {
             expect(store.getActions()).toEqual(expectedActions);
     
         });
-        it('setActiveElement for with show pdf', () => {
+        xit('setActiveElement for with show pdf', () => {
             let store = mockStore();
             store.dispatch(selectActions.setActiveElement(wip.pdf, 1));
     
