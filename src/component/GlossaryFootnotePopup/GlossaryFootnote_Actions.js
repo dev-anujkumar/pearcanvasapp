@@ -105,6 +105,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let newBodymatter = newParentData[slateId].contents.bodymatter;
     let workEditor, workContainer;
 
+    /** Feedback status from elementData */
+    const result = newBodymatter.find( ({ id }) => id == elementWorkId );
+    let tcmFeedback = result.feedback || false;
+
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, title, captions, credits, elementIndex
@@ -153,6 +157,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 type: elementType,
                 versionUrn: null,
                 contentUrn: null,
+                feedback: tcmFeedback,
                 html: {
                     ...figureDataObj,
                     glossaryentries: {},
@@ -174,6 +179,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 type: elementType,
                 versionUrn: null,
                 contentUrn: null,
+                feedback: tcmFeedback,
                 html: {
                     ...figureDataObj,
                     glossaryentries: glossaryEntry,

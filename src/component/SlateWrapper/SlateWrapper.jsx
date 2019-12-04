@@ -604,12 +604,7 @@ class SlateWrapper extends Component {
                         outerIndex = Number(outerIndex) + 1
                     }
                 } else {
-                    if (outerAsideIndex != 1) {
-                        outerIndex = outerAsideIndex + 1
-                    } else {
-                        outerIndex = outerAsideIndex;
-                    }
-
+                    outerIndex = indexToinsert;
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
