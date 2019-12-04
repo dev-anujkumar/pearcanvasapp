@@ -183,7 +183,7 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`).innerText.trim(),
+            preformattedText = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerText.trim(): "",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -282,7 +282,7 @@ class ElementContainer extends Component {
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""),
+            text = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""): "<p></p>",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
