@@ -106,8 +106,10 @@ class SlateWrapper extends Component {
                 let currentSlateId = Object.keys(this.props.slateData)[0];
                 let tcmCount = 0;
                 this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
-                    if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
-                        tcmCount++;
+                    if(data.hasOwnProperty('type') && (data.type.includes('element-authoredtext') || data.type.includes('element-list') || data.type.includes('element-blockfeature') || data.type.includes('element-learningobjectives') )){
+                        if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
+                            tcmCount++;
+                        }
                     }
                 });
                 if(tcmCount > 0){
