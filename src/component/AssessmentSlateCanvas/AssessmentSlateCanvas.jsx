@@ -11,7 +11,7 @@ import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import PopUp from './../PopUp';
 import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learningTool/learningToolActions';
-import { FULL_ASSESSMENT_CITE } from './AssessmentSlateConstants.js';
+import { FULL_ASSESSMENT_CITE , LEARNOSITY , PUF} from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
@@ -74,10 +74,11 @@ export class AssessmentSlateCanvas extends Component {
     * @description - This is the function to add C2-Media to Assessment Slate 
     * @param pufObj - The object contains data about PUF Assessment 
     */
-    addPufAssessment = (pufObj) => {
+    addPufAssessment = (pufObj , activeAssessmentType) => {
+        let assessmentType = activeAssessmentType === LEARNOSITY ? "learnosity" : PUF
         showTocBlocker();
         disableHeader(true);
-        this.updateAssessment(pufObj.id, "", pufObj.title, pufObj.assessmentFormat, pufObj.usagetype, 'insert');
+        this.updateAssessment(pufObj.id, "", pufObj.title, assessmentType , pufObj.usagetype, 'insert');
     }
 
     /***
