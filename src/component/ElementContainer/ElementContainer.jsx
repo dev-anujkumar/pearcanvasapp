@@ -183,7 +183,7 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`).innerText.trim(),
+            preformattedText = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerText.trim(): "",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -282,7 +282,7 @@ class ElementContainer extends Component {
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""),
+            text = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""): "<p></p>",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -664,6 +664,20 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        /** Handle TCM for tcm enable elements */
+        let tcm = false;
+        let feedback = false;
+        if(element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+            if (element.tcm) {
+                tcm = element.tcm;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+            if (element.feedback) {
+                feedback = element.feedback;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+        }
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -795,7 +809,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
+                    {feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
