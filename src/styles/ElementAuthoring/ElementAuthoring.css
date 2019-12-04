@@ -33,7 +33,13 @@
 .cypress-editable ::selection {
     background: #B5D6FD !important;
     color: #000000 !important;
-  }
+}
+
+#glossary-editor ::selection,#glossary-editor-attacher ::selection {
+background: #B5D6FD !important;
+color: #000000 !important;
+}
+
 .element-container p.paragraphNumeroUno{
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
