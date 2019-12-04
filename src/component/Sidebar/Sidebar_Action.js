@@ -10,7 +10,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
     try {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
@@ -22,6 +22,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
         inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]
 
+   // console.log("oldElementData",oldElementData)
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
     if(oldElementData.figuretype==="assessment"){
@@ -50,16 +51,15 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
             newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
-            if (tinymce && tinymce.activeEditor.id) {
+            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }
         else {
-            if (tinymce && tinymce.activeEditor.id) {
+            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
             }
         }
-
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
@@ -177,6 +177,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 			"PearsonSSOSession": config.ssoToken
 		}
     }).then(res =>{
+        console.log('res-->',res)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
@@ -227,11 +228,12 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
     })
 }
 catch (error) {
+    console.log('in the catch block')
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
 }
 }
 
-const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];

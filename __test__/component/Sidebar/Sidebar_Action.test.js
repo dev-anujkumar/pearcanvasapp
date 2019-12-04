@@ -3,10 +3,11 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import slateLevelData from './slateData';
+// import slateLevelData from './slateData';
 import slateData from '../../../fixtures/SidebarTestData'
 import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
 import { spy, stub } from 'sinon';
+// import config from '../../../src/config/config';
 const callback = new stub();
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
@@ -51,7 +52,7 @@ const initialState2 = {
             primaryOption: "primary-single-assessment",
             secondaryOption: "secondary-single-assessment-cite",
             tag: "Qu",
-            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
         },
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -72,7 +73,90 @@ const initialState3 = {
             primaryOption: "primary-image-figure",
             secondaryOption: "secondary-image-figure-width",
             tag: "Fg",
-            toolbar: ["assetpopover", "decreaseindent", "glossary"]   
+            toolbar: ["assetpopover", "decreaseindent", "glossary"]
+        },
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ]
+    },
+}
+const initialState4 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            elementWipType: "figure",
+            index: 5,
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-alfresco",
+            tag: "VID",
+            toolbar: ["assetpopover", "glossary"]
+        },
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ]
+    },
+}
+const initialState5 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: {
+            altText: "",
+            elementId: "urn:pearson:work:180226f6-ba40-406c-8b20-7842071ae4e3",
+            elementType: "element-interactive",
+            elementWipType: "figure",
+            index: 6,
+            primaryOption: "primary-mmi",
+            secondaryOption: "secondary-interactive-mmi",
+            tag: "MMI",
+            toolbar: ["assetpopover", "glossary"]
+        },
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ]
+    },
+}
+const initialState6 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: {
+            altText: "",
+            elementId: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
+            elementType: "figure",
+            elementWipType: undefined,
+            index: 7,
+            longDesc: "",
+            primaryOption: "primary-blockcode-equation",
+            secondaryOption: "secondary-blockcode-language-Python",
+            tag: "BCE",
+            toolbar: ["assetpopover", "decreaseindent", "glossary"]
+        },
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ]
+    },
+}
+const initialState7 = {
+    appStore: {
+        slateLevelData: slateData,
+        activeElement: {
+            elementId: "urn:pearson:work:b922acc4-3ee7-4e77-bd6a-55b7bbe36d90",
+            elementType: "element-authoredtext",
+            elementWipType: "element-list",
+            index: 8,
+            primaryOption: "primary-list",
+            secondaryOption: "secondary-list-2",
+            tag: "OL",
+            toolbar: []
         },
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -82,7 +166,7 @@ const initialState3 = {
     },
 }
 describe('Test convertElement- paragraph', () => {
-   let store = mockStore(() => initialState);
+    let store = mockStore(() => initialState);
     it('Test Convert Element', () => {
         store = mockStore(() => initialState);
         let elementData = {
@@ -120,7 +204,7 @@ describe('Test convertElement- paragraph', () => {
 });
 describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
-     it('Test convertElement  -assessment type', () => {
+    it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
         let newData = {
             elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
@@ -130,36 +214,424 @@ describe('Test convertElement- singleAssessment', () => {
             secondaryOption: "secondary-single-assessment-tdx",
             toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
         }
-        // let assessmentDiv = document.createElement('div');
-        // assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
-        // let usageTypeSpan = document.createElement('span');
-        // usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
-        // usageTypeSpan.innerText = 'Quiz'
-        // assessmentDiv.appendChild(usageTypeSpan)
-        // document.body.appendChild(assessmentDiv)
+        let acElem={
+            elementId: "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+            elementType: "element-assessment",
+            elementWipType: "figure",
+            index: 3,
+            primaryOption: "primary-single-assessment",
+            secondaryOption: "secondary-single-assessment-cite",
+            tag: "Qu",
+            toolbar: ["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+        }
+        let oldData={
+            "comments": false,
+            "contentUrn": "urn:pearson:entity:3880c07d-2740-4768-822b-a719c9303f93",
+            "elementdata": { text: null },
+            "feedback": false,
+            "figuredata": {
+                "elementdata": {
+                    "assessmentformat": "tdx",
+                    "assessmentitemtype": "tdxAssessmentItem",
+                    "posterimage": { "path": "https://cite-media-stg.pearson.com/legacy_paths/8e…41-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png" },
+                    "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                    "usagetype": "Quiz",
+              },
+                "schema": "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                "type": "element-assessment",
+                "subtype": "assessment"
+            },
+            "figuretype": "assessment",
+            "html": { "title": "" },
+            "id": "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+            "title": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+            "type": "figure",
+            "tcm": false,
+            "versionUrn": "urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a",
+        }
+        let assessmentDiv = document.createElement('div');
+        assessmentDiv.setAttribute('data-id', 'urn:pearson:work:fa8ebea3-d9ba-4aec-8658-2f944841404a')
+        let usageTypeSpan = document.createElement('span');
+        usageTypeSpan.className = 'singleAssessment_Dropdown_currentLabel';
+        usageTypeSpan.innerText = 'Quiz'
+        assessmentDiv.appendChild(usageTypeSpan)
+        document.body.appendChild(assessmentDiv)
         let store = mockStore(() => initialState2);
-        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        // const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(newData));
-        expect(spyconversionElement).toHaveBeenCalled()
-        spyconversionElement.mockClear()
+        // expect(spyconversionElement).toHaveBeenCalled()
+        // spyconversionElement.mockClear()
     });
 });
-describe('Test convertElement- figure-', () => {
+describe('Test convertElement- figure-IMAGE', () => {
     let store = mockStore(() => initialState3);
-     it('Test convertElement  -figure', () => {
+    it('Test convertElement  -figure-IMAGE to TABLE', () => {
         store = mockStore(() => initialState3);
-         let newData = {
-             elementId: "urn:pearson:work:be34d78e-1638-4fcc-8511-5db7a3d4b395",
-             elementType: "figure",
-             labelText: "TB",
-             primaryOption: "primary-image-table",
-             secondaryOption: "secondary-image-table-half",
-             toolbar: ["assetpopover", "decreaseindent", "glossary"]
-         }
+        let newData = {
+            elementId: "urn:pearson:work:be34d78e-1638-4fcc-8511-5db7a3d4b395",
+            elementType: "figure",
+            labelText: "TB",
+            primaryOption: "primary-image-table",
+            secondaryOption: "secondary-image-table-half",
+            toolbar: ["assetpopover", "decreaseindent", "glossary"]
+        }
         let store = mockStore(() => initialState3);
         const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(newData));
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
+});
+describe('Test convertElement- figure-VIDEO ', () => {
+    let store = mockStore(() => initialState4);
+    it('Test convertElement  -figure-IMAGE to TABLE', () => {
+        store = mockStore(() => initialState4);
+        let newData = {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            labelText: "VID",
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-smartlink",
+            toolbar: ["assetpopover", "glossary"]
+        }
+        let store = mockStore(() => initialState4);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(newData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
+describe('Test convertElement- figure-INTERACTIVE ', () => {
+    let store = mockStore(() => initialState5);
+    it('Test convertElement  -MMI-SMARTLINK', () => {
+        store = mockStore(() => initialState5);
+        let newData = {
+            elementId: "urn:pearson:work:180226f6-ba40-406c-8b20-7842071ae4e3",
+            elementType: "element-interactive",
+            labelText: "SL",
+            primaryOption: "primary-smartlink",
+            secondaryOption: "secondary-interactive-smartlink-third",
+            toolbar: ["assetpopover", "glossary"]
+        }
+        let store = mockStore(() => initialState5);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(newData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
+});
+describe('Test convertElement- figure-BLOCL-CODE-EDITOR', () => {
+    let store = mockStore(() => initialState4);
+     it('Test convertElement  -figure-BCE', () => {
+        store = mockStore(() => initialState4);
+         let newData = {
+            elementId: "urn:pearson:work:be34d78e-1638-4fcc-8511-5db7a3d4b395",
+            elementType: "figure",
+            labelText: "BCE",
+            primaryOption: "primary-blockcode-equation",
+            secondaryOption: "secondary-blockcode-language-Default",
+            toolbar:  ["assetpopover", "decreaseindent", "glossary"]
+            
+         }
+        let store = mockStore(() => initialState4);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(newData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+    });
  });
+describe('Test convertElement- figure-BLOCL-CODE-EDITOR-SUBTYPE', () => {
+    let store = mockStore(() => initialState6);
+    it('Test convertElement  -figure-BCE-C', () => {
+        store = mockStore(() => initialState6);
+        let newData =  {
+            alignment: "Select",
+            captions:{
+                footnotes: [],
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: []
+            },
+            comments: false,
+            contentUrn: "urn:pearson:entity:62af2cad-718e-486b-b409-5be2ae99be76",
+            credits: { 
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            elementdata:{
+                text: null
+            },
+            feedback: false,
+            figuredata: { 
+                numbered: true,
+                preformattedtext: [""],
+                programlanguage: "Select",
+                schema: "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+                startNumber: 1,
+                type: "codelisting"
+            },
+                figuretype: "codelisting",
+            html: { 
+                captions: "<p><br></p>",
+                credits: "<p><br></p>",
+                footnotes: {},
+                glossaryentries: {},
+                postertext: "",
+                subtitle: "<p><br></p>",
+                text: "",
+                title: "<p><br></p>",
+            },
+            id: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
+            subtitle: { 
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+            status: "wip",
+            subtype: "codelisting",
+            tcm: false,
+            title: { 
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            type: "figure",
+            versionUrn: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
+        }
+        let elementData = {
+            elementId: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
+            elementType: "figure",
+            labelText: "BCE",
+            primaryOption: "primary-blockcode-equation",
+            secondaryOption: "secondary-blockcode-language-Java",
+            toolbar: ["assetpopover", "decreaseindent", "glossary"]
+        }
+        let store = mockStore(() => initialState6);
+        // const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        // expect(spyconversionElement).toHaveBeenCalled()
+        // spyconversionElement.mockClear()
+    });
+});
+describe('Test convertElement- PARAGRAPH to LIST', () => {
+    let store = mockStore(() => initialState);
+    it('Test convertElement  -PARAGRAPH to LIST', () => {
+        store = mockStore(() => initialState);
+        let elementData = {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+            elementType: "element-authoredtext",
+            labelText: "UL",
+            primaryOption: "primary-list",
+            secondaryOption: "secondary-list-1",
+        }
+        let store = mockStore(() => initialState);
+        store.dispatch(sidebarAction.conversionElement(elementData));
+
+    });
+});
+xdescribe('Test convertElement- UL to NUMBERED LIST', () => {
+    let store = mockStore(() => initialState7);
+    it('Test convertElement  -UL to NUMBERED LIST', () => {
+        store = mockStore(() => initialState7);
+        let elementData = {
+            elementId: "urn:pearson:work:b922acc4-3ee7-4e77-bd6a-55b7bbe36d90",
+            elementType: "element-authoredtext",
+            labelText: "OL",
+            primaryOption: "primary-list",
+            secondaryOption: "secondary-list-3",
+            toolbar:[]
+        }
+        let store = mockStore(() => initialState7);
+        store.dispatch(sidebarAction.conversionElement(elementData));
+
+    });
+});
+xdescribe('Test convertElement- MOCK API CALL', () => {
+    let store = mockStore(() => initialState4);
+
+    beforeEach(() => {
+
+        moxios.install();
+    });
+    afterEach(() => moxios.uninstall());
+    it('Test convertElement  -MOCK API CALL', () => {
+        store = mockStore(() => initialState4);
+        let elementData = {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            labelText: "VID",
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-smartlink",
+            toolbar: ["assetpopover", "glossary"],
+            altText: "",
+            longDesc: "",
+            tag: "VID"
+        }
+        let activeElement = {
+            elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            elementType: "video-audio",
+            elementWipType: "figure",
+            index: 5,
+            primaryOption: "primary-video",
+            secondaryOption: "secondary-video-alfresco",
+            tag: "VID",
+            toolbar: ["assetpopover", "glossary"]
+        }
+        let oldData = {
+            captions: {
+                footnotes: [],
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: []
+            },
+            comments: false,
+            contentUrn: "urn:pearson:entity:a3838838-ad6a-4061-907a-c2dd9165d9b8",
+            credits: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            elementdata: {
+                text: null
+            },
+            feedback: false,
+            figuredata: {
+                clipinfo: {},
+                height: "399",
+                posterimage: { path: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png" },
+                schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                srctype: "internal",
+                videos: [{
+                    path: "",
+                    format: ""
+                }
+                ],
+                width: "600",
+            },
+            figuretype: "video",
+            html: {
+                captions: "<p><br></p>",
+                credits: "<p><br></p>",
+                footnotes: {},
+                glossaryentries: {},
+                postertext: "",
+                subtitle: "<p><br></p>",
+                text: "",
+                title: "<p><br></p>",
+            },
+            id: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            subtitle: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            subtype: "figureVideo",
+            status: "wip",
+            title: {
+                mathml: [],
+                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                text: "↵",
+                textsemantics: [],
+                footnotes: []
+            },
+            type: "figure",
+            versionUrn: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+        }
+        let expectedRes = {
+            status: 200,
+            statusText: "",
+            data: {
+                captions: {
+                    footnotes: [],
+                    mathml: [],
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: "↵",
+                    textsemantics: []
+                },
+                comments: false,
+                contentUrn: "urn:pearson:entity:a3838838-ad6a-4061-907a-c2dd9165d9b8",
+                credits: {
+                    mathml: [],
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: "↵",
+                    textsemantics: [],
+                    footnotes: []
+                },
+                elementdata: {
+                    text: null
+                },
+                feedback: false,
+                figuredata: {
+                    clipinfo: {},
+                    height: "399",
+                    posterimage: { path: "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png" },
+                    schema: "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+                    srctype: "externallink",
+                    videos: [{
+                        path: "",
+                        format: ""
+                    }
+                    ],
+                    width: "600",
+                },
+                figuretype: "video",
+                html: {
+                    captions: "<p><br></p>",
+                    credits: "<p><br></p>",
+                    footnotes: {},
+                    glossaryentries: {},
+                    postertext: "",
+                    subtitle: "<p><br></p>",
+                    text: "",
+                    title: "<p><br></p>",
+                },
+                id: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+                subtitle: {
+                    mathml: [],
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: "↵",
+                    textsemantics: [],
+                    footnotes: []
+                },
+                subtype: "figureVideo",
+                status: "wip",
+                title: {
+                    mathml: [],
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: "↵",
+                    textsemantics: [],
+                    footnotes: []
+                },
+                type: "figure",
+                versionUrn: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
+            }
+        }
+        let store = mockStore(() => initialState4);
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: expectedRes
+            });
+        });
+        store.dispatch(sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"])).then((res) => {
+            expect(res).toBe(expectedRes)
+        });
+    });
+});
+
