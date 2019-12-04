@@ -540,7 +540,8 @@ export class TinyMceEditor extends Component {
      */
     addInlineCode = (editor) => {
         let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-         if (editor.selection.getContent() != "" && selectedText != "CODE") {
+        let hasCodeTag = window.getSelection().anchorNode.parentNode.innerHTML.includes('<code data-mce-selected="inline-boundary">') 
+         if (editor.selection.getContent() != "" && selectedText != "CODE" && !hasCodeTag) {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
@@ -679,9 +680,8 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         if(this.props.element && this.props.element.type === 'element-list'){
-            args.content = tinymce.activeEditor.selection.getContent();
-            return
-        };
+            args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
+        }
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if(testElement.innerText.trim().length){
@@ -1216,10 +1216,7 @@ export class TinyMceEditor extends Component {
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        /**
-         * In case current element is list element
-         */
-        if (el.findChildren('ol').length || el.findChildren('ul').length || el.innerText==="") {
+        if (el.innerText==="") {
             return
         }
         if (isSameTarget) {
