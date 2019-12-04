@@ -200,7 +200,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {           
+    ).then(response => {    
+        let parentData = getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+		let currentSlateData = currentParentData[config.slateManifestURN];       
         if(response.data.id !== updatedData.id){
             if(currentSlateData.status === 'wip'){
                 updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, 'Directupdate');
