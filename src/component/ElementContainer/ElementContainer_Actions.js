@@ -334,7 +334,6 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                     }
                 }
-                 
             }).catch(err => {
                 console.log('axios Error', err);
             })         
