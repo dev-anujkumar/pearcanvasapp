@@ -1,6 +1,6 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
 import { elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData } from '../../../fixtures/UpdateElementsTestData';
-
+import tinyMCE from 'tinymce/tinymce'
 describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
         let type = "element-authoredtext",
@@ -89,7 +89,7 @@ describe('Test for UpdateElements Functions', () => {
         elementPre.appendChild(code);
         elementDiv.appendChild(elementPre);
         document.body.appendChild(elementDiv);
-
+        
         let type = "figure",
             previousElementData = blockCodeEditorData,
             node = {},

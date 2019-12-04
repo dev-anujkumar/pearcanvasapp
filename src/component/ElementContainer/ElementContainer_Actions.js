@@ -198,37 +198,29 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 "PearsonSSOSession": config.ssoToken
             }
         }
-    ).then(response => {    
+    ).then(response => {
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
-		let currentSlateData = currentParentData[config.slateManifestURN];       
-        if(response.data.id !== updatedData.id){
-            if(currentSlateData.status === 'wip'){
-                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, 'Directupdate');
-            }else if(currentSlateData.status === 'approved'){
-                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
+            if(response.data.id !== updatedData.id){
+                if(currentSlateData.status === 'wip'){
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, 'Directupdate');
+                }else if(currentSlateData.status === 'approved'){
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                }
+            }else{
+                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
             }
-        }else{
-            updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
-        }
+        }  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        //console.log("success saving")
-        // if(tinyMCE && tinyMCE.activeEditor){
-        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        //     tinyMCE.activeEditor.selection.collapse(false);
-        // }
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-        // if(tinyMCE && tinyMCE.activeEditor){
-        //     tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        //     tinyMCE.activeEditor.selection.collapse(false);
-        // }
     })
 
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
-
 }
 
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ,Directupdate ){
@@ -309,10 +301,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     }else if(versionedData){
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
         if(Directupdate === 'Directupdate'){
-            if(indexes.length === 2){
-                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
-            }else if(indexes.length === 3){
-                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+            if(asideData && asideData.type == 'element-aside'){
+                if(indexes.length === 2){
+                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
+                }else if(indexes.length === 3){
+                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+                }
+            }else{
+                newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
         }else if(asideData && asideData.type == 'element-aside' && updatedData.status === 'approved'){
            axios.get(`${config.ASSET_POPOVER_ENDPOINT}context/v2/${config.projectUrn}/ancestors/${updatedData.id}`, {
@@ -334,9 +330,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }).catch(err => {
                 console.log('axios Error', err);
             })         
-        }else{
-            newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
         }
+        // else{
+        //     newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+        // }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {

@@ -106,8 +106,10 @@ class SlateWrapper extends Component {
                 let currentSlateId = Object.keys(this.props.slateData)[0];
                 let tcmCount = 0;
                 this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
-                    if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
-                        tcmCount++;
+                    if(data.hasOwnProperty('type') && (data.type.includes('element-authoredtext') || data.type.includes('element-list') || data.type.includes('element-blockfeature') || data.type.includes('element-learningobjectives') )){
+                        if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
+                            tcmCount++;
+                        }
                     }
                 });
                 if(tcmCount > 0){
@@ -604,12 +606,7 @@ class SlateWrapper extends Component {
                         outerIndex = Number(outerIndex) + 1
                     }
                 } else {
-                    if (outerAsideIndex != 1) {
-                        outerIndex = outerAsideIndex + 1
-                    } else {
-                        outerIndex = outerAsideIndex;
-                    }
-
+                    outerIndex = indexToinsert;
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;
