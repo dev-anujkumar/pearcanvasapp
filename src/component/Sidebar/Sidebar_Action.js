@@ -77,8 +77,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
-        }        
-        oldElementData.html.title = "";
+        }
+        // oldElementData['html']['title'] = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
     }
