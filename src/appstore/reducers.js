@@ -145,7 +145,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 popupSlateData: action.payload
-            };
+            }
         default:
             return state;
     }

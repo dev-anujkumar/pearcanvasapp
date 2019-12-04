@@ -148,7 +148,7 @@ export class CanvasWrapper extends Component {
     }
     
     render() {
-        let slateData = this.props.popupSlateData? this.props.popupSlateData:this.props.slateLevelData
+        let slateData = this.props.popupSlateData ? this.props.popupSlateData:this.props.slateLevelData
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
