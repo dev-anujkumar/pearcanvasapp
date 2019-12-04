@@ -1178,7 +1178,7 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then(() => { 
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
-                this.setCursorAtEnd(currentTarget, isSameTarget); 
+               // this.setCursorAtEnd(currentTarget, isSameTarget); 
 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
@@ -1197,7 +1197,7 @@ export class TinyMceEditor extends Component {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
-                this.setCursorAtEnd(currentTarget, isSameTarget);
+               // this.setCursorAtEnd(currentTarget, isSameTarget);
 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
@@ -1211,7 +1211,7 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
-        this.setCursorAtEnd(currentTarget, isSameTarget);
+      //  this.setCursorAtEnd(currentTarget, isSameTarget);
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
@@ -1268,6 +1268,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         this.props.handleBlur();
     }
     

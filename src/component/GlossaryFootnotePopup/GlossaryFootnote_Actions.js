@@ -105,6 +105,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let newBodymatter = newParentData[slateId].contents.bodymatter;
     let workEditor, workContainer;
 
+    /** Feedback status from elementData */
+    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback')
+    let tcmFeedback =  elementNodeData;
+
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, title, captions, credits, elementIndex
@@ -153,12 +157,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 type: elementType,
                 versionUrn: null,
                 contentUrn: null,
+                feedback: tcmFeedback,
                 html: {
                     ...figureDataObj,
                     glossaryentries: {},
                     footnotes: footnoteEntry,
                     assetspopover: {}
-                }
+                },
+                projectURN : config.projectUrn,
+                slateEntity : config.slateEntityURN
             }
             break;
 
@@ -172,15 +179,40 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 type: elementType,
                 versionUrn: null,
                 contentUrn: null,
+                feedback: tcmFeedback,
                 html: {
                     ...figureDataObj,
                     glossaryentries: glossaryEntry,
                     footnotes: {},
                     assetspopover: {}
-                }
+                },
+                projectURN : config.projectUrn,
+                slateEntity : config.slateEntityURN
             }
             break;
     }
+
+    if(index &&  typeof (index) !== 'number'){
+        let tempIndex =  index.split('-');
+        if(tempIndex.length === 2){
+            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
+                data.isHead = true;
+                if(newBodymatter[tempIndex[0]].subtype === "sidebar"){
+                    data.parentType = "element-aside";
+                }else{
+                    data.parentType = "workedexample";
+                }
+            }
+        }else if(tempIndex.length === 3){
+            if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].id === elementWorkId){
+                data.isHead = false;
+                if(newBodymatter[tempIndex[0]].subtype === "workedexample"){
+                    data.parentType = "workedexample";
+                }
+            }
+        }
+    }
+
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
