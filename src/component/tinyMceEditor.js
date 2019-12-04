@@ -1268,6 +1268,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         this.props.handleBlur();
     }
     
