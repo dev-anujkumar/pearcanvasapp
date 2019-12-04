@@ -309,10 +309,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     }else if(versionedData){
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
         if(Directupdate === 'Directupdate'){
-            if(indexes.length === 2){
-                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
-            }else if(indexes.length === 3){
-                newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+            if(asideData && asideData.type == 'element-aside'){
+                if(indexes.length === 2){
+                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
+                }else if(indexes.length === 3){
+                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+                }
+            }else{
+                newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
         }else if(asideData && asideData.type == 'element-aside' && updatedData.status === 'approved'){
            axios.get(`${config.ASSET_POPOVER_ENDPOINT}context/v2/${config.projectUrn}/ancestors/${updatedData.id}`, {
@@ -334,9 +338,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }).catch(err => {
                 console.log('axios Error', err);
             })         
-        }else{
-            newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
         }
+        // else{
+        //     newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
+        // }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
