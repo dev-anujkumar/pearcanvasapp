@@ -290,7 +290,7 @@ export class ReactEditor extends React.Component {
 
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
-      this.setCursorAtEnd(tinymce.activeEditor);
+     // this.setCursorAtEnd(tinymce.activeEditor);
     })
   }
 
