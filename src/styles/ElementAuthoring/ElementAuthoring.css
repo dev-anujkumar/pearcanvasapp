@@ -30,14 +30,9 @@
     height:100%;
 }
 
-.cypress-editable ::selection {
+.cypress-editable ::selection,#glossary-editor ::selection,#glossary-editor-attacher ::selection {
     background: #B5D6FD !important;
     color: #000000 !important;
-}
-
-#glossary-editor ::selection,#glossary-editor-attacher ::selection {
-background: #B5D6FD !important;
-color: #000000 !important;
 }
 
 .element-container p.paragraphNumeroUno{
