@@ -422,7 +422,7 @@ tr.modalCard td:nth-child(5) {
 }
 @media only screen and (max-width:1500px) {
     .learningToolContainer {
-        max-height: 500px;
+        max-height: 450px;
     }
   }
 @media only screen and (max-width:1200px) {
