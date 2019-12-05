@@ -783,7 +783,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+        if(!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
