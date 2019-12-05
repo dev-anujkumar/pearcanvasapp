@@ -385,7 +385,6 @@ export class TinyMceEditor extends Component {
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
-                console.log("tseting of keyup lastcontent", this.lastContent)
                 if (!isMediaElement && !activeElement.children.length || (activeElement.children.length===1 && activeElement.children[0].tagName==="BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
@@ -426,17 +425,14 @@ export class TinyMceEditor extends Component {
             }
 
             bindKeyDownEvent(editor, e);
-            console.log("bind event",editor, editor.selection)
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    console.log("inside active elementchildren",activeElement);
                     if(div.children && div.children[0]){
                         div.children[0].innerHTML = '<br/>';
-                        console.log("inside active elementchildren inside if",activeElement);
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
@@ -448,7 +444,6 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                console.log("before showing",activeElement);
                 this.lastContent = activeElement.innerHTML;
             }
 
@@ -1273,7 +1268,6 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-      //  tinymce.$('span[data-mce-type="bookmark"]').innerHTML
         tinymce.$('span[data-mce-type="bookmark"]').each(function(){
             let innerHtm = this.innerHTML;
             this.outerHTML = innerHtm;
