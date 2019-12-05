@@ -664,6 +664,20 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        /** Handle TCM for tcm enable elements */
+        let tcm = false;
+        let feedback = false;
+        if(element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+            if (element.tcm) {
+                tcm = element.tcm;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+            if (element.feedback) {
+                feedback = element.feedback;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+        }
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -769,7 +783,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+        if(!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
@@ -795,7 +809,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
+                    {feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
