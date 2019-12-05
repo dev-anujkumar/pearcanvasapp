@@ -1269,8 +1269,8 @@ export class TinyMceEditor extends Component {
             return;
         }
         tinymce.$('span[data-mce-type="bookmark"]').each(function(){
-            let innerHtm = this.innerHTML;
-            this.outerHTML = innerHtm;
+            let innerHtml = this.innerHTML;
+            this.outerHTML = innerHtml;
         })
         this.props.handleBlur();
     }
