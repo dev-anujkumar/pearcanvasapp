@@ -151,8 +151,8 @@ const findElementType = (element, index) => {
 
 	elementType['toolbar'] = [];
 	if (elementType.elementType && elementType.elementType !== '') {
-		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
 	}
 	return elementType;
 }
