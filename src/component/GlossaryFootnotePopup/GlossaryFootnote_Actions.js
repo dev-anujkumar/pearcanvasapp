@@ -192,7 +192,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    if(index &&  typeof (index) !== 'number'){
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
