@@ -231,9 +231,6 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
-    if(_slateObject.tcm){
-        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});
-    }
     if(!versionedData){
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
