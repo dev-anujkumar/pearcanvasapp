@@ -3,15 +3,13 @@ import configureMockStore from 'redux-mock-store';
 import * as selectActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
 const middlewares = [thunk];
 import axios from 'axios';
-import wip from '../../component/ElementContainer/wipData'
-import { spy, stub } from 'sinon';
+import wip from '../../component/ElementContainer/wipData';
 import moxios from 'moxios';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
 } from '../../../src/constants/Action_Constants';
-import { slateData, slateDataNew } from '../../../fixtures/slateTestingData';
-import { get } from 'https';
+import { slateDataNew } from '../../../fixtures/slateTestingData';
 const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
