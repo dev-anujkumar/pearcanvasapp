@@ -99,26 +99,8 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate(prevprops) {
+    componentDidUpdate() {
         this.renderDefaultElement();
-        if(Object.keys(this.props.slateData).length > 0){
-            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
-                let currentSlateId = Object.keys(this.props.slateData)[0];
-                let tcmCount = 0;
-                this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
-                    if(data.hasOwnProperty('type') && (data.type.includes('element-authoredtext') || data.type.includes('element-list') || data.type.includes('element-blockfeature') || data.type.includes('element-learningobjectives') )){
-                        if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
-                            tcmCount++;
-                        }
-                    }
-                });
-                if(tcmCount > 0){
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
-                } else {
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
-                }
-            }
-        }
     }
 
 
@@ -149,6 +131,28 @@ class SlateWrapper extends Component {
                 });
             }            
         }
+    }
+
+    getSnapshotBeforeUpdate(prevprops){
+        if(Object.keys(this.props.slateData).length > 0){
+            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
+                let currentSlateId = Object.keys(this.props.slateData)[0];
+                let tcmCount = 0;
+                this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
+                    if(data.hasOwnProperty('type') && (data.type.includes('element-authoredtext') || data.type.includes('element-list') || data.type.includes('element-blockfeature') || data.type.includes('element-learningobjectives') )){
+                        if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
+                            tcmCount++;
+                        }
+                    }
+                });
+                if(tcmCount > 0){
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
+                } else {
+                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+                }
+            }
+        }
+        return null;
     }
 
     static getDerivedStateFromProps = (props, state) => {
