@@ -248,7 +248,8 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        if(previousElementData.figuredata.interactivetype === "pdf"){
+        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+            previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
 
