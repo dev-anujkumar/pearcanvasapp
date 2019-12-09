@@ -29,6 +29,7 @@ describe('Testing <PageNumberElement> Component', () => {
         const div = document.createElement('div');
         ReactDOM.render(<PageNumberElement {...props} />, div);
         ReactDOM.unmountComponentAtNode(div);
+        expect(PageNumberElement).toHaveLength(1);
     })
     test('should call onChange on input', () => {
         const event = {
@@ -40,7 +41,7 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapper.update();
         expect(wrapperInstance.state.inputValue).toBe('123');
     })
-    xtest('should update page number', () => {
+    test('should update page number', () => {
         const event = {
             preventDefault() { },
             currentTarget: targetElem
@@ -48,7 +49,7 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapper.find('input.textBox').simulate('blur', event);
         wrapperInstance.forceUpdate();
         wrapper.update();
-        //expect(wrapperInstance.state.loader).toBe(true);
+        expect(wrapperInstance.state.loader).toBe(false);
     })
     test('input should be clicked', () => {
         const event = {
@@ -76,5 +77,10 @@ describe('Testing <PageNumberElement> Component', () => {
         wrapperInstance.forceUpdate();
         wrapper.update();
         expect(wrapper.find('div.pageNumberCover').hasClass('hoverNumberCover')).toBe(true)
+    })
+    test('PageNumber should get removed', () => {
+      let e = ''
+      wrapperInstance.removePageNumber(e)
+      expect(wrapperInstance.state.inputValue).toBe('');
     })
 })

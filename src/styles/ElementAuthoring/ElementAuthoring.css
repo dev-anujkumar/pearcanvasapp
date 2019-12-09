@@ -47,5 +47,6 @@ h3.pullQuoteNumeroUno{
     margin-left: 0em;
 }
 p.blockquoteTextCredit{
-    pointer-events: none;
+    pointer-events: none !important;
+    user-select: none !important;
 }
