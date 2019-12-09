@@ -344,6 +344,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
 export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
+        element,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
