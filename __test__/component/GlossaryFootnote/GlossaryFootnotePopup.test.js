@@ -8,7 +8,7 @@ return {
     }
 }
 })
-describe('Testing GlossaryFootnote component with props', () => {
+xdescribe('Testing GlossaryFootnote component with props', () => {
     let props={
         permissions:[],
         setWrapperRef: jest.fn(),
