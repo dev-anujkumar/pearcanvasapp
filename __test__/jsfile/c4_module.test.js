@@ -6,7 +6,7 @@ import { doesNotReject } from 'assert';
 
 jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
 
-xdescribe('Testing c4_modules', () => {
+describe('Testing c4_modules', () => {
 
     xit('Testing publishSlate function', () => {
         let project = 'project',
