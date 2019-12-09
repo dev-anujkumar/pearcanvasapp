@@ -159,7 +159,10 @@ export class TinyMceEditor extends Component {
      * function to remove formatting of whole element excluding Math/Chem
      */
     innerTextWithMathMl = (node) => {
-        tinymce.$('span[data-mce-type="bookmark"]').remove();
+        tinymce.$('span[data-mce-type="bookmark"]').each(function(){
+            let innerHtml = this.innerHTML;
+            this.outerHTML = innerHtml;
+        });
         if (node.childNodes.length) {
             node.childNodes.forEach((innerNode) => {
                 if (innerNode.childNodes.length) {
@@ -1268,7 +1271,10 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        tinymce.$('span[data-mce-type="bookmark"]').remove();
+        tinymce.$('span[data-mce-type="bookmark"]').each(function(){
+            let innerHtml = this.innerHTML;
+            this.outerHTML = innerHtml;
+        })
         this.props.handleBlur();
     }
     
@@ -1292,11 +1298,11 @@ export class TinyMceEditor extends Component {
         switch (this.props.tagName) {
             case 'p':
                 return (
-                    <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
+                    <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
                 return (
-                    <h4 ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
@@ -1331,12 +1337,19 @@ export class TinyMceEditor extends Component {
                 }
             case 'figureCredit':
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
             default:
                 return (
-                    <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
+        }
+    }
+    normalKeyDownHandler = (e)=>{
+        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         }
     }
 }
