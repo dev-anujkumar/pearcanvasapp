@@ -167,17 +167,23 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== previousElementData.figuredata.path
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             this.props.oldImage !== previousElementData.figuredata.path
-            ){
-                return 1
-            }
-            else {
-                return 0
-            }
+            );
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
@@ -206,19 +212,27 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
+        //     startNumber !== previousElementData.figuredata.startNumber ||
+        //     isNumbered !== previousElementData.figuredata.numbered
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
             startNumber !== previousElementData.figuredata.startNumber ||
             isNumbered !== previousElementData.figuredata.numbered
-            ){
-                return 1
-            }
-            else {
-                return 0
-            }
+            );
     }
 
     /**
@@ -253,32 +267,44 @@ class ElementContainer extends Component {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
 
-            if(titleHTML !== previousElementData.html.title ||
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     posterTextHTML !== previousElementData.html.postertext
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
                 subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
                 creditsHTML !== previousElementData.html.credits || 
                 posterTextHTML !== previousElementData.html.postertext ||
                 this.props.oldImage !== newInteractiveid
-                ){
-                    return 1
-                }
-                else {
-                    return 0
-                }
+                );
         }
         else {
-            if(titleHTML !== previousElementData.html.title ||
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     this.props.oldImage !== newInteractiveid
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
                 subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
                 creditsHTML !== previousElementData.html.credits || 
                 this.props.oldImage !== newInteractiveid
-                ){
-                    return 1
-                }
-                else {
-                    return 0
-                }
-            }
+                );
+        }
     }
 
     figureDifferenceAT = (index, previousElementData) => {
@@ -303,18 +329,25 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     text !== previousElementData.figuredata.elementdata.text
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             text !== previousElementData.figuredata.elementdata.text
-            ){
-                return 1
-            }
-            else {
-                return 0
-            }
+            );
     }
+
     figureDifferenceAudioVideo = (index, previousElementData) => {
         let newAudioVideoId = ""
         if(previousElementData.figuretype === "audio"){
@@ -343,17 +376,23 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== newAudioVideoId
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             this.props.oldImage !== newAudioVideoId
-            ){
-                return 1
-            }
-            else {
-                return 0
-            }
+            );
     }
 
     updateOpenerElement = (dataToSend) => {
@@ -404,7 +443,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
-                    case elementTypeConstant.FIGURE_TABLE_EDITOR:   
+                    case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
@@ -662,7 +701,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
