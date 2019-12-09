@@ -257,7 +257,8 @@ class ElementContainer extends Component {
                 subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
                 creditsHTML !== previousElementData.html.credits || 
-                posterTextHTML !== previousElementData.html.postertext
+                posterTextHTML !== previousElementData.html.postertext ||
+                this.props.oldImage !== newInteractiveid
                 ){
                     return 1
                 }
