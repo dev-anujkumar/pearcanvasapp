@@ -271,7 +271,7 @@ class Sidebar extends Component {
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
@@ -310,6 +310,10 @@ class Sidebar extends Component {
         document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
     }
 
+    handleBQAttributionBlur = () => {
+        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
+        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+    }
 
     /**
     * handleBceToggle function responsible for handling toggle value for BCE element
