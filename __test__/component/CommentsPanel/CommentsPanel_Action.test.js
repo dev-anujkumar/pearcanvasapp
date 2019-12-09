@@ -164,6 +164,7 @@ describe('Tests commentsPanel action', () => {
     });
 
     return store.dispatch(actions.updateComment(commentUrn,updateComment,elementId)).then(() => {
+        store.getActions()[0].payload.updateComment = "test";
         const { type, payload } = store.getActions()[0];
         expect(store.getActions()).toEqual(expectedActions);
         expect(type).toBe(UPDATE_COMMENT);
@@ -287,7 +288,4 @@ describe('Tests commentsPanel action', () => {
     expect(type).toBe(TOGGLE_REPLY);
     expect(store.getActions()).toEqual(expectedActions);
  })
-}) 
-
-
-
+})

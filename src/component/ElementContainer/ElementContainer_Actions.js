@@ -160,7 +160,18 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     })
 }
 
+function contentEditableFalse (updatedData){
+    if(updatedData.type == "element-blockfeature"){
+        if(updatedData.html && updatedData.html.text){
+            let data = updatedData.html.text;
+            updatedData.html.text = data.replace('contenteditable="true"','contenteditable="false"');
+            return updatedData ; 
+        }
+    }
+}
+
 function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
+    updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
@@ -344,6 +355,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
 
 export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
+        element,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
