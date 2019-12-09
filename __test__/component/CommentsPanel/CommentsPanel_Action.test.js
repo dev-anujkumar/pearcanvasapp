@@ -13,7 +13,8 @@ import {
     UPDATE_COMMENT,
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    TOGGLE_REPLY
 } from '../../../src/constants/Action_Constants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -219,7 +220,7 @@ describe('Tests commentsPanel action', () => {
  it('testing------- deleteComment  action',()=>{
     store = mockStore(() => initialState);
     let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-     elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
+     elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"
     const expectedActions = [{
         type: DELETE_COMMENT,
         payload: commentUrn
@@ -240,7 +241,8 @@ describe('Tests commentsPanel action', () => {
 
  it('testing------- fetchCommentByElement  action',()=>{
     store = mockStore(() => initialState);
-     let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
+    let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
+
     const expectedActions = [{
         type: FETCH_COMMENT_BY_ELEMENT,
         payload: {
@@ -271,5 +273,21 @@ describe('Tests commentsPanel action', () => {
     expect(type).toBe(TOGGLE_COMMENTS_PANEL);
     expect(store.getActions()).toEqual(expectedActions);
  })
+ it('testing------- toggleReply  action',()=>{
+    store = mockStore(() => initialState);
+     let toggle = true;
+    const expectedActions = [{
+        type: TOGGLE_REPLY,
+        payload: toggle
+    
+    }];
+
+     store.dispatch(actions.toggleReply(toggle))
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(TOGGLE_REPLY);
+    expect(store.getActions()).toEqual(expectedActions);
+ })
 }) 
+
+
 

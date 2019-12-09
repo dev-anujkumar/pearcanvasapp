@@ -1,41 +1,98 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import GlossaryFootnotePopup from '../../../src/component/GlossaryFootnotePopup/GlossaryFootnotePopup';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-const middlewares = [thunk];
-import { Provider } from 'react-redux';
-import ReactDOM from 'react-dom';
-const mockStore = configureMockStore(middlewares);
-const store = mockStore({
-    glossaryFootnoteReducer:{glossaryFootnoteValue:{"type":"","popUpStatus":false}
+jest.mock('../../../src/js/utils',()=>{
+return {
+    checkforToolbarClick: ()=>{
+        return false
     }
-  
-  
-});
+}
+})
 xdescribe('Testing GlossaryFootnote component with props', () => {
-    const div = document.createElement('div');
-    const wrapper = mount( <GlossaryFootnotePopup   />)
-    let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
-    it('render Glossary Footnote component ', () => {
-        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup /></Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
-    })
+    let props={
+        permissions:[],
+        setWrapperRef: jest.fn(),
+        showGlossaaryFootnote: jest.fn(),
+        glossaryFootnoteValue:{"type":"","popUpStatus":false} ,
+        closePopup:jest.fn(),
+        saveContent:jest.fn(),
+        glossaryFootNoteCurrentValue:{},
 
-    it('render Glossary ', () => {
-        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Glossary' /></Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
-    })
+    }
 
-    it('render Footnote ', () => {
-        ReactDOM.render(<Provider store={store}><GlossaryFootnotePopup glossaryFootnote='Footnote' /></Provider>, div);
-        ReactDOM.unmountComponentAtNode(div);
+    it('render Glossary Footnote component -Footnote', () => {
+        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
+        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        expect(wrapper).toHaveLength(1);
+        expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
-
-    it('ComponetDidMount Event', () => {
-        GlossaryFootnotePopupInstance.componentDidMount()
+    it('render Glossary Footnote component -Glossary', () => {
+        let glossaryValue = {
+            "type": "Glossary", "popUpStatus": false
+        }
+        let wrapper = mount(< GlossaryFootnotePopup {...props} glossaryFootnoteValue={glossaryValue} />)
+        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        expect(wrapper).toHaveLength(1);
+        expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
-    it('ComponetDidUpdate Event', () => {
-        GlossaryFootnotePopupInstance.componentDidUpdate()
+    xit('Test-toolbarHandling function - case1', () => {
+        let event={
+            relatedTarget:{
+                classList:["tox-toolbar"]
+            },
+            stopPropagation: jest.fn()
+        }
+        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
+        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
+        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
+        expect(spytoolbarHandling).toHaveBeenCalled() 
+        spytoolbarHandling.mockClear()
+    })
+    xit('Test-toolbarHandling function -case2', () => {
+        let wrapper = mount(< GlossaryFootnotePopup {...props} />, { attachTo: document.body })
+        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        let event={
+            relatedTarget:{
+                classList:["tox-toolbar"]
+            },
+            stopPropagation: jest.fn()
+        }
+        let element = document.getElementById("toolbarGlossaryFootnote");
+        element.innerHTML += "<div className= 'tox-toolbar'>B</div>";
+        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
+        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
+        expect(spytoolbarHandling).toHaveBeenCalled() 
+        spytoolbarHandling.mockClear()
+    })
+    
+    it('Test-componentWillUnmount', () => {
+        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
+        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
+        const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
+        GlossaryFootnotePopupInstance.componentWillUnmount()
+        expect(spycomponentWillUnmount).toHaveBeenCalled() 
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-onFocus-1', () => {
+        let glossaryValue = {
+            "type": "Glossary", "popUpStatus": false
+        }
+        let wrapper = mount(< GlossaryFootnotePopup {...props}  glossaryFootnoteValue={glossaryValue}/>, { attachTo: document.body })
+        wrapper.find('#glossary-editor').simulate('focus')
+        wrapper.find('#glossary-editor').simulate('blur')
+        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
+        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
+        expect(spytoolbarHandling).toHaveBeenCalled() 
+        spytoolbarHandling.mockClear()
+    })
+    it('Test-onFocus-2', () => {
+        let wrapper = mount(< GlossaryFootnotePopup {...props}  />, { attachTo: document.body })
+        wrapper.find('#glossary-editor-attacher').simulate('focus')
+        wrapper.find('#glossary-editor-attacher').simulate('blur')
+        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
+        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
+        expect(spytoolbarHandling).toHaveBeenCalled() 
+        spytoolbarHandling.mockClear()
     })
 })

@@ -58,3 +58,4 @@ global.window.crypto={
     }
 }
 global.window.origin= "https://localhost:"
+global.window.parent.postMessage = jest.fn();

@@ -10,17 +10,48 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = {
     audioReducer: {
-        audioData: {}
+        audioData:  {
+            "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
+            "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
+            "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
+            "data": [{
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce794",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            },
+            {
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            }
+            ]
+        }
     }
 };
 let store = mockStore(initialState);
 describe('Testing OpenAudioBook component', () => {
     let props = {
-        closeAudioBookDialog : false,
-        audioData: {},
-        closeAudioBookDialog: function(){},
+        closeAudioBookDialog : jest.fn(),
+        audioData:  {
+            "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
+            "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
+            "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
+            "data": [{
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce794",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            },
+            {
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            }
+            ]
+        },
+        closeAudioBookDialog: jest.fn(),
         deleteAudioNarrationForContainer:  jest.fn(),
-        showAudioRemovePopup : true
+        showAudioRemovePopup : jest.fn(),
+        
     }
     const e = {
         target: {
@@ -33,17 +64,24 @@ describe('Testing OpenAudioBook component', () => {
     const narrativeAudio = mount(<Provider store={store}><OpenAudioBook {...props} /></Provider>);
     let narrativeAudioInstance = narrativeAudio.find('OpenAudioBook').instance();
     const spyProcessConfirmation = jest.spyOn(narrativeAudioInstance, 'processConfirmation')
-
+    const spyopenConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openConfirmationBox')
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);
         let instance = narrativeAudio.instance(); 
         expect(instance).toBeDefined();
     })
-    it('onClick-default case', () => {
-        narrativeAudioInstance.processConfirmation("test");
+    it('Test-processConfirmation', () => {
+        narrativeAudioInstance.processConfirmation();
         narrativeAudioInstance.forceUpdate();
         narrativeAudio.update();
         expect(spyProcessConfirmation).toHaveBeenCalled()
         spyProcessConfirmation.mockClear()
+    })
+    it('Test-openConfirmationBox', () => {
+        narrativeAudioInstance.openConfirmationBox({});
+        narrativeAudioInstance.forceUpdate();
+        narrativeAudio.update();
+        expect(spyopenConfirmationBox).toHaveBeenCalled()
+        spyopenConfirmationBox.mockClear()
     })
 })
