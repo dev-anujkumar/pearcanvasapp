@@ -83,13 +83,13 @@ const findElementType = (element, index) => {
 						}
 						break;
 					case "interactive":
-						altText = element.figuredata.alttext ? element.figuredata.alttext : "",
-							elementType = {
-								elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-								primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
-								secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
-								altText
-							}
+						altText = element.figuredata.alttext ? element.figuredata.alttext : "";
+						elementType = {
+							elementType: elementDataBank[element.type][element.figuretype]["elementType"],
+							primaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["primaryOption"],
+							secondaryOption: elementDataBank[element.type][element.figuretype][element.figuredata.interactivetype]["secondaryOption"],
+							altText
+						}
 						break;
 					case "assessment":
 						elementType = {
@@ -151,8 +151,8 @@ const findElementType = (element, index) => {
 
 	elementType['toolbar'] = [];
 	if (elementType.elementType && elementType.elementType !== '') {
-		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+		elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+		elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
 	}
 	return elementType;
 }
@@ -398,7 +398,7 @@ export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, ge
 
 export const fetchAuthUser = () => dispatch => {
 
-	return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}`, {
+	return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
 		headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
