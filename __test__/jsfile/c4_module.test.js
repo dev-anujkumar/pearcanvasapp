@@ -5,9 +5,6 @@ import * as sinon from 'sinon';
 import { doesNotReject } from 'assert';
 
 jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
-// jest.mock('./../../src/config/config', () => ({
-//     ssoToken: "qyQKJ4pfDxLltByru3DQJiSbzuQ.*AAJTSQACMDIAAlNLABxuVE9GbG02OVNxSFJRWWRtSTZ6SkpnVzQwZ1E9AAJTMQACMDE.*"
-// }));
 
 describe('Testing c4_modules', () => {
 
