@@ -28,7 +28,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    it('testing------- ADD OPENER ELEMENT ------action', () => {
+    xit('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
@@ -95,7 +95,7 @@ describe('Tests Slate Wrapper Actions', () => {
          store.dispatch(actions.createElement(type, index));
          expect(type).toBe(expectedActions.type);
     });
-    it('testing------- ASIDE ------action', () => {
+    xit('testing------- ASIDE ------action', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
@@ -127,7 +127,7 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe(expectedActions.type);
         });
     });
-    it('testing------- ASIDE ------action when aside and element id same', () => {
+    xit('testing------- ASIDE ------action when aside and element id same', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
