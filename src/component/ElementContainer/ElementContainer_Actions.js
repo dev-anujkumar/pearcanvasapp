@@ -190,7 +190,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
+    return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
             headers: {
@@ -220,7 +221,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
 
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
 }
 
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ,Directupdate ){
@@ -399,7 +399,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
 
 export const getTableEditorData = (elementId) => (dispatch, getState) => {
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-    axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
+    return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
                 "Content-Type": "application/json",
