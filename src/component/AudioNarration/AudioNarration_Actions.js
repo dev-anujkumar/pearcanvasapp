@@ -69,9 +69,9 @@ export const fetchAudioNarrationForContainer = (slateData) => async(dispatch, ge
 
 /**
  * Method to Delete audio narration for container / state 
- * @param {object} slateData 
+ * @param {object} slateObject 
  */
-export const deleteAudioNarrationForContainer = (slateData) => async(dispatch, getState) => {
+export const deleteAudioNarrationForContainer = (slateObject) => async(dispatch, getState) => {
     var storeData = store.getState();
         let slateData = {
             currentProjectId: config.projectUrn,
