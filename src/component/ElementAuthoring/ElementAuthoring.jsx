@@ -8,7 +8,7 @@ export class ElementAuthoring extends Component {
   }
 
   render() {
-    const { className, placeholder, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue} = this.props
+    const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue} = this.props
      return (
         <TinyMceEditor
           openAssetPopoverPopUp ={openAssetPopoverPopUp}

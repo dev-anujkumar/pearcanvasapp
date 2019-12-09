@@ -358,7 +358,7 @@ class ElementAsideContainer extends Component {
                             showSectionBreak = (elementLength == index + 1) ? true : false
                             return (
                                 <React.Fragment key={element.id}>
-                                    {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+                                    {index === 0 && (!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar") && <ElementSaprator
                                         upperOne={true}
                                         firstOne={index === 0}
                                         index={index}
@@ -456,8 +456,6 @@ class ElementAsideContainer extends Component {
                     <h4 className="heading4NumeroUnoSidebar05" resource=""></h4>
                 </React.Fragment>
             )
-
-
         } else if (designtype == "asideActivity") {
             return (
                 <React.Fragment>
@@ -467,7 +465,7 @@ class ElementAsideContainer extends Component {
             )
         } else {
             return (
-                <div className={designtype + "BorderTop"} />
+                <div className={designtype + "BorderTop"}></div>
             )
 
         }
