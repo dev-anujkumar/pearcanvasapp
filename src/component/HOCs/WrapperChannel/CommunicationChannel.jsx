@@ -84,7 +84,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                     break;
                 case 'newSplitedSlate':
-                    this.hanndleSplitSlate(message)
+                    setTimeout(()=>{this.hanndleSplitSlate(message)}, 500)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);

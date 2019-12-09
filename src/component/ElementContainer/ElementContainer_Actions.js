@@ -237,13 +237,15 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 element  = {
                     ...element,
                     ...updatedData,
-                    elementdata : {
-                        ...element.elementdata,
-                        text : updatedData.elementdata?updatedData.elementdata.text:null
-                    },
                     tcm : _slateObject.tcm?true:false,
                     html : updatedData.html
                 };
+                if(element.type !== "openerelement"){
+                    element.elementdata = {
+                        ...element.elementdata,
+                        text : updatedData.elementdata?updatedData.elementdata.text:null
+                    }
+                }
             }else if(asideData && asideData.type == 'element-aside'){
                 if(element.id == asideData.id){
                    let nestedBodyMatter =  element.elementdata.bodymatter.map((nestedEle)=>{

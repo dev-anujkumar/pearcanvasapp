@@ -344,7 +344,7 @@ class OpenerElement extends Component {
             };
         }
                 
-        element.title.text = `${label} ${number}: ${title}`;
+        element.title.text = `${label} ${number} ${title}`;
         element.title.textsemantics = this.createSemantics({label, number});
 
         if(!element.backgroundimage) {
