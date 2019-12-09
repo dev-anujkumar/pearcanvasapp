@@ -432,7 +432,7 @@ describe('Tests ElementContainer Actions', () => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
                     status: 200,
-                    response: status
+                    response: 200
                 });
             });
     
@@ -456,7 +456,7 @@ describe('Tests ElementContainer Actions', () => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
                     status: 200,
-                    response: status
+                    response: 200
                 });
             });
     
@@ -476,11 +476,11 @@ describe('Tests ElementContainer Actions', () => {
                 const request = moxios.requests.mostRecent();
                 request.respondWith({
                     status: 200,
-                    response: status
+                    response: 200
                 });
             });
     
-            store.dispatch(actions.getTableEditorData(elementId)).then(() => {
+            return store.dispatch(actions.getTableEditorData(elementId)).then(() => {
                 
             });
             // expect(store.getActions()).toEqual(expectedActions);

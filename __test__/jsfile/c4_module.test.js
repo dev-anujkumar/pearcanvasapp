@@ -3,13 +3,20 @@ import _ from 'lodash';
 var axios = require('axios');
 import * as sinon from 'sinon';
 import { doesNotReject } from 'assert';
-jest.mock('axios', () => ({ post: () => jest.fn(),create: jest.fn() }));
+
+jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
+// jest.mock('./../../src/config/config', () => ({
+//     ssoToken: "qyQKJ4pfDxLltByru3DQJiSbzuQ.*AAJTSQACMDIAAlNLABxuVE9GbG02OVNxSFJRWWRtSTZ6SkpnVzQwZ1E9AAJTMQACMDE.*"
+// }));
+
 describe('Testing c4_modules', () => {
 
-    xit('Testing publishSlate function', () => {
+    it('Testing publishSlate function', () => {
         let project = 'project',
             section = 'section',
             cite = 'cite'
+        jest.mock('axios');
+        _.delay = jest.fn(() => {});
         c4PublishObj.publishSlate(project, section, cite);
     })
 
@@ -20,7 +27,7 @@ describe('Testing c4_modules', () => {
             requester: 'requestere',
             timestamp: '31 Oct'
         }
-        _.delay = jest.fn()
+        _.delay = jest.fn(() => {});
         c4PublishObj.publishContent(pubConObj, pubCallBack);
     })
 
@@ -30,22 +37,25 @@ describe('Testing c4_modules', () => {
             cite = 'cite',
             callBack = jest.fn(),
             isPreview = true
+        _.delay = jest.fn(jest.fn());
         c4PublishObj.publishTitle(project, section, cite, callBack, isPreview);
     })
 
     it('Testing publishContentDelay function',() => {
-    
         let response = {
             responseText: {
                 ResponseMetadata: {
                     requestStatusCode: 200
+                },
+                data: {
+                    previewURL: "http://previewURL"
                 }
             } 
         }
         jest.mock('axios'); 
         const mockedResponse = Promise.resolve(response);
         let callback = (response) => jest.fn(response);
-        jest.mock('axios', (response) => ({ post: (response) => jest.fn(response),create: jest.fn() }));
+        jest.mock('axios', (response) => ({ post: (response) => jest.fn(response), create: jest.fn() }));
         mockedResponse.then(function(mockedResponse) {
             let content_url = 'http://helloUrl',
             pubConObj = {
@@ -54,9 +64,9 @@ describe('Testing c4_modules', () => {
                 requester: 'cypress',
                 timestamp: '25Dec'
             },
-            pubApiKey = 'key';
+            pubApiKey = {};
            
-            publishContentDelay(content_url, pubConObj, pubApiKey,callback);
+            publishContentDelay(content_url, pubConObj, pubApiKey, callback);
           });
 
     })
@@ -67,6 +77,9 @@ describe('Testing c4_modules', () => {
             responseText: {
                 ResponseMetadata: {
                     requestStatusCode: 200
+                },
+                data: {
+                    previewURL: "http://previewURL"
                 }
             } 
         }

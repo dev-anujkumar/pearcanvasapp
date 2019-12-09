@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/CommentsPanel/CommentsPanel_Action';
 import { comments, users } from '../../../fixtures/commentPanelData.js'
+import { slateLevelData } from "../../../fixtures/slateTestingData"
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
@@ -20,6 +21,11 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
 }))
 
+jest.mock('../../../src/config/config.js', () => ({
+    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+    projectUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
+    slateEntityURN: "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
+}))
 
 let  initialState = {
     allComments: comments,
@@ -29,23 +35,28 @@ let  initialState = {
     slateTitle: ""
 };
 
-xdescribe('Tests commentsPanel action', () => {
+describe('Tests commentsPanel action', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
         initialState = {
+            slateLevelData: slateLevelData,
+            appStore: slateLevelData,
             allComments: [],
             toggleReplyForm: true,
             togglePanel: false,
             users: [],
-            slateTitle: ""
+            slateTitle: "",
+            commentsPanelReducer: {
+                index: "1-0"
+            }
         };
 
         moxios.install();
     });
    
     afterEach(() => moxios.uninstall());
- xit('testing---Fetch comment action',()=>{
+ it('testing---Fetch comment action',()=>{
     store = mockStore(() => initialState);
     let contentUrn = "urn:pearson:entity:88187e28-1992-4048-8b03-87c6115dd446",
         title = "slate title"
@@ -223,8 +234,7 @@ xdescribe('Tests commentsPanel action', () => {
     });
 
     return store.dispatch(actions.deleteComment(commentUrn,elementId)).then(() => {
-        const { type, payload } = store.getActions()[0];
-        expect(type).toBe(DELETE_COMMENT);
+        expect(store.getActions()[0]).toEqual(expectedActions[0]);
     });
  })
 
@@ -233,11 +243,14 @@ xdescribe('Tests commentsPanel action', () => {
      let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
     const expectedActions = [{
         type: FETCH_COMMENT_BY_ELEMENT,
-        payload: elementId
+        payload: {
+            elementId: elementId,
+            index: 1
+        }
     
     }];
 
-     store.dispatch(actions.fetchCommentByElement(elementId))
+    store.dispatch(actions.fetchCommentByElement(elementId, 1))
     const { type, payload } = store.getActions()[0];
     expect(type).toBe(FETCH_COMMENT_BY_ELEMENT);
     expect(store.getActions()).toEqual(expectedActions);
