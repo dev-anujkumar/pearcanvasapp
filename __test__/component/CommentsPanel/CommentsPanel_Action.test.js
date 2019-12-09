@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/CommentsPanel/CommentsPanel_Action';
 import { comments, users } from '../../../fixtures/commentPanelData.js'
+import {createstoreWithFigure} from "../../../fixtures/slateTestingData"
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
@@ -12,7 +13,8 @@ import {
     UPDATE_COMMENT,
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    TOGGLE_REPLY
 } from '../../../src/constants/Action_Constants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -20,6 +22,15 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
 }))
 
+jest.mock('../../../src/config/config.js', () => ({
+    slateManifestURN: "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0",
+    ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
+    STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
+    PRODUCTAPI_ENDPOINT:"https://contentapis-staging.pearsoncms.net/product-api/",
+    projectUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
+    parentEntityUrn : "bodyMatter",
+    slateType: "assessment"
+}))
 
 let  initialState = {
     allComments: comments,
@@ -29,7 +40,7 @@ let  initialState = {
     slateTitle: ""
 };
 
-xdescribe('Tests commentsPanel action', () => {
+describe('Tests commentsPanel action', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {
@@ -38,14 +49,17 @@ xdescribe('Tests commentsPanel action', () => {
             toggleReplyForm: true,
             togglePanel: false,
             users: [],
-            slateTitle: ""
+            slateTitle: "",
+            appStore:{slateLevelData:createstoreWithFigure.slateLevelData},
+        commentsPanelReducer:{index:1}
+            
         };
 
         moxios.install();
     });
    
     afterEach(() => moxios.uninstall());
- xit('testing---Fetch comment action',()=>{
+ it('testing---Fetch comment action',()=>{
     store = mockStore(() => initialState);
     let contentUrn = "urn:pearson:entity:88187e28-1992-4048-8b03-87c6115dd446",
         title = "slate title"
@@ -208,7 +222,7 @@ xdescribe('Tests commentsPanel action', () => {
  it('testing------- deleteComment  action',()=>{
     store = mockStore(() => initialState);
     let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-     elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5"
+     elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"
     const expectedActions = [{
         type: DELETE_COMMENT,
         payload: commentUrn
@@ -231,9 +245,11 @@ xdescribe('Tests commentsPanel action', () => {
  it('testing------- fetchCommentByElement  action',()=>{
     store = mockStore(() => initialState);
      let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
+     let index;
+
     const expectedActions = [{
         type: FETCH_COMMENT_BY_ELEMENT,
-        payload: elementId
+        payload: {elementId, index:index}
     
     }];
 
@@ -258,5 +274,21 @@ xdescribe('Tests commentsPanel action', () => {
     expect(type).toBe(TOGGLE_COMMENTS_PANEL);
     expect(store.getActions()).toEqual(expectedActions);
  })
+ it('testing------- toggleReply  action',()=>{
+    store = mockStore(() => initialState);
+     let toggle = true;
+    const expectedActions = [{
+        type: TOGGLE_REPLY,
+        payload: toggle
+    
+    }];
+
+     store.dispatch(actions.toggleReply(toggle))
+    const { type, payload } = store.getActions()[0];
+    expect(type).toBe(TOGGLE_REPLY);
+    expect(store.getActions()).toEqual(expectedActions);
+ })
 }) 
+
+
 
