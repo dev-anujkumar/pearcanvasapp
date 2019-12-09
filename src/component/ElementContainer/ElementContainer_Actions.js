@@ -236,17 +236,26 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     if(!versionedData) {
         _slateBodyMatter = _slateBodyMatter.map(element => {
             if (element.id === elementId) {
-                element  = {
-                    ...element,
-                    ...updatedData,
-                    tcm : _slateObject.tcm?true:false,
-                    html : updatedData.html
-                };
+               
                 if(element.type !== "openerelement"){
-                    element.elementdata = {
-                        ...element.elementdata,
-                        text : updatedData.elementdata?updatedData.elementdata.text:null
-                    }
+                    element  = {
+                        ...element,
+                        ...updatedData,
+                        elementdata : {
+                            ...element.elementdata,
+                            text : updatedData.elementdata?updatedData.elementdata.text:null
+                        },
+                        tcm : _slateObject.tcm?true:false,
+                        html : updatedData.html
+                    };
+                }
+                else{
+                    element  = {
+                        ...element,
+                        ...updatedData,
+                        tcm : _slateObject.tcm?true:false,
+                        html : updatedData.html
+                    };
                 }
             }else if(asideData && asideData.type == 'element-aside'){
                 if(element.id == asideData.id){
