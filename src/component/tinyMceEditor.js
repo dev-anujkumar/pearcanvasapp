@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 //IMPORT TINYMCE 

@@ -8,7 +8,7 @@ return {
     }
 }
 })
-xdescribe('Testing GlossaryFootnote component with props', () => {
+describe('Testing GlossaryFootnote component with props', () => {
     let props={
         permissions:[],
         setWrapperRef: jest.fn(),
@@ -35,21 +35,7 @@ xdescribe('Testing GlossaryFootnote component with props', () => {
         expect(wrapper).toHaveLength(1);
         expect(GlossaryFootnotePopupInstance).toBeDefined();
     })
-    xit('Test-toolbarHandling function - case1', () => {
-        let event={
-            relatedTarget:{
-                classList:["tox-toolbar"]
-            },
-            stopPropagation: jest.fn()
-        }
-        let wrapper = mount(< GlossaryFootnotePopup {...props} />)
-        let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
-        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
-        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
-        expect(spytoolbarHandling).toHaveBeenCalled() 
-        spytoolbarHandling.mockClear()
-    })
-    xit('Test-toolbarHandling function -case2', () => {
+    it('Test-toolbarHandling function -case2', () => {
         let wrapper = mount(< GlossaryFootnotePopup {...props} />, { attachTo: document.body })
         let GlossaryFootnotePopupInstance = wrapper.find('GlossaryFootnotePopup').instance();
         let event={
@@ -74,25 +60,5 @@ xdescribe('Testing GlossaryFootnote component with props', () => {
         expect(spycomponentWillUnmount).toHaveBeenCalled() 
         spycomponentWillUnmount.mockClear()
     })
-    it('Test-onFocus-1', () => {
-        let glossaryValue = {
-            "type": "Glossary", "popUpStatus": false
-        }
-        let wrapper = mount(< GlossaryFootnotePopup {...props}  glossaryFootnoteValue={glossaryValue}/>, { attachTo: document.body })
-        wrapper.find('#glossary-editor').simulate('focus')
-        wrapper.find('#glossary-editor').simulate('blur')
-        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
-        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
-        expect(spytoolbarHandling).toHaveBeenCalled() 
-        spytoolbarHandling.mockClear()
-    })
-    it('Test-onFocus-2', () => {
-        let wrapper = mount(< GlossaryFootnotePopup {...props}  />, { attachTo: document.body })
-        wrapper.find('#glossary-editor-attacher').simulate('focus')
-        wrapper.find('#glossary-editor-attacher').simulate('blur')
-        const spytoolbarHandling = jest.spyOn(GlossaryFootnotePopupInstance, 'toolbarHandling')
-        GlossaryFootnotePopupInstance.toolbarHandling(event,"add")
-        expect(spytoolbarHandling).toHaveBeenCalled() 
-        spytoolbarHandling.mockClear()
-    })
+
 })
