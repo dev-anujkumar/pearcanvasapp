@@ -434,7 +434,7 @@ export class TinyMceEditor extends Component {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]){
+                    if(div.innerText == "" && div.children && div.children[0]){
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
@@ -442,7 +442,7 @@ export class TinyMceEditor extends Component {
                 else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]){
+                    if(div.innerText == "" && div.children && div.children[0]){
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
