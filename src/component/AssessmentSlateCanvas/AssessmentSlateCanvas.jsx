@@ -218,6 +218,8 @@ export class AssessmentSlateCanvas extends Component {
                     permissions={this.props.permissions}
                     handleAssessmentBlur= {this.handleAssessmentBlur}
                     learningTemplateLabel = {this.state.learningTemplateLabel}
+                    setSlateParent={this.props.setSlateParent}
+                    setSlateEntity={this.props.setSlateEntity}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -240,7 +242,9 @@ const mapStateToProps = (state, props) => {
     return {
         toggleLT: state.learningToolReducer.toggleLT,
         selectedResultFormApi: state.learningToolReducer.selectedResultFormApi,
-        permissions: state.appStore.permissions
+        permissions: state.appStore.permissions,
+        setSlateParent: state.appStore.setSlateParent,
+        setSlateEntity:state.appStore.setSlateEntity
     }
 }
 const mapActionToProps = {

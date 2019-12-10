@@ -11,11 +11,6 @@ import React, { Component } from 'react';
 import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import localConfig from '../../../env/local.js';
-import stagingConfig from '../../../env/staging.js';
-import qaConfig from '../../../env/qa.js';
-import perfConfig from '../../../env/perf.js';
-import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -146,17 +141,17 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                    this.getProjectConfig(message.currentOrigin, config);
+                	this.getProjectConfig(message.currentOrigin, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
-                    this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     config.book_title =  message.name;                  
+                    this.props.fetchAuthUser();
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -167,7 +162,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
                     if(message){
-                        const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g;
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.label.en= message.label.en.replace(regex, "<img src='$1'></img>")
                     }
                     this.props.currentSlateLO(message);
@@ -234,29 +229,14 @@ function WithWrapperCommunication(WrappedComponent) {
             Object.keys(cypressConfig).forEach(function(key) {
                 obj[key] = cypressConfig[key];
             });
-            
+            if(process.env.NODE_ENV === 'development'){
+                obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
+                obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
+            }              
         }
 
-        getProjectConfig = (currentOrigin, config) => {
-            switch (currentOrigin) {
-                case 'qa':
-                    this.modifyObjKeys(config, qaConfig);
-                    break;
-                case 'perf':
-                    this.modifyObjKeys(config, perfConfig);
-                    break;
-                case 'staging':
-                    this.modifyObjKeys(config, stagingConfig);
-                    break;
-                case 'stg':
-                case 'prod':
-                case 'prod2':
-                    this.modifyObjKeys(config, prodConfig);
-                    break;
-                case 'local':
-                    this.modifyObjKeys(config, localConfig);
-                    break;
-            }
+        getProjectConfig = (configObj, config) => {
+            this.modifyObjKeys(config, configObj);
         }
 
         /**
@@ -290,7 +270,7 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g
+                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
