@@ -141,7 +141,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                	this.getProjectConfig(message.currentOrigin, config);
+                	this.getProjectConfig(message.configObj, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -225,10 +225,10 @@ function WithWrapperCommunication(WrappedComponent) {
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
             });
-
             Object.keys(cypressConfig).forEach(function(key) {
                 obj[key] = cypressConfig[key];
             });
+            console.log("obj >> ", obj);
             if(process.env.NODE_ENV === 'development'){
                 obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
                 obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;

@@ -237,7 +237,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: previousElementData.figuretype,
-            numbered: isNumbered,
+            numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             preformattedtext: [...preformattedText.split("\n")]
