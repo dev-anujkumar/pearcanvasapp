@@ -45,7 +45,7 @@ ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey)
     if (pubApiKey !== undefined) {
         xApiKey = pubApiKey;
     } else {
-        xApiKey = CTOOL_APIKEY;
+        xApiKey = config_object.CTOOL_APIKEY;
     }
     var x = ajax.x();
     x.open(method, url, sync, null, null);

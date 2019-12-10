@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
     REACT_APP_API_URL

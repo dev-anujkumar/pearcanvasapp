@@ -7,7 +7,6 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    AddEditLOAssessmentDropdown,
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
 }
     from '../../constants/IFrameMessageTypes';
