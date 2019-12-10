@@ -20,7 +20,6 @@ class Sidebar extends Component {
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         let numbered = this.props.activeElement.numbered || true;
-        let startNumber = this.props.activeElement.startNumber || "1"
         
         this.state = {
             elementDropdown: '',
@@ -31,15 +30,22 @@ class Sidebar extends Component {
             activeLabelText: labelText,
             attrInput: "",
             bceToggleValue: numbered,
-            bceNumberStartFrom : startNumber
+            bceNumberStartFrom : 1
         };
+    }
+    componentDidMount() {
+        this.setState({
+            bceNumberStartFrom : this.props.activeElement.startNumber
+        })
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
+            let numberStartFrom = prevState.bceNumberStartFrom
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
+                numberStartFrom = nextProps.activeElement.startNumber
             }
             
             return {
@@ -48,7 +54,8 @@ class Sidebar extends Component {
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
-                activeLabelText: nextProps.activeElement.tag
+                activeLabelText: nextProps.activeElement.tag,
+                bceNumberStartFrom : numberStartFrom
             };
         }
 
