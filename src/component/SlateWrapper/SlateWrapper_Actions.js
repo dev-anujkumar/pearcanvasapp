@@ -423,10 +423,10 @@ export const setSlateType = (slateType) => (dispatch, getState) =>{
         payload: slateType
     }) 
 }
-export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
+export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) =>{
     return dispatch({
         type: SET_SLATE_ENTITY,
-        payload: setSlateEntity
+        payload: setSlateEntityParams
     }) 
 }
 
@@ -437,9 +437,9 @@ export const accessDenied = (value) => (dispatch, getState) => {
         payload: value
     })
 }
-export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
+export const setSlateParent = (setSlateParentParams) => (dispatch, getState) =>{
     return dispatch({
         type: SET_PARENT_NODE,
-        payload: setSlateParent
+        payload: setSlateParentParams
     }) 
 }

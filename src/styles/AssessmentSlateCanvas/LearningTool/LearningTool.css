@@ -14,6 +14,7 @@
     z-index: 1500;
     min-height: 60px;
     max-height: 560px;
+    overflow-y:auto;
     transition: top 0.4s, opacity 0.4s;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -63,8 +64,6 @@
     font-weight: 100;
     text-align: center;
 }
-
-.learningToolHeaderTypeFilter {}
 
 .spanLTFilterType {
     margin-left: 100px;
@@ -385,6 +384,7 @@ tr.modalCard td:nth-child(5) {
 }
 
 #style-2::-webkit-scrollbar-track , .learningToolContainer::-webkit-scrollbar-track  {
+    box-shadow: inset 0 0 6px grey;
     -webkit-box-shadow: inset 0 0 6px grey;
     border-radius: 5px;
     background-color: #F5F5F5;
@@ -397,12 +397,13 @@ tr.modalCard td:nth-child(5) {
 
 #style-2::-webkit-scrollbar-thumb, .learningToolContainer::-webkit-scrollbar-thumb {
     border-radius: 5px;
+    box-shadow: inset 0 0 6px grey;
     -webkit-box-shadow: inset 0 0 6px grey;
     background-color: #555;
 }
-.learningToolContainer{
+/* .learningToolContainer{
     overflow-y:auto;
-}
+} */
 
 .highlightSelectedRow {
     background-color: #E8F8FF !important;

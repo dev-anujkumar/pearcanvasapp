@@ -259,7 +259,7 @@ class Sidebar extends Component {
     
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
+                let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
@@ -277,7 +277,7 @@ class Sidebar extends Component {
             }
             if(this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId){
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockCodeFigure") : null
+                let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if( attrNode ){
                     attrNode.setAttribute("numbered", this.state.bceToggleValue)
                     attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)

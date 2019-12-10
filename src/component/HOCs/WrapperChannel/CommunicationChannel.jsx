@@ -113,13 +113,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disableNext = true;//message.disableNext;
                     break;
                 case 'swappedIS':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
                 case 'ISDeleted':
+                case 'TocLoader':
                     {
                         /**
                          * TO BE IMPLEMENTED
@@ -145,13 +140,6 @@ function WithWrapperCommunication(WrappedComponent) {
                             hideBlocker();
                         }
 
-                    }
-                    break;
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
                     }
                     break;
                 case 'updateSlateTitleByID':
@@ -186,6 +174,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.isLOExist(message);
                 break;
                 case 'loEditResponse':
+                case 'cancelCEPopup':
                     this.setState({
                         showBlocker: false
                     });
@@ -201,11 +190,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
-                case 'cancelCEPopup':
-                    this.setState({
-                        showBlocker: false
-                    });
-                 break;
+                // case 'cancelCEPopup':
+                //     this.setState({
+                //         showBlocker: false
+                //     });
+                //  break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;

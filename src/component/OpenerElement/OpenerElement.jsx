@@ -45,9 +45,9 @@ class OpenerElement extends Component {
         let imageId = imageData['workURN'] ? imageData['workURN'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
-        let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
-        let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
-        let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
+        // let smartLinkString = (imageData.desc && imageData.desc.toLowerCase() !== "eps media") ? imageData.desc : "{}";
+        // let smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
+        // let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData['alt-text'] ? imageData['alt-text'] : "";
             let longDesc = imageData['longDescription'] ? imageData['longDescription'] : "";
@@ -84,7 +84,7 @@ class OpenerElement extends Component {
         if(hasReviewerRole()){
             return true
         }
-        const { slateLockInfo , permissions } = this.props
+        const { slateLockInfo } = this.props
         if(checkSlateLock(slateLockInfo))
             return false
 
@@ -380,7 +380,7 @@ class OpenerElement extends Component {
     
     render() {
         const { imgSrc, width } = this.state
-        const { element, backgroundColor, slateLockInfo } = this.props
+        const { backgroundColor, slateLockInfo } = this.props
         let isDisable = hasReviewerRole() ? " disable-role" : ""
         const styleObj = this.getBGStyle(imgSrc, width)
         return (

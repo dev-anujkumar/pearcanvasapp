@@ -16,13 +16,13 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, placeholder, model, element, slateLockInfo } = this.props
+        const { className, model, element, slateLockInfo } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;
         if (!model) {
             let subType = element.subtype;
-            let startNumber = isNaN(parseInt(element.elementdata.startNumber)) && 0 || element.elementdata.startNumber;
+            let startNumber = isNaN(parseInt(element.elementdata.startNumber)) ? 0 : element.elementdata.startNumber; //isNaN(parseInt(element.elementdata.startNumber)) && 0 || element.elementdata.startNumber;
             startNumber = (startNumber > 0) && (startNumber - 1) || 0;
             wipModel = {
                 "text": `<ol class='${subType}' data-treelevel='1' style='counter-increment: section ${startNumber};'><li class='reset listItemNumeroUnoUpperAlpha'>This is a default text and will perform working once wip conversion is ready</li></ol>`
