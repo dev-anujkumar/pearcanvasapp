@@ -158,9 +158,9 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
   @param {String} elementId - Element id of the element
 */
 
-export const updateComment = (commentUrn, updateComment, elementId) => dispatch => {
+export const updateComment = (commentUrn, updateCommentParams, elementId) => dispatch => {
 
-    let request = updateComment
+    let request = updateCommentParams
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         {

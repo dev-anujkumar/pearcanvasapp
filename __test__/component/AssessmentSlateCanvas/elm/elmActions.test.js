@@ -12,7 +12,7 @@ jest.mock('../../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn()
 }))
 
-xdescribe('ELM Actions test', () => {
+describe('ELM Actions test', () => {
     let store = mockStore(() => initialState);
     beforeEach(() => {
         initialState = {

@@ -137,9 +137,13 @@ export class TinyMceEditor extends Component {
                     editor.execCommand('Strikethrough', false);
                 });
                 /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
-                let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
-                revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-                document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
+                if(editor.getContentAreaContainer()){
+                    let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+                    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
+                    document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
+                }
+               
+                
             }
         }
         this.editorRef  = React.createRef();
@@ -269,8 +273,8 @@ export class TinyMceEditor extends Component {
                 case "mceShowCharmap":
                     this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();
                     break;
-                case "mceInsertContent":
-                    editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                case "mceInsertContent": 
+                        editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     break;
                 case "FormatBlock":
                     if (e.value === 'h5'){
@@ -1311,8 +1315,9 @@ export class TinyMceEditor extends Component {
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor';
@@ -1322,8 +1327,9 @@ export class TinyMceEditor extends Component {
                 }
                 else if(this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote"){
                     let temDiv = document.createElement('div');
-                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
+                    temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     classes = classes + ' blockquote-editor';
                     return (
