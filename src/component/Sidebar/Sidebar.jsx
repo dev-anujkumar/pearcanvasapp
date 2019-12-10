@@ -19,7 +19,6 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
-        let numbered = this.props.activeElement.numbered || true;
         
         this.state = {
             elementDropdown: '',
@@ -29,23 +28,26 @@ class Sidebar extends Component {
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
-            bceToggleValue: numbered,
+            bceToggleValue: true,
             bceNumberStartFrom : 1
         };
     }
     componentDidMount() {
         this.setState({
-            bceNumberStartFrom : this.props.activeElement.startNumber
+            bceNumberStartFrom : this.props.activeElement.startNumber,
+            bceToggleValue : this.props.activeElement.numbered
         })
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            let numberStartFrom = prevState.bceNumberStartFrom
+            let numberStartFrom = prevState.bceNumberStartFrom;
+            let bceToggle = prevState.bceToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber
+                numberStartFrom = nextProps.activeElement.startNumber;
+                bceToggle = nextProps.activeElement.numbered
             }
             
             return {
@@ -55,7 +57,8 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
-                bceNumberStartFrom : numberStartFrom
+                bceNumberStartFrom : numberStartFrom,
+                bceToggleValue : bceToggle
             };
         }
 
@@ -324,8 +327,7 @@ class Sidebar extends Component {
     handleBceToggle = () => {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
-        })
-        this.handleBceBlur()
+        }, () => this.handleBceBlur() )
     }
 
     /**

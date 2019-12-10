@@ -1083,6 +1083,11 @@ export class TinyMceEditor extends Component {
         // else if( tinymce.$(e.target).closest('li') && tinymce.$(e.target).closest('li').length && !tinymce.$(e.target).closest('li').html().trim() && !tinymce.$(e.target).closest('li').find('br').length ){
         //     tinymce.$(e.target).closest('li').append('<br/>');
         // }
+         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+            if (tinymce.activeEditor && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+            }
+         }
         this.props.handleEditorFocus();
         let isSameTarget = false;
         let event = Object.assign({}, e);
@@ -1346,6 +1351,11 @@ export class TinyMceEditor extends Component {
         }
     }
     normalKeyDownHandler = (e)=>{
+         if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
+            if (tinymce.activeEditor && tinymce.activeEditor.id) {
+                document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
+            }
+         }
         if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
             e.preventDefault();
             e.stopPropagation();
