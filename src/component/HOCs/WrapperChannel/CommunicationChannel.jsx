@@ -236,7 +236,6 @@ function WithWrapperCommunication(WrappedComponent) {
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
             });
-
             Object.keys(cypressConfig).forEach(function(key) {
                 obj[key] = cypressConfig[key];
             });
