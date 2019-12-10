@@ -11,11 +11,6 @@ import React, { Component } from 'react';
 import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import localConfig from '../../../env/local.js';
-import stagingConfig from '../../../env/staging.js';
-import qaConfig from '../../../env/qa.js';
-import perfConfig from '../../../env/perf.js';
-import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -158,7 +153,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                	this.getProjectConfig(message.currentOrigin, config);
+                	this.getProjectConfig(message.configObj, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -241,33 +236,18 @@ function WithWrapperCommunication(WrappedComponent) {
             Object.keys(newObj).forEach(function(key) {
               obj[key] = newObj[key];
             });
-
             Object.keys(cypressConfig).forEach(function(key) {
                 obj[key] = cypressConfig[key];
             });
-            
+            console.log("obj >> ", obj);
+            if(process.env.NODE_ENV === 'development'){
+                obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
+                obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
+            }              
         }
 
-        getProjectConfig = (currentOrigin, config) => {
-            switch (currentOrigin) {
-                case 'qa':
-                    this.modifyObjKeys(config, qaConfig);
-                    break;
-                case 'perf':
-                    this.modifyObjKeys(config, perfConfig);
-                    break;
-                case 'staging':
-                    this.modifyObjKeys(config, stagingConfig);
-                    break;
-                case 'stg':
-                case 'prod':
-                case 'prod2':
-                    this.modifyObjKeys(config, prodConfig);
-                    break;
-                case 'local':
-                    this.modifyObjKeys(config, localConfig);
-                    break;
-            }
+        getProjectConfig = (configObj, config) => {
+            this.modifyObjKeys(config, configObj);
         }
 
         /**
