@@ -47,7 +47,7 @@ class ElmTable extends Component {
     */
     renderTableData = (currentProps) => {
         if (!currentProps.errFlag && currentProps.apiData) {
-            this.filterData(currentProps.getParentId, currentProps.apiData);
+            this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
 
         this.timer = setTimeout(() => {
@@ -129,7 +129,7 @@ class ElmTable extends Component {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
                     resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": assesments.type || "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
+                        this.preparedData.push({ "type": "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
