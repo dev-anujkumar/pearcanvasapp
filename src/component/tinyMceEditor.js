@@ -1192,7 +1192,7 @@ export class TinyMceEditor extends Component {
              */
             currentTarget.focus();
             tinymce.init(this.editorConfig).then(() => { 
-                tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY)
+                tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
@@ -1212,7 +1212,6 @@ export class TinyMceEditor extends Component {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
-               tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY)
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
                         if (li.innerHTML.trim() == '') {
