@@ -55,7 +55,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
         }
         else {
-            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
+            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id && document.getElementById(tinymce.activeEditor.id)) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
             }
         }
@@ -81,6 +81,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         // oldElementData['html']['title'] = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
+        oldElementData.html.title="";
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
