@@ -333,41 +333,46 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
                 }
             }
         ).then(res => {
-
-            /** This will uncomment when pagenumber key is fixed**/
-
-
-        /*   const parentData = getState().appStore.slateLevelData;
+            const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
             let { contents: _slateContent } = _slateObject;
             let { bodymatter: _slateBodyMatter } = _slateContent;
+            let pageNumberRef = {
+                pageNumber: data.pageNumber
+            }
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
-                    element['pageNumber'] = pagenumber
-                } else if (asideData && asideData.type == 'element-aside') {
+                    element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
+                }
+                else if (asideData && asideData.type == 'element-aside') {
                     if (element.id == asideData.id) {
                         element.elementdata.bodymatter.map((nestedEle) => {
-                         
                             if (nestedEle.id == elementId) {
-                                nestedEle['pageNumber'] = pagenumber;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                              
+                                nestedEle['pageNumberRef'] = { ...pageNumberRef, urn: nestedEle.id }
+                            }
+                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                                 nestedEle.contents.bodymatter.map((ele) => {
                                     if (ele.id == elementId) {
-                                        ele['pageNumber'] = pagenumber;
+                                        ele['pageNumberRef'] = { ...pageNumberRef, urn: ele.id }
                                     }
+                                    return ele
                                 })
                             }
+                            return nestedEle
                         })
                     }
                 }
-            }) */
+                return element
+            })
 
+            dispatch({
+                type: FETCH_SLATE_DATA,
+                payload:  newslateData
+            })
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
-                 //   slateLevelData: {},
                     pageLoading: false
                 }
             })
