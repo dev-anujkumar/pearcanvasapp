@@ -149,7 +149,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
 
-    if(previousElementData.figuredata.interactivetype === "pdf"){
+    if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+        previousElementData.figuredata.interactivetype === "web-link") {
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""

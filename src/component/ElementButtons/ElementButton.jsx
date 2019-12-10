@@ -169,7 +169,7 @@ class Button extends Component {
     }
     
     render() {
-        const { type, onClick, elementId, btnClassName } = this.props
+        const { type, onClick, btnClassName } = this.props
         
         return(
             <>

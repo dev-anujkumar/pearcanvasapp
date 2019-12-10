@@ -59,7 +59,7 @@ describe('Testing OpenAudioBook component', () => {
 
 })
 
-describe('Testing Element figure component with props', () => {
+describe('Testing AudioNarration component with props', () => {
     let props = {
         audioData: {
             "narrativeAudioUrn": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
