@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import {FULL_ASSESSMENT_PUF , PUF } from '../../../AssessmentSlateConstants.js'
+import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 
 
@@ -314,7 +314,7 @@ class ElmTable extends Component {
                     </div>
                     <div className="puf-footer">
                         <button className="puf-button cancel" onClick={this.props.closeElmWindow}>CANCEL</button>
-        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>{buttonText}</button>
+                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>{buttonText}</button>
                     </div>
                 </div>
             );
