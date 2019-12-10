@@ -11,7 +11,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
     try {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
@@ -25,7 +25,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
-
     if(oldElementData.figuretype==="assessment"){
         inputPrimaryOptionEnum=inputSubType['enum'];
         inputSubTypeEnum=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText.toUpperCase().replace(" ", "_").replace("-", "_");
@@ -52,16 +51,15 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
             newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
-            if (tinymce && tinymce.activeEditor.id) {
+            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }
         else {
-            if (tinymce && tinymce.activeEditor.id) {
+            if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', true)
             }
         }
-
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
         }
@@ -80,8 +78,8 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
-        }        
-        oldElementData.html.title = "";
+        }
+        // oldElementData['html']['title'] = "";
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
     }
@@ -94,7 +92,7 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
         let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
-        let domHtml = editableDom.innerHTML
+        let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }
@@ -160,13 +158,18 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
 
     let elmIndexes = indexes ? indexes : 0;
     let slateBodyMatter = store[config.slateManifestURN].contents.bodymatter;
-    if(elmIndexes.length === 2){
+    if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample" ){
         if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
             conversionDataToSend.isHead = true;
             conversionDataToSend.parentType = "workedexample";
         }
-    }else if(elmIndexes.length === 3){
+    }else if(elmIndexes.length === 3 && slateBodyMatter[elmIndexes[0]].subtype == "workedexample"){
         if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].contents.bodymatter[elmIndexes[2]].id === conversionDataToSend.id){
+            conversionDataToSend.isHead = false;
+            conversionDataToSend.parentType = "workedexample";
+        }
+    }else if(elmIndexes.length === 2 && slateBodyMatter[elmIndexes[0]].subtype == "sidebar"){
+        if(slateBodyMatter[elmIndexes[0]].elementdata.bodymatter[elmIndexes[1]].id === conversionDataToSend.id){
             conversionDataToSend.isHead = false;
             conversionDataToSend.parentType = "element-aside";
         }
@@ -213,7 +216,6 @@ const convertElement = (oldElementData, newElementData, oldElementInfo, store, i
             altText,
             longDesc
         };
-
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -268,7 +270,7 @@ catch (error) {
 }
 }
 
-const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
         let storeElement = store[config.slateManifestURN];

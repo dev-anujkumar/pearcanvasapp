@@ -66,7 +66,7 @@ describe('Testing <SlateWrapper> Component', () => {
         ReactDOM.unmountComponentAtNode(div);
     })
 
-    describe('With no element', () => {
+    xdescribe('With no element', () => {
         let props = {
             slateData: emptySlateData,
             slateLockInfo: {
@@ -100,7 +100,7 @@ describe('Testing <SlateWrapper> Component', () => {
             expect(wrapper.find('.header-label').length).toBe(1);
         })
     })
-    describe('With default elements', () => {
+    xdescribe('With default elements', () => {
         let props = {
             slateData,
             slateLockInfo: {
@@ -146,7 +146,7 @@ describe('Testing <SlateWrapper> Component', () => {
         })
     })
 
-    describe('With elements', () => {
+    xdescribe('With elements', () => {
         let props = {
             slateData: slateData,
             slateLockInfo: {
@@ -243,7 +243,7 @@ describe('Testing <SlateWrapper> Component', () => {
             slateWrapper.find('SlateWrapper').instance().showSplitSlatePopup()
         })
     })
-    describe('With elements and lock status true', () => {
+    xdescribe('With elements and lock status true', () => {
         let props = {
             slateData: slateData,
             slateLockInfo: {

@@ -3,6 +3,7 @@ import config from '../../config/config';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
+	SET_OLD_IMAGE_PATH
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -237,11 +238,167 @@ export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
 	});
 };
 
-export const setActiveElement = (activeElement = {}, index = 0) => dispatch => {
+const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
+	let parentData = getState().appStore.slateLevelData,
+        oldPath,
+        index = elementIndex;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
+       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+      if (typeof (index) == 'number') {
+        if (newBodymatter[index].versionUrn == activeElement.id) {
+            oldPath = bodymatter[index].figuredata.path || ""     
+        }
+    } else {
+        let indexes = index.split('-');
+        let indexesLen = indexes.length, condition;
+        if (indexesLen == 2) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
+            }
+        } else if (indexesLen == 3) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
+            }
+        }
+    }
+    return oldPath || ""
+}
+
+const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
+	let parentData = getState().appStore.slateLevelData,
+        oldPath,
+        index = elementIndex;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
+	   bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+
+	   switch(type){
+			case "audio":
+				if (typeof (index) == 'number') {
+					if (newBodymatter[index].versionUrn == activeElement.id) {
+						oldPath = bodymatter[index].figuredata.audio.path || ""
+					}
+				} else {
+					let indexes = index.split('-');
+					let indexesLen = indexes.length, condition;
+					if (indexesLen == 2) {
+						condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+						if (condition.versionUrn == activeElement.id) {
+							oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+						}
+					} else if (indexesLen == 3) {
+						condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+						if (condition.versionUrn == activeElement.id) {
+							oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
+						}
+					}
+				}
+			   break;
+			case "video":
+				if (typeof (index) == 'number') {
+					if (newBodymatter[index].versionUrn == activeElement.id) {
+						oldPath = bodymatter[index].figuredata.videos[0].path || ""
+					}
+				} else {
+					let indexes = index.split('-');
+					let indexesLen = indexes.length, condition;
+					if (indexesLen == 2) {
+						condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+						if (condition.versionUrn == activeElement.id) {
+							oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
+						}
+					} else if (indexesLen == 3) {
+						condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+						if (condition.versionUrn == activeElement.id) {
+								oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videos[0].path
+						}
+					}
+				}
+				break;
+	   }
+      
+    return oldPath || ""
+}
+
+const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
+	let parentData = getState().appStore.slateLevelData,
+        oldPath,
+        index = elementIndex;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
+	   bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+	   if (typeof (index) == 'number') {
+        if (newBodymatter[index].versionUrn == activeElement.id) {
+            oldPath = bodymatter[index].figuredata.interactiveid || ""
+        }
+    } else {
+        let indexes = index.split('-');
+        let indexesLen = indexes.length, condition;
+        if (indexesLen == 2) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+            if (condition.versionUrn == activeElement.id) {
+                    oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
+            }
+        } else if (indexesLen == 3) {
+            condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+            if (condition.versionUrn == activeElement.id) {
+                oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.interactiveid || ""
+            }
+        }
+    }	   
+    return oldPath || ""
+}
+
+export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, getState) => {
 	dispatch({
 		type: SET_ACTIVE_ELEMENT,
 		payload: findElementType(activeElement, index)
 	});
+	switch(activeElement.figuretype){
+		case "image":
+		case "mathImage":
+		case "table":
+			let oldPath = setOldImagePath(getState, activeElement, index)
+			dispatch({
+				type: SET_OLD_IMAGE_PATH,
+				payload: {
+					oldImage: oldPath
+				}
+			})
+			break;
+		case "audio":
+			let oldAudioId = setOldAudioVideoPath(getState, activeElement, index, activeElement.figuretype)
+			dispatch({
+				type: SET_OLD_IMAGE_PATH,
+				payload: {
+					oldImage: oldAudioId
+				}
+			})
+		break;
+
+		case "video":
+			let oldVideoId = setOldAudioVideoPath(getState, activeElement, index, activeElement.figuretype)
+			dispatch({
+				type: SET_OLD_IMAGE_PATH,
+				payload: {
+					oldImage: oldVideoId
+				}
+			})
+			break;
+
+		case "interactive":
+			let interactiveId = setOldinteractiveIdPath(getState, activeElement, index)
+			dispatch({
+				type: SET_OLD_IMAGE_PATH,
+				payload: {
+					oldImage: interactiveId
+				}
+			})
+			break;
+	}
 }
 
 

@@ -65,6 +65,7 @@ export const bindKeyDownEvent = (editor, e) => {
     const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
+    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(e.target)
 
     /**
      * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
@@ -284,6 +285,13 @@ export const bindKeyDownEvent = (editor, e) => {
             prohibitEventBubling(e);
             return false;
         }
+        if (anchorNode.nextSibling !== null) {
+            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+            if (closestLi.findChildren('ol').length > 0 || closestLi.findChildren('ul').length > 0) {
+                prohibitEventBubling(e);
+                return false;
+            }
+        }
         // else update list content //
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
@@ -295,6 +303,7 @@ export const bindKeyDownEvent = (editor, e) => {
     if (isOnlyListElement && !listUpdatedOnce) {
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
+            createDefaultOlLi(treelevel, olClass, listType, e.target);
             updateNestedList(e.target);
             return false;
         });
@@ -500,5 +509,33 @@ const isFullRangeSelected = (editor) => {
         return true
     }
     return false
+}
+
+const getListClassTypeAndTreeLvl = (element) => {
+    let listType = 'ol';
+    let allOlElement = element.querySelectorAll('ol');
+    if (allOlElement.length == 0) {
+        allOlElement = element.querySelectorAll('ul');
+        listType = 'ul';
+    }
+    let treelevel = 1, olClass = "disc"
+    if (allOlElement[0]) {
+        treelevel = parseInt(allOlElement[0].getAttribute('treelevel'));
+        olClass = allOlElement[0].getAttribute('class') || 'disc';
+    }
+    return { treelevel, olClass, listType }
+}
+
+const createDefaultOlLi = (treelevel, olClass, listType, element) => {
+    if (element.querySelectorAll(listType).length === 0) {
+        let olEle = document.createElement(listType)
+        olEle.classList.add(olClass)
+        olEle.setAttribute('treelevel', treelevel)
+        let liEle = document.createElement('li')
+        liEle.append(document.createElement('br'))
+        olEle.append(liEle)
+        element.innerHTML = ""
+        element.append(olEle)
+    }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

@@ -159,6 +159,7 @@ export class TinyMceEditor extends Component {
      * function to remove formatting of whole element excluding Math/Chem
      */
     innerTextWithMathMl = (node) => {
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         if (node.childNodes.length) {
             node.childNodes.forEach((innerNode) => {
                 if (innerNode.childNodes.length) {
@@ -493,7 +494,7 @@ export class TinyMceEditor extends Component {
      */
     isTabPressed = (keydownEvent) => {
         const keyCode = keydownEvent.keyCode || keydownEvent.which
-        if(this.props.element.type !== "element-list" && keyCode === 9){
+        if(this.props.element && this.props.element.type !== "element-list" && keyCode === 9){
             return 1
         }
         else{
@@ -539,7 +540,8 @@ export class TinyMceEditor extends Component {
      */
     addInlineCode = (editor) => {
         let selectedText = window.getSelection().anchorNode.parentNode.nodeName;
-         if (editor.selection.getContent() != "" && selectedText != "CODE") {
+        let hasCodeTag = window.getSelection().anchorNode.parentNode.innerHTML.includes('<code data-mce-selected="inline-boundary">') 
+         if (editor.selection.getContent() != "" && selectedText != "CODE" && !hasCodeTag) {
              editor.selection.setContent('<code>' + editor.selection.getContent() + '</code>');
          }
          else{
@@ -678,9 +680,8 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         if(this.props.element && this.props.element.type === 'element-list'){
-            args.content = tinymce.activeEditor.selection.getContent();
-            return
-        };
+            args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
+        }
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if(testElement.innerText.trim().length){
@@ -807,8 +808,8 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+      	this.handleBlur();
         saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
-        this.handleBlur();
     }
 
 
@@ -896,9 +897,12 @@ export class TinyMceEditor extends Component {
                 */
                 this.editorRef.current.style.caretColor = 'transparent';
                 this.editorRef.current.focus(); // element must be focused before
-                if(!newElement){
-                    document.getElementById('slateWrapper').scrollTop=0;
-                }
+                /**
+                 * This particular logic is now moved at SlateWrapper
+                 */
+                // if(!newElement){
+                //     document.getElementById('slateWrapper').scrollTop=0;
+                // }
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if(document.getElementById(this.editorRef.current.id) && newElement) {
@@ -1174,7 +1178,7 @@ export class TinyMceEditor extends Component {
             tinymce.init(this.editorConfig).then(() => { 
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
-                this.setCursorAtEnd(currentTarget, isSameTarget); 
+               // this.setCursorAtEnd(currentTarget, isSameTarget); 
 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
@@ -1193,7 +1197,7 @@ export class TinyMceEditor extends Component {
             clearTimeout(timeoutInstance);
             tinymce.init(this.editorConfig).then((d)=>{
                 this.setToolbarByElementType();
-                this.setCursorAtEnd(currentTarget, isSameTarget);
+               // this.setCursorAtEnd(currentTarget, isSameTarget);
 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
                     currentTarget.querySelectorAll('li').forEach((li) => {
@@ -1207,15 +1211,12 @@ export class TinyMceEditor extends Component {
         if (isSameTarget) {
             this.editorOnClick(event);
         }
-        this.setCursorAtEnd(currentTarget, isSameTarget);
+      //  this.setCursorAtEnd(currentTarget, isSameTarget);
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
     setCursorAtEnd(el, isSameTarget) {
-        /**
-         * In case current element is list element
-         */
-        if (el.findChildren('ol').length || el.findChildren('ul').length || el.innerText==="") {
+        if (el.innerText==="") {
             return
         }
         if (isSameTarget) {
@@ -1267,6 +1268,7 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
+        tinymce.$('span[data-mce-type="bookmark"]').remove();
         this.props.handleBlur();
     }
     
