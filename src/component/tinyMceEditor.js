@@ -138,9 +138,19 @@ export class TinyMceEditor extends Component {
                 });
                 /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
                 if(editor.getContentAreaContainer()){
-                    let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
+                    let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
+
+                    //Test Case Changes
+                    if(!revertingTempContainerHtml) {
+                        revertingTempContainerHtml = "";
+                    }
+
                     revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
-                    document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
+
+                    //Test Case Changes
+                    if (document.getElementById(editor.id)) {
+                        document.getElementById(editor.id).innerHTML = revertingTempContainerHtml;
+                    }
                 }
                
                 
@@ -902,8 +912,14 @@ export class TinyMceEditor extends Component {
                 /*
                     Removing the blinking cursor on first load by making it transparent
                 */
+
+
+               if(this.editorRef.current) {
                 this.editorRef.current.style.caretColor = 'transparent';
-                this.editorRef.current.focus(); // element must be focused before
+                this.editorRef.current.focus();
+               }
+
+                 // element must be focused before
                 /**
                  * This particular logic is now moved at SlateWrapper
                  */
@@ -912,7 +928,7 @@ export class TinyMceEditor extends Component {
                 // }
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
-                if(document.getElementById(this.editorRef.current.id) && newElement) {
+                if(this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                      config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(()=>{
                         document.getElementById(this.editorRef.current.id).click();
@@ -920,15 +936,19 @@ export class TinyMceEditor extends Component {
                     },0)
                     localStorage.removeItem('newElement');
                 }
-                this.editorConfig.selector = '#' + this.editorRef.current.id;
+                this.editorConfig.selector = '#' + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0') ;
                
                 /**
                  * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
                  * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
                  */
-                let tempFirstContainerHtml = tinyMCE.$("#" + this.editorRef.current.id).html()
+                let tempFirstContainerHtml = tinyMCE.$("#" + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0')).html()
                 tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
+
+                //Test Case Changes
+                if(this.editorRef.current && document.getElementById(this.editorRef.current.id)) {
+                    document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
+                }
 
                 tinymce.init(this.editorConfig).then((d) => { 
                     if (this.editorRef.current) {
@@ -987,6 +1007,9 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+            if (!testElem.innerText) {
+                testElem.innerText = "";
+            }
             if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                 this.placeHolderClass = 'place-holder';
             }
