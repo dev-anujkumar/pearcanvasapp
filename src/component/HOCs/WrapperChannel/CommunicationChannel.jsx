@@ -84,7 +84,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                     break;
                 case 'newSplitedSlate':
-                    this.hanndleSplitSlate(message)
+                    setTimeout(()=>{this.hanndleSplitSlate(message)}, 500)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -158,17 +158,17 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                    this.getProjectConfig(message.currentOrigin, config);
+                	this.getProjectConfig(message.currentOrigin, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
-                    this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
                     config.book_title =  message.name;                  
+                    this.props.fetchAuthUser();
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -179,7 +179,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
                     if(message){
-                        const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g;
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.label.en= message.label.en.replace(regex, "<img src='$1'></img>")
                     }
                     this.props.currentSlateLO(message);
@@ -301,7 +301,7 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g
+                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);

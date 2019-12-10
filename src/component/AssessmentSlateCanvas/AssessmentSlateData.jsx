@@ -1,17 +1,16 @@
 // IMPORT - Plugins //
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
 
 // IMPORT - Assets //
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, 
-    FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE , PUF } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +28,8 @@ export class AssessmentSlateData extends Component {
     }
     
     componentWillReceiveProps(nextProps){
-     if(this.props!==nextProps && this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
+
+     if(this.props!==nextProps && (this.props.setSlateParent != nextProps.setSlateParent || this.props.setSlateEntity  != nextProps.setSlateEntity ||this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup)){
          this.sendDataAssessment(nextProps);
      }
     }

@@ -1,5 +1,5 @@
 // // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React from 'react';
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
