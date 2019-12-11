@@ -260,6 +260,8 @@ export class ReactEditor extends React.Component {
   }
 
   handleClick = (e) => {
+    clickedX = e.clientX;
+    clickedY = e.clientY;
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
@@ -303,6 +305,7 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
      // this.setCursorAtEnd(tinymce.activeEditor);
+     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
 
