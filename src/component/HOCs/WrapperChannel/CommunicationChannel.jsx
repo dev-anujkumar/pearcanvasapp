@@ -12,7 +12,7 @@ import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
+import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';

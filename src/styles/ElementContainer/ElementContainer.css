@@ -90,7 +90,7 @@ a.paragraphNumeroUnoFootnote {
 .color-palette-list{
     position: absolute;
     left: 25px;
-    top: 12%;;
+    top: 12%;
     z-index: 1;
 }
 .color-palette-item.selected {

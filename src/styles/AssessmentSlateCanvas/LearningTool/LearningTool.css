@@ -316,7 +316,6 @@
 .learningToolSearchButton[disabled] {
     border: 1px ridge gray;
     background-color: rgb(21, 119, 162);
-    ;
     color: white;
     opacity: 0.3;
     cursor: default;
