@@ -260,8 +260,8 @@ export class ReactEditor extends React.Component {
   }
 
   handleClick = (e) => {
-    clickedX = e.clientX;
-    clickedY = e.clientY;
+    let clickedX = e.clientX;
+    let clickedY = e.clientY;
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
