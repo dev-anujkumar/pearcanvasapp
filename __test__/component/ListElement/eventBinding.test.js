@@ -112,7 +112,11 @@ describe('Testing Event Binding Methods', () => {
                                 return {
                                     length: 1
                                 }
-                            }
+                            },
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
                         }
                     }
                 },
@@ -134,7 +138,13 @@ describe('Testing Event Binding Methods', () => {
                             length: 1
                         }
                     }
-                }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    }
+                },
+                childNodes: [{}]
             }
         };
         let event = {
@@ -155,7 +165,8 @@ describe('Testing Event Binding Methods', () => {
                             }
                         ]
                     }
-                }
+                },
+                closest: () => {}
             },
             stopImmediatePropagation: () => { },
             stopPropagation: () => { },
@@ -182,7 +193,7 @@ describe('Testing Event Binding Methods', () => {
             }
         }
         let result = bindKeyDownEvent(editor, event);
-        expect(result).toEqual(false);
+        expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for innerhtml not equal br', () => {
         let editor = {
