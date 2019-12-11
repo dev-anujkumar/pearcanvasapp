@@ -162,13 +162,13 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
-                    this.props.fetchAuthUser()
                     config.ssoToken = message.ssoToken;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.projectEntityUrn = message.entityUrn;
                     config.alfrescoMetaData = message;
-                    config.book_title =  message.name;                  
+                    config.book_title =  message.name;
+                    this.props.fetchAuthUser()                  
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
