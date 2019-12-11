@@ -457,7 +457,7 @@ function WithWrapperCommunication(WrappedComponent) {
             getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
                 if (response == "error"){
                     if(type==='withPendingTrack') {
-                        that.deleteTocItemWithPendingTrack(message);
+                        that.deleteTocItemWithPendingTrack('withPendingTrack');
                     }
                     else {
                         that.deleteTocItem(message);
@@ -478,7 +478,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                     else{
                         if(type==='withPendingTrack') {
-                            that.deleteTocItemWithPendingTrack(message);
+                            that.deleteTocItemWithPendingTrack('withPendingTrack');
                         }
                         else {
                             that.deleteTocItem(message);
@@ -487,7 +487,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 catch(err){
                     if(type==='withPendingTrack') {
-                        that.deleteTocItemWithPendingTrack(message);
+                        that.deleteTocItemWithPendingTrack('withPendingTrack');
                     }
                     else {
                         that.deleteTocItem(message);
