@@ -1107,7 +1107,7 @@ export class TinyMceEditor extends Component {
             
          clickedX = e.clientX;
          clickedY = e.clientY;
-         console.log('RRRRRRRRRRRRRRRR>>>>',clickedX,clickedY)
+         
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */        
