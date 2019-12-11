@@ -95,7 +95,7 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
             },
 
-            init_instance_callback: (editor) => {             
+            init_instance_callback: (editor) => {                            
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
 
                 if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
@@ -127,7 +127,7 @@ export class TinyMceEditor extends Component {
                         else {
                             activeElement.classList.add('place-holder')
                         }
-                    }
+                    }                   
                 });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
@@ -282,7 +282,13 @@ export class TinyMceEditor extends Component {
                     }
                     break;
                 case "mceShowCharmap":
-                   this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
+                    let coOrds = editor.selection.getBoundingClientRect();
+                    clickedX = coOrds.left;
+                    clickedY = coOrds.top + coOrds.height / 2;
+                    setTimeout(() => {
+                        tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
+                    }, 1000)
+                    //this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
                     break;
                 case "mceInsertContent": 
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
@@ -1030,7 +1036,7 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder() 
-        tinymce.$('.blockquote-editor').attr('contenteditable',false)
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)        
     }
 
     removeMultiTinyInstance = ()=>{
@@ -1101,6 +1107,7 @@ export class TinyMceEditor extends Component {
             
          clickedX = e.clientX;
          clickedY = e.clientY;
+         
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */        
