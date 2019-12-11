@@ -148,7 +148,7 @@ export class CanvasWrapper extends Component {
     }
     
     render() {
-        let slateData = this.props.popupSlateData ? this.props.popupSlateData:this.props.slateLevelData
+        let slateData = this.props.slateLevelData
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -217,7 +217,7 @@ const mapStateToProps = state => {
         permissions: state.appStore.permissions,
         logout,
         withinLockPeriod: state.slateLockReducer.withinLockPeriod,
-        popupSlateData:state.appStore.popupSlateData
+        // popupSlateData:state.appStore.popupSlateData
     };
 };
 

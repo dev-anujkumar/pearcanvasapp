@@ -27,7 +27,8 @@ import {
     FETCH_DATA_ON_SLATE_REFRESH,
     ACCESS_DENIED_POPUP,
     SET_PARENT_NODE,
-    OPEN_POPUP_SLATE
+    OPEN_POPUP_SLATE,
+    CLOSE_POPUP_SLATE
 } from '../constants/Action_Constants';
 
 /**
@@ -144,7 +145,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case OPEN_POPUP_SLATE:
             return {
                 ...state,
-                popupSlateData: action.payload
+                slateLevelData: {
+                    ...state.slateLevelData,
+                     [Object.keys(action.payload)[0]] : action.payload[Object.keys(action.payload)[0]]
+                    }
+            }
+        case CLOSE_POPUP_SLATE:
+            let stateCopy = {...state}
+            delete stateCopy.slateLevelData[action.payload.popupId]
+            return {
+                ...stateCopy
             }
         default:
             return state;

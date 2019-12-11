@@ -3,7 +3,8 @@ import config from '../../config/config';
 import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
-	OPEN_POPUP_SLATE
+	OPEN_POPUP_SLATE,
+	CLOSE_POPUP_SLATE
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -257,9 +258,22 @@ export const fetchAuthUser = () => dispatch => {
 		})
 }
 
-export const openPopupSlate = (element) => dispatch => {
-	dispatch({
-		type: OPEN_POPUP_SLATE,
-		payload: element
-	});
+export const openPopupSlate = (element, popupId) => dispatch => {
+	if(element){
+		dispatch({
+			type: OPEN_POPUP_SLATE,
+			payload: {
+				[element.id]: element,
+			}
+		});
+	}
+	else{
+		dispatch({
+			type: CLOSE_POPUP_SLATE,
+			payload: {
+				popupId
+			}
+		});
+	}
+	
 }

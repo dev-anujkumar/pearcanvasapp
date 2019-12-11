@@ -19,7 +19,11 @@ class ElementPopup extends React.Component {
         }
     }
     renderSlate =()=>{
-     this.props.openPopupSlate(this.props.element)
+        config.tempSlateManifestURN = config.slateManifestURN
+        config.tempSlateEntityURN = config.slateEntityURN
+        config.slateManifestURN = this.props.element.id
+        config.slateEntityURN = this.props.element.contentUrn
+        this.props.openPopupSlate(this.props.element, this.props.element.id)
     }
     renderPopup = ()=>{
         const {index,element,slateLockInfo} = this.props
