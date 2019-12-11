@@ -73,9 +73,11 @@ export const bindKeyDownEvent = (editor, e) => {
      * then element goes to create new paragraph element next to it
      */
     if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
-        prohibitEventBubling(e);
-        createNewParagraphElement(e, editor);
-        return false;
+        if ((e.metaKey && e.which === 13) || (e.which === 13)) {
+            prohibitEventBubling(e);
+            createNewParagraphElement(e, editor);
+            return false;
+        }
     }
 
     //------- later dependency ----------//
