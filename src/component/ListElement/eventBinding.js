@@ -68,13 +68,17 @@ export const bindKeyDownEvent = (editor, e) => {
     let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(e.target)
 
     /**
-     * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
-     * keep this commented code for reference
+     * [BG-818] and [BG-935] | at times @anchorNode points directly to 'div.cypress-editable',
+     * and this happens only when element has only one empty li,
+     * then element goes to create new paragraph element next to it
      */
-    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-    //     prohibitEventBubling(e);
-    //     return false;
-    // }
+    if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
+        if ((e.metaKey && e.which === 13) || (e.which === 13)) {
+            prohibitEventBubling(e);
+            createNewParagraphElement(e, editor);
+            return false;
+        }
+    }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&

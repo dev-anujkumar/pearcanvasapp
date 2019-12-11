@@ -112,12 +112,12 @@ import { sendDataToIframe } from '../../constants/utility.js';
         let slateLabel = this.getLabel(slateType);
         let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : ''; 
 
-        let nextDisabled = 'forward-nav-active';
+        // let nextDisabled = 'forward-nav-active';
         // if(this.props.disabled === 'next') {
         //     nextDisabled = 'forward-nav-disable';
         // }
 
-        let backDisabled = 'backward-nav-active';
+        // let backDisabled = 'backward-nav-active';
         // if(this.props.disabled === 'back') {
         //     backDisabled = 'backward-nav-disable';
         // }

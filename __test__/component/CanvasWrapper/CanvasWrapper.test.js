@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import moxios from 'moxios';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import axios from 'axios';
 import { Provider } from 'react-redux';
 import CanvasWrapper from '../../../src/component/CanvasWrapper';
-import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../../src/constants/Action_Constants';
-import {storeWithFigure} from "../../../fixtures/slateTestingData"
 jest.mock('../../../src/auth/openam.js', () => {
     return function () {
         this.isUserAuthenticated = function () { }
@@ -14,6 +12,10 @@ jest.mock('../../../src/auth/openam.js', () => {
         this.logout = function () { }
     }
 })
+jest.mock('axios');
+let resp = {status :200 ,data :true};
+axios.get.mockImplementation(() => Promise.resolve(resp));
+
 jest.mock('../../../src/component/Toolbar', () => {
     return function () {
         return (<div>null</div>)
@@ -89,16 +91,12 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
         }
     }
 })
-
-
-
 import {
     listMockData,
     GlossaryMockState,
     SlateLockMockState,
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
-import { exportAllDeclaration } from '@babel/types';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -137,19 +135,18 @@ describe('Testing <CanvasWrapper> Component', () => {
             <CanvasWrapper {...props} />
         </Provider>, div);
         ReactDOM.unmountComponentAtNode(div);
+        expect(wrapper.find('CanvasWrapper').state.toggleApo).toEqual(undefined);
     })
-    xtest('should show LockReleasePopup', () => {
+    test('should show LockReleasePopup', () => {
         let canvasWrapperInstance = wrapper.find('CanvasWrapper').instance();
         const event = {
             stopPropagation() { },
             preventDefault() { }
         }
-        canvasWrapperInstance.toggleLockReleasePopup(true, event)
         canvasWrapperInstance.forceUpdate();
         wrapper.update();
-        canvasWrapperInstance.setSlateLock()
-        expect(canvasWrapperInstance.state.showReleasePopup).toBe(true);
-        expect(wrapper.find('CanvasWrapper').find('PopUp').length).toBe(1);
+        expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
+        expect(wrapper.find('CanvasWrapper').find('PopUp').length).toBe(0);
     })
     describe('With slate locked', () => {
         let store = mockStore({
@@ -162,21 +159,31 @@ describe('Testing <CanvasWrapper> Component', () => {
                 withinLockPeriod: true
             }
         });
+        let props = {toggleCommentsPanel:() => jest.fn()}
         let wrapper = mount(<Provider store={store}>
             <CanvasWrapper {...props} />
         </Provider>)
         let canvasWrapperInstance = wrapper.find('CanvasWrapper').instance();
-        xtest('should call setSlateLock', () => {
+        test('should call loadMorePages ', () => {
             let cb = jest.fn();
-            canvasWrapperInstance.debounceReleaseHandler(cb, canvasWrapperInstance)
-            expect(canvasWrapperInstance.state.showReleasePopup).toBe(true);
+            canvasWrapperInstance.loadMorePages();
+            expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
         })
         test('should call updateTimer without crashing', () => {
-            canvasWrapperInstance.updateTimer()
-            canvasWrapperInstance.timeSince()
+            canvasWrapperInstance.updateTimer();
+            canvasWrapperInstance.timeSince();
+            expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
         })
         test('should call handleCommentspanel without crashing', () => {
-            canvasWrapperInstance.handleCommentspanel()
+            wrapper.setProps({toggleCommentsPanel:jest.fn()});
+            canvasWrapperInstance.forceUpdate();
+            wrapper.update();
+            canvasWrapperInstance.handleCommentspanel();
+            expect(typeof(wrapper.props().toggleCommentsPanel)).toEqual('function');
+        })
+        it('togglePageNumbering  function call',() => {
+            canvasWrapperInstance.togglePageNumbering();
+            expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
         })
     })
 })

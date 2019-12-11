@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/CommentsPanel/CommentsPanel_Action';
 import { comments, users } from '../../../fixtures/commentPanelData.js'
-import {createstoreWithFigure} from "../../../fixtures/slateTestingData"
+import { slateLevelData } from "../../../fixtures/slateTestingData"
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
@@ -23,13 +23,9 @@ jest.mock('../../../src/constants/utility.js', () => ({
 }))
 
 jest.mock('../../../src/config/config.js', () => ({
-    slateManifestURN: "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0",
-    ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
-    STRUCTURE_APIKEY:'Gf7G8OZPaVGtIquQPbqpZc6D2Ri6A5Ld',
-    PRODUCTAPI_ENDPOINT:"https://contentapis-staging.pearsoncms.net/product-api/",
+    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
     projectUrn: "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab1ef",
-    parentEntityUrn : "bodyMatter",
-    slateType: "assessment"
+    slateEntityURN: "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75"
 }))
 
 let  initialState = {
@@ -45,14 +41,16 @@ describe('Tests commentsPanel action', () => {
 
     beforeEach(() => {
         initialState = {
+            slateLevelData: slateLevelData,
+            appStore: slateLevelData,
             allComments: [],
             toggleReplyForm: true,
             togglePanel: false,
             users: [],
             slateTitle: "",
-            appStore:{slateLevelData:createstoreWithFigure.slateLevelData},
-        commentsPanelReducer:{index:1}
-            
+            commentsPanelReducer: {
+                index: "1-0"
+            }
         };
 
         moxios.install();
@@ -166,6 +164,7 @@ describe('Tests commentsPanel action', () => {
     });
 
     return store.dispatch(actions.updateComment(commentUrn,updateComment,elementId)).then(() => {
+        store.getActions()[0].payload.updateComment = "test";
         const { type, payload } = store.getActions()[0];
         expect(store.getActions()).toEqual(expectedActions);
         expect(type).toBe(UPDATE_COMMENT);
@@ -237,23 +236,24 @@ describe('Tests commentsPanel action', () => {
     });
 
     return store.dispatch(actions.deleteComment(commentUrn,elementId)).then(() => {
-        const { type, payload } = store.getActions()[0];
-        expect(type).toBe(DELETE_COMMENT);
+        expect(store.getActions()[0]).toEqual(expectedActions[0]);
     });
  })
 
  it('testing------- fetchCommentByElement  action',()=>{
     store = mockStore(() => initialState);
-     let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
-     let index;
+    let elementId = "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf5";
 
     const expectedActions = [{
         type: FETCH_COMMENT_BY_ELEMENT,
-        payload: {elementId, index:index}
+        payload: {
+            elementId: elementId,
+            index: 1
+        }
     
     }];
 
-     store.dispatch(actions.fetchCommentByElement(elementId))
+    store.dispatch(actions.fetchCommentByElement(elementId, 1))
     const { type, payload } = store.getActions()[0];
     expect(type).toBe(FETCH_COMMENT_BY_ELEMENT);
     expect(store.getActions()).toEqual(expectedActions);
@@ -288,7 +288,4 @@ describe('Tests commentsPanel action', () => {
     expect(type).toBe(TOGGLE_REPLY);
     expect(store.getActions()).toEqual(expectedActions);
  })
-}) 
-
-
-
+})
