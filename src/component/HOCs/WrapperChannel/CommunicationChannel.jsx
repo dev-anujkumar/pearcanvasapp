@@ -197,6 +197,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
+                    if(this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en){
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        this.props.currentSlateLOData.label.en= this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
+                        this.props.currentSlateLO(this.props.currentSlateLOData);
+                    }
+                    
                     this.setState({
                         showBlocker: false
                     });
@@ -418,10 +424,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
-                }
-                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
-                    let newMessage = {assessmentResponseMsg:false};
-                    this.props.isLOExist(newMessage);
                 }
             }
             /**
