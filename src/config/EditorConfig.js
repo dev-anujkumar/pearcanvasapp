@@ -29,6 +29,8 @@ export const EditorConfig = {
 export const GlossaryFootnoteEditorConfig = {
     formats: {
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
+        'strikethrough' : {inline : 's', exact : true},
+        'underline' : {inline : 'u', exact : true},
     },
     toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }
