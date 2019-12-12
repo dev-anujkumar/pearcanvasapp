@@ -111,6 +111,10 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
+                        tinyMCE.$('.Wirisformula').each(function () {
+                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        }) 
                         this.props.handleBlur()
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
@@ -1047,7 +1051,7 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder() 
-        tinymce.$('.blockquote-editor').attr('contenteditable',false)        
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
     removeMultiTinyInstance = ()=>{
@@ -1282,6 +1286,10 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        }) 
         this.props.handleBlur();
     }
     
