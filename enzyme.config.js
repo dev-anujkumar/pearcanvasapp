@@ -49,7 +49,17 @@ global.MutationObserver = function () {
 }
 global.window.getSelection=()=>{
     return {
-        removeAllRanges: ()=>{}
+        removeAllRanges: ()=>{},
+        toString: ()=>{
+            return "hello TEST"
+        },
+        anchorNode:{
+            parentNode:{
+                nodeName: "P",
+                innerHTML: "",
+                outerHTML:""
+            }
+        }
     }
 }
 global.window.crypto={

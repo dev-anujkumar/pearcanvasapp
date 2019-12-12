@@ -58,14 +58,14 @@ export const positionListDrop = (event) => {
 /**
  * bindKeyDownEvent | binds keydown event on editor instance and handles various scenarios
  */
-export const bindKeyDownEvent = (editor, e) => {
+export const bindKeyDownEvent = (editor, e, element) => {
     const anchorNode = editor.selection.getSel().anchorNode;
     let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
     let listUpdatedOnce = false;
-    let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
-    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(e.target)
+    let isOnlyListElement = element.type === "element-list"
+    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element) 
 
     /**
      * [BG-818] and [BG-935] | at times @anchorNode points directly to 'div.cypress-editable',
@@ -515,22 +515,16 @@ const isFullRangeSelected = (editor) => {
 }
 
 const getListClassTypeAndTreeLvl = (element) => {
-    let listType = 'ol';
-    let allOlElement = element.querySelectorAll('ol');
-    if (allOlElement.length == 0) {
-        allOlElement = element.querySelectorAll('ul');
-        listType = 'ul';
+    let olClass = "disc", listType = "ul"
+    if (element.subtype !== "disc") {
+        listType = "ol";
+        olClass = element.subtype
     }
-    let treelevel = 1, olClass = "disc"
-    if (allOlElement[0]) {
-        treelevel = parseInt(allOlElement[0].getAttribute('treelevel'));
-        olClass = allOlElement[0].getAttribute('class') || 'disc';
-    }
-    return { treelevel, olClass, listType }
+    return { treelevel: 1, olClass, listType }
 }
 
 const createDefaultOlLi = (treelevel, olClass, listType, element) => {
-    if (element.querySelectorAll(listType).length === 0) {
+    if (element.querySelectorAll(listType).length === 0 || element.querySelector(listType).querySelectorAll('li').length === 0) {
         let olEle = document.createElement(listType)
         olEle.classList.add(olClass)
         olEle.setAttribute('treelevel', treelevel)
