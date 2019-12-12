@@ -123,7 +123,7 @@ describe('Test convertElement- paragraph', () => {
         spyconversionElement.mockClear()
     });
 });
-describe('Test convertElement- singleAssessment', () => {
+xdescribe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
     it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
@@ -179,10 +179,10 @@ describe('Test convertElement- singleAssessment', () => {
         assessmentDiv.appendChild(usageTypeSpan)
         document.body.appendChild(assessmentDiv)
         let store = mockStore(() => initialState2);
-        // const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(newData));
-        // expect(spyconversionElement).toHaveBeenCalled()
-        // spyconversionElement.mockClear()
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
     });
 });
 describe('Test convertElement- figure-IMAGE', () => {
@@ -338,10 +338,10 @@ describe('Test convertElement- figure-BLOCL-CODE-EDITOR-SUBTYPE', () => {
             toolbar: ["assetpopover", "decreaseindent", "glossary"]
         }
         let store = mockStore(() => initialState6);
-        // const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
-        // expect(spyconversionElement).toHaveBeenCalled()
-        // spyconversionElement.mockClear()
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
     });
 });
 describe('Test convertElement- PARAGRAPH to LIST', () => {
@@ -356,7 +356,10 @@ describe('Test convertElement- PARAGRAPH to LIST', () => {
             secondaryOption: "secondary-list-1",
         }
         let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
@@ -373,7 +376,10 @@ describe('Test convertElement- UL to NUMBERED LIST', () => {
             toolbar:[]
         }
         let store = mockStore(() => initialState7);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
@@ -391,7 +397,10 @@ describe('Test convertElement- WORKED-EXAMPLE 1 TO 2', () => {
 
         }
         let store = mockStore(() => initialState8);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
@@ -408,7 +417,10 @@ describe('Test convertElement- WORKED-EXAMPLE -internal conversion', () => {
             toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
         }
         let store = mockStore(() => initialState11);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
@@ -426,7 +438,10 @@ describe('Test convertElement- ASIDE-CONTAINER', () => {
 
         }
         let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
@@ -443,7 +458,10 @@ describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
             toolbar:  ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
         }
         let store = mockStore(() => initialState10);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
         store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
 
     });
 });
