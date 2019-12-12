@@ -2,12 +2,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import tinymce from 'tinymce/tinymce';
 import TinyMceEditor from '../../../src/component/tinyMceEditor'
-import { getGlossaryFootnoteId } from "../../../src/js/glossaryFootnote"
 import elementData from './elementData';
-import * as utilFunction from '../../../src/js/utils';
-import moxios from 'moxios';
 import { JSDOM } from 'jsdom'
-import { FETCH_SLATE_DATA } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 global.document = (new JSDOM()).window.Element;
 Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -228,7 +224,6 @@ describe('Testing TinyMCE Editor', () => {
                 }
             }
         }
-        console.log("userid:::::::::::::::::::::::::::::::::",config.userId,props.slateLockInfo.userId)
         const spyeditorMousedown = jest.spyOn(instance, 'editorMousedown')
         instance.editorMousedown(editor);
         expect(spyeditorMousedown).toHaveBeenCalled()
@@ -2057,72 +2052,5 @@ let keyDownEvent={
         const spyaddFootnote = jest.spyOn(instance, 'addGlossary')
         instance.addGlossary(editor);
         expect(spyaddFootnote).toHaveBeenCalled()
-    });
-    xit('Test saveContent ', () => {
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let editor = {
-            on: (temp, cb) => { cb(event) },
-            targetElm: {
-                findChildren: () => {
-                    return {
-                        length: 0
-                    };
-                },
-                dispatchEvent: () => { }
-            },
-            selection: {
-                bookmarkManager: {
-                    moveToBookmark: jest.fn(),
-                    getBookmark: jest.fn()
-                },
-                getStart: () => {
-                    
-                }
-            },
-            insertContent:()=>{
-                return '<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>'
-            },
-            dom: {
-                getParent: () => {
-                    return {
-                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
-                        children: [
-                            {
-                                tagName: 'BR'
-                            }
-                        ],
-                        innerText: "hello",
-                        querySelectorAll: jest.fn(),
-                        classList: {
-                            remove:jest.fn()
-                        }
-                    }
-                }
-            },
-            children: ['<p class="paragraphNumeroUno">hello</p>'],
-            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
-        }
-        tinymce.activeEditor = {
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
-            innerText: "hello",
-            textContent: "hello",
-            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
-            selection: {
-                getStart: () => {
-                    return tinymce.activeEditor.innerHTML;
-                },
-                getContent:() => {
-                    return '<p class="paragraphNumeroUno">hello</p>'
-                }
-            },
-            children: ['p.paragraphNumeroUno'],
-            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
-        }
-        const spysaveContent = jest.spyOn(instance, 'saveContent')
-        instance.saveContent();
-        expect(spysaveContent).toHaveBeenCalled()
     });
 }) 
