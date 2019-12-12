@@ -1044,11 +1044,11 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
-        this.props.openPopupSlate(undefined, config.slateManifestURN)
-        document.getElementById("slateWrapper").scrollTop = config.scrollPosition
+        let popupId = config.slateManifestURN
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
-        
+        this.props.openPopupSlate(undefined, popupId)
+        document.getElementById("slateWrapper").scrollTop = config.scrollPosition
     }
 
     /**
