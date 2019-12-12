@@ -68,7 +68,7 @@ class SlateWrapper extends Component {
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
         let scrollingPosition = Number(e.target.scrollTop);
-        if(this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'manifest'){
+        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest' || this.props.slateData[config.slateManifestURN].type === 'popup')){
             config.scrollPosition = scrollingPosition;
         }
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 

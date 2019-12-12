@@ -12,6 +12,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
+
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -151,68 +152,115 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, page, popupFlag) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
-    // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-    config.isFetchSlateInProgress = true;
-    if (config.totalPageCount <= page) {
-        page = config.totalPageCount;
-    }
-    config.page = page;
+	// sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+	config.isFetchSlateInProgress = true;
+	if (config.totalPageCount <= page) {
+		page = config.totalPageCount;
+	}
+	config.page = page;
+    
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-        if (Object.values(slateData.data).length > 0) {
-            if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-                sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-                let contentUrn = slateData.data[manifestURN].contentUrn;
-                let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-                let messageTcmStatus = {
-                    TcmStatus: {
-                        tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-                    }
-                }
-                sendDataToIframe({
-                    'type': "TcmStatusUpdated",
-                    'message': messageTcmStatus
-                })
-                dispatch(fetchComments(contentUrn, title));
-                config.totalPageCount = slateData.data[manifestURN].pageCount;
-                config.pageLimit = slateData.data[manifestURN].pageLimit;
-                let parentData = getState().appStore.slateLevelData;
-                let currentParentData;
-                if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
-                    currentParentData = JSON.parse(JSON.stringify(parentData));
-                    let currentContent = currentParentData[config.slateManifestURN].contents
-                    let oldbodymatter = currentContent.bodymatter;
-                    let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
-                    currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
-                    currentParentData = currentParentData[manifestURN];
-                    config.scrolling = true;
-                } else {
-                    currentParentData = slateData.data[manifestURN];
-                }
-                dispatch({
-                    type: FETCH_SLATE_DATA,
-                    payload: {
-                        [manifestURN]: currentParentData
-                    }
-                });
-                dispatch({
-                    type: SET_ACTIVE_ELEMENT,
-                    payload: {}
-                });
-                //}
-                // config.isFetchSlateInProgress = false;
-            }else{
-                console.log("incorrect data comming...")
-            }
-        }
+		if(popupFlag){
+			// let popupSlateData = {...slateData.data}
+			// if (popupSlateData[manifestURN]) {
+				// popupSlateData[manifestURN].type = "popup"
+			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+				let messageTcmStatus = {
+					TcmStatus: {
+						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+					}
+				}
+				sendDataToIframe({
+					'type': "TcmStatusUpdated",
+					'message': messageTcmStatus
+				})
+				let contentUrn = slateData.data[manifestURN].contentUrn;
+				let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+				slateData.data[manifestURN].type = "popup"
+				dispatch(fetchComments(contentUrn, title));
+				config.totalPageCount = slateData.data[manifestURN].pageCount;
+				config.pageLimit = slateData.data[manifestURN].pageLimit;
+				let parentData = getState().appStore.slateLevelData;
+				let currentParentData;
+				if ((slateData.data[manifestURN]) && (!config.fromTOC) && slateData.data[manifestURN].pageNo > 0) {
+					currentParentData = JSON.parse(JSON.stringify(parentData));
+					let currentContent = currentParentData[config.slateManifestURN].contents
+					let oldbodymatter = currentContent.bodymatter;
+					let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+					currentParentData = currentParentData[manifestURN];
+					config.scrolling = true;
+				} else {
+					currentParentData = slateData.data[manifestURN];
+				}
+				dispatch({
+					type: OPEN_POPUP_SLATE,
+					payload: {
+						[manifestURN]: currentParentData
+					}
+				});
+				sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+			// }
+			}
+		}
+		else{
+			if (Object.values(slateData.data).length > 0) {
+				if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+					sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+					let contentUrn = slateData.data[manifestURN].contentUrn;
+					let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+					let messageTcmStatus = {
+						TcmStatus: {
+							tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+						}
+					}
+					sendDataToIframe({
+						'type': "TcmStatusUpdated",
+						'message': messageTcmStatus
+					})
+					dispatch(fetchComments(contentUrn, title));
+					config.totalPageCount = slateData.data[manifestURN].pageCount;
+					config.pageLimit = slateData.data[manifestURN].pageLimit;
+					let parentData = getState().appStore.slateLevelData;
+					let currentParentData;
+					if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
+						currentParentData = JSON.parse(JSON.stringify(parentData));
+						let currentContent = currentParentData[config.slateManifestURN].contents
+						let oldbodymatter = currentContent.bodymatter;
+						let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+						currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+						currentParentData = currentParentData[manifestURN];
+						config.scrolling = true;
+					} else {
+						currentParentData = slateData.data[manifestURN];
+					}
+					dispatch({
+						type: FETCH_SLATE_DATA,
+						payload: {
+							[manifestURN]: currentParentData
+						}
+					});
+					dispatch({
+						type: SET_ACTIVE_ELEMENT,
+						payload: {}
+					});
+					//}
+					// config.isFetchSlateInProgress = false;
+				}else{
+					console.log("incorrect data comming...")
+				}
+			}
+		}
+        
     });
 };
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
@@ -389,12 +437,12 @@ export const fetchAuthUser = () => dispatch => {
 
 export const openPopupSlate = (element, popupId) => dispatch => {
 	if(element){
-		dispatch({
+		/* dispatch({
 			type: OPEN_POPUP_SLATE,
 			payload: {
-				[element.id]: element,
+				[element.id]: popupData[element.id],
 			}
-		});
+		}); */
 	}
 	else{
 		dispatch({
