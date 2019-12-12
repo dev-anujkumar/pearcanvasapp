@@ -19,6 +19,8 @@ class Sidebar extends Component {
         let primaryFirstOption = Object.keys(elementTypeList)[0];
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
+        let numbered = this.props.activeElement.numbered || true;
+        let startNumber = this.props.activeElement.startNumber || "1";
         
         this.state = {
             elementDropdown: '',
@@ -28,15 +30,9 @@ class Sidebar extends Component {
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
-            bceToggleValue: true,
-            bceNumberStartFrom : 1
+            bceToggleValue: numbered,
+            bceNumberStartFrom : startNumber
         };
-    }
-    componentDidMount() {
-        this.setState({
-            bceNumberStartFrom : this.props.activeElement.startNumber,
-            bceToggleValue : this.props.activeElement.numbered
-        })
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -46,8 +42,8 @@ class Sidebar extends Component {
             let bceToggle = prevState.bceToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                numberStartFrom = nextProps.activeElement.startNumber;
-                bceToggle = nextProps.activeElement.numbered
+                numberStartFrom = nextProps.activeElement.startNumber || "1";
+                bceToggle = nextProps.activeElement.numbered || true
             }
             
             return {

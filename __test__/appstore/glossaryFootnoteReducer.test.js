@@ -7,19 +7,18 @@ const initialState = {
 };
 
 const glossaryFootnoteData = { 
-    glossaryFootnoteValue: 'testing footnote value',
+    glossaaryFootnoteValue: 'testing footnote value',
     glossaryFootNoteCurrentValue : 'checking footnote current value',
     elementIndex :  2 
 }
 
 describe('testing glossary Footnote Reducer cases --', () => {
-
     it('should return the initial state', () => {
         expect(glossaryFootnoteReducer(initialState, {
 
         })).toEqual(initialState);
     });
-    xit('get glossaryFootnoteValue', () => {
+    it('get glossaryFootnoteValue', () => {
         let expectedState = {
             ...initialState,
             glossaryFootnoteValue: 'testing footnote value',
@@ -31,5 +30,4 @@ describe('testing glossary Footnote Reducer cases --', () => {
             payload: glossaryFootnoteData            
         })).toEqual(expectedState);
     })
-
 });

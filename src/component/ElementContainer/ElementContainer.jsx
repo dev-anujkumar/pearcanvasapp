@@ -201,7 +201,9 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
-
+        if (typeof (isNumbered) == "string") {
+            isNumbered = JSON.parse(isNumbered)
+        }
         captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 

@@ -73,9 +73,11 @@ export const bindKeyDownEvent = (editor, e) => {
      * then element goes to create new paragraph element next to it
      */
     if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
-        prohibitEventBubling(e);
-        createNewParagraphElement(e, editor);
-        return false;
+        if ((e.metaKey && e.which === 13) || (e.which === 13)) {
+            prohibitEventBubling(e);
+            createNewParagraphElement(e, editor);
+            return false;
+        }
     }
 
     //------- later dependency ----------//
@@ -449,7 +451,6 @@ export const updateNestedList = (element) => {
         }
         treelevel = treelevel + 1;
     }
-
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
         for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
