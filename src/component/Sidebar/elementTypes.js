@@ -703,6 +703,19 @@ export default {
                 }
             }
         },
+        'primary-showhide': {
+            text: 'Show Hide',
+            toolbar: ['assetpopover'],
+            enum: 'MMI',
+            subtype: {
+                'secondary-aside-showhide': {
+                    text: 'Show Hide',
+                    labelText: 'SH',
+                    enum: 'SHOWHIDE',
+                    wipValue: 'showhide'
+                }
+            }
+        },
         enumType: 'interactive'
     },
     "openerelement": {

@@ -189,7 +189,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         indexes.forEach(index => {
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data;
+                focusedElement[index] = ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
                   //  focusedElement = focusedElement[index].elementdata.bodymatter;
@@ -233,7 +233,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         indexes.forEach(index => {
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = ElementWipData[newElementData['secondaryOption'].replace('secondary-','')];
+                focusedElement[index] = ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
                   //  focusedElement = focusedElement[index].elementdata.bodymatter;

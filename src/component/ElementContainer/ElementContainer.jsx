@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement,createShowHideElement } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -776,7 +776,7 @@ class ElementContainer extends Component {
                     labelText = 'MA'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <ElementShowHide showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementShowHide createShowHideElement = {this.props.createShowHideElement} activeElement  = {this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'SH'
                     break;
             }
@@ -975,7 +975,11 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(resetTableDataAction(isReplaced))
         },
         accessDenied,
-        releaseSlateLock
+        releaseSlateLock,
+        createShowHideElement: (element, type, index) => {
+            dispatch(createShowHideElement(element, type, index))
+        },
+        
     }
 }
 

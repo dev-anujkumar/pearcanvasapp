@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, DELETE_ELEMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH,CREATE_SHOW_HIDE_ELEMENT } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -441,5 +441,46 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
             elm.contents.bodymatter = updateTableEditorData(elementId, tableData, elm.contents.bodymatter)
         }
         return elm;
+    })
+}
+
+export const createShowHideElement = (elementId,type,index) => (dispatch, getState) =>{
+    const parentData = getState().appStore.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+    let newIndex = index.split("-")[2]
+    let createdElementData = {
+        
+            "id": "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c",
+            "type": "element-authoredtext",
+            "subtype": "",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "html": {
+                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+            },
+            "versionUrn": "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c",
+            "contentUrn": "urn:pearson:entity:096be0c4-5f3d-4ae0-a5b7-52571b51dbc6",
+            "status": "wip",
+            "tcm": true,
+            "feedback": false,
+            "comments": false
+        
+    }
+    bodymatter.forEach((element, index) => {
+        if(element.id == elementId){
+            element.interactivedata[type].splice(newIndex +1, 0, createdElementData)
+            console.log("element",element);
+        }
+    })
+    console.log("bodymatter",bodymatter);
+    dispatch({
+        type: CREATE_SHOW_HIDE_ELEMENT,
+        payload: {
+            slateLevelData: newParentData
+        }
     })
 }

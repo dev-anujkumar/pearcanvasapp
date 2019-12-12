@@ -367,6 +367,10 @@ export class TinyMceEditor extends Component {
             }
             this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
         }
+
+        if(this.props.activeShowHide){
+            this.props.activeShowHide(e)
+        }
     }
 
     toggleGlossaryandFootnoteIcon = (flag) => {
@@ -448,12 +452,14 @@ export class TinyMceEditor extends Component {
             }
 
             let key = e.keyCode || e.which;
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE") {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
                 let nextSaparator = activeEditor.nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }
+            }else if(key === 13 && this.props.element.type ==='showhide') {
+                this.props.createShowHideElement(this.props.showHideType,this.props.index);
+            }   
         });
     }
 
