@@ -15,7 +15,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets //
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-0.2.5  ---- !!!!!!")
+console.log("!!!!! ---- canvas-0.2.6  ---- !!!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -25,8 +25,8 @@ class App extends Component {
     }
 
     getQueryParameter() {
-        const search = window.location.search;
-        const params = new URLSearchParams(search);
+        const search = this.props.testWindowMock ? this.props.testWindowMock: window.location.search;
+        const params = this.props.testWindowMock ? new URL(search).searchParams : new URLSearchParams(search);
         const projectUrn = params.get('projectUrn');
         const projectEntityUrn = params.get('projectEntityUrn')
         const slateEntityURN = params.get('slateEntityURN')
