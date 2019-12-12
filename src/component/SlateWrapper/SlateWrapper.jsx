@@ -1051,7 +1051,8 @@ class SlateWrapper extends Component {
         },1500);
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
-        
+        this.props.openPopupSlate(undefined, popupId)
+        document.getElementById("slateWrapper").scrollTop = config.scrollPosition
     }
 
     /**
