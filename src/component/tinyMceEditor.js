@@ -292,6 +292,17 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                     }
+                    break;
+                case "redo":
+                    if(this.props.element.type === "element-list")
+                    {
+                        e.preventDefault()
+                        /** EVENT - ctrl + y keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, keyCode: 89, metaKey: false, shiftKey: false, which: 89 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
+                    break;
             }
         })
     }
@@ -442,7 +453,7 @@ export class TinyMceEditor extends Component {
                 e.preventDefault()
             }
 
-            bindKeyDownEvent(editor, e);
+            bindKeyDownEvent(editor, e, this.props.element);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length) {
