@@ -222,6 +222,13 @@
 .tocDeleteClass {
   font-family: "Helvetica Neue", sans-serif;
   color: #847676;
+  line-height: 25px;
+}
+.popup-note-message {
+    color: #645454;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
 }
 .audioRemoveClass {
   line-height: 1.22em;
