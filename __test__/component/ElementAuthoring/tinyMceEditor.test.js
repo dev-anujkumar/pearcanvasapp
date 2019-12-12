@@ -660,8 +660,16 @@ describe('Testing tinyMce  component with  props', () => {
                 bookmarkManager: {
                     moveToBookmark: jest.fn(),
                     getBookmark: jest.fn()
+                },
+                getBoundingClientRect: ()=>{
+                    return {
+                        left: '20px',
+                        top:  '20px',
+                        height: "40px",
+                    }
                 }
-            }
+            },
+            
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
