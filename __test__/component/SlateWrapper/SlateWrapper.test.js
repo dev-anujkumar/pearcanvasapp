@@ -100,30 +100,6 @@ describe('Testing <SlateWrapper> Component', () => {
             expect(wrapper.find('.header-label').length).toBe(1);
         })
     })
-    xdescribe('With default elements', () => {
-        let props = {
-            slateData,
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            audioReducer : {
-                openRemovePopUp : true,
-                openSplitPopUp : false
-            },
-            permissions : [],
-            openRemovePopUp : true,
-        };
-        let wrapper = mount(<SlateWrapper store={store} {...props} />);
-        test('renders properly', () => {
-            expect(wrapper.find('.element-list').length).toBe(1);
-        })
-        test('renders slate title', () => {
-            expect(wrapper.find('SlateHeader').length).toBe(1);
-            expect(wrapper.find('.header-label').length).toBe(1);
-            expect(wrapper.find('.header-label').text()).toBe('SLATE:');
-        })
-    })
     describe('With loading elements', () => {
         let props = {
             slateData: {},
@@ -273,7 +249,36 @@ describe('Testing <SlateWrapper> Component', () => {
             let slateWrapperInstance = slateWrapper.find('SlateWrapper').instance()
             slateWrapperInstance.setListDropRef({})
         })
-
     })
     
+})
+describe('With default elements', () => {
+    let props = {
+        slateData,
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        audioReducer : {
+            openRemovePopUp : true,
+            openSplitPopUp : false
+        },
+        permissions : [],
+        openRemovePopUp : true,
+    };
+    document.getElementById= () => {
+        return {
+            scrollTop: 0,
+            focus: () => {}
+        }
+    }
+    let slatewrapper = mount(<SlateWrapper store={store} {...props} />);
+    test('renders properly', () => {
+        expect(slatewrapper.find('.element-list').length).toBe(1);
+    })
+    test('renders slate title', () => {
+        expect(slatewrapper.find('SlateHeader').length).toBe(1);
+        expect(slatewrapper.find('.header-label').length).toBe(1);
+        expect(slatewrapper.find('.header-label').text()).toBe('SLATE:');
+    })
 })
