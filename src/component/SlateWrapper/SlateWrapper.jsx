@@ -106,22 +106,6 @@ class SlateWrapper extends Component {
 
     componentDidUpdate() {
         this.renderDefaultElement();
-        if(Object.keys(this.props.slateData).length > 0){
-            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
-                let currentSlateId = Object.keys(this.props.slateData)[0];
-                let tcmCount = 0;
-                this.props.slateData[currentSlateId].contents && this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
-                    if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
-                        tcmCount++;
-                    }
-                });
-                if(tcmCount > 0){
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
-                } else {
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
-                }
-            }
-        }
     }
 
 
@@ -132,7 +116,8 @@ class SlateWrapper extends Component {
         }
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
-            if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
+            if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
+            // if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
                 // let _slateObject = Object.values(_slateData)[0];
                 let _slateObject =_slateData[config.slateManifestURN];
                 let { contents: _slateContent } = _slateObject;
@@ -173,7 +158,8 @@ class SlateWrapper extends Component {
         let stateChanged = false;
         let _state = state;
         //**************************************************** */
-        let _slateObject = Object.values(props.slateData)[0];
+        // let _slateObject = Object.values(props.slateData)[0];
+        let _slateObject = props.slateData[config.slateManifestURN];
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
@@ -242,8 +228,10 @@ class SlateWrapper extends Component {
     renderSlateHeader({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
-                if (Object.values(_slateData).length > 0) {
-                    let _slateObject = Object.values(_slateData)[0];
+                if(_slateData[config.slateManifestURN]){
+                // if (Object.values(_slateData).length > 0) {
+                    // let _slateObject = Object.values(_slateData)[0];
+                    let _slateObject = _slateData[config.slateManifestURN];
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let title = {
                         text: this.props.slateTitleUpdated
@@ -284,7 +272,7 @@ class SlateWrapper extends Component {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
                     let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent || _slateData.popupdata;
+                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -1048,11 +1036,11 @@ class SlateWrapper extends Component {
         this.props.openPopupSlate(undefined, config.slateManifestURN);
         setTimeout(() => {
             document.getElementById("slateWrapper").scrollTop = config.scrollPosition;
-        },1500);
+        },0);
+        let popupId = config.slateManifestURN
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         this.props.openPopupSlate(undefined, popupId)
-        document.getElementById("slateWrapper").scrollTop = config.scrollPosition
     }
 
     /**

@@ -4,7 +4,8 @@ import {
 	FETCH_SLATE_DATA,
 	SET_ACTIVE_ELEMENT,
 	OPEN_POPUP_SLATE,
-	CLOSE_POPUP_SLATE
+	CLOSE_POPUP_SLATE,
+	SET_OLD_IMAGE_PATH
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
