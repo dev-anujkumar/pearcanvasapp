@@ -66,8 +66,12 @@ class SlateWrapper extends Component {
     handleScroll = (e) =>{
         if(config.totalPageCount <= config.page) return false;
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
-        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
-        config.scrollPosition = scrollPosition
+        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
+        let scrollingPosition = Number(e.target.scrollTop);
+        if(this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'manifest'){
+            config.scrollPosition = scrollingPosition;
+            console.log("in if handleScroll >> ", config.scrollPosition)
+        }
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
             config.scrolling = false;
             config.fromTOC = false;
@@ -272,7 +276,6 @@ class SlateWrapper extends Component {
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
-        console.log("slateData",_slateData)
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
@@ -1044,8 +1047,10 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         // Scrolling to the previous element after SAVE  & CLOSE is clicked
-        this.props.openPopupSlate(undefined, config.slateManifestURN)
-        document.getElementById("slateWrapper").scrollTop = config.scrollPosition
+        this.props.openPopupSlate(undefined, config.slateManifestURN);
+        setTimeout(() => {
+            document.getElementById("slateWrapper").scrollTop = config.scrollPosition;
+        },1500);
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         

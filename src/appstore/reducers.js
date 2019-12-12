@@ -151,10 +151,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                     }
             }
         case CLOSE_POPUP_SLATE:
-            let stateCopy = {...state}
-            delete stateCopy.slateLevelData[action.payload.popupId]
+            let stateCopy = {...state.slateLevelData}
+            delete stateCopy[action.payload.popupId]
             return {
-                ...stateCopy
+                ...state,
+                slateLevelData : stateCopy
             }
         default:
             return state;
