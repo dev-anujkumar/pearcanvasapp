@@ -65,15 +65,20 @@ export const bindKeyDownEvent = (editor, e) => {
     const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
     let listUpdatedOnce = false;
     let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
+    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(e.target)
 
     /**
-     * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
-     * keep this commented code for reference
+     * [BG-818] and [BG-935] | at times @anchorNode points directly to 'div.cypress-editable',
+     * and this happens only when element has only one empty li,
+     * then element goes to create new paragraph element next to it
      */
-    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-    //     prohibitEventBubling(e);
-    //     return false;
-    // }
+    if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
+        if ((e.metaKey && e.which === 13) || (e.which === 13)) {
+            prohibitEventBubling(e);
+            createNewParagraphElement(e, editor);
+            return false;
+        }
+    }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
@@ -284,6 +289,13 @@ export const bindKeyDownEvent = (editor, e) => {
             prohibitEventBubling(e);
             return false;
         }
+        if (anchorNode.nextSibling !== null) {
+            let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
+            if (closestLi.findChildren('ol').length > 0 || closestLi.findChildren('ul').length > 0) {
+                prohibitEventBubling(e);
+                return false;
+            }
+        }
         // else update list content //
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
@@ -295,6 +307,7 @@ export const bindKeyDownEvent = (editor, e) => {
     if (isOnlyListElement && !listUpdatedOnce) {
         let timeoutInstance = setTimeout(() => {
             clearTimeout(timeoutInstance);
+            createDefaultOlLi(treelevel, olClass, listType, e.target);
             updateNestedList(e.target);
             return false;
         });
@@ -438,7 +451,6 @@ export const updateNestedList = (element) => {
         }
         treelevel = treelevel + 1;
     }
-
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
         for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
@@ -500,5 +512,33 @@ const isFullRangeSelected = (editor) => {
         return true
     }
     return false
+}
+
+const getListClassTypeAndTreeLvl = (element) => {
+    let listType = 'ol';
+    let allOlElement = element.querySelectorAll('ol');
+    if (allOlElement.length == 0) {
+        allOlElement = element.querySelectorAll('ul');
+        listType = 'ul';
+    }
+    let treelevel = 1, olClass = "disc"
+    if (allOlElement[0]) {
+        treelevel = parseInt(allOlElement[0].getAttribute('treelevel'));
+        olClass = allOlElement[0].getAttribute('class') || 'disc';
+    }
+    return { treelevel, olClass, listType }
+}
+
+const createDefaultOlLi = (treelevel, olClass, listType, element) => {
+    if (element.querySelectorAll(listType).length === 0) {
+        let olEle = document.createElement(listType)
+        olEle.classList.add(olClass)
+        olEle.setAttribute('treelevel', treelevel)
+        let liEle = document.createElement('li')
+        liEle.append(document.createElement('br'))
+        olEle.append(liEle)
+        element.innerHTML = ""
+        element.append(olEle)
+    }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

@@ -207,9 +207,9 @@ class CommentsPanel extends React.Component {
     @param {Object} props - objct of comments
     @return {String} - returns the jsx code of the comment
     */
-    renderComment = (comment) => {
+    renderComment = (commentObject) => {
         let { filters } = this.state;
-        let finalFilteredComments = this.filterComments(comment, filters)
+        let finalFilteredComments = this.filterComments(commentObject, filters)
         if (finalFilteredComments && finalFilteredComments.length > 0) {
             let comments = finalFilteredComments.map((comment, index) => {
                 return (<Comments comment={comment}
@@ -252,7 +252,7 @@ class CommentsPanel extends React.Component {
                 chronoFilteredComments = elementWiseComments
                 break;
             case "-1":      //Newest To Oldest
-                chronoFilteredComments = _ && _.sortBy(elementWiseComments, [comment => moment(elementWiseComments.commentDateTime).unix()]).reverse()
+                chronoFilteredComments = _ && _.sortBy(elementWiseComments, [commentItem => moment(elementWiseComments.commentDateTime).unix()]).reverse()
                 break;
         }
         switch (filters.status.value.toLowerCase()) {
@@ -260,13 +260,13 @@ class CommentsPanel extends React.Component {
                 statusFilteredComments = chronoFilteredComments
                 break;
             case "open":
-                statusFilteredComments = chronoFilteredComments.filter(comment => comment.commentStatus.toLowerCase() == "open")
+                statusFilteredComments = chronoFilteredComments.filter(commentItem => commentItem.commentStatus.toLowerCase() == "open")
                 break;
             case "resolved":
-                statusFilteredComments = chronoFilteredComments.filter(comment => comment.commentStatus.toLowerCase() == "resolved")
+                statusFilteredComments = chronoFilteredComments.filter(commentItem => commentItem.commentStatus.toLowerCase() == "resolved")
                 break;
         }
-        finalFilteredComments = statusFilteredComments.filter(comment => comment.commentString.toLowerCase().includes(filters.text.toLowerCase()))
+        finalFilteredComments = statusFilteredComments.filter(commentItem => commentItem.commentString.toLowerCase().includes(filters.text.toLowerCase()))
         return finalFilteredComments;
     }
 
@@ -274,8 +274,7 @@ class CommentsPanel extends React.Component {
      * Closses the comments panel
      */
     togglePanel = () => {
-        const { toggleCommentsPanel } = this.props;
-        toggleCommentsPanel(false)
+        this.props.toggleCommentsPanel(false)
     }
 
     componentDidUpdate(prevProps){

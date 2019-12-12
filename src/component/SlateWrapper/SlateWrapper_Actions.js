@@ -19,7 +19,7 @@ import {
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 
 Array.prototype.move = function (from, to) {
@@ -135,7 +135,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -244,27 +244,14 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         "versionUrn": newSlateObj.containerUrn
     }
 
-    let slateLevelData = getState().appStore.slateLevelData[config.slateManifestURN];
-    let oldSlateBodymatter = slateLevelData.contents.bodymatter;
-    let newSlateBodymatter = oldSlateBodymatter.splice(splitIndex)
-
-    oldSlateBodymatter.forEach((oldSlateBody) => {
-        oldSlateData.contents.bodymatter.push({
-            type: oldSlateBody.type,
-            id: oldSlateBody.id
-        })
-    })
-    newSlateBodymatter.forEach((newSlateBody) => {
-        newSlateData.contents.bodymatter.push({
-            type: newSlateBody.type,
-            id: newSlateBody.id
-        })
-    })
-    slateLevelData.contents.bodymatter=oldSlateBodymatter;
     slateDataList.push(oldSlateData, newSlateData)
+    let slateLevelData = getState().appStore.slateLevelData[config.slateManifestURN];
+    let oldSlateBodymatterLocal = slateLevelData.contents.bodymatter;
+    oldSlateBodymatterLocal.splice(splitIndex)
+    slateLevelData.contents.bodymatter = oldSlateBodymatterLocal;
 
     return axios.put(
-        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}`,
+        `${config.REACT_APP_API_URL}v1/slate/split/${config.projectUrn}/${config.slateEntityURN}/${splitIndex}`,
         JSON.stringify({ slateDataList }),
         {
             headers: {
@@ -352,41 +339,46 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
                 }
             }
         ).then(res => {
-
-            /** This will uncomment when pagenumber key is fixed**/
-
-
-        /*   const parentData = getState().appStore.slateLevelData;
+            const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
             let { contents: _slateContent } = _slateObject;
             let { bodymatter: _slateBodyMatter } = _slateContent;
+            let pageNumberRef = {
+                pageNumber: data.pageNumber
+            }
             const element = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
-                    element['pageNumber'] = pagenumber
-                } else if (asideData && asideData.type == 'element-aside') {
+                    element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
+                }
+                else if (asideData && asideData.type == 'element-aside') {
                     if (element.id == asideData.id) {
                         element.elementdata.bodymatter.map((nestedEle) => {
-                         
                             if (nestedEle.id == elementId) {
-                                nestedEle['pageNumber'] = pagenumber;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                              
+                                nestedEle['pageNumberRef'] = { ...pageNumberRef, urn: nestedEle.id }
+                            }
+                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                                 nestedEle.contents.bodymatter.map((ele) => {
                                     if (ele.id == elementId) {
-                                        ele['pageNumber'] = pagenumber;
+                                        ele['pageNumberRef'] = { ...pageNumberRef, urn: ele.id }
                                     }
+                                    return ele
                                 })
                             }
+                            return nestedEle
                         })
                     }
                 }
-            }) */
+                return element
+            })
 
+            dispatch({
+                type: FETCH_SLATE_DATA,
+                payload:  newslateData
+            })
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
-                 //   slateLevelData: {},
                     pageLoading: false
                 }
             })

@@ -1,5 +1,5 @@
 // // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React from 'react';
 import config from '../../config/config';
 import store from '../../appstore/store'
 import { checkSlateLock } from '../../js/slateLockUtility'
@@ -9,17 +9,39 @@ export const loadTrackChanges = (elementId) => {
     if (!checkSlateLock(slateLockInfo)) {
         let slateData = store.getState().appStore.slateLevelData;
         let slateId = config.slateManifestURN;
+        var childObj = [];
+        var createManifestObject = (element, type) => {
+          if(element && element[type] && element[type].bodymatter){
+            element[type].bodymatter.map((data)=>{
+              if(data.id.includes("work")){
+                let obj = {}
+                obj.urn = data.id;
+                obj.index = childObj.length
+                childObj =[...childObj, obj]
+              }
+              if(data.id.includes("manifest")){
+               return createManifestObject(data,'contents')
+              }
+            })
+          }
+          return childObj;
+        } 
+        
         if (slateData && slateData[slateId] && slateData[slateId].contents && slateData[slateId].contents.bodymatter) {
-            var list = [];
-            let elements = slateData[slateId].contents.bodymatter;
-            if (elements && elements.length > 0) {
-                elements.map((element, index) => {
-                    let obj = {};
-                    obj.index = index;
-                    obj.urn = element.id;
-                    list.push(obj);
-                })
-            }
+          var list = [];
+          let elements = slateData[slateId].contents.bodymatter;
+          if (elements && elements.length > 0) {
+            elements.map(async(element, index) => {
+              let obj = {};
+              obj.index = index;
+              obj.urn = element.id;
+              if(obj.urn.includes('manifest')){
+                let childData = await createManifestObject(element,'elementdata')
+                obj.child = childData;
+              }
+              return list.push(obj);
+            })
+          }
         }
 
         let currentElementId = elementId ? elementId : "";

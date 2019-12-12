@@ -70,7 +70,6 @@ class SlateWrapper extends Component {
         let scrollingPosition = Number(e.target.scrollTop);
         if(this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'manifest'){
             config.scrollPosition = scrollingPosition;
-            console.log("in if handleScroll >> ", config.scrollPosition)
         }
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
             config.scrolling = false;
@@ -105,7 +104,7 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate(prevprops) {
+    componentDidUpdate() {
         this.renderDefaultElement();
         if(Object.keys(this.props.slateData).length > 0){
             if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
@@ -157,6 +156,9 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        /** Default Red Dot indicator to false */
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -175,6 +177,7 @@ class SlateWrapper extends Component {
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
+                document.getElementById('slateWrapper').scrollTop = 0;
                 _state = {
                     ..._state,
                     previousSlateId: _slateId
@@ -610,12 +613,7 @@ class SlateWrapper extends Component {
                         outerIndex = Number(outerIndex) + 1
                     }
                 } else {
-                    if (outerAsideIndex != 1) {
-                        outerIndex = outerAsideIndex + 1
-                    } else {
-                        outerIndex = outerAsideIndex;
-                    }
-
+                    outerIndex = indexToinsert;
                 }
                 this.props.createElement(SECTION_BREAK, indexToinsert, parentUrn, asideData, outerIndex)
                 break;

@@ -8,6 +8,12 @@ let indivisualData = {
     mathml: [ ]
 }
 
+const replaceUnwantedtags = (html) => {
+    let tempDiv = document.createElement('div'); 
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('br').remove();
+    return tempDiv.innerHTML;
+}
 /**
  * Generates updated element data for figure element
  * @param {*} index 
@@ -31,6 +37,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
+
+    captionHTML = replaceUnwantedtags(captionHTML)
+    creditsHTML = replaceUnwantedtags(creditsHTML)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML)
+    titleHTML = replaceUnwantedtags(titleHTML)
+
     let data = {
         ...previousElementData,
         title :{
@@ -57,7 +69,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
             title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
@@ -92,11 +104,14 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+        captionHTML = replaceUnwantedtags(captionHTML)
+        creditsHTML = replaceUnwantedtags(creditsHTML)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML)
+        titleHTML = replaceUnwantedtags(titleHTML)
+
         if('posterimage' in previousElementData.figuredata && typeof(previousElementData.figuredata.posterimage)!=="object"){
             delete previousElementData.figuredata.posterimage;
         }
-
-        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
 
     let data = {
         ...previousElementData,
@@ -122,16 +137,29 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         html : {
             captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
             credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+    }
+
+    if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+        previousElementData.figuredata.interactivetype === "web-link") {
+        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+        let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+        let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
+        data.html.postertext = posterTextHTML
+        data.figuredata.postertext = {
+            schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            text : posterText,
+            textsemantics : [ ]
+        }
     }
     return data
 }
@@ -145,7 +173,6 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  * @param {*} secondaryOption 
  */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
@@ -166,12 +193,15 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
-        
-        console.log("FIGURE DATA UPDATED TITLE BLOCKCODE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
-        console.log("preformattedText HTML BLOCKCODE::", preformattedText)
+
+        captionHTML = replaceUnwantedtags(captionHTML)
+        creditsHTML = replaceUnwantedtags(creditsHTML)
+        subtitleHTML = replaceUnwantedtags(subtitleHTML)
+        titleHTML = replaceUnwantedtags(titleHTML)
+    
         preformattedText = preformattedText.replace(/&lt;/g, "<")
         preformattedText = preformattedText.replace(/&gt;/g, ">")
-        console.log("preformattedText HTML BLOCKCODE PROCESSED::", preformattedText.split("\n"))
+
     let data = {
         ...previousElementData,
         title :{
@@ -207,7 +237,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: previousElementData.figuretype,
-            numbered: isNumbered,
+            numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             preformattedtext: [...preformattedText.split("\n")]
@@ -246,7 +276,11 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         creditsText = creditsDOM ? creditsDOM.innerText : "",
         eleText = textDOM ? textDOM.innerText : ""
 
-        console.log("FIGURE DATA UPDATED TITLE:",titleHTML, "SUBTITLE:", subtitleHTML, "CAPTION:", captionHTML, "CREDITS:", creditsHTML)
+    captionHTML = replaceUnwantedtags(captionHTML)
+    creditsHTML = replaceUnwantedtags(creditsHTML)
+    subtitleHTML = replaceUnwantedtags(subtitleHTML)
+    titleHTML = replaceUnwantedtags(titleHTML)
+    textHTML = replaceUnwantedtags(textHTML)
     
     let data = {
         ...previousElementData,
@@ -288,7 +322,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
-            text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`,
+            text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
@@ -429,6 +463,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
     }
+    dataToReturn.slateUrn = config.slateManifestURN;
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }

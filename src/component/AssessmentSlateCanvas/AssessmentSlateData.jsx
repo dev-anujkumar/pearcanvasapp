@@ -1,17 +1,16 @@
 // IMPORT - Plugins //
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
 
 // IMPORT - Assets //
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, 
-    FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE , PUF } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +28,8 @@ export class AssessmentSlateData extends Component {
     }
     
     componentWillReceiveProps(nextProps){
-     if(this.props!==nextProps && this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
+
+     if(this.props!==nextProps && (this.props.setSlateParent != nextProps.setSlateParent || this.props.setSlateEntity  != nextProps.setSlateEntity ||this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup)){
          this.sendDataAssessment(nextProps);
      }
     }
@@ -108,7 +108,7 @@ export class AssessmentSlateData extends Component {
             }, () => {
                     this.mainAddAssessment(e, FULL_ASSESSMENT_PUF);
                 })
-        } else if (assessmentFormat === LEARNOSITY || assessmentFormat == LEARNOSITY.toLowerCase()) {
+        } else if (assessmentFormat === LEARNOSITY || assessmentFormat == "learnosity") {
             this.setState({
                 activeAssessmentType: LEARNOSITY,
                 showElmComponent: true,
@@ -164,7 +164,7 @@ export class AssessmentSlateData extends Component {
     * @param pufObj - The object contains data about PUF Assessment 
     */
     addPufAssessment = (pufObj) => {
-        this.props.addPufAssessment(pufObj);
+        this.props.addPufAssessment(pufObj , this.state.activeAssessmentType);
     }
 
     /*** @description - This is the root function to add Assessment 
@@ -284,7 +284,7 @@ export class AssessmentSlateData extends Component {
             changeTypeValue="Change assessment";
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
-            return <RootElmComponent closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
+            return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">

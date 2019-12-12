@@ -260,37 +260,52 @@ export class ReactEditor extends React.Component {
   }
 
   handleClick = (e) => {
+    let clickedX = e.clientX;
+    let clickedY = e.clientY;
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
       return false;
     }
 
-    if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
-      let activeEditorId = tinymce.activeEditor.id;
+    for (let i = tinymce.editors.length - 1; i > -1; i--) {
+      let ed_id = tinymce.editors[i].id;
+      if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
+        if (ed_id === currentTarget.id) {
+          return false;
+        }
+        let activeEditorId = ed_id;
 
-      /*
-        Before setting wiris remove the classes to prevent it converting to mathml
-      */
-      let tempContainerHtml = tinyMCE.$("#" + tinymce.activeEditor.id).html()
-      tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-      //tinymce.$('.wrs_modal_desktop').remove();
+        /*
+          Before setting wiris remove the classes to prevent it converting to mathml
+        */
+        let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
+        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
 
-      tinymce.remove('#' + tinymce.activeEditor.id)
-      tinymce.$('.wrs_modal_desktop').remove();
-      /*
-        this line must execute after removing tinymce
-      */
-      document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+        tinymce.remove('#' + activeEditorId)
+        tinymce.$('.wrs_modal_desktop').remove();
+        /*
+          this line must execute after removing tinymce
+        */
+        document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
 
-      if (document.getElementById(activeEditorId)) {
-        document.getElementById(activeEditorId).contentEditable = true;
+        if (document.getElementById(activeEditorId)) {
+          document.getElementById(activeEditorId).contentEditable = true;
+        }
       }
     }
 
+    /**
+     * [BG-262] | keep the commented code to track
+     */
+    // if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
+    //    // previoulsy above code was placed here //
+    // }
+
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
-      this.setCursorAtEnd(tinymce.activeEditor);
+     // this.setCursorAtEnd(tinymce.activeEditor);
+     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
 

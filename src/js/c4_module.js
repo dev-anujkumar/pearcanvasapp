@@ -45,7 +45,7 @@ ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey)
     if (pubApiKey !== undefined) {
         xApiKey = pubApiKey;
     } else {
-        xApiKey = CTOOL_APIKEY;
+        xApiKey = config_object.CTOOL_APIKEY;
     }
     var x = ajax.x();
     x.open(method, url, sync, null, null);
@@ -82,7 +82,7 @@ ajax.put = function (url, data, callback, contentType, sync) {
 };
 
 export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) {
-    content_url = C6PUB_ENDPOINT;
+    content_url = config_object.C6PUB_ENDPOINT;
     ajax.post(content_url, JSON.stringify(pubConObj), callback, 'application/json', false, pubApiKey);
     let parsedResponse = JSON.parse(response.responseText);
     if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
@@ -100,7 +100,7 @@ export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) 
 }
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
-    var content_url = CTOOL_PUBTITLE;
+    var content_url = config_object.CTOOL_PUBTITLE;
     let content_data = {};
     content_data["projectManifest"] = project;
     content_data["sectionManifest"] = section;
@@ -126,7 +126,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
 export const c4PublishObj = {
 
     publishSlate: function (project, section, cite) {
-        var content_url = CTOOL_PUBSLATE;
+        var content_url = config_object.CTOOL_PUBSLATE;
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
@@ -159,8 +159,8 @@ export const c4PublishObj = {
     },
 
     publishContent: function (pubConObj, pubCallBack) {
-        let content_url = C6PUB_ENDPOINT;
-        let pubApiKey = C6PUB_API_KEY;
+        let content_url = config_object.C6PUB_ENDPOINT;
+        let pubApiKey = config_object.C6PUB_API_KEY;
         try {
             _.delay(() => {
                 publishContentDelay(content_url, pubConObj, pubApiKey,callback)

@@ -20,7 +20,7 @@ class Sidebar extends Component {
         let secondaryFirstOption = Object.keys(elementTypeList[primaryFirstOption].subtype)[0];
         let labelText = elementTypeList[primaryFirstOption].subtype[secondaryFirstOption].labelText;
         let numbered = this.props.activeElement.numbered || true;
-        let startNumber = this.props.activeElement.startNumber || "1"
+        let startNumber = this.props.activeElement.startNumber || "1";
         
         this.state = {
             elementDropdown: '',
@@ -38,8 +38,12 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if(Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
+            let numberStartFrom = prevState.bceNumberStartFrom;
+            let bceToggle = prevState.bceToggleValue;
             if(nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
+                numberStartFrom = nextProps.activeElement.startNumber || "1";
+                bceToggle = nextProps.activeElement.numbered || true
             }
             
             return {
@@ -48,7 +52,9 @@ class Sidebar extends Component {
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,
-                activeLabelText: nextProps.activeElement.tag
+                activeLabelText: nextProps.activeElement.tag,
+                bceNumberStartFrom : numberStartFrom,
+                bceToggleValue : bceToggle
             };
         }
 
@@ -271,7 +277,7 @@ class Sidebar extends Component {
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
@@ -310,6 +316,10 @@ class Sidebar extends Component {
         document.getElementById(`cypress-${this.props.activeElement.index}-0`).blur()
     }
 
+    handleBQAttributionBlur = () => {
+        document.querySelector(`#cypress-${this.props.activeElement.index} p`).focus()
+        document.querySelector(`#cypress-${this.props.activeElement.index} p`).blur()
+    }
 
     /**
     * handleBceToggle function responsible for handling toggle value for BCE element
@@ -317,8 +327,7 @@ class Sidebar extends Component {
     handleBceToggle = () => {
         this.setState({
             bceToggleValue : !this.state.bceToggleValue
-        })
-        this.handleBceBlur()
+        }, () => this.handleBceBlur() )
     }
 
     /**

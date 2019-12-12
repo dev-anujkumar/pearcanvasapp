@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
+import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 
 
@@ -46,7 +47,7 @@ class ElmTable extends Component {
     */
     renderTableData = (currentProps) => {
         if (!currentProps.errFlag && currentProps.apiData) {
-            this.filterData(currentProps.getParentId, currentProps.apiData);
+            this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
 
         this.timer = setTimeout(() => {
@@ -128,7 +129,7 @@ class ElmTable extends Component {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
                     resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": assesments.type || "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
+                        this.preparedData.push({ "type": "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
@@ -249,6 +250,9 @@ class ElmTable extends Component {
     }
 
     render() {
+        let buttonText = (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ? "ADD" : "OK";
+        let errorMessage = (this.props.activeAssessmentType === FULL_ASSESSMENT_PUF || this.props.activeAssessmentType === PUF) ?
+            <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>No Results Found</i>
         if (this.props.errFlag) {
             return (
                 <div>
@@ -259,7 +263,7 @@ class ElmTable extends Component {
                     </div>
                     <div className="elm-error-div">
                         <p className="elm-error-line">
-                            {this.props.errorStatus == 404 ? <i>This project has no PUF assessments currently. Please add a PUF assessment to this project first</i> : <i>**Error occured, Please try again!!!</i>}
+                            {this.props.errorStatus == 404 ? errorMessage : <i>**Error occured, Please try again!!!</i>}
                         </p>
                     </div>
                 </div>
@@ -310,7 +314,7 @@ class ElmTable extends Component {
                     </div>
                     <div className="puf-footer">
                         <button className="puf-button cancel" onClick={this.props.closeElmWindow}>CANCEL</button>
-                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>ADD</button>
+                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>{buttonText}</button>
                     </div>
                 </div>
             );

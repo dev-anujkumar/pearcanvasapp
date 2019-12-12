@@ -106,7 +106,17 @@ class ElementContainer extends Component {
             return true
         }
         if (updateFromC2Flag) {
-            this.props.setActiveElement(this.props.element, this.props.index);
+            if(this.props.element.type == "openerelement"){
+                this.setState({
+                    borderToggle: 'active'
+                })
+            }
+            else{
+                this.setState({
+                    borderToggle: 'active',
+                    btnClassName: 'activeTagBgColor'
+                })
+            }   
         }
         else {
             if (this.props.element.type == "openerelement") {
@@ -125,33 +135,107 @@ class ElementContainer extends Component {
         }
     }
 
+    replaceUnwantedtags = (html) => {
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = html;
+        tinyMCE.$(tempDiv).find('br').remove();
+        return tempDiv.innerHTML;
+    }
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
      * @param {*} previousElementData old element data
      */
     figureDifference = (index, previousElementData) => {
+        
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
             creditsDOM = document.getElementById(`cypress-${index}-3`)
+            
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+        
+        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== previousElementData.figuredata.path
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle ||
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits ||
+            this.props.oldImage !== previousElementData.figuredata.path
+            );
+    }
+
+    figureDifferenceBlockCode = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            preformattedText = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerText.trim(): "",
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        if (titleHTML !== previousElementData.html.title ||
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+        let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
+        let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
+        if (typeof (isNumbered) == "string") {
+            isNumbered = JSON.parse(isNumbered)
+        }
+        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
+        //     startNumber !== previousElementData.figuredata.startNumber ||
+        //     isNumbered !== previousElementData.figuredata.numbered
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
-            previousElementData.figuredata.path !== this.props.oldImage
-        ) {
-            return true
-        }
-        else {
-            return false
-        }
+            preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
+            startNumber !== previousElementData.figuredata.startNumber ||
+            isNumbered !== previousElementData.figuredata.numbered
+            );
     }
 
     /**
@@ -160,28 +244,158 @@ class ElementContainer extends Component {
      * @param {*} previousElementData old element data
      */
     figureDifferenceInteractive = (index, previousElementData) => {
+        let newInteractiveid = previousElementData.figuredata.interactiveid || ""
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            interactiveDOM = document.getElementById(`cypress-${index}-2`),
             captionsDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
-            interactiveHTML = interactiveDOM ? interactiveDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        if (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits || previousElementData.figuredata.interactiveid
-        ) {
-            return true
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+            previousElementData.figuredata.interactivetype === "web-link") {
+            let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
+            let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     posterTextHTML !== previousElementData.html.postertext
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
+                captionHTML !== previousElementData.html.captions ||
+                creditsHTML !== previousElementData.html.credits || 
+                posterTextHTML !== previousElementData.html.postertext ||
+                this.props.oldImage !== newInteractiveid
+                );
         }
         else {
-            return false
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     this.props.oldImage !== newInteractiveid
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
+                captionHTML !== previousElementData.html.captions ||
+                creditsHTML !== previousElementData.html.credits || 
+                this.props.oldImage !== newInteractiveid
+                );
         }
+    }
+
+    figureDifferenceAT = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            text = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""): "<p></p>",
+            captionDOM = document.getElementById(`cypress-${index}-3`),
+            creditsDOM = document.getElementById(`cypress-${index}-4`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+
+        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     text !== previousElementData.figuredata.elementdata.text
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle ||
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits ||
+            text !== previousElementData.figuredata.elementdata.text
+            );
+    }
+
+    figureDifferenceAudioVideo = (index, previousElementData) => {
+        let newAudioVideoId = ""
+        if(previousElementData.figuretype === "audio"){
+            newAudioVideoId = previousElementData.figuredata.audio.path
+        }
+        else {
+            newAudioVideoId = previousElementData.figuredata.videos[0].path
+        }
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            captionDOM = document.getElementById(`cypress-${index}-2`),
+            creditsDOM = document.getElementById(`cypress-${index}-3`)
+            
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            captionHTML = captionDOM ? captionDOM.innerHTML : "",
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+        
+        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+
+        captionHTML = this.replaceUnwantedtags(captionHTML)
+        creditsHTML = this.replaceUnwantedtags(creditsHTML)
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== newAudioVideoId
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
+            subtitleHTML !== previousElementData.html.subtitle ||
+            captionHTML !== previousElementData.html.captions ||
+            creditsHTML !== previousElementData.html.credits ||
+            this.props.oldImage !== newAudioVideoId
+            );
     }
 
     updateOpenerElement = (dataToSend) => {
@@ -233,7 +447,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
+                        if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
@@ -241,7 +455,7 @@ class ElementContainer extends Component {
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
+                        if (this.figureDifferenceAudioVideo(this.props.index, previousElementData)) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
@@ -261,19 +475,19 @@ class ElementContainer extends Component {
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
-                        }
-                        break;
+                            if(this.figureDifferenceBlockCode(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
+                            }
+                            break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
-                        }
-                        break;
+                            if(this.figureDifferenceAT(this.props.index, previousElementData)){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
+                            }
+                            break;
                 }
                 break;
 
@@ -318,9 +532,9 @@ class ElementContainer extends Component {
     /**
      * Will e called on assessment element's blur
      */
-    handleBlurAssessmentSlate = (assessmentData) => {
-        const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let dataToSend = { ...this.props.element }
+    handleBlurAssessmentSlate = (assessmentData)=>{
+        // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
+        let dataToSend = {...this.props.element}
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
@@ -490,10 +704,24 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions,updatePageNumber, accessDenied, allComments } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        /** Handle TCM for tcm enable elements */
+        let tcm = false;
+        let feedback = false;
+        if(element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+            if (element.tcm) {
+                tcm = element.tcm;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+            if (element.feedback) {
+                feedback = element.feedback;
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+            }
+        }
+
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
             switch (element.type) {
@@ -613,7 +841,7 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if(this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+        if(!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
@@ -639,7 +867,7 @@ class ElementContainer extends Component {
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
                     {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
-                    {element && element.feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (element && element.tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
+                    {feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
