@@ -28,8 +28,8 @@ export class AssessmentSlateData extends Component {
     }
     
     componentWillReceiveProps(nextProps){
-
-     if(this.props!==nextProps && (this.props.setSlateParent != nextProps.setSlateParent || this.props.setSlateEntity  != nextProps.setSlateEntity ||this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup)){
+        
+     if(this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
          this.sendDataAssessment(nextProps);
      }
     }
@@ -51,6 +51,8 @@ export class AssessmentSlateData extends Component {
     }
 
     componentDidMount() {
+        let newMessage = {assessmentResponseMsg:false};
+        this.props.isLOExist(newMessage);
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
             this.sendDataAssessment(this.props);
             this.setState({
