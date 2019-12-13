@@ -3,7 +3,8 @@ import config from '../../config/config';
 import {
     FETCH_SLATE_DATA,
     SET_ACTIVE_ELEMENT,
-    SET_OLD_IMAGE_PATH
+	SET_OLD_IMAGE_PATH,
+	AUTHORING_ELEMENT_UPDATE
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -149,7 +150,8 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN,entityURN, page, versioning) => (dispatch, getState) => {
+	console.log("versioning >> ", versioning);
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
@@ -159,14 +161,25 @@ export const fetchSlateData = (manifestURN, page) => (dispatch, getState) => {
         page = config.totalPageCount;
     }
     config.page = page;
-    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
+    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
         if (Object.values(slateData.data).length > 0) {
-            if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+			if(versioning && versioning.type === 'element-aside'){
+				let parentData = getState().appStore.slateLevelData;
+				let newslateData = JSON.parse(JSON.stringify(parentData));
+				let index = versioning.indexes[0];
+				newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+				return dispatch({
+					type: AUTHORING_ELEMENT_UPDATE,
+					payload: {
+						slateLevelData: newslateData
+					}
+				})
+			}else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
                 let contentUrn = slateData.data[manifestURN].contentUrn;
                 let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
