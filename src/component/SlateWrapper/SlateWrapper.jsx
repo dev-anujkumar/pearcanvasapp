@@ -68,7 +68,7 @@ class SlateWrapper extends Component {
         // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
         let scrollingPosition = Number(e.target.scrollTop);
-        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest' || this.props.slateData[config.slateManifestURN].type === 'popup')){
+        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')){
             config.scrollPosition = scrollingPosition;
         }
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
@@ -1032,15 +1032,20 @@ class SlateWrapper extends Component {
         }
     }
     closePopup = () =>{
-        // Scrolling to the previous element after SAVE  & CLOSE is clicked
-        this.props.openPopupSlate(undefined, config.slateManifestURN);
-        setTimeout(() => {
-            document.getElementById("slateWrapper").scrollTop = config.scrollPosition;
-        },0);
         let popupId = config.slateManifestURN
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         this.props.openPopupSlate(undefined, popupId)
+        this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        
+        // Scrolling to the previous element after SAVE  & CLOSE is clicked
+        setTimeout(() => {
+            let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
+            if(elementDom){
+                console.log("TO FOCUS::>>", elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`))
+                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).focus()
+            }
+        },0);
     }
 
     /**
@@ -1151,6 +1156,7 @@ export default connect(
         getSlateLockStatus,
         accessDenied,
         openPopupSlate,
-        showSlateLockPopup
+        showSlateLockPopup,
+
     }
 )(SlateWrapper);

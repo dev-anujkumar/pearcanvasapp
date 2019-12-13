@@ -21,10 +21,15 @@ class ElementPopup extends React.Component {
         }
     }
     renderSlate =()=>{
+        const { element, index } = this.props
         config.tempSlateManifestURN = config.slateManifestURN
         config.tempSlateEntityURN = config.slateEntityURN
-        config.slateManifestURN = "urn:pearson:manifest:d2d6713c-6828-4a20-bfdf-3cc88614c706" //For mock purpose
-        config.slateEntityURN = "urn:pearson:entity:28ee3c4c-8afa-4980-b748-4746bd7ffefa" //For mock purpose
+        config.slateManifestURN = "urn:pearson:manifest:2da68ebe-ee1b-46f5-b4cd-636cf527c1da" //For mock purpose
+        config.slateEntityURN = "urn:pearson:entity:7a91ed8a-77de-4a36-a071-28b963618e16" //For mock purpose
+        config.cachedActiveElement = {
+            index,
+            element: {...element}
+        }
         // this.props.openPopupSlate(this.props.element, config.slateManifestURN)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, 0, 'popup');
@@ -35,9 +40,9 @@ class ElementPopup extends React.Component {
                 <div className="divWidgetPU" resource="">
                 <figure className="figureWidgetPU" resource="">
                     <header>
-                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.contents && element.contents.titles[0].html.text}
+                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"].html.text}
                               handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.contents && element.contents.titles[1].html.text}
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"].html.text}
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
                    {/*  <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div> */}
@@ -45,7 +50,7 @@ class ElementPopup extends React.Component {
                         {
                                  <a className="buttonWidgetPU" href="javascript:void(0)" onClick = {this.renderSlate}>
                                     <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} 
-                                    model={element.contents && element.contents.postertextobject? element.contents.postertextobject.html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                                    model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject.html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                                  </a>
                         }
                     </div>
@@ -57,9 +62,9 @@ class ElementPopup extends React.Component {
     }
     render(){
       return (
-          <>
-         { this.renderPopup()}
-          </>
+        <div className="interactive-element">
+            { this.renderPopup()}
+        </div>  
       )
     }
 }

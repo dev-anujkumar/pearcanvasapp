@@ -150,10 +150,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
+        projectURN : config.projectUrn,
         slateUrn:config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
         index: indexes[indexes.length - 1],
-        projectURN : config.projectUrn,
         slateEntity : config.slateEntityURN
     }
 
@@ -178,7 +178,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
 
-
     let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
@@ -195,10 +194,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
         let longDesc="";
-    /*     if(res.data.figuredata){
-            altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
-            longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
-        } */
+        
         let activeElementObject = {
             elementId: newElementData.elementId,
             index: indexes.join("-"),
@@ -211,7 +207,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
-
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -221,7 +217,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
-/*     axios.post(url, JSON.stringify(conversionDataToSend), { 
+
+    /* axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken

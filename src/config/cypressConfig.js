@@ -5,6 +5,7 @@ let cypressConfig = {
     slateManifestURN : null,
     tempSlateManifestURN : null,
     tempSlateEntityURN : null,
+    cachedActiveElement : {},
     scrollPosition : 0,
     parentContainerUrn:"",
     parentEntityUrn:"",

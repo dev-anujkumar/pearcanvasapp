@@ -719,12 +719,12 @@ export default {
         'primary-popup': {
             text: 'Popup window',
             toolbar: ['assetpopover'],
-            enum: 'MMI',
+            enum: 'POP_UP',
             subtype: {
                 'secondary-interactive-showhide': {
                     text: 'Popup window',
                     labelText: 'SH',
-                    enum: 'POPUP',
+                    enum: 'NA',
                     wipValue: 'popup'
                 }
             }
