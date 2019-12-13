@@ -65,7 +65,7 @@ export default function ElementSaprator(props) {
             parents.push(elem.className);
         }
         return parents;
-    };
+    }
 
     /**
      * Close dropdown

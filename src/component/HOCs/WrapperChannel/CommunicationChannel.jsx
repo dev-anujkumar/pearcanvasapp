@@ -12,7 +12,7 @@ import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
+import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
@@ -96,8 +96,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        // config.disablePrev = message.enableNext;
-                        config.disableNext = false;//message.enableNext;
+                    // config.disablePrev = message.enableNext;
+                    config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
                     // config.disablePrev = message.disablePrev;
@@ -108,13 +108,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disableNext = true;//message.disableNext;
                     break;
                 case 'swappedIS':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
                 case 'ISDeleted':
+                case 'TocLoader':
                     {
                         /**
                          * TO BE IMPLEMENTED
@@ -140,13 +135,6 @@ function WithWrapperCommunication(WrappedComponent) {
                             hideBlocker();
                         }
 
-                    }
-                    break;
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
                     }
                     break;
                 case 'updateSlateTitleByID':

@@ -99,7 +99,7 @@ export class ReactEditor extends React.Component {
     pastePreProcess = (plugin, args) => {
       let testElement = document.createElement('div');
       testElement.innerHTML = args.content;
-      if(testElement.innerText.trim().length){
+      if(testElement.innerText && testElement.innerText.trim().length){
           args.content = testElement.innerText;
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
@@ -214,7 +214,7 @@ export class ReactEditor extends React.Component {
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-      if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+      if (testElem.innerText && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
         this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')

@@ -209,7 +209,7 @@ describe('Testing communication channel', () => {
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    describe('Test for projectDetails-modifyObjKeys function', () => {
+    xdescribe('Test for projectDetails-modifyObjKeys function', () => {
         const spygetProjectConfig = jest.spyOn(channelInstance, 'getProjectConfig')
         const spymodifyObjKeys = jest.spyOn(channelInstance, 'modifyObjKeys')
         xtest('Test for projectDetails case-qa', () => {

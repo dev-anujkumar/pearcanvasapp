@@ -286,7 +286,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             };
                         } else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
-                            let element =  nestedEle.contents.bodymatter.map((ele)=>{
+                            let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
                                 if(ele.id == elementId) {
                                     ele = {
                                         ...ele,
@@ -301,7 +301,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 }
                                 return ele;
                             })
-                            nestedEle.contents.bodymatter = element;
+                            nestedEle.contents.bodymatter = elementObject;
                         }
                         return nestedEle;
                     })
