@@ -47,10 +47,10 @@ let initialState = {
     }
 };
 describe('Testing Assessment Slate Data component', () => {
-    const assessmentSlate = mount(<AssessmentSlateData />)
+    const assessmentSlate = mount(<AssessmentSlateData isLOExist={jest.fn()} />)
     let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
     it('render Assessment Slate Data component without crashing ', () => {
-        const assessmentSlate = mount(<AssessmentSlateData model={assessmentSlateDefault}/>)
+        const assessmentSlate = mount(<AssessmentSlateData isLOExist={jest.fn()} model={assessmentSlateDefault}/>)
         expect(assessmentSlate).toHaveLength(1);
         let assessmentSlateDataInstance = assessmentSlate.find('AssessmentSlateData').instance();
         expect(assessmentSlateDataInstance).toBeDefined();
@@ -72,7 +72,8 @@ describe('Testing Assessment Slate Data component', () => {
             model: assessmentSlateWithData,
             getAssessmentData: true,
             handleAssessmentBlur: jest.fn(),
-            selectAssessmentType: jest.fn()
+            selectAssessmentType: jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<AssessmentSlateData {...props} />);
         const assessmentSlateDataInstance = component.instance();
@@ -104,7 +105,8 @@ describe('Testing Assessment Slate Data component', () => {
             assessmentItemTitle: "1.1 Homework",
             model: assessmentSlateWithData,
             getAssessmentData: true,
-            selectAssessmentType: jest.fn()
+            selectAssessmentType: jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -120,7 +122,8 @@ describe('Testing Assessment Slate Data component', () => {
         let props = {
             getAssessmentData: true,
             getAssessmentDataPopup: false,
-            selectAssessmentType: jest.fn()
+            selectAssessmentType: jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<AssessmentSlateData {...props} />);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -143,7 +146,8 @@ describe('Testing Assessment Slate Data component', () => {
             showBlocker: jest.fn(),
             openLtAction: jest.fn(),
             getDiscipline:jest.fn(), 
-            openLTFunction: jest.fn(), 
+            openLTFunction: jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -228,7 +232,8 @@ describe('Testing Assessment Slate Data component', () => {
             openLtAction: jest.fn(),
             getDiscipline:jest.fn(), 
             showBlocker:jest.fn(),
-            permissions: ['quad_create_edit_ia']
+            permissions: ['quad_create_edit_ia'],
+            isLOExist: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -315,7 +320,8 @@ describe('Testing Assessment Slate Data component', () => {
             getAssessmentData: true,
             toggleAssessmentPopup: function () { },
             selectAssessmentType: mockLoginfn,
-            showBlocker:jest.fn()
+            showBlocker:jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -351,7 +357,8 @@ describe('Testing Assessment Slate Data component', () => {
             getAssessmentData: true,
             toggleAssessmentPopup: function () { },
             selectAssessmentType: mockLoginfn,
-            addPufAssessment:  function (pufObj) { }
+            addPufAssessment:  function (pufObj) { },
+            isLOExist: jest.fn()
         }      
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -374,7 +381,8 @@ describe('Testing Assessment Slate Data component', () => {
         let props = {
             getAssessmentDataPopup: true,
             getAssessmentData: true,
-            showBlocker:jest.fn()
+            showBlocker:jest.fn(),
+            isLOExist: jest.fn()
        }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -396,7 +404,8 @@ describe('Testing Assessment Slate Data component', () => {
         let props = {
             getAssessmentDataPopup: true,
             getAssessmentData: true,
-            showBlocker:jest.fn()
+            showBlocker:jest.fn(),
+            isLOExist: jest.fn()
        }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -420,7 +429,8 @@ describe('Testing Assessment Slate Data component', () => {
             openLtAction: jest.fn(),
             openLTFunction: jest.fn(), 
             getDiscipline:jest.fn(),
-            showBlocker:jest.fn() 
+            showBlocker:jest.fn(),
+            isLOExist: jest.fn()
        }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();
@@ -456,7 +466,8 @@ describe('Testing Assessment Slate Data component', () => {
                 timestamp: "",
                 userId: ""
             },
-            updateAssessment:jest.fn()
+            updateAssessment:jest.fn(),
+            isLOExist: jest.fn()
         }
         const component = mount(<Provider store={store}><AssessmentSlateData {...props} /></Provider>);
         let assessmentSlateDataInstance = component.find('AssessmentSlateData').instance();

@@ -4,11 +4,11 @@ import ReactEditor from '../../../src/component/tinyMceGlossaryFootnoteEditor'
 import { tinymceFormulaIcon,tinymceFormulaChemistryIcon } from '../../../src/images/TinyMce/TinyMce';
 import { JSDOM } from 'jsdom'
 global.document = (new JSDOM()).window.Element;
-Object.defineProperty(global.Element.prototype, 'innerText', {
-    get() {
-        return this.textContent;
-    },
-});
+// Object.defineProperty(global.Element.prototype, 'innerText', {
+//     get() {
+//         return this.textContent;
+//     },
+// });
 
 describe('Testing tinyMce component for glossary footnote with  props', () => {
     let props = {
