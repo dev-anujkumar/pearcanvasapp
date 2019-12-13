@@ -96,8 +96,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        // config.disablePrev = message.enableNext;
-                        config.disableNext = false;//message.enableNext;
+                    // config.disablePrev = message.enableNext;
+                    config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
                     // config.disablePrev = message.disablePrev;
@@ -169,7 +169,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.props.isLOExist(message);
                 break;
                 case 'loEditResponse':
-                case 'cancelCEPopup':
                     this.setState({
                         showBlocker: false
                     });
@@ -185,11 +184,17 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'refreshSlate' :    
                     this.handleRefreshSlate();
                     break;
-                // case 'cancelCEPopup':
-                //     this.setState({
-                //         showBlocker: false
-                //     });
-                //  break;
+                case 'cancelCEPopup':
+                    if(this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en){
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        this.props.currentSlateLOData.label.en= this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
+                        this.props.currentSlateLO(this.props.currentSlateLOData);
+                    }
+                    
+                    this.setState({
+                        showBlocker: false
+                    });
+                 break;
                 case 'slatePreview':
                     this.props.publishContent('slatePreview');
                     break;
@@ -407,10 +412,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
-                }
-                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
-                    let newMessage = {assessmentResponseMsg:false};
-                    this.props.isLOExist(newMessage);
                 }
             }
             /**

@@ -118,9 +118,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (oldElementData.subtype && oldElementData.subtype === "sidebar") {
         let elemDesigntype = "asideSidebar01"
         switch (outputSubTypeEnum) {
-            case "SIDEBAR_01":
-                elemDesigntype = "asideSidebar01"
-                break;
             case "SIDEBAR_02":
                 elemDesigntype = "asideSidebar02"
                 break;
@@ -136,6 +133,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             case "SIDEBAR_06":
                 elemDesigntype = "asideSidebar06"
                 break;
+            case "SIDEBAR_01":
             default:
                 elemDesigntype = "asideSidebar01"
                 break;

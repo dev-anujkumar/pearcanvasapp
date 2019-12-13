@@ -20,7 +20,6 @@ class ElmTable extends Component {
             noDataFound: false,
             currentUrn: this.props.apiData.versionUrn,
             parentUrn: null,
-            apiData: props.apiData,
             firstName: this.getProjectTitle() || "",
             parentTitle: "",
             currentAssessmentSelected: {},
@@ -40,7 +39,6 @@ class ElmTable extends Component {
             firstName: fName
         })
         this.renderTableData(this.props)
-
     }
     /*** @description - This function is to render elm table data
      * @param currentProps- props
@@ -49,20 +47,16 @@ class ElmTable extends Component {
         if (!currentProps.errFlag && currentProps.apiData) {
             this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
-
         this.timer = setTimeout(() => {
-            if (!this.state.tableValue.length) {
+            //if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
-            }
+            //}
         }, 0)
     }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (JSON.stringify(nextProps.apiData) !== JSON.stringify(prevState.apiData)) {
-            prevState.renderTableData(nextProps);
-            return {
-                apiData: nextProps.apiData
-            };
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.apiData != this.props.apiData) {
+            let _self = this;
+            _self.renderTableData(this.props);
         }
     }
     componentWillUnmount() {
@@ -124,7 +118,6 @@ class ElmTable extends Component {
          * @param parentUrn- parent-Urn
         */
     getResourcefromFilterData = (data, parentUrn) => {
-
         if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
@@ -325,7 +318,8 @@ class ElmTable extends Component {
 
 export default connect((state) => {
     return {
-        getParentId: state.appStore.slateLevelData[config.slateManifestURN].id
+        getParentId: state.appStore.slateLevelData[config.slateManifestURN].id,
+        apiData: state.elmReducer.elmData
     }
 
 })(ElmTable);

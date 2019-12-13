@@ -95,7 +95,7 @@ export class TinyMceEditor extends Component {
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
             },
 
-            init_instance_callback: (editor) => {             
+            init_instance_callback: (editor) => {                            
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
 
                 if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
@@ -111,6 +111,10 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
+                        tinyMCE.$('.Wirisformula').each(function () {
+                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        }) 
                         this.props.handleBlur()
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
@@ -127,7 +131,7 @@ export class TinyMceEditor extends Component {
                         else {
                             activeElement.classList.add('place-holder')
                         }
-                    }
+                    }                   
                 });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
@@ -282,7 +286,13 @@ export class TinyMceEditor extends Component {
                     }
                     break;
                 case "mceShowCharmap":
-                   this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
+                    let coOrds = editor.selection.getBoundingClientRect();
+                    clickedX = coOrds.left;
+                    clickedY = coOrds.top + coOrds.height / 2;
+                    setTimeout(() => {
+                        tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY)
+                    }, 1000)
+                    //this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
                     break;
                 case "mceInsertContent": 
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
@@ -292,6 +302,17 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                     }
+                    break;
+                case "redo":
+                    if(this.props.element.type === "element-list")
+                    {
+                        e.preventDefault()
+                        /** EVENT - ctrl + y keydown */
+                        keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, keyCode: 89, metaKey: false, shiftKey: false, which: 89 })
+                        editor.targetElm.dispatchEvent(keyDownEvent)
+                        return false
+                    }
+                    break;
             }
         })
     }
@@ -442,7 +463,7 @@ export class TinyMceEditor extends Component {
                 e.preventDefault()
             }
 
-            bindKeyDownEvent(editor, e);
+            bindKeyDownEvent(editor, e, this.props.element);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length ||
@@ -980,7 +1001,7 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+            if (testElem.innerText && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                 this.placeHolderClass = 'place-holder';
             }
             else {
@@ -1031,7 +1052,7 @@ export class TinyMceEditor extends Component {
         }
         this.removeMultiTinyInstance();
         this.handlePlaceholder() 
-        tinymce.$('.blockquote-editor').attr('contenteditable',false)
+        tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
     removeMultiTinyInstance = ()=>{
@@ -1102,6 +1123,7 @@ export class TinyMceEditor extends Component {
             
          clickedX = e.clientX;
          clickedY = e.clientY;
+         
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */        
@@ -1265,6 +1287,10 @@ export class TinyMceEditor extends Component {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        }) 
         this.props.handleBlur();
     }
     
