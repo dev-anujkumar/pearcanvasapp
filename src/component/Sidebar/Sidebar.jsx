@@ -363,7 +363,8 @@ class Sidebar extends Component {
                 level: "chapter",
                 groupby: groupby
             },
-            "metaDataAnchorID": [this.props.activeElement.elementId]
+            "metaDataAnchorID": [this.props.activeElement.elementId],
+            "elementVersionType": "element-generateLOlist"
         }
         this.props.updateElement(data)
 
