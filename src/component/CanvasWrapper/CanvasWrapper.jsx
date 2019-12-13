@@ -34,7 +34,6 @@ import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnot
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
@@ -43,18 +42,24 @@ export class CanvasWrapper extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
-            if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
-            }
-            return null;    
+        if(nextProps.isConfigLoaded){
+            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+        }
+        if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+        }
+        return null;    
      }
 
+
     componentDidMount() {  
+        console.log("componentDidMount >> ")
         // To run Canvas Stabilization app as stand alone app //
-        if (config.slateManifestURN) {
-            this.props.fetchSlateData(config.slateManifestURN);
-        }
+        // if (config.slateManifestURN) {
+        //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+        // }
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
+        
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -63,6 +68,7 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
+        
         let { projectUrn } = config,
         slateId = config.slateManifestURN
         this.props.getSlateLockStatus(projectUrn ,slateId) 
@@ -144,7 +150,7 @@ export class CanvasWrapper extends Component {
     loadMorePages = () => {
         config.page++;
         if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN, config.page);
+        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '');
     }
     
     render() {

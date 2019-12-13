@@ -1,6 +1,7 @@
 .figureAssessment{
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
+    max-width:100% !important;
 }
 
 .singleAssessmentIdInfo{
@@ -74,9 +75,6 @@ position: relative;
 .singleAssessment_Dropdown_currentLabel{
     font-size: 14px;
     margin:0 0 0 8px;
-}
-.figureAssessment {
-    max-width:100% !important;
 }
 .divAssessment{
        max-width:auto!important ;
