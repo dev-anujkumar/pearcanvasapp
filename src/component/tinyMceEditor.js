@@ -1332,7 +1332,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
-                    classes = classes + ' blockquote-editor';
+                    classes = classes + ' blockquote-editor with-attr';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
@@ -1342,13 +1342,14 @@ export class TinyMceEditor extends Component {
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
-                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    classes = classes + ' blockquote-editor';
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);                    
+                    classes = classes + ' blockquote-editor without-attr';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
-                else {
+                else {                    
+                    classes = classes + ' pullquote-editor';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
