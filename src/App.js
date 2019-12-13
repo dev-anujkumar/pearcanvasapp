@@ -5,7 +5,7 @@ import './styles/style.css';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import img from './images/logo.png';
 
-// Route Based 
+// Route Based  
 import RouteComponent from './component/RouteComponent.jsx';
 const AsyncHome = asyncComponent(() => import("./component/RouteComponent.jsx"));
 
