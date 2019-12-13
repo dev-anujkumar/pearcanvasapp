@@ -1265,6 +1265,11 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }  
+                if(document.querySelector('button[title="Asset Popover"]')){
+                    document.querySelector('button[title="Asset Popover"]').setAttribute("aria-disabled",false)
+                    document.querySelector('button[title="Asset Popover"]').removeAttribute('aria-pressed')
+                    document.querySelector('button[title="Asset Popover"]').classList.remove('tox-tbtn--disabled')
+                }
             })
         });
         if (isSameTarget) {
