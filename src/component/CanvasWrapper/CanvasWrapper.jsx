@@ -37,13 +37,17 @@ export class CanvasWrapper extends Component {
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false
-        }        
+            isPageNumberEnabled : false,
+            isConfigLoaded : true
+        }  
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
-        if(nextProps.isConfigLoaded){
+        if(nextProps.isConfigLoaded && prevState.isConfigLoaded){
             nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+            return {
+                isConfigLoaded : false
+            };
         }
         if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
@@ -53,7 +57,6 @@ export class CanvasWrapper extends Component {
 
 
     componentDidMount() {  
-        console.log("componentDidMount >> ")
         // To run Canvas Stabilization app as stand alone app //
         // if (config.slateManifestURN) {
         //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
