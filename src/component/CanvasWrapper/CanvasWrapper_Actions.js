@@ -151,7 +151,6 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 export const fetchSlateData = (manifestURN,entityURN, page, versioning) => (dispatch, getState) => {
-	console.log("versioning >> ", versioning);
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
