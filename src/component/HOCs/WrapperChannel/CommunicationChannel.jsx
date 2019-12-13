@@ -141,7 +141,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                	this.getProjectConfig(message.configObj, config);
+                	// this.getProjectConfig(message.configObj, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -222,27 +222,27 @@ function WithWrapperCommunication(WrappedComponent) {
             }
         }
 
-        modifyObjKeys = (obj, newObj) => {
-            Object.keys(obj).forEach(function(key) {
-              delete obj[key];
-            });
+        // modifyObjKeys = (obj, newObj) => {
+        //     Object.keys(obj).forEach(function(key) {
+        //       delete obj[key];
+        //     });
           
-            Object.keys(newObj).forEach(function(key) {
-              obj[key] = newObj[key];
-            });
-            Object.keys(cypressConfig).forEach(function(key) {
-                obj[key] = cypressConfig[key];
-            });
-            console.log("obj >> ", obj);
-            if(process.env.NODE_ENV === 'development'){
-                obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
-                obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
-            }              
-        }
+        //     Object.keys(newObj).forEach(function(key) {
+        //       obj[key] = newObj[key];
+        //     });
+        //     Object.keys(cypressConfig).forEach(function(key) {
+        //         obj[key] = cypressConfig[key];
+        //     });
+        //     console.log("obj >> ", obj);
+        //     if(process.env.NODE_ENV === 'development'){
+        //         obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
+        //         obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
+        //     }              
+        // }
 
-        getProjectConfig = (configObj, config) => {
-            this.modifyObjKeys(config, configObj);
-        }
+        // getProjectConfig = (configObj, config) => {
+        //     this.modifyObjKeys(config, configObj);
+        // }
 
         /**
          * Releases slate lock and logs user out.
@@ -401,7 +401,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn, config.page);
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
