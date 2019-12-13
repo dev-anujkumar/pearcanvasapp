@@ -27,7 +27,6 @@ class ElmTable extends Component {
             sortFlag: true
         };
         this.preparedData = [];
-        this.renderTableData(this.props);
         this.timer = null;
         this.setSort();
 
