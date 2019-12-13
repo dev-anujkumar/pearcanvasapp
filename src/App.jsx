@@ -13,7 +13,7 @@ import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import CanvasWrapper from './component/CanvasWrapper';
 
-// IMPORT - Assets //
+// IMPORT - Assets // 
 import './styles/style.css';
 
 console.log("!!!!! ---- canvas-0.2.8  ---- !!!!!!")
