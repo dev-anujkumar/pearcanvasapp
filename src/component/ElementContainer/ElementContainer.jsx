@@ -776,7 +776,7 @@ class ElementContainer extends Component {
                     labelText = 'MA'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <ElementShowHide createShowHideElement = {this.props.createShowHideElement} activeElement  = {this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementShowHide showHideId = {this.props.showHideId} createShowHideElement = {this.props.createShowHideElement} activeElement  = {this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'SH'
                     break;
             }
@@ -976,8 +976,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
-        createShowHideElement: (element, type, index) => {
-            dispatch(createShowHideElement(element, type, index))
+        createShowHideElement: (element, type, index,parentContentUrn) => {
+            dispatch(createShowHideElement(element, type, index,parentContentUrn))
         },
         
     }
@@ -991,7 +991,8 @@ const mapStateToProps = (state) => {
         permissions: state.appStore.permissions,
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        allComments: state.commentsPanelReducer.allComments
+        allComments: state.commentsPanelReducer.allComments,
+        showHideId:state.appStore.showHideId
     }
 }
 

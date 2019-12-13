@@ -16,8 +16,16 @@ class ElementShowHide extends React.Component {
         };
 
     }
-    createShowHideElement =(type,index) =>{
-        this.props.createShowHideElement(this.props.element.id,type,index);
+
+    createShowHideElement =(type,index,elementShowHideId) =>{
+        this.props.createShowHideElement(this.props.element.id,type,index, this.props.element.contentUrn);
+        let newIndex = index.split("-")
+        newIndex[2] =   parseInt(newIndex[2])+1
+        let newshowIndex = newIndex.join("-")
+        if( document.getElementById(`cypress-${newshowIndex}`)){
+            document.getElementById(`cypress-${newshowIndex}`).focus();
+           }
+
     }
 
     activeShowHide = (e) =>{
@@ -25,7 +33,10 @@ class ElementShowHide extends React.Component {
        if(activeElement){
         document.querySelector('.show-hide-active').classList.remove("show-hide-active")
        }
+       if(e.target){
         e.target.closest(".show-hide").classList.add("show-hide-active")
+       }
+       
     }
     render() {
         const { model, index, element, slateLockInfo } = this.props;
@@ -45,7 +56,7 @@ class ElementShowHide extends React.Component {
                              element={this.props.element}
                              index={`${index}-1-${innerIndex}`}
                              placeholder="Enter Show text"
-                             id={this.props.id} tagName={'p'}
+                             id={showItem.id} tagName={'p'}
                              model={showItem.html.text}
                              handleEditorFocus={this.props.handleFocus}
                              handleBlur={this.props.handleBlur}
@@ -65,13 +76,16 @@ class ElementShowHide extends React.Component {
                             <h4 className="heading4WidgetShowHideTitle " resource="">Button Expand text Customize:</h4>
                         </header>
                         <div class="container revel">
-                            <TinyMceEditor permissions={this.props.permissions}
+
+                          {element && element.interactivedata.postertextobject.map((posterItem,innerIndex)=>{
+                            return ( 
+                                <TinyMceEditor permissions={this.props.permissions}
                                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                                 element={this.props.element}
-                                index={`${index}-2`}
+                                index={`${index}-2-${innerIndex}`}
                                 placeholder="Enter revel text"
-                                id={this.props.id} tagName={'p'}
-                                model={element.interactivedata && element.interactivedata.postertextobject.html.text}
+                                id={ posterItem.id} tagName={'p'}
+                                model={posterItem.html.text}
                                 handleEditorFocus={this.props.handleFocus}
                                 handleBlur={this.props.handleBlur}
                                 slateLockInfo={slateLockInfo}
@@ -82,6 +96,8 @@ class ElementShowHide extends React.Component {
                                 showHideType = "revel"
                                 createShowHideElement = {this.createShowHideElement}
                                 />
+                             )
+                            })}
                         </div>
                     </div>
                     <div class="divWidgetShowHideAnswerText show-hide" data-type="action">
@@ -96,7 +112,7 @@ class ElementShowHide extends React.Component {
                              element={this.props.element}
                              index={`${index}-3-${innerIndex}`}
                              placeholder="Enter Hide text"
-                             id={this.props.id} tagName={'p'}
+                             id={hideItem.id} tagName={'p'}
                              model={hideItem.html.text}
                              handleEditorFocus={this.props.handleFocus}
                              handleBlur={this.props.handleBlur}

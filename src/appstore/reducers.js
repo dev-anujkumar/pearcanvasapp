@@ -44,7 +44,8 @@ const INITIAL_STATE = {
     permissions: [],
     accesDeniedPopup: false,
     roleId: '',
-    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+    showHideId:""
 };
 
 const INITIAL_ACTION = {
@@ -144,7 +145,8 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case CREATE_SHOW_HIDE_ELEMENT:
             return {
                 ...state,
-                slateLevelData: action.payload.slateLevelData
+                slateLevelData: action.payload.slateLevelData,
+                showHideId: action.payload.showHideId
             };
         default:
             return state;

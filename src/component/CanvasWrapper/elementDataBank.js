@@ -343,8 +343,8 @@ const elementDataBank = {
     },
 
     "showhide" : {
-        "elementType" : "element-aside",
-        "primaryOption" : "primary-aside-showhide",
+        "elementType" : "element-interactive",
+        "primaryOption" : "primary-showhide",
         "secondaryOption" : "secondary-aside-showhide"
     }
 }
