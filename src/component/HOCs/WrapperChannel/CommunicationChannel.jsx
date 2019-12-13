@@ -271,7 +271,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     "elementdata": {
                         "loref": loUrn
                     },
-                    "metaDataAnchorID": LOElements
+                    "metaDataAnchorID": LOElements,
+                    "elementVersionType": "element-learningobjectivemapping"
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
