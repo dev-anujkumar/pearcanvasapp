@@ -60,9 +60,9 @@ export const positionListDrop = (event) => {
  */
 export const bindKeyDownEvent = (editor, e, element) => {
     const anchorNode = editor.selection.getSel().anchorNode;
-    let isOnlyMathmlFlag = false;
+    // let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
-    const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
+    const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
     let isOnlyListElement = element.type === "element-list"
     let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element) 
@@ -93,12 +93,12 @@ export const bindKeyDownEvent = (editor, e, element) => {
     if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR") {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             // prohibitEventBubling(e);
-            isOnlyMathmlFlag = false;
+            // isOnlyMathmlFlag = false;
 
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
                 (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
-                isOnlyMathmlFlag = true;
+                // isOnlyMathmlFlag = true;
             }
 
             // creating new paragraph //
@@ -120,7 +120,7 @@ export const bindKeyDownEvent = (editor, e, element) => {
                     if (anchorNode.children[1] &&
                         (anchorNode.children[1].tagName === "OL" ||
                             anchorNode.children[1].tagName === "UL")) {
-                        isOnlyMathmlFlag = false;
+                        // isOnlyMathmlFlag = false;
                         prohibitEventBubling(e);
                         return false;
                     }
@@ -161,9 +161,9 @@ export const bindKeyDownEvent = (editor, e, element) => {
         }
     }
 
-    const atStart = false; // editor.selection.info(anchorNode.parentNode).atStart, // could not get this in tinymce
-    const origFormat = anchorNode.parentNode.tagName.toLowerCase();
-    const origClass = anchorNode.parentNode.classList[0];
+    // const atStart = false; // editor.selection.info(anchorNode.parentNode).atStart, // could not get this in tinymce
+    // const origFormat = anchorNode.parentNode.tagName.toLowerCase();
+    // const origClass = anchorNode.parentNode.classList[0];
     const sel = editor.selection.getSel();
     let atEnd = false;
 
@@ -238,7 +238,7 @@ export const bindKeyDownEvent = (editor, e, element) => {
              */
             if (closestTreeLevel === '1') {
                 prohibitEventBubling(e);
-                updatelistFlag = false;
+                // updatelistFlag = false;
                 return false;
             }
 

@@ -17,31 +17,32 @@ export const currentSlateLOMath = (currentSlateLODataMath) =>  (dispatch, getSta
 }
 
 export const isLOExist = (message) =>  (dispatch, getState) => {
-    if(message && (message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn){
+    if(message && (((message.loObj && (message.loObj.id|| message.loObj.loUrn))|| message.loUrn) ||
+        (message.toastData === "Learning Objectives has been aligned "))) {
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload: true
         })
     }
-    else if (message.toastData === "Learning Objectives has been unlinked ") {
-        return dispatch({
-            type: 'SLATE_TAG_ENABLE',
-            payload:  false
-        })
-    }
-    else if (message.toastData === "Learning Objectives has been aligned ") {
-        return dispatch({
-            type: 'SLATE_TAG_ENABLE',
-            payload:  true
-        })
-    }
+    // else if (message.toastData === "Learning Objectives has been unlinked ") {
+    //     return dispatch({
+    //         type: 'SLATE_TAG_ENABLE',
+    //         payload:  false
+    //     })
+    // }
+    // else if (message.toastData === "Learning Objectives has been aligned ") {
+    //     return dispatch({
+    //         type: 'SLATE_TAG_ENABLE',
+    //         payload:  true
+    //     })
+    // }
     else if (message.assessmentResponseMsg){
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload:  message.assessmentResponseMsg
         })
     }
-    else{
+    else {
         return dispatch({
             type: 'SLATE_TAG_ENABLE',
             payload:  false

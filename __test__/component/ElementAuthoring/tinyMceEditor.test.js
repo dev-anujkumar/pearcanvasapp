@@ -1377,29 +1377,6 @@ describe('Testing -Editor Key events', () => {
             type: "Glossary"
         }
     }
-    let editorInstance = {
-        current: {
-            outerHTML: '<div id="cypress-1" class="cypress-editable place-holder mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p></div>',
-            tabIndex: 0,
-            tagName: "DIV",
-            textContent: "hghfg bgjhgh hgjgjhello all",
-            title: "",
-            translate: true,
-            hidden: false,
-            id: "cypress-1",
-            innerHTML: '<p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p>',
-            innerText: "↵",
-            inputMode: "",
-            isConnected: true,
-            isContentEditable: true,
-            className: "cypress-editable",
-            clientHeight: 64,
-            clientLeft: 0,
-            clientTop: 0,
-            clientWidth: 670,
-            contentEditable: "true",
-        }
-    }
     const component = mount(<TinyMceEditor {...props} />)
     let instance = component.instance();
 
@@ -1511,15 +1488,11 @@ describe('Testing -Editor Key events', () => {
             children: ['<p class="paragraphNumeroUno">hello</p>'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
         }
-let keyDownEvent={
-    keyCode :9,
-    which:88,
-}
         const spyisTabPressed = jest.spyOn(instance,'isTabPressed')
-        const spyeditorKeyup = jest.spyOn(instance, 'editorKeydown')
+        const spyFunction = jest.spyOn(instance, 'editorKeydown')
         instance.isTabPressed(event);
         instance.editorKeydown(editor);
-        expect(spyeditorKeyup).toHaveBeenCalled()
+        expect(spyFunction).toHaveBeenCalled()
         expect(spyisTabPressed).toHaveBeenCalled()
     });
     it('Test isTabPressed - keyCode :88', () => {
@@ -1597,7 +1570,6 @@ let keyDownEvent={
         expect(spyaddInlineCode).toHaveBeenCalled()
     });
     it('Test handleFocussingInlineCode ', () => {
-        // window.getSelection().anchorNode.parentNode.innerHTML="Hello"
         let api={
             isActive: jest.fn(),
             isDisabled: jest.fn(),
@@ -1741,70 +1713,27 @@ let keyDownEvent={
             children: ['p.paragraphNumeroUno'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
         }
-        const spyhandleFocussingInlineCode = jest.spyOn(instance, 'addAssetPopover')
+        const spyaddAssetPopover = jest.spyOn(instance, 'addAssetPopover')
         instance.addAssetPopover(editor, selectedText);
-        expect(spyhandleFocussingInlineCode).toHaveBeenCalled()
+        expect(spyaddAssetPopover).toHaveBeenCalled()
     })
     it('Test onBeforeIndent method', () => {
         let event={
             preventDefault: jest.fn()
         }
-        const setContent = jest.spyOn(instance, 'onBeforeIndent');
+        const spyFunction = jest.spyOn(instance, 'onBeforeIndent');
         instance.onBeforeIndent(event, 'paragraphNumeroUnoIndentLevel3');
-        expect(setContent).toHaveBeenCalled()
+        expect(spyFunction).toHaveBeenCalled()
     });
     it('Test onBeforeOutdent method', () => {
         let event={
             preventDefault: jest.fn()
         }
-        const setContent = jest.spyOn(instance, 'onBeforeOutdent');
+        const spyFunction = jest.spyOn(instance, 'onBeforeOutdent');
         instance.onBeforeOutdent(event, 'paragraphNumeroUno');
-        expect(setContent).toHaveBeenCalled()
+        expect(spyFunction).toHaveBeenCalled()
     });
     it('Test pastePreProcess - else case', () => {
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let editor = {
-            on: (temp, cb) => { cb(event) },
-            targetElm: {
-                findChildren: () => {
-                    return {
-                        length: 0
-                    };
-                },
-                dispatchEvent: () => { }
-            },
-            selection: {
-                bookmarkManager: {
-                    moveToBookmark: jest.fn(),
-                    getBookmark: jest.fn()
-                },
-                getStart: () => {
-                    
-                }
-            },
-            dom: {
-                getParent: () => {
-                    return {
-                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
-                        children: [
-                            {
-                                tagName: 'BR'
-                            }
-                        ],
-                        innerText: "hello",
-                        querySelectorAll: jest.fn(),
-                        classList: {
-                            remove:jest.fn()
-                        }
-                    }
-                }
-            },
-            children: ['<p class="paragraphNumeroUno">hello</p>'],
-            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
-        }
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -1830,49 +1759,6 @@ let keyDownEvent={
         expect(spypastePreProcess).toHaveBeenCalled()
     });
     it('Test pastePreProcess - if case', () => {
-        let event = {
-            preventDefault: () => { },
-            stopPropagation: () => { }
-        }
-        let editor = {
-            on: (temp, cb) => { cb(event) },
-            targetElm: {
-                findChildren: () => {
-                    return {
-                        length: 0
-                    };
-                },
-                dispatchEvent: () => { }
-            },
-            selection: {
-                bookmarkManager: {
-                    moveToBookmark: jest.fn(),
-                    getBookmark: jest.fn()
-                },
-                getStart: () => {
-                    
-                }
-            },
-            dom: {
-                getParent: () => {
-                    return {
-                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
-                        children: [
-                            {
-                                tagName: 'BR'
-                            }
-                        ],
-                        innerText: "hello",
-                        querySelectorAll: jest.fn(),
-                        classList: {
-                            remove:jest.fn()
-                        }
-                    }
-                }
-            },
-            children: ['<p class="paragraphNumeroUno">hello</p>'],
-            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
-        }
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -2049,8 +1935,8 @@ let keyDownEvent={
             children: ['p.paragraphNumeroUno'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
         }
-        const spyaddFootnote = jest.spyOn(instance, 'addGlossary')
+        const spyaddGlossary = jest.spyOn(instance, 'addGlossary')
         instance.addGlossary(editor);
-        expect(spyaddFootnote).toHaveBeenCalled()
+        expect(spyaddGlossary).toHaveBeenCalled()
     });
 }) 

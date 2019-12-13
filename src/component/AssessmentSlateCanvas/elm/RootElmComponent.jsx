@@ -55,7 +55,7 @@ class RootElmComponent extends Component {
       <div className="vex-overlay elm-wrapper">
         <div className="root-container">
           <ElmHeader elmHeaderProps={this.elmHeaderProps} />
-          {this.props.errFlag == null ? <div className="elm-loader"></div> : <ElmTable activeAssessmentType={this.props.activeAssessmentType} errFlag={this.props.errFlag} errorStatus={this.props.errorStatus} apiData={this.props.apiData} {...this.props} navigateBack={this.navigateBack} hidePufPopup={this.hidePufPopup} usageTypeMetadata={this.props.usageTypeMetadata} />}
+          {this.props.errFlag == null ? <div className="elm-loader"></div> : <ElmTable activeAssessmentType={this.props.activeAssessmentType} errFlag={this.props.errFlag} errorStatus={this.props.errorStatus} {...this.props} navigateBack={this.navigateBack} hidePufPopup={this.hidePufPopup} usageTypeMetadata={this.props.usageTypeMetadata} />}
         </div>
       </div>
     );

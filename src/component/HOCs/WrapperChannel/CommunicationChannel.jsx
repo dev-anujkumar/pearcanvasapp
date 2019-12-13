@@ -12,7 +12,7 @@ import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
+import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
@@ -96,8 +96,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        // config.disablePrev = message.enableNext;
-                        config.disableNext = false;//message.enableNext;
+                    // config.disablePrev = message.enableNext;
+                    config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
                     // config.disablePrev = message.disablePrev;
@@ -108,13 +108,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disableNext = true;//message.disableNext;
                     break;
                 case 'swappedIS':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
                 case 'ISDeleted':
+                case 'TocLoader':
                     {
                         /**
                          * TO BE IMPLEMENTED
@@ -142,18 +137,11 @@ function WithWrapperCommunication(WrappedComponent) {
 
                     }
                     break;
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
                 case 'updateSlateTitleByID':
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                	this.getProjectConfig(message.configObj, config);
+                	// this.getProjectConfig(message.configObj, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -197,6 +185,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
+                    if(this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en){
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        this.props.currentSlateLOData.label.en= this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
+                        this.props.currentSlateLO(this.props.currentSlateLOData);
+                    }
+                    
                     this.setState({
                         showBlocker: false
                     });
@@ -228,27 +222,27 @@ function WithWrapperCommunication(WrappedComponent) {
             }
         }
 
-        modifyObjKeys = (obj, newObj) => {
-            Object.keys(obj).forEach(function(key) {
-              delete obj[key];
-            });
+        // modifyObjKeys = (obj, newObj) => {
+        //     Object.keys(obj).forEach(function(key) {
+        //       delete obj[key];
+        //     });
           
-            Object.keys(newObj).forEach(function(key) {
-              obj[key] = newObj[key];
-            });
-            Object.keys(cypressConfig).forEach(function(key) {
-                obj[key] = cypressConfig[key];
-            });
-            console.log("obj >> ", obj);
-            if(process.env.NODE_ENV === 'development'){
-                obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
-                obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
-            }              
-        }
+        //     Object.keys(newObj).forEach(function(key) {
+        //       obj[key] = newObj[key];
+        //     });
+        //     Object.keys(cypressConfig).forEach(function(key) {
+        //         obj[key] = cypressConfig[key];
+        //     });
+        //     console.log("obj >> ", obj);
+        //     if(process.env.NODE_ENV === 'development'){
+        //         obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
+        //         obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
+        //     }              
+        // }
 
-        getProjectConfig = (configObj, config) => {
-            this.modifyObjKeys(config, configObj);
-        }
+        // getProjectConfig = (configObj, config) => {
+        //     this.modifyObjKeys(config, configObj);
+        // }
 
         /**
          * Releases slate lock and logs user out.
@@ -407,7 +401,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn, config.page);
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
@@ -418,10 +412,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
-                }
-                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
-                    let newMessage = {assessmentResponseMsg:false};
-                    this.props.isLOExist(newMessage);
                 }
             }
             /**

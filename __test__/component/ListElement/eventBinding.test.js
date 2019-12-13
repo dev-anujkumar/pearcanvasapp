@@ -172,7 +172,7 @@ describe('Testing Event Binding Methods', () => {
             stopPropagation: () => { },
             preventDefault: () => { }
         }
-        document.getElementById = () => {
+        document.getElementById = () => { 
             return {
                 closest: () => {
                     return {
@@ -192,7 +192,10 @@ describe('Testing Event Binding Methods', () => {
                 id: ''
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for innerhtml not equal br', () => {
@@ -271,7 +274,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for tagname br', () => {
@@ -365,7 +371,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for tagname UL', () => {
@@ -479,7 +488,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for tagname li', () => {
@@ -596,7 +608,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for tagname li', () => {
@@ -715,7 +730,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for (li).length == 0', () => {
@@ -834,7 +852,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for shift key false ', () => {
@@ -985,7 +1006,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for shift key true ', () => {
@@ -1138,7 +1162,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for which is 8 ', () => {
@@ -1312,7 +1339,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
     it('Test bindKeyDownEvent for key code is 90 ', () => {
@@ -1488,7 +1518,10 @@ describe('Testing Event Binding Methods', () => {
                 }
             }
         }
-        let result = bindKeyDownEvent(editor, event1);
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event1, element);
         expect(result).toEqual(undefined);
     });
     it('Test updateNestedList', () => {

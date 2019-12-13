@@ -760,6 +760,7 @@ class SlateWrapper extends Component {
                         saveContent={this.deleteAccepted}
                         saveButtonText='Yes'
                         dialogText=' Are you sure you want to delete this slate/container with pending changes?'
+                        note='Note:There will be no undo available after deletion'
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />

@@ -466,23 +466,24 @@ export class TinyMceEditor extends Component {
             bindKeyDownEvent(editor, e, this.props.element);
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
-                if (!activeElement.children.length) {
+                if (!activeElement.children.length ||
+                    (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    if(div.innerText == "" && div.children && div.children[0]){
+                    if(div.innerText == "" && div.children && div.children[0]) {
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
-                    let div = document.createElement('div');
-                    div.innerHTML = this.lastContent;
-                    if(div.innerText == "" && div.children && div.children[0]){
-                        div.children[0].innerHTML = '<br/>';
-                        activeElement.innerHTML = div.children[0].outerHTML;
-                    }
-                }
+                // else if (activeElement.children.length <= 1 && activeElement.children[0].tagName === 'BR' && activeElement.nodeName !== "CODE") {
+                //     let div = document.createElement('div');
+                //     div.innerHTML = this.lastContent;
+                //     if(div.children && div.children[0]){
+                //         div.children[0].innerHTML = '<br/>';
+                //         activeElement.innerHTML = div.children[0].outerHTML;
+                //     }
+                // }
                 this.lastContent = activeElement.innerHTML;
             }
 
@@ -1001,11 +1002,16 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
-                this.placeHolderClass = 'place-holder';
+            if (testElem.innerText) {
+                if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+                    this.placeHolderClass = 'place-holder';
+                }
+                else {
+                    this.placeHolderClass = '';
+                }
             }
             else {
-                this.placeHolderClass = '';
+                this.placeHolderClass = 'place-holder';
             }
         }
         else if (this.props.model && this.props.model.figuredata && this.props.model.figuredata.text) {
@@ -1265,6 +1271,11 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }  
+                if(document.querySelector('button[title="Asset Popover"]')){
+                    document.querySelector('button[title="Asset Popover"]').setAttribute("aria-disabled",false)
+                    document.querySelector('button[title="Asset Popover"]').removeAttribute('aria-pressed')
+                    document.querySelector('button[title="Asset Popover"]').classList.remove('tox-tbtn--disabled')
+                }
             })
         });
         if (isSameTarget) {
@@ -1332,7 +1343,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
-                    classes = classes + ' blockquote-editor';
+                    classes = classes + ' blockquote-editor with-attr';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
@@ -1342,13 +1353,14 @@ export class TinyMceEditor extends Component {
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
-                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    classes = classes + ' blockquote-editor';
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);                    
+                    classes = classes + ' blockquote-editor without-attr';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
-                else {
+                else {                    
+                    classes = classes + ' pullquote-editor';
                     return (
                         <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text : '<p class="paragraphNumeroUno"><br/></p>' }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )

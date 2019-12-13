@@ -89,10 +89,6 @@ div.container {
   color: #ffffff;
 }
 
-.item header a {
-  color: inherit;
-}
-
 .item header a:hover {
   color: #EF6480 !important;
 }
@@ -132,6 +128,7 @@ div.container {
   width: 100%;
   height: 100%;
   display: block;
+  color: inherit;
 }
 
 .item header a:before {
@@ -159,6 +156,7 @@ div.container {
 
 .item header h3 {
   margin: 0;
+  pointer-events: none;
   -moz-pointer-events: none;
   -webkit-pointer-events: none;
   -ms-pointer-events: none;
@@ -1013,11 +1011,6 @@ aside.asideSidebar03 {
          margin-right: -2em;
         }
 
-      div.asideSidebar04BorderBottom {
-        margin-left: -2em;
-        margin-right: -2em;
-      }
-
       
       H5.heading5NummerEinsSidebar04 {
          padding-top: 0.40em;
@@ -1104,6 +1097,8 @@ div.asideActivityBorderBottom  {
 }
 
 div.asideSidebar04BorderBottom {
+  margin-left: -2em;
+  margin-right: -2em;
   border-bottom: 3px solid #eaeaea;
 }
 
@@ -1367,16 +1362,6 @@ p.paragraphNummerEins {
   font-size: 1.03em;
   font-weight: 400;
   line-height: 1.75em;
-}
-
-a.paragraphNummerEins {
-  color: #007FA3;
-  font-family: sans-serif;
-  text-decoration: none;
-}
-
-a.paragraphNummerEins:hover {
-  text-decoration: underline;
 }
 
 P.paragraphNummerEinsIndentLevel1 {
@@ -3662,39 +3647,20 @@ p.paragraphMathImageCredit {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Print Page and Digital Page Numbers */
 
-div.PrintPageNumber {
-}
+/* div.PrintPageNumber {
+} */
 
-div.DigitalPageNumber {
-}
+/* div.DigitalPageNumber {
+} */
 
 
 
 /*  Print Page Number */
   
-div.divPrintPageNumber {
-}
+/* div.divPrintPageNumber {
+} */
 
 
 
@@ -3949,35 +3915,29 @@ span.spanNumeroUnoFootnote {
   vertical-align: baseline;
   position: relative;
   top: -1em;
-} 
-      
-      
-      
-      
-        /* MATH TEXT */
-    /* SANS-SERIF */
+}
 
-p.paragraphMath {
+/* MATH TEXT */
+/* SANS-SERIF */
+/* p.paragraphMath {
   color: #000;
   margin: 0 0 1em 0;
   font-family: sans-serif;
   font-size: 1em;
   font-weight: 400;
   line-height: 1.75em;
-}
+} */
   
-    /* PARAGRAPH */
-    /* MONO */
-  
-  
-p.paragraphMono {
+/* PARAGRAPH */
+/* MONO */
+/* p.paragraphMono {
   color: #000;
   margin: 0 0 1em 0;
   font-family: monospace;
   font-size: 1.5em;
   font-weight: 400;
   line-height: 1.75em;
-}
+} */
      
 
 
@@ -3996,7 +3956,7 @@ p.paragraphMono {
 
 /* TABLE CONTAINER */
 
-     /*  container to wrap figure container and credit text */
+/*  container to wrap figure container and credit text */
 div.divTable {
   background-color: #FFFFFF;
   padding: 0;
@@ -4006,10 +3966,8 @@ div.divTable {
   border-color: #FCFCFC;
   border-width: 1px;
 }
-      
-      
 
-      /* figure container for title, image and fig caption */
+/* figure container for title, image and fig caption */
 figure.figureTable {
   background-color: #FFFFFF;
   padding: 0.75em;
@@ -4017,7 +3975,7 @@ figure.figureTable {
   margin-bottom: 0;
 }
 
-       /* Table Number Label */
+/* Table Number Label */
 h4.heading4TableNumberLabel {
   color: #000;
   font-family: Helvetica, sans-serif;
@@ -4029,7 +3987,7 @@ h4.heading4TableNumberLabel {
 }       
 
 
-      /* Table title text */
+/* Table title text */
 h4.heading4TableTitle {
   color: #505759;
   font-family: sans-serif;
@@ -4040,53 +3998,47 @@ h4.heading4TableTitle {
   letter-spacing: 0.03em;
 }
 
-
-
-      /* Table image fill to 100% */
-img.imageTable100 {
+/* Table image fill to 100% */
+/* img.imageTable100 {
   display: block;
   max-width: 100%;
   width: auto;
   margin-top: 0.45em;
   margin-left: auto;
   margin-right: auto;
-}
-       
-       
-       /* Table image fill to 75% and center */
-img.imageTable75 {
+} */
+      
+/* Table image fill to 75% and center */
+/* img.imageTable75 {
   display: block;
   max-width: 75%;
   width: auto;
   margin-top: 0.45em;
   margin-left: auto;
   margin-right: auto;
-}
+} */
        
-       /* Table image fill to 50% and center*/
-img.imageTable50 {
+/* Table image fill to 50% and center*/
+/* img.imageTable50 {
   display: block;
   max-width: 50%;
   width: auto;
   margin-top: 0.45em;
   margin-left: auto;
   margin-right: auto;
-}
+} */
        
-        /* Table image fill to 75% and center */
-img.imageTable25 {
+/* Table image fill to 75% and center */
+/* img.imageTable25 {
   display: block;
   max-width: 25%;
   width: auto;
   margin-top: 0.45em;
   margin-left: auto;
   margin-right: auto;
-}
+} */
 
-
-
-
-      /* table caption text */
+/* table caption text */
 figcaption.figcaptionTable {
   color: #505759;
   font-family: Helvetica, sans-serif;
@@ -4096,8 +4048,6 @@ figcaption.figcaptionTable {
   line-height: 1.5em;
   letter-spacing: 0.03em;
 }
-
-
 
 /*  Table copyright, credit or source attribution text */
   
@@ -4155,9 +4105,6 @@ th.tableTable01Last {
   color: #fff;
   padding: 1em;
   vertical-align: top;
-}
-
-table.tableTable01 tbody tr {
 }
 
 table.tableTable01 tbody tr:nth-child(even) {
