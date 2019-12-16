@@ -2,40 +2,60 @@ import React from 'react';
 import SlateHeader from '../../../src/component/CanvasSlateHeader';
 
 
-xdescribe('Testing SlateHeader component with props', () => {
-    
-    it('render SlateHeader component ', () => {
-        const component = mount(<SlateHeader />);
-        expect(component).toMatchSnapshot();
+describe('Test-handleNavClick', () => {
+    let props={
+        slateType:'container-introduction' , 
+        slateTitle: {
+            text:'C1'}, 
+        slateLockInfo:{
+            isLocked: true,
+            timestamp: "",
+            userId: "c5Test01"
+        },
+        disabled : 'next'
+    }
+        const CanvasSlateHeader = mount(<SlateHeader {...props} />)
+        let CanvasSlateHeaderInstance = CanvasSlateHeader.find('SlateHeader').instance();
+        const spygetLabel = jest.spyOn(CanvasSlateHeaderInstance, 'getLabel')
+        const spysetDynamicStyle = jest.spyOn(CanvasSlateHeaderInstance, 'setDynamicStyle')
+        it('render SlateHeader component ', () => {
+            expect(CanvasSlateHeader).toHaveLength(1);
+            let CanvasSlateHeaderInstance = CanvasSlateHeader.instance(); 
+            expect(CanvasSlateHeaderInstance).toBeDefined();
+        })
+        it('onClick Event-handleNavClick-next', () => {
+            const spyhandleNavClick = jest.spyOn(CanvasSlateHeaderInstance, 'handleNavClick')
+            CanvasSlateHeaderInstance.handleNavClick("next");
+            expect(CanvasSlateHeaderInstance.handleNavClick).toHaveBeenCalled()
+            spyhandleNavClick.mockClear()
+        })
+        it('Test-getLabel() -default case ', () => {        
+            CanvasSlateHeaderInstance.getLabel("into");
+            expect(CanvasSlateHeaderInstance.getLabel).toHaveBeenCalled()
+            spygetLabel.mockClear()
+        })
+        it('Test-getLabel() -default case ', () => {
+            CanvasSlateHeaderInstance.getLabel("assessment");
+            expect(CanvasSlateHeaderInstance.getLabel).toHaveBeenCalled()
+            spygetLabel.mockClear()
+        })
+        it('Test-setDynamicStyle', () => {
+            CanvasSlateHeaderInstance.setDynamicStyle("assessment",'input-text');
+            expect(CanvasSlateHeaderInstance.setDynamicStyle).toHaveBeenCalled()
+            spysetDynamicStyle.mockClear()
+        })
+       
     })
-
-    it('render container-introduction Slate ', () => {
-        const component = mount(<SlateHeader slateType='container-introduction' />);
-        expect(component).toMatchSnapshot();
-    })
-
-    it('render assessment Slate ', () => {
-        const component = mount(<SlateHeader slateType='assessment' />);
-        expect(component).toMatchSnapshot();
-    })
-
-    it('render section Slate ', () => {
-        const component = mount(<SlateHeader slateType='section' />);
-        expect(component).toMatchSnapshot();
-    })
-    it('render default Slate ', () => {
-        const component = mount(<SlateHeader slateType='' />);
-        expect(component).toMatchSnapshot();
-    })
-})
 describe('onClick Event', () => {
-
     const onLoadMock = jest.fn();
     const CanvasSlateHeader = mount(<SlateHeader onNavigate={onLoadMock} />)
     let CanvasSlateHeaderInstance = CanvasSlateHeader.find('SlateHeader').instance();
 
     it('onClick Event', () => {
+        const spyhandleNavClick = jest.spyOn(CanvasSlateHeaderInstance, 'handleNavClick')
         CanvasSlateHeaderInstance.handleNavClick("back")
+        expect(CanvasSlateHeaderInstance.handleNavClick).toHaveBeenCalled()
+        spyhandleNavClick.mockClear()
     })
     it('navigate Event ', () => {
         const onLoadMock = jest.fn();

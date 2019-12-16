@@ -105,7 +105,7 @@ class LearningTool extends React.Component {
 
         let learningToolSearchValue = this.state.searchValue;
         let learningSystem = this.state.learningSystem[tempLearningToolTypeValue]
-        let search //= $('#learningToolSearchBar').hasClass('error')
+        // let search = $('#learningToolSearchBar').hasClass('error')
        // if(!search){
             if (learningToolSearchValue) {
                 this.props.learningToolSearch(learningToolSearchValue, tempLearningToolTypeValue,learningSystem);

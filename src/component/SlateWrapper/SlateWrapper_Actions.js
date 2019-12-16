@@ -19,7 +19,7 @@ import {
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader, NextSlate } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 
 Array.prototype.move = function (from, to) {
@@ -129,7 +129,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
 }
 
 export const swapElement = (dataObj, cb) => (dispatch, getState) => {
-    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, swappedElementId, asideId } = dataObj;
+    const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem, asideId } = dataObj;
     const slateId = config.slateManifestURN;
 
     let _requestData = {
@@ -333,41 +333,46 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
                 }
             }
         ).then(res => {
-
-            /** This will uncomment when pagenumber key is fixed**/
-
-
-        /*   const parentData = getState().appStore.slateLevelData;
+            const parentData = getState().appStore.slateLevelData;
             const newslateData = JSON.parse(JSON.stringify(parentData));
             let _slateObject = Object.values(newslateData)[0];
             let { contents: _slateContent } = _slateObject;
             let { bodymatter: _slateBodyMatter } = _slateContent;
-            const element = _slateBodyMatter.map(element => {
+            let pageNumberRef = {
+                pageNumber: data.pageNumber
+            }
+            const elementObject = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
-                    element['pageNumber'] = pagenumber
-                } else if (asideData && asideData.type == 'element-aside') {
+                    element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
+                }
+                else if (asideData && asideData.type == 'element-aside') {
                     if (element.id == asideData.id) {
                         element.elementdata.bodymatter.map((nestedEle) => {
-                         
                             if (nestedEle.id == elementId) {
-                                nestedEle['pageNumber'] = pagenumber;
-                            } else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
-                              
+                                nestedEle['pageNumberRef'] = { ...pageNumberRef, urn: nestedEle.id }
+                            }
+                            else if (nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                                 nestedEle.contents.bodymatter.map((ele) => {
                                     if (ele.id == elementId) {
-                                        ele['pageNumber'] = pagenumber;
+                                        ele['pageNumberRef'] = { ...pageNumberRef, urn: ele.id }
                                     }
+                                    return ele
                                 })
                             }
+                            return nestedEle
                         })
                     }
                 }
-            }) */
+                return element
+            })
 
+            dispatch({
+                type: FETCH_SLATE_DATA,
+                payload:  newslateData
+            })
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
                 payload: {
-                 //   slateLevelData: {},
                     pageLoading: false
                 }
             })
@@ -423,10 +428,10 @@ export const setSlateType = (slateType) => (dispatch, getState) =>{
         payload: slateType
     }) 
 }
-export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
+export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) =>{
     return dispatch({
         type: SET_SLATE_ENTITY,
-        payload: setSlateEntity
+        payload: setSlateEntityParams
     }) 
 }
 
@@ -437,9 +442,9 @@ export const accessDenied = (value) => (dispatch, getState) => {
         payload: value
     })
 }
-export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
+export const setSlateParent = (setSlateParentParams) => (dispatch, getState) =>{
     return dispatch({
         type: SET_PARENT_NODE,
-        payload: setSlateParent
+        payload: setSlateParentParams
     }) 
 }

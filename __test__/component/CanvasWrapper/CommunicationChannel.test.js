@@ -209,10 +209,10 @@ describe('Testing communication channel', () => {
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    describe('Test for projectDetails-modifyObjKeys function', () => {
+    xdescribe('Test for projectDetails-modifyObjKeys function', () => {
         const spygetProjectConfig = jest.spyOn(channelInstance, 'getProjectConfig')
         const spymodifyObjKeys = jest.spyOn(channelInstance, 'modifyObjKeys')
-        test('Test for projectDetails case-qa', () => {
+        xtest('Test for projectDetails case-qa', () => {
             let event = {
                 data: {
                     type: "projectDetails",
@@ -236,7 +236,7 @@ describe('Testing communication channel', () => {
             spygetProjectConfig.mockClear()
             spymodifyObjKeys.mockClear()
         })
-        test('Test for projectDetails case-perf', () => {
+        xtest('Test for projectDetails case-perf', () => {
             let event = {
                 data: {
                     type: "projectDetails",
@@ -260,7 +260,7 @@ describe('Testing communication channel', () => {
             spygetProjectConfig.mockClear()
             spymodifyObjKeys.mockClear()
         })
-        test('Test for projectDetails case-staging', () => {
+        xtest('Test for projectDetails case-staging', () => {
             let event = {
                 data: {
                     type: "projectDetails",
@@ -284,7 +284,7 @@ describe('Testing communication channel', () => {
             spygetProjectConfig.mockClear()
             spymodifyObjKeys.mockClear()
         })
-        test('Test for projectDetails case-prod', () => {
+        xtest('Test for projectDetails case-prod', () => {
             let event = {
                 data: {
                     type: "projectDetails",
@@ -308,7 +308,7 @@ describe('Testing communication channel', () => {
             spygetProjectConfig.mockClear()
             spymodifyObjKeys.mockClear()
         })
-        test('Test for projectDetails case-local', () => {
+        xtest('Test for projectDetails case-local', () => {
             let event = {
                 data: {
                     type: "projectDetails",
@@ -480,7 +480,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
         spysetCurrentSlate.mockClear()
     })
-    test('Test for newSplitedSlate case', () => {
+    xtest('Test for newSplitedSlate case', () => {
         let event = {
             data: {
                 type: "newSplitedSlate",

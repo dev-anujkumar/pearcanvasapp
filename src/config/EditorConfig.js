@@ -15,8 +15,10 @@ export const EditorConfig = {
         'pullquote': { block: 'h3', classes: 'pullQuoteNumeroUno' },
         'marginalia-attribution': { block: 'blockquote', classes: 'blockquoteMarginaliaAttr', wrapper: true },
         'LO': { block: 'h2', classes: 'heading2learningObjectiveItem' },
+        'strikethrough' : {inline : 's', exact : true},
+        'underline' : {inline : 'u', exact : true},
         removeformat: [
-            { selector: 'abbr,dfn,a,strong,em,s,sub,sup,code,span', remove: 'all',split: true, expand: false }
+            { selector: 'abbr,dfn,a,strong,em,s,u,sub,sup,code,span', remove: 'all',split: true, expand: false }
           ]
     },
     toolbar: 'bold italic underline strikethrough removeformat indent outdent Footnote Glossary customListButton customUoListButton tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code superscript subscript charmap undo redo assetPopoverIcon slateTag ',
@@ -27,6 +29,8 @@ export const EditorConfig = {
 export const GlossaryFootnoteEditorConfig = {
     formats: {
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },
+        'strikethrough' : {inline : 's', exact : true},
+        'underline' : {inline : 'u', exact : true},
     },
     toolbar: 'bold italic underline strikethrough removeformat superscript subscript tinyMcewirisformulaEditor tinyMcewirisformulaEditorChemistry code'
 }

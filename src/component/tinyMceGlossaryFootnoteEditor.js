@@ -15,6 +15,7 @@ export class ReactEditor extends React.Component {
     this.mathMlMenuButton = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
+      formats: GlossaryFootnoteEditorConfig.formats,
       plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
       selector: '#glossary-0',
@@ -99,7 +100,7 @@ export class ReactEditor extends React.Component {
     pastePreProcess = (plugin, args) => {
       let testElement = document.createElement('div');
       testElement.innerHTML = args.content;
-      if(testElement.innerText.trim().length){
+      if(testElement.innerText && testElement.innerText.trim().length){
           args.content = testElement.innerText;
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
@@ -214,7 +215,7 @@ export class ReactEditor extends React.Component {
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-      if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+      if (testElem.innerText && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
         this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
@@ -260,6 +261,8 @@ export class ReactEditor extends React.Component {
   }
 
   handleClick = (e) => {
+    let clickedX = e.clientX;
+    let clickedY = e.clientY;
     let event = Object.assign({}, e);
     let currentTarget = event.currentTarget;
     if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
@@ -303,6 +306,7 @@ export class ReactEditor extends React.Component {
     this.editorConfig.selector = '#' + currentTarget.id;
     tinymce.init(this.editorConfig).then((d)=>{
      // this.setCursorAtEnd(tinymce.activeEditor);
+     tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
 

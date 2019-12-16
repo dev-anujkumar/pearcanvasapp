@@ -58,23 +58,27 @@ export const positionListDrop = (event) => {
 /**
  * bindKeyDownEvent | binds keydown event on editor instance and handles various scenarios
  */
-export const bindKeyDownEvent = (editor, e) => {
+export const bindKeyDownEvent = (editor, e, element) => {
     const anchorNode = editor.selection.getSel().anchorNode;
-    let isOnlyMathmlFlag = false;
+    // let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
-    const isMultilineSelection = !(_selRange.startContainer === _selRange.endContainer);
+    const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
-    let isOnlyListElement = (editor.targetElm.findChildren('ol').length > 0) || (editor.targetElm.findChildren('ul').length > 0)
-    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(e.target)
+    let isOnlyListElement = element.type === "element-list"
+    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element) 
 
     /**
-     * [BG-721] : as discussed with ankit agarwal we don't need to prevent backspace
-     * keep this commented code for reference
+     * [BG-818] and [BG-935] | at times @anchorNode points directly to 'div.cypress-editable',
+     * and this happens only when element has only one empty li,
+     * then element goes to create new paragraph element next to it
      */
-    // if (isOnlyListElement && e.which === 8 && isMultilineSelection) {
-    //     prohibitEventBubling(e);
-    //     return false;
-    // }
+    if (anchorNode.tagName === "DIV" && anchorNode.querySelectorAll('li').length === 1) {
+        if ((e.metaKey && e.which === 13) || (e.which === 13)) {
+            prohibitEventBubling(e);
+            createNewParagraphElement(e, editor);
+            return false;
+        }
+    }
 
     //------- later dependency ----------//
     if (anchorNode.innerHTML !== '<br>' &&
@@ -89,12 +93,12 @@ export const bindKeyDownEvent = (editor, e) => {
     if (anchorNode.tagName === "LI" || anchorNode.tagName === "BR") {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
             // prohibitEventBubling(e);
-            isOnlyMathmlFlag = false;
+            // isOnlyMathmlFlag = false;
 
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
                 (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
-                isOnlyMathmlFlag = true;
+                // isOnlyMathmlFlag = true;
             }
 
             // creating new paragraph //
@@ -116,7 +120,7 @@ export const bindKeyDownEvent = (editor, e) => {
                     if (anchorNode.children[1] &&
                         (anchorNode.children[1].tagName === "OL" ||
                             anchorNode.children[1].tagName === "UL")) {
-                        isOnlyMathmlFlag = false;
+                        // isOnlyMathmlFlag = false;
                         prohibitEventBubling(e);
                         return false;
                     }
@@ -157,9 +161,9 @@ export const bindKeyDownEvent = (editor, e) => {
         }
     }
 
-    const atStart = false; // editor.selection.info(anchorNode.parentNode).atStart, // could not get this in tinymce
-    const origFormat = anchorNode.parentNode.tagName.toLowerCase();
-    const origClass = anchorNode.parentNode.classList[0];
+    // const atStart = false; // editor.selection.info(anchorNode.parentNode).atStart, // could not get this in tinymce
+    // const origFormat = anchorNode.parentNode.tagName.toLowerCase();
+    // const origClass = anchorNode.parentNode.classList[0];
     const sel = editor.selection.getSel();
     let atEnd = false;
 
@@ -234,7 +238,7 @@ export const bindKeyDownEvent = (editor, e) => {
              */
             if (closestTreeLevel === '1') {
                 prohibitEventBubling(e);
-                updatelistFlag = false;
+                // updatelistFlag = false;
                 return false;
             }
 
@@ -447,7 +451,6 @@ export const updateNestedList = (element) => {
         }
         treelevel = treelevel + 1;
     }
-
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
         for (var i = 0; i < liClasses.length; i++) {
             if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
@@ -512,22 +515,16 @@ const isFullRangeSelected = (editor) => {
 }
 
 const getListClassTypeAndTreeLvl = (element) => {
-    let listType = 'ol';
-    let allOlElement = element.querySelectorAll('ol');
-    if (allOlElement.length == 0) {
-        allOlElement = element.querySelectorAll('ul');
-        listType = 'ul';
+    let olClass = "disc", listType = "ul"
+    if (element.subtype !== "disc") {
+        listType = "ol";
+        olClass = element.subtype
     }
-    let treelevel = 1, olClass = "disc"
-    if (allOlElement[0]) {
-        treelevel = parseInt(allOlElement[0].getAttribute('treelevel'));
-        olClass = allOlElement[0].getAttribute('class') || 'disc';
-    }
-    return { treelevel, olClass, listType }
+    return { treelevel: 1, olClass, listType }
 }
 
 const createDefaultOlLi = (treelevel, olClass, listType, element) => {
-    if (element.querySelectorAll(listType).length === 0) {
+    if (element.querySelectorAll(listType).length === 0 || element.querySelector(listType).querySelectorAll('li').length === 0) {
         let olEle = document.createElement(listType)
         olEle.classList.add(olClass)
         olEle.setAttribute('treelevel', treelevel)

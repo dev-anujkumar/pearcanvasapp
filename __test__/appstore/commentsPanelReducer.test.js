@@ -213,7 +213,23 @@ describe('testing slateLock Reducer cases -->', () => {
         let stateObj4 = initialState;
         stateObj4.toggleReplyForm = false;
         stateObj4.comments=[];
-
+        initialState.comments = [{
+            "commentType": "comment",
+            "commentDateTime": "2019-08-25T04:29:55.633Z",
+            "commentAssignee": "c5test01",
+            "commentCreator": "c5test01",
+            "commentString": "sadsa",
+            "commentStatus": "OPEN",
+            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            "replyComments": [{
+                "commentCreator": "c5test01",
+                "commentDateTime": "2019-08-25T04:56:38.241Z",
+                "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                "commentString": "zxczcczz",
+                "commentType": "commentReply"
+            }],
+            "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
+        }]  
         expect(reducer(initialState, {
             type: REPLY_COMMENT,
             payload: {
@@ -232,6 +248,25 @@ describe('testing slateLock Reducer cases -->', () => {
     it('Test 6- RESOLVE_COMMENT', () => {
         let stateObj5 = initialState;
         stateObj5.comments =[];
+        
+        initialState.comments = [{
+            "commentType": "comment",
+            "commentDateTime": "2019-08-25T04:29:55.633Z",
+            "commentAssignee": "c5test01",
+            "commentCreator": "c5test01",
+            "commentString": "sadsa",
+            "commentStatus": "OPEN",
+            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            "replyComments": [{
+                "commentCreator": "c5test01",
+                "commentDateTime": "2019-08-25T04:56:38.241Z",
+                "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                "commentString": "zxczcczz",
+                "commentType": "commentReply"
+            }],
+            "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
+        }]  
+
         expect(reducer(initialState, {
             type: RESOLVE_COMMENT,
             payload: {
@@ -242,10 +277,28 @@ describe('testing slateLock Reducer cases -->', () => {
     })
     it('Test 7- UPDATE_COMMENT', () => {
         let stateObj6 = initialState;
+        initialState.comments = [{
+            "commentType": "comment",
+            "commentDateTime": "2019-08-25T04:29:55.633Z",
+            "commentAssignee": "c5test01",
+            "commentCreator": "c5test01",
+            "commentString": "sadsa",
+            "commentStatus": "OPEN",
+            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            "replyComments": [{
+                "commentCreator": "c5test01",
+                "commentDateTime": "2019-08-25T04:56:38.241Z",
+                "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                "commentString": "zxczcczz",
+                "commentType": "commentReply"
+            }],
+            "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
+        }]  
+
         expect(reducer(initialState, {
             type: UPDATE_COMMENT,
             payload: {
-                commentUrn: "urn:pearson:comment:90a27123456e87-9630-47e5-a5d8-ef2fe0e362612c",
+                commentUrn: "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
                 updateComment: "comment updated"
             }
         })).toEqual(stateObj6);
@@ -261,6 +314,24 @@ describe('testing slateLock Reducer cases -->', () => {
     it('Test 9- UPDATE_ASSIGNEE', () => {
         let stateObj8 = initialState;
         stateObj8.comments =[];
+        initialState.comments = [{
+            "commentType": "comment",
+            "commentDateTime": "2019-08-25T04:29:55.633Z",
+            "commentAssignee": "c5test01",
+            "commentCreator": "c5test01",
+            "commentString": "sadsa",
+            "commentStatus": "OPEN",
+            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            "replyComments": [{
+                "commentCreator": "c5test01",
+                "commentDateTime": "2019-08-25T04:56:38.241Z",
+                "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                "commentString": "zxczcczz",
+                "commentType": "commentReply"
+            }],
+            "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
+        }]  
+
         expect(reducer(initialState, {
             type: UPDATE_ASSIGNEE,
             payload: {
@@ -271,6 +342,24 @@ describe('testing slateLock Reducer cases -->', () => {
     })
     it('Test 10- DELETE_COMMENT', () => {
         let stateObj9 = initialState;
+        initialState.comments = [{
+            "commentType": "comment",
+            "commentDateTime": "2019-08-25T04:29:55.633Z",
+            "commentAssignee": "c5test01",
+            "commentCreator": "c5test01",
+            "commentString": "sadsa",
+            "commentStatus": "OPEN",
+            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+            "replyComments": [{
+                "commentCreator": "c5test01",
+                "commentDateTime": "2019-08-25T04:56:38.241Z",
+                "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
+                "commentString": "zxczcczz",
+                "commentType": "commentReply"
+            }],
+            "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
+        }]  
+
         expect(reducer(initialState, {
             type: DELETE_COMMENT,
             payload: "urn:pearson:comment:90a27e87-9630-47e32435-a5d8-ef2fe0e3626c"

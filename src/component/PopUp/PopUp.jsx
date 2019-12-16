@@ -204,6 +204,7 @@ class PopUp extends React.Component {
                             <div className={`dialog-input ${assessmentClass}`}>
                                 {this.renderInputBox(this.props)}
                             </div>
+                            <div class="popup-note-message">{this.props.note?this.props.note:''}</div>
                             {this.renderButtons(this.props)}
                         </div>
                     </div>

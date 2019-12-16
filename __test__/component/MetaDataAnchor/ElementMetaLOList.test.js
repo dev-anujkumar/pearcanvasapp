@@ -5,33 +5,74 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
+
+jest.mock('../../../src/config/config.js', () => ({
+    editorRefID: ""
+}))
+
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({
+let store = mockStore({
     metadataReducer:{
-        currentSlateLOData:""
+        currentSlateLOData:[]
     }
 });
+
 let props={
     slateLockInfo:{
         isLocked:false
     },
-    currentSlateLOData:""
+    element: {
+        elementdata: {
+            groupby: "module"
+        }
+    },
+    currentSlateLOData: jest.fn(),
+    handleFocus: jest.fn(),
+    showBlocker: jest.fn()
 }
-    // let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
-    // let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+
+let wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
+let elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+
+jest.useFakeTimers();
 
 //Rendering component
-xdescribe('Test Rendering of metadaanchor on slate', () => {
+describe('Test Rendering of metadaanchor on slate', () => {
    
     it('render component', () => {
+        wrapper.find('#introslateLOL').simulate('click');
         expect(wrapper.find('ElementMetaLOList')).toHaveLength(1);
     })
+
     it('on lo click', () => {
-        let data = "";
-        elementMetaAnchorInstance.onLOLClickHandle(data);
+        let data = [];
+        let e = {
+            target: {
+                id: ""
+            }
+        }
+        elementMetaAnchorInstance.onLOLClickHandle(data, e);
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
-  
-   
-    
+
+    it('on lo click with not empty data', () => {
+        let data = ["Test"];
+        let e = {
+            target: {
+                id: ""
+            }
+        }
+
+        store = mockStore({
+            metadataReducer:{
+                currentSlateLOData:["Test"]
+            }
+        });
+
+        wrapper = mount(<Provider store={store}><ElementMetaLOList  model ={{}} {...props}/> </Provider>)
+        elementMetaAnchorInstance = wrapper.find('ElementMetaLOList').instance();
+
+        elementMetaAnchorInstance.onLOLClickHandle(data, e);
+        expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
+    })
 });
