@@ -418,7 +418,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
 
         case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
-                    
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
