@@ -377,14 +377,15 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId,currentElementType) => {
         const { parentUrn, asideData } = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-                let currentNode = document.getElementById(`cypress-${this.props.index}`)
+            let index  = currentElementType == "showhide"? activeEditorId:`cypress-${this.props.index}`
+                let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
@@ -491,11 +492,12 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = () => {
+    handleBlur = (currentElement) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId)
+        let element = currentElement ? currentElement:this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId,this.props.element.type)
     }
 
     /**

@@ -67,6 +67,7 @@ class ElementShowHide extends React.Component {
                              activeShowHide = {this.activeShowHide}
                              showHideType = "show"
                              createShowHideElement= {this.createShowHideElement}
+                             currentElement = {showItem}
                              />)
                         })}
                         </div>
@@ -95,6 +96,7 @@ class ElementShowHide extends React.Component {
                                 activeShowHide = {this.activeShowHide}
                                 showHideType = "revel"
                                 createShowHideElement = {this.createShowHideElement}
+                                currentElement = {posterItem}
                                 />
                              )
                             })}
@@ -123,6 +125,7 @@ class ElementShowHide extends React.Component {
                              activeShowHide = {this.activeShowHide}
                              showHideType = "hide"
                              createShowHideElement = {this.createShowHideElement}
+                             currentElement = {hideItem}
                              />)
                         })}
 

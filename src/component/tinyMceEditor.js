@@ -1275,7 +1275,7 @@ export class TinyMceEditor extends Component {
             return;
         }
         tinymce.$('span[data-mce-type="bookmark"]').remove();
-        this.props.handleBlur();
+        this.props.handleBlur(this.props.currentElement,this.props.index);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
