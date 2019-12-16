@@ -173,7 +173,7 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
     ).then(response => {
         dispatch({
             type: UPDATE_COMMENT,
-            payload: { commentUrn, updateComment: updateComment.comment }
+            payload: { commentUrn, updateComment: updateCommentParams.comment }
         });
     }).catch(error => {
         //console.log("status update fail", error);

@@ -240,9 +240,13 @@ export class ReactEditor extends React.Component {
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
+      this.termtext = document.getElementById('glossary-0').innerHTML;
       tinymce.init(this.editorConfig);
     }
-    this.handlePlaceholer()
+    this.handlePlaceholer();
+    if(this.termtext){
+      document.getElementById('glossary-0').innerHTML=this.termtext;
+    }
   }
 
   componentDidUpdate() {
@@ -254,6 +258,9 @@ export class ReactEditor extends React.Component {
       }
     }
     this.handlePlaceholer()
+    if(this.termtext){
+      document.getElementById('glossary-0').innerHTML=this.termtext;
+    }
   }
 
   componentWillMount() {

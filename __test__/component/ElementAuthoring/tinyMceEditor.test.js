@@ -157,7 +157,9 @@ describe('Testing TinyMCE Editor', () => {
         }
         instance.editorRef = editorInstance
         tinymce.activeEditor = {
-            id: ""
+            id: "",
+            getContent: jest.fn(),
+            setContent: jest.fn()
         }
         //     utilFunction.checkforToolbarClick=()=>{
         //         return true        
