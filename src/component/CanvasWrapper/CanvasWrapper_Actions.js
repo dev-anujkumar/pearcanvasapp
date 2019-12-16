@@ -170,6 +170,7 @@ export const fetchSlateData = (manifestURN, page, popupFlag) => (dispatch, getSt
         }
     }).then(slateData => {
 		if(popupFlag){
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
 			// let popupSlateData = {...slateData.data}
 			// if (popupSlateData[manifestURN]) {
 				// popupSlateData[manifestURN].type = "popup"
@@ -208,7 +209,6 @@ export const fetchSlateData = (manifestURN, page, popupFlag) => (dispatch, getSt
 						[manifestURN]: currentParentData
 					}
 				});
-				sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
 			// }
 			}
 		}

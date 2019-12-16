@@ -211,7 +211,8 @@ class SlateWrapper extends Component {
      */
     prepareSwapData = (event) => {
         const { slateData } = this.props
-        const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        // const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        const _slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter
         const swappedElementData = _slateBodyMatter[event.oldDraggableIndex]
         let dataObj = {
             oldIndex: event.oldDraggableIndex,

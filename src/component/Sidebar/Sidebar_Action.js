@@ -218,7 +218,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             payload: activeElementObject
         });
 
-    /* axios.post(url, JSON.stringify(conversionDataToSend), { 
+/*     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -275,7 +275,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 catch (error) {
     console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-}
+    }
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {

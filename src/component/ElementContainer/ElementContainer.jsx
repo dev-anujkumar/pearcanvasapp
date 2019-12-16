@@ -106,7 +106,7 @@ class ElementContainer extends Component {
             return true
         }
         if (updateFromC2Flag) {
-            if(this.props.element.type == "openerelement"){
+            if(this.props.element.type === "openerelement"){
                 this.setState({
                     borderToggle: 'active'
                 })
@@ -119,7 +119,7 @@ class ElementContainer extends Component {
             }   
         }
         else {
-            if (this.props.element.type == "openerelement") {
+            if (this.props.element.type === "openerelement") {
                 this.setState({
                     borderToggle: 'active'
                 })
@@ -829,6 +829,10 @@ class ElementContainer extends Component {
                         slateLockInfo={slateLockInfo}
                         onClick={this.handleFocus} 
                         openPopupSlate = {this.props.openPopupSlate}
+                        accessDenied={accessDenied}
+                        openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         />;
                     labelText = 'Pop'
                     break;
