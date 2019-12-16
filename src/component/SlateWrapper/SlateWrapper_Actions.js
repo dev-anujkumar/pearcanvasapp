@@ -341,7 +341,7 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
             let pageNumberRef = {
                 pageNumber: data.pageNumber
             }
-            const element = _slateBodyMatter.map(element => {
+            const elementObject = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
                 }

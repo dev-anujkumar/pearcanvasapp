@@ -8,7 +8,6 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
-import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
@@ -141,7 +140,6 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                	// this.getProjectConfig(message.configObj, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -222,28 +220,6 @@ function WithWrapperCommunication(WrappedComponent) {
             }
         }
 
-        // modifyObjKeys = (obj, newObj) => {
-        //     Object.keys(obj).forEach(function(key) {
-        //       delete obj[key];
-        //     });
-          
-        //     Object.keys(newObj).forEach(function(key) {
-        //       obj[key] = newObj[key];
-        //     });
-        //     Object.keys(cypressConfig).forEach(function(key) {
-        //         obj[key] = cypressConfig[key];
-        //     });
-        //     console.log("obj >> ", obj);
-        //     if(process.env.NODE_ENV === 'development'){
-        //         obj.REACT_APP_API_URL = cypressConfig.CYPRESS_API_ENDPOINT;
-        //         obj.JAVA_API_URL = cypressConfig.CYPRESS_TOC_JAVA_ENDPOINT;
-        //     }              
-        // }
-
-        // getProjectConfig = (configObj, config) => {
-        //     this.modifyObjKeys(config, configObj);
-        // }
-
         /**
          * Releases slate lock and logs user out.
          */
@@ -295,7 +271,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     "elementdata": {
                         "loref": loUrn
                     },
-                    "metaDataAnchorID": LOElements
+                    "metaDataAnchorID": LOElements,
+                    "elementVersionType": "element-learningobjectivemapping"
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
