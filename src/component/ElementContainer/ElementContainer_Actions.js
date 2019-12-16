@@ -84,6 +84,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         switch (type) {
             case "element-workedexample":
             case "element-aside":
+            case "showhide":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -453,8 +454,8 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn) =
         "slateUrn":  elementId,
         "index": newShowhideIndex,
         "type": "TEXT",
-        "parentType ":"showhide",
-        "sectionType ": type
+        "parentType":"showhide",
+        "sectionType": type
 
     };
     
@@ -471,9 +472,10 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn) =
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        console.log("bodymatter===>",bodymatter)
         bodymatter.forEach((element, index) => {
             if (element.id == elementId) {
-                element.interactivedata[type].splice(newShowhideIndex, 0, createdElementData)
+                element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
                 console.log("element", element);
             }
         })
@@ -482,11 +484,11 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn) =
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
                 slateLevelData: newParentData,
-                showHideId: createdElementData.id
+                showHideId: createdElemData.data.id
             }
         })
     }).catch(error => {
-
+        console.log("error while createing element",error)
     })
 
 

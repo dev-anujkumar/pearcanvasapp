@@ -49,7 +49,7 @@ class ElementShowHide extends React.Component {
                             <h4 className="heading4WidgetShowHideTitle" resource="">Show</h4>
                         </header>
                         <div class="container show">
-                        {element && element.interactivedata.show.map((showItem,innerIndex)=>{
+                        {element && element.interactivedata.show && element.interactivedata.show.map((showItem,innerIndex)=>{
                             return ( 
                             <TinyMceEditor permissions={this.props.permissions}
                              openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
@@ -77,7 +77,7 @@ class ElementShowHide extends React.Component {
                         </header>
                         <div class="container revel">
 
-                          {element && element.interactivedata.postertextobject.map((posterItem,innerIndex)=>{
+                          {element && element.interactivedata.postertextobject && element.interactivedata.postertextobject.map((posterItem,innerIndex)=>{
                             return ( 
                                 <TinyMceEditor permissions={this.props.permissions}
                                 openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
@@ -105,7 +105,7 @@ class ElementShowHide extends React.Component {
                             <h4 className="heading4WidgetShowHideTitle" resource="">Hide</h4>
                         </header>
                         <div class="container hide">
-                         {element && element.interactivedata.hide.map((hideItem,innerIndex)=>{
+                         {element && element.interactivedata.hide && element.interactivedata.hide.map((hideItem,innerIndex)=>{
                             return ( 
                             <TinyMceEditor permissions={this.props.permissions}
                              openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
