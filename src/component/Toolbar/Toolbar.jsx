@@ -33,12 +33,12 @@ const _Toolbar = props => {
        /**
      * Function for show/hide slate tag icon
      */
-      function hideSlateTagIcon(){
-          if( document.querySelector(".tox-toolbar")){
-            if (document.getElementsByClassName("slate-tag-icon").length) {
-                document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-          }}
-      }
+    function hideSlateTagIcon() {
+        if (document.getElementsByClassName("slate-tag-icon").length) {
+            document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
+        }
+    }
+      
 
     /**
   * Function for show/hide audio Narration icon

@@ -2,7 +2,13 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import SectionSeperator from '../../../src/component/ElementAsideContainer/SectionSeperator';
 import { spy, stub } from 'sinon';
+import tinymce from 'tinymce/tinymce';
 const setActiveElement = new stub();
+
+jest.mock('../../../src/config/config.js', () => ({
+    asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],   
+    toolBarList : ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
+    }));
 
 describe('Testing SectionSeperator component with props', () => {
     let props = {
@@ -34,8 +40,6 @@ describe('Testing SectionSeperator component with props', () => {
             const sectionFocus = wrapper.find('SectionSeperator').state().sectionFocus
             expect(sectionFocus).toEqual(true);
         })
-
-
     })
 
 })

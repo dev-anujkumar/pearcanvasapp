@@ -1,6 +1,6 @@
 import { stub } from 'sinon';
 
-describe('Testing Local env file----->', () => {
+describe('Testing prod env file----->', () => {
     process.env = {
         NODE_ENV: "development"
     }
@@ -21,7 +21,7 @@ describe('Testing Local env file----->', () => {
         test('will receive process.env variables', () => {
             process.env.NODE_ENV = 'production';
             
-            const testedModule = require('../../src/env/local').default
+            const testedModule = require('../../src/env/qa').default
           expect(testedModule.WRAPPER_URL).toBe("https://localhost:/toc-wrapper/index.html")
           expect(testedModule.TCM_DASHBOARD_UI_URL).toBe("https://localhost:/cypress/trackchanges/index.html")
           expect(testedModule.LOCK_API_BASE_URL).toBe("https://localhost:/cypress/dashboard-srvr")

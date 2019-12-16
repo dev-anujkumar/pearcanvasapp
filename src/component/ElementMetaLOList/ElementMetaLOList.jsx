@@ -7,10 +7,11 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+
 export class ElementMetaLOList extends Component {
   //To show module name if groupby module is present in wip
   componentDidMount() {
-    if (this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module") {
+    if (this.props.element && this.props.element.elementdata.groupby && this.props.element.elementdata.groupby == "module") {
       this.props.setCurrentModule(true);
       let els = document.getElementsByClassName('moduleContainer');
       els = Array.from(els);
