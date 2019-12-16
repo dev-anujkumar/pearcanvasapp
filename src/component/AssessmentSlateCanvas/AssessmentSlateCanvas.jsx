@@ -60,7 +60,7 @@ export class AssessmentSlateCanvas extends Component {
     */
     selectAssessmentType = (type) => {
         let assessmentType;
-        if (type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
+        if (type.toLowerCase() === 'cite' || type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
             assessmentType = "CITE"
         } else {
             assessmentType = "TDX"
@@ -68,7 +68,6 @@ export class AssessmentSlateCanvas extends Component {
         this.setState({
             assessmentFormatType: assessmentType
         })
-        //return assessmentType
     }
 
     /*** 
