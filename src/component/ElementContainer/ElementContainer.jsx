@@ -508,7 +508,7 @@ class ElementContainer extends Component {
                     // let html = node.innerHTML;
                     let currentListNode = document.getElementById(`cypress-${this.props.index}`)
                     let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
+                    if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
