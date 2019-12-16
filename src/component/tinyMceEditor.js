@@ -1292,6 +1292,16 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+        let isBlockQuote = this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote"
+        console.log('NNNNNNNN',tinymce.activeEditor.getContent());
+        
+        let tempdiv = document.createElement('div');
+        tempdiv.innerHTML = tinymce.activeEditor.getContent()
+        console.log('BBBBBBBBBB',tinymce.$(tempdiv).find('.paragraphNummerEins').length)
+        console.log(tinymce.$(tempdiv).find('.paragraphNummerEins').text().length)
+        if (isBlockQuote && !tinymce.$(tempdiv).find('.paragraphNummerEins').length  || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
+            tinymce.activeEditor.setContent(this.lastContent);
+        }
         let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
