@@ -220,7 +220,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     
-    axios.put(url, JSON.stringify(data), {
+    return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken
