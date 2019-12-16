@@ -15,6 +15,7 @@ export class ReactEditor extends React.Component {
     this.mathMlMenuButton = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
+      formats: GlossaryFootnoteEditorConfig.formats,
       plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
       selector: '#glossary-0',
