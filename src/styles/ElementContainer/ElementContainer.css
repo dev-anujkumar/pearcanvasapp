@@ -8,6 +8,7 @@
     /* padding: 15px; */
     flex-grow: 1;
     max-width: 93.1%;
+    padding: 1px 8px !important; 
     /* border: 1.5px solid #aaa; */
 }
 
@@ -55,9 +56,9 @@
     overflow-y: hidden;
     min-height: 64px;
 }
-.element-container{
+/* .element-container{
     padding: 1px 8px !important; 
-}
+} */
 a.paragraphNumeroUnoFootnote {
     text-decoration: none !important;
     cursor: pointer;
@@ -89,7 +90,7 @@ a.paragraphNumeroUnoFootnote {
 .color-palette-list{
     position: absolute;
     left: 25px;
-    top: 12%;;
+    top: 12%;
     z-index: 1;
 }
 .color-palette-item.selected {

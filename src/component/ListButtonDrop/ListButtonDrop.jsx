@@ -53,7 +53,7 @@ const ListButtonDrop = (props) => {
  */
 const onListOptionSelect = (type, props) => {
     let _value = parseInt(document.getElementById('listINputBox').value || 0);
-    _value = isNaN(_value) && 0 || _value;
+    _value = isNaN(_value) ? 0 : _value; //isNaN(_value) && 0 || _value;
     props.onListSelect(type, _value);
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     if (_listWrapperDiv)

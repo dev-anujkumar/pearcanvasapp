@@ -7,7 +7,7 @@ import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import PropTypes from 'prop-types'
 import config from '../../config/config'
-import { HideLoader, NextSlate, PreviousSlate, ShowLoader} from '../../constants/IFrameMessageTypes.js';
+import { NextSlate, PreviousSlate, ShowLoader} from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
@@ -110,17 +110,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
     render() {
         const { slateType, slateTitle, slateLockInfo } = this.props
         let slateLabel = this.getLabel(slateType);
-        let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : ''; 
-
-        let nextDisabled = 'forward-nav-active';
-        // if(this.props.disabled === 'next') {
-        //     nextDisabled = 'forward-nav-disable';
-        // }
-
-        let backDisabled = 'backward-nav-active';
-        // if(this.props.disabled === 'back') {
-        //     backDisabled = 'backward-nav-disable';
-        // }
+        let currentSlateTitle = (slateTitle && slateTitle.text) ? slateTitle.text : '';
 
         return (
             <div className="slate-title">

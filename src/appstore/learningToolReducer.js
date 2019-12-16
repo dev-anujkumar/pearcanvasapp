@@ -6,7 +6,6 @@ import {LT_API_RESULT,
     TOGGLE_LT_POPUP,
     GET_DISCIPLINE,
     REMOVE_SELECTED_DATA,
-    LINK_BUTTON_DISABLE,
     GET_DISCIPLINE_FAIL,
     LT_TYPE_FILTER_SELECTED
   } from '../constants/Action_Constants';
@@ -49,11 +48,12 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
                     let tempDisToMatchArray = value.disciplines.en;
                     if(state.learningToolDisValue !==''){
                         let temp1 = tempDisToMatchArray.indexOf(state.learningToolDisValue.toLowerCase());
-                        if (temp1 >= 0) {
-                            return true
-                        } else {
-                            return false
-                        }
+                        // if (temp1 >= 0) {
+                        //     return true
+                        // } else {
+                        //     return false
+                        // }
+                        return temp1 >= 0;
                     }else{
                         return true;
                     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import { utils } from '../../js/utils'
 import config from '../../config/config';
+
 class ReplyComment extends React.Component {
     constructor(props) {
         super(props)
@@ -26,7 +26,7 @@ class ReplyComment extends React.Component {
     *@discription - This function is to reply comment
     */
     replyComment = (e) => {
-        const { comment, elementId, toggleReplyForm } = this.props;
+        const { comment, elementId } = this.props;
         const { text } = this.state;
         const date = new Date()
         const commentUrn = comment.commentUrn;
@@ -111,7 +111,7 @@ class ReplyComment extends React.Component {
         }
     }
     render() {
-        const { reply } = this.props
+        // const { reply } = this.props
         return (
             <>
                 {this.replyCommentForm(this.props)}

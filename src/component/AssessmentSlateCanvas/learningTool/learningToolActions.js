@@ -41,15 +41,14 @@ export const toolTypeFilterSelectedAction = (toolType, learningSystem) => dispat
           showLTBody: true,
           learningToolTypeValue: toolType
         }
-      }),
-        err => dispatch({
-          type: LT_API_RESULT_FAIL, payload: {
-            error: err,
-            showDisFilterValues: false
-          }
-        })
-
-    }).catch(error => {
+      })},
+      err => dispatch({
+        type: LT_API_RESULT_FAIL, payload: {
+          error: err,
+          showDisFilterValues: false
+        }
+      })
+    ).catch(error => {
       //console.log('this is error while fetching from LT_LA api', error)
     })
 };
@@ -85,15 +84,14 @@ export const learningToolSearchAction = (learningToolSearchValue, toolType1, lea
             showLTBody: true,
             learningToolTypeValue: toolType1
           }
-        }),
-          err => dispatch({
-            type: LT_API_RESULT_FAIL, payload: {
-              error: err,
-              showDisFilterValues: false
-            }
-          })
-
-      }).catch(error => {
+        })},
+        err => dispatch({
+          type: LT_API_RESULT_FAIL, payload: {
+            error: err,
+            showDisFilterValues: false
+          }
+        })
+      ).catch(error => {
         //console.log('this is error while fetching from LT_LA api', error)
     })
   }
@@ -113,15 +111,14 @@ export const openLTFunction = () => dispatch => {
       }
     )
       .then(res => {
-        dispatch(getDiscipline(res.data)),
-          err => dispatch({
-            type: LT_API_RESULT_FAIL, payload: {
-              error: err,
-              showDisFilterValues: false
-            }
-          })
-
-      }).catch(error => {
+        dispatch(getDiscipline(res.data))},
+        err => dispatch({
+          type: LT_API_RESULT_FAIL, payload: {
+            error: err,
+            showDisFilterValues: false
+          }
+        })
+      ).catch(error => {
         //console.log('this is error while fetching from LT_LA api', error)
     })
  

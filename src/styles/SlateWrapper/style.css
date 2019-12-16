@@ -233,9 +233,9 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 }
 
 .showHide .cypress-editable.place-holder::before{
-    margin-top: 0px !important;
+    /* margin-top: 0px !important; */
 }
 
 .showHide .cypress-editable{
-    min-height: 44px !important;
+    /* min-height: 44px !important; */
 }

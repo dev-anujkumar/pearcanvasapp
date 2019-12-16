@@ -168,17 +168,23 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== previousElementData.figuredata.path
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             this.props.oldImage !== previousElementData.figuredata.path
-        ) {
-            return 1
-        }
-        else {
-            return 0
-        }
+            );
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
@@ -196,10 +202,12 @@ class ElementContainer extends Component {
         let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`)
         let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
         let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered")
-
-        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        if (typeof (isNumbered) == "string") {
+            isNumbered = JSON.parse(isNumbered)
+        }
+        captionHTML= captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML= creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
@@ -207,19 +215,27 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
+        //     startNumber !== previousElementData.figuredata.startNumber ||
+        //     isNumbered !== previousElementData.figuredata.numbered
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
             startNumber !== previousElementData.figuredata.startNumber ||
             isNumbered !== previousElementData.figuredata.numbered
-        ) {
-            return 1
-        }
-        else {
-            return 0
-        }
+            );
     }
 
     /**
@@ -249,34 +265,48 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        if (previousElementData.figuredata.interactivetype === "pdf") {
+        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+            previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
 
-            if (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle ||
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     posterTextHTML !== previousElementData.html.postertext
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits ||
-                posterTextHTML !== previousElementData.html.postertext
-            ) {
-                return 1
-            }
-            else {
-                return 0
-            }
+                creditsHTML !== previousElementData.html.credits || 
+                posterTextHTML !== previousElementData.html.postertext ||
+                this.props.oldImage !== newInteractiveid
+                );
         }
         else {
-            if (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle ||
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     this.props.oldImage !== newInteractiveid
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
+            return (titleHTML !== previousElementData.html.title ||
+                subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
                 creditsHTML !== previousElementData.html.credits ||
                 this.props.oldImage !== newInteractiveid
-            ) {
-                return 1
-            }
-            else {
-                return 0
-            }
+                );
         }
     }
 
@@ -302,18 +332,25 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     text !== previousElementData.figuredata.elementdata.text
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             text !== previousElementData.figuredata.elementdata.text
-        ) {
-            return 1
-        }
-        else {
-            return 0
-        }
+            );
     }
+
     figureDifferenceAudioVideo = (index, previousElementData) => {
         let newAudioVideoId = ""
         if (previousElementData.figuretype === "audio") {
@@ -342,17 +379,23 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        if (titleHTML !== previousElementData.html.title ||
+        // if (titleHTML !== previousElementData.html.title ||
+        //     subtitleHTML !== previousElementData.html.subtitle ||
+        //     captionHTML !== previousElementData.html.captions ||
+        //     creditsHTML !== previousElementData.html.credits ||
+        //     this.props.oldImage !== newAudioVideoId
+        //     ){
+        //         return 1
+        //     }
+        //     else {
+        //         return 0
+        //     }
+        return (titleHTML !== previousElementData.html.title ||
             subtitleHTML !== previousElementData.html.subtitle ||
             captionHTML !== previousElementData.html.captions ||
             creditsHTML !== previousElementData.html.credits ||
             this.props.oldImage !== newAudioVideoId
-        ) {
-            return 1
-        }
-        else {
-            return 0
-        }
+            );
     }
 
     updateOpenerElement = (dataToSend) => {
@@ -377,8 +420,8 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId,currentElementType) => {
-        const { parentUrn, asideData } = this.props
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,currentElementType) => {
+        const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -392,7 +435,7 @@ class ElementContainer extends Component {
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && html !== previousElementData.html.text && !assetPopoverPopupIsVisible) {
+                if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
@@ -405,7 +448,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        if (this.figureDifference(this.props.index, previousElementData)) {
+                        if(this.figureDifference(this.props.index, previousElementData)){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
@@ -467,7 +510,7 @@ class ElementContainer extends Component {
                     // let html = node.innerHTML;
                     let currentListNode = document.getElementById(`cypress-${this.props.index}`)
                     let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
+                    if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
@@ -492,12 +535,11 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (currentElement) => {
+    handleBlur = (forceupdate) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        let element = currentElement ? currentElement:this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId,this.props.element.type)
+        this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element.type)
     }
 
     /**

@@ -6,12 +6,8 @@ import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
 import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
-import { spy, stub } from 'sinon';
-import { JestEnvironment } from '@jest/environment';
 import { Provider } from 'react-redux';
 const mockStore = configureMockStore(middlewares);
-const setActiveElement = new stub();
-const handleFocus =new stub();
 let initialState = {
     appStore: {
         pageNumberData: {},
@@ -40,25 +36,11 @@ let initialState = {
     metadataReducer: {
         currentSlateLOData: {}
     }
-
 };
 
 let store = mockStore(initialState);
 
-
 describe('Testing ElementAside component with props', () => {
-    let esProps = [            {
-        buttonType: 'worked-exp-elem',
-        buttonHandler: () => {},
-        tooltipText: 'Worked Example',
-        tooltipDirection: 'left'
-    },
-    {
-        buttonType: 'section-break-elem',
-        buttonHandler: () => {},
-        tooltipText: 'Section Break',
-        tooltipDirection: 'left'
-    },];
     let props = {
         element: elementAsideWorkExample,
         swapElement : swapElement,
@@ -66,11 +48,12 @@ describe('Testing ElementAside component with props', () => {
         onStart : jest.fn(),
         setActiveElement : jest.fn(),
         handleFocus : jest.fn(),
-        swapElement : jest.fn()
-
+        swapElement : jest.fn(),
+        deleteElement: jest.fn(),
+        slateLockInfo:{isLocked:true,userId:'c5test01'}
     }  
 
-    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>);
     const instance = wrapper.find('ElementAsideContainer').instance();
 
     describe('Testing ElementAside component', () => {
@@ -92,7 +75,6 @@ describe('Testing ElementAside component with props', () => {
             expect(wrapper.find(".container-aside")).toHaveLength(1)
         })
         it('should render  section function correctly', () => {
-
             let sectiondata = instance.section(section)
             expect(sectiondata.props.className).toEqual('section');
         })
@@ -105,23 +87,26 @@ describe('Testing ElementAside component with props', () => {
         it('should render  renderElement function correctly', () => {
             let parentEntityUrn = "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1"
             instance.renderElement(element, parentEntityUrn)
-            // expect(sectionBreak.props.className).toEqual('section-break');
+            expect(instance.props.className).toEqual(undefined);
         })
 
         it('should render  renderAside  function correctly', () => {
-
             let designType = "asideSidebar01"
             let renderAside = instance.renderAside(designType)
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
-        xit('should render  handle focus function correctly', () => {
-
-            instance.handleFocus()
-         //   expect(sectiondata.props.className).toEqual('section');
+        it('should render  handle focus function correctly', () => {
+            let el = document.createElement('div');
+            el.classList.add("elemDiv-hr");
+            let event = {
+                target:el
+            };
+            
+            instance.handleFocus(event);
+            expect(instance.props.slateLockInfo).toEqual(props.slateLockInfo);
         })
 
         it('should render  renderWorkExample  function correctly', () => {
-
             let designType = "workedexample2"
             let renderWorkExample = instance.renderWorkExample(designType)
             expect(renderWorkExample.props.children[0].props.className).toEqual('aside-horizotal-break aside-horizotal-break-green');
@@ -175,15 +160,27 @@ describe('Testing ElementAside component with props', () => {
             expect(borderTop.props.className).toEqual('asideFeatureBorderTop');
         })
 
-    xit(' handleFocus function testing', () => {
+    it(' handleFocus function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('ElementAsideContainer').instance();
-        instance.handleFocus();
+        let el = document.createElement('div');
+        el.classList.add("elemDiv-hr");
+        let event = {
+            target:el
+        };
+        instance.handleFocus(event);
+        let el2 = document.createElement('div');
+        el2.classList.add('aside-container');
+        let event2 = {
+            target:el
+        };
+        instance.handleFocus(event2);
+        let booleanCheck = event.target === event2.target;
+        expect(booleanCheck).toEqual(true);
     })
 
     it(' componentWillMount  testing', () => {
         const tempWrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
-
         const componentWillUnmount = jest.spyOn(tempWrapper.instance(), 'componentWillUnmount');
         tempWrapper.unmount();
         expect(componentWillUnmount).toHaveBeenCalled();
@@ -192,43 +189,28 @@ describe('Testing ElementAside component with props', () => {
     it(' Sortable onChange function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('Sortable').instance();
-
-        let onChange = jest.fn()
         expect(instance.props.onChange).toHaveLength(3);
     })
 
     it(' Sortable onStart function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('Sortable').instance();
-
         instance.props.options.onStart()
-        instance.props.onChange()
+        instance.props.onChange();
+        expect(instance.props.onChange).toHaveLength(3);
     })
 
     it(' Sortable onUpdate function testing', () => {
+        props.setActiveElement = jest.fn();
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('Sortable').instance();
-
         let evt = {
             oldDraggableIndex : 0,
             newDraggableIndex : 1
         }
-
-        let _bodymatter = [
-            {
-				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-				"type": "element-authoredtext",
-				"subtype": "",
-				"schema": "http://schemas.pearson.com/wip-authoring/element/1"
-            },
-            {
-				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-				"type": "element-authoredtext",
-				"subtype": "",
-				"schema": "http://schemas.pearson.com/wip-authoring/element/1"
-            }]
         
-        instance.props.options.onUpdate(evt)
+        instance.props.options.onUpdate(evt);
+        expect(instance.props.options.onUpdate).toHaveLength(1);
     })
 
     })

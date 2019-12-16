@@ -4,7 +4,6 @@
 
 import store from '../../appstore/store.js';
 import {
-    getAssetPopoverId,
     getCurrentlyLinkedImage
 } from './AssetPopover_Actions.js'
 import { TOGGLE_APO_SEARCH } from '../../constants/Action_Constants';

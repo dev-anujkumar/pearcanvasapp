@@ -32,7 +32,7 @@ import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { OPEN_AM } from '../../js/auth_module';
+// import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
@@ -99,26 +99,8 @@ class SlateWrapper extends Component {
         // *********************************************************************
     }
 
-    componentDidUpdate(prevprops) {
+    componentDidUpdate() {
         this.renderDefaultElement();
-        if(Object.keys(this.props.slateData).length > 0){
-            if(Object.keys(this.props.slateData)[0] != Object.keys(prevprops)[0]){
-                let currentSlateId = Object.keys(this.props.slateData)[0];
-                let tcmCount = 0;
-                this.props.slateData[currentSlateId].contents.bodymatter.map((data)=>{
-                    if(data.hasOwnProperty('type') && (data.type.includes('element-authoredtext') || data.type.includes('element-list') || data.type.includes('element-blockfeature') || data.type.includes('element-learningobjectives') )){
-                        if((data.hasOwnProperty('tcm') && data.tcm) || (data.hasOwnProperty('feedback') && data.feedback)){
-                            tcmCount++;
-                        }
-                    }
-                });
-                if(tcmCount > 0){
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'});  
-                } else {
-                    sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
-                }
-            }
-        }
     }
 
 
@@ -152,6 +134,9 @@ class SlateWrapper extends Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
+        /** Default Red Dot indicator to false */
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false'});  
+
         /**
          * updateTimer is for updating Time for slate refresh
          */
@@ -775,6 +760,7 @@ class SlateWrapper extends Component {
                         saveContent={this.deleteAccepted}
                         saveButtonText='Yes'
                         dialogText=' Are you sure you want to delete this slate/container with pending changes?'
+                        note='Note:There will be no undo available after deletion'
                         tocDelete={true}
                         tocDeleteClass='tocDeleteClass'
                     />

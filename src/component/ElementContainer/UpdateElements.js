@@ -149,7 +149,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
 
-    if(previousElementData.figuredata.interactivetype === "pdf"){
+    if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+        previousElementData.figuredata.interactivetype === "web-link") {
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
@@ -236,7 +237,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: previousElementData.figuretype,
-            numbered: isNumbered,
+            numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             preformattedtext: [...preformattedText.split("\n")]
@@ -446,21 +447,27 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
-                switch (previousElementData.subtype) {
-                    case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                    default:
-                        dataToReturn = { 
-                            ...previousElementData,
-                            inputType : elementTypes[elementType][primaryOption]['enum'],
-                            inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                    }
-                }
+            dataToReturn = { 
+                ...previousElementData,
+                inputType : elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            }
+                // switch (previousElementData.subtype) {
+                //     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
+                //     default:
+                //         dataToReturn = { 
+                //             ...previousElementData,
+                //             inputType : elementTypes[elementType][primaryOption]['enum'],
+                //             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+                //     }
+                // }
             break;
         
         case elementTypeConstant.ASSESSMENT_SLATE:
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
     }
+    dataToReturn.slateUrn = config.slateManifestURN;
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }

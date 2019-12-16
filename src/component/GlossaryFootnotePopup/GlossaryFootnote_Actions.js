@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { sendDataToIframe } from '../../constants/utility.js';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 
 const {
     REACT_APP_API_URL
@@ -111,7 +111,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
-        let label, title, captions, credits, elementIndex
+        let label, title, captions, credits, elementIndex, text
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4){//Figure inside a WE
             elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
@@ -131,11 +131,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
             credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
         }
+        if(document.querySelector('div[data-type="mathml"] p')){
+            text = document.querySelector('div[data-type="mathml"] p').innerHTML;
+        }
        
         figureDataObj = {
             "title": label.match(/<p>/g) ? label : `<p>${label}</p>`,
             "subtitle": title.match(/<p>/g) ? title : `<p>${title}</p>`,
-            "text": "",
+            "text": text ? text : "",
             "postertext": "",
             "tableasHTML": "",
             "captions": captions ? captions.match(/<p>/g) ? captions : `<p>${captions}</p>` : "<p></p>",
@@ -217,7 +220,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     
     let url = `${config.REACT_APP_API_URL}v1/slate/element?type=${type.toUpperCase()}&id=${glossaryfootnoteid}`
     
-    axios.put(url, JSON.stringify(data), {
+    return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken

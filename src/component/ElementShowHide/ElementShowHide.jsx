@@ -56,7 +56,8 @@ class ElementShowHide extends React.Component {
                              element={this.props.element}
                              index={`${index}-1-${innerIndex}`}
                              placeholder="Enter Show text"
-                             id={showItem.id} tagName={'p'}
+                             id={showItem.id} 
+                            //  tagName={'p'}
                              model={showItem.html.text}
                              handleEditorFocus={this.props.handleFocus}
                              handleBlur={this.props.handleBlur}
@@ -85,7 +86,7 @@ class ElementShowHide extends React.Component {
                                 element={this.props.element}
                                 index={`${index}-2-${innerIndex}`}
                                 placeholder="Enter revel text"
-                                id={ posterItem.id} tagName={'p'}
+                                // id={ posterItem.id} tagName={'p'}
                                 model={posterItem.html.text}
                                 handleEditorFocus={this.props.handleFocus}
                                 handleBlur={this.props.handleBlur}
@@ -114,7 +115,8 @@ class ElementShowHide extends React.Component {
                              element={this.props.element}
                              index={`${index}-3-${innerIndex}`}
                              placeholder="Enter Hide text"
-                             id={hideItem.id} tagName={'p'}
+                             id={hideItem.id} 
+                            //  tagName={'p'}
                              model={hideItem.html.text}
                              handleEditorFocus={this.props.handleFocus}
                              handleBlur={this.props.handleBlur}
