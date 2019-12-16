@@ -138,6 +138,7 @@ export class CanvasWrapper extends Component {
         ];
         let seconds = Math.floor((new Date().getTime() - this.countTimer) / 1000);
         let interval = intervals.find(i => i.seconds <= seconds);
+        console.log("this is interval--",interval,seconds);
         if (interval && interval.label != 'second') {
             count = Math.floor(seconds / interval.seconds);
             sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
