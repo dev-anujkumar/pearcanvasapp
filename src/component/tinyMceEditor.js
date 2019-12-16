@@ -497,7 +497,7 @@ export class TinyMceEditor extends Component {
                 let nextSaparator = activeEditor.nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }else if(key === 13 && this.props.element.type ==='showhide') {
+            }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel') {
                 this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
             }   
         });

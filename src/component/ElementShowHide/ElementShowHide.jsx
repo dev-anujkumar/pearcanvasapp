@@ -17,30 +17,30 @@ class ElementShowHide extends React.Component {
 
     }
 
-    createShowHideElement =(type,index,elementShowHideId) =>{
-        this.props.createShowHideElement(this.props.element.id,type,index, this.props.element.contentUrn);
-        let newIndex = index.split("-")
-        newIndex[2] =   parseInt(newIndex[2])+1
-        let newshowIndex = newIndex.join("-")
-        if( document.getElementById(`cypress-${newshowIndex}`)){
-            document.getElementById(`cypress-${newshowIndex}`).focus();
-           }
-
+    createShowHideElement = (type, index, elementShowHideId) => {
+        this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, () => {
+                let newIndex = index.split("-")
+                newIndex[2] = parseInt(newIndex[2]) + 1
+                let newshowIndex = newIndex.join("-")
+                if (document.getElementById(`cypress-${newshowIndex}`)) {
+                    document.getElementById(`cypress-${newshowIndex}`).focus();
+                }
+        });
     }
 
-    activeShowHide = (e) =>{
-       let activeElement =  document.querySelector('.show-hide-active')
-       if(activeElement){
-        document.querySelector('.show-hide-active').classList.remove("show-hide-active")
-       }
-       if(e.target){
-        e.target.closest(".show-hide").classList.add("show-hide-active")
-       }
-       
+    activeShowHide = (e) => {
+        let activeElement = document.querySelector('.show-hide-active')
+        if (activeElement) {
+            document.querySelector('.show-hide-active').classList.remove("show-hide-active")
+        }
+        if (e.target) {
+            e.target.closest(".show-hide").classList.add("show-hide-active")
+        }
+
     }
     render() {
         const { model, index, element, slateLockInfo } = this.props;
-        
+
         return (
             <div class="divWidgetShowHide">
                 <div class="pearson-component showHide" data-type="showHide">
@@ -49,28 +49,28 @@ class ElementShowHide extends React.Component {
                             <h4 className="heading4WidgetShowHideTitle" resource="">Show</h4>
                         </header>
                         <div class="container show">
-                        {element && element.interactivedata.show && element.interactivedata.show.map((showItem,innerIndex)=>{
-                            return ( 
-                            <TinyMceEditor permissions={this.props.permissions}
-                             openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                             element={this.props.element}
-                             index={`${index}-1-${innerIndex}`}
-                             placeholder="Enter Show text"
-                             id={showItem.id} 
-                            //  tagName={'p'}
-                             model={showItem.html.text}
-                             handleEditorFocus={this.props.handleFocus}
-                             handleBlur={this.props.handleBlur}
-                             slateLockInfo={slateLockInfo}
-                             glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                             glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                             elementId={this.props.elementId} 
-                             activeShowHide = {this.activeShowHide}
-                             showHideType = "show"
-                             createShowHideElement= {this.createShowHideElement}
-                             currentElement = {showItem}
-                             />)
-                        })}
+                            {element && element.interactivedata.show && element.interactivedata.show.map((showItem, innerIndex) => {
+                                return (
+                                    <TinyMceEditor permissions={this.props.permissions}
+                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                        element={this.props.element}
+                                        index={`${index}-1-${innerIndex}`}
+                                        placeholder="Enter Show text"
+                                        id={showItem.id}
+                                        //  tagName={'p'}
+                                        model={showItem.html.text}
+                                        handleEditorFocus={this.props.handleFocus}
+                                        handleBlur={this.props.handleBlur}
+                                        slateLockInfo={slateLockInfo}
+                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                        elementId={this.props.elementId}
+                                        activeShowHide={this.activeShowHide}
+                                        showHideType="show"
+                                        createShowHideElement={this.createShowHideElement}
+                                        currentElement = {showItem}
+                                    />)
+                            })}
                         </div>
                     </div>
                     <div class="divWidgetShowHideActionText show-hide" data-type="action">
@@ -79,27 +79,27 @@ class ElementShowHide extends React.Component {
                         </header>
                         <div class="container revel">
 
-                          {element && element.interactivedata.postertextobject && element.interactivedata.postertextobject.map((posterItem,innerIndex)=>{
-                            return ( 
-                                <TinyMceEditor permissions={this.props.permissions}
-                                openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                                element={this.props.element}
-                                index={`${index}-2-${innerIndex}`}
-                                placeholder="Enter revel text"
-                                // id={ posterItem.id} tagName={'p'}
-                                model={posterItem.html.text}
-                                handleEditorFocus={this.props.handleFocus}
-                                handleBlur={this.props.handleBlur}
-                                slateLockInfo={slateLockInfo}
-                                glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                elementId={this.props.elementId}
-                                activeShowHide = {this.activeShowHide}
-                                showHideType = "revel"
-                                createShowHideElement = {this.createShowHideElement}
-                                currentElement = {posterItem}
-                                />
-                             )
+                            {element && element.interactivedata.postertextobject && element.interactivedata.postertextobject.map((posterItem, innerIndex) => {
+                                return (
+                                    <TinyMceEditor permissions={this.props.permissions}
+                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                        element={this.props.element}
+                                        index={`${index}-2-${innerIndex}`}
+                                        placeholder="Enter revel text"
+                                        // id={ posterItem.id} tagName={'p'}
+                                        model={posterItem.html.text}
+                                        handleEditorFocus={this.props.handleFocus}
+                                        handleBlur={this.props.handleBlur}
+                                        slateLockInfo={slateLockInfo}
+                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                        elementId={this.props.elementId}
+                                        activeShowHide={this.activeShowHide}
+                                        showHideType="revel"
+                                        createShowHideElement={this.createShowHideElement}
+                                        currentElement = {posterItem}
+                                    />
+                                )
                             })}
                         </div>
                     </div>
@@ -108,28 +108,28 @@ class ElementShowHide extends React.Component {
                             <h4 className="heading4WidgetShowHideTitle" resource="">Hide</h4>
                         </header>
                         <div class="container hide">
-                         {element && element.interactivedata.hide && element.interactivedata.hide.map((hideItem,innerIndex)=>{
-                            return ( 
-                            <TinyMceEditor permissions={this.props.permissions}
-                             openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                             element={this.props.element}
-                             index={`${index}-3-${innerIndex}`}
-                             placeholder="Enter Hide text"
-                             id={hideItem.id} 
-                            //  tagName={'p'}
-                             model={hideItem.html.text}
-                             handleEditorFocus={this.props.handleFocus}
-                             handleBlur={this.props.handleBlur}
-                             slateLockInfo={slateLockInfo}
-                             glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                             glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                             elementId={this.props.elementId} 
-                             activeShowHide = {this.activeShowHide}
-                             showHideType = "hide"
-                             createShowHideElement = {this.createShowHideElement}
-                             currentElement = {hideItem}
-                             />)
-                        })}
+                            {element && element.interactivedata.hide && element.interactivedata.hide.map((hideItem, innerIndex) => {
+                                return (
+                                    <TinyMceEditor permissions={this.props.permissions}
+                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                        element={this.props.element}
+                                        index={`${index}-3-${innerIndex}`}
+                                        placeholder="Enter Hide text"
+                                        id={hideItem.id}
+                                        //  tagName={'p'}
+                                        model={hideItem.html.text}
+                                        handleEditorFocus={this.props.handleFocus}
+                                        handleBlur={this.props.handleBlur}
+                                        slateLockInfo={slateLockInfo}
+                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                        elementId={this.props.elementId}
+                                        activeShowHide={this.activeShowHide}
+                                        showHideType="hide"
+                                        createShowHideElement={this.createShowHideElement}
+                                        currentElement = {hideItem}
+                                    />)
+                            })}
 
                         </div>
                     </div>

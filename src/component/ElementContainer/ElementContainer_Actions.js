@@ -445,7 +445,8 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
     })
 }
 
-export const createShowHideElement = (elementId, type, index,parentContentUrn) => (dispatch, getState) => {
+export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
+    localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
     let newIndex = index.split("-")[2]
     let newShowhideIndex = parseInt(newIndex)+1
@@ -488,6 +489,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn) =
                 showHideId: createdElemData.data.id
             }
         })
+        cb()
     }).catch(error => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)

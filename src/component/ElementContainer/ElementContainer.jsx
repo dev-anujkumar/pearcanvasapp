@@ -420,14 +420,14 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,currentElementType) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,parentElement) => {
         const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = currentElementType == "showhide"? activeEditorId:`cypress-${this.props.index}`
+            let index  = parentElement.type == "showhide"? activeEditorId:`cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
@@ -436,7 +436,7 @@ class ElementContainer extends Component {
                 html = tempDiv.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
                 }
@@ -535,11 +535,12 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate) => {
+    handleBlur = (forceupdate,currrentElement) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element.type)
+        let element = currrentElement ? currrentElement:this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element)
     }
 
     /**
