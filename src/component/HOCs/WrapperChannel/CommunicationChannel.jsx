@@ -261,9 +261,11 @@ function WithWrapperCommunication(WrappedComponent) {
                 let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter
                 let LOElements = [];
 
+                let loIndex = [];
                 bodymatter.forEach((item, index) => {
                     if (item.type == "element-learningobjectivemapping") {
                         LOElements.push(item.id)
+                        loIndex.push(index);
                     }
                 });
                 let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
@@ -272,7 +274,9 @@ function WithWrapperCommunication(WrappedComponent) {
                         "loref": loUrn
                     },
                     "metaDataAnchorID": LOElements,
-                    "elementVersionType": "element-learningobjectivemapping"
+                    "elementVersionType": "element-learningobjectivemapping",
+                    "loIndex" : loIndex,
+                    "slateUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
