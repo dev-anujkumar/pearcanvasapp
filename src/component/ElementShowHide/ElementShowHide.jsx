@@ -3,11 +3,14 @@
 */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
+import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
+
 class ElementShowHide extends React.Component {
     constructor(props) {
         super(props);
@@ -38,6 +41,11 @@ class ElementShowHide extends React.Component {
         }
 
     }
+
+    deleteShowHideUnit = (id, type, contentUrn, index) => {
+        this.props.deleteShowHideUnit(id, type, contentUrn, index)
+    }
+    
     render() {
         const { model, index, element, slateLockInfo } = this.props;
 
@@ -55,6 +63,7 @@ class ElementShowHide extends React.Component {
                                         openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                                         element={this.props.element}
                                         index={`${index}-1-${innerIndex}`}
+                                        innerIndex = {innerIndex}
                                         placeholder="Enter Show text"
                                         id={showItem.id}
                                         //  tagName={'p'}
@@ -69,6 +78,7 @@ class ElementShowHide extends React.Component {
                                         showHideType="show"
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {showItem}
+                                        deleteShowHideUnit = {this.deleteShowHideUnit}
                                     />)
                             })}
                         </div>
@@ -85,6 +95,7 @@ class ElementShowHide extends React.Component {
                                         openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                                         element={this.props.element}
                                         index={`${index}-2-${innerIndex}`}
+                                        innerIndex = {innerIndex}
                                         placeholder="Enter revel text"
                                         // id={ posterItem.id} tagName={'p'}
                                         model={posterItem.html.text}
@@ -114,6 +125,7 @@ class ElementShowHide extends React.Component {
                                         openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
                                         element={this.props.element}
                                         index={`${index}-3-${innerIndex}`}
+                                        innerIndex = {innerIndex}
                                         placeholder="Enter Hide text"
                                         id={hideItem.id}
                                         //  tagName={'p'}
@@ -128,6 +140,7 @@ class ElementShowHide extends React.Component {
                                         showHideType="hide"
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {hideItem}
+                                        deleteShowHideUnit = {this.deleteShowHideUnit}
                                     />)
                             })}
 
@@ -160,4 +173,6 @@ ElementShowHide.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-export default ElementShowHide;
+
+export default connect(null, { deleteShowHideUnit })(ElementShowHide)
+// export default ElementShowHide;

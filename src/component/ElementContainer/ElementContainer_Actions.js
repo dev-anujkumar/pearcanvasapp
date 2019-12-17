@@ -494,12 +494,23 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)
     })
+}
 
-
-
-
-
-   
-    console.log("bodymatter", bodymatter);
-   
+export const deleteShowHideUnit = (elmId, type, parentUrn, index) => (dispatch, getState) => {
+    let _requestData = {
+        projectUrn : config.projectUrn,
+        entityUrn : parentUrn,
+        workUrn : elmId,
+        index : index.toString(),
+        slateEntity : config.slateEntityURN
+    }
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    )
 }
