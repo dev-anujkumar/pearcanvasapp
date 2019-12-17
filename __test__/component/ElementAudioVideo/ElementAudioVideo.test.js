@@ -11,7 +11,7 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
 })
 describe('Testing Element Audio-Video component', () => {
 
-    test('renders without crashing', () => {
+    it('renders without crashing', () => {
         let props = {
             model:{},
             index:"" ,
@@ -110,7 +110,7 @@ describe('Testing Element Audio-Video component', () => {
         })
 
     });
-    describe('Testing ElementAudioVideo component with props', () => {
+    describe('Testing handleC2MediaClick function', () => {
 
         let props = {
             slateLockInfo: {
@@ -130,24 +130,54 @@ describe('Testing Element Audio-Video component', () => {
             handleFocus: jest.fn(),
             accessDenied: jest.fn(),
         };
-        const e = {
+        const event = {
             target:{
                 tagName: "p"
             },
             stopPropagation() { }
         }
+        let alfrescoPath={
+            alfresco:{
+                nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+            repositoryFolder: "001_C5 Media POC - AWS US ",
+            repositoryName: "AWS US",
+            repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+            visibility: "MODERATED",
+            },
+            associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+            authorName: "Krajewski",
+            citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+            containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+            currentOrigin: "local",
+            dateApproved: null,
+            dateCreated: "2019-02-28T19:14:32.948Z",
+            eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+            entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+            gridId: [],
+            hasVersions: false,
+            id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+            name: "ELMTEST_StgEnv_Krajewski Test",
+            roleId: "admin",
+            ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+            status: "wip",
+            tcm: {timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true},
+            url: null,
+            userApprover: null,
+            userApproverFullName: null,
+            userCount: 0,
+            'x-prsn-user-id': " ",
+        }
         const elementAudioVideo = mount(<ElementAudioVideo {...props}/>);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-        it('onClick-default case', () => {
+        it('handleC2MediaClick-default case', () => {
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
-            elementAudioVideoInstance.handleC2MediaClick(e);
+            elementAudioVideoInstance.handleC2MediaClick(event);
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         }) 
-
-        it('Simulating alfresco click without alfresco location-if path', () =>{
+        it('handleC2MediaClick-if->if->if case', () =>{
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -161,16 +191,26 @@ describe('Testing Element Audio-Video component', () => {
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
                 ]
             };
+
             const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
-            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'b'}}) 
+            let event={
+                target: { tagName: 'b' },
+    
+            }
+            elementAudioVideoInstance.setState({
+                projectMetadata: alfrescoPath
+            })
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+
+            config.alfrescoMetaData = alfrescoPath
+            elementAudioVideoInstance.handleC2MediaClick(event) 
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         })
-        it('Simulating alfresco click without alfresco location', () =>{
+        it('handleC2MediaClick-if->if->else case', () =>{
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -179,20 +219,28 @@ describe('Testing Element Audio-Video component', () => {
                 onClick : ()=>{},
                 handleFocus: function(){},
                 permissions: [],
-                model: videoElementTypeSLDefault,
-                accessDenied: jest.fn()
+                accessDenied: jest.fn(),
             };
-            config.alfrescoMetaData = {nodeRef : {}}
+
             const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
-            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'b'}}) 
+            let event={
+                target: { tagName: 'b' },
+    
+            }
+            elementAudioVideoInstance.setState({
+                projectMetadata: alfrescoPath
+            })
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+
+            config.alfrescoMetaData = alfrescoPath
+            elementAudioVideoInstance.handleC2MediaClick(event) 
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         })
-        it('Simulating alfresco click with alfresco location', () =>{
+        it('handleC2MediaClick-else->if case', () =>{
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -204,20 +252,75 @@ describe('Testing Element Audio-Video component', () => {
                     "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                     "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
-                ]
+                ],
+                accessDenied: jest.fn(),
             };
+            config.alfrescoMetaData = {}
             const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-            config.alfrescoMetaData = {nodeRef : {}}
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
-            elementAudioVideoInstance.handleC2MediaClick({target : {tagName : 'b'}})           
+            let event={
+                target: { tagName: 'b' },
+    
+            }
+            elementAudioVideoInstance.setState({
+                projectMetadata: {}
+            })
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+            elementAudioVideoInstance.handleC2MediaClick(event) 
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         })
-        describe('Alfresco Data Handling', () => {
+        it('handleC2MediaClick-else->else case', () =>{
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick : ()=>{},
+                handleFocus: function(){},
+                permissions: [],
+                accessDenied: jest.fn(),
+            };
+            config.alfrescoMetaData = {}
+            const elementAudioVideo = mount( <ElementAudioVideo {...props} /> )
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick') 
+            let event={
+                target: { tagName: 'b' },
+    
+            }
+            elementAudioVideoInstance.setState({
+                projectMetadata: {}
+            })
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            elementAudioVideoInstance.handleC2MediaClick(event) 
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
+            spyhandleC2MediaClick.mockClear()
+        })
+    })
+    describe('Testing dataFromAlfresco function', () => {
 
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            model: videoElementTypeSLDefault,
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            accessDenied: jest.fn(),
+        };
             let sampleAltTextDiv = document.createElement('at')
             sampleAltTextDiv.setAttribute('name', 'alt_text' );
             sampleAltTextDiv.innerHTML = "alt_text"
@@ -327,7 +430,6 @@ describe('Testing Element Audio-Video component', () => {
                 expect(spydataFromAlfresco).toHaveBeenCalled()
                 spydataFromAlfresco.mockClear()
             }) 
-         
-        }) 
+
     })
 });
