@@ -13,6 +13,7 @@ export class ReactEditor extends React.Component {
     this.placeHolderClass = ''
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
+    this.termtext = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
       formats: GlossaryFootnoteEditorConfig.formats,
@@ -240,7 +241,7 @@ export class ReactEditor extends React.Component {
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
-      this.termtext = document.getElementById('glossary-0').innerHTML;
+      this.termtext = document.getElementById('glossary-0')&&document.getElementById('glossary-0').innerHTML;
       tinymce.init(this.editorConfig);
     }
     this.handlePlaceholer();
