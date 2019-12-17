@@ -851,9 +851,9 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        //this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         await saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
-        //this.handleBlur(null, true);
+        this.handleBlur(null, true);
     }
 
 
