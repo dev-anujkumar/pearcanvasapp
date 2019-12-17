@@ -28,7 +28,8 @@ import {
     ACCESS_DENIED_POPUP,
     SET_PARENT_NODE,
     OPEN_POPUP_SLATE,
-    CLOSE_POPUP_SLATE
+    CLOSE_POPUP_SLATE,
+    CREATE_SHOW_HIDE_ELEMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -46,7 +47,8 @@ const INITIAL_STATE = {
     accesDeniedPopup: false,
     popupSlateData: null,
     roleId: '',
-    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+    showHideId:""
 };
 
 const INITIAL_ACTION = {
@@ -142,6 +144,12 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 accesDeniedPopup: action.payload
+            };
+        case CREATE_SHOW_HIDE_ELEMENT:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData,
+                showHideId: action.payload.showHideId
             };
         case OPEN_POPUP_SLATE:
             return {

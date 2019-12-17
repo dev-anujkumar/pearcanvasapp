@@ -1,0 +1,23 @@
+.divWidgetShowHide .show-hide{
+    border-bottom: 1px solid #808080b8;
+  
+}
+.divWidgetShowHide h4 {
+    margin:10px;
+    padding-top: 10px;
+    color: #808080;
+}
+
+.divWidgetShowHide .show-hide.show-hide-active{
+    box-shadow: 0px 2px 8px -2px;
+    border-bottom: 3px solid #117d8e;
+    border-radius: 3px;
+}
+
+.divWidgetShowHide .show-hide.show-hide-active h4{
+    color:#117d8e;
+}
+
+.mce-content-body .mce-edit-focus {
+
+}

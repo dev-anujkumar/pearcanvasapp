@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -35,6 +35,7 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
+import ElementShowHide from '../ElementShowHide';
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -52,23 +53,23 @@ class ElementContainer extends Component {
             sectionBreak: null
         };
     }
-    componentDidMount() { 
+    componentDidMount() {
         this.setState({
             ElementId: this.props.element.id,
             btnClassName: '',
             isOpener: this.props.element.type === elementTypeConstant.OPENER
         })
     }
-    
-    componentWillUnmount(){
-        if(config.releaseCallCount === 0){
+
+    componentWillUnmount() {
+        if (config.releaseCallCount === 0) {
             this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
             config.releaseCallCount += 1
         }
     }
 
     componentWillReceiveProps(newProps) {
-        if(!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+        if (!(newProps.permissions && newProps.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
             return true
         }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
@@ -102,7 +103,7 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag) => {
-        if(!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()){
+        if (!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
             return true
         }
         if (updateFromC2Flag) {
@@ -111,12 +112,12 @@ class ElementContainer extends Component {
                     borderToggle: 'active'
                 })
             }
-            else{
+            else {
                 this.setState({
                     borderToggle: 'active',
                     btnClassName: 'activeTagBgColor'
                 })
-            }   
+            }
         }
         else {
             if (this.props.element.type === "openerelement") {
@@ -136,7 +137,7 @@ class ElementContainer extends Component {
     }
 
     replaceUnwantedtags = (html) => {
-        let tempDiv = document.createElement('div'); 
+        let tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         return tempDiv.innerHTML;
@@ -147,20 +148,20 @@ class ElementContainer extends Component {
      * @param {*} previousElementData old element data
      */
     figureDifference = (index, previousElementData) => {
-        
+
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
             creditsDOM = document.getElementById(`cypress-${index}-3`)
-            
+
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-        
+
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
@@ -190,7 +191,7 @@ class ElementContainer extends Component {
     figureDifferenceBlockCode = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            preformattedText = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerText.trim(): "",
+            preformattedText = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerText.trim() : "",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -260,9 +261,9 @@ class ElementContainer extends Component {
         subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
         titleHTML = this.replaceUnwantedtags(titleHTML)
 
-        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
@@ -304,7 +305,7 @@ class ElementContainer extends Component {
             return (titleHTML !== previousElementData.html.title ||
                 subtitleHTML !== previousElementData.html.subtitle || 
                 captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits || 
+                creditsHTML !== previousElementData.html.credits ||
                 this.props.oldImage !== newInteractiveid
                 );
         }
@@ -313,7 +314,7 @@ class ElementContainer extends Component {
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`)? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g,""): "<p></p>",
+            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g, "") : "<p></p>",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -322,9 +323,9 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML= captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML= creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
@@ -353,7 +354,7 @@ class ElementContainer extends Component {
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
         let newAudioVideoId = ""
-        if(previousElementData.figuretype === "audio"){
+        if (previousElementData.figuretype === "audio") {
             newAudioVideoId = previousElementData.figuredata.audio.path
         }
         else {
@@ -363,15 +364,15 @@ class ElementContainer extends Component {
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             captionDOM = document.getElementById(`cypress-${index}-2`),
             creditsDOM = document.getElementById(`cypress-${index}-3`)
-            
+
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-        
+
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
@@ -420,22 +421,23 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,parentElement) => {
         const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-                let currentNode = document.getElementById(`cypress-${this.props.index}`)
+            let index  = parentElement.type == "showhide"? activeEditorId:`cypress-${this.props.index}`
+                let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;               
+                tempDiv.innerHTML = html;
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
                 }
@@ -515,7 +517,19 @@ class ElementContainer extends Component {
                     if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData);
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                    }
+                    break;
+                }
+            case elementTypeConstant.SHOW_HIDE:
+                {
+                    // let html = node.innerHTML;
+                    let currentListNode = document.getElementById(`cypress-${this.props.index}`)
+                    let nodehtml = currentListNode.innerHTML;
+                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
                     }
                     break;
                 }
@@ -525,19 +539,20 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate) => {
+    handleBlur = (forceupdate,currrentElement) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
         let node = document.getElementById(activeEditorId);
-        this.handleContentChange(node, this.props.element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate)
+        let element = currrentElement ? currrentElement:this.props.element
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element)
     }
 
     /**
      * Will e called on assessment element's blur
      */
-    handleBlurAssessmentSlate = (assessmentData)=>{
+    handleBlurAssessmentSlate = (assessmentData) => {
         // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let dataToSend = {...this.props.element}
+        let dataToSend = { ...this.props.element }
         if (assessmentData.id) {
             dataToSend.elementdata.assessmentformat = assessmentData.format;
             dataToSend.elementdata.usagetype = assessmentData.usageType;
@@ -655,7 +670,7 @@ class ElementContainer extends Component {
         let { contentUrn } = this.props.element
         let index = this.props.index
 
-        if(this.state.sectionBreak){
+        if (this.state.sectionBreak) {
             parentUrn = {
                 elementType: element.type,
                 manifestUrn: element.id,
@@ -673,8 +688,8 @@ class ElementContainer extends Component {
             type = this.props.parentElement.type
             contentUrn = this.props.parentElement.contentUrn
         }
-        
-           // api needs to run from here
+
+        // api needs to run from here
         this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index);
         this.setState({
             sectionBreak: null
@@ -710,18 +725,18 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, updatePageNumber, accessDenied, allComments } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments.filter(({commentStatus, commentOnEntity}) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
+        let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id && commentStatus.toLowerCase() === "open").length > 0
         /** Handle TCM for tcm enable elements */
         let tcm = false;
         let feedback = false;
-        if(element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
+        if (element.type == 'element-authoredtext' || element.type == 'element-list' || element.type == 'element-blockfeature' || element.type == 'element-learningobjectives') {
             if (element.tcm) {
                 tcm = element.tcm;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
             }
             if (element.feedback) {
                 feedback = element.feedback;
-                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true'}); 
+                sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
             }
         }
 
@@ -729,7 +744,7 @@ class ElementContainer extends Component {
         if (labelText) {
             switch (element.type) {
                 case elementTypeConstant.ASSESSMENT_SLATE:
-                    editor = <AssessmentSlateCanvas openCustomPopup = {this.props.openCustomPopup} permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist} />
+                    editor = <AssessmentSlateCanvas openCustomPopup={this.props.openCustomPopup} permissions={permissions} model={element} elementId={element.id} handleBlur={this.handleBlurAssessmentSlate} handleFocus={this.handleFocus} showBlocker={this.props.showBlocker} slateLockInfo={slateLockInfo} isLOExist={this.props.isLOExist} />
                     labelText = 'AS'
                     break;
                 case elementTypeConstant.OPENER:
@@ -763,7 +778,7 @@ class ElementContainer extends Component {
                             //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={accessDenied} updateFigureData = {this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
@@ -811,7 +826,7 @@ class ElementContainer extends Component {
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         onListSelect={this.props.onListSelect}
-                        />;
+                    />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
                     editor = <ElementMetaDataAnchor showBlocker={this.props.showBlocker} permissions={permissions} handleBlur={this.handleBlur} handleFocus={this.handleFocus} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} />;
@@ -839,6 +854,10 @@ class ElementContainer extends Component {
                         />;
                     labelText = 'Pop'
                     break;
+                case elementTypeConstant.SHOW_HIDE:
+                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    labelText = 'SH'
+                    break;
             }
         } else {
             editor = <p className="incorrect-data">Incorrect Data - {element.id}</p>;
@@ -848,11 +867,11 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = ''
-        if(!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))){
+        if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
-        if(element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
-            if((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
+        if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
+            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
@@ -862,7 +881,7 @@ class ElementContainer extends Component {
         return (
             <div className="editor" data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener?' ignore-for-drag':''}`} labelText={labelText} />
+                    <Button type="element-label" btnClassName={`${btnClassName} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} />
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && config.slateType !== 'assessment' ? (<Button type="delete-element" onClick={() => this.showDeleteElemPopup(true)} />)
                         : null}
                     {this.renderColorPaletteButton(element)}
@@ -873,8 +892,8 @@ class ElementContainer extends Component {
                 </div>
                 {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                     {permissions && permissions.includes('notes_adding') && <Button type="add-comment" btnClassName={btnClassName} onClick={() => this.handleCommentPopup(true)} />}
-                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={()=>handleCommentspanel(element.id,this.props.index)} type="comment-flag" />}
-                    {feedback? <Button elementId={element.id} type="feedback" onClick={this.handleTCM}/>: (tcm && <Button type="tcm" onClick={this.handleTCM}/>)}
+                    {permissions && permissions.includes('note_viewer') && anyOpenComment && <Button elementId={element.id} onClick={() => handleCommentspanel(element.id, this.props.index)} type="comment-flag" />}
+                    {feedback ? <Button elementId={element.id} type="feedback" onClick={this.handleTCM} /> : (tcm && <Button type="tcm" onClick={this.handleTCM} />)}
                 </div> : ''}
                 {this.state.popup && <PopUp
                     togglePopup={e => this.handleCommentPopup(e, this)}
@@ -1038,7 +1057,11 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(openPopupSlate(element))
         },
         accessDenied,
-        releaseSlateLock
+        releaseSlateLock,
+        createShowHideElement: (element, type, index, parentContentUrn) => {
+            dispatch(createShowHideElement(element, type, index, parentContentUrn))
+        },
+
     }
 }
 
@@ -1050,7 +1073,8 @@ const mapStateToProps = (state) => {
         permissions: state.appStore.permissions,
         oldImage: state.appStore.oldImage,
         glossaryFootnoteValue: state.glossaryFootnoteReducer.glossaryFootnoteValue,
-        allComments : state.commentsPanelReducer.allComments
+        allComments: state.commentsPanelReducer.allComments,
+        showHideId: state.appStore.showHideId
     }
 }
 

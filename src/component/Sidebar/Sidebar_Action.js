@@ -9,6 +9,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {popup} from '../../../fixtures/ElementPopup'
+import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
@@ -175,48 +176,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }
 
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-
-    let storeElement = store[config.slateManifestURN];
-        let bodymatter = storeElement.contents.bodymatter;
-        let focusedElement = bodymatter;
-        indexes.forEach(index => {
-            if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = popup //res.data;
-            } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
-                }
-            }
-        });
-        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-        let altText="";
-        let longDesc="";
-        
-        let activeElementObject = {
-            elementId: newElementData.elementId,
-            index: indexes.join("-"),
-            elementType: newElementData.elementType,
-            primaryOption: newElementData.primaryOption,
-            secondaryOption: newElementData.secondaryOption,
-            tag: newElementData.labelText,
-            toolbar: newElementData.toolbar,
-            elementWipType: newElementData.elementWipType,
-            altText,
-            longDesc
-        };
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        dispatch({
-            type: FETCH_SLATE_DATA,
-            payload: store
-        });
-
-        dispatch({
-            type: SET_ACTIVE_ELEMENT,
-            payload: activeElementObject
-        });
-
-/*     axios.post(url, JSON.stringify(conversionDataToSend), { 
+    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
+    axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
 			"Content-Type": "application/json",
 			"PearsonSSOSession": config.ssoToken
@@ -228,7 +189,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let focusedElement = bodymatter;
         indexes.forEach(index => {
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data;
+                focusedElement[index] = res.data//ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
                   //  focusedElement = focusedElement[index].elementdata.bodymatter;
@@ -268,7 +229,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         //console.log(err) 
-    }) */
+    })
 }
 catch (error) {
     console.log(error)

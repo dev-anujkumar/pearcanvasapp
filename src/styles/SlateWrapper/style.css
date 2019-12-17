@@ -246,3 +246,11 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
         height: 5em;
     }
 }
+
+.showHide .cypress-editable.place-holder::before{
+    /* margin-top: 0px !important; */
+}
+
+.showHide .cypress-editable{
+    /* min-height: 44px !important; */
+}

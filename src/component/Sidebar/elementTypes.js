@@ -546,32 +546,6 @@ export default {
                 }
             }
         },
-        'primary-aside-showhide': {
-            text: 'Show Hide',
-            toolbar: ['assetpopover'],
-            enum: 'MMI',
-            subtype: {
-                'secondary-aside-showhide': {
-                    text: 'Show Hide',
-                    labelText: 'SH',
-                    enum: 'SHOWHIDE',
-                    wipValue: 'showhide'
-                }
-            }
-        },
-        'primary-aside-popup': {
-            text: 'Pop Up',
-            toolbar: ['assetpopover'],
-            enum: 'NARRATIVE_LINK',
-            subtype: {
-                'secondary-aside-popup': {
-                    text: 'Pop Up',
-                    labelText: 'Pop',
-                    enum: 'POPUP',
-                    wipValue: 'popup'
-                }
-            }
-        },
         enumType: 'container',
     },
     'element-workedexample': {
@@ -706,12 +680,12 @@ export default {
         'primary-showhide': {
             text: 'Show Hide',
             toolbar: ['assetpopover'],
-            enum: 'MMI',
+            enum: 'SHOW_HIDE',
             subtype: {
                 'secondary-interactive-showhide': {
                     text: 'Show Hide',
                     labelText: 'SH',
-                    enum: 'SHOWHIDE',
+                    enum: 'NA',
                     wipValue: 'showhide'
                 }
             }
