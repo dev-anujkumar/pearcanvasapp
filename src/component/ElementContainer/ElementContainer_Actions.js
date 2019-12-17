@@ -83,6 +83,22 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
         })
 }
 
+function createNewVersionOfSlate(){
+    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "PearsonSSOSession": config.ssoToken,
+                "ApiKey": config.APO_API_KEY,
+            }
+        })
+            .then(res => res.json()) // OR res.json()
+            .then((res) => {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        })
+}
+
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
@@ -101,6 +117,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     "workUrn": elmId
                 }
         }
+    }
+
+    let parentData = getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        createNewVersionOfSlate()
+        return false;
     }
 
     let _requestData = prepareDeleteRequestData(type)
@@ -221,7 +245,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
-            if(response.data.id !== updatedData.id){
+            if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
+                console.log("mapping inside")
+                if (currentSlateData.status === 'wip') {
+                    console.log("mapping wip")
+                    updateLOInStore(updatedData, response.data);
+                } else if (currentSlateData.status === 'approved') {
+                    console.log("mapping approved")
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+            } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
                 }else if(currentSlateData.status === 'approved'){
@@ -237,6 +270,24 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
     })
 }
 
+function updateLOInStore(updatedData, versionedData) {
+    console.log("updateLOInStore")
+    let parentData = getState().appStore.slateLevelData;
+    let newslateData = JSON.parse(JSON.stringify(parentData));
+    let _slateObject = Object.values(newslateData)[0];
+    let { contents: _slateContent } = _slateObject;
+    let { bodymatter: _slateBodyMatter } = _slateContent;
+    for(let i = 0; i < updatedData.loIndex.length; i++){
+        newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }
+
+}
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;

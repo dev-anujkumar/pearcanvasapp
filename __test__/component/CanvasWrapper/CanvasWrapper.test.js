@@ -170,6 +170,8 @@ describe('Testing <CanvasWrapper> Component', () => {
             expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
         })
         test('should call updateTimer without crashing', () => {
+            global.setInterval = jest.fn();
+            canvasWrapperInstance.countTimer = 21;
             canvasWrapperInstance.updateTimer();
             canvasWrapperInstance.timeSince();
             expect(canvasWrapperInstance.state.showReleasePopup).toBe(false);
@@ -182,6 +184,17 @@ describe('Testing <CanvasWrapper> Component', () => {
             expect(typeof(wrapper.props().toggleCommentsPanel)).toEqual('function');
         })
         it('togglePageNumbering  function call',() => {
+            canvasWrapperInstance.togglePageNumbering();
+            expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
+        })
+        test('should call updateTimer mock', () => {
+            global.setInterval = jest.fn();
+            canvasWrapperInstance.countTimer = 21;
+            canvasWrapperInstance.updateTimer();
+            expect(global.setInterval).toHaveBeenCalled();
+        })
+        it('togglePageNumbering  function call togglecheck',() => {
+            canvasWrapperInstance.togglePageNumbering();
             canvasWrapperInstance.togglePageNumbering();
             expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
         })

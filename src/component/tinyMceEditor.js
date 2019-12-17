@@ -860,9 +860,9 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-      	// this.handleBlur();
+        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         await saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
-        this.handleBlur(null, true);
+        //this.handleBlur(null, true);
     }
 
 
@@ -1301,12 +1301,20 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
-        if(checkforToolbarClick(relatedTargets)){
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+        if (isBlockQuote) {
+            let tempdiv = document.createElement('div');
+            tempdiv.innerHTML = tinymce.activeEditor.getContent()
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {                
+                tinymce.activeEditor.setContent(this.lastContent);
+            }
+        }
+        let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
+        if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
         }
-        tinymce.$('span[data-mce-type="bookmark"]').each(function(){
+        tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })

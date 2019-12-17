@@ -31,7 +31,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    it('testing------- ADD OPENER ELEMENT ------action', () => {
+    xit('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
