@@ -9,6 +9,7 @@ import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole } from '../../constants/utility.js'
+import config from '../../../src/config/config.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -373,7 +374,9 @@ class Sidebar extends Component {
                 groupby: groupby
             },
             "metaDataAnchorID": [this.props.activeElement.elementId],
-            "elementVersionType": "element-generateLOlist"
+            "elementVersionType": "element-generateLOlist",
+            "loIndex" : this.props.activeElement.index,
+            "slateUrn": config.slateManifestURN
         }
         this.props.updateElement(data)
 
