@@ -53,7 +53,7 @@ function createNewVersionOfSlate(){
                 "ApiKey": config.APO_API_KEY,
             }
         })
-            .then(res => res.json()) // OR res.json()
+            .then(res => res.json())
             .then((res) => {
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         })
