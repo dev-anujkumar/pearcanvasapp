@@ -83,6 +83,22 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
         })
 }
 
+function createNewVersionOfSlate(){
+    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "PearsonSSOSession": config.ssoToken,
+                "ApiKey": config.APO_API_KEY,
+            }
+        })
+            .then(res => res.json()) // OR res.json()
+            .then((res) => {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        })
+}
+
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
@@ -100,6 +116,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     "workUrn": elmId
                 }
         }
+    }
+
+    let parentData = getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        createNewVersionOfSlate()
+        return false;
     }
 
     let _requestData = prepareDeleteRequestData(type)
