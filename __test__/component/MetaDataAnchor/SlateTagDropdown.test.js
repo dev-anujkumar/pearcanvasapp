@@ -120,20 +120,22 @@ describe('Test Rendering of metadaanchor on slate', () => {
         slateTagInstance.learningObjectiveDropdown(event);
         // expect(event.target.innerText).toEqual(data);
     })
-    xit('on innerText=AddLearningObjectiveSlateDropdown ', () => {
-        document.cookie= "?projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
+    it('on innerText=AddLearningObjectiveSlateDropdown ', () => {
+        document.cookie= "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Add a New Learning Objective" } };
         let data = "Add a New Learning Objective";
         slateTagInstance.learningObjectiveDropdown(event);
         expect(event.target.innerText).toEqual(data);
     })
-    xit('on innerText=AddEditLearningObjectiveDropdown ', () => {
+    it('on innerText=AddEditLearningObjectiveDropdown ', () => {
+        document.cookie= "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Add From Existing or Edit" } };
         let data = "Add From Existing or Edit";
         slateTagInstance.learningObjectiveDropdown(event);
         expect(event.target.innerText).toEqual(data);
     })
-    xit('on innerText=AddLearningObjectiveAssessmentDropdown ', () => {
+    it('on innerText=AddLearningObjectiveAssessmentDropdown ', () => {
+        document.cookie= "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Add From Existing" } };
         let data = "Add From Existing";
         slateTagInstance.learningObjectiveDropdown(event);
