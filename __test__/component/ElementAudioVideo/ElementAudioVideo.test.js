@@ -55,19 +55,19 @@ describe('Testing Element Audio-Video component', () => {
             accessDenied: jest.fn(),
         };
         let component = mount(<ElementAudioVideo {...props} />);
-        test('renders properly with default audio SL-type element', () => {        
+        it('renders properly with default audio SL-type element', () => {        
             expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
            
         })
-        test('renders  properly with given audio SL-type  element', () => {
+        it('renders  properly with given audio SL-type  element', () => {
             component.setProps({ model: audioElementTypeSLWithData,index: 2 });
             expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
         })
-        test('renders  properly with default audio Alfresco-type element', () => {
+        it('renders  properly with default audio Alfresco-type element', () => {
             component.setProps({ model: audioElementTypeAlfrescoDefault,index: 3 });
             expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
         })
-        test('renders  properly with given audio Alfresco-type element', () => {
+        it('renders  properly with given audio Alfresco-type element', () => {
             component.setProps({ model: audioElementTypeAlfrescoWithData ,index:4 });
             expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
         })
@@ -93,18 +93,18 @@ describe('Testing Element Audio-Video component', () => {
             accessDenied: jest.fn(),
         };
         let component = mount(<ElementAudioVideo {...props} />);
-        test('renders properly with default video SL-type element', () => {
+        it('renders properly with default video SL-type element', () => {
             expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
         })
-        test('renders  properly with given video SL-type element', () => {
+        it('renders  properly with given video SL-type element', () => {
             component.setProps({ model: videoElementTypeSLWithData,index: 6 });
             expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
         })
-        test('renders  properly with default video Alfresco-type element', () => {
+        it('renders  properly with default video Alfresco-type element', () => {
             component.setProps({ model: videoElementTypeAlfrescoDefault ,index: 7});
             expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
         })
-        test('renders  properly with given video Alfresco-type element', () => {
+        it('renders  properly with given video Alfresco-type element', () => {
             component.setProps({ model: videoElementTypeAlfrescoWithData,index: 8 });
             expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
         })
