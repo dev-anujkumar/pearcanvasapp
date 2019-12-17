@@ -719,6 +719,9 @@ export class TinyMceEditor extends Component {
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
+        if (this.props.element.figuretype === "codelisting") {
+            return;
+        }
         if(this.props.element && this.props.element.type === 'element-list'){
             args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
         }
@@ -1289,27 +1292,27 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-        /*
-        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
-        let tempdiv = document.createElement('div');
-        tempdiv.innerHTML = tinymce.activeEditor.getContent()
-        if (isBlockQuote && !tinymce.$(tempdiv).find('.paragraphNummerEins').length  || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-            tinymce.activeEditor.setContent(this.lastContent);
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+        if (isBlockQuote) {
+            let tempdiv = document.createElement('div');
+            tempdiv.innerHTML = tinymce.activeEditor.getContent()
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {                
+                tinymce.activeEditor.setContent(this.lastContent);
+            }
         }
-        */
-        let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
-        if(checkforToolbarClick(relatedTargets)){
+        let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
+        if (checkforToolbarClick(relatedTargets)) {
             e.stopPropagation();
             return;
         }
-        tinymce.$('span[data-mce-type="bookmark"]').each(function(){
+        tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
             this.outerHTML = innerHtml;
         })
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        }) 
+        })
         this.props.handleBlur(forceupdate);
     }
     

@@ -5,7 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
 // import { comments } from '../../../fixtures/commentPanelData.js'
-import { slateLevelData, newslateData, addNewComment, addNewCommentOnAsideElement, deleteElement, slateLevelDataAside, newslateDataAside } from "../../../fixtures/slateTestingData"
+import { slateLevelData, newslateData, addNewComment,addNewCommentAside, slateLevelAsideData,addNewCommentOnAsideElement,newSlateAsideDataComment, deleteElement, slateLevelDataAside, newslateDataAside ,newslateAsideData} from "../../../fixtures/slateTestingData"
 import axios from 'axios';
 
 import { ADD_COMMENT, ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, SET_OLD_IMAGE_PATH} from '../../../src/constants/Action_Constants';
@@ -134,6 +134,80 @@ describe('Tests ElementContainer Actions', () => {
                 expectedActions[1].payload && delete expectedActions[1].payload['commentDateTime'];
                 expect(store.getActions()).toEqual(expectedActions);
                 
+            });
+        })
+
+        it('testing------- ADD COMMENT for aside elements ------action-else case', () => {
+            let initialState = {
+                slateLevelData: slateLevelAsideData.slateLevelData,
+                appStore: slateLevelAsideData,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25
+                }
+            }
+            let store = mockStore(() => initialState);
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 201,
+                    response: response
+                });
+            });
+
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0v";
+            addNewComment.commentOnEntity = elementId;
+            newslateAsideData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].comments = false;
+            newslateAsideData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[1].elementdata.bodymatter[0].comments = true;
+            const expectedActions = [{
+                type: ADD_COMMENT,
+                payload: slateLevelAsideData
+            },
+            {
+                type: ADD_NEW_COMMENT,
+                payload: addNewComment
+            }];
+
+            const asideData = {
+                id: "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
+                type: "element-aside"
+            }
+            const parentUrn={
+                manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+            }
+            return store.dispatch(actions.addComment(newComment.comment, elementId, asideData,parentUrn)).then(() => {
+               store.getActions()[1].payload && delete store.getActions()[1].payload['commentDateTime'];
+               expectedActions.payload && delete expectedActions.payload['commentDateTime'];
+               expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+               expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
+                
+            });
+        })
+
+        it('testing------- ADD COMMENT ------action- catch case', () => {
+            let store = mockStore(() => initialState);
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 404,
+                    response: {}
+                });
+            });
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+            newslateData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter[0].comments = true;
+            return store.dispatch(actions.addComment(newComment.comment, elementId)).catch((error) => {
             });
         })
     })
@@ -277,7 +351,37 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
+        it('testing------- Delete Element------action-catch case', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+                contentUrn="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                type="element-workedexample",
+                status =200;
+            let asideData = {
+                type:"element-aside",
+                id:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                
+            };
+
+            (deleteElement.slateLevelData['urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e'].contents.bodymatter).splice(2, 1);
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: deleteElement
+            }];
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 404,
+                    response: {}
+                });
+            });
+
+            return store.dispatch(actions.deleteElement(elementId,type, "",asideData,contentUrn)).catch(() => {
+                // expect(store.getActions()).toEqual(expectedActions);
+            });
+        })
     });
+
     describe('testing------- UPDATE ELEMENT------action', () => {
         it('testing------- Update Element------action', () => {
             let store = mockStore(() => initialState);
