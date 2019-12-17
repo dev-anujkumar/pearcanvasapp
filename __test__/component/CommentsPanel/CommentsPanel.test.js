@@ -158,6 +158,8 @@ describe('Testing CommentsPanel component with props', () => {
 
   describe('Testing action function with props', () => {
     let wrapper = mount(<Provider store={store}><CommentsPanel comment={comments} /></Provider>);
+    wrapper.find('.dropdown.sort-dropdown .dropdown__button').simulate('click');
+    wrapper.find('.dropdown.status-dropdown .dropdown__button').simulate('click');
     const instance = wrapper.find('CommentsPanel').instance();
     it('renders updateElementComment ', () => {
       instance.updateElementComment();
