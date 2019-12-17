@@ -1292,12 +1292,14 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+      /*  
+      let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
         let tempdiv = document.createElement('div');
         tempdiv.innerHTML = tinymce.activeEditor.getContent()
         if (isBlockQuote && !tinymce.$(tempdiv).find('.paragraphNummerEins').length  || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
             tinymce.activeEditor.setContent(this.lastContent);
         }
+        */
         let relatedTargets = (e&&e.relatedTarget&&e.relatedTarget.classList)?e.relatedTarget.classList : [];
         if(checkforToolbarClick(relatedTargets)){
             e.stopPropagation();
