@@ -324,10 +324,10 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
-                if(indexes.length === 2){
-                    dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
-                }else if(indexes.length === 3){
-                    dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0,asideData));
+                if(indexes.length === 2 || indexes.length === 3){
+                    dispatch(fetchSlateData(asideData.id, asideData.contentUrn, 0, asideData));
+                // }else if(indexes.length === 3){
+                //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
             }else{
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
@@ -348,7 +348,7 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    let bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    // let bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
     if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
             if(newBodymatter[index].figuretype==="assessment"){

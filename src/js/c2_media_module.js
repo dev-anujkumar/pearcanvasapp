@@ -204,13 +204,13 @@ export const c2MediaModule = {
             var config = { attributes: true };
 
             // Callback function to execute when mutations are observed
-            var callbackOb = function (mutationsList, observer) {
+            var callbackOb = function (mutationsList, observercb) {
                 for (var mutation of mutationsList) {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {
                         {
                             hideTocBlocker();
                             disableHeader(false);
-                            observer.disconnect();
+                            observercb.disconnect();
                         }
                     }
                 }
@@ -307,14 +307,14 @@ export const c2MediaModule = {
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
         // Callback function to execute when mutations are observed		
-        var callbackOb = function (mutationsList, observer) {
+        var callbackOb = function (mutationsList, observercb) {
             //console.log(mutationsList)		
             for (var mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class' && targetNode.classList.contains("transitionLeave-0-6")) {
                     {
                         hideTocBlocker();
                         disableHeader(false);
-                        observer.disconnect();
+                        observercb.disconnect();
                     }
                 }
             }
