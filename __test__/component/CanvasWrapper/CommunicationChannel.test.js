@@ -28,7 +28,10 @@ const initialState = {
     metadataReducer: {
         currentSlateLOData: {
             id: 1,
-            loUrn: "123"
+            loUrn: "123",
+            label:{
+                en:'en'
+            }
         }
     }
 };
@@ -202,14 +205,17 @@ describe('Testing communication channel', () => {
         updateElement: jest.fn(),
         currentSlateLOData: {
             id: 1,
-            loUrn: "123"
+            loUrn: "123",
+            label:{
+                en:'en'
+            }
         }
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    describe('Test for projectDetails-modifyObjKeys function', () => {
+    xdescribe('Test for projectDetails-modifyObjKeys function', () => {
         const spygetProjectConfig = jest.spyOn(channelInstance, 'getProjectConfig')
         const spymodifyObjKeys = jest.spyOn(channelInstance, 'modifyObjKeys')
         xtest('Test for projectDetails case-qa', () => {
@@ -333,7 +339,7 @@ describe('Testing communication channel', () => {
             spymodifyObjKeys.mockClear()
         })
     })
-    test('Test for getPermissions case', () => {
+    test('Test for getPermissions else case', () => {
         let event = {
             data: {
                 type: "getPermissions",
@@ -345,6 +351,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.sendingPermissions).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     })
+    
     test('Test for selectedSlate case', () => {
         let currentSlate = {
             category: "titleChange",
@@ -467,7 +474,23 @@ describe('Testing communication channel', () => {
             parentType: "chapter",
             title: "blank",
             type: "assessment",
-            slateType: "section"
+            slateType: "section",
+            node: {
+                HasBackMatter: false,
+                HasIntroductorySlate: false,
+                ParentContainerUrn: "urn:pearson:manifest:4887bbbf-286e-4b27-81ac-d77f507161dc",
+                ParentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
+                containerUrn: "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4",
+                cursored: false,
+                deletableStatus: true,
+                entityUrn: "urn:pearson:entity:fe283fbd-b9e4-4666-8d65-be2bc9da63b3",
+                label: "section",
+                nodeLabel: "section",
+                nodeParentLabel: "chapter",
+                parentBodyMatterLengthFlag: false,
+                parentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
+                type: "container"
+            }
         }
         let event = {
             data: {
@@ -475,12 +498,14 @@ describe('Testing communication channel', () => {
                 message: currentSlate1
             }
         }
+        props.withinLockPeriod = true;
         const spysetCurrentSlate = jest.spyOn(channelInstance, 'setCurrentSlate')
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
         spysetCurrentSlate.mockClear()
     })
-    xtest('Test for newSplitedSlate case', () => {
+    test('Test for newSplitedSlate case', () => {
+        jest.useFakeTimers();
         let event = {
             data: {
                 type: "newSplitedSlate",
@@ -489,7 +514,7 @@ describe('Testing communication channel', () => {
         }
         const spyhanndleSplitSlate = jest.spyOn(channelInstance, 'hanndleSplitSlate')
         channelInstance.handleIncommingMessages(event);
-        expect(channelInstance.hanndleSplitSlate).toHaveBeenCalled()
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
         spyhanndleSplitSlate.mockClear()
     })
     describe('Test for updateSlateTitleByID', () => {
@@ -693,6 +718,53 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
+        
+        test('Test swappedIS case', () => {
+            let event = {
+                data: {
+                    type: "swappedIS",
+                    message: ""
+                }
+            }
+            channelInstance.handleIncommingMessages(event);
+        })
+        test('Test ISDeleted case', () => {
+            let event = {
+                data: {
+                    type: "ISDeleted",
+                    message: ""
+                }
+            }
+            channelInstance.handleIncommingMessages(event);
+        })
+        test('Test TocLoader case', () => {
+            let event = {
+                data: {
+                    type: "TocLoader",
+                    message: ""
+                }
+            }
+            channelInstance.handleIncommingMessages(event);
+        })
+        test('Test projectDetails case', () => {
+            let event = {
+                data: {
+                    type: "projectDetails",
+                    message: {
+                        'tcm':{
+                            activated: true
+                        },
+                        'x-prsn-user-id':'c5test01',
+                        'ssoToken':'ssoToken',
+                        'id':'10',
+                        'citeUrn':'citeUrn',
+                        'entityUrn':'entityUrn',
+                        'name':'vetest'
+                    }
+                }
+            }
+            channelInstance.handleIncommingMessages(event);
+        })
     })
     test('Test for canvasBlocker case-true', () => {
         let event = {
@@ -746,7 +818,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    test('Test for statusForSave case', () => {
+    test('Test for statusForSave if case', () => {
         const div = document.createElement('div');
         const loChild = document.createElement('div');
         loChild.classList.add("learning-objective");
@@ -766,6 +838,30 @@ describe('Testing communication channel', () => {
                 }
             }
         }
+        const spyhandleLOData = jest.spyOn(channelInstance, 'handleLOData')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleLOData).toHaveBeenCalled()
+        spyhandleLOData.mockClear()
+    })
+    test('Test for statusForSave if-else case', () => {
+        const div = document.createElement('div');
+        const loChild = document.createElement('div');
+        loChild.classList.add("learning-objective");
+        div.appendChild(loChild);
+        document.body.appendChild(div);
+        let event = {
+            data: {
+                type: "statusForSave",
+                statusForSave: true,
+                message: {
+                    statusForSave: true,
+                    loObj: ''
+                }
+            }
+        }
+        props.currentSlateLOData.id = '';
+        initialState.metadataReducer.currentSlateLOData.id = '';
+        props.slateLevelData['urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'].contents.bodymatter = [];
         const spyhandleLOData = jest.spyOn(channelInstance, 'handleLOData')
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.handleLOData).toHaveBeenCalled()
@@ -796,7 +892,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
-    test('Test for getSlateLOResponse case', () => {
+    test('Test for getSlateLOResponse if case', () => {
         let event = {
             data: {
                 type: "getSlateLOResponse",
@@ -805,6 +901,18 @@ describe('Testing communication channel', () => {
                         en: "Lo"
                     }
                 }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for getSlateLOResponse else case', () => {
+        let event = {
+            data: {
+                type: "getSlateLOResponse",
+                message:'' 
             }
         }
         const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')

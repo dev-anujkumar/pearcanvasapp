@@ -9,6 +9,7 @@ import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole } from '../../constants/utility.js'
+import config from '../../../src/config/config.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -265,7 +266,7 @@ class Sidebar extends Component {
     
             if(attributionsList.length > 0) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockquoteTextCredit") : null
+                let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = attrNode && attrNode.innerHTML!=null ? attrNode.innerHTML.replace(/<br>/g, "") : ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable) 
@@ -283,7 +284,7 @@ class Sidebar extends Component {
             }
             if(this.state.activePrimaryOption === "primary-blockcode-equation" && this.props.activeElement.elementId){
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                let attrNode = activeElement && activeElement!=null ? activeElement.querySelector(".blockCodeFigure") : null
+                let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if( attrNode ){
                     attrNode.setAttribute("numbered", this.state.bceToggleValue)
                     attrNode.setAttribute("startNumber", this.state.bceNumberStartFrom)
@@ -372,7 +373,10 @@ class Sidebar extends Component {
                 level: "chapter",
                 groupby: groupby
             },
-            "metaDataAnchorID": [this.props.activeElement.elementId]
+            "metaDataAnchorID": [this.props.activeElement.elementId],
+            "elementVersionType": "element-generateLOlist",
+            "loIndex" : this.props.activeElement.index,
+            "slateUrn": config.slateManifestURN
         }
         this.props.updateElement(data)
 

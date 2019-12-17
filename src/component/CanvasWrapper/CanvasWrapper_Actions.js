@@ -5,7 +5,8 @@ import {
 	SET_ACTIVE_ELEMENT,
 	OPEN_POPUP_SLATE,
 	CLOSE_POPUP_SLATE,
-	SET_OLD_IMAGE_PATH
+    SET_OLD_IMAGE_PATH,
+    AUTHORING_ELEMENT_UPDATE
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -152,18 +153,17 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN, page, popupFlag) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN,entityURN, page, versioning) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
-	// sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
-	config.isFetchSlateInProgress = true;
-	if (config.totalPageCount <= page) {
-		page = config.totalPageCount;
-	}
-	config.page = page;
-    
-    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${config.slateEntityURN}/${manifestURN}?page=${page}`, {
+    // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+    config.isFetchSlateInProgress = true;
+    if (config.totalPageCount <= page) {
+        page = config.totalPageCount;
+    }
+    config.page = page;
+    return axios.get(`${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}`, {
         headers: {
             "Content-Type": "application/json",
             "PearsonSSOSession": config.ssoToken

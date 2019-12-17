@@ -13,8 +13,10 @@ export class ReactEditor extends React.Component {
     this.placeHolderClass = ''
     this.chemistryMlMenuButton = null;
     this.mathMlMenuButton = null;
+    this.termtext = null;
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
+      formats: GlossaryFootnoteEditorConfig.formats,
       plugins: "placeholder tiny_mce_wiris paste",
       menubar: false,
       selector: '#glossary-0',
@@ -99,7 +101,7 @@ export class ReactEditor extends React.Component {
     pastePreProcess = (plugin, args) => {
       let testElement = document.createElement('div');
       testElement.innerHTML = args.content;
-      if(testElement.innerText.trim().length){
+      if(testElement.innerText && testElement.innerText.trim().length){
           args.content = testElement.innerText;
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
@@ -214,7 +216,7 @@ export class ReactEditor extends React.Component {
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-      if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+      if (testElem.innerText && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
         this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
@@ -239,9 +241,13 @@ export class ReactEditor extends React.Component {
     if (!_isEditorPlaced) {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
+      this.termtext = document.getElementById('glossary-0')&&document.getElementById('glossary-0').innerHTML;
       tinymce.init(this.editorConfig);
     }
-    this.handlePlaceholer()
+    this.handlePlaceholer();
+    if(this.termtext){
+      document.getElementById('glossary-0').innerHTML=this.termtext;
+    }
   }
 
   componentDidUpdate() {
@@ -253,6 +259,9 @@ export class ReactEditor extends React.Component {
       }
     }
     this.handlePlaceholer()
+    if(this.termtext){
+      document.getElementById('glossary-0').innerHTML=this.termtext;
+    }
   }
 
   componentWillMount() {

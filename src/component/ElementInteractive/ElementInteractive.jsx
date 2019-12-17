@@ -527,9 +527,6 @@ class Interactive extends React.Component {
                     case "mdpopup":
                         interactivetype="pop-up-web-link"
                         break;
-                    default:
-                        interactivetype="3rd-party"
-                        break;
                 }
                 // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {

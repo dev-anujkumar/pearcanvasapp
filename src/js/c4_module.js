@@ -40,7 +40,7 @@ ajax.x = function () {
     }
 };
 
-ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey) {
+ajax.send = function (url, cb, method, data, contentType, sync, pubApiKey) {
     let xApiKey = '';
     if (pubApiKey !== undefined) {
         xApiKey = pubApiKey;
@@ -52,9 +52,9 @@ ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey)
     x.onreadystatechange = function () {
         if (x.readyState === 4) {
             IF_MATCH = x.getResponseHeader("ETag");
-            callback(x.status, x.responseText);
-            if (this.status == 201) {
-            }
+            cb(x.status, x.responseText);
+            // if (this.status == 201) {
+            // }
         }
     };
 
@@ -69,21 +69,21 @@ ajax.send = function (url, callback, method, data, contentType, sync, pubApiKey)
     x.send(data);
 };
 
-ajax.get = function (url, callback, contentType, sync) {
-    ajax.send(url, callback, 'GET', null, contentType, sync);
+ajax.get = function (url, cb, contentType, sync) {
+    ajax.send(url, cb, 'GET', null, contentType, sync);
 };
 
-ajax.post = function (url, data, callback, contentType, sync, pubApiKey) {
-    ajax.send(url, callback, 'POST', data, contentType, sync, pubApiKey);
+ajax.post = function (url, data, cb, contentType, sync, pubApiKey) {
+    ajax.send(url, cb, 'POST', data, contentType, sync, pubApiKey);
 };
 
-ajax.put = function (url, data, callback, contentType, sync) {
-    ajax.send(url, callback, 'PUT', data, contentType, sync);
+ajax.put = function (url, data, cb, contentType, sync) {
+    ajax.send(url, cb, 'PUT', data, contentType, sync);
 };
 
-export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) {
+export function publishContentDelay(content_url, pubConObj, pubApiKey,cb) {
     content_url = config_object.C6PUB_ENDPOINT;
-    ajax.post(content_url, JSON.stringify(pubConObj), callback, 'application/json', false, pubApiKey);
+    ajax.post(content_url, JSON.stringify(pubConObj), cb, 'application/json', false, pubApiKey);
     let parsedResponse = JSON.parse(response.responseText);
     if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
         let redis_url = C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
@@ -99,7 +99,7 @@ export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) 
     }
 }
 
-export function publishTitleDelay(project, section, cite, callBack, isPreview) {
+export function publishTitleDelay(project, section, cite, cb, isPreview) {
     var content_url = config_object.CTOOL_PUBTITLE;
     let content_data = {};
     content_data["projectManifest"] = project;
@@ -110,13 +110,13 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
     if (isPreview == true) {
         content_data["preview"] = true;
     }
-    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
+    ajax.post(content_url, JSON.stringify(content_data), cb, 'application/json', false);
     let parsedResponse = JSON.parse(response.responseText);
 
     if (parsedResponse.data && parsedResponse.data.previewURL) {
         let previewURL = parsedResponse.data.previewURL;
         window.open(previewURL, '_blank');
-        if (callBack) { callBack(); }
+        if (cb) { cb(); }
     } else {
         alert("Title Preview failed to load.");
         return false

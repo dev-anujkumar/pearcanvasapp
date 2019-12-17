@@ -69,8 +69,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
     if (oldElementData.figuretype === "assessment") {
         let usageType=document.querySelector(`div[data-id='${oldElementData.id}'] span.singleAssessment_Dropdown_currentLabel`).innerText;
-        outputPrimaryOptionEnum=outputSubType['enum'],
-        outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_"),
+        outputPrimaryOptionEnum=outputSubType['enum'];
+        outputSubTypeEnum = usageType.toUpperCase().replace(" ", "_").replace("-", "_");
         oldElementData.figuredata.elementdata.usagetype=usageType;
         let assessmentFormat =outputSubType.text.toLowerCase();
         let assessmentItemType ="";
@@ -119,9 +119,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (oldElementData.subtype && oldElementData.subtype === "sidebar") {
         let elemDesigntype = "asideSidebar01"
         switch (outputSubTypeEnum) {
-            case "SIDEBAR_01":
-                elemDesigntype = "asideSidebar01"
-                break;
             case "SIDEBAR_02":
                 elemDesigntype = "asideSidebar02"
                 break;
@@ -137,6 +134,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             case "SIDEBAR_06":
                 elemDesigntype = "asideSidebar06"
                 break;
+            case "SIDEBAR_01":
             default:
                 elemDesigntype = "asideSidebar01"
                 break;

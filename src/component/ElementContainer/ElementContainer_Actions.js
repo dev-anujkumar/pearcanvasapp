@@ -2,6 +2,9 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
+import {
+    fetchSlateData
+} from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -80,6 +83,22 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
         })
 }
 
+function createNewVersionOfSlate(){
+    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "PearsonSSOSession": config.ssoToken,
+                "ApiKey": config.APO_API_KEY,
+            }
+        })
+            .then(res => res.json()) // OR res.json()
+            .then((res) => {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        })
+}
+
 export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, index) => (dispatch, getState) => {
 
     const prepareDeleteRequestData = (elementType) => {
@@ -97,6 +116,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
                     "workUrn": elmId
                 }
         }
+    }
+
+    let parentData = getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        createNewVersionOfSlate()
+        return false;
     }
 
     let _requestData = prepareDeleteRequestData(type)
@@ -217,14 +244,21 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
-            if(response.data.id !== updatedData.id){
+            if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
+                console.log("mapping inside")
+                if (currentSlateData.status === 'wip') {
+                    console.log("mapping wip")
+                    updateLOInStore(updatedData, response.data);
+                } else if (currentSlateData.status === 'approved') {
+                    console.log("mapping approved")
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+            } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, 'Directupdate');
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
                 }else if(currentSlateData.status === 'approved'){
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
-            }else{
-                updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
             }
         }  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
@@ -236,7 +270,25 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
 
 }
 
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex ,Directupdate ){
+function updateLOInStore(updatedData, versionedData) {
+    console.log("updateLOInStore")
+    let parentData = getState().appStore.slateLevelData;
+    let newslateData = JSON.parse(JSON.stringify(parentData));
+    let _slateObject = Object.values(newslateData)[0];
+    let { contents: _slateContent } = _slateObject;
+    let { bodymatter: _slateBodyMatter } = _slateContent;
+    for(let i = 0; i < updatedData.loIndex.length; i++){
+        newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
+        return dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
+    }
+
+}
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -285,7 +337,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             };
                         } else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
-                            let element =  nestedEle.contents.bodymatter.map((ele)=>{
+                            let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
                                 if(ele.id == elementId) {
                                     ele = {
                                         ...ele,
@@ -300,7 +352,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 }
                                 return ele;
                             })
-                            nestedEle.contents.bodymatter = element;
+                            nestedEle.contents.bodymatter = elementObject;
                         }
                         return nestedEle;
                     })
@@ -321,39 +373,16 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         })
     } else if(versionedData){
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
-        if(Directupdate === 'Directupdate'){
             if(asideData && asideData.type == 'element-aside'){
+                asideData.indexes = indexes;
                 if(indexes.length === 2){
-                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]] = versionedData;
+                    dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }else if(indexes.length === 3){
-                    newslateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]] = versionedData;
+                    dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0,asideData));
                 }
             }else{
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
-        }else if(asideData && asideData.type == 'element-aside' && updatedData.status === 'approved'){
-           axios.get(`${config.ASSET_POPOVER_ENDPOINT}context/v2/${config.projectUrn}/ancestors/${updatedData.id}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
-                }
-            }).then(ancestorData => {
-                if(indexes.length === 2){
-                    if(ancestorData.ancestor.versionUrn !== parentUrn.manifestUrn){
-                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-                    }
-                }else if(indexes.length === 3){
-                    if(ancestorData.ancestor.ancestor.versionUrn !== asideData.id){
-                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
-                    }
-                }
-            }).catch(err => {
-                console.log('axios Error', err);
-            })         
-        }
-        // else{
-        //     newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
-        // }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {

@@ -448,15 +448,20 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
-                switch (previousElementData.subtype) {
-                    case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                    default:
-                        dataToReturn = { 
-                            ...previousElementData,
-                            inputType : elementTypes[elementType][primaryOption]['enum'],
-                            inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                    }
-                }
+            dataToReturn = { 
+                ...previousElementData,
+                inputType : elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            }
+                // switch (previousElementData.subtype) {
+                //     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
+                //     default:
+                //         dataToReturn = { 
+                //             ...previousElementData,
+                //             inputType : elementTypes[elementType][primaryOption]['enum'],
+                //             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+                //     }
+                // }
             break;
         
         case elementTypeConstant.ASSESSMENT_SLATE:

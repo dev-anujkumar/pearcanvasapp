@@ -5,7 +5,16 @@ const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
-import Toolbar from '../../../src/component/Toolbar/'
+import Toolbar from '../../../src/component/Toolbar';
+
+jest.mock('../../../src/constants/utility.js', () => ({
+    sendDataToIframe: jest.fn(),
+    hasReviewerRole: jest.fn()
+}))
+
+jest.mock('../../../src/js/slateLockUtility', () => ({
+    checkSlateLock: jest.fn()
+}))
 
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
@@ -13,7 +22,8 @@ const store = mockStore({
         elemBorderToggle: true
     },
     metadataReducer: {
-        currentSlateLOData: {}
+        currentSlateLOData: {},
+        isLOExist: true
     },
     appStore: {
         permissions: [
@@ -23,8 +33,8 @@ const store = mockStore({
         ]
     },
     audioReducer:{
-        addAudio: false,
-        openAudio: false
+        addAudio: true,
+        openAudio: true
     },
     slateLockReducer: {
         slateLockInfo: {
@@ -35,18 +45,27 @@ const store = mockStore({
     }
 });
 
-let  wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
+let wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
 
 beforeEach(() => {
     wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
 })
 
-xdescribe('Toolbar testing', () => {
-    it('Should have 2 Toolbar switch buttons', () => {
+describe('Toolbar testing', () => {
+    it('Should have 2 Toolbar switch buttons and toggle switch', () => {
         expect(wrapper.find('.switch')).toHaveLength(2)
-    }),
+    })
 
     it('Should have 2 input for Toolbar', () => {
         expect(wrapper.find('input')).toHaveLength(2)
+    })
+
+    it('Simulate audio icon click', () => {
+        wrapper.find('.audio.audioicon').at(0).simulate('click')
+        wrapper.find('.audio.audioicon').at(1).simulate('click')
+    })
+
+    it('Handle slate tag icon click', () => {
+        wrapper.find('.learningobjectiveicon.slate-tag-icon').simulate('click')
     })
 })

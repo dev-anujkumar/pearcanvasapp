@@ -426,7 +426,25 @@ describe('Test convertElement- WORKED-EXAMPLE -internal conversion', () => {
 });
 describe('Test convertElement- ASIDE-CONTAINER', () => {
     let store = mockStore(() => initialState9);
-    it('Test convertElement  - ASIDE-CONTAINER', () => {
+    it('Test convertElement  - ASIDE-CONTAINER -- SIDEBAR 01', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb1",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+    it('Test convertElement  - ASIDE-CONTAINER -- SIDEBAR 02', () => {
         store = mockStore(() => initialState9);
         let elementData = {
             elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
@@ -434,6 +452,78 @@ describe('Test convertElement- ASIDE-CONTAINER', () => {
             labelText: "As",
             primaryOption: "primary-aside-aside",
             secondaryOption: "secondary-aside-sb2",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+    it('Test convertElement  - ASIDE-CONTAINER -- SIDEBAR 03', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb3",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+    it('Test convertElement  - ASIDE-CONTAINER -- SIDEBAR 04', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb4",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+    it('Test convertElement  - ASIDE-CONTAINER -- SIDEBAR 05', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb5",
+            toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
+
+        }
+        let store = mockStore(() => initialState9);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+        store.dispatch(sidebarAction.conversionElement(elementData));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+
+    });
+    it('Test convertElement  - ASIDE-CONTAINER -- default', () => {
+        store = mockStore(() => initialState9);
+        let elementData = {
+            elementId: "urn:pearson:manifest:8e16f0f7-40d0-4abf-a515-4a3ac49122d5",
+            elementType: "element-aside",
+            labelText: "As",
+            primaryOption: "primary-aside-aside",
+            secondaryOption: "secondary-aside-sb",
             toolbar:["bold", "italic", "underline", "strikethrough", "clearformatting", "increaseindent", "decreaseindent", "footnote", "glossary", "orderedlist", "unorderedlist", "mathml", "chemml", "inlinecode", "superscript", "subscript", "specialcharactor", "undo", "redo", "assetpopover", "slatetag"]
 
         }

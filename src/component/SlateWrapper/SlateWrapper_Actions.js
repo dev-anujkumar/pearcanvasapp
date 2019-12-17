@@ -15,7 +15,7 @@ import {
     FETCH_SLATE_DATA,
     SET_PARENT_NODE
 
-    
+
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
@@ -26,16 +26,16 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-function prepareDataForTcmUpdate (updatedData,parentData, asideData) {
-    if(parentData && parentData.elementType === "element-aside"){
+function prepareDataForTcmUpdate(updatedData, parentData, asideData) {
+    if (parentData && parentData.elementType === "element-aside") {
         updatedData.isHead = true;
-    }else if(parentData && parentData.elementType === "manifest"){
+    } else if (parentData && parentData.elementType === "manifest") {
         updatedData.isHead = false;
     }
-    if(asideData && asideData.type === "element-aside"){
-        if(asideData.subtype === "workedexample"){
+    if (asideData && asideData.type === "element-aside") {
+        if (asideData.subtype === "workedexample") {
             updatedData.parentType = "workedexample";
-        }else{
+        } else {
             updatedData.parentType = "element-aside";
         }
     }
@@ -43,7 +43,30 @@ function prepareDataForTcmUpdate (updatedData,parentData, asideData) {
     updatedData.slateEntity = config.slateEntityURN;
 }
 
-export const createElement = (type, index, parentUrn, asideData, outerAsideIndex,loref,cb) => (dispatch, getState) => {
+function createNewVersionOfSlate(){
+    fetch(`${config.STRUCTURE_API_URL}structure-api/context/v2/${config.projectUrn}/container/${config.slateEntityURN}/version`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "PearsonSSOSession": config.ssoToken,
+                "ApiKey": config.APO_API_KEY,
+            }
+        })
+            .then(res => res.json())
+            .then((res) => {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        })
+}
+
+export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
+    let parentData = getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        createNewVersionOfSlate()
+        return false;
+    }
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -58,12 +81,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "type": type,
     };
 
-    if(type=="LO"){
-        _requestData.loref = loref?loref:""
+    if (type == "LO") {
+        _requestData.loref = loref ? loref : ""
     }
 
-    prepareDataForTcmUpdate(_requestData,parentUrn,asideData)
-    return  axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+    prepareDataForTcmUpdate(_requestData, parentUrn, asideData)
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -108,7 +131,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        if(cb){
+        if (cb) {
             cb();
         }
     }).catch(error => {
@@ -128,7 +151,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("create Api fail", error);
-        if(cb){
+        if (cb) {
             cb();
         }
     })
@@ -141,12 +164,21 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let _requestData = {
         "projectUrn": config.projectUrn,
         "currentSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
-        "destSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn:config.slateEntityURN,
+        "destSlateEntityUrn": currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN,
         "workUrn": swappedElementData.id,
         "entityUrn": swappedElementData.contentUrn,
         "type": swappedElementData.type,
         "index": newIndex
     }
+
+    let parentData = getState().appStore.slateLevelData;
+    let currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    if (currentSlateData.status === 'approved') {
+        createNewVersionOfSlate()
+        return false;
+    }
+
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
@@ -170,22 +202,22 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
-                    for(let i in newBodymatter){
-                        if( newBodymatter[i].contentUrn== currentSlateEntityUrn){
+                    for (let i in newBodymatter) {
+                        if (newBodymatter[i].contentUrn == currentSlateEntityUrn) {
                             newBodymatter[i].elementdata.bodymatter.move(oldIndex, newIndex);
                         }
                     }
-                }else if(containerTypeElem && containerTypeElem == 'section'){
+                } else if (containerTypeElem && containerTypeElem == 'section') {
                     newBodymatter.forEach(element => {
-                        if(element.id == asideId){
+                        if (element.id == asideId) {
                             element.elementdata.bodymatter.forEach((nestedElem) => {
-                                if(nestedElem.contentUrn == currentSlateEntityUrn){
+                                if (nestedElem.contentUrn == currentSlateEntityUrn) {
                                     nestedElem.contents.bodymatter.move(oldIndex, newIndex);
                                 }
                             })
                         }
                     });
-                }else{
+                } else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 
@@ -204,9 +236,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
         })
         .catch((err) => {
-              /* For hiding the spinning loader send HideLoader message to Wrapper component */
-              sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
-             // console.log('Error occured while swaping element', err)
+            /* For hiding the spinning loader send HideLoader message to Wrapper component */
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            // console.log('Error occured while swaping element', err)
         })
 }
 
@@ -316,7 +348,7 @@ export const setElementPageNumber = (numberObject) => (dispatch, getState) => {
     })
 }
 
-export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (dispatch, getState) => {
+export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) => (dispatch, getState) => {
     dispatch({
         type: UPDATE_PAGENUMBER,
         payload: {
@@ -347,7 +379,7 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
             let pageNumberRef = {
                 pageNumber: data.pageNumber
             }
-            const element = _slateBodyMatter.map(element => {
+            const elementObject = _slateBodyMatter.map(element => {
                 if (element.id === elementId) {
                     element['pageNumberRef'] = { ...pageNumberRef, urn: element.id }
                 }
@@ -374,7 +406,7 @@ export const updatePageNumber = (pagenumber, elementId,asideData,parentUrn) => (
 
             dispatch({
                 type: FETCH_SLATE_DATA,
-                payload:  newslateData
+                payload: newslateData
             })
             dispatch({
                 type: UPDATE_PAGENUMBER_SUCCESS,
@@ -428,17 +460,17 @@ export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {
         payload: newSlateObj
     })
 }
-export const setSlateType = (slateType) => (dispatch, getState) =>{
+export const setSlateType = (slateType) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_TYPE,
         payload: slateType
-    }) 
+    })
 }
-export const setSlateEntity = (setSlateEntity) => (dispatch, getState) =>{
+export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_ENTITY,
-        payload: setSlateEntity
-    }) 
+        payload: setSlateEntityParams
+    })
 }
 
 
@@ -448,9 +480,9 @@ export const accessDenied = (value) => (dispatch, getState) => {
         payload: value
     })
 }
-export const setSlateParent = (setSlateParent) => (dispatch, getState) =>{
+export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => {
     return dispatch({
         type: SET_PARENT_NODE,
-        payload: setSlateParent
-    }) 
+        payload: setSlateParentParams
+    })
 }
