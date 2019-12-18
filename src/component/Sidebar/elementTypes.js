@@ -695,7 +695,7 @@ export default {
             toolbar: ['assetpopover'],
             enum: 'POP_UP',
             subtype: {
-                'secondary-interactive-showhide': {
+                'secondary-interactive-popup': {
                     text: 'Popup window',
                     labelText: 'SH',
                     enum: 'NA',

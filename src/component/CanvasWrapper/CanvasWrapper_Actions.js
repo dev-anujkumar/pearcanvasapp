@@ -153,7 +153,7 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN,entityURN, page, versioning) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN,entityURN, page, versioning, popupFlag) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
@@ -214,51 +214,62 @@ export const fetchSlateData = (manifestURN,entityURN, page, versioning) => (disp
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-				if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-					sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-					let contentUrn = slateData.data[manifestURN].contentUrn;
-					let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-					let messageTcmStatus = {
-						TcmStatus: {
-							tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-						}
-					}
-					sendDataToIframe({
-						'type': "TcmStatusUpdated",
-						'message': messageTcmStatus
-					})
-					dispatch(fetchComments(contentUrn, title));
-					config.totalPageCount = slateData.data[manifestURN].pageCount;
-					config.pageLimit = slateData.data[manifestURN].pageLimit;
-					let parentData = getState().appStore.slateLevelData;
-					let currentParentData;
-					if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
-						currentParentData = JSON.parse(JSON.stringify(parentData));
-						let currentContent = currentParentData[config.slateManifestURN].contents
-						let oldbodymatter = currentContent.bodymatter;
-						let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
-						currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
-						currentParentData = currentParentData[manifestURN];
-						config.scrolling = true;
-					} else {
-						currentParentData = slateData.data[manifestURN];
-					}
-					dispatch({
-						type: FETCH_SLATE_DATA,
-						payload: {
-							[manifestURN]: currentParentData
-						}
-					});
-					dispatch({
-						type: SET_ACTIVE_ELEMENT,
-						payload: {}
-					});
-					//}
-					// config.isFetchSlateInProgress = false;
-				}else{
-					console.log("incorrect data comming...")
-				}
-			}
+                if(versioning && versioning.type === 'element-aside'){
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index = versioning.indexes[0];
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                }else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+                    let contentUrn = slateData.data[manifestURN].contentUrn;
+                    let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+                    let messageTcmStatus = {
+                        TcmStatus: {
+                            tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+                        }
+                    }
+                    sendDataToIframe({
+                        'type': "TcmStatusUpdated",
+                        'message': messageTcmStatus
+                    })
+                    dispatch(fetchComments(contentUrn, title));
+                    config.totalPageCount = slateData.data[manifestURN].pageCount;
+                    config.pageLimit = slateData.data[manifestURN].pageLimit;
+                    let parentData = getState().appStore.slateLevelData;
+                    let currentParentData;
+                    if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
+                        currentParentData = JSON.parse(JSON.stringify(parentData));
+                        let currentContent = currentParentData[config.slateManifestURN].contents
+                        let oldbodymatter = currentContent.bodymatter;
+                        let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+                        currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+                        currentParentData = currentParentData[manifestURN];
+                        config.scrolling = true;
+                    } else {
+                        currentParentData = slateData.data[manifestURN];
+                    }
+                    dispatch({
+                        type: FETCH_SLATE_DATA,
+                        payload: {
+                            [manifestURN]: currentParentData
+                        }
+                    });
+                    dispatch({
+                        type: SET_ACTIVE_ELEMENT,
+                        payload: {}
+                    });
+                    //}
+                    // config.isFetchSlateInProgress = false;
+                }else{
+                    console.log("incorrect data comming...")
+                }
+            }
 		}
         
     });

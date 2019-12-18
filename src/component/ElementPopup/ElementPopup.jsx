@@ -37,15 +37,14 @@ class ElementPopup extends React.Component {
         const { element, index } = this.props
         config.tempSlateManifestURN = config.slateManifestURN
         config.tempSlateEntityURN = config.slateEntityURN
-        config.slateManifestURN = "urn:pearson:manifest:18a0bb7d-bfed-49bd-b56e-b4f186645671" //For mock purpose
-        config.slateEntityURN = "urn:pearson:entity:c5ef5f9b-916d-45d0-82d4-6e3f01d00e5b" //For mock purpose
+        config.slateManifestURN = "urn:pearson:manifest:4c1b9968-fd55-4a66-8b08-896f5f9f2727" //For mock purpose
+        config.slateEntityURN = "urn:pearson:entity:3eb7351e-3dfe-4714-b267-41b3701bfe57" //For mock purpose
         config.cachedActiveElement = {
             index,
             element: {...element}
         }
-        // this.props.openPopupSlate(this.props.element, config.slateManifestURN)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        this.props.fetchSlateData(config.slateManifestURN, 0, 'popup');
+        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false, 'popup');
     }
     renderPopup = ()=>{
         const {index,element,slateLockInfo} = this.props
