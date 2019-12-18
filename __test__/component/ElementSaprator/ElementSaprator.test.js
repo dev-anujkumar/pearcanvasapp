@@ -69,16 +69,20 @@ describe('Testing ElementSaprator rendering', () => {
         let permissions = ['split_slate'];
         let elementType  = 'test';
         let firstOne = false;
-
-        let Es = mount(<ElementSaprator esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
+        let props = {
+            onClickCapture: jest.fn()
+        }
+        let Es = mount(<ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
     })
 
     it('Render ElementSaprator with props elements_add_remove permission', () => {
         let permissions = ['elements_add_remove'];
         let elementType  = 'test';
         let firstOne = false;
-
-        let Es = mount(<ElementSaprator esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
+        let props = {
+            onClickCapture: jest.fn()
+        }
+        let Es = mount(<ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>);
     })
 });
 
@@ -90,7 +94,8 @@ describe('Testing functions', () => {
     it('splitSlateClickHandler  testing', () => {
         let tempWrapper;
         let props = {
-            permissions: ['split_slate']
+            permissions: ['split_slate'],
+            onClickCapture: jest.fn()
         }
         
         tempWrapper = mount(<ElementSaprator esProps={esProps} {...props}/>)
@@ -102,12 +107,31 @@ describe('Testing functions', () => {
     })
 
     
-    xit('splitSlateClickHandler else testing', () => {
+    it('splitSlateClickHandler else testing', () => {
         let tempWrapper;
         let permissions = ['split_slate', 'elements_add_remove']
         let elementType  = 'test';
         let firstOne = false;
-        tempWrapper = mount(<ElementSaprator esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        let props = {
+            onClickCapture: jest.fn(),
+            openAudio: true
+        }
+        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
+        tempWrapper.setProps({
+            toggleSplitSlatePopup : jest.fn(),
+            showAudioSplitPopup: jest.fn()
+        })
+        tempWrapper.find(Button).at(0).simulate('click');
+    })
+    it('splitSlateClickHandler else-if testing', () => {
+        let tempWrapper;
+        let permissions = ['split_slate', 'elements_add_remove']
+        let elementType  = 'test';
+        let firstOne = false;
+        let props = {
+            onClickCapture: jest.fn(),
+        }
+        tempWrapper = mount(<ElementSaprator {...props} esProps={esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/>)
         tempWrapper.setProps({
             toggleSplitSlatePopup : jest.fn(),
             showAudioSplitPopup: jest.fn()
@@ -118,7 +142,8 @@ describe('Testing functions', () => {
     it('toggleElementList  testing', () => {
         let tempWrapper;
         let props = {
-            permissions: ['elements_add_remove']
+            permissions: ['elements_add_remove'],
+            onClickCapture: jest.fn()
         }
         
         let samplediv = document.createElement('div');
@@ -175,8 +200,22 @@ describe('Testing functions', () => {
         config.isCO = true;
         config.isLOL = true;
 
-        // config.parentEntityUrn == FRONT_MATTER 
-        // config.parentEntityUrn == BACK_MATTER
+        config.parentEntityUrn = 'Front Matter' 
+        config.parentEntityUrn = 'Back Matter'
+
+        renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
+    })
+
+    it('Testing renderDropdownButtons function ELEMENT_ASIDE if-else condition',() => {
+        let elementType = ''
+        let sectionBreak = true
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf';
+        config.isCO = true;
+        config.isLOL = true;
+
+        config.parentEntityUrn = 'Front Matter' 
+        config.parentEntityUrn = 'Back Matter'
 
         renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown)
     })
