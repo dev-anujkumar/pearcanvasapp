@@ -18,6 +18,16 @@
     color:#117d8e;
 }
 
-.mce-content-body .mce-edit-focus {
-
+.divWidgetShowHide .cypress-editable{
+    padding :0px 10px 0px 10px !important ;
+}
+.revel .cypress-editable.place-holder::before {
+    content: attr(placeholder);
+    color: #dc3545;
+    display: block;
+    position: absolute;
+    margin-top: 7px;
+    font-family: inherit;
+    font-size: 115%;
+    font-weight: 500;
 }
