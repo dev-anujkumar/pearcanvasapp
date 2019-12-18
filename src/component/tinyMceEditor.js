@@ -860,9 +860,9 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        this.handleBlur(null, true); //element saving before creating G/F (as per java team)
+        //this.handleBlur(null, true); //element saving before creating G/F (as per java team)
         await saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
-        //this.handleBlur(null, true);
+        this.handleBlur(null, true);
     }
 
 
@@ -1068,6 +1068,10 @@ export class TinyMceEditor extends Component {
             //console.log('tiny update')
             //tinymce.init(this.editorConfig)
         }
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+        if (isBlockQuote){
+            this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
+        }
         this.removeMultiTinyInstance();
         this.handlePlaceholder() 
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
@@ -1209,6 +1213,8 @@ export class TinyMceEditor extends Component {
             /*
                 Before entering to new element follow same  procedure
             */
+           let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+          if(!isBlockQuote){
             if(!isSameTargetBasedOnDataId){
                 if(document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable').length)
                     document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')[0].innerHTML = tempContainerHtml;
@@ -1218,6 +1224,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
                 document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
             }
+          }
         }
         
         /**
@@ -1304,11 +1311,13 @@ export class TinyMceEditor extends Component {
      */
     handleBlur = (e, forceupdate) => {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
-        if (isBlockQuote) {
+        if (isBlockQuote && this.lastContent) {
             let tempdiv = document.createElement('div');
-            tempdiv.innerHTML = tinymce.activeEditor.getContent()
+            let currentId = this.props.index;
+            let node = document.getElementById('cypress-'+currentId);
+            tempdiv.innerHTML = node ?node.innerHTML:'';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {                
-                tinymce.activeEditor.setContent(this.lastContent);
+                node.innerHTML = this.lastContent;
             }
         }
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
