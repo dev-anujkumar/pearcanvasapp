@@ -16,7 +16,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-showhide-0.2.18  ---- !!!!!!")
+console.log("!!!!! ---- canvas-showhide-0.2.19  ---- !!!!!!")
 
 class App extends Component {
     constructor(props) {
