@@ -227,40 +227,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     })
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        let storeElement = store[config.slateManifestURN];
-        let bodymatter = storeElement.contents.bodymatter;
-        let focusedElement = bodymatter;
-        indexes.forEach(index => {
-            if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = ElementWipData.showhide;
-            } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
-                }
-            }
-        });
-        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-        let activeElementObject = {
-            elementId: "urn:pearson:manifest:55e2ba3f-632a-41e1-9197-2aa58c9966b3",
-            index: indexes.join("-"),
-            elementType: newElementData.elementType,
-            primaryOption: newElementData.primaryOption,
-            secondaryOption: newElementData.secondaryOption,
-            tag: newElementData.labelText,
-            toolbar: newElementData.toolbar,
-            elementWipType: newElementData.elementWipType,
-        };
-
-        dispatch({
-            type: FETCH_SLATE_DATA,
-            payload: store
-        });
-
-        dispatch({
-            type: SET_ACTIVE_ELEMENT,
-            payload: activeElementObject
-        });
         console.log("Conversion Error >> ",err) 
     })
 }

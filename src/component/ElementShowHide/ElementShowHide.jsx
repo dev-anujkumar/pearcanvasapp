@@ -96,9 +96,9 @@ class ElementShowHide extends React.Component {
                                         element={this.props.element}
                                         index={`${index}-2-${innerIndex}`}
                                         innerIndex = {innerIndex}
-                                        placeholder="Enter revel text"
+                                        placeholder="This cannot be left blank"
                                         // id={ posterItem.id} tagName={'p'}
-                                        model={posterItem.html.text}
+                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Revel Answer:</p>"}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
                                         slateLockInfo={slateLockInfo}
