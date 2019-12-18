@@ -6,6 +6,7 @@
     margin:10px;
     padding-top: 10px;
     color: #808080;
+    font-size: 10px;
 }
 
 .divWidgetShowHide .show-hide.show-hide-active{
@@ -16,6 +17,7 @@
 
 .divWidgetShowHide .show-hide.show-hide-active h4{
     color:#117d8e;
+    font-size: 10px;
 }
 
 .divWidgetShowHide .cypress-editable{

@@ -237,5 +237,5 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 }
 
 .showHide .cypress-editable{
-    /* min-height: 44px !important; */
+    min-height: 50px !important;
 }
