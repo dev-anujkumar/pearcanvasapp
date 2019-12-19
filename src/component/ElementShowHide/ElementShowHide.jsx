@@ -33,13 +33,12 @@ class ElementShowHide extends React.Component {
 
     activeShowHide = (e) => {
         let activeElement = document.querySelector('.show-hide-active')
-        console.log(activeElement,e.target.closest(".show-hide"))
-        if (activeElement && activeElement!== e.target.closest(".show-hide")) {
+        if (activeElement && activeElement!== e.currentTarget.closest(".show-hide")) {
             document.querySelector('.show-hide-active').classList.remove("show-hide-active")
             
         }
-        if (e.target && e.target.closest(".show-hide")) {
-            e.target.closest(".show-hide").classList.add("show-hide-active")
+        if (e.currentTarget && e.currentTarget.closest(".show-hide")) {
+            e.currentTarget.closest(".show-hide").classList.add("show-hide-active")
         }
        
 
