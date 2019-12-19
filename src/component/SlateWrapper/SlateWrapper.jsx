@@ -1051,6 +1051,8 @@ class SlateWrapper extends Component {
         let popupId = config.slateManifestURN
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
+        config.tempSlateManifestURN = null
+        config.tempSlateEntityURN = null
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         

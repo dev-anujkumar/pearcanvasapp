@@ -485,7 +485,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement.type == "showhide" ? parentElement.id: config.slateManifestURN      
+                slateUrn: parentElement.type == "showhide" || parentElement.type == "popup" ? parentElement.id: config.slateManifestURN      
             }
             break;
 
@@ -539,9 +539,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
         
-        case elementTypeConstant.POOPUP_ELEMENT:
+       /*  case elementTypeConstant.POOPUP_ELEMENT:
             dataToReturn = generatePopupElementData(index, previousElementData, elementType, primaryOption, secondaryOption)
-            break;
+            break; */
     }
     dataToReturn.slateUrn = config.slateManifestURN;
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }

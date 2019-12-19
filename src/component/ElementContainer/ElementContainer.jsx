@@ -400,7 +400,7 @@ class ElementContainer extends Component {
     }
 
     figureDifferencePopupElement = (index, previousElementData) => {
-        
+
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
             posterTextDOM = document.getElementById(`cypress-${index}-2`)
@@ -455,7 +455,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide"? activeEditorId:`cypress-${this.props.index}`
+            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
@@ -560,13 +560,13 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
-            case elementTypeConstant.POOPUP_ELEMENT:
+            /* case elementTypeConstant.POOPUP_ELEMENT:
                 if(this.figureDifferencePopupElement(this.props.index, previousElementData) || forceupdate){
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData)
                 }
-                break;
+                break; */
         }
     }
 

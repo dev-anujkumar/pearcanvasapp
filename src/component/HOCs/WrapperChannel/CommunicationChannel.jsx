@@ -297,6 +297,8 @@ function WithWrapperCommunication(WrappedComponent) {
             //     return false;
             // }
             localStorage.removeItem('newElement');
+            config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 config.page = 0;
