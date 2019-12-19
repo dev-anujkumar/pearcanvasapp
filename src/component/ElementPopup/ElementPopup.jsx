@@ -37,32 +37,32 @@ class ElementPopup extends React.Component {
         const { element, index } = this.props
         config.tempSlateManifestURN = config.slateManifestURN
         config.tempSlateEntityURN = config.slateEntityURN
-        config.slateManifestURN = "urn:pearson:manifest:4c1b9968-fd55-4a66-8b08-896f5f9f2727" //For mock purpose
-        config.slateEntityURN = "urn:pearson:entity:3eb7351e-3dfe-4714-b267-41b3701bfe57" //For mock purpose
+        config.slateManifestURN = element.id
+        config.slateEntityURN = element.contentUrn
         config.cachedActiveElement = {
             index,
             element: {...element}
         }
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false, 'popup');
+        this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
     }
     renderPopup = ()=>{
-        const {index,element,slateLockInfo} = this.props
+        const {index, element, slateLockInfo} = this.props
             return(
                 <div className="divWidgetPU" resource="">
                 <figure className="figureWidgetPU" resource="">
                     <header>
-                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"].html.text}
+                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"].html.text}
                               handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"].html.text}
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"].html.text}
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
                    {/*  <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div> */}
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
                             <a className="buttonWidgetPU" href="javascript:void(0)">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'}
-                            model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject.html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} element={element}
+                            model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                             </a>
                         }
                     </div>

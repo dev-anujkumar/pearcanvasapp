@@ -399,6 +399,33 @@ class ElementContainer extends Component {
             );
     }
 
+    figureDifferencePopupElement = (index, previousElementData) => {
+        
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            posterTextDOM = document.getElementById(`cypress-${index}-2`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            posterTextHTML = posterTextDOM ? posterTextDOM.innerHTML : ""
+
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        posterTextHTML = posterTextHTML.match(/<p>/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+        
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+        posterTextHTML = this.replaceUnwantedtags(posterTextHTML)
+
+        let { popupdata } = previousElementData
+
+        return (
+            titleHTML !== popupdata["formatted-title"].html.text ||
+            subtitleHTML !== popupdata["formatted-subtitle"].html.text ||
+            posterTextHTML !== popupdata.postertextobject[0].html.text
+        );
+    }
+    
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
@@ -533,6 +560,13 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
+            case elementTypeConstant.POOPUP_ELEMENT:
+                if(this.figureDifferencePopupElement(this.props.index, previousElementData) || forceupdate){
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData)
+                }
+                break;
         }
     }
 

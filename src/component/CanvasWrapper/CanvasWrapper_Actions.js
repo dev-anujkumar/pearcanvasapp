@@ -119,6 +119,7 @@ const findElementType = (element, index) => {
             case 'element-learningobjectivemapping':
             case 'element-generateLOlist':
             case 'element-learningobjectives':
+            case "popup":
                 elementType = { ...elementDataBank[element.type] }
                 break;
             case 'openerelement':
@@ -169,7 +170,7 @@ export const fetchSlateData = (manifestURN,entityURN, page, versioning, popupFla
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-		if(popupFlag){
+		if(slateData.data[manifestURN].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
 			// let popupSlateData = {...slateData.data}
 			// if (popupSlateData[manifestURN]) {
@@ -185,9 +186,8 @@ export const fetchSlateData = (manifestURN,entityURN, page, versioning, popupFla
 					'message': messageTcmStatus
 				})
 				let contentUrn = slateData.data[manifestURN].contentUrn;
-				let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-				slateData.data[manifestURN].type = "popup"
-				dispatch(fetchComments(contentUrn, title));
+				// let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+				dispatch(fetchComments(contentUrn, "popup slate"));
 				config.totalPageCount = slateData.data[manifestURN].pageCount;
 				config.pageLimit = slateData.data[manifestURN].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
@@ -208,7 +208,11 @@ export const fetchSlateData = (manifestURN,entityURN, page, versioning, popupFla
 					payload: {
 						[manifestURN]: currentParentData
 					}
-				});
+                });
+                dispatch({
+                    type: SET_ACTIVE_ELEMENT,
+                    payload: {}
+                });
 			// }
 			}
 		}

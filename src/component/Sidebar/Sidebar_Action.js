@@ -174,20 +174,24 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             conversionDataToSend.parentType = "element-aside";
         }
     }
-
-    /**
-     * FOR MOCK PURPOSE
-     */
-    if(newElementData.primaryOption === "primary-popup"){
+    const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
+    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
+    axios.post(url, JSON.stringify(conversionDataToSend), { 
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    }).then(res =>{
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         indexes.forEach(index => {
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = popup //res.data;
+                focusedElement[index] = res.data//ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    //  focusedElement = focusedElement[index].elementdata.bodymatter;
                     focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
                 }
             }
@@ -195,10 +199,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
         let longDesc="";
-        
-        console.log("POPUP NEW ELEMENT DATA::", newElementData)
+        if(res.data.figuredata){
+            altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
+            longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
+        }
+
+        console.log("normal element NEW ELEMENT DATA::", newElementData)
         let activeElementObject = {
-            elementId: popup.id,
+            elementId: res.data.id,
             // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
@@ -210,8 +218,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
-        console.log("POPUP NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        console.log("normal element NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -220,70 +227,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
-        });  
-    }
-    else {
-        const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-        console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
-        axios.post(url, JSON.stringify(conversionDataToSend), { 
-            headers: {
-                "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
-            }
-        }).then(res =>{
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            let storeElement = store[config.slateManifestURN];
-            let bodymatter = storeElement.contents.bodymatter;
-            let focusedElement = bodymatter;
-            indexes.forEach(index => {
-                if(newElementData.elementId === focusedElement[index].id) {
-                    focusedElement[index] = res.data//ElementWipData.showhide;
-                } else {
-                    if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                      //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                        focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
-                    }
-                }
-            });
-            store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
-            let altText="";
-            let longDesc="";
-            if(res.data.figuredata){
-                altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
-                longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
-            }
-
-            console.log("normal element NEW ELEMENT DATA::", newElementData)
-            let activeElementObject = {
-                elementId: newElementData.elementId,
-                index: indexes.join("-"),
-                elementType: newElementData.elementType,
-                primaryOption: newElementData.primaryOption,
-                secondaryOption: newElementData.secondaryOption,
-                tag: newElementData.labelText,
-                toolbar: newElementData.toolbar,
-                elementWipType: newElementData.elementWipType,
-                altText,
-                longDesc
-            };
-            console.log("normal element NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
-            dispatch({
-                type: FETCH_SLATE_DATA,
-                payload: store
-            });
-    
-            dispatch({
-                type: SET_ACTIVE_ELEMENT,
-                payload: activeElementObject
-            });
-        })
-        .catch(err =>{
-            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            //console.log(err) 
-        })
-    }
-
-    
+        });
+    })
+    .catch(err =>{
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        //console.log(err) 
+    })   
 }
 catch (error) {
     console.log(error)

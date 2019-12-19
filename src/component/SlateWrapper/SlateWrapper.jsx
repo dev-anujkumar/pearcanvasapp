@@ -120,7 +120,14 @@ class SlateWrapper extends Component {
             // if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
                 // let _slateObject = Object.values(_slateData)[0];
                 let _slateObject =_slateData[config.slateManifestURN];
-                let { contents: _slateContent } = _slateObject;
+                let _slateContent = _slateObject.contents
+                /* if(_slateData[config.slateManifestURN].type === "popup"){
+                    _slateContent = _slateObject.popupdata
+                }
+                else {
+                    _slateContent = _slateObject.contents
+                } */
+                // let { contents: _slateContent } = _slateObject;
                 let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
                 if (_slateBodyMatter.length == 0) {
                     this.isDefaultElementInProgress = true;
@@ -272,7 +279,14 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
-                    let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
+                    let _slateContent = _slateObject.contents
+                    /* if(_slateObject.type === "popup"){
+                        _slateContent = _slateObject.popupdata
+                    }
+                    else{
+                        _slateContent = _slateObject.contents
+                    } */
+                    let { id: _slateId, type: _slateType } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
