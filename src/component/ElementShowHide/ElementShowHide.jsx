@@ -33,12 +33,14 @@ class ElementShowHide extends React.Component {
 
     activeShowHide = (e) => {
         let activeElement = document.querySelector('.show-hide-active')
-        if (activeElement) {
+        if (activeElement && activeElement!== e.currentTarget.closest(".show-hide")) {
             document.querySelector('.show-hide-active').classList.remove("show-hide-active")
+            
         }
-        if (e.target) {
-            e.target.closest(".show-hide").classList.add("show-hide-active")
+        if (e.currentTarget && e.currentTarget.closest(".show-hide")) {
+            e.currentTarget.closest(".show-hide").classList.add("show-hide-active")
         }
+       
 
     }
 
@@ -53,7 +55,7 @@ class ElementShowHide extends React.Component {
             <div class="divWidgetShowHide">
                 <div class="pearson-component showHide" data-type="showHide">
                     <div class="divWidgetShowHideQuestionText show-hide" data-type="show">
-                        <header>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle" resource="">Show</h4>
                         </header>
                         <div class="container show">
@@ -84,7 +86,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideActionText show-hide" data-type="action">
-                        <header>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle " resource="">Button Expand text Customize:</h4>
                         </header>
                         <div class="container revel">
@@ -115,7 +117,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideAnswerText show-hide" data-type="action">
-                        <header>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle" resource="">Hide</h4>
                         </header>
                         <div class="container hide">

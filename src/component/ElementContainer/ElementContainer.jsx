@@ -552,26 +552,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
-            case elementTypeConstant.SHOW_HIDE:
-                {
-                    // let html = node.innerHTML;
-                    let currentListNode = document.getElementById(`cypress-${this.props.index}`)
-                    let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && nodehtml !== previousElementData.html.text) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
-                    }
-                    break;
-                }
-            /* case elementTypeConstant.POOPUP_ELEMENT:
-                if(this.figureDifferencePopupElement(this.props.index, previousElementData) || forceupdate){
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData)
-                }
-                break; */
-        }
+            }
     }
 
     /**
@@ -893,7 +874,7 @@ class ElementContainer extends Component {
                     labelText = 'Pop'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} glossaryFootnoteValue={this.props.glossaryFootnoteValue}/>;
                     labelText = 'SH'
                     break;
             }

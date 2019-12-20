@@ -679,7 +679,7 @@ export default {
         },
         'primary-showhide': {
             text: 'Show Hide',
-            toolbar: ['assetpopover'],
+            toolbar: ['footnote','glossary','assetpopover'],
             enum: 'SHOW_HIDE',
             subtype: {
                 'secondary-interactive-showhide': {

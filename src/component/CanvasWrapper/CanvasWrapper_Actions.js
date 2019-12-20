@@ -131,6 +131,13 @@ const findElementType = (element, index) => {
                     ...elementDataBank[element.type]
                 }
                 break;
+            case "showhide":
+                elementType = {
+                    elementType: elementDataBank[element.type]["elementType"],
+                    primaryOption: elementDataBank[element.type]["primaryOption"],
+                    secondaryOption: elementDataBank[element.type]["secondaryOption"]
+                }
+                break;
             default:
                 elementType = { ...elementDataBank["element-authoredtext"] }
         }
@@ -144,8 +151,8 @@ const findElementType = (element, index) => {
     elementType['elementWipType'] = element.type;
     elementType['toolbar'] = [];
     if (elementType.elementType && elementType.elementType !== '') {
-        elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
-        elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption]&&elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
+        elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+        elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
     }
     return elementType;
 }
@@ -154,7 +161,7 @@ export const fetchElementTag = (element, index = 0) => {
         return findElementType(element, index).tag || "";
     }
 }
-export const fetchSlateData = (manifestURN,entityURN, page, versioning, popupFlag) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dispatch, getState) => {
     // if(config.isFetchSlateInProgress){
     //  return false;
     // }
@@ -284,10 +291,10 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
-       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
-      if (typeof (index) == 'number') {
+        bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == activeElement.id) {
-            oldPath = bodymatter[index].figuredata.path || ""     
+            oldPath = bodymatter[index].figuredata.path || ""
         }
     } else {
         let indexes = index.split('-');
@@ -295,12 +302,12 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
-                oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
+                oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.path
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == activeElement.id) {
-                oldPath =   bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
+                oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.path
             }
         }
     }
@@ -312,52 +319,52 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
-       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
-       switch(type){
-            case "audio":
-                if (typeof (index) == 'number') {
-                    if (newBodymatter[index].versionUrn == activeElement.id) {
-                        oldPath = bodymatter[index].figuredata.audio.path || ""
+        bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    switch (type) {
+        case "audio":
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == activeElement.id) {
+                    oldPath = bodymatter[index].figuredata.audio.path || ""
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
                     }
-                } else {
-                    let indexes = index.split('-');
-                    let indexesLen = indexes.length, condition;
-                    if (indexesLen == 2) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                        if (condition.versionUrn == activeElement.id) {
-                            oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
-                        }
-                    } else if (indexesLen == 3) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                        if (condition.versionUrn == activeElement.id) {
-                            oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
-                        }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
-               break;
-            case "video":
-                if (typeof (index) == 'number') {
-                    if (newBodymatter[index].versionUrn == activeElement.id) {
-                        oldPath = bodymatter[index].figuredata.videos[0].path || ""
+            }
+            break;
+        case "video":
+            if (typeof (index) == 'number') {
+                if (newBodymatter[index].versionUrn == activeElement.id) {
+                    oldPath = bodymatter[index].figuredata.videos[0].path || ""
+                }
+            } else {
+                let indexes = index.split('-');
+                let indexesLen = indexes.length, condition;
+                if (indexesLen == 2) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
                     }
-                } else {
-                    let indexes = index.split('-');
-                    let indexesLen = indexes.length, condition;
-                    if (indexesLen == 2) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
-                        if (condition.versionUrn == activeElement.id) {
-                            oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.videos[0].path
-                        }
-                    } else if (indexesLen == 3) {
-                        condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
-                        if (condition.versionUrn == activeElement.id) {
-                                oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videos[0].path
-                        }
+                } else if (indexesLen == 3) {
+                    condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
+                    if (condition.versionUrn == activeElement.id) {
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.videos[0].path
                     }
                 }
-                break;
-       }
-      
+            }
+            break;
+    }
+
     return oldPath || ""
 }
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
@@ -366,8 +373,8 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
-       bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
-       if (typeof (index) == 'number') {
+        bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == activeElement.id) {
             oldPath = bodymatter[index].figuredata.interactiveid || ""
         }
@@ -377,7 +384,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
-                    oldPath =  bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
+                oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.interactiveid || ""
             }
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
@@ -385,7 +392,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
                 oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.interactiveid || ""
             }
         }
-    }      
+    }
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, getState) => {
@@ -393,7 +400,7 @@ export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, ge
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
     });
-    switch(activeElement.figuretype){
+    switch (activeElement.figuretype) {
         case "image":
         case "mathImage":
         case "table":
@@ -413,7 +420,7 @@ export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, ge
                     oldImage: oldAudioId
                 }
             })
-        break;
+            break;
         case "video":
             let oldVideoId = setOldAudioVideoPath(getState, activeElement, index, activeElement.figuretype)
             dispatch({

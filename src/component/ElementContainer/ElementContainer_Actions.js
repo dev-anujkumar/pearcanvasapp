@@ -268,6 +268,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
             }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
+        customEvent.trigger('glossaryFootnoteSave');
 
     }).catch(error => {
         console.log("updateElement Api fail", error);
