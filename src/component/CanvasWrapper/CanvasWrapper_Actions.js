@@ -1,8 +1,10 @@
 import axios from 'axios';
 import config from '../../config/config';
 import {
-    FETCH_SLATE_DATA,
-    SET_ACTIVE_ELEMENT,
+	FETCH_SLATE_DATA,
+	SET_ACTIVE_ELEMENT,
+	OPEN_POPUP_SLATE,
+	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE
 } from '../../constants/Action_Constants';
@@ -11,6 +13,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
+
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -116,6 +119,7 @@ const findElementType = (element, index) => {
             case 'element-learningobjectivemapping':
             case 'element-generateLOlist':
             case 'element-learningobjectives':
+            case "popup":
                 elementType = { ...elementDataBank[element.type] }
                 break;
             case 'openerelement':
@@ -173,63 +177,112 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-        if (Object.values(slateData.data).length > 0) {
-            if (versioning && versioning.type === 'element-aside') {
-                let parentData = getState().appStore.slateLevelData;
-                let newslateData = JSON.parse(JSON.stringify(parentData));
-                let index = versioning.indexes[0];
-                newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
-                return dispatch({
-                    type: AUTHORING_ELEMENT_UPDATE,
-                    payload: {
-                        slateLevelData: newslateData
-                    }
-                })
-            } else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
-                sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-                let contentUrn = slateData.data[manifestURN].contentUrn;
-                let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-                let messageTcmStatus = {
-                    TcmStatus: {
-                        tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
-                    }
-                }
-                sendDataToIframe({
-                    'type': "TcmStatusUpdated",
-                    'message': messageTcmStatus
-                })
-                dispatch(fetchComments(contentUrn, title));
-                config.totalPageCount = slateData.data[manifestURN].pageCount;
-                config.pageLimit = slateData.data[manifestURN].pageLimit;
-                let parentData = getState().appStore.slateLevelData;
-                let currentParentData;
-                if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
-                    currentParentData = JSON.parse(JSON.stringify(parentData));
-                    let currentContent = currentParentData[config.slateManifestURN].contents
-                    let oldbodymatter = currentContent.bodymatter;
-                    let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
-                    currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
-                    currentParentData = currentParentData[manifestURN];
-                    config.scrolling = true;
-                } else {
-                    currentParentData = slateData.data[manifestURN];
-                }
-                dispatch({
-                    type: FETCH_SLATE_DATA,
-                    payload: {
-                        [manifestURN]: currentParentData
-                    }
+		if(slateData.data[manifestURN].type === "popup"){
+            sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+			// let popupSlateData = {...slateData.data}
+			// if (popupSlateData[manifestURN]) {
+				// popupSlateData[manifestURN].type = "popup"
+			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+				let messageTcmStatus = {
+					TcmStatus: {
+						tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+					}
+				}
+				sendDataToIframe({
+					'type': "TcmStatusUpdated",
+					'message': messageTcmStatus
+				})
+				let contentUrn = slateData.data[manifestURN].contentUrn;
+				// let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+				dispatch(fetchComments(contentUrn, "popup slate"));
+				config.totalPageCount = slateData.data[manifestURN].pageCount;
+				config.pageLimit = slateData.data[manifestURN].pageLimit;
+				let parentData = getState().appStore.slateLevelData;
+				let currentParentData;
+				if ((slateData.data[manifestURN]) && (!config.fromTOC) && slateData.data[manifestURN].pageNo > 0) {
+					currentParentData = JSON.parse(JSON.stringify(parentData));
+					let currentContent = currentParentData[config.slateManifestURN].contents
+					let oldbodymatter = currentContent.bodymatter;
+					let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+					currentParentData = currentParentData[manifestURN];
+					config.scrolling = true;
+				} else {
+					currentParentData = slateData.data[manifestURN];
+				}
+				dispatch({
+					type: OPEN_POPUP_SLATE,
+					payload: {
+						[manifestURN]: currentParentData
+					}
                 });
                 dispatch({
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
-                //}
-                // config.isFetchSlateInProgress = false;
-            } else {
-                console.log("incorrect data comming...")
+			// }
+			}
+		}
+		else{
+			if (Object.values(slateData.data).length > 0) {
+                if(versioning && versioning.type === 'element-aside'){
+                    let parentData = getState().appStore.slateLevelData;
+                    let newslateData = JSON.parse(JSON.stringify(parentData));
+                    let index = versioning.indexes[0];
+                    newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
+                    return dispatch({
+                        type: AUTHORING_ELEMENT_UPDATE,
+                        payload: {
+                            slateLevelData: newslateData
+                        }
+                    })
+                }else if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
+                    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+                    let contentUrn = slateData.data[manifestURN].contentUrn;
+                    let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
+                    let messageTcmStatus = {
+                        TcmStatus: {
+                            tc_activated: JSON.stringify(slateData.data[manifestURN].tcm)
+                        }
+                    }
+                    sendDataToIframe({
+                        'type': "TcmStatusUpdated",
+                        'message': messageTcmStatus
+                    })
+                    dispatch(fetchComments(contentUrn, title));
+                    config.totalPageCount = slateData.data[manifestURN].pageCount;
+                    config.pageLimit = slateData.data[manifestURN].pageLimit;
+                    let parentData = getState().appStore.slateLevelData;
+                    let currentParentData;
+                    if ((Object.keys(parentData).length !== 0) && (!config.fromTOC) && Object.values(slateData.data)[0].pageNo > 0) {
+                        currentParentData = JSON.parse(JSON.stringify(parentData));
+                        let currentContent = currentParentData[config.slateManifestURN].contents
+                        let oldbodymatter = currentContent.bodymatter;
+                        let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+                        currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
+                        currentParentData = currentParentData[manifestURN];
+                        config.scrolling = true;
+                    } else {
+                        currentParentData = slateData.data[manifestURN];
+                    }
+                    dispatch({
+                        type: FETCH_SLATE_DATA,
+                        payload: {
+                            [manifestURN]: currentParentData
+                        }
+                    });
+                    dispatch({
+                        type: SET_ACTIVE_ELEMENT,
+                        payload: {}
+                    });
+                    //}
+                    // config.isFetchSlateInProgress = false;
+                }else{
+                    console.log("incorrect data comming...")
+                }
             }
-        }
+		}
+        
     });
 };
 const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
@@ -402,4 +455,24 @@ export const fetchAuthUser = () => dispatch => {
             console.log('axios Error', err);
             //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
         })
+}
+
+export const openPopupSlate = (element, popupId) => dispatch => {
+	if(element){
+		/* dispatch({
+			type: OPEN_POPUP_SLATE,
+			payload: {
+				[element.id]: popupData[element.id],
+			}
+		}); */
+	}
+	else{
+		dispatch({
+			type: CLOSE_POPUP_SLATE,
+			payload: {
+				popupId
+			}
+		});
+	}
+	
 }

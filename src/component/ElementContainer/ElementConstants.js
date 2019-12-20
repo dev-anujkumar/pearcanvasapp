@@ -35,8 +35,10 @@ export default {
 
 /****************Assessment Slate Element************************ */  
     ASSESSMENT_SLATE : "element-assessment",
-    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT "
-    
+    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
+
+/****************Pop Up elment************************ */  
+    POOPUP_ELEMENT:"popup"
 }
 
 export const LABELS = {
