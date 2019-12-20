@@ -3,7 +3,8 @@ import tinymce from 'tinymce/tinymce';
 import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
-    SET_ACTIVE_ELEMENT
+    SET_ACTIVE_ELEMENT,
+    ERROR_POPUP
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -232,12 +233,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         console.log("Conversion Error >> ",err) 
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
 catch (error) {
     console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-    }
+    dispatch({type: ERROR_POPUP, payload:{show: true}})
+}
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {

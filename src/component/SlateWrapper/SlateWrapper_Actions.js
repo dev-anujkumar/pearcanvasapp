@@ -13,8 +13,8 @@ import {
     SET_SLATE_ENTITY,
     ACCESS_DENIED_POPUP,
     FETCH_SLATE_DATA,
-    SET_PARENT_NODE
-
+    SET_PARENT_NODE,
+    ERROR_POPUP
 
 } from '../../constants/Action_Constants';
 
@@ -158,6 +158,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("create Api fail", error);
         if (cb) {
             cb();
@@ -246,6 +247,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         .catch((err) => {
             /* For hiding the spinning loader send HideLoader message to Wrapper component */
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             // console.log('Error occured while swaping element', err)
         })
 }
@@ -310,6 +312,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     }).catch(error => {
         //console.log("SPLIT SLATE API ERROR : ", error)
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
 
@@ -430,6 +433,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("UPDATE PAGE NUMBER ERROR : ", error)
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
         })
     }
     else {
@@ -458,6 +462,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("DELETE PAGE NUMBER ERROR : ", error)
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
         })
     }
 }

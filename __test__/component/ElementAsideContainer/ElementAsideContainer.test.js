@@ -50,7 +50,7 @@ describe('Testing ElementAside component with props', () => {
         handleFocus : jest.fn(),
         swapElement : jest.fn(),
         deleteElement: jest.fn(),
-        slateLockInfo:{isLocked:true,userId:'c5test01'}
+        slateLockInfo:{isLocked:false,userId:'c5test01'}
     }  
 
     const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>);
@@ -96,11 +96,16 @@ describe('Testing ElementAside component with props', () => {
             expect(renderAside.props.children[0].props.className).toEqual('asideSidebar01BorderTop');
         })
         it('should render  handle focus function correctly', () => {
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>);
+            const instance = wrapper.find('ElementAsideContainer').instance();
             let el = document.createElement('div');
             el.classList.add("elemDiv-hr");
             let event = {
                 target:el
             };
+            wrapper.setProps ({
+                slateLockInfo:{isLocked:true}
+            })
             
             instance.handleFocus(event);
             expect(instance.props.slateLockInfo).toEqual(props.slateLockInfo);
@@ -164,7 +169,7 @@ describe('Testing ElementAside component with props', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('ElementAsideContainer').instance();
         let el = document.createElement('div');
-        el.classList.add("elemDiv-hr");
+        el.classList.add("elemDiv-ha");
         let event = {
             target:el
         };

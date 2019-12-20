@@ -6,7 +6,7 @@ import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import {SECTION_BREAK_DELETE_TEXT} from '../../constants/Element_Constants'
-
+import { showTocBlocker, showBlocker } from '../../js/toggleLoader';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -43,6 +43,7 @@ class PopUp extends React.Component {
     */
     renderButtons = (props) => {
         if(props.isLockPopup || props.isLockReleasePopup || props.wrongAudio){ //Slate lock popup
+            showBlocker(true); showTocBlocker();
             return(
                 <div  className={`dialog-buttons ${props.slateLockClass}` }>
                     <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
