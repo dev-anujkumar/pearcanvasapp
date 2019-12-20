@@ -171,7 +171,7 @@ describe('testing slateLock Reducer cases -->', () => {
     it('should return the initial state', () => {
         expect(reducer(undefined, {})).toEqual(initialState);
     });
-    it('Test 1- FETCH_COMMENTS', () => {
+    xit('Test 1- FETCH_COMMENTS', () => {
         initialState.slateTitle = 'ELMTEST_StgEnv_Krajewski Test';
         expect(reducer(initialState, {
             type: FETCH_COMMENTS,
