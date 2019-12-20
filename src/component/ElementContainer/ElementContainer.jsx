@@ -836,7 +836,7 @@ class ElementContainer extends Component {
                     labelText = 'MA'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
+                    editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} glossaryFootnoteValue={this.props.glossaryFootnoteValue}/>;
                     labelText = 'SH'
                     break;
             }
