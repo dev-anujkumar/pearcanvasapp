@@ -483,9 +483,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement.type == "showhide" || parentElement.type == "popup" ? parentElement.id: config.slateManifestURN      
+                inputType : parentElement && parentElement.type == "popup" ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                slateUrn: parentElement && parentElement.type === "showhide" || parentElement.type === "popup" ? parentElement.id: config.slateManifestURN      
             }
             break;
 

@@ -242,7 +242,7 @@ catch (error) {
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
-    if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
+    if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;

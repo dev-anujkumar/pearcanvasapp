@@ -462,6 +462,10 @@ class ElementContainer extends Component {
                 tempDiv.innerHTML = html;
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                if(parentElement.type === "popup"){
+                    tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
+                    html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement)

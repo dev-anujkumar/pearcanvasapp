@@ -61,7 +61,7 @@ class ElementPopup extends React.Component {
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
                             <a className="buttonWidgetPU" href="javascript:void(0)">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject}
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject[0]}
                             model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                             </a>
                         }
