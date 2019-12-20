@@ -409,6 +409,8 @@ export class TinyMceEditor extends Component {
 
         if(this.props.activeShowHide){
             this.props.activeShowHide(e)
+        }else if(document.querySelector('.show-hide-active')){
+            document.querySelector('.show-hide-active').classList.remove("show-hide-active")
         }
     }
 
