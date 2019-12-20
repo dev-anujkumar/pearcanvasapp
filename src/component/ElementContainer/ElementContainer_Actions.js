@@ -124,7 +124,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
+        // createNewVersionOfSlate()
         return false;
     }
 
@@ -538,7 +538,6 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 console.log("element", element);
             }
         })
-
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -546,7 +545,10 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        cb()
+        setTimeout(() => {
+            cb();
+        }, 300)
+        
     }).catch(error => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)

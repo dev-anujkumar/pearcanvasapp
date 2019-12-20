@@ -95,6 +95,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(createdElemData => {
+
+        // let parentData = getState().appStore.slateLevelData;
+        // let currentParentData = JSON.parse(JSON.stringify(parentData));
+        // let currentSlateData = currentParentData[config.slateManifestURN];
+        // if (currentSlateData.status === 'approved') {
+        //     createNewVersionOfSlate()
+        //     return false;
+        // }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
