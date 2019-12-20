@@ -20,7 +20,7 @@ import {
     assetPopoverIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import {checkforToolbarClick} from '../js/utils'
+import { checkforToolbarClick , customEvent} from '../js/utils';
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
@@ -841,7 +841,7 @@ export class TinyMceEditor extends Component {
     /**
      * Saves glossary/footnote on creation
      */
-    saveContent = async () => {
+    saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
         let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
@@ -851,8 +851,11 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        customEvent.subscribe('glossaryFootnoteSave',()=>{
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+            customEvent.unsubscribe('glossaryFootnoteSave');
+        })        
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
-        await saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
         //this.handleBlur(null, true);
     }
 
