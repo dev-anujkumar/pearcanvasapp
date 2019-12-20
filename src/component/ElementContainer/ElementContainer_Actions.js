@@ -6,7 +6,7 @@ import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP } from "./../../constants/Action_Constants";
-import { customEvent } from '../js/utils';
+import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
