@@ -106,15 +106,15 @@ function WithWrapperCommunication(WrappedComponent) {
                     // config.disableNext = message.disableNext;
                     config.disableNext = true;//message.disableNext;
                     break;
-                case 'swappedIS':
-                case 'ISDeleted':
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
+                // case 'swappedIS':
+                // case 'ISDeleted':
+                // case 'TocLoader':
+                //     {
+                //         /**
+                //          * TO BE IMPLEMENTED
+                //          *  */
+                //     }
+                //     break;
                 case 'refreshElementWithTable':
                     {
                         // this.showCanvasBlocker(true);
