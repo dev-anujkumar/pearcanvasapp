@@ -23,10 +23,11 @@ import {
     UPDATE_PAGENUMBER_SUCCESS,
     UPDATE_PAGENUMBER,
     UPDATE_PAGENUMBER_FAIL,
-    UPDATE_FOOTNOTEGLOSSARY, 
+    UPDATE_FOOTNOTEGLOSSARY,
     FETCH_DATA_ON_SLATE_REFRESH,
     ACCESS_DENIED_POPUP,
-    SET_PARENT_NODE
+    SET_PARENT_NODE,
+    CREATE_SHOW_HIDE_ELEMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -43,7 +44,8 @@ const INITIAL_STATE = {
     permissions: [],
     accesDeniedPopup: false,
     roleId: '',
-    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+    oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+    showHideId:""
 };
 
 const INITIAL_ACTION = {
@@ -85,17 +87,17 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case SET_SPLIT_INDEX:
             return {
                 ...state,
-                splittedElementIndex : action.payload
+                splittedElementIndex: action.payload
             }
         case GET_PAGE_NUMBER:
             return {
                 ...state,
                 pageNumberData: action.payload
             }
-         case SET_UPDATED_SLATE_TITLE:
+        case SET_UPDATED_SLATE_TITLE:
             return {
                 ...state,
-                slateTitleUpdated : action.payload.title
+                slateTitleUpdated: action.payload.title
             }
         case SET_SLATE_TYPE:
             return {
@@ -112,7 +114,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 setSlateParent: action.payload
             }
-         case AUTHORING_ELEMENT_UPDATE:
+        case AUTHORING_ELEMENT_UPDATE:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
@@ -121,24 +123,30 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 permissions: action.payload.permissions,
-                roleId : action.payload.roleId
+                roleId: action.payload.roleId
             }
         case SET_OLD_IMAGE_PATH:
             return {
                 ...state,
                 oldImage: action.payload.oldImage
-            } ;
+            };
         case UPDATE_PAGENUMBER:
         case UPDATE_PAGENUMBER_SUCCESS:
         case UPDATE_PAGENUMBER_FAIL:
-            return{
-               ...state,
-               pageLoading:action.payload.pageLoading
+            return {
+                ...state,
+                pageLoading: action.payload.pageLoading
             };
         case ACCESS_DENIED_POPUP:
             return {
                 ...state,
-                accesDeniedPopup : action.payload
+                accesDeniedPopup: action.payload
+            };
+        case CREATE_SHOW_HIDE_ELEMENT:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData,
+                showHideId: action.payload.showHideId
             };
         default:
             return state;

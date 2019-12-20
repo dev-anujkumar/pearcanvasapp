@@ -16,7 +16,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-0.2.20  ---- !!!!!!")
+console.log("!!!!! ---- canvas-0.2.21  ---- !!!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -47,7 +47,7 @@ class App extends Component {
     
     getEnvConfig = () => {
         let requestURI = this.requestConfigURI();
-        axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
+        return axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
             headers: {
                 "Content-Type": "application/json",
             }
@@ -56,8 +56,8 @@ class App extends Component {
                 let uri = response.data.env;
                 cypressConfig.currnetEnv = uri;
                 this.modifyObjKeys(config, response.data)
-                const search = this.props.testWindowMock ? this.props.testWindowMock: window.location.search;
-                const params = this.props.testWindowMock ? new URL(search).searchParams : new URLSearchParams(search);
+                const search = window.location.search;
+                const params = new URLSearchParams(search);
                 const projectUrn = params.get('projectUrn');
                 const projectEntityUrn = params.get('projectEntityUrn')
                 const slateEntityURN = params.get('slateEntityURN')

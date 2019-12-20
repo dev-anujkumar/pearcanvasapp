@@ -20,7 +20,7 @@ import {
     assetPopoverIcon
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
-import {checkforToolbarClick} from '../js/utils'
+import { checkforToolbarClick , customEvent} from '../js/utils';
 import { saveGlossaryAndFootnote } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions"
 import { ShowLoader } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../constants/utility.js';
@@ -406,6 +406,12 @@ export class TinyMceEditor extends Component {
             }
             this.toggleGlossaryandFootnotePopup(false, null, null, cbFunc);
         }
+
+        if(this.props.activeShowHide){
+            this.props.activeShowHide(e)
+        }else if(document.querySelector('.show-hide-active')){
+            document.querySelector('.show-hide-active').classList.remove("show-hide-active")
+        }
     }
 
     toggleGlossaryandFootnoteIcon = (flag) => {
@@ -419,6 +425,9 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            if(this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length){
+                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
+            }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement =tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
             if (activeElement) { 
@@ -488,12 +497,14 @@ export class TinyMceEditor extends Component {
             }
 
             let key = e.keyCode || e.which;
-            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE") {
+            if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
                 let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
                 let nextSaparator = activeEditor.nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }
+            }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel') {
+                this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
+            }   
         });
     }
 
@@ -841,7 +852,7 @@ export class TinyMceEditor extends Component {
     /**
      * Saves glossary/footnote on creation
      */
-    saveContent = async () => {
+    saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
         let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
@@ -851,8 +862,11 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        customEvent.subscribe('glossaryFootnoteSave',()=>{
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+            customEvent.unsubscribe('glossaryFootnoteSave');
+        })        
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
-        await saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
         //this.handleBlur(null, true);
     }
 
@@ -1106,6 +1120,8 @@ export class TinyMceEditor extends Component {
 
         }else if (this.props.placeholder === "Enter block code...") { 
             toolbar =  config.codeListingToolbar;
+        }else if(this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text" || this.props.placeholder === "Enter Hide text"){
+            toolbar = config.showHideToolbar
         }else{
             toolbar = config.elementToolbar;
         }
@@ -1321,8 +1337,8 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        })
-        this.props.handleBlur(forceupdate);
+        }) 
+        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
