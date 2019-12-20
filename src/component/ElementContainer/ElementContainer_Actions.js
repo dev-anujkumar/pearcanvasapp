@@ -5,7 +5,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -78,6 +78,7 @@ export const addComment = (commentString, elementId, asideData, parentUrn) => (d
             });
 
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             console.log("Failed to add comment", error);
         })
@@ -182,6 +183,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
 
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("delete Api fail", error);
     })
@@ -264,6 +266,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
 
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
@@ -472,6 +475,7 @@ export const getTableEditorData = (elementId) => (dispatch, getState) => {
             }
         })
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("getTableEditorData Api fail", error);
     })

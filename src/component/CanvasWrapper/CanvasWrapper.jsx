@@ -31,6 +31,10 @@ import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import store from './../../appstore/store'
+import PopUp from '../PopUp';
+import { hideBlocker } from '../../js/toggleLoader';
+
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -156,10 +160,26 @@ export class CanvasWrapper extends Component {
         this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '');
     }
     
+    ReleaseErrorPopup = () => {
+        hideBlocker()
+        store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
+        return true;
+    }
+
     render() {
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
+                {/** Custom Error Popup on Canvas wrapper in API Failure */}
+                {this.props.ErrorPopup && this.props.ErrorPopup.show &&
+                    <div className="canvas-blocker" ></div>}
+                {this.props.ErrorPopup && this.props.ErrorPopup.show && <PopUp dialogText={this.props.ErrorPopup.message}
+                    active={true}
+                    togglePopup={this.ReleaseErrorPopup}
+                    isLockReleasePopup={true}
+                    isInputDisabled={true}
+                />}
+                {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* editor tool goes here */}
                     <Toolbar togglePageNumbering={this.togglePageNumbering} />
@@ -224,7 +244,8 @@ const mapStateToProps = state => {
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
         logout,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        ErrorPopup: state.errorPopup,
     };
 };
 
