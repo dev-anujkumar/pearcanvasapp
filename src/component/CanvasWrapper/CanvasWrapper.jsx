@@ -71,10 +71,9 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        
-        let { projectUrn } = config,
-        slateId = config.slateManifestURN
-        this.props.getSlateLockStatus(projectUrn ,slateId) 
+        // let { projectUrn } = config,
+        // slateId = config.slateManifestURN
+        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
 
         let searchString = window.location.search;
         let q = new URLSearchParams(searchString);

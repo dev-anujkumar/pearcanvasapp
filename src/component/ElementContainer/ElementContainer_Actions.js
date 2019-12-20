@@ -1,12 +1,11 @@
 import axios from 'axios';
 import config from '../../config/config';
-import { ShowLoader,HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE } from "./../../constants/Action_Constants";
-import { customEvent} from '../../js/utils';
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT } from "./../../constants/Action_Constants";
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -106,6 +105,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         switch (elementType) {
             case "element-workedexample":
             case "element-aside":
+            case "showhide":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -129,7 +129,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
 
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
-    _requestData = {..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
+    _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
     prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -204,19 +204,19 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
     let storeData = getState().appStore.slateLevelData;
     let slateData = JSON.parse(JSON.stringify(storeData));
     let slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter;
-    if(indexes.length === 2){
-        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id){
+    if (indexes.length === 2) {
+        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].id === id) {
             updatedData.isHead = true;
         }
-    }else if(indexes.length === 3){
-        if(slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id){
+    } else if (indexes.length === 3) {
+        if (slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].id === id) {
             updatedData.isHead = false;
         }
     }
-    if(asideData && asideData.type === "element-aside"){
-        if(asideData.subtype === "workedexample"){
+    if (asideData && asideData.type === "element-aside") {
+        if (asideData.subtype === "workedexample") {
             updatedData.parentType = "workedexample";
-        }else{
+        } else {
             updatedData.parentType = "element-aside";
         }
     }
@@ -261,7 +261,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
             }
-        }  
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         customEvent.trigger('glossaryFootnoteSave');
 
@@ -269,7 +269,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
-
 }
 
 function updateLOInStore(updatedData, versionedData) {
@@ -330,12 +329,12 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             nestedEle  = {
                                 ...nestedEle,
                                 ...updatedData,
-                                elementdata : {
+                                elementdata: {
                                     ...nestedEle.elementdata,
-                                    text : updatedData.elementdata?updatedData.elementdata.text:null
+                                    text: updatedData.elementdata ? updatedData.elementdata.text : null
                                 },
-                                tcm : _slateObject.tcm?true:false,
-                                html : updatedData.html
+                                tcm: _slateObject.tcm ? true : false,
+                                html: updatedData.html
                             };
                         } else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
@@ -344,12 +343,12 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     ele = {
                                         ...ele,
                                         ...updatedData,
-                                        elementdata : {
+                                        elementdata: {
                                             ...ele.elementdata,
-                                            text : updatedData.elementdata?updatedData.elementdata.text:null
+                                            text: updatedData.elementdata ? updatedData.elementdata.text : null
                                         },
-                                        tcm : _slateObject.tcm?true:false,
-                                        html : updatedData.html
+                                        tcm: _slateObject.tcm ? true : false,
+                                        html: updatedData.html
                                     };
                                 }
                                 return ele;
@@ -365,7 +364,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
         })
         _slateContent.bodymatter = _slateBodyMatter
         _slateObject.contents = _slateContent
-        
+
         //console.log("saving new data dispatched")
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
@@ -382,7 +381,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }else if(indexes.length === 3){
                     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0,asideData));
                 }
-            }else{
+            } else {
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
         return dispatch({
@@ -392,25 +391,25 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     }
-//diret dispatching in store
+    //diret dispatching in store
 }
 
-export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dispatch, getState) => {
+export const updateFigureData = (figureData, elementIndex, elementId, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData,
         element,
         index = elementIndex;
     const newParentData = JSON.parse(JSON.stringify(parentData));
-    let  newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    let bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
+    let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter,
+        bodymatter = parentData[config.slateManifestURN].contents.bodymatter;
     if (typeof (index) == 'number') {
         if (newBodymatter[index].versionUrn == elementId) {
-            if(newBodymatter[index].figuretype==="assessment"){
+            if (newBodymatter[index].figuretype === "assessment") {
                 newBodymatter[index].figuredata['elementdata'] = figureData
                 element = newBodymatter[index]
-            }else{
+            } else {
                 newBodymatter[index].figuredata = figureData
                 element = newBodymatter[index]
-            }          
+            }
         }
     } else {
         let indexes = index.split('-');
@@ -418,10 +417,10 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == elementId) {
-                if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype==="assessment"){
+                if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuretype === "assessment") {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata['elementdata'] = figureData
                     element = newBodymatter[index]
-                }else{
+                } else {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata = figureData
                     element = condition
                 }
@@ -429,17 +428,17 @@ export const updateFigureData = (figureData, elementIndex, elementId,cb) => (dis
         } else if (indexesLen == 3) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
             if (condition.versionUrn == elementId) {
-                if(newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment"){
+                if (newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuretype === "assessment") {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata['elementdata'] = figureData
                     element = condition
-                }else{
+                } else {
                     newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
                     element = condition
                 }
 
             }
         }
-      }
+    }
     dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
         payload: {
@@ -496,4 +495,74 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
         }
         return elm;
     })
+}
+
+export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
+    localStorage.setItem('newElement', 1);
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    let newIndex = index.split("-")[2]
+    let newShowhideIndex = parseInt(newIndex)+1
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentContentUrn,
+        "slateUrn":  elementId,
+        "index": newShowhideIndex,
+        "type": "TEXT",
+        "parentType":"showhide",
+        "sectionType": type
+
+    };
+    
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    ).then(createdElemData => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        const parentData = getState().appStore.slateLevelData;
+        const newParentData = JSON.parse(JSON.stringify(parentData));
+        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
+        console.log("bodymatter===>",bodymatter)
+        bodymatter.forEach((element, index) => {
+            if (element.id == elementId) {
+                element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+                console.log("element", element);
+            }
+        })
+
+        dispatch({
+            type: CREATE_SHOW_HIDE_ELEMENT,
+            payload: {
+                slateLevelData: newParentData,
+                showHideId: createdElemData.data.id
+            }
+        })
+        cb()
+    }).catch(error => {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        console.log("error while createing element",error)
+    })
+}
+
+export const deleteShowHideUnit = (elmId, type, parentUrn, index) => (dispatch, getState) => {
+    let _requestData = {
+        projectUrn : config.projectUrn,
+        entityUrn : parentUrn,
+        workUrn : elmId,
+        index : index.toString(),
+        slateEntity : config.slateEntityURN
+    }
+    return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        }
+    )
 }
