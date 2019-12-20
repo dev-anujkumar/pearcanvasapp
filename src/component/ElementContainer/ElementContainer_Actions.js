@@ -547,6 +547,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         })
         cb()
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)
     })
