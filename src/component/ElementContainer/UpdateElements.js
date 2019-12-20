@@ -393,7 +393,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -413,13 +413,12 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: config.slateManifestURN      
+                slateUrn: parentElement.type == "showhide" ? parentElement.id: config.slateManifestURN      
             }
             break;
 
         case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
-                    
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:

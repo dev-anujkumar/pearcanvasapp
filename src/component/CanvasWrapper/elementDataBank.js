@@ -341,6 +341,12 @@ const elementDataBank = {
             }
         },
     },
+
+    "showhide" : {
+        "elementType" : "element-interactive",
+        "primaryOption" : "primary-showhide",
+        "secondaryOption" : "secondary-aside-showhide"
+    }
 }
 
 export default elementDataBank
