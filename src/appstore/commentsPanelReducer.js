@@ -102,7 +102,8 @@ export default function (state = initialState, action = INITIAL_ACTION) {
             return {
                 ...state,
                 allComments: payload.comments,
-                slateTitle: payload.title
+                slateTitle: payload.title,
+                comments: payload.comments
             };
         case FETCH_COMMENT_BY_ELEMENT:
             let commentList = state.allComments
