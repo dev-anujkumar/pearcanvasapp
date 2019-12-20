@@ -682,7 +682,7 @@ export default {
             toolbar: ['footnote','glossary','assetpopover'],
             enum: 'SHOW_HIDE',
             subtype: {
-                'secondary-interactive-showhide': {
+                'secondary-aside-showhide': {
                     text: 'Show Hide',
                     labelText: 'SH',
                     enum: 'NA',
