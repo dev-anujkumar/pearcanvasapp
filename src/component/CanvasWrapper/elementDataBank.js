@@ -94,6 +94,12 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
+    
+    "popup": {
+        "elementType" : "element-interactive",
+        "primaryOption" : "primary-popup",
+        "secondaryOption" : "secondary-interactive-popup"
+    },
 
     "figure" : {
         "image" : {
@@ -216,10 +222,6 @@ const elementDataBank = {
             "showhide": {
                 "primaryOption" : "primary-showhide",
                 "secondaryOption" : "secondary-interactive-showhide"
-            },
-            "popup": {
-                "primaryOption" : "primary-popup",
-                "secondaryOption" : "secondary-interactive-popup"
             },
             "fpo": {
                 "primaryOption" : "primary-mmi",

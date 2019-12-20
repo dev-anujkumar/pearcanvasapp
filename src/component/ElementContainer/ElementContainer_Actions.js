@@ -6,6 +6,7 @@ import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP } from "./../../constants/Action_Constants";
+import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/`
@@ -107,6 +108,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "element-workedexample":
             case "element-aside":
             case "showhide":
+            case "popup":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -124,14 +126,14 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
+        // createNewVersionOfSlate()
         return false;
     }
 
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
-    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState);
+    prepareDataForTcmUpdate(_requestData, elmId, index, asideData, getState, type);
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
@@ -200,7 +202,7 @@ function contentEditableFalse (updatedData){
     }
 }
 
-function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState) {
+function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getState, type) {
     updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
     let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
     let storeData = getState().appStore.slateLevelData;
@@ -221,6 +223,10 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
         } else {
             updatedData.parentType = "element-aside";
         }
+    }
+
+    if(config.tempSlateManifestURN){
+        updatedData.parentType = "popup"
     }
     updatedData.projectURN = config.projectUrn;
     updatedData.slateEntity = config.slateEntityURN;
@@ -537,7 +543,6 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 console.log("element", element);
             }
         })
-
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -545,7 +550,10 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        cb()
+        setTimeout(() => {
+            cb();
+        }, 300)
+        
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
