@@ -69,11 +69,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     }
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
+    let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn|| config.slateEntityURN,
+    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
-        "slateUrn": parentUrn && parentUrn.manifestUrn || config.slateManifestURN,
+        "slateEntityUrn":slateEntityUrn,
+        "slateUrn": slateUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type,
     };
@@ -95,6 +98,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
         if (type == 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
@@ -114,6 +118,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })
+        }else if (popupSlateData && popupSlateData.type == "popup"){
+            newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);

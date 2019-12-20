@@ -690,6 +690,19 @@ export default {
                 }
             }
         },
+        'primary-popup': {
+            text: 'Popup',
+            toolbar: ['assetpopover'],
+            enum: 'POP_UP',
+            subtype: {
+                'secondary-interactive-popup': {
+                    text: 'Popup window',
+                    labelText: 'SH',
+                    enum: 'NA',
+                    wipValue: 'popup'
+                }
+            }
+        },
         enumType: 'interactive'
     },
     "openerelement": {

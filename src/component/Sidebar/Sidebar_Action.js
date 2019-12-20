@@ -8,6 +8,7 @@ import {
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import {popup} from '../../../fixtures/ElementPopup'
 import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
@@ -148,10 +149,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
+        projectURN : config.projectUrn,
         slateUrn:config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
         index: indexes[indexes.length - 1],
-        projectURN : config.projectUrn,
         slateEntity : config.slateEntityURN
     }
 
@@ -173,14 +174,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             conversionDataToSend.parentType = "element-aside";
         }
     }
-
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
-			"Content-Type": "application/json",
-			"PearsonSSOSession": config.ssoToken
-		}
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         let storeElement = store[config.slateManifestURN];
@@ -191,7 +191,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 focusedElement[index] = res.data//ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    //  focusedElement = focusedElement[index].elementdata.bodymatter;
                     focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
                 }
             }
@@ -203,8 +203,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
+
+        console.log("normal element NEW ELEMENT DATA::", newElementData)
         let activeElementObject = {
-            elementId: newElementData.elementId,
+            elementId: res.data.id,
+            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -215,6 +218,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
+        console.log("normal element NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -231,13 +235,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     })
 }
 catch (error) {
+    console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-}
+    }
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
-    if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
+    if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;

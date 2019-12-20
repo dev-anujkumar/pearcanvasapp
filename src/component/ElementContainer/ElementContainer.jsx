@@ -18,7 +18,7 @@ import { addComment, deleteElement, updateElement, createShowHideElement } from 
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
-import { setActiveElement, fetchElementTag } from './../CanvasWrapper/CanvasWrapper_Actions';
+import { setActiveElement, fetchElementTag,openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
@@ -31,8 +31,9 @@ import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData } from './UpdateElements.js';
-import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
+import ElementPopup from '../ElementPopup'
+import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
 class ElementContainer extends Component {
@@ -106,7 +107,7 @@ class ElementContainer extends Component {
             return true
         }
         if (updateFromC2Flag) {
-            if (this.props.element.type == "openerelement") {
+            if(this.props.element.type === "openerelement"){
                 this.setState({
                     borderToggle: 'active'
                 })
@@ -119,7 +120,7 @@ class ElementContainer extends Component {
             }
         }
         else {
-            if (this.props.element.type == "openerelement") {
+            if (this.props.element.type === "openerelement") {
                 this.setState({
                     borderToggle: 'active'
                 })
@@ -398,6 +399,33 @@ class ElementContainer extends Component {
             );
     }
 
+    figureDifferencePopupElement = (index, previousElementData) => {
+
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+            subtitleDOM = document.getElementById(`cypress-${index}-1`),
+            posterTextDOM = document.getElementById(`cypress-${index}-2`)
+
+        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+            posterTextHTML = posterTextDOM ? posterTextDOM.innerHTML : ""
+
+        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        posterTextHTML = posterTextHTML.match(/<p>/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+        
+        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
+        titleHTML = this.replaceUnwantedtags(titleHTML)
+        posterTextHTML = this.replaceUnwantedtags(posterTextHTML)
+
+        let { popupdata } = previousElementData
+
+        return (
+            titleHTML !== popupdata["formatted-title"].html.text ||
+            subtitleHTML !== popupdata["formatted-subtitle"].html.text ||
+            posterTextHTML !== popupdata.postertextobject[0].html.text
+        );
+    }
+    
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
@@ -427,13 +455,17 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-            let index  = parentElement.type == "showhide"? activeEditorId:`cypress-${this.props.index}`
+            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
+                if(parentElement.type === "popup"){
+                    tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
+                    html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement)
@@ -520,7 +552,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 }
-        }
+            }
     }
 
     /**
@@ -702,7 +734,7 @@ class ElementContainer extends Component {
             }
         }
     }
-
+    
     /**
      * Render Element function takes current element from bodymatter and render it into currnet slate 
      * @param {element} 
@@ -822,6 +854,24 @@ class ElementContainer extends Component {
                 case elementTypeConstant.METADATA_ANCHOR_LO_LIST:
                     editor = <ElementMetaLOList showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} />;
                     labelText = 'MA'
+                    break;
+                case elementTypeConstant.POOPUP_ELEMENT:
+                    editor = <ElementPopup showBlocker={this.props.showBlocker}
+                        permissions={permissions} handleFocus={this.handleFocus}
+                        handleBlur={this.handleBlur}
+                        index={index}
+                        elementId={element.id}
+                        element={element}
+                        model={element.html}
+                        slateLockInfo={slateLockInfo}
+                        onClick={this.handleFocus} 
+                        openPopupSlate = {this.props.openPopupSlate}
+                        accessDenied={accessDenied}
+                        openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
+                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        />;
+                    labelText = 'Pop'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
                     editor = <ElementShowHide showHideId={this.props.showHideId} createShowHideElement={this.props.createShowHideElement} activeElement={this.props.activeElement} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onClick={this.handleFocus} glossaryFootnoteValue={this.props.glossaryFootnoteValue}/>;
@@ -1021,6 +1071,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetTableDataAction: (isReplaced) => {
             dispatch(resetTableDataAction(isReplaced))
+        } ,
+        openPopupSlate:(element) => {
+            dispatch(openPopupSlate(element))
         },
         accessDenied,
         releaseSlateLock,
