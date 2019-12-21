@@ -19,7 +19,7 @@ import {
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
 
 Array.prototype.move = function (from, to) {
@@ -60,13 +60,6 @@ function createNewVersionOfSlate(){
 }
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
-        return false;
-    }
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
     let  popupSlateData = getState().appStore.popupSlateData
@@ -95,17 +88,16 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             }
         }
     ).then(createdElemData => {
-
-        // let parentData = getState().appStore.slateLevelData;
-        // let currentParentData = JSON.parse(JSON.stringify(parentData));
-        // let currentSlateData = currentParentData[config.slateManifestURN];
-        // if (currentSlateData.status === 'approved') {
-        //     createNewVersionOfSlate()
-        //     return false;
-        // }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            // createNewVersionOfSlate();
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
         if (type == 'SECTION_BREAK') {

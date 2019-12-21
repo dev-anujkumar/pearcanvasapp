@@ -122,14 +122,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     }
 
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        // createNewVersionOfSlate()
-        return false;
-    }
-
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
@@ -302,7 +294,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = Object.values(newslateData)[0];
+    let _slateObject = newslateData[updatedData.slateUrn];
+    // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
@@ -367,6 +360,33 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         return nestedEle;
                     })
                     element.elementdata.bodymatter = nestedBodyMatter;
+                }
+            }
+            else if(element.type === "popup"){
+                if(element.popupdata["formatted-title"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-title" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata["formatted-subtitle"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-subtitle" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata.postertextobject[0].id === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            postertextobject : [{...updatedData}]
+                        }
+                    };
                 }
             }
             return element
@@ -509,9 +529,11 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 
 export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    console.log("index >> ", index);
     let newIndex = index.split("-")[2]
     let newShowhideIndex = parseInt(newIndex)+1
+    console.log("newShowhideIndex >> ", newShowhideIndex);
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -540,7 +562,6 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         bodymatter.forEach((element, index) => {
             if (element.id == elementId) {
                 element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-                console.log("element", element);
             }
         })
         dispatch({
@@ -550,9 +571,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        setTimeout(() => {
-            cb();
-        }, 300)
+        if (cb) cb(true);
         
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})

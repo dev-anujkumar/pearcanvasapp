@@ -38,6 +38,7 @@ export class TinyMceEditor extends Component {
         this.glossaryTermText = '';
         this.lastContent = '';
         this.clearFormateText = '';
+        this.isctrlPlusV = false;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -124,9 +125,13 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement) {
+                        let currentNode = document.getElementById('cypress-'+this.props.index)
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+                        let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
                         if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
-                            activeElement.classList.remove('place-holder')
+                            if(nodeContent){
+                                activeElement.classList.remove('place-holder')
+                            }
                         }
                         else {
                             activeElement.classList.add('place-holder')
@@ -425,6 +430,7 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            this.isctrlPlusV = false;
             if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
             }
@@ -460,7 +466,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorKeydown = (editor) => {
-        editor.on('keydown', (e) => {
+        editor.on('keydown', (e) => {            
+            if(e.keyCode == 86 && e.ctrlKey){
+                this.isctrlPlusV = true;
+            }
             if(hasReviewerRole()){
                 let evt = (e) ? e : window.event;
                 if(evt.ctrlKey && evt.which == 88){ 
@@ -858,7 +867,7 @@ export class TinyMceEditor extends Component {
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -1053,7 +1062,7 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (!testElem.innerText) {
+            if (!testElem.innerText.trim()) {
                 testElem.innerText = "";
             }
             if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
@@ -1078,7 +1087,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
-        this.handlePlaceholder() 
+        //this.handlePlaceholder() 
+        if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
+            this.handlePlaceholder()
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
@@ -1314,8 +1326,12 @@ export class TinyMceEditor extends Component {
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
-    handleBlur = (e, forceupdate) => {
+    handleBlur = (e, forceupdate) => {       
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+         if(isBlockQuote && this.isctrlPlusV){            
+            e.preventDefault();            
+            return false;
+        }
         if (isBlockQuote && this.lastContent) {
             let tempdiv = document.createElement('div');
             let currentId = this.props.index;
@@ -1364,8 +1380,13 @@ export class TinyMceEditor extends Component {
                     <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
+                let model = ""
+                if(this.props.element.type === "popup"){
+                    model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                
                 return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
@@ -1392,7 +1413,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);                    
                     classes = classes + ' blockquote-editor without-attr';
                     return (
-                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                        <div ref={this.editorRef}  id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
                 else {                    
@@ -1407,7 +1428,7 @@ export class TinyMceEditor extends Component {
                 )
             default:
                 return (
-                    <div ref={this.editorRef} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

@@ -398,33 +398,6 @@ class ElementContainer extends Component {
             this.props.oldImage !== newAudioVideoId
             );
     }
-
-    figureDifferencePopupElement = (index, previousElementData) => {
-
-        let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            posterTextDOM = document.getElementById(`cypress-${index}-2`)
-
-        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
-            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
-            posterTextHTML = posterTextDOM ? posterTextDOM.innerHTML : ""
-
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
-        posterTextHTML = posterTextHTML.match(/<p>/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
-        
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
-        posterTextHTML = this.replaceUnwantedtags(posterTextHTML)
-
-        let { popupdata } = previousElementData
-
-        return (
-            titleHTML !== popupdata["formatted-title"].html.text ||
-            subtitleHTML !== popupdata["formatted-subtitle"].html.text ||
-            posterTextHTML !== popupdata.postertextobject[0].html.text
-        );
-    }
     
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -558,9 +531,9 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate,currrentElement) => {
+    handleBlur = (forceupdate,currrentElement,elemIndex) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : ""
+        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : `cypress-${elemIndex}`
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement:this.props.element
         this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element)
@@ -870,6 +843,7 @@ class ElementContainer extends Component {
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
                         glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                        activeElement={this.props.activeElement}
                         />;
                     labelText = 'Pop'
                     break;

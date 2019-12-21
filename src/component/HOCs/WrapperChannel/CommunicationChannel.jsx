@@ -106,15 +106,15 @@ function WithWrapperCommunication(WrappedComponent) {
                     // config.disableNext = message.disableNext;
                     config.disableNext = true;//message.disableNext;
                     break;
-                case 'swappedIS':
-                case 'ISDeleted':
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
+                // case 'swappedIS':
+                // case 'ISDeleted':
+                // case 'TocLoader':
+                //     {
+                //         /**
+                //          * TO BE IMPLEMENTED
+                //          *  */
+                //     }
+                //     break;
                 case 'refreshElementWithTable':
                     {
                         // this.showCanvasBlocker(true);
@@ -301,6 +301,7 @@ function WithWrapperCommunication(WrappedComponent) {
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
             config.tempSlateManifestURN = null
             config.tempSlateEntityURN = null
+            config.isPopupSlate = false
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 config.page = 0;
