@@ -124,9 +124,13 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement) {
+                        let currentNode = document.getElementById('cypress-'+this.props.index)
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+                        let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
                         if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
-                            activeElement.classList.remove('place-holder')
+                            if(nodeContent){
+                                activeElement.classList.remove('place-holder')
+                            }
                         }
                         else {
                             activeElement.classList.add('place-holder')
@@ -1053,7 +1057,7 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (!testElem.innerText) {
+            if (!testElem.innerText.trim()) {
                 testElem.innerText = "";
             }
             if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
@@ -1078,7 +1082,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
-        this.handlePlaceholder() 
+        //this.handlePlaceholder() 
+        if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
+            this.handlePlaceholder()
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
