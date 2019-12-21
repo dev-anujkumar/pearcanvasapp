@@ -216,7 +216,7 @@ export class ReactEditor extends React.Component {
 
     if (testElem && model) {
       let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-      if (testElem.innerText && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
+      if (testElem.innerHTML && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
         this.placeHolderClass = tempPlaceHolderclass.replace('place-holder', '')
