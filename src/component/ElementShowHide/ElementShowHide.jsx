@@ -55,7 +55,7 @@ class ElementShowHide extends React.Component {
             <div class="divWidgetShowHide">
                 <div class="pearson-component showHide" data-type="showHide">
                     <div class="divWidgetShowHideQuestionText show-hide" data-type="show">
-                        <header className="showhideHeader">
+                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
                             <h4 className="heading4WidgetShowHideTitle" resource="">Show</h4>
                         </header>
                         <div class="container show">
@@ -86,7 +86,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideActionText show-hide" data-type="action">
-                        <header className="showhideHeader">
+                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
                             <h4 className="heading4WidgetShowHideTitle " resource="">Button Expand text Customize:</h4>
                         </header>
                         <div class="container revel">
@@ -117,7 +117,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideAnswerText show-hide" data-type="action">
-                        <header className="showhideHeader">
+                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
                             <h4 className="heading4WidgetShowHideTitle" resource="">Hide</h4>
                         </header>
                         <div class="container hide">
