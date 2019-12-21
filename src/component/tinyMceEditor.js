@@ -38,6 +38,7 @@ export class TinyMceEditor extends Component {
         this.glossaryTermText = '';
         this.lastContent = '';
         this.clearFormateText = '';
+        this.isctrlPlusV = false;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -425,6 +426,7 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            this.isctrlPlusV = false;
             if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
             }
@@ -460,7 +462,10 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorKeydown = (editor) => {
-        editor.on('keydown', (e) => {
+        editor.on('keydown', (e) => {            
+            if(e.keyCode == 86 && e.ctrlKey){
+                this.isctrlPlusV = true;
+            }
             if(hasReviewerRole()){
                 let evt = (e) ? e : window.event;
                 if(evt.ctrlKey && evt.which == 88){ 
@@ -1314,8 +1319,12 @@ export class TinyMceEditor extends Component {
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
-    handleBlur = (e, forceupdate) => {
+    handleBlur = (e, forceupdate) => {       
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
+         if(isBlockQuote && this.isctrlPlusV){            
+            e.preventDefault();            
+            return false;
+        }
         if (isBlockQuote && this.lastContent) {
             let tempdiv = document.createElement('div');
             let currentId = this.props.index;
