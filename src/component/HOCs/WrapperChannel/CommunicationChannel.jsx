@@ -301,6 +301,7 @@ function WithWrapperCommunication(WrappedComponent) {
             config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
             config.tempSlateManifestURN = null
             config.tempSlateEntityURN = null
+            config.isPopupSlate = false
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 config.page = 0;
