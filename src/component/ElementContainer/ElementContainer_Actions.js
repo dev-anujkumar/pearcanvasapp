@@ -302,7 +302,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = Object.values(newslateData)[0];
+    let _slateObject = newslateData[updatedData.slateUrn];
+    // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
@@ -367,6 +368,33 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         return nestedEle;
                     })
                     element.elementdata.bodymatter = nestedBodyMatter;
+                }
+            }
+            else if(element.type === "popup"){
+                if(element.popupdata["formatted-title"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-title" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata["formatted-subtitle"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-subtitle" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata.postertextobject[0].id === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            postertextobject : [{...updatedData}]
+                        }
+                    };
                 }
             }
             return element

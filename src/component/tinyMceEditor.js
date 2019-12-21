@@ -1364,8 +1364,13 @@ export class TinyMceEditor extends Component {
                     <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
+                let model = ""
+                if(this.props.element.type === "popup"){
+                    model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                
                 return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
