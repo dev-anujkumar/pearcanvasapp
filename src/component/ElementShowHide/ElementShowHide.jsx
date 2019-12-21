@@ -21,13 +21,15 @@ class ElementShowHide extends React.Component {
     }
 
     createShowHideElement = (type, index, elementShowHideId) => {
-        this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, () => {
+        this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, (status) => {
+            if(status){
                 let newIndex = index.split("-")
                 newIndex[2] = parseInt(newIndex[2]) + 1
-                let newshowIndex = newIndex.join("-")
+                let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
                     document.getElementById(`cypress-${newshowIndex}`).focus();
                 }
+            }
         });
     }
 

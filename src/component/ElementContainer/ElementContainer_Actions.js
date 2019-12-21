@@ -122,14 +122,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     }
 
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        // createNewVersionOfSlate()
-        return false;
-    }
-
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
@@ -509,9 +501,11 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 
 export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    console.log("index >> ", index);
     let newIndex = index.split("-")[2]
     let newShowhideIndex = parseInt(newIndex)+1
+    console.log("newShowhideIndex >> ", newShowhideIndex);
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -540,7 +534,6 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         bodymatter.forEach((element, index) => {
             if (element.id == elementId) {
                 element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-                console.log("element", element);
             }
         })
         dispatch({
@@ -550,9 +543,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        setTimeout(() => {
-            cb();
-        }, 300)
+        if (cb) cb(true);
         
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
