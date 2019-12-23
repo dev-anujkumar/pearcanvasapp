@@ -436,7 +436,6 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             } else {
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
-            console.log(newslateData);
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
