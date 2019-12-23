@@ -381,78 +381,6 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
         return dataToSend;
 }
 
-const generatePopupElementData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let titleDOM = document.getElementById(`cypress-${index}-0`),
-            subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            posterTextDOM = document.getElementById(`cypress-${index}-2`)
-
-        let titleHTML = titleDOM ? titleDOM.innerHTML : "",
-            subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
-            posterTextHTML = posterTextDOM ? posterTextDOM.innerHTML : ""
-
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
-        posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
-        
-        subtitleHTML = replaceUnwantedtags(subtitleHTML)
-        titleHTML = replaceUnwantedtags(titleHTML)
-        posterTextHTML = replaceUnwantedtags(posterTextHTML)
-
-        let titleText = titleDOM ? titleDOM.innerText : "",
-            subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
-            posterText = posterTextDOM ? posterTextDOM.innerText : ""
-
-    let data = { 
-        ...previousElementData,
-        popupdata: {
-            ...previousElementData.popupdata,
-            "formatted-title" : {
-                ...previousElementData.popupdata["formatted-title"],
-                elementdata : {
-                    schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text : titleText
-                },
-                html : {
-                    assetspopover: {},
-                    footnotes: {},
-                    glossaryentries: {},
-                    text: titleHTML
-                }
-            },
-            "formatted-subtitle" : {
-                ...previousElementData.popupdata["formatted-subtitle"],
-                elementdata : {
-                    schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text : subtitleText
-                },
-                html : {
-                    assetspopover: {},
-                    footnotes: {},
-                    glossaryentries: {},
-                    text: subtitleHTML
-                }
-            },
-            "postertextobject" : [{
-                ...previousElementData.popupdata["postertextobject"][0],
-                elementdata : {
-                    schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                    text : posterText
-                },
-                html : {
-                    assetspopover: {},
-                    footnotes: {},
-                    glossaryentries: {},
-                    text: posterTextHTML
-                }
-            }]
-        },
-        inputType : elementTypes[elementType][primaryOption]['enum'],
-        inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-    }
-    return data
-}
-
-
 /**
  * Prepares new element data for all elements
  * @param {*} type 
@@ -485,7 +413,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement && parentElement.type === "showhide" || parentElement.type === "popup" ? parentElement.id: config.slateManifestURN      
+                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN      
             }
             break;
 
@@ -538,10 +466,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.ASSESSMENT_SLATE:
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
-        
-       /*  case elementTypeConstant.POOPUP_ELEMENT:
-            dataToReturn = generatePopupElementData(index, previousElementData, elementType, primaryOption, secondaryOption)
-            break; */
     }
     dataToReturn.slateUrn = config.slateManifestURN;
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
@@ -554,7 +478,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         dataToReturn = {
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
-            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+            slateUrn: config.slateManifestURN 
         }
     }
 

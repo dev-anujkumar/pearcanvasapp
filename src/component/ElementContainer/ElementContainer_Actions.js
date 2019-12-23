@@ -122,14 +122,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     }
 
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        // createNewVersionOfSlate()
-        return false;
-    }
-
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1] }
@@ -237,9 +229,9 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType) => (dispatch, getState) => {
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -257,14 +249,14 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 console.log("mapping inside")
                 if (currentSlateData.status === 'wip') {
                     console.log("mapping wip")
-                    updateLOInStore(updatedData, response.data);
+                    updateLOInStore(updatedData, response.data, getState);
                 } else if (currentSlateData.status === 'approved') {
                     console.log("mapping approved")
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                 }
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null);
                 }else if(currentSlateData.status === 'approved'){
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
@@ -280,7 +272,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
     })
 }
 
-function updateLOInStore(updatedData, versionedData) {
+function updateLOInStore(updatedData, versionedData, getState) {
     console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -298,11 +290,12 @@ function updateLOInStore(updatedData, versionedData) {
     }
 
 }
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex){
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = Object.values(newslateData)[0];
+    let _slateObject = newslateData[updatedData.slateUrn];
+    // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     let elementId = updatedData.id;
@@ -368,6 +361,41 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     })
                     element.elementdata.bodymatter = nestedBodyMatter;
                 }
+            }
+            else if(element.type === "popup"){
+                if(element.popupdata["formatted-title"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-title" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata["formatted-subtitle"]["id"] === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            "formatted-subtitle" : {...updatedData}
+                        }
+                    };
+                } else if(element.popupdata.postertextobject[0].id === elementId){
+                    element  = {
+                        ...element,
+                        popupdata : {
+                            ...element.popupdata,
+                            postertextobject : [{...updatedData}]
+                        }
+                    };
+                }
+            }
+            else if(element.type === "showhide"){
+                element.interactivedata[showHideType].forEach((showHideElement, index) => {
+                    if(showHideElement.id === elementId){
+                        showHideElement = {...updatedData}
+                        element.interactivedata[showHideType][index] = showHideElement
+                    }
+                })
             }
             return element
         })
@@ -509,7 +537,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 
 export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")[2]
     let newShowhideIndex = parseInt(newIndex)+1
     let _requestData = {
@@ -536,11 +564,9 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-        console.log("bodymatter===>",bodymatter)
         bodymatter.forEach((element, index) => {
-            if (element.id == elementId) {
+            if (element.id === elementId) {
                 element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-                console.log("element", element);
             }
         })
         dispatch({
@@ -550,10 +576,9 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        setTimeout(() => {
-            cb();
-        }, 300)
-        
+        if(cb){
+            cb(true);
+        }  
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })

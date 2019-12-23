@@ -691,7 +691,7 @@ export default {
             }
         },
         'primary-popup': {
-            text: 'Popup',
+            text: 'Pop up window',
             toolbar: ['assetpopover'],
             enum: 'POP_UP',
             subtype: {

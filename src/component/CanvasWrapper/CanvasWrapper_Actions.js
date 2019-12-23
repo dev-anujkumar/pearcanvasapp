@@ -179,6 +179,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     }).then(slateData => {
 		if(slateData.data[manifestURN].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+            config.isPopupSlate = true
 			// let popupSlateData = {...slateData.data}
 			// if (popupSlateData[manifestURN]) {
 				// popupSlateData[manifestURN].type = "popup"

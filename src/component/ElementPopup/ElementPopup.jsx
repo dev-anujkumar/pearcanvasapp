@@ -8,6 +8,7 @@ import {
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
+import { checkSlateLock } from '../../js/slateLockUtility.js'
 /**
 * @description - Interactive is a class based component. It is defined simply
 * to make a skeleton of the Interactive Element.
@@ -29,7 +30,9 @@ class ElementPopup extends React.Component {
     }
     handlepopupSlateClick = (event) => {
         if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
-            this.renderSlate()
+            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
+                this.renderSlate()
+            }
         }
     }
     
@@ -60,7 +63,7 @@ class ElementPopup extends React.Component {
                    {/*  <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div> */}
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
-                            <a className="buttonWidgetPU" href="javascript:void(0)">
+                            <a className="buttonWidgetPU">
                             <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject[0]}
                             model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                             </a>

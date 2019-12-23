@@ -1053,6 +1053,7 @@ class SlateWrapper extends Component {
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null
         config.tempSlateEntityURN = null
+        config.isPopupSlate = false
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         
@@ -1069,7 +1070,6 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        console.log("this.props.slateData >> ", this.props.slateData)
         if (this.state.hasError) {
             return (
                 <div className='slate-content'>

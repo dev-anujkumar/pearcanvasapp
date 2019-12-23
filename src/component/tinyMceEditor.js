@@ -116,7 +116,7 @@ export class TinyMceEditor extends Component {
                             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         }) 
-                        this.props.handleBlur()
+                        this.props.handleBlur("",this.props.currentElement,this.props.index)
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
@@ -125,9 +125,13 @@ export class TinyMceEditor extends Component {
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
                     if (activeElement) {
+                        let currentNode = document.getElementById('cypress-'+this.props.index)
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+                        let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
                         if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
-                            activeElement.classList.remove('place-holder')
+                            if(nodeContent){
+                                activeElement.classList.remove('place-holder')
+                            }
                         }
                         else {
                             activeElement.classList.add('place-holder')
@@ -332,7 +336,7 @@ export class TinyMceEditor extends Component {
                 this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(true);
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
             }
         });
     }
@@ -1065,7 +1069,7 @@ export class TinyMceEditor extends Component {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (!testElem.innerText) {
+            if (!testElem.innerText.trim()) {
                 testElem.innerText = "";
             }
             if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
@@ -1090,7 +1094,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
-        this.handlePlaceholder() 
+        //this.handlePlaceholder() 
+        if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
+            this.handlePlaceholder()
+        }
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
@@ -1353,8 +1360,10 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        }) 
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index);
+        })
+        let showHideType = this.props.showHideType || null
+        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
@@ -1380,8 +1389,15 @@ export class TinyMceEditor extends Component {
                     <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }}>{/*htmlToReactParser.parse(this.props.model) */}</p>
                 );
             case 'h4':
+                let model = ""
+                if(this.props.element.type === "popup"){
+                    model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                }
+                else{
+                    model = this.props.model;
+                }
                 return (
-                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
+                    <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
             case 'code':
                 return (
@@ -1408,7 +1424,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);                    
                     classes = classes + ' blockquote-editor without-attr';
                     return (
-                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                        <div ref={this.editorRef}  id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: temDiv.innerHTML }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                     )
                 }
                 else {                    
@@ -1423,7 +1439,7 @@ export class TinyMceEditor extends Component {
                 )
             default:
                 return (
-                    <div ref={this.editorRef} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : ''} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: this.props.model && this.props.model.text ? this.props.model.text: (typeof(this.props.model)==='string'?this.props.model:'<p class="paragraphNumeroUno"><br/></p>')}} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</div>
                 )
         }
     }

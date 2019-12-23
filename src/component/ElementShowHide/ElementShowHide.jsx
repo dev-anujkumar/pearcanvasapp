@@ -21,13 +21,15 @@ class ElementShowHide extends React.Component {
     }
 
     createShowHideElement = (type, index, elementShowHideId) => {
-        this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, () => {
+        this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, (status) => {
+            if(status){
                 let newIndex = index.split("-")
                 newIndex[2] = parseInt(newIndex[2]) + 1
-                let newshowIndex = newIndex.join("-")
+                let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
                     document.getElementById(`cypress-${newshowIndex}`).focus();
                 }
+            }
         });
     }
 
@@ -52,10 +54,10 @@ class ElementShowHide extends React.Component {
         const { model, index, element, slateLockInfo } = this.props;
 
         return (
-            <div class="divWidgetShowHide">
-                <div class="pearson-component showHide" data-type="showHide">
+            <div class="divWidgetShowHide" onClick={() => this.props.handleFocus()}>
+                <div class="pearson-component showHide" data-type="showHide" >
                     <div class="divWidgetShowHideQuestionText show-hide" data-type="show">
-                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle" resource="">Show</h4>
                         </header>
                         <div class="container show">
@@ -86,7 +88,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideActionText show-hide" data-type="action">
-                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle " resource="">Button Expand text Customize:</h4>
                         </header>
                         <div class="container revel">
@@ -117,7 +119,7 @@ class ElementShowHide extends React.Component {
                         </div>
                     </div>
                     <div class="divWidgetShowHideAnswerText show-hide" data-type="action">
-                        <header className="showhideHeader" onClick={() => this.props.handleFocus()}>
+                        <header className="showhideHeader">
                             <h4 className="heading4WidgetShowHideTitle" resource="">Hide</h4>
                         </header>
                         <div class="container hide">
