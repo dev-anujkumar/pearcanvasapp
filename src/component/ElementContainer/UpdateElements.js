@@ -478,7 +478,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         dataToReturn = {
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
-            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+            slateUrn: config.slateManifestURN 
         }
     }
 
