@@ -871,7 +871,8 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        customEvent.subscribe('glossaryFootnoteSave',()=>{
+        customEvent.subscribe('glossaryFootnoteSave',(elementWorkId)=>{
+            console.log("save elementWorkId", elementWorkId)
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })        

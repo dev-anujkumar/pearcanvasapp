@@ -20,7 +20,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         elementSubType,
         glossaryTermText
     }
-
+console.log("open work id",elementWorkId)
     if (status === true) {
         let semanticType = glossaaryFootnote.toUpperCase();
         const slateId = config.slateManifestURN;
@@ -106,7 +106,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
 
     /** Feedback status from elementData */
-    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback')
+    console.log("feedback status", elementWorkId)
+    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
 
     //Get updated innerHtml of element for API request 
