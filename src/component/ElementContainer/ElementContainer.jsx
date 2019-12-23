@@ -421,7 +421,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,parentElement) => {
+    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,parentElement, showHideType) => {
         const {parentUrn,asideData} = this.props
         let dataToSend = {}
         switch (previousElementData.type) {
@@ -443,7 +443,7 @@ class ElementContainer extends Component {
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType);
                 }
                 break;
 
@@ -531,12 +531,12 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate,currrentElement,elemIndex) => {
+    handleBlur = (forceupdate,currrentElement,elemIndex, showHideType) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         let activeEditorId = elemIndex?`cypress-${elemIndex}`:(tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement:this.props.element
-        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element)
+        this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element, showHideType)
     }
 
     /**
@@ -1034,8 +1034,8 @@ const mapDispatchToProps = (dispatch) => {
                 }
             })
         },
-        updateElement: (updatedData, elementIndex, parentUrn, asideData) => {
-            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData))
+        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType) => {
+            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType))
         },
         updateFigureData: (figureData, index, elementId, cb) => {
             dispatch(updateFigureData(figureData, index, elementId, cb))
@@ -1051,8 +1051,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
-        createShowHideElement: (element, type, index, parentContentUrn) => {
-            dispatch(createShowHideElement(element, type, index, parentContentUrn))
+        createShowHideElement: (element, type, index, parentContentUrn, cb) => {
+            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
         },
 
     }

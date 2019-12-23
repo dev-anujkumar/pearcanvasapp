@@ -1070,7 +1070,6 @@ class SlateWrapper extends Component {
      * render | renders title and slate wrapper
      */
     render() {
-        console.log("this.props.slateData >> ", this.props.slateData)
         if (this.state.hasError) {
             return (
                 <div className='slate-content'>
