@@ -346,7 +346,7 @@ export class TinyMceEditor extends Component {
                 this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(true);
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
             }
         });
     }
@@ -476,7 +476,14 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorKeydown = (editor) => {
-        editor.on('keydown', (e) => {            
+        editor.on('keydown', (e) => {           
+            let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
+            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+            if(isBlockQuote && !iFocusinBlockQuote){
+                let evt = (e) ? e : window.event;
+                evt.preventDefault();
+                return false;
+            }                         
             if(e.keyCode == 86 && e.ctrlKey){
                 this.isctrlPlusV = true;
             }
@@ -1363,8 +1370,10 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        }) 
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index);
+        })
+        let showHideType = this.props.showHideType || null
+        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
