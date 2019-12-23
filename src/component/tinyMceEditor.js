@@ -116,7 +116,9 @@ export class TinyMceEditor extends Component {
                             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         }) 
-                        this.props.handleBlur("",this.props.currentElement,this.props.index)
+                        let showHideType = this.props.showHideType || null
+                        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+                        this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
