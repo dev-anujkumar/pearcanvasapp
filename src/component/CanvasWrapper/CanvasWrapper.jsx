@@ -16,7 +16,7 @@ import config from './../../config/config';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
@@ -167,6 +167,7 @@ export class CanvasWrapper extends Component {
 
     render() {
         let slateData = this.props.slateLevelData
+        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -188,7 +189,7 @@ export class CanvasWrapper extends Component {
 
                 <div className='workspace'>
                    
-                    <div id='canvas' className='canvas'>
+                    <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
