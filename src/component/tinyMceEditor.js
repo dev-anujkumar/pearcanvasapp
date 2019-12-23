@@ -1384,7 +1384,9 @@ export class TinyMceEditor extends Component {
                 if(this.props.element.type === "popup"){
                     model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                
+                else{
+                    model = this.props.model;
+                }
                 return (
                     <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
