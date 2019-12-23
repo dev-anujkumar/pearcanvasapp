@@ -336,7 +336,7 @@ export class TinyMceEditor extends Component {
                 this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(true);
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
             }
         });
     }
@@ -1353,8 +1353,10 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        }) 
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index);
+        })
+        let showHideType = this.props.showHideType || null
+        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
@@ -1384,7 +1386,6 @@ export class TinyMceEditor extends Component {
                 if(this.props.element.type === "popup"){
                     model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
-                
                 return (
                     <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
