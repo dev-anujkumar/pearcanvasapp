@@ -249,7 +249,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 console.log("mapping inside")
                 if (currentSlateData.status === 'wip') {
                     console.log("mapping wip")
-                    updateLOInStore(updatedData, response.data);
+                    updateLOInStore(updatedData, response.data, getState);
                 } else if (currentSlateData.status === 'approved') {
                     console.log("mapping approved")
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -272,7 +272,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
     })
 }
 
-function updateLOInStore(updatedData, versionedData) {
+function updateLOInStore(updatedData, versionedData, getState) {
     console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
