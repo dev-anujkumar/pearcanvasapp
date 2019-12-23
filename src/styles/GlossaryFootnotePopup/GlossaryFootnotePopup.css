@@ -151,3 +151,9 @@
     opacity: 0.3;
     pointer-events: none;
 }
+
+.definition-editor .Wirisformula,
+.definition-editor .temp_Wirisformula {
+    vertical-align: middle !important;
+    padding-bottom: 4px !important;
+}

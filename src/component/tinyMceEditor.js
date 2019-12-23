@@ -116,7 +116,9 @@ export class TinyMceEditor extends Component {
                             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         }) 
-                        this.props.handleBlur()
+                        let showHideType = this.props.showHideType || null
+                        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+                        this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
@@ -275,7 +277,17 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
-                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
+                        else if (
+                            e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
+                            e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                            e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem")
+                        ){
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         /*  For Figure type*/
@@ -336,7 +348,7 @@ export class TinyMceEditor extends Component {
                 this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(true);
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
             }
         });
     }
@@ -466,7 +478,14 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorKeydown = (editor) => {
-        editor.on('keydown', (e) => {            
+        editor.on('keydown', (e) => {           
+            let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
+            let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+            if(isBlockQuote && !iFocusinBlockQuote){
+                let evt = (e) ? e : window.event;
+                evt.preventDefault();
+                return false;
+            }                         
             if(e.keyCode == 86 && e.ctrlKey){
                 this.isctrlPlusV = true;
             }
@@ -871,7 +890,7 @@ export class TinyMceEditor extends Component {
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        customEvent.subscribe('glossaryFootnoteSave',()=>{
+        customEvent.subscribe('glossaryFootnoteSave',(elementWorkId)=>{
             saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })        
@@ -1353,8 +1372,10 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        }) 
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index);
+        })
+        let showHideType = this.props.showHideType || null
+        showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{

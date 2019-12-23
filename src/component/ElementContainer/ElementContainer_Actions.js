@@ -5,7 +5,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE } from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -229,9 +229,9 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData) => (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType) => (dispatch, getState) => {
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
-    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState)
+    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
         updatedData,
         {
@@ -244,6 +244,19 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
         let parentData = getState().appStore.slateLevelData;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
+        let glossaaryFootnoteValue = getState().glossaryFootnoteReducer.glossaryFootnoteValue;
+        let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
+        let elementIndex = getState().glossaryFootnoteReducer.elementIndex;
+        console.log(response.data.id)
+        glossaaryFootnoteValue.elementWorkId =response.data.id;
+        dispatch({
+            type: OPEN_GLOSSARY_FOOTNOTE,
+            payload: {
+                glossaaryFootnoteValue: glossaaryFootnoteValue,
+                glossaryFootNoteCurrentValue:glossaryFootNoteCurrentValue,
+                elementIndex: elementIndex
+            }
+        });
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 console.log("mapping inside")
@@ -256,14 +269,16 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData) =
                 }
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
-                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex);
+                    updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null);
                 }else if(currentSlateData.status === 'approved'){
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
             }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        customEvent.trigger('glossaryFootnoteSave');
+        
+        customEvent.trigger('glossaryFootnoteSave', response.data.id); 
+       
 
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -290,7 +305,7 @@ function updateLOInStore(updatedData, versionedData, getState) {
     }
 
 }
-function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex){
+function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType){
     //direct dispatching in store
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -388,6 +403,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                         }
                     };
                 }
+            }
+            else if(element.type === "showhide"){
+                element.interactivedata[showHideType].forEach((showHideElement, index) => {
+                    if(showHideElement.id === elementId){
+                        showHideElement = {...updatedData}
+                        element.interactivedata[showHideType][index] = showHideElement
+                    }
+                })
             }
             return element
         })
@@ -581,8 +604,9 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 showHideId: createdElemData.data.id
             }
         })
-        if (cb) cb(true);
-        
+        if(cb){
+            cb(true);
+        }  
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
