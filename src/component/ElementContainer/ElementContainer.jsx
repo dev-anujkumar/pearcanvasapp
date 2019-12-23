@@ -533,7 +533,7 @@ class ElementContainer extends Component {
      */
     handleBlur = (forceupdate,currrentElement,elemIndex) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
-        let activeEditorId = tinyMCE.activeEditor ? tinyMCE.activeEditor.id : `cypress-${elemIndex}`
+        let activeEditorId = elemIndex?`cypress-${elemIndex}`:(tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
         let element = currrentElement ? currrentElement:this.props.element
         this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate,this.props.element)
