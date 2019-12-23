@@ -275,7 +275,17 @@ export class TinyMceEditor extends Component {
                         if (e.target.targetElm.children[0].classList.contains('blockquoteMarginaliaAttr') || e.target.targetElm.children[0].classList.contains('blockquoteMarginalia')){
                             e.target.targetElm.children[0].children[0].innerHTML = textToReplace;
                         }
-                        else if (config.exemptedElementClass.includes(e.target.targetElm.children[0].classList)) {
+                        else if (
+                            e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
+                            e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
+                            e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                            e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem")
+                        ){
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
                         /*  For Figure type*/
