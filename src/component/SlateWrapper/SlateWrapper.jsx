@@ -744,7 +744,7 @@ class SlateWrapper extends Component {
     }
 
     deleteAccepted = () => {
-        if(this.props.tocDeleteMessage !== 'singleContainerDelete'){
+        if(this.props.tocDeleteMessage.messageType !== 'singleContainerDelete'){
             sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
         }
         this.deleteRejected()
@@ -763,7 +763,7 @@ class SlateWrapper extends Component {
          * Need to refactor these all condition and minimize them
          */
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage === 'singleContainerDelete'){
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === 'singleContainerDelete'){
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
@@ -777,7 +777,7 @@ class SlateWrapper extends Component {
                    
                 )
             }
-            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage === 'withPendingTrack'){
+            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage.messageType === 'withPendingTrack'){
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
