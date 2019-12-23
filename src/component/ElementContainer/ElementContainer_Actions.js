@@ -405,12 +405,15 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }
             }
             else if(element.type === "showhide"){
-                element.interactivedata[showHideType].forEach((showHideElement, index) => {
-                    if(showHideElement.id === elementId){
-                        showHideElement = {...updatedData}
-                        element.interactivedata[showHideType][index] = showHideElement
-                    }
-                })
+                if(showHideType){
+                    element.interactivedata[showHideType].forEach((showHideElement, index) => {
+                        if(showHideElement.id === elementId){
+                            showHideElement = {...updatedData}
+                            element.interactivedata[showHideType][index] = showHideElement
+                        }
+                    })
+                }
+                
             }
             return element
         })
