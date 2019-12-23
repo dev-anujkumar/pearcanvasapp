@@ -126,10 +126,10 @@ export const customEvent = {
                 customEvent.listeners[eventName] = [listner];
             }
         },
-        trigger: (eventName) => {
+        trigger: (eventName,args) => {
             if (customEvent.listeners.hasOwnProperty(eventName)) {
                 customEvent.listeners[eventName].forEach((listner, index) => {
-                    listner();
+                    listner(args);
                 })
             }
         },

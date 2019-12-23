@@ -106,7 +106,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
 
     /** Feedback status from elementData */
-    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback')
+    let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
 
     //Get updated innerHtml of element for API request 
