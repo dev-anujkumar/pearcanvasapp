@@ -116,7 +116,7 @@ export class TinyMceEditor extends Component {
                             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         }) 
-                        this.props.handleBlur()
+                        this.props.handleBlur("",this.props.currentElement,this.props.index)
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
