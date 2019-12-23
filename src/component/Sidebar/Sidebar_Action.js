@@ -13,7 +13,8 @@ import {popup} from '../../../fixtures/ElementPopup'
 import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
+    let appStore =  getState().appStore;
     try {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
@@ -151,10 +152,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
         projectURN : config.projectUrn,
-        slateUrn:config.slateManifestURN,
+        slateUrn:appStore.parentUrn?appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
         index: indexes[indexes.length - 1],
-        slateEntity : config.slateEntityURN
+        slateEntity : appStore.parentUrn?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
     let elmIndexes = indexes ? indexes : 0;
