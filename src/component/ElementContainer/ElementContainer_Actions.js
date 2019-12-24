@@ -556,8 +556,10 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
 export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-    let newIndex = index.split("-")[2]
-    let newShowhideIndex = parseInt(newIndex)+1
+    console.log("index >> ", index);
+    let newIndex = index.split("-")
+    let newShowhideIndex = parseInt(newIndex[newIndex.length-1])+1
+    console.log("newShowhideIndex >> ", newShowhideIndex);
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentContentUrn,
@@ -568,7 +570,6 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         "sectionType": type
 
     };
-    
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {
@@ -581,12 +582,24 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
-        bodymatter.forEach((element, index) => {
-            if (element.id === elementId) {
-                element.interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+        let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+        let condition;
+        if (newIndex.length == 4) {
+            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
+            if (condition.versionUrn == elementId) {
+                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
-        })
+        } else if (newIndex.length == 5) {
+            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
+            if (condition.versionUrn == elementId) {
+                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        }else{
+            condition =  newBodymatter[newIndex[0]]
+            if(condition.versionUrn == elementId){
+                newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
+            }
+        }
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {

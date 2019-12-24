@@ -131,7 +131,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index);
+            this.props.setActiveElement(this.props.element, this.props.index,this.props.parentUrn,this.props.asideData);
             this.props.fetchCommentByElement(this.props.element.id);
         }
     }
@@ -1021,8 +1021,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement: (elementId) => {
             dispatch(fetchCommentByElement(elementId))
         },
-        setActiveElement: (element, index) => {
-            dispatch(setActiveElement(element, index))
+        setActiveElement: (element, index,parentUrn,asideData) => {
+            dispatch(setActiveElement(element, index,parentUrn,asideData))
         },
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
