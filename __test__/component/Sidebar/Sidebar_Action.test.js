@@ -535,7 +535,7 @@ describe('Test convertElement- ASIDE-CONTAINER', () => {
 
     });
 });
-describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
+xdescribe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
     let store = mockStore(() => initialState10);
     it('Test convertElement  - ASIDE-CONTAINER', () => {
         store = mockStore(() => initialState10);
@@ -555,7 +555,7 @@ describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
 
     });
 });
-describe('Test convertElement- MOCK API CALL', () => {
+xdescribe('Test convertElement- MOCK API CALL', () => {
     let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
         store = mockStore(() => initialState4);
@@ -754,7 +754,7 @@ describe('Test convertElement- MOCK API CALL', () => {
          },1000)
     });
 });
-describe('Test convertElement- MOCK API CALL-catch', () => {
+xdescribe('Test convertElement- MOCK API CALL-catch', () => {
     let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
         store = mockStore(() => initialState4);

@@ -115,7 +115,7 @@ describe('Testing <SlateWrapper> Component', () => {
             openRemovePopUp : true,
         };
         let wrapper = mount(<Provider store={store}><SlateWrapper {...props} /> </Provider>);
-        test('renders properly', () => {
+        xtest('renders properly', () => {
             expect(wrapper.find('.element-list').length).toBe(0);
             expect(wrapper.find('LargeLoader').length).toBe(7);
             expect(wrapper.find('SmalllLoader').length).toBe(1);
@@ -252,7 +252,7 @@ describe('Testing <SlateWrapper> Component', () => {
     })
     
 })
-describe('With default elements', () => {
+xdescribe('With default elements', () => {
     let props = {
         slateData,
         slateLockInfo: {

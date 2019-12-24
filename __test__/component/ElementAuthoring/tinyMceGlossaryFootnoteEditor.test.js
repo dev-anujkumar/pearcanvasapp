@@ -66,7 +66,7 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
 
     });
 })
-describe('Test- editor functions', () => {
+xdescribe('Test- editor functions', () => {
     let props = {
         className: "definition-editor place-holder",
         glossaaryFootnotePopup: undefined,
@@ -471,7 +471,7 @@ describe('Test- editor functions', () => {
         expect(spysetCursorAtEnd).toHaveBeenCalled()
     });
 })
-describe('Test-Function-handlePlaceholer-------->', () => {
+xdescribe('Test-Function-handlePlaceholer-------->', () => {
     let nextProps = {
         className: "definition-editor place-holder",
         glossaaryFootnotePopup: undefined,
@@ -505,7 +505,7 @@ describe('Test-Function-handlePlaceholer-------->', () => {
         spyhandlePlaceholder.mockClear()
     })
 })
-describe('Test- lifecycle methods', () => {
+xdescribe('Test- lifecycle methods', () => {
     let props = {
         className: "definition-editor place-holder",
         glossaaryFootnotePopup: undefined,

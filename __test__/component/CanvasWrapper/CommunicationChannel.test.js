@@ -447,7 +447,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.onDeleteTocItem).toHaveBeenCalledWith(event.data.message, 'withPendingTrack')
         spyonDeleteTocItem.mockClear()
     })
-    test('Test for showSingleContainerDelete case', () => {
+    xtest('Test for showSingleContainerDelete case', () => {
         let event = {
             data: {
                 type: "showSingleContainerDelete",
