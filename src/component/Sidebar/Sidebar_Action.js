@@ -175,8 +175,20 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             conversionDataToSend.parentType = "element-aside";
         }
     }
+
+    if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
+        slateBodyMatter.forEach((elem)=>{
+            if(elem.type==="element-aside"){
+                elem.elementdata.bodymatter.forEach((nestElem)=>{
+                    if(nestElem.id===conversionDataToSend.id){
+                        conversionDataToSend.slateUrn = elem.versionUrn;
+                        conversionDataToSend.slateEntity = elem.contentUrn;
+                    }
+                })
+            }
+        })
+    }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
