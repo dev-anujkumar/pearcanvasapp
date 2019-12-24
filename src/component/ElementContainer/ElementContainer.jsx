@@ -118,7 +118,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index , "updateFromC2Flag");
+            this.props.setActiveElement(this.props.element, this.props.index ,"","", "updateFromC2Flag");
         }
         else {
             if (this.props.element.type === "openerelement") {
@@ -132,7 +132,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index);
+            this.props.setActiveElement(this.props.element, this.props.index,this.props.parentUrn,this.props.asideData);
             this.props.fetchCommentByElement(this.props.element.id);
         }
     }
@@ -1022,8 +1022,8 @@ const mapDispatchToProps = (dispatch) => {
         fetchCommentByElement: (elementId) => {
             dispatch(fetchCommentByElement(elementId))
         },
-        setActiveElement: (element, index, updateFromC2Flag) => {
-            dispatch(setActiveElement(element, index, updateFromC2Flag))
+        setActiveElement: (element, index,parentUrn,asideData, updateFromC2Flag) => {
+            dispatch(setActiveElement(element, index,parentUrn,asideData, updateFromC2Flag))
         },
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
