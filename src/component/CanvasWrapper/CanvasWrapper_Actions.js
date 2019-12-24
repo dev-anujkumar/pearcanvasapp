@@ -397,7 +397,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData, updateFromC2Flag) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -413,7 +413,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideDa
         case "image":
         case "mathImage":
         case "table":
-            let oldPath = setOldImagePath(getState, activeElement, index)
+            let oldPath = activeElement.figuretype == "image" && updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {
@@ -440,7 +440,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideDa
             })
             break;
         case "interactive":
-            let interactiveId = setOldinteractiveIdPath(getState, activeElement, index)
+            let interactiveId = updateFromC2Flag ? "" : setOldinteractiveIdPath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {
