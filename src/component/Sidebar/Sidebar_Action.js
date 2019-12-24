@@ -189,6 +189,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         })
     }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
+    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
