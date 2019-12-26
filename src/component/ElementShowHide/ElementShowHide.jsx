@@ -19,7 +19,6 @@ class ElementShowHide extends React.Component {
         };
 
     }
-
     createShowHideElement = (type, index, elementShowHideId) => {
         this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, (status) => {
             if(status){
