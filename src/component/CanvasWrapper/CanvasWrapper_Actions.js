@@ -6,7 +6,8 @@ import {
 	OPEN_POPUP_SLATE,
 	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
-    AUTHORING_ELEMENT_UPDATE
+    AUTHORING_ELEMENT_UPDATE,
+    SET_PARENT_ASIDE_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -396,16 +397,23 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData, updateFromC2Flag) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
     });
+    dispatch({
+        type: SET_PARENT_ASIDE_DATA,
+        payload: {
+            parentUrn : parentUrn,
+            asideData:asideData
+        }
+    })
     switch (activeElement.figuretype) {
         case "image":
         case "mathImage":
         case "table":
-            let oldPath = setOldImagePath(getState, activeElement, index)
+            let oldPath = activeElement.figuretype == "image" && updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {
@@ -432,7 +440,7 @@ export const setActiveElement = (activeElement = {}, index = 0) => (dispatch, ge
             })
             break;
         case "interactive":
-            let interactiveId = setOldinteractiveIdPath(getState, activeElement, index)
+            let interactiveId = updateFromC2Flag ? "" : setOldinteractiveIdPath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {

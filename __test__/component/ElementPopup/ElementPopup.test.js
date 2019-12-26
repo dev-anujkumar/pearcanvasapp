@@ -11,7 +11,7 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 
-describe('Testing Element Show Hide component', () => {
+xdescribe('Testing Element Show Hide component', () => {
     let props = {
         model: {},
         index: "",

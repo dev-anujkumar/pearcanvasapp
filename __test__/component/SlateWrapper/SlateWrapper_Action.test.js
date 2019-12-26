@@ -130,7 +130,7 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe(expectedActions.type);
         });
     });
-    it('testing------- ASIDE ------action when aside and element id same', () => {
+    xit('testing------- ASIDE ------action when aside and element id same', () => {
         //let store = mockStore(() => initialState);
         const type = "FIGURE";
         const index = 3;
