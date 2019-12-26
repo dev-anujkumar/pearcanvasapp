@@ -29,6 +29,7 @@ class ElementPopup extends React.Component {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
     }
     handlepopupSlateClick = (event) => {
+        this.props.handleFocus();
         if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
             if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
                 this.renderSlate()
