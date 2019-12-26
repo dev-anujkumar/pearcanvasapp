@@ -175,13 +175,15 @@ export const bindKeyDownEvent = (editor, e, element) => {
      * Facilitate indent feature at end of text on TAB key
      */
     if (atEnd && e.which == 9 && !e.shiftKey) {
-        editor.editorCommands.commands.exec.indent();
+        // editor.editorCommands.commands.exec.indent();
+        editor.execCommand('indent')
     }
     /**
      * Facilitate indent feature at end of text on shift+TAB key
      */
     if (atEnd && e.which == 9 && e.shiftKey) {
-        editor.editorCommands.commands.exec.outdent();
+        // editor.editorCommands.commands.exec.outdent();
+        editor.execCommand('outdent')
     }
 
     let isBackspaceOnStart = false

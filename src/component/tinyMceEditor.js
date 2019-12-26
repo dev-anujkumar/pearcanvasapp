@@ -497,7 +497,8 @@ export class TinyMceEditor extends Component {
              }
 
             if(this.isTabPressed(e)){
-                e.preventDefault()
+                let evt = (e) ? e : window.event;
+                evt.preventDefault();                
             }
 
             bindKeyDownEvent(editor, e, this.props.element);
