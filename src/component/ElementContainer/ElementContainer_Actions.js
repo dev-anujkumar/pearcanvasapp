@@ -262,7 +262,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 console.log("mapping inside")
                 if (currentSlateData.status === 'wip') {
                     console.log("mapping wip")
-                    updateLOInStore(updatedData, response.data, getState);
+                    updateLOInStore(updatedData, response.data, getState,dispatch);
                 } else if (currentSlateData.status === 'approved') {
                     console.log("mapping approved")
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -287,7 +287,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     })
 }
 
-function updateLOInStore(updatedData, versionedData, getState) {
+function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -296,13 +296,13 @@ function updateLOInStore(updatedData, versionedData, getState) {
     let { bodymatter: _slateBodyMatter } = _slateContent;
     for(let i = 0; i < updatedData.loIndex.length; i++){
         newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
-        return dispatch({
-            type: AUTHORING_ELEMENT_UPDATE,
-            payload: {
-                slateLevelData: newslateData
-            }
-        })
     }
+    return dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: newslateData
+        }
+    })
 
 }
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType){
