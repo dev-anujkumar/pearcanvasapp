@@ -1110,10 +1110,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
-        //this.handlePlaceholder() 
-        if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
+        this.handlePlaceholder() 
+        /* if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
             this.handlePlaceholder()
-        }
+        } */
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 

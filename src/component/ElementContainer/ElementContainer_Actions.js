@@ -247,7 +247,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let glossaaryFootnoteValue = getState().glossaryFootnoteReducer.glossaryFootnoteValue;
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
         let elementIndex = getState().glossaryFootnoteReducer.elementIndex;
-        console.log(response.data.id)
         glossaaryFootnoteValue.elementWorkId =response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
