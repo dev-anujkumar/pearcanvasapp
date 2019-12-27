@@ -1403,7 +1403,7 @@ export class TinyMceEditor extends Component {
                 );
             case 'h4':
                 let model = ""
-                if(this.props.element.type === "popup"){
+                if(this.props.element && this.props.element.type === "popup"){
                     model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
                 else{
