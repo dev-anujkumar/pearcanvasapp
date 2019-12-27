@@ -939,12 +939,15 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                if( document.getElementById( activeElementObj.join("-"))){
-                    document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                let isBlockQuote =  document.getElementById(activeElementObj.join("-")).classList.contains('blockquote-editor');      
+                if (!isBlockQuote) {                   
+                    if (document.getElementById(activeElementObj.join("-")) && tinymce.activeEditor.id == activeElementObj.join("-")) {
+                        document.getElementById(activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                    }
+                   // tinymce.remove('#' + activeElementObj.join("-"));
                 }
                 
-                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
-                tinymce.remove('#' + activeElementObj.join("-"));
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)              
                 tinymce.$('.wrs_modal_desktop').remove();
             }
         }
