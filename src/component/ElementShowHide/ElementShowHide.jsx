@@ -19,7 +19,6 @@ class ElementShowHide extends React.Component {
         };
 
     }
-
     createShowHideElement = (type, index, elementShowHideId) => {
         this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, (status) => {
             if(status){
@@ -70,7 +69,6 @@ class ElementShowHide extends React.Component {
                                         innerIndex = {innerIndex}
                                         placeholder="Enter Show text"
                                         id={showItem.id}
-                                        //  tagName={'p'}
                                         model={showItem.html.text}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
@@ -100,9 +98,8 @@ class ElementShowHide extends React.Component {
                                         element={this.props.element}
                                         index={`${index}-2-${innerIndex}`}
                                         innerIndex = {innerIndex}
-                                        placeholder="This cannot be left blank"
-                                        // id={ posterItem.id} tagName={'p'}
-                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Revel Answer:</p>"}
+                                        placeholder="This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
+                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
                                         slateLockInfo={slateLockInfo}
@@ -113,6 +110,7 @@ class ElementShowHide extends React.Component {
                                         showHideType="revel"
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {posterItem}
+                                        key = {posterItem}
                                     />
                                 )
                             })}
@@ -132,7 +130,6 @@ class ElementShowHide extends React.Component {
                                         innerIndex = {innerIndex}
                                         placeholder="Enter Hide text"
                                         id={hideItem.id}
-                                        //  tagName={'p'}
                                         model={hideItem.html.text}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
