@@ -313,6 +313,19 @@ export class TinyMceEditor extends Component {
                     break;
                 case "mceInsertContent": 
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    setTimeout(() => {
+                        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                        console.log(activeElement);
+                        if(activeElement){
+                        if (activeElement.innerText === "") {
+                            activeElement.classList.add('place-holder')
+                        }
+                        else {
+                            activeElement.classList.remove('place-holder')
+
+                        }
+                    }
+                }, 0)
                     break;
                 case "FormatBlock":
                     if (e.value === 'h5'){
