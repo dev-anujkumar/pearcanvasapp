@@ -16,7 +16,6 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
     let appStore =  getState().appStore;
     try {
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
@@ -189,6 +188,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
         })
     }
+
+    if(conversionDataToSend.inputType===conversionDataToSend.outputType && conversionDataToSend.inputSubType===conversionDataToSend.outputSubType){
+        return;
+    }
+
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -197,6 +203,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+
+        tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
+
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
