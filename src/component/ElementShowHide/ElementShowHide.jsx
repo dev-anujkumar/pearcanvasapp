@@ -99,7 +99,7 @@ class ElementShowHide extends React.Component {
                                         index={`${index}-2-${innerIndex}`}
                                         innerIndex = {innerIndex}
                                         placeholder="This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
-                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
+                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" || posterItem.elementdata.mathml? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
                                         slateLockInfo={slateLockInfo}
