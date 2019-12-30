@@ -457,7 +457,6 @@ export class TinyMceEditor extends Component {
         editor.on('keyup', (e) => {
             this.isctrlPlusV = false;
             if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 )) ){
-                console.log("this.props", this.props.element.interactivedata.show.length);
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
             }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
