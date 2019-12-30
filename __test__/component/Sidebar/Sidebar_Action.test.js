@@ -123,7 +123,7 @@ describe('Test convertElement- paragraph', () => {
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- singleAssessment', () => {
+describe('Test convertElement- singleAssessment', () => {
     let store = mockStore(() => initialState2);
     it('Test convertElement  -assessment type', () => {
         store = mockStore(() => initialState2);
@@ -535,7 +535,7 @@ describe('Test convertElement- ASIDE-CONTAINER', () => {
 
     });
 });
-xdescribe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
+describe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
     let store = mockStore(() => initialState10);
     it('Test convertElement  - ASIDE-CONTAINER', () => {
         store = mockStore(() => initialState10);
@@ -555,10 +555,13 @@ xdescribe('Test convertElement- ASIDE-CONTAINER-internal conversion', () => {
 
     });
 });
-xdescribe('Test convertElement- MOCK API CALL', () => {
+describe('Test convertElement- MOCK API CALL', () => {
     let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
         store = mockStore(() => initialState4);
+        let getState = () => {
+            return initialState;
+           }
         let elementData = {
             elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
             elementType: "video-audio",
@@ -741,7 +744,7 @@ xdescribe('Test convertElement- MOCK API CALL', () => {
             }
         }
          let result = await sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"]);
-         result(dispatch);
+         result(dispatch,getState);
          setTimeout(()=>{
             if(elemData.type==='FETCH_SLATE_DATA'){
                 expect(elemData.type).toEqual('FETCH_SLATE_DATA')
@@ -754,10 +757,13 @@ xdescribe('Test convertElement- MOCK API CALL', () => {
          },1000)
     });
 });
-xdescribe('Test convertElement- MOCK API CALL-catch', () => {
+describe('Test convertElement- MOCK API CALL-catch', () => {
     let store = mockStore(() => initialState4);
     it('Test convertElement  -MOCK API CALL',async () => {
         store = mockStore(() => initialState4);
+        let getState = () => {
+            return initialState;
+           }
         let elementData = {
             elementId: "urn:pearson:work:e4d3e2ce-71f6-4ffa-9868-3d0b00a69f75",
             elementType: "video-audio",
@@ -847,7 +853,7 @@ xdescribe('Test convertElement- MOCK API CALL-catch', () => {
         let error= 'TypeError: dispatch is not a function at dispatch (D:\Canvas Stabilization\canvas-stabilization\src\component\Sidebar\Sidebar_Action.js:215:9) at processTicksAndRejections (internal/process/task_queues.js:89:5)'
         axios.post.mockImplementation(() => Promise.reject(error));
          let result = await sidebarAction.convertElement(oldData, elementData, activeElement, slateData,["5"]);
-        result();
+        result(()=>{},getState);
         setTimeout(() => {
             expect(sendDataToIframe).toHaveBeenCalled()
         }, 1000)
