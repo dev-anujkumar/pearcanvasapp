@@ -5,13 +5,13 @@ export const popup = {
     "contentUrn": "urn:pearson:entity:5094db18-29f2-46c8-8529-a8153220e5c7",
     "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
     "popupdata": {
-        "postertextobject": {
+        "postertextobject": [{
             "id": "urn:pearson:work:55e2ba3f-632a-41e1-9197-2aa58c9978y5",
             "type": "element-authoredtext",
             "html": {
                 "text": "<p class=\"paragraphNumeroUno\"><br></p>"
             },
-        },
+        }],
         "formatted-title": {
             "id": "urn:pearson:work:e09f7655-c9e8-40dc-b6f1-18a5972d5720",
             "type": "element-authoredtext",
