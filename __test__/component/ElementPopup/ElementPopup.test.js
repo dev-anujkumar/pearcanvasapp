@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
-import { Provider } from 'react-redux';
 import ElementPopup from '../../../src/component/ElementPopup';
 import { popup } from '../../../fixtures/ElementPopup';
 import configureMockStore from 'redux-mock-store';
