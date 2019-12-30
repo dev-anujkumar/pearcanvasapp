@@ -29,11 +29,12 @@ class ElementPopup extends React.Component {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
     }
     handlepopupSlateClick = (event) => {
+        this.props.handleFocus();
         if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
             if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
                 this.renderSlate()
             }
-        }
+        } 
     }
     
     renderSlate =()=>{
@@ -49,7 +50,7 @@ class ElementPopup extends React.Component {
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
     }
-    renderPopup = ()=>{
+    renderPopup = ()=>{        
         const {index, element, slateLockInfo} = this.props
             return(
                 <div className="divWidgetPU" resource="">
@@ -64,8 +65,8 @@ class ElementPopup extends React.Component {
                     <div className="pearson-component pu"  data-uri="" data-type="pu" data-width="600" data-height="399" ref={this.popupBorderRef}>
                         {
                             <a className="buttonWidgetPU">
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} tagName={'p'} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject[0]}
-                            model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} index={`${index}-2`} placeholder="Enter call to action..." className={"actionPU"} id={this.props.id} element={element} currentElement = {element.popupdata && element.popupdata.postertextobject[0]} model={element.popupdata && element.popupdata.postertextobject? element.popupdata.postertextobject[0].html.text : "" } 
+                            handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} elementId={this.props.elementId} />
                             </a>
                         }
                     </div>
