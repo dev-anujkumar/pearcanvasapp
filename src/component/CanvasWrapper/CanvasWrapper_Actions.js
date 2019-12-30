@@ -397,7 +397,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData, updateFromC2Flag) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData, updateFromC2Flag = false) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)

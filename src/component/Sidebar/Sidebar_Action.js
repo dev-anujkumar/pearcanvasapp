@@ -16,7 +16,6 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
     let appStore =  getState().appStore;
     try {
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
@@ -189,8 +188,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
         })
     }
+
+    if(conversionDataToSend.inputType===conversionDataToSend.outputType && conversionDataToSend.inputSubType===conversionDataToSend.outputSubType){
+        return;
+    }
+
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
@@ -198,6 +203,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+
+        tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
+
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
@@ -219,7 +227,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
 
-        console.log("normal element NEW ELEMENT DATA::", newElementData)
         let activeElementObject = {
             elementId: res.data.id,
             // elementId: newElementData.elementId,
@@ -233,7 +240,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
-        console.log("normal element NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -243,7 +249,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+
+        if(activeElementObject.primaryOption === "primary-showhide"){
+           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
+           showHideRevealElement.focus()
+           showHideRevealElement.blur()
+        }
     })
+    
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         console.log("Conversion Error >> ",err) 

@@ -15,7 +15,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag','redo'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag'],//PCAT-6725 fixed
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
