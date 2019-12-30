@@ -2,7 +2,6 @@ import React from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 import { connect } from 'react-redux';
 import config from '../../config/config'
-import { showTocBlocker,hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';

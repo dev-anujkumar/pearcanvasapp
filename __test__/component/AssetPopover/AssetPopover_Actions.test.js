@@ -27,7 +27,8 @@ jest.mock('../../../src/constants/Action_Constants', ()=> {
         TOGGLE_APO_SEARCH: 'TOGGLE_LO_DROPDOWN',
         REMOVE_ASSET_LINK: 'REMOVE_ASSET_LINK',
         IMAGES_FROM_API: 'IMAGES_FROM_API',
-        SELECTED_FIGURE: 'SELECTED_FIGURE'
+        SELECTED_FIGURE: 'SELECTED_FIGURE',
+        IMAGES_FROM_API_FAIL: 'IMAGES_FROM_API_FAIL'
     }
 })
 jest.mock('../../../src/constants/utility.js', () => ({

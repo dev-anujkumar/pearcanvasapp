@@ -36,6 +36,7 @@ describe('Testing Element Show Hide component', () => {
         handleFocus: jest.fn(),
         accessDenied: jest.fn(),
         openPopupSlate:jest.fn(),
+        fetchSlateData: jest.fn(),
         element: popup
     }
     const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
