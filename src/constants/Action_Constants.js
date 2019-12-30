@@ -66,6 +66,7 @@ export const TOGGLE_APO_SEARCH = 'TOGGLE_APO_SEARCH'
 export const REMOVE_ASSET_LINK = 'REMOVE_ASSET_LINK'
 export const USE_STATE_IMAGE_DATA = 'USE_STATE_IMAGE_DATA'
 export const IMAGES_FROM_API = 'IMAGES_FROM_API'
+export const IMAGES_FROM_API_FAIL = 'IMAGES_FROM_API_FAIL'
 
 /*--------------- Learning Tool -------------------*/
 export const LT_API_RESULT = "LT_API_RESULT"

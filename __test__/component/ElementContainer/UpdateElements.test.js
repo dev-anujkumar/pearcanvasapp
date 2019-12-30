@@ -95,7 +95,7 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    xit('Test for ELEMENT-TYPE----->figure---->BlockCodeEditor', () => {
+    it('Test for ELEMENT-TYPE----->figure---->BlockCodeEditor', () => {
         const elementDiv = document.createElement('div');
         elementDiv.className = "divCodeSnippetFigure blockCodeFigure";
 
@@ -127,7 +127,7 @@ describe('Test for UpdateElements Functions', () => {
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
     })
-    xit('Test for ELEMENT-TYPE----->figure---->SingleAssessment', () => {
+    it('Test for ELEMENT-TYPE----->figure---->SingleAssessment', () => {
         const elementDiv = document.createElement('div');
         elementDiv.setAttribute('data-id', "urn:pearson:work:7b027839-60ae-4673-a80b-00d5a6567bd9");
 

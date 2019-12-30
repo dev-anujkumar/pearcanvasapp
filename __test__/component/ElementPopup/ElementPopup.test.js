@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
 import ElementPopup from '../../../src/component/ElementPopup';
 import { popup } from '../../../fixtures/ElementPopup'
+
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
+const store = mockStore({})
 
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
@@ -11,7 +19,7 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 
-xdescribe('Testing Element Show Hide component', () => {
+describe('Testing Element Show Hide component', () => {
     let props = {
         model: {},
         index: "",
@@ -29,18 +37,19 @@ xdescribe('Testing Element Show Hide component', () => {
         handleFocus: jest.fn(),
         accessDenied: jest.fn(),
         openPopupSlate:jest.fn(),
+        fetchSlateData: jest.fn(),
         element: popup
     }
-    const component = mount(<ElementPopup {...props} />)
+    const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
     let elementPopupInstance = component.instance();
     test('renders without crashing', () => {
-        const component = mount(<ElementPopup {...props} />)
+        const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance();
         expect(instance).toBeDefined();
     })
 
-    test('Test renderslate function ', () => {
+    xtest('Test renderslate function ', () => {
         const spyRenderSlatefunction = jest.spyOn(elementPopupInstance, 'renderSlate')
         elementPopupInstance.renderSlate();
         elementPopupInstance.forceUpdate();
