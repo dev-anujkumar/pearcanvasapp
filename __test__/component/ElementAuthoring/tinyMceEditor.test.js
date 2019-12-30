@@ -239,7 +239,7 @@ describe('Testing TinyMCE Editor', () => {
     })
 
 })
-describe('Testing tinyMce  component with  props', () => {
+xdescribe('Testing tinyMce  component with  props', () => {
     let props = {
         slateLockInfo: {
             isLocked: false,
@@ -877,7 +877,7 @@ describe('Testing tinyMce  component with  props', () => {
     });
 
 })
-describe('Test-Function-setInstanceToolbar -------->', () => {
+xdescribe('Test-Function-setInstanceToolbar -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -989,7 +989,7 @@ describe('Test-Function-setInstanceToolbar -------->', () => {
         spysetInstanceToolbar.mockClear()
     })
 })
-describe('Test-Function-setToolbarByElementType -------->', () => {
+xdescribe('Test-Function-setToolbarByElementType -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -1123,7 +1123,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    it('Test- handlePlaceholder-figuredata.text', () => {
+    xit('Test- handlePlaceholder-figuredata.text', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1152,7 +1152,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    it('Test- handlePlaceholder-BCE', () => {
+    xit('Test- handlePlaceholder-BCE', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1314,7 +1314,7 @@ describe('Test-TinyMCE Editor for Other Elements', () => {
         expect(instance).toBeDefined();
         instance.editorRef = editorInstance
     })
-    it('Test editorBeforeExecCommand  method for RemoveFormat', () => {
+    xit('Test editorBeforeExecCommand  method for RemoveFormat', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -1844,7 +1844,7 @@ describe('Testing -Editor Key events', () => {
         instance.onBeforeOutdent(event, 'paragraphNumeroUno');
         expect(spyFunction).toHaveBeenCalled()
     });
-    it('Test pastePreProcess - else case', () => {
+    xit('Test pastePreProcess - else case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -1869,7 +1869,7 @@ describe('Testing -Editor Key events', () => {
         instance.pastePreProcess(plugin,args);
         expect(spypastePreProcess).toHaveBeenCalled()
     });
-    it('Test pastePreProcess - if case', () => {
+    xit('Test pastePreProcess - if case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
