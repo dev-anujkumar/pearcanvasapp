@@ -252,8 +252,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         if(activeElementObject.primaryOption === "primary-showhide"){
            let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
-           showHideRevealElement.focus()
-           showHideRevealElement.blur()
+           if(showHideRevealElement){
+                showHideRevealElement.focus()
+                showHideRevealElement.blur()
+           } 
         }
     })
     
