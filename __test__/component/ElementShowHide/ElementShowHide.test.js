@@ -1,17 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 import ElementShowHide from '../../../src/component/ElementShowHide';
 import {showHide} from '../../../fixtures/ElementSHowHideData'
 
-import config from '../../../src/config/config';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+const store = mockStore({});
+
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
         return (<div>null</div>)
     }
 })
 
-xdescribe('Testing Element Show Hide component', () => {
+describe('Testing Element Show Hide component', () => {
 
     test('renders without crashing', () => {
         let props = {
@@ -32,7 +38,7 @@ xdescribe('Testing Element Show Hide component', () => {
             accessDenied: jest.fn(),
             element:showHide["aside-showhide"]
         }
-        const component = mount(<ElementShowHide {...props} />)
+        const component = mount(<Provider store={store}><ElementShowHide {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance(); 
         expect(instance).toBeDefined();

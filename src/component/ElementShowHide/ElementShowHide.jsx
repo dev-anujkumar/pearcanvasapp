@@ -45,8 +45,17 @@ class ElementShowHide extends React.Component {
 
     }
 
-    deleteShowHideUnit = (id, type, contentUrn, index) => {
-        this.props.deleteShowHideUnit(id, type, contentUrn, index)
+    deleteShowHideUnit = (id, type, contentUrn, index,eleIndex,parentId) => {
+        this.props.deleteShowHideUnit(id, type, contentUrn, index,eleIndex,parentId, (status)=>{
+            if(status){
+                let newIndex = eleIndex.split("-")
+                newIndex[2] = parseInt(newIndex[2]) - 1
+                let newshowIndex = newIndex.join("-");
+                if (document.getElementById(`cypress-${newshowIndex}`)) {
+                    document.getElementById(`cypress-${newshowIndex}`).focus();
+                }
+            }
+        })
     }
     
     render() {

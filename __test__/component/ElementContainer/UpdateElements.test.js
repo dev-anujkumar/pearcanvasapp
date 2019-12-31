@@ -104,6 +104,7 @@ describe('Test for UpdateElements Functions', () => {
 
         const code = document.createElement('code');
         code.id = "cypress-4-2";
+        code.textContent = "blockCode";
         code.innerText = "blockCode";
         code.innerHTML = "blockCode";
         elementPre.appendChild(code);
@@ -136,11 +137,12 @@ describe('Test for UpdateElements Functions', () => {
 
         const elementTitle = document.createElement('div');
         elementTitle.id = "single_assessment_title";
-        elementTitle.innerText = "Title"
+        // elementTitle.innerText = "Title"
         elementFigure.appendChild(elementTitle);
 
         const elementIdInfo = document.createElement('div');
         elementIdInfo.className = "singleAssessmentIdInfo";
+        elementIdInfo.textContent = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
         elementIdInfo.innerText = "urn:pearson:work:4da32e71-a6b5-4daa-84ed-fb72d6b0aa74";
         elementFigure.appendChild(elementIdInfo);
 

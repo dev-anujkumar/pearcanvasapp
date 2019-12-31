@@ -30,7 +30,8 @@ import {
     OPEN_POPUP_SLATE,
     CLOSE_POPUP_SLATE,
     CREATE_SHOW_HIDE_ELEMENT,
-    SET_PARENT_ASIDE_DATA
+    SET_PARENT_ASIDE_DATA,
+    DELETE_SHOW_HIDE_ELEMENT
 } from '../constants/Action_Constants';
 
 /**
@@ -49,9 +50,9 @@ const INITIAL_STATE = {
     popupSlateData: null,
     roleId: '',
     oldImage: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
-    showHideId:"",
-    parentUrn:{},
-    asideData:{}
+    showHideId: "",
+    parentUrn: {},
+    asideData: {}
 };
 
 const INITIAL_ACTION = {
@@ -159,22 +160,27 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 slateLevelData: {
                     ...state.slateLevelData,
-                     [Object.keys(action.payload)[0]] : action.payload[Object.keys(action.payload)[0]]
-                    }
+                    [Object.keys(action.payload)[0]]: action.payload[Object.keys(action.payload)[0]]
+                }
             }
         case CLOSE_POPUP_SLATE:
-            let stateCopy = {...state.slateLevelData}
+            let stateCopy = { ...state.slateLevelData }
             delete stateCopy[action.payload.popupId]
             return {
                 ...state,
-                slateLevelData : stateCopy
+                slateLevelData: stateCopy
             }
-    case SET_PARENT_ASIDE_DATA:
-    return {
-        ...state,
-        parentUrn : action.payload.parentUrn,
-        asideData:action.payload.asideData
-    }
+        case SET_PARENT_ASIDE_DATA:
+            return {
+                ...state,
+                parentUrn: action.payload.parentUrn,
+                asideData: action.payload.asideData
+            }
+        case DELETE_SHOW_HIDE_ELEMENT:
+            return {
+                ...state,
+                slateLevelData: action.payload.slateLevelData
+            };
         default:
             return state;
     }

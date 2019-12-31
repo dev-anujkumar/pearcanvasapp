@@ -4,7 +4,8 @@ import {
   TOGGLE_APO_SEARCH,
   REMOVE_ASSET_LINK,
   SELECTED_FIGURE,
-  IMAGES_FROM_API
+  IMAGES_FROM_API,
+  IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
 const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES,COREAPI_ENDPOINT } = config;
