@@ -140,6 +140,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
