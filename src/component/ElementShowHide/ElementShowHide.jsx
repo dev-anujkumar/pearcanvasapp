@@ -23,7 +23,7 @@ class ElementShowHide extends React.Component {
         this.props.createShowHideElement(this.props.element.id, type, index, this.props.element.contentUrn, (status) => {
             if(status){
                 let newIndex = index.split("-")
-                newIndex[2] = parseInt(newIndex[2]) + 1
+                newIndex[newIndex.length-1] = parseInt(newIndex[newIndex.length-1]) + 1
                 let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
                     document.getElementById(`cypress-${newshowIndex}`).focus();
@@ -49,7 +49,7 @@ class ElementShowHide extends React.Component {
         this.props.deleteShowHideUnit(id, type, contentUrn, index,eleIndex,parentId, (status)=>{
             if(status){
                 let newIndex = eleIndex.split("-")
-                newIndex[2] = parseInt(newIndex[2]) - 1
+                newIndex[newIndex.length-1] = parseInt(newIndex[newIndex.length-1]) - 1
                 let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
                     document.getElementById(`cypress-${newshowIndex}`).focus();
@@ -108,7 +108,7 @@ class ElementShowHide extends React.Component {
                                         index={`${index}-2-${innerIndex}`}
                                         innerIndex = {innerIndex}
                                         placeholder="This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
-                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" || posterItem.elementdata.mathml? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
+                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" || posterItem.html.text.match(/<img/)? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
                                         handleEditorFocus={this.props.handleFocus}
                                         handleBlur={this.props.handleBlur}
                                         slateLockInfo={slateLockInfo}

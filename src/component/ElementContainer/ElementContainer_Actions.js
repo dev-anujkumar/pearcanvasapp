@@ -622,6 +622,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         index : index.toString(),
         slateEntity : config.slateEntityURN
     }
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
