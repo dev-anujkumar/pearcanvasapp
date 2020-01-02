@@ -113,8 +113,6 @@ export class TinyMceEditor extends Component {
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
                         // tinyMCE.$('.Wirisformula').each(function () {
-                        //     this.removeAttribute('width');
-                        //     console.log("wiris:::", this, this.naturalWidth, this.clientWidth);
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
                         // }) 
@@ -173,7 +171,7 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.Wirisformula').each(function () {
             this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
             this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-        })
+        });
 
         this.editorRef  = React.createRef();
         this.currentCursorBookmark = {};
