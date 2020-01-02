@@ -4,30 +4,15 @@ var axios = require('axios');
 import * as sinon from 'sinon';
 import { doesNotReject } from 'assert';
 
-// jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
+jest.mock('axios', () => ({ get: jest.fn(), post: jest.fn() }));
 
 describe('Testing c4_modules', () => {
 
-    it('Testing publishSlate function', () => {
-        let response = {
-            responseText: {
-                ResponseMetadata: {
-                    requestStatusCode: 200
-                },
-                data: {
-                    previewURL: "http://previewURL"
-                }
-            } 
-        }
-
-        const mockedResponse = Promise.resolve(response);
-        jest.mock('axios', (response) => ({ post: (response) => jest.fn(response), create: jest.fn() }));
-        // mockedResponse.then(function(mockedResponse) {            
-            let project = 'project',
-                section = 'section',
-                cite = 'cite';
-                // pubApiKey = {};
-        //   });
+    xit('Testing publishSlate function', () => {
+        let project = 'project',
+            section = 'section',
+            cite = 'cite';
+        jest.mock('axios');
         _.delay = jest.fn(() => {});
         c4PublishObj.publishSlate(project, section, cite);
     })
