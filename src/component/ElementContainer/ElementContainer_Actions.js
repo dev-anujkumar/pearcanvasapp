@@ -140,6 +140,12 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
+            let currentSlateData = newParentData[config.slateManifestURN];
+            if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
             bodymatter.forEach((element, key) => {
                 if (element.id === elmId) {
@@ -622,6 +628,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         index : index.toString(),
         slateEntity : config.slateEntityURN
     }
+    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
