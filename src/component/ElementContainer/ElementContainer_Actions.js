@@ -282,7 +282,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
               
                 
             } else if(response.data.id !== updatedData.id){
-                console.log("mapping insideqwfeqf")
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null);
                 }else if(currentSlateData.status === 'approved'){
