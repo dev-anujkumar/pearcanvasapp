@@ -265,14 +265,24 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 console.log("mapping inside")
-                if (currentSlateData.status === 'wip') {
-                    console.log("mapping wip")
-                    updateLOInStore(updatedData, response.data, getState,dispatch);
-                } else if (currentSlateData.status === 'approved') {
-                    console.log("mapping approved")
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                for(let i=0;i <updatedData.metaDataAnchorID.length; i++){
+                        if(updatedData.metaDataAnchorID[i] !==  response.data.metaDataAnchorID[i] ){
+                            if (currentSlateData.status === 'wip') {
+                                console.log("mapping wip")
+                                updateLOInStore(updatedData, response.data, getState,dispatch);
+                            } else if (currentSlateData.status === 'approved') {
+                                console.log("mapping approved")
+                                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                            }
+                            break;
+                        }
+                       
+                   
                 }
+              
+                
             } else if(response.data.id !== updatedData.id){
+                console.log("mapping insideqwfeqf")
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null);
                 }else if(currentSlateData.status === 'approved'){
@@ -296,11 +306,13 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = Object.values(newslateData)[0];
+    if(versionedData){
+        let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     for(let i = 0; i < updatedData.loIndex.length; i++){
         newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
+    }
     }
     return dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
@@ -308,6 +320,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
             slateLevelData: newslateData
         }
     })
+    
 
 }
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType){
