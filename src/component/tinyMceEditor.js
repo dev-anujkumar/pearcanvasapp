@@ -112,10 +112,12 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-                        tinyMCE.$('.Wirisformula').each(function () {
-                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        }) 
+                        // tinyMCE.$('.Wirisformula').each(function () {
+                        //     this.removeAttribute('width');
+                        //     console.log("wiris:::", this, this.naturalWidth, this.clientWidth);
+                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
@@ -168,6 +170,11 @@ export class TinyMceEditor extends Component {
                 
             }
         }
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        })
+
         this.editorRef  = React.createRef();
         this.currentCursorBookmark = {};
     };
