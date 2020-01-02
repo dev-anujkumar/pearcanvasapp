@@ -249,7 +249,16 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+
+        if(activeElementObject.primaryOption === "primary-showhide"){
+           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
+           if(showHideRevealElement){
+                showHideRevealElement.focus()
+                showHideRevealElement.blur()
+           } 
+        }
     })
+    
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         console.log("Conversion Error >> ",err) 

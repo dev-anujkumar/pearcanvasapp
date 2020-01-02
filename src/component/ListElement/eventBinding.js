@@ -65,7 +65,7 @@ export const bindKeyDownEvent = (editor, e, element) => {
     const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
     let isOnlyListElement = element.type === "element-list"
-    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element) 
+    let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element)
 
     /**
      * [BG-818] and [BG-935] | at times @anchorNode points directly to 'div.cypress-editable',
@@ -175,15 +175,15 @@ export const bindKeyDownEvent = (editor, e, element) => {
      * Facilitate indent feature at end of text on TAB key
      */
     if (atEnd && e.which == 9 && !e.shiftKey) {
-        // editor.editorCommands.commands.exec.indent();
-        editor.execCommand('indent')
+        isOnlyListElement && editor.editorCommands.commands.exec.indent();      // In case of List
+        !isOnlyListElement && editor.execCommand('indent')                      // Other then List
     }
     /**
      * Facilitate indent feature at end of text on shift+TAB key
      */
     if (atEnd && e.which == 9 && e.shiftKey) {
-        // editor.editorCommands.commands.exec.outdent();
-        editor.execCommand('outdent')
+        isOnlyListElement && editor.editorCommands.commands.exec.outdent()          // In case of List
+        !isOnlyListElement && editor.execCommand('outdent')                         // Other then List
     }
 
     let isBackspaceOnStart = false

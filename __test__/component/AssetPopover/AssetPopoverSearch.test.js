@@ -11,6 +11,7 @@ jest.mock('../../../src/component/AssetPopover/openApoFunction.js', () => {
         clearAssetPopoverLink: jest.fn()
     }
 });
+import tinymce from 'tinymce/tinymce';
 
 jest.mock('../../../src/component/AssetPopover/AssetPopover_Actions.js',() => ({
     getAssetPopoverId: () => Promise.resolve({})
@@ -39,7 +40,8 @@ const searchForFigures =jest.fn();
 let props = {
     searchForFigures : jest.fn(),
     apoSearchClose: jest.fn(),
-    selectedFigure:jest.fn()
+    selectedFigure:jest.fn(),
+    saveAssetLinkedMedia : jest.fn()
 }
 
 beforeEach(() => {
@@ -158,5 +160,34 @@ describe('Interaction functions test cases', () => {
         tempWrapper.update();
         instance.searchForFigures(event, stateImageData);
         expect(instance.props.searchForFigures).toHaveBeenCalled();
+    })
+
+    it('Testing saveAssetLinkedMedia update function', ()=>{
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props}/> </Provider>);
+        const instance = tempWrapper.find('AssetPopoverSearch').instance();
+        const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
+        let apoObject = {'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45'}, imageObj = {'entityUrn': 'urn:entity:12gdh1g34g12v12h34512'}
+        tinymce.activeEditor = {'id' : 'cypress-1'}
+        let simpleDiv = document.createElement('div');
+        simpleDiv.setAttribute('id', 'cypress-1');
+        simpleDiv.innerHTML = '<abbr asset-id="urn:work:1b4234nb234bv523b4v52b3v45"> Hello </abbr>';
+        document.body.appendChild(simpleDiv);
+        instance.saveAssetLinkedMedia(apoObject,imageObj)
+        expect(spysaveAssetLinkedMedia).toHaveBeenCalled()
+        spysaveAssetLinkedMedia.mockClear() 
+    })
+
+    it('Testing saveAssetLinkedMedia create function', ()=>{
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props}/> </Provider>);
+        const instance = tempWrapper.find('AssetPopoverSearch').instance();
+        const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
+        let apoObject = { }, imageObj = {'entityUrn': 'urn:entity:12gdh1g34g12v12h34512'}
+        let simpleDiv = document.createElement('div');
+        simpleDiv.setAttribute('id', 'asset-popover-attacher');
+        simpleDiv.innerHTML = '<span> Hello </abbr>';
+        document.body.appendChild(simpleDiv);
+        instance.saveAssetLinkedMedia(apoObject,imageObj)
+        expect(spysaveAssetLinkedMedia).toHaveBeenCalled()
+        spysaveAssetLinkedMedia.mockClear() 
     })
 })

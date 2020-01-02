@@ -139,7 +139,8 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     disableHeader: jest.fn(),
     showTocBlocker: jest.fn(),
     hideBlocker: jest.fn(),
-    showHeaderBlocker: jest.fn()
+    showHeaderBlocker: jest.fn(),
+    showBlocker: jest.fn()
 }))
 jest.mock('../../../src/config/config.js', () => ({
     disablePrev: false,
@@ -447,7 +448,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.onDeleteTocItem).toHaveBeenCalledWith(event.data.message, 'withPendingTrack')
         spyonDeleteTocItem.mockClear()
     })
-    xtest('Test for showSingleContainerDelete case', () => {
+    test('Test for showSingleContainerDelete case', () => {
         let event = {
             data: {
                 type: "showSingleContainerDelete",
@@ -458,7 +459,7 @@ describe('Testing communication channel', () => {
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.onSingleContainerDelete).toHaveBeenCalled()
         expect(channelInstance.state.toggleTocDelete).toBe(true)
-        expect(channelInstance.state.tocDeleteMessage).toBe("singleContainerDelete")
+        expect(channelInstance.state.tocDeleteMessage.messageType).toBe("singleContainerDelete")
         spyonSingleContainerDelete.mockClear()
     })
     test('Test for titleChanging case', () => {
@@ -1069,7 +1070,7 @@ describe('Testing communication channel', () => {
             expect(channelInstance.redirectDashboard).toHaveBeenCalled()
             spyredirectDashboard.mockClear()
         })
-        xtest('Test for slateLockAlert  function', () => {
+        test('Test for slateLockAlert  function', () => {
             let userInfo = {
                 userName: 'c5test01',
                 userId: 'c5test01',
@@ -1113,7 +1114,7 @@ describe('Testing communication channel', () => {
             expect(channelInstance.prohibitPropagation).toHaveBeenCalled()
             spyprohibitPropagation.mockClear()
         })
-        xtest('Test for toggleLockPopup  function', () => {
+        test('Test for toggleLockPopup  function', () => {
             let event = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn()
