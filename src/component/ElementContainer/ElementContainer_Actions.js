@@ -358,7 +358,35 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 tcm: _slateObject.tcm ? true : false,
                                 html: updatedData.html
                             };
-                        } else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                        }
+                        else if(nestedEle.type === "popup"){
+                            if(nestedEle.popupdata["formatted-title"]["id"] === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        "formatted-title" : {...updatedData}
+                                    }
+                                };
+                            } else if(nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        "formatted-subtitle" : {...updatedData}
+                                    }
+                                };
+                            } else if(nestedEle.popupdata.postertextobject[0].id === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        postertextobject : [{...updatedData}]
+                                    }
+                                };
+                            }
+                        }
+                         else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
                             let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
                                 if(ele.id == elementId) {
@@ -372,6 +400,33 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         tcm: _slateObject.tcm ? true : false,
                                         html: updatedData.html
                                     };
+                                }
+                                else if(ele.type === "popup"){
+                                    if(ele.popupdata["formatted-title"]["id"] === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                "formatted-title" : {...updatedData}
+                                            }
+                                        };
+                                    } else if(ele.popupdata["formatted-subtitle"]["id"] === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                "formatted-subtitle" : {...updatedData}
+                                            }
+                                        };
+                                    } else if(ele.popupdata.postertextobject[0].id === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                postertextobject : [{...updatedData}]
+                                            }
+                                        };
+                                    }
                                 }
                                 return ele;
                             })
