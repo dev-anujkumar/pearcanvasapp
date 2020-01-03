@@ -112,10 +112,10 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-                        tinyMCE.$('.Wirisformula').each(function () {
-                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        }) 
+                        // tinyMCE.$('.Wirisformula').each(function () {
+                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
@@ -168,6 +168,11 @@ export class TinyMceEditor extends Component {
                 
             }
         }
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        });
+
         this.editorRef  = React.createRef();
         this.currentCursorBookmark = {};
     };
@@ -456,11 +461,18 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             this.isctrlPlusV = false;
-            if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 )) ){
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
-            }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement =tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
+            let isContainsMath = false ;
+
+            if (activeElement) {
+                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+             }
+
+            if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && !isContainsMath){
+                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
+            }
+
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
@@ -473,7 +485,6 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                let isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
                 if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
@@ -788,6 +799,18 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Sets cursor position and content after indent or outdent
+     * @param {*} editor  editor instance
+     * @param {*} content  content inside editor
+     */
+    setContentAndPlaceCaret = (editor, content) => {
+        clickedX = editor.selection.getBoundingClientRect().left;
+        clickedY = editor.selection.getBoundingClientRect().top;
+        editor.setContent(content)
+        editor.selection.placeCaretAt(clickedX,clickedY);
+    }
+    
+    /**
      * Handles indent behaviour for paragraph on indent command execution
      * @param {*} e  event object
      * @param {*} editor  editor instance
@@ -803,7 +826,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**
@@ -822,7 +845,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**

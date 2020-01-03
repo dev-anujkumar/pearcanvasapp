@@ -175,11 +175,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
-        return false;
-    }
-
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
@@ -199,7 +194,11 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
-
+                if (currentSlateData.status === 'approved') {
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    return false;
+                }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
@@ -454,7 +453,9 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("DELETE PAGE NUMBER ERROR : ", error)
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+        if(!(error.response.status===404 && error.response.data.message==="Not Found")){
+                dispatch({type: ERROR_POPUP, payload:{show: true}})
+            }
         })
     }
 }

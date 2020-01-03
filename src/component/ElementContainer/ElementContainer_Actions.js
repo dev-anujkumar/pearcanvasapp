@@ -265,13 +265,22 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 console.log("mapping inside")
-                if (currentSlateData.status === 'wip') {
-                    console.log("mapping wip")
-                    updateLOInStore(updatedData, response.data, getState,dispatch);
-                } else if (currentSlateData.status === 'approved') {
-                    console.log("mapping approved")
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                for(let i=0;i <updatedData.metaDataAnchorID.length; i++){
+                        if(updatedData.metaDataAnchorID[i] !==  response.data.metaDataAnchorID[i] ){
+                            if (currentSlateData.status === 'wip') {
+                                console.log("mapping wip")
+                                updateLOInStore(updatedData, response.data, getState,dispatch);
+                            } else if (currentSlateData.status === 'approved') {
+                                console.log("mapping approved")
+                                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                            }
+                            break;
+                        }
+                       
+                   
                 }
+              
+                
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null);
@@ -296,11 +305,13 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
     console.log("updateLOInStore")
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
-    let _slateObject = Object.values(newslateData)[0];
+    if(versionedData){
+        let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
     for(let i = 0; i < updatedData.loIndex.length; i++){
         newslateData[config.slateManifestURN].contents.bodymatter[i].id = versionedData.metaDataAnchorID[i];
+    }
     }
     return dispatch({
         type: AUTHORING_ELEMENT_UPDATE,
@@ -308,6 +319,7 @@ function updateLOInStore(updatedData, versionedData, getState, dispatch) {
             slateLevelData: newslateData
         }
     })
+    
 
 }
 function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getState, versionedData, elementIndex, showHideType){
@@ -358,7 +370,42 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                 tcm: _slateObject.tcm ? true : false,
                                 html: updatedData.html
                             };
-                        } else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
+                        }
+                        else if(nestedEle.type === "popup"){
+                            if(nestedEle.popupdata["formatted-title"]["id"] === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        "formatted-title" : {...updatedData}
+                                    }
+                                };
+                            } else if(nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        "formatted-subtitle" : {...updatedData}
+                                    }
+                                };
+                            } else if(nestedEle.popupdata.postertextobject[0].id === elementId){
+                                nestedEle  = {
+                                    ...nestedEle,
+                                    popupdata : {
+                                        ...nestedEle.popupdata,
+                                        postertextobject : [{...updatedData}]
+                                    }
+                                };
+                            }
+                        }else if(nestedEle.type == "showhide" && showHideType){
+                            nestedEle.interactivedata[showHideType].map((showHideData,index)=>{
+                                if(showHideData.id == updatedData.id){
+                                    showHideData.elementdata.text =  updatedData.elementdata.text;
+                                    showHideData.html = updatedData.html;
+                                }
+                            })
+                        }
+                         else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
                             let elementObject =  nestedEle.contents.bodymatter.map((ele)=>{
                                 if(ele.id == elementId) {
@@ -372,6 +419,41 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         tcm: _slateObject.tcm ? true : false,
                                         html: updatedData.html
                                     };
+                                }
+                                else if(ele.type === "popup"){
+                                    if(ele.popupdata["formatted-title"]["id"] === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                "formatted-title" : {...updatedData}
+                                            }
+                                        };
+                                    } else if(ele.popupdata["formatted-subtitle"]["id"] === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                "formatted-subtitle" : {...updatedData}
+                                            }
+                                        };
+                                    } else if(ele.popupdata.postertextobject[0].id === elementId){
+                                        ele  = {
+                                            ...ele,
+                                            popupdata : {
+                                                ...ele.popupdata,
+                                                postertextobject : [{...updatedData}]
+                                            }
+                                        };
+                                    }
+                                }else if(ele.type == "showhide" && showHideType){
+                                    ele.interactivedata[showHideType].map((showHideData,index)=>{
+                                        if(showHideData.id == updatedData.id){
+                                            showHideData.elementdata.text =  updatedData.elementdata.text;
+                                            showHideData.html = updatedData.html;
+                                        }
+                                    })
+                                   
                                 }
                                 return ele;
                             })
