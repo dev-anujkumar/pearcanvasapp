@@ -443,11 +443,18 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             this.isctrlPlusV = false;
-            if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length){
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
-            }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement =tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
+            let isContainsMath = false ;
+
+            if (activeElement) {
+                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+             }
+
+            if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && !isContainsMath){
+                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
+            }
+
             if (activeElement) { 
                 let lastCont = this.lastContent;
                 this.lastContent = activeElement.innerHTML;
@@ -460,7 +467,6 @@ export class TinyMceEditor extends Component {
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
                 }
-                let isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
                 if (activeElement.innerText.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || isContainsMath) {
                     activeElement.classList.remove('place-holder')
                 }
