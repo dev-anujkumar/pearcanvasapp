@@ -7,6 +7,11 @@ const mockStore = configureMockStore(middlewares);
 import slateData from '../../../fixtures/SidebarTestData'
 import * as listAction from '../../../src/component/ListElement/ListElement_Action.js';
 jest.mock('axios');
+
+jest.mock('../../../src/config/config.js', () => ({
+    slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+}))
+
 const initialState = {
     appStore: {
         slateLevelData: slateData,
@@ -16,10 +21,11 @@ const initialState = {
             labelText: "UL",
             primaryOption: "primary-list",
             secondaryOption: "secondary-list-1",
+            index: 1
         }
     }
 }
-xdescribe('Test convertElement- PARAGRAPH to LIST', () => {
+describe('Test convertElement- PARAGRAPH to LIST', () => {
     let store = mockStore(() => initialState);
     it('Test convertElement  -PARAGRAPH to LIST', () => {
         store = mockStore(() => initialState);

@@ -118,7 +118,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
-            this.props.setActiveElement(this.props.element, this.props.index ,"","", "updateFromC2Flag");
+            this.props.setActiveElement(this.props.element, this.props.index ,"","", true);
         }
         else {
             if (this.props.element.type === "openerelement") {

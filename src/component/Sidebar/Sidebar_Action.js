@@ -196,7 +196,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
 
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    console.log("ElementWipData >> ", ElementWipData[newElementData['secondaryOption'].replace('secondary-','')])
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
@@ -228,7 +227,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
 
-        console.log("normal element NEW ELEMENT DATA::", newElementData)
         let activeElementObject = {
             elementId: res.data.id,
             // elementId: newElementData.elementId,
@@ -242,7 +240,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText,
             longDesc
         };
-        console.log("normal element NEW ACTIVEELEMENT OBJ DATA::", activeElementObject)
         dispatch({
             type: FETCH_SLATE_DATA,
             payload: store
@@ -252,7 +249,16 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+
+        if(activeElementObject.primaryOption === "primary-showhide"){
+           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
+           if(showHideRevealElement){
+                showHideRevealElement.focus()
+                showHideRevealElement.blur()
+           } 
+        }
     })
+    
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         console.log("Conversion Error >> ",err) 

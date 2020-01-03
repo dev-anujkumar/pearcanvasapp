@@ -116,7 +116,7 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) =>
  * @param {*} callback Callback method to be executed
  */
 export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
-    let url = `${config.LOCK_API_BASE_URL}locks/typ/releaselock`
+    let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId

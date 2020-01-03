@@ -959,7 +959,8 @@ describe('Testing Event Binding Methods', () => {
                         indent: () => { }
                     }
                 }
-            }
+            },
+            execCommand:jest.fn()
         };
         let event = {
             target: {
@@ -1115,7 +1116,8 @@ describe('Testing Event Binding Methods', () => {
                         outdent: () => { }
                     }
                 }
-            }
+            },
+            execCommand:jest.fn()
         };
         let event = {
             target: {
@@ -1580,7 +1582,7 @@ describe('Testing Event Binding Methods', () => {
         let result = updateNestedList(element);
         expect(result).toEqual(undefined);
     });
-    it('Test updateNestedList for switch for decimal', () => {
+it('Test updateNestedList for switch for decimal', () => {
         let element = {
             querySelectorAll: (temp) => {
                 if (temp === 'ol') {

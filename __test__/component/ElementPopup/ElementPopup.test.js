@@ -2,16 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import ElementPopup from '../../../src/component/ElementPopup';
-import { popup } from '../../../fixtures/ElementPopup'
+import { popup } from '../../../fixtures/ElementPopup';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
-import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
     }
 })
-
-xdescribe('Testing Element Show Hide component', () => {
+const initialState = {
+    slateLevelData : {}
+}
+let store = mockStore(initialState);
+describe('Testing Element Show Hide component', () => {
     let props = {
         model: {},
         index: "",
@@ -29,18 +36,19 @@ xdescribe('Testing Element Show Hide component', () => {
         handleFocus: jest.fn(),
         accessDenied: jest.fn(),
         openPopupSlate:jest.fn(),
+        fetchSlateData: jest.fn(),
         element: popup
     }
-    const component = mount(<ElementPopup {...props} />)
-    let elementPopupInstance = component.instance();
+    const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
     test('renders without crashing', () => {
-        const component = mount(<ElementPopup {...props} />)
+        const component = mount(<Provider store={store}><ElementPopup {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance();
         expect(instance).toBeDefined();
     })
 
     test('Test renderslate function ', () => {
+        let elementPopupInstance = component.find("ElementPopup").instance()
         const spyRenderSlatefunction = jest.spyOn(elementPopupInstance, 'renderSlate')
         elementPopupInstance.renderSlate();
         elementPopupInstance.forceUpdate();

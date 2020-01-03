@@ -11,7 +11,7 @@ describe('Testing c4_modules', () => {
     xit('Testing publishSlate function', () => {
         let project = 'project',
             section = 'section',
-            cite = 'cite'
+            cite = 'cite';
         jest.mock('axios');
         _.delay = jest.fn(() => {});
         c4PublishObj.publishSlate(project, section, cite);

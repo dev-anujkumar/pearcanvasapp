@@ -112,10 +112,10 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-                        tinyMCE.$('.Wirisformula').each(function () {
-                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        }) 
+                        // tinyMCE.$('.Wirisformula').each(function () {
+                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
@@ -168,6 +168,11 @@ export class TinyMceEditor extends Component {
                 
             }
         }
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        });
+
         this.editorRef  = React.createRef();
         this.currentCursorBookmark = {};
     };
@@ -313,6 +318,19 @@ export class TinyMceEditor extends Component {
                     break;
                 case "mceInsertContent": 
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
+                    setTimeout(() => {
+                        let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+                        console.log(activeElement);
+                        if(activeElement){
+                        if (activeElement.innerText === "") {
+                            activeElement.classList.add('place-holder')
+                        }
+                        else {
+                            activeElement.classList.remove('place-holder')
+
+                        }
+                    }
+                }, 0)
                     break;
                 case "FormatBlock":
                     if (e.value === 'h5'){
@@ -781,6 +799,18 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Sets cursor position and content after indent or outdent
+     * @param {*} editor  editor instance
+     * @param {*} content  content inside editor
+     */
+    setContentAndPlaceCaret = (editor, content) => {
+        clickedX = editor.selection.getBoundingClientRect().left;
+        clickedY = editor.selection.getBoundingClientRect().top;
+        editor.setContent(content)
+        editor.selection.placeCaretAt(clickedX,clickedY);
+    }
+    
+    /**
      * Handles indent behaviour for paragraph on indent command execution
      * @param {*} e  event object
      * @param {*} editor  editor instance
@@ -796,7 +826,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**
@@ -815,7 +845,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**
@@ -945,12 +975,15 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();          
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                if( document.getElementById( activeElementObj.join("-"))){
-                    document.getElementById( activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                let isBlockQuote =  document.getElementById(tinymce.activeEditor.id) && document.getElementById(tinymce.activeEditor.id).classList.contains('blockquote-editor');      
+                if (!isBlockQuote) {                   
+                    if (document.getElementById(activeElementObj.join("-")) && tinymce.activeEditor.id == activeElementObj.join("-")) {
+                        document.getElementById(activeElementObj.join("-")).innerHTML = tempContainerHtml;
+                    }
+                   // tinymce.remove('#' + activeElementObj.join("-"));
                 }
                 
-                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
-                tinymce.remove('#' + activeElementObj.join("-"));
+                removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)              
                 tinymce.$('.wrs_modal_desktop').remove();
             }
         }
@@ -1113,10 +1146,10 @@ export class TinyMceEditor extends Component {
             this.lastContent = document.getElementById('cypress-'+this.props.index).innerHTML;
         }
         this.removeMultiTinyInstance();
-        //this.handlePlaceholder() 
-        if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
+        this.handlePlaceholder() 
+        /* if(document.getElementById('cypress-'+this.props.index) && !document.getElementById('cypress-'+this.props.index).innerText.trim().length){
             this.handlePlaceholder()
-        }
+        } */
         tinymce.$('.blockquote-editor').attr('contenteditable',false)  
     }
 
@@ -1357,6 +1390,15 @@ export class TinyMceEditor extends Component {
          if(isBlockQuote && this.isctrlPlusV){            
             e.preventDefault();            
             return false;
+        }
+        if(this.props.element.type === "showhide"){
+            let currentId = this.props.index;
+            let node = document.getElementById('cypress-'+currentId);
+            setTimeout(()=>{
+                if(node.innerText !== "" && this.props.showHideType === "revel"){
+                    node.classList.remove('place-holder')
+                }
+            },0)
         }
         if (isBlockQuote && this.lastContent) {
             let tempdiv = document.createElement('div');
