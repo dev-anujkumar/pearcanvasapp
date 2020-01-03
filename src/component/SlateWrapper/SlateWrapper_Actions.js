@@ -175,11 +175,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
-    // if (currentSlateData.status === 'approved') {
-    //     createNewVersionOfSlate()
-    //     return false;
-    // }
-
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
@@ -200,7 +195,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 if (currentSlateData.status === 'approved') {
-                    // createNewVersionOfSlate();
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                     return false;
