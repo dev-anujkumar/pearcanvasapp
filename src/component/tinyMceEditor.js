@@ -883,7 +883,22 @@ export class TinyMceEditor extends Component {
     addFootnote = (editor) => {
         getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
-                editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
+                tinymce.$(tempDiv).find('.blockquote-hidden').remove()
+                if(this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()){
+                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML}</p></blockquote>`
+                    tinymce.activeEditor.setContent(insertText);
+                    document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
+                }
+                else if(this.props.model.text.includes("blockquoteMarginalia") && !tempDiv.innerText.trim()){
+                    let insertText = `<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p></blockquote>`;
+                    tinymce.activeEditor.setContent(insertText);
+                    document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
+                }
+                else{
+                    editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                }
                 this.toggleGlossaryandFootnotePopup(true, "Footnote", res.data.id , () => { this.toggleGlossaryandFootnoteIcon(true); }); 
                 this.saveContent()
             }  
