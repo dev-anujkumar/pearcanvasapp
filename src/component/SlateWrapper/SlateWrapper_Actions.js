@@ -453,7 +453,9 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("DELETE PAGE NUMBER ERROR : ", error)
-            dispatch({type: ERROR_POPUP, payload:{show: true}})
+        if(!(error.response.status===404 && error.response.data.message==="Not Found")){
+                dispatch({type: ERROR_POPUP, payload:{show: true}})
+            }
         })
     }
 }

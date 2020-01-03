@@ -112,10 +112,10 @@ export class TinyMceEditor extends Component {
                     if( !e.level ){
                         clickedX = editor.selection.getBoundingClientRect().left;
                         clickedY = editor.selection.getBoundingClientRect().top;
-                        tinyMCE.$('.Wirisformula').each(function () {
-                            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
-                            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
-                        }) 
+                        // tinyMCE.$('.Wirisformula').each(function () {
+                        //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+                        //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+                        // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
@@ -168,6 +168,11 @@ export class TinyMceEditor extends Component {
                 
             }
         }
+        tinyMCE.$('.Wirisformula').each(function () {
+            this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
+            this.naturalWidth && this.setAttribute('width', this.naturalWidth)
+        });
+
         this.editorRef  = React.createRef();
         this.currentCursorBookmark = {};
     };
@@ -788,6 +793,18 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * Sets cursor position and content after indent or outdent
+     * @param {*} editor  editor instance
+     * @param {*} content  content inside editor
+     */
+    setContentAndPlaceCaret = (editor, content) => {
+        clickedX = editor.selection.getBoundingClientRect().left;
+        clickedY = editor.selection.getBoundingClientRect().top;
+        editor.setContent(content)
+        editor.selection.placeCaretAt(clickedX,clickedY);
+    }
+    
+    /**
      * Handles indent behaviour for paragraph on indent command execution
      * @param {*} e  event object
      * @param {*} editor  editor instance
@@ -803,7 +820,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel2\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**
@@ -822,7 +839,7 @@ export class TinyMceEditor extends Component {
         else if(content.match(/paragraphNumeroUnoIndentLevel1\b/)){
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
         }
-        editor.setContent(content)
+        this.setContentAndPlaceCaret(editor, content)
     }
 
     /**
