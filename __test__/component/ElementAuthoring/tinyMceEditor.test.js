@@ -239,7 +239,7 @@ describe('Testing TinyMCE Editor', () => {
     })
 
 })
-xdescribe('Testing tinyMce  component with  props', () => {
+describe('Testing tinyMce  component with  props', () => {
     let props = {
         slateLockInfo: {
             isLocked: false,
@@ -250,7 +250,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
     }
     const tinyMceEditor = shallow(<TinyMceEditor {...props} />)
 
-    it('Test Tinymce Setup Call', () => {
+    xit('Test Tinymce Setup Call', () => {
         let editor = {
             ui: {
                 registry: {
@@ -273,7 +273,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorConfig.setup(editor);
         expect(setup).toHaveBeenCalled();
     });
-    it('Test Tinymce Setup Callback Call', () => {
+    xit('Test Tinymce Setup Callback Call', () => {
         let editor = {
             on: () => { },
             shortcuts: {
@@ -298,11 +298,11 @@ xdescribe('Testing tinyMce  component with  props', () => {
         let result = tinyMceEditor.instance().innerTextWithMathMl(node);
         expect(result).toEqual("undefined");
     });
-    it('Test the method onUnorderedListButtonClick  ', () => {
+    xit('Test the method onUnorderedListButtonClick  ', () => {
         tinyMceEditor.instance().onUnorderedListButtonClick("ABCDE");
         expect(typeof tinyMceEditor.instance().props.onListSelect).toBe('function');
     });
-    it('Test editorExecCommand  method for indent', () => {
+    xit('Test editorExecCommand  method for indent', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -319,7 +319,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorExecCommand(editor);
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test editorExecCommand  method for outdent', () => {
+    xit('Test editorExecCommand  method for outdent', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -336,7 +336,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorExecCommand(editor);
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test editorExecCommand  method for updateFormula', () => {
+    xit('Test editorExecCommand  method for updateFormula', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -357,7 +357,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorExecCommand(editor);
         expect(moveToBookmark).toHaveBeenCalled()
     });
-    it('Test handleIndent method for paragraphNumeroUno', () => {
+    xit('Test handleIndent method for paragraphNumeroUno', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -366,7 +366,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUno');
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test handleIndent method for paragraphNumeroUnoIndentLevel1', () => {
+    xit('Test handleIndent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -375,7 +375,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel1');
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test handleIndent method for paragraphNumeroUnoIndentLevel2', () => {
+    xit('Test handleIndent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -384,7 +384,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel2');
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test handleOutdent method for paragraphNumeroUnoIndentLevel3', () => {
+    xit('Test handleOutdent method for paragraphNumeroUnoIndentLevel3', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -393,7 +393,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel3');
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test handleOutdent method for paragraphNumeroUnoIndentLevel2', () => {
+    xit('Test handleOutdent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -402,7 +402,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel2');
         expect(setContent).toHaveBeenCalled()
     });
-    it('Test handleOutdent method for paragraphNumeroUnoIndentLevel1', () => {
+    xit('Test handleOutdent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
             setContent: () => { }
@@ -412,7 +412,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         expect(setContent).toHaveBeenCalled()
     });
 
-    it('Test editorBeforeExecCommand  method for outdent, ol', () => {
+    xit('Test editorBeforeExecCommand  method for outdent, ol', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -437,7 +437,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for outdent, ul', () => {
+    xit('Test editorBeforeExecCommand  method for outdent, ul', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -468,7 +468,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for outdent', () => {
+    xit('Test editorBeforeExecCommand  method for outdent', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -493,7 +493,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for indent, ol', () => {
+    xit('Test editorBeforeExecCommand  method for indent, ol', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -518,7 +518,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for indent, ul', () => {
+    xit('Test editorBeforeExecCommand  method for indent, ul', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -549,7 +549,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for indent', () => {
+    xit('Test editorBeforeExecCommand  method for indent', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -574,7 +574,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for FormatBlock', () => {
+    xit('Test editorBeforeExecCommand  method for FormatBlock', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -601,7 +601,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for mceInsertContent', () => {
+    xit('Test editorBeforeExecCommand  method for mceInsertContent', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -632,7 +632,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorBeforeExecCommand  method for mceShowCharmap', () => {
+    xit('Test editorBeforeExecCommand  method for mceShowCharmap', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -672,7 +672,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-    it('Test editorClick  method for false', () => {
+    xit('Test editorClick  method for false', () => {
         let editor = {
             on: (temp, cb) => { cb() },
             selection: {
@@ -697,7 +697,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorClick(editor);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorClick  method for true', () => {
+    xit('Test editorClick  method for true', () => {
         let editor = {
             on: (temp, cb) => { cb() },
             selection: {
@@ -722,7 +722,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorClick(editor);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorOnClick method with alreadyExist true for SUP', () => {
+    xit('Test editorOnClick method with alreadyExist true for SUP', () => {
         let event = {
             target: {
                 parentElement: {
@@ -745,7 +745,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorOnClick(event);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorOnClick method with alreadyExist false for SUP', () => {
+    xit('Test editorOnClick method with alreadyExist false for SUP', () => {
         let event = {
             target: {
                 parentElement: {
@@ -768,7 +768,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorOnClick(event);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorOnClick method with alreadyExist false for DNF', () => {
+    xit('Test editorOnClick method with alreadyExist false for DNF', () => {
         let event = {
             target: {
                 nodeName: 'DFN',
@@ -789,7 +789,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorOnClick(event);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorOnClick method with alreadyExist true for DNF', () => {
+    xit('Test editorOnClick method with alreadyExist true for DNF', () => {
         let event = {
             target: {
                 nodeName: 'DFN',
@@ -810,7 +810,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         tinyMceEditor.instance().editorOnClick(event);
         expect(setDisabled).toHaveBeenCalled();
     });
-    it('Test editorOnClick method with alreadyExist true for ABBR', () => {
+    xit('Test editorOnClick method with alreadyExist true for ABBR', () => {
         let event = {
             target: {
                 nodeName: 'ABBR',
@@ -837,7 +837,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         }
         tinyMceEditor.instance().editorOnClick(event);
     });
-    it('Test editorOnClick method with alreadyExist true for unknown', () => {
+    xit('Test editorOnClick method with alreadyExist true for unknown', () => {
         let event = {
             target: {
                 nodeName: 'unknown',
@@ -864,7 +864,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
         }
         tinyMceEditor.instance().editorOnClick(event);
     });
-    it('Test toggleGlossaryandFootnoteIcon method', () => {
+    xit('Test toggleGlossaryandFootnoteIcon method', () => {
         tinyMceEditor.instance().glossaryBtnInstance = {
             setDisabled: () => { }
         }
@@ -2050,4 +2050,64 @@ describe('Testing -Editor Key events', () => {
         instance.addGlossary(editor);
         expect(spyaddGlossary).toHaveBeenCalled()
     });
-}) 
+})
+
+describe("Testing editorBeforeExecCommand method", () => {
+    let props = {
+        permissions: permissions,
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test02'
+        },
+        tagName: "p",
+        className: "",
+        index: 1,
+        element: elementData.paragraph,
+        model: elementData.paragraph.html,
+        handleBlur: jest.fn(),
+        onListSelect: jest.fn(),
+        learningObjectiveOperations: jest.fn(),
+        elementId: elementData.paragraph.id,
+        openAssetPopoverPopUp: jest.fn(),
+        placeholder: "Enter you text here",
+        handleEditorFocus: jest.fn(),
+        openGlossaryFootnotePopUp: jest.fn(),
+    }
+    const component = mount(<TinyMceEditor {...props} />)
+    let instance = component.instance();
+
+    it("editorBeforeExecCommand method - indent command", () => {
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { },
+            command : "indent",
+            target : {
+                getContent : () => { }
+            }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart: () => {
+                    
+                }
+            }
+        }
+        const spyOnBeforeIndent = jest.spyOn(instance, 'onBeforeIndent')
+        instance.editorBeforeExecCommand(editor);
+        expect(spyOnBeforeIndent).toHaveBeenCalled();
+        spyOnBeforeIndent.mockClear()
+    })
+})
