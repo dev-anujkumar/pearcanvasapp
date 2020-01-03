@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import CanvasWrapper from '../../../src/component/CanvasWrapper';
+import config from '../../../src/config/config';
 jest.mock('../../../src/auth/openam.js', () => {
     return function () {
         this.isUserAuthenticated = function () { }
@@ -24,6 +25,14 @@ jest.mock('../../../src/component/Toolbar', () => {
 jest.mock('../../../src/component/SlateWrapper', () => {
     return function () {
         return (<div>null</div>)
+    }
+})
+jest.mock('../../../src/constants/utility.js', () => {
+    return {
+        sendDataToIframe: () => {},
+        hasReviewerRole: () => {
+            return true;
+        }
     }
 })
 jest.mock('../../../src/component/CommentsPanel', () => {
@@ -90,7 +99,7 @@ jest.mock('../../../src/component/CommentsPanel/CommentsPanel_Action', () => {
             }
         }
     }
-})
+});
 import {
     listMockData,
     GlossaryMockState,
@@ -124,7 +133,12 @@ const initialState = {
 
 describe('Testing <CanvasWrapper> Component', () => {
     let store = mockStore(initialState);
-    let props = {}
+    let props = {
+        ErrorPopup : {
+            show: ()=> {return true}
+        },
+
+    }
     let wrapper = mount(<Provider store={store}>
         <CanvasWrapper {...props} />
     </Provider>)
@@ -197,6 +211,16 @@ describe('Testing <CanvasWrapper> Component', () => {
             canvasWrapperInstance.togglePageNumbering();
             canvasWrapperInstance.togglePageNumbering();
             expect(canvasWrapperInstance.state.isPageNumberEnabled).toBe(true);
+        })
+        it('loadMorePages  function call',() => {
+            config.page = 0;
+            config.totalPageCount = 0;
+            canvasWrapperInstance.loadMorePages();
+            expect(canvasWrapperInstance.loadMorePages).toBeTruthy();
+        })
+        it('ReleaseErrorPopup  function call',() => {
+            canvasWrapperInstance.ReleaseErrorPopup();
+            expect(canvasWrapperInstance.ReleaseErrorPopup).toBeTruthy();
         })
     })
 })
