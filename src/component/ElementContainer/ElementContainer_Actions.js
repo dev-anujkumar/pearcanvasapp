@@ -398,6 +398,13 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     }
                                 };
                             }
+                        }else if(nestedEle.type == "showhide" && showHideType){
+                            nestedEle.interactivedata[showHideType].map((showHideData,index)=>{
+                                if(showHideData.id == updatedData.id){
+                                    showHideData.elementdata.text =  updatedData.elementdata.text;
+                                    showHideData.html = updatedData.html;
+                                }
+                            })
                         }
                          else if(nestedEle.type == "manifest" && nestedEle.id == parentUrn.manifestUrn) {
                             /*This condition add object of element in existing element  in section of aside */
@@ -440,6 +447,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                             }
                                         };
                                     }
+                                }else if(ele.type == "showhide" && showHideType){
+                                    ele.interactivedata[showHideType].map((showHideData,index)=>{
+                                        if(showHideData.id == updatedData.id){
+                                            showHideData.elementdata.text =  updatedData.elementdata.text;
+                                            showHideData.html = updatedData.html;
+                                        }
+                                    })
+                                   
                                 }
                                 return ele;
                             })
