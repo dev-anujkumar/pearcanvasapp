@@ -327,6 +327,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
     let parentData = getState().appStore.slateLevelData;
     let newslateData = JSON.parse(JSON.stringify(parentData));
     let _slateObject = newslateData[updatedData.slateUrn];
+   
     // let _slateObject = Object.values(newslateData)[0];
     let { contents: _slateContent } = _slateObject;
     let { bodymatter: _slateBodyMatter } = _slateContent;
@@ -509,6 +510,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0,asideData));
                 }
             } else {
+                elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
             }
         return dispatch({
