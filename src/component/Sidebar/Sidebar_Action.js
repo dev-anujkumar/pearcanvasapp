@@ -189,7 +189,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         })
     }
 
-    if(conversionDataToSend.inputType===conversionDataToSend.outputType && conversionDataToSend.inputSubType===conversionDataToSend.outputSubType){
+    if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
 

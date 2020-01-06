@@ -75,7 +75,7 @@ ul li.listItemNumeroUnoBullet::before {
     font-size: 1.6rem;
 }
 
-ul li.listItemNumeroUnoBullet.listItemNumeroUnoSquare::before {
+/* ul li.listItemNumeroUnoBullet.listItemNumeroUnoSquare::before {
     counter-increment: section;
     content: counter(section, square);
     font-size: 1rem;
@@ -84,7 +84,7 @@ ul li.listItemNumeroUnoBullet.listItemNumeroUnoSquare::before {
 ul li.listItemNumeroUnoBullet.listItemNumeroUnoCircle::before {
     counter-increment: section;
     content: counter(section, circle);
-}
+} */
 
 .disabledListBtn {
     opacity: 0.3;
