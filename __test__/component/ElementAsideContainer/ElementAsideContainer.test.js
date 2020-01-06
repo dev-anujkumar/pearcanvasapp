@@ -7,6 +7,11 @@ import ElementAsideContainer from '../../../src/component/ElementAsideContainer/
 import { elementAsideWorkExample, element, section } from '../../../fixtures/elementAsideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { Provider } from 'react-redux';
+jest.mock('../../../src/component/ElementSaprator/ElementSaprator.jsx', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+});
 const mockStore = configureMockStore(middlewares);
 let initialState = {
     appStore: {
@@ -25,7 +30,7 @@ let initialState = {
         }
     },
     toolbarReducer: {
-        elemBorderToggle: true
+        elemBorderToggle: "true"
     },
     slateLockReducer: {
         slateLockInfo: {
@@ -35,6 +40,12 @@ let initialState = {
     },
     metadataReducer: {
         currentSlateLOData: {}
+    },
+    glossaryFootnoteReducer : {
+        glossaryFootnoteValue : {"type":"","popUpStatus":false}
+    },
+    commentsPanelReducer:{
+        allComments: []
     }
 };
 
@@ -50,10 +61,12 @@ describe('Testing ElementAside component with props', () => {
         handleFocus : jest.fn(),
         swapElement : jest.fn(),
         deleteElement: jest.fn(),
-        slateLockInfo:{isLocked:false,userId:'c5test01'}
+        slateLockInfo:{isLocked:false,userId:'c5test01'},
+        elementSepratorProps : jest.fn(),
+        permissions: []
     }  
 
-    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>);
+    const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} esProps={props.elementSepratorProps}/> </Provider>);
     const instance = wrapper.find('ElementAsideContainer').instance();
 
     describe('Testing ElementAside component', () => {
@@ -190,13 +203,26 @@ describe('Testing ElementAside component with props', () => {
         tempWrapper.unmount();
         expect(componentWillUnmount).toHaveBeenCalled();
     })
+    })
+})
 
-    it(' Sortable onChange function testing', () => {
-        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
+describe('Testing ElementAside component with props', () => {
+    let props = {
+        element: elementAsideWorkExample,
+        swapElement : swapElement,
+        onUpdate : jest.fn(),
+        onStart : jest.fn(),
+        setActiveElement : jest.fn(),
+        handleFocus : jest.fn(),
+        swapElement : jest.fn(),
+        deleteElement: jest.fn(),
+        slateLockInfo:{isLocked:false,userId:'c5test01'}
+    }  
+    it('sortable testing', () => {
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
         const instance = wrapper.find('Sortable').instance();
         expect(instance.props.onChange).toHaveLength(3);
     })
-
     it(' Sortable onStart function testing', () => {
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('Sortable').instance();
@@ -204,8 +230,7 @@ describe('Testing ElementAside component with props', () => {
         instance.props.onChange();
         expect(instance.props.onChange).toHaveLength(3);
     })
-
-    xit(' Sortable onUpdate function testing', () => {
+    it(' Sortable onUpdate function testing', () => {
         props.setActiveElement = jest.fn();
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} /> </Provider>)
         const instance = wrapper.find('Sortable').instance();
@@ -216,7 +241,5 @@ describe('Testing ElementAside component with props', () => {
         
         instance.props.options.onUpdate(evt);
         expect(instance.props.options.onUpdate).toHaveLength(1);
-    })
-
     })
 })

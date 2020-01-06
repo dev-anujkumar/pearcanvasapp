@@ -469,8 +469,8 @@ export class TinyMceEditor extends Component {
                 isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
              }
 
-            if(this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && !isContainsMath){
-                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.currentElement.type, this.props.element.contentUrn, this.props.innerIndex)
+             if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
+                this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
             }
 
             if (activeElement) { 
@@ -886,12 +886,12 @@ export class TinyMceEditor extends Component {
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
                 tinymce.$(tempDiv).find('.blockquote-hidden').remove()
-                if(this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()){
+                if(this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()){
                     let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="false">${document.getElementsByClassName('attribution-editor')[0].innerHTML}</p></blockquote>`
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
-                else if(this.props.model.text.includes("blockquoteMarginalia") && !tempDiv.innerText.trim()){
+                else if(this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginalia") && !tempDiv.innerText.trim()){
                     let insertText = `<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p></blockquote>`;
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
