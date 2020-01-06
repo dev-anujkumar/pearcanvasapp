@@ -5,12 +5,15 @@ import TinyMceEditor from '../../../src/component/tinyMceEditor'
 import elementData from './elementData';
 import { JSDOM } from 'jsdom'
 import config from '../../../src/config/config.js';
-// global.document = (new JSDOM()).window.Element;
-// Object.defineProperty(global.Element.prototype, 'innerText', {
-//     get() {
-//         return this.textContent;
-//     },
-// });
+global.document = (new JSDOM()).window.Element;
+if(!global.Element.prototype.hasOwnProperty("innerText")){
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+}
+
 jest.mock('../../../src/js/utils', () => {
     return {
         checkforToolbarClick: () => {
@@ -2130,55 +2133,3 @@ describe('Testing -Editor Key events', () => {
     });
 })
 
-xdescribe("Init function", () => {
-    let props = {
-        permissions: permissions,
-        slateLockInfo: {
-            isLocked: false,
-            userId: 'c5Test02'
-        },
-        tagName: "p",
-        className: "",
-        index: 1,
-        element: elementData.paragraph,
-        model: elementData.paragraph.html,
-        handleBlur: jest.fn(),
-        onListSelect: jest.fn(),
-        learningObjectiveOperations: jest.fn(),
-        elementId: elementData.paragraph.id,
-        openAssetPopoverPopUp: jest.fn(),
-        placeholder: "Enter you text here",
-        handleEditorFocus: jest.fn(),
-        openGlossaryFootnotePopUp: jest.fn(),
-    }
-    let editorInstance = {
-        current: {
-            outerHTML: '<div id="cypress-1" class="cypress-editable place-holder mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p></div>',
-            tabIndex: 0,
-            tagName: "DIV",
-            textContent: "hghfg bgjhgh hgjgjhello all",
-            title: "",
-            translate: true,
-            hidden: false,
-            id: "cypress-1",
-            innerHTML: '<p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p>',
-            innerText: "↵",
-            inputMode: "",
-            isConnected: true,
-            isContentEditable: true,
-            className: "cypress-editable",
-            clientHeight: 64,
-            clientLeft: 0,
-            clientTop: 0,
-            clientWidth: 670,
-            contentEditable: "true",
-        }
-    }
-    const component = mount(<TinyMceEditor {...props} />, { attachTo: document.body })
-    let instance = component.instance();
-
-    it("Triggering TinyMce init event", () => {
-
-    })
-
-})
