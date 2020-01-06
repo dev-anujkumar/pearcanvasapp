@@ -325,6 +325,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -347,6 +350,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -371,6 +377,9 @@ describe('Testing tinyMce  component with  props', () => {
                 },
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -385,6 +394,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -399,6 +411,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -413,6 +428,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -427,6 +445,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -441,6 +462,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -455,6 +479,9 @@ describe('Testing tinyMce  component with  props', () => {
             selection : {
                 getBoundingClientRect : () => {
                     return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -928,7 +955,7 @@ describe('Testing tinyMce  component with  props', () => {
     });
 
 })
-xdescribe('Test-Function-setInstanceToolbar -------->', () => {
+describe('Test-Function-setInstanceToolbar -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -1040,7 +1067,7 @@ xdescribe('Test-Function-setInstanceToolbar -------->', () => {
         spysetInstanceToolbar.mockClear()
     })
 })
-xdescribe('Test-Function-setToolbarByElementType -------->', () => {
+describe('Test-Function-setToolbarByElementType -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -1174,7 +1201,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    xit('Test- handlePlaceholder-figuredata.text', () => {
+    it('Test- handlePlaceholder-figuredata.text', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1203,7 +1230,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    xit('Test- handlePlaceholder-BCE', () => {
+    it('Test- handlePlaceholder-BCE', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1895,7 +1922,7 @@ describe('Testing -Editor Key events', () => {
         instance.onBeforeOutdent(event, 'paragraphNumeroUno');
         expect(spyFunction).toHaveBeenCalled()
     });
-    xit('Test pastePreProcess - else case', () => {
+    it('Test pastePreProcess - else case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -1920,7 +1947,7 @@ describe('Testing -Editor Key events', () => {
         instance.pastePreProcess(plugin,args);
         expect(spypastePreProcess).toHaveBeenCalled()
     });
-    xit('Test pastePreProcess - if case', () => {
+    it('Test pastePreProcess - if case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -2101,4 +2128,57 @@ describe('Testing -Editor Key events', () => {
         instance.addGlossary(editor);
         expect(spyaddGlossary).toHaveBeenCalled()
     });
+})
+
+xdescribe("Init function", () => {
+    let props = {
+        permissions: permissions,
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test02'
+        },
+        tagName: "p",
+        className: "",
+        index: 1,
+        element: elementData.paragraph,
+        model: elementData.paragraph.html,
+        handleBlur: jest.fn(),
+        onListSelect: jest.fn(),
+        learningObjectiveOperations: jest.fn(),
+        elementId: elementData.paragraph.id,
+        openAssetPopoverPopUp: jest.fn(),
+        placeholder: "Enter you text here",
+        handleEditorFocus: jest.fn(),
+        openGlossaryFootnotePopUp: jest.fn(),
+    }
+    let editorInstance = {
+        current: {
+            outerHTML: '<div id="cypress-1" class="cypress-editable place-holder mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p></div>',
+            tabIndex: 0,
+            tagName: "DIV",
+            textContent: "hghfg bgjhgh hgjgjhello all",
+            title: "",
+            translate: true,
+            hidden: false,
+            id: "cypress-1",
+            innerHTML: '<p class="paragraphNumeroUno">&nbsp;hghfg bgjhgh hgjgjhello allg&nbsp;</p>',
+            innerText: "↵",
+            inputMode: "",
+            isConnected: true,
+            isContentEditable: true,
+            className: "cypress-editable",
+            clientHeight: 64,
+            clientLeft: 0,
+            clientTop: 0,
+            clientWidth: 670,
+            contentEditable: "true",
+        }
+    }
+    const component = mount(<TinyMceEditor {...props} />, { attachTo: document.body })
+    let instance = component.instance();
+
+    it("Triggering TinyMce init event", () => {
+
+    })
+
 })
