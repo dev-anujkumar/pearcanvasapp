@@ -456,7 +456,7 @@ describe('Testing Interactive element component', () => {
             })
         })
     });
-    describe('Testing Element interactive - C2 Interactive Media Handling Functions', () => {
+    describe('Testing Element interactive - handleC2MediaClick Function', () => {
         let type = "figure";
         let props = {
             slateLockInfo: {
@@ -475,10 +475,41 @@ describe('Testing Interactive element component', () => {
             accessDenied: jest.fn(),
             showBlocker: jest.fn()
         };
-
+        let alfrescoPath = {
+            alfresco: {
+                nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                repositoryFolder: "001_C5 Media POC - AWS US ",
+                repositoryName: "AWS US",
+                repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                visibility: "MODERATED",
+            },
+            associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+            authorName: "Krajewski",
+            citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+            containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+            currentOrigin: "local",
+            dateApproved: null,
+            dateCreated: "2019-02-28T19:14:32.948Z",
+            eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+            entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+            gridId: [],
+            hasVersions: false,
+            id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+            name: "ELMTEST_StgEnv_Krajewski Test",
+            roleId: "admin",
+            ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+            status: "wip",
+            tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
+            url: null,
+            userApprover: null,
+            userApproverFullName: null,
+            userCount: 0,
+            'x-prsn-user-id': " ",
+        }
         const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
         let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
-        it('onClick-default case', () => {
+
+        it('handleC2MediaClick-default case', () => {
             const e = {
                 target: {
                     tagName: "p"
@@ -487,18 +518,17 @@ describe('Testing Interactive element component', () => {
             }
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
             elementInteractiveInstance.handleC2MediaClick(e);
-            elementInteractiveInstance.forceUpdate();
-            elementInteractive.update();
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         })
-        it('onClick-if case', () => {
+        it('handleC2MediaClick-else case', () => {
             const e = {
                 target: {
                     tagName: "IMG"
                 },
                 stopPropagation() { }
             }
+            config.alfrescoMetaData = { nodeRef: {} }
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
             elementInteractiveInstance.handleC2MediaClick(e);
             elementInteractiveInstance.forceUpdate();
@@ -506,177 +536,216 @@ describe('Testing Interactive element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         })
-        it('Simulating alfresco click with alfresco location', () => {
-            config.alfrescoMetaData = { nodeRef: {} }
-            const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
-            elementInteractiveInstance.handleC2MediaClick({ target: { tagName: 'b' } })
+        it('handleC2MediaClick- alfrescoPath && this.state.projectMetadata is true', () => {
+            const e = {
+                target: {
+                    tagName: "IMG"
+                },
+                stopPropagation() { }
+            }
+            config.alfrescoMetaData = alfrescoPath
+            elementInteractiveInstance.setState({
+                projectMetadata: alfrescoPath
+            })
             elementInteractiveInstance.forceUpdate();
             elementInteractive.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({ target: { tagName: 'b' } })
+            const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
+            elementInteractiveInstance.handleC2MediaClick(e);
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         })
-        it('Simulating alfresco click with alfresco location - without permission', () => {
+        it('handleC2MediaClick- without permission- add_multimedia_via_alfresco', () => {
+            let type = "figure";
             let props = {
                 slateLockInfo: {
                     isLocked: false,
                     userId: 'c5Test01'
                 },
                 onClick: () => { },
-                permissions: [],
+                permissions: [
+                    "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                    "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+                ],
                 updateFigureData: jest.fn(),
                 handleBlur: jest.fn(),
                 handleFocus: jest.fn(),
                 accessDenied: jest.fn(),
+                showBlocker: jest.fn()
             };
             const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
             let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
-            elementInteractiveInstance.handleC2MediaClick({ target: { tagName: 'b' } })
+            const e = {
+                target: {
+                    tagName: "IMG"
+                },
+                stopPropagation() { }
+            }
+            config.alfrescoMetaData = alfrescoPath
+            elementInteractiveInstance.setState({
+                projectMetadata: alfrescoPath
+            })
             elementInteractiveInstance.forceUpdate();
             elementInteractive.update();
-            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({ target: { tagName: 'b' } })
+            elementInteractiveInstance.handleC2MediaClick(e);
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         })
-        describe('Test-Alfresco Data Handling', () => {
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
-            let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
-            const spydataFromAlfresco = jest.spyOn(elementInteractiveInstance, 'dataFromAlfresco')
-            it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"3rd Party Interactive"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-            it('Test- if case workflow-smartLinkType-website', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"website"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-            it('Test- if case workflow-smartLinkType-pdf', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"pdf"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-            it('Test- if case workflow-smartLinkType-table', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"table"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-            it('Test- if case workflow-smartLinkType-"pop-up-web-link"', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"mdpopup"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-            it('Test- if case workflow-smartLinkType-metrodigi interactive', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"metrodigi interactive"}'
-                }
-                elementInteractiveInstance.dataFromAlfresco(data)
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spydataFromAlfresco).toHaveBeenCalled()
-                expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
-                expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
-                spydataFromAlfresco.mockClear()
-            })
-        })
-        describe('Test-Alfresco Data Handling', () => {
-            const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
-            let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+    });
+    describe('Testing Element interactive - handleC2InteractiveClick Functions', () => {
+        let type = "figure";
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            accessDenied: jest.fn(),
+            showBlocker: jest.fn()
+        };
+        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+
+        it('handleC2InteractiveClick-default case', () => {
             const spyhandleC2InteractiveClick = jest.spyOn(elementInteractiveInstance, 'handleC2InteractiveClick')
-            it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
-                let data = {
-                    'assetType': "image",
-                    'EpsUrl': "",
-                    'width': "",
-                    'height': "",
-                    'req': {
-                        url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
-                    },
-                    desc: '{"smartLinkType":"3rd Party Interactive"}'
-                }
-                elementInteractiveInstance.handleC2InteractiveClick("")
-                elementInteractiveInstance.forceUpdate();
-                elementInteractive.update();
-                expect(spyhandleC2InteractiveClick).toHaveBeenCalled()
-                spyhandleC2InteractiveClick.mockClear()
-            })
+            elementInteractiveInstance.handleC2InteractiveClick();
+            expect(spyhandleC2InteractiveClick).toHaveBeenCalled()
+            spyhandleC2InteractiveClick.mockClear()
         })
     });
+    describe('Test-Alfresco Data Handling', () => {
+        let type = "figure";
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            permissions: [
+                "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+                "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+                "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            ],
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            accessDenied: jest.fn(),
+            showBlocker: jest.fn()
+        };
+        const elementInteractive = mount(<Interactive type={type} model={Interactivefpo} index="1" {...props} />);
+        let elementInteractiveInstance = elementInteractive.find('Interactive').instance();
+        const spydataFromAlfresco = jest.spyOn(elementInteractiveInstance, 'dataFromAlfresco')
+        it('Test- if case workflow -smartLinkType-3rd Party Interactive', () => {
+            let data = {
+                'smartLinkURl': "http://www.pearson.com",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    'url': "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '9bcb36b0-f4e0-4238-9239-bc8da6d41a5d'"
+                },
+                'desc': '{"smartLinkType":"3rd Party Interactive"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            elementInteractiveInstance.forceUpdate();
+            elementInteractive.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-smartLinkType-website', () => {
+            let data = {
+                'assetType': "image",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                },
+                desc: '{"smartLinkType":"website"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+            expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-smartLinkType-pdf', () => {
+            let data = {
+                'assetType': "image",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                },
+                desc: '{"smartLinkType":"pdf"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+            expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-smartLinkType-table', () => {
+            let data = {
+                'assetType': "image",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                },
+                desc: '{"smartLinkType":"table"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+            expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-smartLinkType-"pop-up-web-link"', () => {
+            let data = {
+                'assetType': "image",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                },
+                desc: '{"smartLinkType":"mdpopup"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+            expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-smartLinkType-metrodigi interactive', () => {
+            let data = {
+                'assetType': "image",
+                'EpsUrl': "",
+                'width': "",
+                'height': "",
+                'req': {
+                    url: "https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/cmis/versions/1.1/browser?cmisselector=query&q=SELECT s.avs:url,s.avs:jsonString FROM cmis:document AS d JOIN avs:smartLink AS s ON d.cmis:objectId = s.cmis:objectId where s.cmis:objectId = '7bffceb3-33fc-40cc-a70c-50b6f32665c9'"
+                },
+                desc: '{"smartLinkType":"metrodigi interactive"}'
+            }
+            elementInteractiveInstance.dataFromAlfresco(data)
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:7bffceb3-33fc-40cc-a70c-50b6f32665c9")
+            expect(elementInteractiveInstance.state.posterImage).toBe("https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png")
+            spydataFromAlfresco.mockClear()
+        })
+    })
+        
 });
