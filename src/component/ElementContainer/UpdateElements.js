@@ -341,20 +341,22 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
     let assessmenttitle = document.getElementById('single_assessment_title').innerText;
-     
+    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: assessmenttitle
+            title: assessmenttTitleHTML
         }}
         
     dataToSend.figuredata.elementdata;
-  
+
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
+    let getAsid=assessmentId.split(' ')[1];
+    dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
 
     let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
+    let getAsItemid=assessmentItemId.split(' ')[2];
+    dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;

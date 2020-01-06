@@ -5,12 +5,15 @@ import TinyMceEditor from '../../../src/component/tinyMceEditor'
 import elementData from './elementData';
 import { JSDOM } from 'jsdom'
 import config from '../../../src/config/config.js';
-// global.document = (new JSDOM()).window.Element;
-// Object.defineProperty(global.Element.prototype, 'innerText', {
-//     get() {
-//         return this.textContent;
-//     },
-// });
+global.document = (new JSDOM()).window.Element;
+if(!global.Element.prototype.hasOwnProperty("innerText")){
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+}
+
 jest.mock('../../../src/js/utils', () => {
     return {
         checkforToolbarClick: () => {
@@ -239,7 +242,15 @@ describe('Testing TinyMCE Editor', () => {
     })
 
 })
-xdescribe('Testing tinyMce  component with  props', () => {
+describe('Testing tinyMce  component with  props', () => {
+    global.document = (new JSDOM()).window.Element;
+    if(!global.Element.prototype.hasOwnProperty("innerText")){
+        Object.defineProperty(global.Element.prototype, 'innerText', {
+            get() {
+                return this.textContent;
+            },
+        });
+    }
     let props = {
         slateLockInfo: {
             isLocked: false,
@@ -313,7 +324,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
         }
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().editorExecCommand(editor);
@@ -330,7 +349,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
         }
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().editorExecCommand(editor);
@@ -350,6 +377,12 @@ xdescribe('Testing tinyMce  component with  props', () => {
             selection: {
                 bookmarkManager: {
                     moveToBookmark: () => { }
+                },
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -360,7 +393,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUno', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUno');
@@ -369,7 +410,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel1');
@@ -378,7 +427,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel2');
@@ -387,7 +444,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel3', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel3');
@@ -396,7 +461,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel2');
@@ -405,7 +478,15 @@ xdescribe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel1');
@@ -431,7 +512,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
                     };
                 },
                 dispatchEvent: () => { }
-            },
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
@@ -877,7 +958,7 @@ xdescribe('Testing tinyMce  component with  props', () => {
     });
 
 })
-xdescribe('Test-Function-setInstanceToolbar -------->', () => {
+describe('Test-Function-setInstanceToolbar -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -989,7 +1070,7 @@ xdescribe('Test-Function-setInstanceToolbar -------->', () => {
         spysetInstanceToolbar.mockClear()
     })
 })
-xdescribe('Test-Function-setToolbarByElementType -------->', () => {
+describe('Test-Function-setToolbarByElementType -------->', () => {
     let props = {
         permissions: permissions,
         slateLockInfo: {
@@ -1123,7 +1204,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    xit('Test- handlePlaceholder-figuredata.text', () => {
+    it('Test- handlePlaceholder-figuredata.text', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1152,7 +1233,7 @@ describe('Test-Function-handlePlaceholder-------->', () => {
         expect(spyhandlePlaceholder).toHaveBeenCalled();
         spyhandlePlaceholder.mockClear()
     })
-    xit('Test- handlePlaceholder-BCE', () => {
+    it('Test- handlePlaceholder-BCE', () => {
         let props = {
             permissions: permissions,
             slateLockInfo: {
@@ -1314,7 +1395,7 @@ describe('Test-TinyMCE Editor for Other Elements', () => {
         expect(instance).toBeDefined();
         instance.editorRef = editorInstance
     })
-    xit('Test editorBeforeExecCommand  method for RemoveFormat', () => {
+    it('Test editorBeforeExecCommand  method for RemoveFormat', () => {
         let event = {
             target: {
                 getContent: () => {
@@ -1844,7 +1925,7 @@ describe('Testing -Editor Key events', () => {
         instance.onBeforeOutdent(event, 'paragraphNumeroUno');
         expect(spyFunction).toHaveBeenCalled()
     });
-    xit('Test pastePreProcess - else case', () => {
+    it('Test pastePreProcess - else case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -1869,7 +1950,7 @@ describe('Testing -Editor Key events', () => {
         instance.pastePreProcess(plugin,args);
         expect(spypastePreProcess).toHaveBeenCalled()
     });
-    xit('Test pastePreProcess - if case', () => {
+    it('Test pastePreProcess - if case', () => {
         tinymce.activeEditor = {
             innerHTML: '<p class="paragraphNumeroUno">hello</p>',
             innerText: "hello",
@@ -2050,4 +2131,5 @@ describe('Testing -Editor Key events', () => {
         instance.addGlossary(editor);
         expect(spyaddGlossary).toHaveBeenCalled()
     });
-}) 
+})
+
