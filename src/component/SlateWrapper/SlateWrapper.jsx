@@ -170,7 +170,9 @@ class SlateWrapper extends Component {
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
-                document.getElementById('slateWrapper').scrollTop = 0;
+                if(document.getElementById('slateWrapper')){
+                    document.getElementById('slateWrapper').scrollTop = 0;
+                }
                 _state = {
                     ..._state,
                     previousSlateId: _slateId

@@ -515,7 +515,7 @@ describe('Testing communication channel', () => {
         }
         const spyhanndleSplitSlate = jest.spyOn(channelInstance, 'hanndleSplitSlate')
         channelInstance.handleIncommingMessages(event);
-        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
         spyhanndleSplitSlate.mockClear()
     })
     describe('Test for updateSlateTitleByID', () => {
