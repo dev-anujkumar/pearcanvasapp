@@ -13,13 +13,13 @@ import {
     SET_SLATE_ENTITY,
     ACCESS_DENIED_POPUP,
     FETCH_SLATE_DATA,
-    SET_PARENT_NODE
-
+    SET_PARENT_NODE,
+    ERROR_POPUP
 
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe } from '../../constants/utility.js';
-import { HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
 
 Array.prototype.move = function (from, to) {
@@ -60,20 +60,16 @@ function createNewVersionOfSlate(){
 }
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb) => (dispatch, getState) => {
-    let parentData = getState().appStore.slateLevelData;
-    let currentParentData = JSON.parse(JSON.stringify(parentData));
-    let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
-        return false;
-    }
     config.currentInsertedIndex = index;
     config.currentInsertedType = type;
+    let  popupSlateData = getState().appStore.popupSlateData
     localStorage.setItem('newElement', 1);
+    let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn|| config.slateEntityURN,
+    slateUrn =  parentUrn && parentUrn.manifestUrn || popupSlateData && popupSlateData.id || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
-        "slateEntityUrn": parentUrn && parentUrn.contentUrn || config.slateEntityURN,
-        "slateUrn": parentUrn && parentUrn.manifestUrn || config.slateManifestURN,
+        "slateEntityUrn":slateEntityUrn,
+        "slateUrn": slateUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type,
     };
@@ -95,6 +91,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            // createNewVersionOfSlate();
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
+        const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
         if (type == 'SECTION_BREAK') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
@@ -114,6 +118,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     })
                 }
             })
+        }else if (popupSlateData && popupSlateData.type == "popup"){
+            newPopupSlateData.popupdata.bodymatter.splice(index, 0, createdElementData);
         }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
@@ -144,6 +150,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             })
         }
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("create Api fail", error);
         if (cb) {
             cb();
@@ -168,11 +175,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
-    if (currentSlateData.status === 'approved') {
-        createNewVersionOfSlate()
-        return false;
-    }
-
     config.swappedElementType = _requestData.type;
     config.swappedElementIndex = _requestData.index;
 
@@ -192,7 +194,11 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
 
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
-
+                if (currentSlateData.status === 'approved') {
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    return false;
+                }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;
                 if (containerTypeElem && containerTypeElem == 'we') {
                     //swap WE element
@@ -232,6 +238,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         .catch((err) => {
             /* For hiding the spinning loader send HideLoader message to Wrapper component */
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             // console.log('Error occured while swaping element', err)
         })
 }
@@ -296,6 +303,7 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
     }).catch(error => {
         //console.log("SPLIT SLATE API ERROR : ", error)
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
 
@@ -416,6 +424,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("UPDATE PAGE NUMBER ERROR : ", error)
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
         })
     }
     else {
@@ -444,6 +453,9 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                 }
             })
             console.log("DELETE PAGE NUMBER ERROR : ", error)
+        if(!(error.response.status===404 && error.response.data.message==="Not Found")){
+                dispatch({type: ERROR_POPUP, payload:{show: true}})
+            }
         })
     }
 }

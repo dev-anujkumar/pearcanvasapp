@@ -117,7 +117,8 @@ export class AssessmentSlateData extends Component {
             }, () => {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
-        } else if (assessmentFormat === LEARNING_TEMPLATE) {
+        // } else if (assessmentFormat === LEARNING_TEMPLATE) {
+        } else if (assessmentFormat === LEARNING_TEMPLATE || assessmentFormat === LEARNING_APP_TYPE) {   //PCAT-6773 fixed
             this.mainAddAssessment(e, LEARNING_TEMPLATE);
             } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);

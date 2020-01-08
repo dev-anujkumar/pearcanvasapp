@@ -3,16 +3,19 @@ import tinymce from 'tinymce/tinymce';
 import config  from './../../config/config';
 import {
     FETCH_SLATE_DATA,
-    SET_ACTIVE_ELEMENT
+    SET_ACTIVE_ELEMENT,
+    ERROR_POPUP
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import {popup} from '../../../fixtures/ElementPopup'
+import ElementWipData from './ElementWipData.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => dispatch => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
+    let appStore =  getState().appStore;
     try {
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         let conversionDataToSend = {};
     // Input Element
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
@@ -147,11 +150,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputType : outputPrimaryOptionEnum,
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
-        slateUrn:config.slateManifestURN,
+        projectURN : config.projectUrn,
+        slateUrn:appStore.parentUrn?appStore.parentUrn.manifestUrn: config.slateManifestURN,
         counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
         index: indexes[indexes.length - 1],
-        projectURN : config.projectUrn,
-        slateEntity : config.slateEntityURN
+        slateEntity : appStore.parentUrn?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
     let elmIndexes = indexes ? indexes : 0;
@@ -173,23 +176,45 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
     }
 
+    if(conversionDataToSend.outputType==="SHOW_HIDE"||conversionDataToSend.outputType==="POP_UP"){
+        slateBodyMatter.forEach((elem)=>{
+            if(elem.type==="element-aside"){
+                elem.elementdata.bodymatter.forEach((nestElem)=>{
+                    if(nestElem.id===conversionDataToSend.id){
+                        conversionDataToSend.slateUrn = elem.versionUrn;
+                        conversionDataToSend.slateEntity = elem.contentUrn;
+                    }
+                })
+            }
+        })
+    }
+
+    if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
+        return;
+    }
+
+    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
-			"Content-Type": "application/json",
-			"PearsonSSOSession": config.ssoToken
-		}
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+
+        tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
+
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         indexes.forEach(index => {
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data;
+                focusedElement[index] = res.data//ElementWipData.showhide;
             } else {
                 if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
-                  //  focusedElement = focusedElement[index].elementdata.bodymatter;
+                    //  focusedElement = focusedElement[index].elementdata.bodymatter;
                     focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
                 }
             }
@@ -201,8 +226,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             altText=res.data.figuredata && res.data.figuredata.alttext ? res.data.figuredata.alttext : "";
             longDesc = res.data.figuredata && res.data.figuredata.longdescription ? res.data.figuredata.longdescription : "";
         }
+
         let activeElementObject = {
-            elementId: newElementData.elementId,
+            elementId: res.data.id,
+            // elementId: newElementData.elementId,
             index: indexes.join("-"),
             elementType: newElementData.elementType,
             primaryOption: newElementData.primaryOption,
@@ -222,20 +249,32 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
         });
+
+        if(activeElementObject.primaryOption === "primary-showhide"){
+           let showHideRevealElement = document.getElementById(`cypress-${indexes[0]}-2-0`)
+           if(showHideRevealElement){
+                showHideRevealElement.focus()
+                showHideRevealElement.blur()
+           } 
+        }
     })
+    
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        //console.log(err) 
+        console.log("Conversion Error >> ",err) 
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     })
 }
 catch (error) {
+    console.log(error)
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+    dispatch({type: ERROR_POPUP, payload:{show: true}})
 }
 }
 
 export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
-    if(Object.keys(store).length > 0 && config.slateManifestURN === Object.keys(store)[0]) {
+    if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;

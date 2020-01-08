@@ -12,7 +12,7 @@ import { JestEnvironment } from '@jest/environment';
 jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', () => ({
     prepareDataForTcmUpdate: jest.fn()
 }))
-
+import config from '../../../src/config/config.js';
 describe('Test for Sidebar component', () => {
     const mockStore = configureMockStore(middlewares);
     const activeElement = {
@@ -49,6 +49,7 @@ describe('Test for Sidebar component', () => {
 
     it('onClick Event', () => {
         const sidebarInstance = sidebar.find('Sidebar').instance();
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         sidebarInstance.setState({
             elementDropdown: 'primary',
             activeElementType: 'element-authoredtext',
@@ -65,9 +66,9 @@ describe('Test for Sidebar component', () => {
             }
         }
 
-        sidebar.find('div.element-dropdown-title').at(0).simulate('click');
-        sidebar.find('ul.element-dropdown-content.primary-options').simulate('click');
-        sidebarInstance.handlePrimaryOptionChange(target);
+         sidebar.find('div.element-dropdown-title').at(0).simulate('click');
+         sidebar.find('ul.element-dropdown-content.primary-options').simulate('click');
+            sidebarInstance.handlePrimaryOptionChange(target);
 
         sidebarInstance.setState({
             elementDropdown: 'secondary'
@@ -81,7 +82,7 @@ describe('Test for Sidebar component', () => {
             }
         }
 
-        sidebar.find('ul.element-dropdown-content.secondary-options').simulate('click');
+       // sidebar.find('ul.element-dropdown-content.secondary-options').simulate('click');
         sidebarInstance.handleSecondaryOptionChange(target);
 
         // Attribution for secondary element type
@@ -101,7 +102,7 @@ describe('Test for Sidebar component', () => {
         });
 
         sidebarInstance.attributions();
-        expect(sidebar.find('.element-dropdown').length).toBe(2)
+       expect(sidebar.find('.element-dropdown').length).toBe(2)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
         expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
     });

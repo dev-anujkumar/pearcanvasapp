@@ -4,7 +4,7 @@ import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { storeWithFigure,SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure} from "../../../fixtures/slateTestingData"
-import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER } from '../../../src/constants/Action_Constants';
+import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE,SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED,SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside,slateLevelData1, slateLevelData2, asideDataType1, asideDataType2 } from '../../../fixtures/elementAsideData';
 
@@ -23,7 +23,10 @@ describe('Tests Slate Wrapper Actions', () => {
                 // elementsTag: {},
                 activeElement: {},
                 splittedElementIndex: 0,
-                pageNumberData: {}
+                pageNumberData: {},
+                popupSlateData: {
+                    type: "popup"
+                }
             }
         };
         store = mockStore(() => initialState);
@@ -31,7 +34,7 @@ describe('Tests Slate Wrapper Actions', () => {
     });
     afterEach(() => moxios.uninstall());
 
-    xit('testing------- ADD OPENER ELEMENT ------action', () => {
+    it('testing------- ADD OPENER ELEMENT ------action', () => {
         initialState = {
             appStore : {
                 slateLevelData: SlatetDataOpenerDefault,
@@ -124,6 +127,7 @@ describe('Tests Slate Wrapper Actions', () => {
             });
         });
         let  parentUrn= {
+            elementType: "element-aside",
             manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7"
         }
         return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'element-aside', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
@@ -156,10 +160,83 @@ describe('Tests Slate Wrapper Actions', () => {
             });
         });
         let  parentUrn= {
-            
+            elementType: "manifest",
             manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b700"
         }
         return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'element-aside', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
+            let { type, payload } = store.getActions()[0];
+            expect(type).toBe(expectedActions.type);
+            expect(payload).toStrictEqual(expectedActions.payload);
+        });
+    });
+    it('testing------- SECTION BREAK ------action when aside and element id same', () => {
+        let store = mockStore(() => initialState);
+        const type = "SECTION_BREAK";
+        const index = 3;
+        const _requestData = {
+            "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
+            "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
+            "slateUrn": "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
+            "type": type,
+            "index": index
+        };
+        config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
+        const slateLevelData = createstoreWithFigure.slateLevelData;
+        const expectedActions = {
+            type: AUTHORING_ELEMENT_CREATED,
+            payload: { slateLevelData }
+
+        };
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: slateLevelData
+            });
+        });
+        let  parentUrn= {
+            elementType: "manifest",
+            manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b700"
+        }
+        return store.dispatch(actions.createElement(type, index, parentUrn, {},0)).then(() => {
+            let { type, payload } = store.getActions()[0];
+
+            console.log("data:::", payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+            console.log("===========================================")
+            console.log("expected:::", expectedActions.payload.slateLevelData[config.slateManifestURN].contents.bodymatter);
+            expect(type).toBe(expectedActions.type);
+            expect(payload).toStrictEqual(expectedActions.payload);
+        });
+    });
+    it('testing------- POPUP ------action when fails', () => {
+        //let store = mockStore(() => initialState);
+        const type = "FIGURE";
+        const index = 3;
+        const _requestData = {
+            "projectUrn": "urn:pearson:distributable:553615b2-57c9-4508-93a9-17c6909d5b44",
+            "slateEntityUrn": "urn:pearson:entity:920e1d14-236e-4882-9a7c-d9d067795d75",
+            "slateUrn": "urn:pearson:manifest:b94059f3-4592-4d84-a316-18d4ba05d734",
+            "type": type,
+            "index": index
+        };
+        config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0";
+        const expectedActions = {
+            type: ERROR_POPUP,
+            payload: { show: true }
+
+        };
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: _requestData
+            });
+        });
+        let  parentUrn= {
+            elementType: "manifest",
+            manifestUrn:"urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b700"
+        }
+        return store.dispatch(actions.createElement(type, index, parentUrn, {type : 'popup', id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'})).then(() => {
             let { type, payload } = store.getActions()[0];
             expect(type).toBe(expectedActions.type);
             expect(payload).toStrictEqual(expectedActions.payload);
@@ -169,7 +246,7 @@ describe('Tests Slate Wrapper Actions', () => {
 
     it('testing------- SWAP ELEMENT ------action - then', () => {
         //let store = mockStore(() => initialState);
-        const typee = "element-authoredtext";
+        const type = "element-authoredtext";
         const index = 2;
 
         let swappedElementData = {
@@ -183,7 +260,7 @@ describe('Tests Slate Wrapper Actions', () => {
             "destSlateEntityUrn":"urn:pearson:entity:c8d3d2b2-176c-48fc-8383-33444fe335f5",
             "workUrn":swappedElementData.id,
             "entityUrn":swappedElementData.contentUrn,
-            "type": typee,
+            "type": type,
             "index": index
         }
 
@@ -272,13 +349,13 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(type).toBe('FETCH_SLATE_DATA');
         });
     });
-    xit('testing------- handleSplitSlate ------action - catch', () => {
+    it('testing------- handleSplitSlate ------action - catch', () => {
 
         axios.put = jest.fn(() => Promise.reject({}))
 
         return store.dispatch(actions.handleSplitSlate({contentUrn : '',entityUrn : ''})).then(() => {
             const { type } = store.getActions()[0];
-            expect(type).toBe('FETCH_SLATE_DATA');
+            expect(type).toBe('ERROR_POPUP');
         });
     });
     it('testing------- setElementPageNumber ------action', () => {

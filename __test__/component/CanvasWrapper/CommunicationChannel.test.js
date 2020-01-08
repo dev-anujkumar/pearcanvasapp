@@ -139,7 +139,8 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     disableHeader: jest.fn(),
     showTocBlocker: jest.fn(),
     hideBlocker: jest.fn(),
-    showHeaderBlocker: jest.fn()
+    showHeaderBlocker: jest.fn(),
+    showBlocker: jest.fn()
 }))
 jest.mock('../../../src/config/config.js', () => ({
     disablePrev: false,
@@ -458,7 +459,7 @@ describe('Testing communication channel', () => {
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.onSingleContainerDelete).toHaveBeenCalled()
         expect(channelInstance.state.toggleTocDelete).toBe(true)
-        expect(channelInstance.state.tocDeleteMessage).toBe("singleContainerDelete")
+        expect(channelInstance.state.tocDeleteMessage.messageType).toBe("singleContainerDelete")
         spyonSingleContainerDelete.mockClear()
     })
     test('Test for titleChanging case', () => {
@@ -514,7 +515,7 @@ describe('Testing communication channel', () => {
         }
         const spyhanndleSplitSlate = jest.spyOn(channelInstance, 'hanndleSplitSlate')
         channelInstance.handleIncommingMessages(event);
-        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
         spyhanndleSplitSlate.mockClear()
     })
     describe('Test for updateSlateTitleByID', () => {

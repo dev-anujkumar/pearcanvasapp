@@ -198,6 +198,105 @@ describe('Testing Event Binding Methods', () => {
         let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
+    it('Test bindKeyDownEvent for tabname div for enter key', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            tagName: 'DIV',
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                        }
+                    }
+                },
+                getRng: () => {
+                    return {
+                        startContainer: 'Test',
+                        endContainer: 'Test'
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    }
+                },
+                childNodes: [{}]
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {}
+            },
+            metaKey: ()=> { },
+            which : 13,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => { 
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.tinymce = {
+            activeEditor: {
+                id: ''
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(false);
+    });
     it('Test bindKeyDownEvent for innerhtml not equal br', () => {
         let editor = {
             selection: {
@@ -959,7 +1058,8 @@ describe('Testing Event Binding Methods', () => {
                         indent: () => { }
                     }
                 }
-            }
+            },
+            execCommand:jest.fn()
         };
         let event = {
             target: {
@@ -1115,7 +1215,8 @@ describe('Testing Event Binding Methods', () => {
                         outdent: () => { }
                     }
                 }
-            }
+            },
+            execCommand:jest.fn()
         };
         let event = {
             target: {
@@ -1580,7 +1681,7 @@ describe('Testing Event Binding Methods', () => {
         let result = updateNestedList(element);
         expect(result).toEqual(undefined);
     });
-    it('Test updateNestedList for switch for decimal', () => {
+it('Test updateNestedList for switch for decimal', () => {
         let element = {
             querySelectorAll: (temp) => {
                 if (temp === 'ol') {

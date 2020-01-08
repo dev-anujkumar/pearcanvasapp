@@ -46,10 +46,12 @@ export const utils = {
                 format = "gallery-video";
                 break;
 
+            // case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
+            //     format = "gallery-image";
+            //     break;
             case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
-                format = "gallery-image";
+                format = "guided-example";
                 break;
-
             case (data.toLowerCase().indexOf("cite-interactive-graph") !== -1):
                 format = "graph";
                 break;
@@ -116,4 +118,31 @@ export const checkforToolbarClick = (classList) =>{
         }
     })
     return isTargetFound;
+}
+export const customEvent = {
+        listeners: {},
+        subscribe: (eventName, listner) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName].push(listner)
+            } else {
+                customEvent.listeners[eventName] = [listner];
+            }
+        },
+        trigger: (eventName,args) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName].forEach((listner, index) => {
+                    listner(args);
+                })
+            }
+        },
+        unsubscribe: (eventName) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName] = []
+            }
+        },
+        removeListenr: (eventName) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                delete customEvent.listeners[eventName]
+            }
+        }
 }

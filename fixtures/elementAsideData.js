@@ -10,7 +10,7 @@ export const elementAsideWorkExample =
         "frontmatter": [],
         "bodymatter": [
             {
-				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"id": "urn:pearson:work:8a49e877-144a-4750-91d2-81d5188d8e0a",
 				"type": "element-authoredtext",
 				"subtype": "",
 				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -35,7 +35,7 @@ export const elementAsideWorkExample =
 					"frontmatter": [],
 					"bodymatter": [
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e877-144a-4850-92d2-81d5188d8e0a",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -48,11 +48,11 @@ export const elementAsideWorkExample =
 							},
 							"comments": true,
 							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"versionUrn": "urn:pearson:work:8a48e877-144a-4750-92d2-81d5188d8e0a",
 							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 						},
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e877-143a-4750-92d2-81d5188d8e0a",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -65,7 +65,7 @@ export const elementAsideWorkExample =
 							},
 							"comments": true,
 							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"versionUrn": "urn:pearson:work:8a49e677-144a-4750-92d2-81d5188d8e0a",
 							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 						}
 					],
@@ -83,7 +83,7 @@ export const elementAsideWorkExample =
 					"frontmatter": [],
 					"bodymatter": [
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e877-144a-4850-92d2-81d5188d8e0a",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -96,7 +96,7 @@ export const elementAsideWorkExample =
 							},
 							"comments": true,
 							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"versionUrn": "urn:pearson:work:8a49e876-144a-4750-92d2-81d5188d8e0a",
 							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 						}
 					],
@@ -114,7 +114,7 @@ export const elementAsideWorkExample =
 					"frontmatter": [],
 					"bodymatter": [
 						{
-							"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"id": "urn:pearson:work:8a49e873-144a-4750-92d2-81d5188d8e0a",
 							"type": "element-authoredtext",
 							"subtype": "",
 							"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -127,7 +127,7 @@ export const elementAsideWorkExample =
 							},
 							"comments": true,
 							"tcm": true,
-							"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+							"versionUrn": "urn:pearson:work:8a49e873-144a-4750-92d2-81d5188d8e0a",
 							"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 						}
 					],

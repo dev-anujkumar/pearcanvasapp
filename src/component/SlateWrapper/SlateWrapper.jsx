@@ -31,8 +31,8 @@ import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../.
 import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { setActiveElement } from '../CanvasWrapper/CanvasWrapper_Actions';
-// import { OPEN_AM } from '../../js/auth_module';
+import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
@@ -65,7 +65,12 @@ class SlateWrapper extends Component {
 
     handleScroll = (e) =>{
         if(config.totalPageCount <= config.page) return false;
-        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100)
+        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
+        let scrollPosition = Number(e.target.scrollTop+e.target.clientHeight+100);
+        let scrollingPosition = Number(e.target.scrollTop);
+        if(this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')){
+            config.scrollPosition = scrollingPosition;
+        }
         if ((scrollPosition >= e.target.scrollHeight) && config.scrolling) { 
             config.scrolling = false;
             config.fromTOC = false;
@@ -111,10 +116,19 @@ class SlateWrapper extends Component {
         }
         let _slateData = this.props.slateData;
         if (_slateData !== null && _slateData !== undefined) {
-            if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
-                let _slateObject = Object.values(_slateData)[0];
-                let { contents: _slateContent } = _slateObject;
-                let { bodymatter: _slateBodyMatter } = _slateContent;
+            if(_slateData[config.slateManifestURN] && config.slateType !== 'assessment'){
+            // if (Object.values(_slateData).length > 0 && config.slateType !== 'assessment') {
+                // let _slateObject = Object.values(_slateData)[0];
+                let _slateObject =_slateData[config.slateManifestURN];
+                let _slateContent = _slateObject.contents
+                /* if(_slateData[config.slateManifestURN].type === "popup"){
+                    _slateContent = _slateObject.popupdata
+                }
+                else {
+                    _slateContent = _slateObject.contents
+                } */
+                // let { contents: _slateContent } = _slateObject;
+                let { bodymatter: _slateBodyMatter } = _slateContent /* || _slateData.popupdata; */
                 if (_slateBodyMatter.length == 0) {
                     this.isDefaultElementInProgress = true;
                     /* For showing the spinning loader send HideLoader message to Wrapper component */
@@ -151,11 +165,14 @@ class SlateWrapper extends Component {
         let stateChanged = false;
         let _state = state;
         //**************************************************** */
-        let _slateObject = Object.values(props.slateData)[0];
+        // let _slateObject = Object.values(props.slateData)[0];
+        let _slateObject = props.slateData[config.slateManifestURN];
         if (_slateObject) {
             let { id: _slateId } = _slateObject;
             if (_slateId !== state.previousSlateId) {
-                document.getElementById('slateWrapper').scrollTop = 0;
+                if(document.getElementById('slateWrapper')){
+                    document.getElementById('slateWrapper').scrollTop = 0;
+                }
                 _state = {
                     ..._state,
                     previousSlateId: _slateId
@@ -203,7 +220,8 @@ class SlateWrapper extends Component {
      */
     prepareSwapData = (event) => {
         const { slateData } = this.props
-        const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        // const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
+        const _slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter
         const swappedElementData = _slateBodyMatter[event.oldDraggableIndex]
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
@@ -220,8 +238,10 @@ class SlateWrapper extends Component {
     renderSlateHeader({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
-                if (Object.values(_slateData).length > 0) {
-                    let _slateObject = Object.values(_slateData)[0];
+                if(_slateData[config.slateManifestURN]){
+                // if (Object.values(_slateData).length > 0) {
+                    // let _slateObject = Object.values(_slateData)[0];
+                    let _slateObject = _slateData[config.slateManifestURN];
                     let { type: _slateType, contents: _slateContent } = _slateObject;
                     let title = {
                         text: this.props.slateTitleUpdated
@@ -260,9 +280,16 @@ class SlateWrapper extends Component {
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
-                    let _slateObject = Object.values(_slateData)[0];
-                    let { id: _slateId, type: _slateType, contents: _slateContent } = _slateObject;
-                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent;
+                    let _slateObject = _slateData[config.slateManifestURN];
+                    let _slateContent = _slateObject.contents
+                    /* if(_slateObject.type === "popup"){
+                        _slateContent = _slateObject.popupdata
+                    }
+                    else{
+                        _slateContent = _slateObject.contents
+                    } */
+                    let { id: _slateId, type: _slateType } = _slateObject;
+                    let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     return (
@@ -719,7 +746,7 @@ class SlateWrapper extends Component {
     }
 
     deleteAccepted = () => {
-        if(this.props.tocDeleteMessage !== 'singleContainerDelete'){
+        if(this.props.tocDeleteMessage.messageType !== 'singleContainerDelete'){
             sendDataToIframe({ 'type': 'deleteAccepted', 'message': this.props.tocDeleteMessage })
         }
         this.deleteRejected()
@@ -738,7 +765,7 @@ class SlateWrapper extends Component {
          * Need to refactor these all condition and minimize them
          */
         if (this.props.toggleTocDelete) {
-            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage === 'singleContainerDelete'){
+            if(this.props.tocDeleteMessage&& this.props.tocDeleteMessage.messageType === 'singleContainerDelete'){
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
@@ -752,7 +779,7 @@ class SlateWrapper extends Component {
                    
                 )
             }
-            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage === 'withPendingTrack'){
+            else if(this.props.tocDeleteMessage && this.props.tocDeleteMessage.messageType === 'withPendingTrack'){
                 return (
                     <PopUp
                         togglePopup={this.deleteRejected}
@@ -1022,6 +1049,24 @@ class SlateWrapper extends Component {
             )
         }
     }
+    closePopup = () =>{
+        let popupId = config.slateManifestURN
+        config.slateManifestURN = config.tempSlateManifestURN
+        config.slateEntityURN = config.tempSlateEntityURN
+        config.tempSlateManifestURN = null
+        config.tempSlateEntityURN = null
+        config.isPopupSlate = false
+        this.props.openPopupSlate(undefined, popupId)
+        this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
+        
+        // Scrolling to the previous element after SAVE  & CLOSE is clicked
+        setTimeout(() => {
+            let elementDom = document.querySelector(`[data-id="${config.cachedActiveElement.element.id}"]`)
+            if(elementDom){
+                elementDom.querySelector(`#cypress-${config.cachedActiveElement.index}-0`).focus()
+            }
+        },0);
+    }
 
     /**
      * render | renders title and slate wrapper
@@ -1041,9 +1086,11 @@ class SlateWrapper extends Component {
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
-                    {
-                        this.renderSlateHeader(this.props)
-                    }
+                     {
+                        this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
+                          <button className="popup-button" onClick={this.closePopup}>SAVE & CLOSE</button>
+                          :this.renderSlateHeader(this.props)
+                    } 
                 </div>
                 <div id="slateWrapper" className='slate-wrapper' onScroll={this.handleScroll}>
                     {
@@ -1127,6 +1174,8 @@ export default connect(
         showWrongAudioPopup,
         getSlateLockStatus,
         accessDenied,
-        showSlateLockPopup
+        openPopupSlate,
+        showSlateLockPopup,
+
     }
 )(SlateWrapper);

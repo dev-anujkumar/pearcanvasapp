@@ -94,6 +94,12 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
+    
+    "popup": {
+        "elementType" : "element-interactive",
+        "primaryOption" : "primary-popup",
+        "secondaryOption" : "secondary-interactive-popup"
+    },
 
     "figure" : {
         "image" : {
@@ -217,10 +223,6 @@ const elementDataBank = {
                 "primaryOption" : "primary-showhide",
                 "secondaryOption" : "secondary-interactive-showhide"
             },
-            "popup": {
-                "primaryOption" : "primary-popup",
-                "secondaryOption" : "secondary-interactive-popup"
-            },
             "fpo": {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
@@ -272,7 +274,11 @@ const elementDataBank = {
             "fill-in-blank": {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
-            }
+            },
+            "guided-example": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
         },
         "assessment" : {
             "elementType" : "element-assessment",
@@ -341,6 +347,12 @@ const elementDataBank = {
             }
         },
     },
+
+    "showhide" : {
+        "elementType" : "element-interactive",
+        "primaryOption" : "primary-showhide",
+        "secondaryOption" : "secondary-aside-showhide"
+    }
 }
 
 export default elementDataBank

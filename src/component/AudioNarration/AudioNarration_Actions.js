@@ -4,7 +4,7 @@ import store from '../../appstore/store.js'
 import {
     OPEN_AUDIO_NARRATION,
     SHOW_REMOVE_POPUP,
-    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP
+    SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
 
 /**
@@ -102,6 +102,7 @@ export const deleteAudioNarrationForContainer = (slateObject) => async(dispatch,
     } catch (e){
         dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
         dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     }
 
 }
@@ -159,5 +160,6 @@ export const addAudioNarrationForContainer = (audioData) => async(dispatch, getS
     } catch(e) {
       // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"
         console.log("Error while adding / updating audio narrative tool",e);
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
     }
 }

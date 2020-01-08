@@ -70,7 +70,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.onDeleteTocItem(message, 'withPendingTrack');
                     break;
                 case 'showSingleContainerDelete':
-                    this.onSingleContainerDelete();
+                    this.onSingleContainerDelete(message);
                     break;
                 case 'titleChanging': {
                     message['parentId'] = this.state.project_urn;
@@ -78,7 +78,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                     break;
                 case 'newSplitedSlate':
-                    setTimeout(()=>{this.hanndleSplitSlate(message)}, 500)
+                    setTimeout(()=>{this.hanndleSplitSlate(message)}, 1000)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -297,6 +297,11 @@ function WithWrapperCommunication(WrappedComponent) {
             //     return false;
             // }
             localStorage.removeItem('newElement');
+            config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
+            config.tempSlateManifestURN = null
+            config.tempSlateEntityURN = null
+            config.isPopupSlate = false
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 config.page = 0;
@@ -426,7 +431,11 @@ function WithWrapperCommunication(WrappedComponent) {
             })
         }
         deleteTocItemWithPendingTrack = (message)=>{
-            this.deleteTocItem(message)
+            let newMessage = {
+                ...message,
+                messageType:'withPendingTrack'
+            }
+            this.deleteTocItem(newMessage)
         }
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
@@ -439,7 +448,7 @@ function WithWrapperCommunication(WrappedComponent) {
             getSlateLockStatusWithCallback(projectUrn, deleteSlateId, (response) => {          
                 if (response == "error"){
                     if(type==='withPendingTrack') {
-                        that.deleteTocItemWithPendingTrack('withPendingTrack');
+                        that.deleteTocItemWithPendingTrack(message);
                     }
                     else {
                         that.deleteTocItem(message);
@@ -460,7 +469,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     }
                     else{
                         if(type==='withPendingTrack') {
-                            that.deleteTocItemWithPendingTrack('withPendingTrack');
+                            that.deleteTocItemWithPendingTrack(message);
                         }
                         else {
                             that.deleteTocItem(message);
@@ -469,7 +478,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 catch(err){
                     if(type==='withPendingTrack') {
-                        that.deleteTocItemWithPendingTrack('withPendingTrack');
+                        that.deleteTocItemWithPendingTrack(message);
                     }
                     else {
                         that.deleteTocItem(message);
@@ -482,7 +491,11 @@ function WithWrapperCommunication(WrappedComponent) {
             this.checkSlateLockAndDeleteSlate(message, type)
         }
 
-        onSingleContainerDelete = () => {
+        onSingleContainerDelete = (message) => {
+            let newMessage = {
+                ...message,
+                messageType:'singleContainerDelete'
+            }
             /**
              * TO BE IMPLEMENTED
              *  */
@@ -492,7 +505,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
             this.setState({
                 toggleTocDelete: true,
-                tocDeleteMessage: "singleContainerDelete"
+                tocDeleteMessage: newMessage
             })
         }
 

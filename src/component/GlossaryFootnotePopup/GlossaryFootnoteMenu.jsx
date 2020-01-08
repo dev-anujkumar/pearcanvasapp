@@ -90,7 +90,7 @@ class GlossaryFootnoteMenu extends React.Component {
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p><br/></p>"
         term = term.match(/<p>/g) ? term.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.replace(/<br data-mce-bogus="1">/g, "")}</p>`
         definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
         if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){

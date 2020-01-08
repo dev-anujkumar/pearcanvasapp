@@ -6,11 +6,14 @@ import elementData from './elementData';
 import { JSDOM } from 'jsdom'
 import config from '../../../src/config/config.js';
 global.document = (new JSDOM()).window.Element;
-Object.defineProperty(global.Element.prototype, 'innerText', {
-    get() {
-        return this.textContent;
-    },
-});
+if(!global.Element.prototype.hasOwnProperty("innerText")){
+    Object.defineProperty(global.Element.prototype, 'innerText', {
+        get() {
+            return this.textContent;
+        },
+    });
+}
+
 jest.mock('../../../src/js/utils', () => {
     return {
         checkforToolbarClick: () => {
@@ -240,6 +243,14 @@ describe('Testing TinyMCE Editor', () => {
 
 })
 describe('Testing tinyMce  component with  props', () => {
+    global.document = (new JSDOM()).window.Element;
+    if(!global.Element.prototype.hasOwnProperty("innerText")){
+        Object.defineProperty(global.Element.prototype, 'innerText', {
+            get() {
+                return this.textContent;
+            },
+        });
+    }
     let props = {
         slateLockInfo: {
             isLocked: false,
@@ -313,7 +324,15 @@ describe('Testing tinyMce  component with  props', () => {
         }
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().editorExecCommand(editor);
@@ -330,7 +349,15 @@ describe('Testing tinyMce  component with  props', () => {
         }
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().editorExecCommand(editor);
@@ -350,6 +377,12 @@ describe('Testing tinyMce  component with  props', () => {
             selection: {
                 bookmarkManager: {
                     moveToBookmark: () => { }
+                },
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
                 }
             }
         }
@@ -360,7 +393,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUno', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUno');
@@ -369,7 +410,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel1');
@@ -378,7 +427,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleIndent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleIndent(null, editor, 'paragraphNumeroUnoIndentLevel2');
@@ -387,7 +444,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel3', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel3');
@@ -396,7 +461,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel2', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel2');
@@ -405,7 +478,15 @@ describe('Testing tinyMce  component with  props', () => {
     it('Test handleOutdent method for paragraphNumeroUnoIndentLevel1', () => {
         let editor = {
             on: (temp, cb) => { cb(event) },
-            setContent: () => { }
+            setContent: () => { },
+            selection : {
+                getBoundingClientRect : () => {
+                    return {left:0, top:0}
+                },
+                placeCaretAt : (a,b) => {
+                    return true
+                }
+            }
         }
         const setContent = jest.spyOn(editor, 'setContent');
         tinyMceEditor.instance().handleOutdent(null, editor, 'paragraphNumeroUnoIndentLevel1');
@@ -431,7 +512,7 @@ describe('Testing tinyMce  component with  props', () => {
                     };
                 },
                 dispatchEvent: () => { }
-            },
+            }
         }
         const getContent = jest.spyOn(event.target, 'getContent');
         tinyMceEditor.instance().editorBeforeExecCommand(editor);
@@ -1347,7 +1428,116 @@ describe('Test-TinyMCE Editor for Other Elements', () => {
         instance.editorBeforeExecCommand(editor);
         expect(getContent).toHaveBeenCalled()
     });
-
+    it('Test editorBeforeExecCommand  method for redo-if case', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test16'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.list,
+            model: elementData.list.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.list.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+         let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'redo',
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                }
+            }
+        }
+        component.setProps(props);
+        let instance = component.instance();
+        const getContent = jest.spyOn(event.target, 'getContent');
+        instance.editorBeforeExecCommand(editor);
+        expect(getContent).toHaveBeenCalled()
+    });
+    it('Test editorBeforeExecCommand  method for redo-else case', () => {
+        let props = {
+            permissions: permissions,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test16'
+            },
+            tagName: "p",
+            className: "",
+            index: 1,
+            element: elementData.paragraph,
+            model: elementData.paragraph.html,
+            handleBlur: jest.fn(),
+            onListSelect: jest.fn(),
+            learningObjectiveOperations: jest.fn(),
+            elementId: elementData.paragraph.id,
+            openAssetPopoverPopUp: jest.fn(),
+            placeholder: "Enter you text here",
+            handleEditorFocus: jest.fn(),
+            openGlossaryFootnotePopUp: jest.fn(),
+        }
+         let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'redo',
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{ classList: ["blockquoteMarginalia"] }],
+                dispatchEvent: () => { }
+            },
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                }
+            }
+        }
+        component.setProps(props);
+        let instance = component.instance();
+        const getContent = jest.spyOn(event.target, 'getContent');
+        instance.editorBeforeExecCommand(editor);
+        expect(getContent).toHaveBeenCalled()
+    });
 })
 describe('Testing -Editor Key events', () => {
     let props = {
@@ -1941,4 +2131,5 @@ describe('Testing -Editor Key events', () => {
         instance.addGlossary(editor);
         expect(spyaddGlossary).toHaveBeenCalled()
     });
-}) 
+})
+

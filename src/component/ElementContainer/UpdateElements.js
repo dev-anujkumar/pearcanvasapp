@@ -341,20 +341,22 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
     let assessmenttitle = document.getElementById('single_assessment_title').innerText;
-     
+    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: assessmenttitle
+            title: assessmenttTitleHTML
         }}
         
     dataToSend.figuredata.elementdata;
-  
+
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
+    let getAsid=assessmentId.split(' ')[1];
+    dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
 
     let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
+    let getAsItemid=assessmentItemId.split(' ')[2];
+    dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
@@ -393,7 +395,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -411,15 +413,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: config.slateManifestURN      
+                inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN      
             }
             break;
 
         case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
-                    
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
@@ -479,7 +480,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         dataToReturn = {
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
-            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+            slateUrn: config.slateManifestURN 
         }
     }
 

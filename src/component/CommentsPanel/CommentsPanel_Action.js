@@ -11,7 +11,8 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    AUTHORING_ELEMENT_UPDATE
+    AUTHORING_ELEMENT_UPDATE,
+    ERROR_POPUP
 } from '../../constants/Action_Constants';
 
 
@@ -113,6 +114,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             });
 
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             //console.log("Failed to add reply", error);
         })
 };
@@ -146,6 +148,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             });
 
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             //console.log("status update fail", error);
         })
 };
@@ -176,6 +179,7 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
             payload: { commentUrn, updateComment: updateCommentParams.comment }
         });
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         //console.log("status update fail", error);
     })
 };
@@ -230,6 +234,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
             payload: { commentUrn, newAssignee: newAssignee }
         });
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         //console.log("error while updating user", error);
     })
 
@@ -287,6 +292,7 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 }
             })
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             console.log("error while deleting user", error);
         })
 
