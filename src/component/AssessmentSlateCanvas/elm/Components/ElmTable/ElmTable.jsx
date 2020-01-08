@@ -117,11 +117,16 @@ class ElmTable extends Component {
          * @param parentUrn- parent-Urn
         */
     getResourcefromFilterData = (data, parentUrn) => {
+        let title = "";
         if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
-                    resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
+                    resource.resources.forEach((assessments) => {
+                        if (assessments && assessments.title && assessments.title.en) {
+                            title = assessments.title.en
+                        }
+
+                        this.preparedData.push({ "type": "assessment", "urn": assessments.urn, "assessmentTitle": title}) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
@@ -208,7 +213,7 @@ class ElmTable extends Component {
     sendPufAssessment = () => {
         let obj = {
             id: this.state.currentAssessmentSelected.urn,
-            title: "dummy",
+            title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.assessmentTitle? this.state.currentAssessmentSelected.assessmentTitle: "dummy",
             assessmentFormat: "puf",
             usagetype: this.props.usageTypeMetadata
         }
@@ -284,7 +289,7 @@ class ElmTable extends Component {
                                             <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} onClick={() => this.toggleActive(index)}>
                                                 <td className='td-class' key={index} onClick={() => this.addAssessment(item)}>
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                    <b className="elm-text-assesment">{item.urn}</b>
+                                                    <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
                                                 </td>
                                             </tr>
                                         </tbody>
