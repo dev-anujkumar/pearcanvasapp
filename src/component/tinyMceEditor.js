@@ -934,7 +934,7 @@ export class TinyMceEditor extends Component {
      */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let { elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"

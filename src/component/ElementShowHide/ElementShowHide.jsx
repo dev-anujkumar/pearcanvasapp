@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+// import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
@@ -59,7 +59,7 @@ class ElementShowHide extends React.Component {
     }
     
     render() {
-        const { model, index, element, slateLockInfo } = this.props;
+        const { index, element, slateLockInfo } = this.props;
 
         return (
             <div class="divWidgetShowHide" onClick={() => this.props.handleFocus()}>
