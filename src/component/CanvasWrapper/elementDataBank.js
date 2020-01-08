@@ -274,7 +274,11 @@ const elementDataBank = {
             "fill-in-blank": {
                 "primaryOption" : "primary-mmi",
                 "secondaryOption" : "secondary-interactive-mmi"
-            }
+            },
+            "guided-example": {
+                "primaryOption" : "primary-mmi",
+                "secondaryOption" : "secondary-interactive-mmi"
+            },
         },
         "assessment" : {
             "elementType" : "element-assessment",

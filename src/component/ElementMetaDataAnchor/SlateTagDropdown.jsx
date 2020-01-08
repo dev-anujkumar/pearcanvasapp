@@ -10,7 +10,7 @@ import {
     OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown
 }
     from '../../constants/IFrameMessageTypes';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { connect } from 'react-redux';
 
 class SlateTagDropdown extends React.Component {
@@ -91,7 +91,7 @@ class SlateTagDropdown extends React.Component {
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.assessmentResponseMsg || this.props.currentSlateLOData.statusForSave)? '' :this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
-                    {config.slateType === 'section' &&
+                    {config.slateType === 'section' && !hasReviewerRole() &&
                         <li className={this.props.currentSlateLOData && (this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn) ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div>
