@@ -1837,7 +1837,7 @@ describe('Testing -Editor Key events', () => {
         instance.handleFocussingInlineCode(api,editor);
         expect(spyhandleFocussingInlineCode).toHaveBeenCalled()
     });
-    it('Test addAssetPopover ', () => {
+    xit('Test addAssetPopover ', () => {
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }
