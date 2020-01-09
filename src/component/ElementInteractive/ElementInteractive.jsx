@@ -59,7 +59,8 @@ class Interactive extends React.Component {
         c2AssessmentModule.launchAssetBrowser(fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, async function (interactiveData) {
             let tempInteractiveType = utils.getTaxonomicType(interactiveData['itemsData']['taxonomicType'][1]);
 
-            if (tempInteractiveType === 'video-mcq') {
+            // if (tempInteractiveType === 'video-mcq') {
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                 let responseData = await axios.get(config.CONTENT_SCAPI_ENDPOINT + "/" + interactiveData['workExample'][0],
                     {
                         headers: {
@@ -85,7 +86,8 @@ class Interactive extends React.Component {
             that.setState({itemID : itemId,
                 imagePath:posterImage.path })
             let figureData={}
-            if(tempInteractiveType === 'video-mcq'){
+            // if(tempInteractiveType === 'video-mcq'){
+            if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                 figureData = {
                     schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
                     interactiveid: itemId,
@@ -368,6 +370,18 @@ class Interactive extends React.Component {
                 paragraphCredit = 'paragraphWidgetPUCredit';
                 break;
 
+            case "guided-example":
+                divImage = 'divWidgetGuidedExample';
+                figureImage = 'figureWidgetGuidedExample';
+                heading4Label = 'heading4WidgetGuidedExampleNumberLabel';
+                heading4Title = 'heading4WidgetGuidedExampleTitle';
+                dataType = 'guidedExample';
+                id = 'id-info';
+                imageDimension = 'imageWidgetGuidedExample';
+                figcaptionClass = 'figcaptionWidgetGuidedExample';
+                paragraphCredit = 'paragraphWidgetGuidedExampleCredit';
+                break;
+
         }
         if (context === 'showhide') {
             jsx = <div className="divWidgetShowHide" resource="">
@@ -395,7 +409,7 @@ class Interactive extends React.Component {
                 </figure>
                 <p className="paragraphWidgetShowHideCredit"></p>
             </div>
-        }else if(context === 'video-mcq' || context === 'mcq') {
+        }else if(context === 'video-mcq' || context === 'mcq' || context === "guided-example") {
             jsx = <div className={divImage} resource="">
                 <figure className={figureImage} resource="">
                     <header>
@@ -405,7 +419,7 @@ class Interactive extends React.Component {
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
                     <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div>
-                    <div className={"pearson-component " + dataType} data-uri="" data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
+                    <div className={"pearson-component " + dataType} data-uri={this.state.itemID?this.state.itemID : itemId} data-type={dataType} data-width="600" data-height="399" onClick={(e)=>{this.togglePopup(e,true)}} >
 
                         <img src={this.state.imagePath ? this.state.imagePath : "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"} title="View Image" alt=""
                             className={imageDimension + " lazyload"} />

@@ -32,7 +32,7 @@ import { guid } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup } from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { OPEN_AM } from '../../js/auth_module';
+// import { OPEN_AM } from '../../js/auth_module';
 import { showSlateLockPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 
 let random = guid();
@@ -329,6 +329,10 @@ class SlateWrapper extends Component {
                                             this.props.swapElement(dataObj, () => { })
                                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                                            let showHideNode = document.querySelector('.show-hide-active')
+                                            if(showHideNode){
+                                                showHideNode.classList.remove("show-hide-active")
+                                            }
                                         },
                                     }}
                                     ref={(c) => {

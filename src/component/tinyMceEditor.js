@@ -934,7 +934,7 @@ export class TinyMceEditor extends Component {
      */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let { elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
@@ -964,6 +964,10 @@ export class TinyMceEditor extends Component {
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
+        customEvent.subscribe('assetPopoverSave',()=>{
+           this.handleBlur(null,true);
+            customEvent.unsubscribe('assetPopoverSave');
+        })
         this.props.openAssetPopoverPopUp(true);
     }
 
@@ -1236,8 +1240,9 @@ export class TinyMceEditor extends Component {
      */
     handleClick = (e) => {
             
-         clickedX = e.clientX;
-         clickedY = e.clientY;
+        clickedX = e.clientX;
+        clickedY = e.clientY;
+        setTimeout(this.removeMultiTinyInstance, 0)
          
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
@@ -1400,7 +1405,7 @@ export class TinyMceEditor extends Component {
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
-    handleBlur = (e, forceupdate) => {       
+    handleBlur = (e, forceupdate) => {  
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
          if(isBlockQuote && this.isctrlPlusV){            
             e.preventDefault();            
@@ -1410,7 +1415,7 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
-                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType === "revel"){
+                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType){
                     node.classList.remove('place-holder')
                 }
             },0)
@@ -1486,6 +1491,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('onBlur', this.handleBlur);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     return (

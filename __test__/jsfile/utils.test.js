@@ -51,10 +51,22 @@ describe('Utils file function testing', () => {
 
     })
 
-    it('Testing getTaxonomicType function', () => {
+    xit('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-slideshow-image'
         let format = utils.getTaxonomicType(data)
         expect(format).toBe('gallery-image')
+    })
+
+    it('Testing getTaxonomicType function', () => {
+        let data = 'cite-interactive-slideshow-image'
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('guided-example')
+    })
+
+    it('Testing getTaxonomicType function', () => {
+        let data = 'cite-interactive-slideshow-video'
+        let format = utils.getTaxonomicType(data)
+        expect(format).toBe('gallery-video')
     })
 
     it('Testing getTaxonomicType function', () => {
