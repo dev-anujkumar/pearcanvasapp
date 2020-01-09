@@ -101,7 +101,7 @@ const findElementType = (element, index) => {
                 }
                 break;
             case 'element-aside':
-                if (element.designtype == "") {
+                if (element.designtype == "" || element.designtype == undefined) {
                     element.designtype = "asideLearningObjective";
                 }
                 elementType = {
