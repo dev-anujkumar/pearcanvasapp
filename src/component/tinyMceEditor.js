@@ -1236,8 +1236,9 @@ export class TinyMceEditor extends Component {
      */
     handleClick = (e) => {
             
-         clickedX = e.clientX;
-         clickedY = e.clientY;
+        clickedX = e.clientX;
+        clickedY = e.clientY;
+        setTimeout(this.removeMultiTinyInstance, 0)
          
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
