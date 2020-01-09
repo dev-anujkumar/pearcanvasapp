@@ -47,6 +47,7 @@ class ElmTable extends Component {
             this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
         this.timer = setTimeout(() => {
+            
             if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
             }
