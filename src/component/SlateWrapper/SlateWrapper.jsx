@@ -329,6 +329,10 @@ class SlateWrapper extends Component {
                                             this.props.swapElement(dataObj, () => { })
                                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                                            let showHideNode = document.querySelector('.show-hide-active')
+                                            if(showHideNode){
+                                                showHideNode.classList.remove("show-hide-active")
+                                            }
                                         },
                                     }}
                                     ref={(c) => {
