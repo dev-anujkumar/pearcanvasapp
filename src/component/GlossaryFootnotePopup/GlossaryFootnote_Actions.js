@@ -10,7 +10,7 @@ const {
 
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP } from "./../../constants/Action_Constants";
 
-export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText) => async (dispatch) => {
+export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup) => async (dispatch) => {
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -39,16 +39,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
         }
-        else if ( elementType === "popup" ) {
+        else if (typeWithPopup && typeWithPopup === "popup" ){
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
-            glossaryFootElem=  newBodymatter[updatedIndex].popupdata["formatted-title"];
+            glossaryFootElem =  newBodymatter[updatedIndex].popupdata["formatted-subtitle"];
         }
          else {
-            if (typeof (index) == 'number') {
+            if (typeof (index) == 'number') { 
                 if (newBodymatter[index].versionUrn == elementWorkId) {
                     glossaryFootElem = newBodymatter[index]
-                }
+                } 
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
@@ -97,7 +97,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
  * @param {*} glossaryfootnoteid, glosary/footnote's work id
  * @param {*} type, type whether glossary or footnote
  */
-export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType) => {
+export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup) => {
     if(!glossaryfootnoteid) return false
 
     let glossaryEntry = Object.create({})
@@ -201,7 +201,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && elementType !== 'popup'){
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && typeWithPopup !== 'popup'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
@@ -241,10 +241,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         } 
-        else if (elementType === "popup") {
-            let updatedIndex = index.split('-')[0];
+        else if (typeWithPopup && typeWithPopup === "popup"){
+            let tempUpdatedIndex = index.split('-');
+            let updatedIndex = tempUpdatedIndex[0];
             newBodymatter[updatedIndex].popupdata["formatted-subtitle"] = res.data;
         }
+        /* else if (elementType === "popup") {
+            let updatedIndex = index.split('-')[0];
+            newBodymatter[updatedIndex].popupdata["formatted-subtitle"] = res.data;
+        } */
         else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
@@ -275,7 +280,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         sendDataToIframe({'type': HideLoader,'message': { status: false }});  
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
     }).catch(err => {
-        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        store.dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("save glossary footnote API error : ", err);
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner

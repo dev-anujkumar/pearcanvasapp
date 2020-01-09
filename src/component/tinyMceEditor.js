@@ -881,7 +881,14 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
+        let elementId = ""
+        if(this.props.currentElement){
+            elementId = this.props.currentElement.id
+        } 
+        else {
+            elementId = this.props.elementId
+        }
+        getGlossaryFootnoteId(elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
@@ -935,6 +942,7 @@ export class TinyMceEditor extends Component {
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
@@ -943,7 +951,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave',(elementWorkId)=>{
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })        
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
@@ -1448,12 +1456,13 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        let elementId=this.props.element?this.props.element.id:"";
-        let elementType = this.props.element?this.props.element.type:"";
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
+        let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback); 
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup); 
     }
 
     render() {
