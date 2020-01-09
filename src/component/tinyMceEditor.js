@@ -1240,8 +1240,9 @@ export class TinyMceEditor extends Component {
      */
     handleClick = (e) => {
             
-         clickedX = e.clientX;
-         clickedY = e.clientY;
+        clickedX = e.clientX;
+        clickedY = e.clientY;
+        setTimeout(this.removeMultiTinyInstance, 0)
          
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
@@ -1414,7 +1415,7 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
-                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType === "revel"){
+                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType){
                     node.classList.remove('place-holder')
                 }
             },0)
