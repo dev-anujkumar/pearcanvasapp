@@ -1410,7 +1410,7 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
-                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType === "revel"){
+                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType){
                     node.classList.remove('place-holder')
                 }
             },0)

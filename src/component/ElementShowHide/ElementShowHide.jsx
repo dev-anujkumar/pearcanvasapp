@@ -26,7 +26,8 @@ class ElementShowHide extends React.Component {
                 newIndex[newIndex.length-1] = parseInt(newIndex[newIndex.length-1]) + 1
                 let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
-                    document.getElementById(`cypress-${newshowIndex}`).focus();
+                        document.getElementById(`cypress-${newshowIndex}`).focus();
+                   
                 }
             }
         });
@@ -90,6 +91,7 @@ class ElementShowHide extends React.Component {
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {showItem}
                                         deleteShowHideUnit = {this.deleteShowHideUnit}
+                                        key = {showItem.id}
                                     />)
                             })}
                         </div>
@@ -119,7 +121,7 @@ class ElementShowHide extends React.Component {
                                         showHideType="revel"
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {posterItem}
-                                        key = {posterItem}
+                                        key = {posterItem.id}
                                     />
                                 )
                             })}
@@ -151,6 +153,7 @@ class ElementShowHide extends React.Component {
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {hideItem}
                                         deleteShowHideUnit = {this.deleteShowHideUnit}
+                                        key = {hideItem.id}
                                     />)
                             })}
 
