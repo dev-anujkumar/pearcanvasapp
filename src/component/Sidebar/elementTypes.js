@@ -692,7 +692,7 @@ export default {
         },
         'primary-popup': {
             text: 'Pop up window',
-            toolbar: ['assetpopover'],
+            toolbar: ['assetpopover', 'glossary'],
             enum: 'POP_UP',
             subtype: {
                 'secondary-interactive-popup': {

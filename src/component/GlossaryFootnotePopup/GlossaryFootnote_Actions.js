@@ -38,7 +38,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
 
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
-        } else {
+        }
+        else if ( elementType === "popup" ) {
+            let tempUpdatedIndex = index.split('-');
+            let updatedIndex = tempUpdatedIndex[0];
+            glossaryFootElem=  newBodymatter[updatedIndex].popupdata["formatted-title"];
+        }
+         else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
                     glossaryFootElem = newBodymatter[index]
@@ -195,7 +201,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             break;
     }
 
-    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'){
+    if(index &&  typeof (index) !== 'number' && elementType !== 'figure'  && elementType !== 'popup'){
         let tempIndex =  index.split('-');
         if(tempIndex.length === 2){
             if(newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].id === elementWorkId){
@@ -234,7 +240,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
-        } else {
+        } 
+        else if (elementType === "popup") {
+            let updatedIndex = index.split('-')[0];
+            newBodymatter[updatedIndex].popupdata["formatted-subtitle"] = res.data;
+        }
+        else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
                     newBodymatter[index] = res.data
