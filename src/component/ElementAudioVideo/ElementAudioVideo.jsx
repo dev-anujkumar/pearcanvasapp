@@ -141,9 +141,11 @@ class ElementAudioVideo extends Component {
                     }
                     break;
             }
+          
+          	let currentModel = this.props.model;
             this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
                 this.props.handleFocus("updateFromC2")
-                this.props.handleBlur()
+                this.props.handleBlur(true, currentModel)
             })
         }
     }
