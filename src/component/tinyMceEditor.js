@@ -320,7 +320,6 @@ export class TinyMceEditor extends Component {
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     setTimeout(() => {
                         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                        console.log(activeElement);
                         if(activeElement){
                         if (activeElement.innerText === "") {
                             activeElement.classList.add('place-holder')

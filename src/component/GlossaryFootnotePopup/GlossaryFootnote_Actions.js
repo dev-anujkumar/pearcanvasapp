@@ -11,6 +11,7 @@ const {
 import { OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP } from "./../../constants/Action_Constants";
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup) => async (dispatch) => {
+    
     let glossaaryFootnoteValue = {
         "type": glossaaryFootnote,
         "popUpStatus": status,
@@ -18,7 +19,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         elementType,
         glossaryfootnoteid,
         elementSubType,
-        glossaryTermText
+        glossaryTermText,
+        typeWithPopup : typeWithPopup ? typeWithPopup : undefined
     }
 
     if (status === true) {
@@ -40,9 +42,21 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             glossaryFootElem = newBodymatter[updatedIndex]
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
-            let tempUpdatedIndex = index.split('-');
-            let updatedIndex = tempUpdatedIndex[0];
-            glossaryFootElem =  newBodymatter[updatedIndex].popupdata["formatted-subtitle"];
+            let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length;
+            switch (indexesLen){
+                case 2:
+                    glossaryFootElem = newBodymatter[tempIndex[0]].popupdata["formatted-subtitle"];
+                    break;
+
+                case 3:
+                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-subtitle"];
+                    break;
+
+                case 4:
+                    glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-subtitle"];
+                    break;
+            }   
         }
          else {
             if (typeof (index) == 'number') { 
@@ -233,7 +247,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }).then(res => {
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        if(tempIndex.length == 4){//Figure inside a WE
+        if(tempIndex.length == 4 && typeWithPopup !== "popup"){//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data
         }else if(tempIndex.length ==3 && elementType =='figure'){//section 2 figure in WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data
@@ -242,14 +256,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[updatedIndex] = res.data;
         } 
         else if (typeWithPopup && typeWithPopup === "popup"){
-            let tempUpdatedIndex = index.split('-');
-            let updatedIndex = tempUpdatedIndex[0];
-            newBodymatter[updatedIndex].popupdata["formatted-subtitle"] = res.data;
+            let tempIndex = index.split('-');
+            let indexesLen = tempIndex.length
+            switch (indexesLen){
+                case 2:
+                    newBodymatter[tempIndex[0]].popupdata["formatted-subtitle"] = res.data;
+                    break;
+
+                case 3:
+                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].popupdata["formatted-subtitle"] = res.data;
+                    break;
+
+                case 4:
+                    newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].popupdata["formatted-subtitle"] = res.data;
+                    break;
+            }
         }
-        /* else if (elementType === "popup") {
-            let updatedIndex = index.split('-')[0];
-            newBodymatter[updatedIndex].popupdata["formatted-subtitle"] = res.data;
-        } */
         else {
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == elementWorkId) {
