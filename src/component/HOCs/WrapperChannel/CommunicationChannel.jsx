@@ -267,6 +267,15 @@ function WithWrapperCommunication(WrappedComponent) {
                         LOElements.push(item.id)
                         loIndex.push(index);
                     }
+                if(item.type == "element-aside"){
+                    item.elementdata.bodymatter.forEach((ele, indexInner) => {
+                        if (ele.type == "element-learningobjectivemapping") {
+                        LOElements.push(ele.id)
+                        indexInner= index + "-" + indexInner;
+                        loIndex.push(indexInner);
+                        }
+                    })
+                }
                 });
                 let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
                 let LOWipData = {
