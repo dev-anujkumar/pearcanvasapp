@@ -452,8 +452,6 @@ export const fetchAuthUser = () => dispatch => {
     }).then((response) => {
         let userInfo = response.data;
         config.userEmail = userInfo.email;
-        config.firstName = userInfo.firstName;
-        config.lastName = userInfo.lastName;
     })
         .catch(err => {
             console.log('axios Error', err);
