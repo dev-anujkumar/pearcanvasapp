@@ -21,7 +21,11 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
 
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
-                payload: res.data
+                payload: {
+                    ...res.data,
+                    userFirstName: config.firstName,
+                    userLastName: config.lastName
+                }
             })
             
         })
