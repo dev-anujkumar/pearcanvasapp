@@ -45,6 +45,7 @@ class SlateWrapper extends Component {
             showCustomPopup: false,
             customPopupMessage: '',
             lockOwner: "",
+            lockOwnerName: "",
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
             hasError: false,
@@ -189,7 +190,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked, userId} } = props
+        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName} } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -204,7 +205,8 @@ class SlateWrapper extends Component {
             _state = {
             ..._state,
             showLockPopup: true,
-            lockOwner: userId
+            lockOwner: userId,
+            lockOwnerName: `${userFirstName} ${userLastName}`
         }
         return _state;
     }
@@ -462,7 +464,8 @@ class SlateWrapper extends Component {
         const { slateLockInfo } = this.props
         if (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId) {
             this.setState({
-                lockOwner: slateLockInfo.userId
+                lockOwner: slateLockInfo.userId,
+                lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
         }
@@ -525,7 +528,7 @@ class SlateWrapper extends Component {
     showLockPopup = () => {
 
         if (this.state.showLockPopup) {
-            const { lockOwner } = this.state
+            const { lockOwnerName } = this.state
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -534,7 +537,7 @@ class SlateWrapper extends Component {
                     cols="1"
                     active={true}
                     togglePopup={this.togglePopup}
-                    inputValue={lockOwner}
+                    inputValue={lockOwnerName}
                     isLockPopup={true}
                     isInputDisabled={true}
                     slateLockClass="lock-message"
