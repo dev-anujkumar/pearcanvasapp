@@ -782,7 +782,7 @@ export class TinyMceEditor extends Component {
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
-        if (this.props.element.figuretype === "codelisting") {
+        if (this.props.element && this.props.element.figuretype === "codelisting") {
             return;
         }
         if(this.props.element && this.props.element.type === 'element-list'){
