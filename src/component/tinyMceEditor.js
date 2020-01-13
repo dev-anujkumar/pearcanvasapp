@@ -1418,7 +1418,7 @@ export class TinyMceEditor extends Component {
             e.preventDefault();            
             return false;
         }
-        if(this.props.element.type === "showhide"){
+        if(this.props.element && this.props.element.type === "showhide"){
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
