@@ -121,7 +121,7 @@ function WithWrapperCommunication(WrappedComponent) {
                         // showHeaderBlocker();
                         // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         // this.props.fetchSlateData(config.slateManifestURN);
-                        this.setTableData(message.elementId);
+                        this.setTableData(message.elementId, message.updatedData);
                     }
                     break;
                 case 'canvasBlocker':
