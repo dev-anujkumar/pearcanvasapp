@@ -340,7 +340,8 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-    let assessmenttitle = document.getElementById('single_assessment_title').innerText;
+    let assessmenttitle = document.querySelector(assessmentNodeSelector+'#single_assessment_title').innerText; //PCAT-6828 fixed
+    // let assessmenttitle = document.getElementById('single_assessment_title').innerText;
     let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
