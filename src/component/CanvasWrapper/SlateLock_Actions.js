@@ -23,7 +23,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
              * [PCAT-5745] - User Name instead of peroot id to be displayed when User Owns a lock on a slate,
              * Get user info based on lockedby userid
              */
-            if (res.data.isLocked) {
+            if (false) { // if (res.data.isLocked) {
                 axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${res.data.userId}?userName=${res.data.userId}`, {
                     headers: {
                         "Content-Type": "application/json",
