@@ -782,10 +782,10 @@ export class TinyMceEditor extends Component {
      * @param {*} args
      */
     pastePreProcess = (plugin, args) => {
-        if (this.props.element && this.props.element.figuretype === "codelisting") {
+        if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting") {
             return;
         }
-        if(this.props.element && this.props.element.type === 'element-list'){
+        if(this.props.element && this.props.element.type && this.props.element.type === 'element-list'){
             args.content = args.content.replace(/<ul>.*?<\/ul>/g, "")
         }
         let testElement = document.createElement('div');
@@ -1418,7 +1418,7 @@ export class TinyMceEditor extends Component {
             e.preventDefault();            
             return false;
         }
-        if(this.props.element && this.props.element.type === "showhide"){
+        if(this.props.element && this.props.element.type && this.props.element.type === "showhide"){
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
