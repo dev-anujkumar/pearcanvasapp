@@ -99,7 +99,7 @@ export class CanvasWrapper extends Component {
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
         // Callback function to execute when mutations are observed		
-        var callbackOb = function (mutationsList, observer) {
+        var callbackOb = function (mutationsList, observercb) {
             for (var mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');

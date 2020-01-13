@@ -81,6 +81,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case AUTHORING_ELEMENT_CREATED:
         case DELETE_ELEMENT:
         case FETCH_DATA_ON_SLATE_REFRESH:
+        case DELETE_SHOW_HIDE_ELEMENT:
             return {
                 ...state,
                 slateLevelData: action.payload.slateLevelData
@@ -176,11 +177,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 parentUrn: action.payload.parentUrn,
                 asideData: action.payload.asideData
             }
-        case DELETE_SHOW_HIDE_ELEMENT:
-            return {
-                ...state,
-                slateLevelData: action.payload.slateLevelData
-            };
+        // case DELETE_SHOW_HIDE_ELEMENT:
+        //     return {
+        //         ...state,
+        //         slateLevelData: action.payload.slateLevelData
+        //     };
         default:
             return state;
     }

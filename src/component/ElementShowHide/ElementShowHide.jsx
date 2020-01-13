@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
-import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
+// import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
@@ -26,7 +26,8 @@ class ElementShowHide extends React.Component {
                 newIndex[newIndex.length-1] = parseInt(newIndex[newIndex.length-1]) + 1
                 let newshowIndex = newIndex.join("-");
                 if (document.getElementById(`cypress-${newshowIndex}`)) {
-                    document.getElementById(`cypress-${newshowIndex}`).focus();
+                        document.getElementById(`cypress-${newshowIndex}`).focus();
+                   
                 }
             }
         });
@@ -59,7 +60,7 @@ class ElementShowHide extends React.Component {
     }
     
     render() {
-        const { model, index, element, slateLockInfo } = this.props;
+        const { index, element, slateLockInfo } = this.props;
 
         return (
             <div class="divWidgetShowHide" onClick={() => this.props.handleFocus()}>
@@ -90,6 +91,7 @@ class ElementShowHide extends React.Component {
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {showItem}
                                         deleteShowHideUnit = {this.deleteShowHideUnit}
+                                        key = {showItem.id}
                                     />)
                             })}
                         </div>
@@ -119,7 +121,7 @@ class ElementShowHide extends React.Component {
                                         showHideType="revel"
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {posterItem}
-                                        key = {posterItem}
+                                        key = {posterItem.id}
                                     />
                                 )
                             })}
@@ -151,6 +153,7 @@ class ElementShowHide extends React.Component {
                                         createShowHideElement={this.createShowHideElement}
                                         currentElement = {hideItem}
                                         deleteShowHideUnit = {this.deleteShowHideUnit}
+                                        key = {hideItem.id}
                                     />)
                             })}
 

@@ -320,7 +320,6 @@ export class TinyMceEditor extends Component {
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
                     setTimeout(() => {
                         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-                        console.log(activeElement);
                         if(activeElement){
                         if (activeElement.innerText === "") {
                             activeElement.classList.add('place-holder')
@@ -881,7 +880,14 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        getGlossaryFootnoteId(this.props.elementId, "FOOTNOTE", res => {
+        let elementId = ""
+        if(this.props.currentElement){
+            elementId = this.props.currentElement.id
+        } 
+        else {
+            elementId = this.props.elementId
+        }
+        getGlossaryFootnoteId(elementId, "FOOTNOTE", res => {
             if(res.data && res.data.id){
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
@@ -934,7 +940,8 @@ export class TinyMceEditor extends Component {
      */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let { elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
@@ -943,7 +950,7 @@ export class TinyMceEditor extends Component {
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         customEvent.subscribe('glossaryFootnoteSave',(elementWorkId)=>{
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })        
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
@@ -964,6 +971,10 @@ export class TinyMceEditor extends Component {
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
+        customEvent.subscribe('assetPopoverSave',()=>{
+           this.handleBlur(null,true);
+            customEvent.unsubscribe('assetPopoverSave');
+        })
         this.props.openAssetPopoverPopUp(true);
     }
 
@@ -1236,8 +1247,9 @@ export class TinyMceEditor extends Component {
      */
     handleClick = (e) => {
             
-         clickedX = e.clientX;
-         clickedY = e.clientY;
+        clickedX = e.clientX;
+        clickedY = e.clientY;
+        setTimeout(this.removeMultiTinyInstance, 0)
          
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
@@ -1400,7 +1412,7 @@ export class TinyMceEditor extends Component {
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
-    handleBlur = (e, forceupdate) => {       
+    handleBlur = (e, forceupdate) => {  
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
          if(isBlockQuote && this.isctrlPlusV){            
             e.preventDefault();            
@@ -1410,7 +1422,7 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-'+currentId);
             setTimeout(()=>{
-                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType === "revel"){
+                if(node && node.innerText && node.innerText.trim() !== "" && this.props.showHideType){
                     node.classList.remove('place-holder')
                 }
             },0)
@@ -1443,12 +1455,13 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
-        let elementId=this.props.element?this.props.element.id:"";
-        let elementType = this.props.element?this.props.element.type:"";
+        let typeWithPopup = this.props.element ? this.props.element.type : "";
+        let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
+        let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback); 
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup); 
     }
 
     render() {
@@ -1486,6 +1499,7 @@ export class TinyMceEditor extends Component {
                     tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
+                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('onBlur', this.handleBlur);
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     return (

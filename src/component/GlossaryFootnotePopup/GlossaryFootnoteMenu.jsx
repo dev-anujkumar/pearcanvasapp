@@ -86,7 +86,7 @@ class GlossaryFootnoteMenu extends React.Component {
     */
     saveContent = () => {
         const { glossaryFootnoteValue } = this.props;
-        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType} = glossaryFootnoteValue;
+        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup} = glossaryFootnoteValue;
         let term = null;
         let definition = null;
         term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
@@ -95,7 +95,7 @@ class GlossaryFootnoteMenu extends React.Component {
         definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
         if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
         }
         this.props.showGlossaaryFootnote(false);
     }

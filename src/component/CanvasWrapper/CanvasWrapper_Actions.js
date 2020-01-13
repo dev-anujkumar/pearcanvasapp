@@ -101,7 +101,7 @@ const findElementType = (element, index) => {
                 }
                 break;
             case 'element-aside':
-                if (element.designtype == "") {
+                if (element.designtype == "" || element.designtype == undefined) {
                     element.designtype = "asideLearningObjective";
                 }
                 elementType = {
@@ -181,9 +181,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 		if(slateData.data[manifestURN].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
-			// let popupSlateData = {...slateData.data}
-			// if (popupSlateData[manifestURN]) {
-				// popupSlateData[manifestURN].type = "popup"
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
 				let messageTcmStatus = {
 					TcmStatus: {
@@ -194,9 +191,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 					'type': "TcmStatusUpdated",
 					'message': messageTcmStatus
 				})
-				let contentUrn = slateData.data[manifestURN].contentUrn;
-				// let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
-				dispatch(fetchComments(contentUrn, "popup slate"));
 				config.totalPageCount = slateData.data[manifestURN].pageCount;
 				config.pageLimit = slateData.data[manifestURN].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
@@ -222,7 +216,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
-			// }
 			}
 		}
 		else{
