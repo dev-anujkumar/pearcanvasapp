@@ -133,9 +133,9 @@ class ElmTable extends Component {
         }
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((item) => {
-                if(item && item.alignments && item.alignments != null ){
+                if(item && (item.alignments && item.alignments != null) ||(item.contents && item.contents != null ) ){
                     this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
-                 }               
+                }               
             })
         }
 
