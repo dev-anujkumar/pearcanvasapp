@@ -528,7 +528,7 @@ class SlateWrapper extends Component {
     showLockPopup = () => {
 
         if (this.state.showLockPopup) {
-            const { lockOwnerName } = this.state
+            const { lockOwner } = this.state
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -537,7 +537,7 @@ class SlateWrapper extends Component {
                     cols="1"
                     active={true}
                     togglePopup={this.togglePopup}
-                    inputValue={lockOwnerName}
+                    inputValue={lockOwner}
                     isLockPopup={true}
                     isInputDisabled={true}
                     slateLockClass="lock-message"
