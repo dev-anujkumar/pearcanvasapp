@@ -371,10 +371,10 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.replaceUnwantedtags(captionHTML)
         creditsHTML = this.replaceUnwantedtags(creditsHTML)
