@@ -485,6 +485,10 @@ class Interactive extends React.Component {
      */
 
     togglePopup = (e,value)=>{
+        if(hasReviewerRole()){
+            return true;
+        }
+        
         if(this.props.model.figuredata.interactiveformat==="external-link"){
             if(e.target.classList.contains('actionPU')){
                 return;
@@ -706,7 +710,7 @@ class Interactive extends React.Component {
                
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssesmentpopup? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssesmentpopup ? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
                     </div>
                 
             )

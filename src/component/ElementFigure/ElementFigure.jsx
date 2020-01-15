@@ -202,7 +202,13 @@ class ElementFigure extends Component {
         if (hasReviewerRole()) {
             editable = false;
         }
-        sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable });
+        this.props.handleFocus()
+        let slateData = {
+            elementId : this.props.elementId,
+            currentProjectId: config.projectUrn,
+            slateEntityUrn: config.slateEntityURN
+        }
+         sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData});
     }
     /**
      * @description function will be called on image src add and fetch resources based on figuretype

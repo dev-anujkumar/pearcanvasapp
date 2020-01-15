@@ -57,7 +57,7 @@ describe('Utils file function testing', () => {
         expect(format).toBe('gallery-image')
     })
 
-    it('Testing getTaxonomicType function', () => {
+    xit('Testing getTaxonomicType function', () => {
         let data = 'cite-interactive-slideshow-image'
         let format = utils.getTaxonomicType(data)
         expect(format).toBe('guided-example')

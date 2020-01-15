@@ -45,13 +45,12 @@ export const utils = {
             case (data.toLowerCase().indexOf("cite-interactive-slideshow-video") !== -1):
                 format = "gallery-video";
                 break;
-
-            // case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
-            //     format = "gallery-image";
-            //     break;
             case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
-                format = "guided-example";
+                format = "gallery-image";
                 break;
+            // case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
+            //     format = "guided-example";
+            //     break;
             case (data.toLowerCase().indexOf("cite-interactive-graph") !== -1):
                 format = "graph";
                 break;
