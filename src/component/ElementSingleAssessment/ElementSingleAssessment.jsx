@@ -143,11 +143,11 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
     /*** @description - This function is to handle Blur on the Assessment element on blur*/       
     handleAssessmentBlur = () =>{
-        this.props.handleBlur();
+        this.props.handleBlur("","",this.props.index);
     }
     /*** @description - This function will be called to save the assessment data */
     saveAssessment = () =>{ 
-            this.props.handleBlur();
+            this.props.handleBlur("","",this.props.index);
     }
 
     /*** @description - This function is for handling the different types of figure-element.
@@ -198,7 +198,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     render() {
         const { model, index } = this.props;
         return (
-            <div className="figureElement" onClick = {this.handleAssessmentFocus} onBlur= {this.handleAssessmentBlur}>
+            <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
                 
