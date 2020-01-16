@@ -252,14 +252,14 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let currentSlateData = currentParentData[config.slateManifestURN];
         let glossaaryFootnoteValue = getState().glossaryFootnoteReducer.glossaryFootnoteValue;
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
-        let elementIndex = getState().glossaryFootnoteReducer.elementIndex;
+        let elementIndexFootnote = getState().glossaryFootnoteReducer.elementIndex;
         glossaaryFootnoteValue.elementWorkId =response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
             payload: {
                 glossaaryFootnoteValue: glossaaryFootnoteValue,
                 glossaryFootNoteCurrentValue:glossaryFootNoteCurrentValue,
-                elementIndex: elementIndex
+                elementIndex: elementIndexFootnote
             }
         });
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating

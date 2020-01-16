@@ -101,9 +101,13 @@ const findElementType = (element, index) => {
                 }
                 break;
             case 'element-aside':
-                if (element.designtype == "" || element.designtype == undefined) {
+                if (element.subtype === "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
+                    element.designtype = "workedexample1";
+                }
+                else if (element.subtype !== "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
                     element.designtype = "asideLearningObjective";
                 }
+                
                 elementType = {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
