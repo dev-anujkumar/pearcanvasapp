@@ -1485,6 +1485,11 @@ export class TinyMceEditor extends Component {
                 else{
                     model = this.props.model;
                 }
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = model;
+                if( tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName==='P'){
+                    model = tempDiv.children[0].innerHTML;
+                }
                 return (
                     <h4 ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: model }} >{/*htmlToReactParser.parse(this.props.model) */}</h4>
                 )
