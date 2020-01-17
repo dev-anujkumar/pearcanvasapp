@@ -47,7 +47,7 @@ ol li.listItemNumeroUnoLowerRoman::before {
     content: counter(section, lower-roman)". ";
 }
 
-li.listItemNumeroUnoBullet {
+div.cypress-editable li.listItemNumeroUnoBullet {
     color: #000;
     font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
     font-size: 1.180em;
@@ -58,7 +58,7 @@ li.listItemNumeroUnoBullet {
     margin-bottom: 0.5em;
 }
 
-li.listItemNumeroUnoBullet::before {
+div.cypress-editable li.listItemNumeroUnoBullet::before {
     content: counter(item) ". ";
     counter-increment: item;
     font-weight: bold;
@@ -69,7 +69,7 @@ li.listItemNumeroUnoBullet::before {
     transform: translateX(-100%);
 }
 
-ul li.listItemNumeroUnoBullet::before {
+div.cypress-editable ul li.listItemNumeroUnoBullet::before {
     counter-increment: section;
     content: counter(section, disc);
     font-size: 1.6rem;
