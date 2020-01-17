@@ -18,7 +18,7 @@ div.cypress-editable ol li, div.cypress-editable ul li {
     font-size: 1em !important;
 }
 
-div.cypress-editable ol, li ol, div.cypress-editable ul, li ul {
+div.cypress-editable ol,div.cypress-editable li ol, div.cypress-editable ul, div.cypress-editable li ul {
     counter-reset: section !important;
 }
 
