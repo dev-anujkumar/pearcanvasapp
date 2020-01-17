@@ -525,6 +525,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
             } 
+            else if(updatedData.popupEntityUrn && updatedData.updatePopupElementField){
+                dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
