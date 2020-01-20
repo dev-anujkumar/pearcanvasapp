@@ -126,7 +126,7 @@ export class TinyMceEditor extends Component {
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
-                    if (activeElement) {
+                    if (activeElement && activeElement.getAttribute('id') === 'cypress-'+this.props.index) {
                         let currentNode = document.getElementById('cypress-'+this.props.index)
                         let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
                         let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
