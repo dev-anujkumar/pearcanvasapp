@@ -550,8 +550,9 @@ export class TinyMceEditor extends Component {
 
             let key = e.keyCode || e.which;
             if(key === 13 && this.props.element.type !== 'element-list' && activeElement.nodeName !== "CODE" && this.props.element.type!=='showhide') {
-                let activeEditor = document.getElementById(tinymce.activeEditor.id).closest('.editor');
-                let nextSaparator = activeEditor.nextSibling;
+                let activeEditor = document.getElementById(tinymce.activeEditor.id);
+                activeEditor.blur();
+                let nextSaparator = (activeEditor.closest('.editor')).nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
             }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel') {
