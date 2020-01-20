@@ -18,14 +18,14 @@ class FigureCard extends React.Component {
                 "hospitality-sims": "Hospitality Sims",
                 "information-technology-sims": "Information Technology Sims",
                 "qual-sims": "Qualitative Business Sims",
-                "soundbites": "Sound Bytes",
+                "soundbytes": "Sound Bytes",
                 "Personal Finance": "Personal Finance",
                 "Psychology Sims": "Psychology Sims",
                 "video-submission": "Shared Media",
                 "video-quiz": "Media Quiz",
                 "myvirtual-child": "MyVirtualChild",
                 "myvirtual-life": "MyVirtualLife",
-                "survey": "Surveys and Inventories",
+                "socialexplorer-surveys": "Surveys and Inventories",
                 "writingsolutions": "Writing Solutions"
             }
         }
