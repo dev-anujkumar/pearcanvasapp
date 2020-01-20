@@ -416,7 +416,16 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN      
+                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
+            }
+            if(parentElement && parentElement.type === "popup"){
+                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedTitle";
+                } 
+                else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedSubtitle";
+                }
             }
             break;
 
