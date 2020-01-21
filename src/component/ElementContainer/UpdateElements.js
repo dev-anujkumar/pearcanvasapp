@@ -396,7 +396,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -426,6 +426,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedSubtitle";
                 }
+            }
+            if(parentElement && parentElement.type === "showhide" && showHideType){
+                dataToReturn.section = showHideType;
             }
             break;
 

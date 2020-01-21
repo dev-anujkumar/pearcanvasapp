@@ -186,7 +186,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-		if(slateData.data[manifestURN].type === "popup"){
+		if(slateData.data && slateData.data[manifestURN] && slateData.data[manifestURN].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
@@ -228,10 +228,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && versioning.type === 'element-aside'){
+                if(versioning && versioning.type === 'element-aside' || versioning.type === 'showhide'){
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index = versioning.indexes[0];
+                    let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
