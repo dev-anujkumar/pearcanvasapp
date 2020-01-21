@@ -350,10 +350,11 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         }}
         
     dataToSend.figuredata.elementdata;
-
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
     let getAsid=assessmentId.split(' ')[1];
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
+    dataToSend.figuredata.id =  getAsid ? getAsid : "";                             //PCAT-6792 fixes
+    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
     let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
     let getAsItemid=assessmentItemId.split(' ')[2];
