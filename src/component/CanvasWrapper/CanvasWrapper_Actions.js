@@ -101,7 +101,11 @@ const findElementType = (element, index) => {
                 }
                 break;
             case 'element-aside':
-                if (element.subtype === "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
+             	if(element.subtype =="" || element.subtype == undefined){
+                    element.subtype = "sidebar";
+                    element.designtype = "asideLearningObjective";
+                }
+                else if (element.subtype === "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
                     element.designtype = "workedexample1";
                 }
                 else if (element.subtype !== "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
