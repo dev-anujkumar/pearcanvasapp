@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -236,6 +236,9 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType) => (dispatch, getState) => {
+    if(hasReviewerRole()){
+        return true
+    }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType)
     return axios.put(`${config.REACT_APP_API_URL}v1/slate/element`,
