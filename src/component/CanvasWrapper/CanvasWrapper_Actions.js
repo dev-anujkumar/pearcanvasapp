@@ -228,7 +228,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && versioning.type === 'element-aside' || versioning.type === 'showhide'){
+                if(versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')){
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];

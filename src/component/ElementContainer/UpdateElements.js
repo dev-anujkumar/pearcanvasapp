@@ -426,6 +426,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedSubtitle";
                 }
+                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                    dataToReturn.section = "postertextobject";
+                }
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
