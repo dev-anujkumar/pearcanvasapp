@@ -137,6 +137,13 @@ class ElementContainer extends Component {
         }
     }
 
+    removeClassesFromHtml = (html) =>{
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        tinyMCE.$(tempDiv).find('p').removeAttr('class')
+        return this.replaceUnwantedtags(tempDiv.innerHTML);
+    }
+
     replaceUnwantedtags = (html) => {
         let tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
@@ -181,12 +188,13 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            this.props.oldImage !== previousElementData.figuredata.path
-            );
+        let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
+            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
+            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
+            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+            (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+        );
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
@@ -230,12 +238,12 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
-            startNumber !== previousElementData.figuredata.startNumber ||
+        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
+            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
+            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
+            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+            preformattedText !== this.replaceUnwantedtags(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+            Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
             isNumbered !== previousElementData.figuredata.numbered
             );
     }
@@ -257,10 +265,10 @@ class ElementContainer extends Component {
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -283,11 +291,11 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
-            return (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle || 
-                captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits || 
-                posterTextHTML !== previousElementData.html.postertext ||
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) || 
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) || 
+                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext) ||
                 this.props.oldImage !== newInteractiveid
                 );
         }
@@ -303,10 +311,10 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
-            return (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle || 
-                captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits ||
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) || 
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== newInteractiveid
                 );
         }
@@ -345,11 +353,11 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            text !== previousElementData.figuredata.elementdata.text
+        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
+            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
+            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
+            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+            (text?text:"<p></p>") !== (previousElementData.figuredata.elementdata.text?previousElementData.figuredata.elementdata.text:"<p></p>")
             );
     }
 
@@ -392,10 +400,10 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
+        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
+            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
+            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
+            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
             this.props.oldImage !== newAudioVideoId
             );
     }
