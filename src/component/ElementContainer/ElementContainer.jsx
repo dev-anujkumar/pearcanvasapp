@@ -333,17 +333,22 @@ class ElementContainer extends Component {
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
+            oldtext = previousElementData.html.text?previousElementData.html.text:""
 
         captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        text = text.match(/(<p.*?>.*?<\/p>)/g) ? text : `<p>${text}</p>`
+        oldtext = oldtext.match(/(<p.*?>.*?<\/p>)/g) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        text =  this.removeClassesFromHtml(text)
+        oldtext =  this.removeClassesFromHtml(oldtext)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -360,7 +365,7 @@ class ElementContainer extends Component {
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            (text?text:"<p></p>") !== (previousElementData.figuredata.elementdata.text?previousElementData.figuredata.elementdata.text:"<p></p>")
+            text !== oldtext
             );
     }
 
