@@ -44,6 +44,31 @@ const findElementType = (element, index) => {
                     case "mathImage":
                     case "authoredtext":
                     case "tableasmarkup":
+                        let subType = ""
+                        if (element.subtype == "" || element.subtype == undefined) {
+                            switch (element.figuretype) {
+                                case "image":
+                                    subType = "imageTextWidth";
+                                    break;
+                                case "table":
+                                    subType = "image50TextTableImage";
+                                    break;
+                                case "mathImage":
+                                    subType = "image50TextMathImage";
+                                    break;
+                                case "authoredtext":
+                                    subType = "mathml";
+                                    break;
+                                case "tableasmarkup":
+                                    subType = undefined
+                                    break;
+                                default:
+                                    subType = "imageTextWidth";
+                                    element.figuretype = "image";
+                                    break;
+                            }
+                            element.subtype = subType
+                        }
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         elementType = {
@@ -60,6 +85,9 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "codelisting":
+                        if(element.subtype == "" || element.subtype == undefined) {
+                            element.subtype = "codelisting"
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
@@ -414,7 +442,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         case "image":
         case "mathImage":
         case "table":
-            let oldPath = activeElement.figuretype == "image" && updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
+            let oldPath = updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {

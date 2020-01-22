@@ -146,8 +146,10 @@ class ElementContainer extends Component {
 
     replaceUnwantedtags = (html) => {
         let tempDiv = document.createElement('div');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         return tempDiv.innerHTML;
     }
     /**
@@ -384,10 +386,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -400,10 +402,10 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
-            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
-            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
-            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             this.props.oldImage !== newAudioVideoId
             );
     }
