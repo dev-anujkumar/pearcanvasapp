@@ -256,7 +256,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let glossaaryFootnoteValue = getState().glossaryFootnoteReducer.glossaryFootnoteValue;
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
         let elementIndexFootnote = getState().glossaryFootnoteReducer.elementIndex;
-        glossaaryFootnoteValue.elementWorkId =response.data.id;
+        if(response.data.id !== updatedData.id){
+            glossaaryFootnoteValue.elementWorkId =response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
             payload: {
@@ -265,6 +266,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 elementIndex: elementIndexFootnote
             }
         });
+        }
+        
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 console.log("mapping inside")
