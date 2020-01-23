@@ -9,6 +9,7 @@ const CMDS_AUTHORIZATION = config_object['CMDS_AUTHORIZATION'];
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
+import { sendDataToIframe } from '../constants/utility.js'
 
 
 
@@ -110,7 +111,7 @@ export const c2AssessmentModule = {
       _interactivePattern.run(_interactivePattern);
       _interactivePattern.on(callback);
 
-      window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+      sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
       //alfresco toc issue
       var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
