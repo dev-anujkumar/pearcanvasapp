@@ -229,7 +229,7 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        this.sectionBreakBodyMatter = _containerBodyMatter;
+        // this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
@@ -273,7 +273,18 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];console.log('elem::', _element);
+                            if(_element.contents){
+                                bodyMatterObj = _element.contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBreakBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            }                           
+                            
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
