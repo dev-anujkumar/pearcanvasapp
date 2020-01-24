@@ -146,8 +146,11 @@ class ElementContainer extends Component {
 
     replaceUnwantedtags = (html) => {
         let tempDiv = document.createElement('div');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('style');
         return tempDiv.innerHTML;
     }
     /**
@@ -172,10 +175,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -189,10 +192,10 @@ class ElementContainer extends Component {
         //         return 0
         //     }
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
-        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
-            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
-            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
-            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
         );
     }
@@ -220,10 +223,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>` 
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -238,11 +241,11 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
-            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
-            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
-            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
-            preformattedText !== this.replaceUnwantedtags(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+            preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
             Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
             isNumbered !== previousElementData.figuredata.numbered
             );
@@ -330,17 +333,22 @@ class ElementContainer extends Component {
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
+            oldtext = previousElementData.html.text?previousElementData.html.text:""
 
         captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        text = text.match(/(<p.*?>.*?<\/p>)/g) ? text : `<p>${text}</p>`
+        oldtext = oldtext.match(/(<p.*?>.*?<\/p>)/g) ? oldtext : `<p>${oldtext}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
+        text =  this.removeClassesFromHtml(text)
+        oldtext =  this.removeClassesFromHtml(oldtext)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -353,11 +361,11 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
-            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
-            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
-            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
-            (text?text:"<p></p>") !== (previousElementData.figuredata.elementdata.text?previousElementData.figuredata.elementdata.text:"<p></p>")
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+            text !== oldtext
             );
     }
 
@@ -384,10 +392,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -400,10 +408,10 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== this.replaceUnwantedtags(previousElementData.html.title) ||
-            subtitleHTML !== this.replaceUnwantedtags(previousElementData.html.subtitle) ||
-            captionHTML !== this.replaceUnwantedtags(previousElementData.html.captions) ||
-            creditsHTML !== this.replaceUnwantedtags(previousElementData.html.credits) ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             this.props.oldImage !== newAudioVideoId
             );
     }
