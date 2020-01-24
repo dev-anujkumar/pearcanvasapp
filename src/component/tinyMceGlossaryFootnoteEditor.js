@@ -26,11 +26,13 @@ export class ReactEditor extends React.Component {
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
       paste_preprocess: this.pastePreProcess,
       setup: (editor) => {
+        if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {  // when user doesn't have edit permission
+          this.setChemistryFormulaIcon(editor);
+          this.setMathmlFormulaIcon(editor);
+          this.addChemistryFormulaButton(editor);
+          this.addMathmlFormulaButton(editor);
+        }
         this.onEditorBlur(editor);
-        this.setChemistryFormulaIcon(editor);
-        this.setMathmlFormulaIcon(editor);
-        this.addChemistryFormulaButton(editor);
-        this.addMathmlFormulaButton(editor);
         editor.on('keyup', (e) => {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           let contentHTML = e.target.innerHTML;
