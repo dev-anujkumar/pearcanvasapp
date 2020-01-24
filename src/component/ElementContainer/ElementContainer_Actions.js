@@ -5,7 +5,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT,CURRENT_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -761,5 +761,15 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)
+    })
+}
+
+
+export const currentSHowHideElement = (element) => (dispatch, getState) => {
+    dispatch({
+        type: CURRENT_SHOW_HIDE_ELEMENT,
+        payload: {
+            currentShowhideElement:element
+        }
     })
 }

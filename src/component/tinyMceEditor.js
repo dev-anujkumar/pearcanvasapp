@@ -443,7 +443,7 @@ export class TinyMceEditor extends Component {
         }
 
         if(this.props.activeShowHide){
-            this.props.activeShowHide(e)
+            this.props.activeShowHide(e,this.props.currentElement)
         }else if(document.querySelector('.show-hide-active')){
             document.querySelector('.show-hide-active').classList.remove("show-hide-active")
         }
@@ -525,7 +525,9 @@ export class TinyMceEditor extends Component {
                 evt.preventDefault();                
             }
 
-            bindKeyDownEvent(editor, e, this.props.element);
+            bindKeyDownEvent(editor, e, this.props.element,()=>{
+                this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
+            });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement) {
                 if (!activeElement.children.length ||
@@ -555,7 +557,7 @@ export class TinyMceEditor extends Component {
                 let nextSaparator = activeEditor.nextSibling;
                 let textPicker = nextSaparator.querySelector('#myDropdown li > .text-elem');
                 textPicker.click();
-            }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel') {
+            }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel' && this.props.currentElement.type!== 'element-list') {
                 this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
             }   
         });
@@ -1095,7 +1097,7 @@ export class TinyMceEditor extends Component {
     * Defines initial placeholder
     */
     handlePlaceholder = () => {
-        if (this.props.element && this.props.element.type === "element-list") {
+        if (this.props.element && this.props.element.type === "element-list" || this.props.currentElement && this.props.currentElement.type === 'element-list') {
             this.placeHolderClass = '';
         }
         else if (this.props.model && this.props.model.text) {
@@ -1235,7 +1237,12 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-            
+         let showHideObj = {
+             currentElement:this.props.currentElement,
+             index:this.props.index,
+             element:this.props.element,
+             showHideType:this.props.showHideType
+         }
          clickedX = e.clientX;
          clickedY = e.clientY;
          
@@ -1257,7 +1264,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        this.props.handleEditorFocus();
+        this.props.handleEditorFocus("",showHideObj);
         let isSameTarget = false;
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
