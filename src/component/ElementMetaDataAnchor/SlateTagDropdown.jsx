@@ -51,8 +51,10 @@ class SlateTagDropdown extends React.Component {
         }
         let currentSlateLOData = this.props.currentSlateLOData;
         let assessmentuRN="";
+        let assessmentType="";
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+        assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
         }
         let isLOExist= this.props.isLOExist;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
@@ -60,7 +62,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN, 'previewLink': previewLink } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN, 'assessmentType':assessmentType, 'previewLink': previewLink } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
