@@ -488,8 +488,8 @@ export const fetchAuthUser = () => dispatch => {
     }).then((response) => {
         let userInfo = response.data;
 		config.userEmail = userInfo.email;
-		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName}`:`FIRST_NAME=`;
-		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName}`:`LAST_NAME=`;
+		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
+		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
     })
         .catch(err => {
             console.log('axios Error', err);
