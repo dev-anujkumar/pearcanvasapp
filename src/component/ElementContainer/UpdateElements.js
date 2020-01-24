@@ -154,7 +154,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
-        data.html.postertext = posterTextHTML
+        let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+        data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,

@@ -54,7 +54,13 @@ class ElementAudioVideo extends Component {
                     clipInfo=JSON.parse(imageData['clipinfo'])
                 }
                 else{
-                    clipInfo=imageData['clipinfo']
+                    clipInfo = {
+                        "clipid": imageData['clipinfo'].id,
+                        "starttime": imageData['clipinfo'].start,
+                        "endtime": imageData['clipinfo'].end,
+                        "description": imageData['clipinfo'].description,
+                        "duration": imageData['clipinfo'].duration
+                    }
                 }
             }
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
@@ -140,6 +146,9 @@ class ElementAudioVideo extends Component {
                         schema: "http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio"
                     }
                     break;
+            }
+            if(figureData && figureData.clipinfo && figureData.clipinfo.clipid  === "" ){
+                delete figureData.clipinfo
             }
             this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
                 this.props.handleFocus("updateFromC2")
