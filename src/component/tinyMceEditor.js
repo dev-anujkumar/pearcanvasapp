@@ -967,7 +967,8 @@ export class TinyMceEditor extends Component {
 
         let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
         if(selectedTag!=="LI"&&selectedTag!=="P"&&selectedTag!=="H3"&&selectedTag!=="BLOCKQUOTE"){
-            selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            selectedText = '<'+selectedTag.toLocaleLowerCase()+'>'+selectedText+'</'+selectedTag.toLocaleLowerCase()+'>'
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
