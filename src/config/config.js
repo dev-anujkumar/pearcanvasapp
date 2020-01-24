@@ -53,7 +53,7 @@ let config = {
     },
     IDENTITY_URL: "/auth",
     GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
-    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-stg.pearson.com/"
+    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
 };
 
 if (process.env.NODE_ENV === "development") {
