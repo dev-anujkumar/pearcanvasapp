@@ -45,16 +45,42 @@ class SlateTagDropdown extends React.Component {
     }
     
     learningObjectiveDropdown = (e) => {
-        let previewLink={
-            previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
-            bookId: config.citeUrn
-        }
+
         let currentSlateLOData = this.props.currentSlateLOData;
         let assessmentuRN="";
         let assessmentType="";
+        let assessmentTypeLO="";
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
+        }
+        switch (assessmentType) {
+            case 'Full Assessment CITE':
+            case 'cite':
+                assessmentTypeLO = 'assessmentItem'
+                break;
+            case 'tdx':
+            case 'Full Assessment TDX':
+                assessmentTypeLO = 'tdxAssessmentItem'
+                break;
+            case 'learningtemplate':
+            case 'Learning App Type':
+                assessmentTypeLO = 'learningtemplate'
+                break;
+            case 'puf':
+            case 'Full Assessment PUF':
+                assessmentTypeLO = 'puf'
+                break;
+            case 'learnosity':
+            case 'Full Assessment Learnosity Beta':
+                assessmentTypeLO = 'learnosity'
+                break;
+        }
+        let previewData={
+            previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
+            bookId: config.citeUrn,
+            assessmentUrn:assessmentuRN,
+            assessmentType: assessmentTypeLO
         }
         let isLOExist= this.props.isLOExist;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
@@ -62,7 +88,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN, 'assessmentType':assessmentType, 'previewLink': previewLink } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN,'previewData': previewData } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
@@ -77,7 +103,7 @@ class SlateTagDropdown extends React.Component {
         }
 
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys,'assessmentUrn':assessmentuRN } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys,'assessmentUrn':assessmentuRN, 'previewData': previewData } })
         }
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
