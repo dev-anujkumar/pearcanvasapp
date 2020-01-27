@@ -150,6 +150,10 @@ class ElementContainer extends Component {
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').empty();
+        //tinyMCE.$(tempDiv).find('.blockquote-hidden').html('');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         return tempDiv.innerHTML;
     }
@@ -415,6 +419,15 @@ class ElementContainer extends Component {
             this.props.oldImage !== newAudioVideoId
             );
     }
+
+    authoredTextDifference = (currentHtml, previousElementData) =>{
+
+        console.log("olddata",this.replaceUnwantedtags(previousElementData.html.text));
+        console.log("newdata",this.replaceUnwantedtags(currentHtml))
+        console.log("isqdata",this.replaceUnwantedtags(currentHtml)===this.replaceUnwantedtags(previousElementData.html.text))
+        return (this.replaceUnwantedtags(currentHtml)!==this.replaceUnwantedtags(previousElementData.html.text))
+
+    }
     
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
@@ -451,13 +464,14 @@ class ElementContainer extends Component {
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+                tinyMCE.$(tempDiv).find('.blockquote-hidden').html('');
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
                     tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
                     html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
+                if (previousElementData.html && (this.authoredTextDifference(html,previousElementData) || forceupdate) && !assetPopoverPopupIsVisible) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
