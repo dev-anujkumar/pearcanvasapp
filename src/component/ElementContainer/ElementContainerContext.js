@@ -9,6 +9,7 @@
 import React from 'react';
 
 const ElementContainerContext = React.createContext({
-    isPageNumberEnabled: false,
+    showHideId: "",
+    index: ""
 })
 export default ElementContainerContext

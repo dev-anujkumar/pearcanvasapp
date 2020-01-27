@@ -250,6 +250,7 @@ export class TinyMceEditor extends Component {
                         e.preventDefault()
                         /** EVENT - Tab keydown */
                         keyDownEvent = new KeyboardEvent('keydown', { bubbles: true, ctrlKey: false, keyCode: 9, metaKey: false, shiftKey: false, which: 9 })
+                        console.log("edtior============>", editor.targetElm)
                         editor.targetElm.dispatchEvent(keyDownEvent)
                         return false
                     }
@@ -505,6 +506,7 @@ export class TinyMceEditor extends Component {
         editor.on('keydown', (e) => {           
             let iFocusinBlockQuote = editor.dom.getParent(editor.selection.getStart(), '.paragraphNummerEins');
             let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+            let newElement = this.props.currentElement ?  this.props.currentElement : this.props.element
             if(isBlockQuote && !iFocusinBlockQuote){
                 let evt = (e) ? e : window.event;
                 evt.preventDefault();
@@ -525,7 +527,7 @@ export class TinyMceEditor extends Component {
                 evt.preventDefault();                
             }
 
-            bindKeyDownEvent(editor, e, this.props.element,()=>{
+            bindKeyDownEvent(editor, e, newElement,()=>{
                 this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
             });
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');

@@ -16,8 +16,7 @@ class ElementShowHide extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            itemID: "",
-            currentElement: {}
+            itemID: ""
         };
 
     }
@@ -34,7 +33,7 @@ class ElementShowHide extends React.Component {
         });
     }
 
-    activeShowHide = (e, currentElement) => {
+    activeShowHide = (e) => {
         let activeElement = document.querySelector('.show-hide-active')
         if (activeElement && activeElement !== e.currentTarget.closest(".show-hide")) {
             document.querySelector('.show-hide-active').classList.remove("show-hide-active")
@@ -43,7 +42,6 @@ class ElementShowHide extends React.Component {
         if (e.currentTarget && e.currentTarget.closest(".show-hide")) {
             e.currentTarget.closest(".show-hide").classList.add("show-hide-active")
         }
-        //this.setState({currentElement:currentElement});
 
     }
 
@@ -84,28 +82,6 @@ class ElementShowHide extends React.Component {
                                     createShowHideElement={this.createShowHideElement}
                                     deleteShowHideUnit={this.deleteShowHideUnit}
                                 />
-                                    /* <TinyMceEditor permissions={this.props.permissions}
-                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                                        element={this.props.element}
-                                        index={`${index}-1-${innerIndex}`}
-                                        innerIndex = {innerIndex}
-                                        placeholder="Enter Show text"
-                                        id={showItem.id}
-                                        model={showItem.html.text}
-                                        handleEditorFocus={this.props.handleFocus}
-                                        handleBlur={this.props.handleBlur}
-                                        slateLockInfo={slateLockInfo}
-                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                        elementId={this.props.elementId}
-                                        activeShowHide={this.activeShowHide}
-                                        showHideType="show"
-                                        createShowHideElement={this.createShowHideElement}
-                                        currentElement = {showItem}
-                                        onListSelect={this.props.onListSelect}
-                                        deleteShowHideUnit = {this.deleteShowHideUnit}
-                                    /> */
-
                                 )
                             })}
                         </div>
@@ -130,26 +106,6 @@ class ElementShowHide extends React.Component {
                                         createShowHideElement={this.createShowHideElement}
                                         deleteShowHideUnit={this.deleteShowHideUnit}
                                     />
-                                    /* <TinyMceEditor permissions={this.props.permissions}
-                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                                        element={this.props.element}
-                                        index={`${index}-2-${innerIndex}`}
-                                        innerIndex={innerIndex}
-                                        placeholder="This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
-                                        model={posterItem.elementdata.text && posterItem.elementdata.text !== "" || posterItem.html.text.match(/<img/) ? posterItem.html.text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"}
-                                        handleEditorFocus={this.props.handleFocus}
-                                        handleBlur={this.props.handleBlur}
-                                        slateLockInfo={slateLockInfo}
-                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                        elementId={this.props.elementId}
-                                        activeShowHide={this.activeShowHide}
-                                        showHideType="revel"
-                                        createShowHideElement={this.createShowHideElement}
-                                        currentElement={posterItem}
-                                        onListSelect={this.props.onListSelect}
-                                        key={posterItem}
-                                    /> */
                                 )
                             })}
                         </div>
@@ -172,28 +128,7 @@ class ElementShowHide extends React.Component {
                                         key={hideItem.id}
                                         createShowHideElement={this.createShowHideElement}
                                         deleteShowHideUnit={this.deleteShowHideUnit}
-                                    />
-                                   /*  <TinyMceEditor permissions={this.props.permissions}
-                                        openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
-                                        element={this.props.element}
-                                        index={`${index}-3-${innerIndex}`}
-                                        innerIndex={innerIndex}
-                                        placeholder="Enter Hide text"
-                                        id={hideItem.id}
-                                        model={hideItem.html.text}
-                                        handleEditorFocus={this.props.handleFocus}
-                                        handleBlur={this.props.handleBlur}
-                                        slateLockInfo={slateLockInfo}
-                                        glossaryFootnoteValue={this.props.glossaryFootnoteValue}
-                                        glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
-                                        elementId={this.props.elementId}
-                                        activeShowHide={this.activeShowHide}
-                                        showHideType="hide"
-                                        createShowHideElement={this.createShowHideElement}
-                                        currentElement={hideItem}
-                                        deleteShowHideUnit={this.deleteShowHideUnit}
-                                        onListSelect={this.props.onListSelect}
-                                    /> */)
+                                    />)
                             })}
 
                         </div>
@@ -228,4 +163,3 @@ ElementShowHide.propTypes = {
 }
 ElementShowHide.contextType = ElementContainerContext;
 export default connect(null, { deleteShowHideUnit })(ElementShowHide)
-// export default ElementShowHide;

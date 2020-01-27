@@ -27,8 +27,8 @@ const ShowHideTinyMce = (props) => {
         onListSelect,
         glossaryFootnoteValue,
         glossaaryFootnotePopup
-     } = context;
-     const {currentElement,activeShowHide,createShowHideElement,deleteShowHideUnit,innerIndex,placeholder,showHideType} = props;
+    } = context;
+    const { currentElement, activeShowHide, createShowHideElement, deleteShowHideUnit, innerIndex, placeholder, showHideType } = props;
     if (currentElement.type == 'element-list') {
         <ListElement
             permissions={permissions}
@@ -71,26 +71,28 @@ const ShowHideTinyMce = (props) => {
 
 ShowHideTinyMce.displayName = "ElementShowHide";
 
-ShowHideTinyMce.defaultProps = {
-    /** Detail of element in JSON object */
-    itemId: ""
-}
-
 ShowHideTinyMce.propTypes = {
 
-    /** Handler to attach on element click */
-    onClick: PropTypes.func,
-    /** Handler to attach on element blur */
-    onBlur: PropTypes.func,
-    /** Handler to attach on element keyup */
-    onKeyup: PropTypes.func,
-    /** Handler to attach on element focus */
-    onFocus: PropTypes.func,
-    /** itemId coming from c2module */
-    itemId: PropTypes.string
+    /** Index of the element */
+    index: PropTypes.string,
+    /** Nested index of the element */
+    innerIndex: PropTypes.number,
+    /**  Html to show of the element */
+    model: PropTypes.string,
+    /**  Handler to show active show hide element */
+    activeShowHide: PropTypes.func,
+     /**  Placeholder of the element */
+    placeholder: PropTypes.string,
+      /**  Type of the element : Show,hide,reveal */
+    showHideType: PropTypes.string,
+     /** Stores the object of the current element of the show hide */
+    currentElement: PropTypes.object,
+       /** Handler to create new show hide on enter */
+    createShowHideElement: PropTypes.func,
+     /** Handler to delete new show hide on backspace */
+    deleteShowHideUnit: PropTypes.func,
 }
 
 ShowHideTinyMce.contextType = ElementContainerContext;
 
 export default ShowHideTinyMce
-// export default ElementShowHide;
