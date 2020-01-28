@@ -150,6 +150,7 @@ class ElementContainer extends Component {
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('.blockquote-hidden').empty();
@@ -183,6 +184,10 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+
+        // console.log("olddata",this.removeClassesFromHtml(previousElementData.html.subtitle));
+        // console.log("newdata",this.removeClassesFromHtml(subtitleHTML))
+        // console.log("isqdata",this.removeClassesFromHtml(subtitleHTML)===this.removeClassesFromHtml(previousElementData.html.subtitle))
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -422,9 +427,9 @@ class ElementContainer extends Component {
 
     authoredTextDifference = (currentHtml, previousElementData) =>{
 
-        console.log("olddata",this.replaceUnwantedtags(previousElementData.html.text));
-        console.log("newdata",this.replaceUnwantedtags(currentHtml))
-        console.log("isqdata",this.replaceUnwantedtags(currentHtml)===this.replaceUnwantedtags(previousElementData.html.text))
+        // console.log("olddata",this.replaceUnwantedtags(previousElementData.html.text));
+        // console.log("newdata",this.replaceUnwantedtags(currentHtml))
+        // console.log("isqdata",this.replaceUnwantedtags(currentHtml)===this.replaceUnwantedtags(previousElementData.html.text))
         return (this.replaceUnwantedtags(currentHtml)!==this.replaceUnwantedtags(previousElementData.html.text))
 
     }
