@@ -49,11 +49,18 @@ class ElementAudioVideo extends Component {
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             // let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
-            if(imageData['clipinfo']){
-                if(typeof(imageData['clipinfo'])=="string"){
-                    clipInfo=JSON.parse(imageData['clipinfo'])
+            if (imageData['clipinfo']) {
+                if (typeof (imageData['clipinfo']) == "string") {
+                    let clipInfoData = JSON.parse(imageData['clipinfo'])
+                    clipInfo = {
+                        "clipid": clipInfoData.id,
+                        "starttime": clipInfoData.start,
+                        "endtime": clipInfoData.end,
+                        "description": clipInfoData.description,
+                        "duration": clipInfoData.duration
+                    }
                 }
-                else{
+                else {
                     clipInfo = {
                         "clipid": imageData['clipinfo'].id,
                         "starttime": imageData['clipinfo'].start,
