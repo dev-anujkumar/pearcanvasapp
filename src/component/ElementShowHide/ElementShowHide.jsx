@@ -21,7 +21,7 @@ class ElementShowHide extends React.Component {
 
     }
     createShowHideElement = (type, index, elementShowHideId) => {
-        this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, (status) => {
+        this.context.createShowHideElement && this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, (status) => {
             if (status) {
                 let newIndex = index.split("-")
                 newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) + 1
@@ -46,7 +46,7 @@ class ElementShowHide extends React.Component {
     }
 
     deleteShowHideUnit = (id, type, contentUrn, index, eleIndex, parentId) => {
-        this.props.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, (status) => {
+        this.context.deleteShowHideUnit && this.context.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, (status) => {
             if (status) {
                 let newIndex = eleIndex.split("-")
                 newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) - 1
@@ -60,7 +60,6 @@ class ElementShowHide extends React.Component {
 
     render() {
         const { index, element, slateLockInfo } = this.context;
-
         return (
             <div className="divWidgetShowHide" /* onClick={() => this.props.handleFocus("",this.state.currentElement)} */>
                 <div className="pearson-component showHide" data-type="showHide" >
@@ -162,4 +161,5 @@ ElementShowHide.propTypes = {
     itemId: PropTypes.string
 }
 ElementShowHide.contextType = ElementContainerContext;
-export default connect(null, { deleteShowHideUnit })(ElementShowHide)
+//export default connect(null, { deleteShowHideUnit })(ElementShowHide)
+export default ElementShowHide

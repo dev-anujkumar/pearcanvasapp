@@ -10,6 +10,7 @@ import React from 'react';
 
 const ElementContainerContext = React.createContext({
     showHideId: "",
-    index: ""
+    index: "",
+    createShowHideElement:null
 })
 export default ElementContainerContext

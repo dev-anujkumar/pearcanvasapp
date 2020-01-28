@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement,deleteShowHideUnit } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -511,7 +511,6 @@ class ElementContainer extends Component {
             case elementTypeConstant.ELEMENT_LIST:
                 {
                     // let html = node.innerHTML;
-                    console.log("index====>", this.props.index)
                     let parentIndex = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
                     let currentListNode = document.getElementById(parentIndex)
                     let nodehtml = currentListNode.innerHTML;
@@ -849,6 +848,7 @@ class ElementContainer extends Component {
                         onListSelect: this.props.onListSelect,
                         showHideId: this.props.showHideId,
                         createShowHideElement: this.props.createShowHideElement,
+                        deleteShowHideUnit:this.props.deleteShowHideUnit,
                         activeElement: this.props.activeElement,
                         showBlocker: this.props.showBlocker,
                         permissions: permissions,
@@ -1069,6 +1069,9 @@ const mapDispatchToProps = (dispatch) => {
         createShowHideElement: (element, type, index, parentContentUrn, cb) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
         },
+        deleteShowHideUnit:(id, type, contentUrn, index, eleIndex, parentId,cb) => {
+            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb))
+        }
 
     }
 }
