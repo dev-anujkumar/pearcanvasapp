@@ -185,9 +185,9 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        // console.log("olddata",this.removeClassesFromHtml(previousElementData.html.subtitle));
-        // console.log("newdata",this.removeClassesFromHtml(subtitleHTML))
-        // console.log("isqdata",this.removeClassesFromHtml(subtitleHTML)===this.removeClassesFromHtml(previousElementData.html.subtitle))
+        console.log("olddata",this.removeClassesFromHtml(previousElementData.html.subtitle));
+        console.log("newdata",this.removeClassesFromHtml(subtitleHTML))
+        console.log("isqdata",this.removeClassesFromHtml(subtitleHTML)===this.removeClassesFromHtml(previousElementData.html.subtitle))
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
