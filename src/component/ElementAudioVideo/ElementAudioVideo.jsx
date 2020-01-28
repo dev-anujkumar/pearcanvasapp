@@ -36,7 +36,6 @@ class ElementAudioVideo extends Component {
         let format , path , lang , tracktype;
         let imageData = data;
         let clipInfo;
-        let clipInfoData;
         let epsURL = imageData['EpsUrl'] ? imageData['EpsUrl'] : "";
         let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData['width'] ? imageData['width'] : "";
@@ -50,9 +49,9 @@ class ElementAudioVideo extends Component {
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             // let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
-            if(imageData['clipinfo']){
-                if(typeof(imageData['clipinfo'])=="string"){
-                    clipInfoData=JSON.parse(imageData['clipinfo'])
+            if (imageData['clipinfo']) {
+                if (typeof (imageData['clipinfo']) == "string") {
+                    let clipInfoData = JSON.parse(imageData['clipinfo'])
                     clipInfo = {
                         "clipid": clipInfoData.id,
                         "starttime": clipInfoData.start,
