@@ -61,8 +61,8 @@ class ElementAudioVideo extends Component {
                         "duration": clipInfoData.duration
                     }
                 }
-                else{
-                       clipInfo = {
+                else {
+                    clipInfo = {
                         "clipid": imageData['clipinfo'].id,
                         "starttime": imageData['clipinfo'].start,
                         "endtime": imageData['clipinfo'].end,
