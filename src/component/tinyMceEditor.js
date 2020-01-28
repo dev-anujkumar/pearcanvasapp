@@ -422,9 +422,9 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Asset text
          */
-        else if (e.target.nodeName == 'ABBR') {
-            let assetId = e.target.attributes['asset-id'].nodeValue;
-            let dataUrn = e.target.attributes['data-uri'].nodeValue;
+        else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
+            let assetId = (e.target.attributes['asset-id']&&e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue ;
+            let dataUrn = (e.target.attributes['data-uri']&&e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
             let apoObject = {
                 'assetId': assetId,
                 'dataUrn': dataUrn
