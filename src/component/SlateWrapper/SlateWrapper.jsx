@@ -45,6 +45,7 @@ class SlateWrapper extends Component {
             showCustomPopup: false,
             customPopupMessage: '',
             lockOwner: "",
+            lockOwnerName: "",
             showSplitSlatePopup: false,
             splittedSlateIndex: 0,
             hasError: false,
@@ -189,7 +190,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked, userId} } = props
+        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName} } = props
         if (!isLocked) {
             _state = {
                 ..._state,
@@ -204,7 +205,8 @@ class SlateWrapper extends Component {
             _state = {
             ..._state,
             showLockPopup: true,
-            lockOwner: userId
+            lockOwner: userId,
+            lockOwnerName: `${userFirstName} ${userLastName}`
         }
         return _state;
     }
@@ -329,6 +331,10 @@ class SlateWrapper extends Component {
                                             this.props.swapElement(dataObj, () => { })
                                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                                            let showHideNode = document.querySelector('.show-hide-active')
+                                            if(showHideNode){
+                                                showHideNode.classList.remove("show-hide-active")
+                                            }
                                         },
                                     }}
                                     ref={(c) => {
@@ -458,7 +464,8 @@ class SlateWrapper extends Component {
         const { slateLockInfo } = this.props
         if (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId) {
             this.setState({
-                lockOwner: slateLockInfo.userId
+                lockOwner: slateLockInfo.userId,
+                lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
         }

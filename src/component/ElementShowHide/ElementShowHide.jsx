@@ -20,17 +20,24 @@ class ElementShowHide extends React.Component {
         };
 
     }
+
+    showHideCallBack = (status, index) => {
+        let newIndex = index.split("-"),
+            newshowIndex;
+        if (status === "create") {
+            newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) + 1
+        } else if (status === "delete") {
+            newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) - 1
+        }
+
+         newshowIndex = newIndex.join("-");
+        if (document.getElementById(`cypress-${newshowIndex}`)) {
+            document.getElementById(`cypress-${newshowIndex}`).focus();
+
+        }
+    }
     createShowHideElement = (type, index, elementShowHideId) => {
-        this.context.createShowHideElement && this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, (status) => {
-            if (status) {
-                let newIndex = index.split("-")
-                newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) + 1
-                let newshowIndex = newIndex.join("-");
-                if (document.getElementById(`cypress-${newshowIndex}`)) {
-                    document.getElementById(`cypress-${newshowIndex}`).focus();
-                }
-            }
-        });
+        this.context.createShowHideElement && this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, this.showHideCallBack);
     }
 
     activeShowHide = (e) => {
@@ -46,16 +53,7 @@ class ElementShowHide extends React.Component {
     }
 
     deleteShowHideUnit = (id, type, contentUrn, index, eleIndex, parentId) => {
-        this.context.deleteShowHideUnit && this.context.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, (status) => {
-            if (status) {
-                let newIndex = eleIndex.split("-")
-                newIndex[newIndex.length - 1] = parseInt(newIndex[newIndex.length - 1]) - 1
-                let newshowIndex = newIndex.join("-");
-                if (document.getElementById(`cypress-${newshowIndex}`)) {
-                    document.getElementById(`cypress-${newshowIndex}`).focus();
-                }
-            }
-        })
+        this.context.deleteShowHideUnit && this.context.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, this.showHideCallBack)
     }
 
     render() {

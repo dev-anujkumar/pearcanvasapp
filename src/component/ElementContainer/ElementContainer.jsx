@@ -14,7 +14,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { addComment, deleteElement, updateElement, createShowHideElement,deleteShowHideUnit } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit } from './ElementContainer_Actions';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
@@ -106,8 +106,13 @@ class ElementContainer extends Component {
      * function will be called on element focus of tinymce instance
      */
     handleFocus = (updateFromC2Flag, showHideObj) => {
-        let element = showHideObj.currentElement ? showHideObj.currentElement : this.props.element
-        let index = showHideObj.index ? showHideObj.index : this.props.index
+        let element = this.props.element,
+            index = this.props.index
+        if (showHideObj) {
+            element = showHideObj.currentElement
+            index = showHideObj.index
+        }
+        console.log("element==================>",this.props.element)
         if (!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
             return true
         }
@@ -142,10 +147,20 @@ class ElementContainer extends Component {
         }
     }
 
-    replaceUnwantedtags = (html) => {
+    removeClassesFromHtml = (html) => {
         let tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
+        tinyMCE.$(tempDiv).find('p').removeAttr('class')
+        return this.replaceUnwantedtags(tempDiv.innerHTML);
+    }
+
+    replaceUnwantedtags = (html) => {
+        let tempDiv = document.createElement('div');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('style');
         return tempDiv.innerHTML;
     }
     /**
@@ -170,10 +185,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -186,11 +201,12 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            this.props.oldImage !== previousElementData.figuredata.path
+        let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+            (this.props.oldImage ? this.props.oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
         );
     }
 
@@ -217,10 +233,10 @@ class ElementContainer extends Component {
         subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -235,12 +251,12 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            preformattedText !== previousElementData.figuredata.preformattedtext.join('\n').trim() ||
-            startNumber !== previousElementData.figuredata.startNumber ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+            preformattedText !== this.removeClassesFromHtml(previousElementData.figuredata.preformattedtext.join('\n').trim()) ||
+            Number(startNumber) !== Number(previousElementData.figuredata.startNumber) ||
             isNumbered !== previousElementData.figuredata.numbered
         );
     }
@@ -262,10 +278,10 @@ class ElementContainer extends Component {
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
@@ -288,11 +304,11 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
-            return (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle ||
-                captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits ||
-                posterTextHTML !== previousElementData.html.postertext ||
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext) ||
                 this.props.oldImage !== newInteractiveid
             );
         }
@@ -308,10 +324,10 @@ class ElementContainer extends Component {
             //     else {
             //         return 0
             //     }
-            return (titleHTML !== previousElementData.html.title ||
-                subtitleHTML !== previousElementData.html.subtitle ||
-                captionHTML !== previousElementData.html.captions ||
-                creditsHTML !== previousElementData.html.credits ||
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.props.oldImage !== newInteractiveid
             );
         }
@@ -327,17 +343,22 @@ class ElementContainer extends Component {
         let titleHTML = titleDOM ? titleDOM.innerHTML : "",
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
-            creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+            creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
+            oldtext = previousElementData.html.text ? previousElementData.html.text : ""
 
         captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        text = text.match(/(<p.*?>.*?<\/p>)/g) ? text : `<p>${text}</p>`
+        oldtext = oldtext.match(/(<p.*?>.*?<\/p>)/g) ? oldtext : `<p>${oldtext}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
+        text = this.removeClassesFromHtml(text)
+        oldtext = this.removeClassesFromHtml(oldtext)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -350,11 +371,11 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
-            text !== previousElementData.figuredata.elementdata.text
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+            text !== oldtext
         );
     }
 
@@ -376,15 +397,15 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
 
-        captionHTML = this.replaceUnwantedtags(captionHTML)
-        creditsHTML = this.replaceUnwantedtags(creditsHTML)
-        subtitleHTML = this.replaceUnwantedtags(subtitleHTML)
-        titleHTML = this.replaceUnwantedtags(titleHTML)
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -397,10 +418,10 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
-        return (titleHTML !== previousElementData.html.title ||
-            subtitleHTML !== previousElementData.html.subtitle ||
-            captionHTML !== previousElementData.html.captions ||
-            creditsHTML !== previousElementData.html.credits ||
+        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
+            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             this.props.oldImage !== newAudioVideoId
         );
     }
@@ -409,7 +430,7 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        this.props.updateElement(dataToSend, 0);
+        this.props.updateElement(dataToSend, 0, undefined, undefined, undefined, undefined);
     }
 
     /**
@@ -447,9 +468,9 @@ class ElementContainer extends Component {
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType);
+                    this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                 }
                 break;
 
@@ -460,44 +481,44 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if (this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData)
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined)
                         }
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
                         if (this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         if (this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
                 }
@@ -505,8 +526,8 @@ class ElementContainer extends Component {
 
 
             case elementTypeConstant.ASSESSMENT_SLATE:
-                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
-                this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
+                this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                 break;
             case elementTypeConstant.ELEMENT_LIST:
                 {
@@ -515,9 +536,9 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     let nodehtml = currentListNode.innerHTML;
                     if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate)) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData);
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                     }
                     break;
                 }
@@ -848,7 +869,7 @@ class ElementContainer extends Component {
                         onListSelect: this.props.onListSelect,
                         showHideId: this.props.showHideId,
                         createShowHideElement: this.props.createShowHideElement,
-                        deleteShowHideUnit:this.props.deleteShowHideUnit,
+                        deleteShowHideUnit: this.props.deleteShowHideUnit,
                         activeElement: this.props.activeElement,
                         showBlocker: this.props.showBlocker,
                         permissions: permissions,
@@ -969,8 +990,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup);
     }
 
     /**
@@ -1042,15 +1063,15 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup)).then(() => {
                 if (callback) {
                     callback();
                 }
             })
         },
-        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType) => {
-            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType))
+        updateElement: (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => {
+            dispatch(updateElement(updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement))
         },
         updateFigureData: (figureData, index, elementId, cb) => {
             dispatch(updateFigureData(figureData, index, elementId, cb))
@@ -1069,7 +1090,7 @@ const mapDispatchToProps = (dispatch) => {
         createShowHideElement: (element, type, index, parentContentUrn, cb) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
         },
-        deleteShowHideUnit:(id, type, contentUrn, index, eleIndex, parentId,cb) => {
+        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb) => {
             dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb))
         }
 

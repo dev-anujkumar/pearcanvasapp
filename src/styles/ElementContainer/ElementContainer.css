@@ -111,7 +111,7 @@ a.paragraphNumeroUnoFootnote {
 abbr.AssetPopoverTerm{
     color: #007FA3;
     font-family: inherit;
-    font-style: normal;
+    /* font-style: normal; */
   }
   abbr.AssetPopoverTerm:hover {
     color: #9E007E;

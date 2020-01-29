@@ -15,7 +15,7 @@ export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
+            activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
@@ -56,7 +56,7 @@ export class AssessmentSlateData extends Component {
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
             this.sendDataAssessment(this.props);
             this.setState({
-                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
             })
         }
     }
@@ -298,6 +298,7 @@ export class AssessmentSlateData extends Component {
                             <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>

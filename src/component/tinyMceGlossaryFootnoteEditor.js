@@ -35,7 +35,7 @@ export class ReactEditor extends React.Component {
           let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
           let contentHTML = e.target.innerHTML;
           if (activeElement) {
-            let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+            let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
             if (activeElement.innerText.trim().length || isContainsMath) {
               activeElement.classList.remove('place-holder')
             }
@@ -74,7 +74,7 @@ export class ReactEditor extends React.Component {
               activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
 
           if (activeElement) {
-              let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+              let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
               if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
                   activeElement.classList.remove('place-holder')
               }
@@ -215,7 +215,7 @@ export class ReactEditor extends React.Component {
     testElem.innerHTML = model;
 
     if (testElem && model) {
-      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
       if (testElem.innerHTML && testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {

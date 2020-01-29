@@ -99,7 +99,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
     checkSlateLock = (slateLockInfo) => {
         if(slateLockInfo){
             if(slateLockInfo.isLocked && config.userId !== slateLockInfo.userId){
-                return this.renderSlateLockJSX(slateLockInfo.userId)
+                return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
             }
             else {
                 return null

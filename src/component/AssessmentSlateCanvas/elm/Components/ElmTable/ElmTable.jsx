@@ -46,10 +46,10 @@ class ElmTable extends Component {
         if (!currentProps.errFlag && currentProps.apiData) {
             this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
-        this.timer = setTimeout(() => {
-            //if (!this.state.tableValue.length) {
+        this.timer = setTimeout(() => {            
+            if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
-            //}
+            }
         }, 0)
     }
     componentDidUpdate(prevProps, prevState) {
@@ -133,7 +133,9 @@ class ElmTable extends Component {
         }
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((item) => {
-                this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
+                if(item && ((item.alignments && item.alignments != null) ||(item.contents && item.contents != null )) ){
+                    this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
+                }               
             })
         }
 

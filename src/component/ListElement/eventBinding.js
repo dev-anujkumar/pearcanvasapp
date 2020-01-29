@@ -65,7 +65,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
-    let isOnlyListElement = element.type === "element-list"
+    let isOnlyListElement = element && element.type && element.type === "element-list" 
     let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element)
 
     /**
@@ -526,7 +526,7 @@ const isFullRangeSelected = (editor) => {
 
 const getListClassTypeAndTreeLvl = (element) => {
     let olClass = "disc", listType = "ul"
-    if (element.subtype !== "disc") {
+    if (element.subtype && element.subtype !== "disc") {
         listType = "ol";
         olClass = element.subtype
     }
