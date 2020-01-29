@@ -11,8 +11,7 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
     if(textSemantics && textSemantics.length > 0 && titleText) {
         let contentData = textSemantics.filter(data => data.type === type)[0]
         let contentNumberData = textSemantics.filter(data => data.type === "number")[0]
-        console.log("contentNumberData",contentNumberData)
-        switch(type){
+         switch(type){
             case "label":
                 if(contentData){
                     dataToReturn = titleText.substring(contentData.charStart, contentData.charEnd)
