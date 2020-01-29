@@ -6,12 +6,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor";
-// import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import '../../styles/ElementShowHide/ElementShowHide.css'
 import { deleteShowHideUnit } from "../ElementContainer/ElementContainer_Actions.js"
 import ElementContainerContext from '../ElementContainer/ElementContainerContext.js'
 import ShowHideTinyMce from './ShowHideTinyMce.jsx'
+import { hasReviewerRole } from '../../constants/utility.js'
+
 class ElementShowHide extends React.Component {
     constructor(props) {
         super(props);
@@ -41,15 +42,15 @@ class ElementShowHide extends React.Component {
     }
 
     activeShowHide = (e) => {
-        let activeElement = document.querySelector('.show-hide-active')
-        if (activeElement && activeElement !== e.currentTarget.closest(".show-hide")) {
-            document.querySelector('.show-hide-active').classList.remove("show-hide-active")
-
+        if (!hasReviewerRole()) {
+            let activeElement = document.querySelector('.show-hide-active')
+            if (activeElement && activeElement !== e.currentTarget.closest(".show-hide")) {
+                document.querySelector('.show-hide-active').classList.remove("show-hide-active")
+            }
+            if (e.currentTarget && e.currentTarget.closest(".show-hide")) {
+                e.currentTarget.closest(".show-hide").classList.add("show-hide-active")
+            }
         }
-        if (e.currentTarget && e.currentTarget.closest(".show-hide")) {
-            e.currentTarget.closest(".show-hide").classList.add("show-hide-active")
-        }
-
     }
 
     deleteShowHideUnit = (id, type, contentUrn, index, eleIndex, parentId) => {

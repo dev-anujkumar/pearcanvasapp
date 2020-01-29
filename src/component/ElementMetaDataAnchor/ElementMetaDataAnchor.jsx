@@ -100,8 +100,9 @@ export class ElementMetaDataAnchor extends Component {
         loData.label.en = this.props.currentSlateLODataMath;
       }
       this.props.showBlocker(true);
+      let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
       let apiKeys = [config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.LEARNING_OBJECTIVES_ENDPOINT, config.COREAPI_ENDPOINT];
-      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
+      sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys, wrapperURL: config.WRAPPER_URL } })
     }
   }
 

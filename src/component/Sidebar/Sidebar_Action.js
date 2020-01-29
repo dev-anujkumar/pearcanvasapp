@@ -80,7 +80,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             assessmentItemType = "tdxAssessmentItem";
         }
         // oldElementData['html']['title'] = "";
-        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat
+        oldElementData.figuredata.id = "";                                              //PCAT-6792 fixes
+        oldElementData.figuredata.elementdata.posterimage.imageid = "";
+        oldElementData.figuredata.elementdata.assessmentid = "";
+        oldElementData.figuredata.elementdata.assessmentitemid = "";
+        oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
     }

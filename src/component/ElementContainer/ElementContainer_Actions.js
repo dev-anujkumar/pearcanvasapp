@@ -237,7 +237,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => (dispatch, getState) => {
     if(hasReviewerRole()){
-        return true
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        return ;
     }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)

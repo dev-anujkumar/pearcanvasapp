@@ -48,6 +48,7 @@
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
 import { releaseSlateLockWithCallback } from "../component/CanvasWrapper/SlateLock_Actions";
+import { sendDataToIframe } from '../constants/utility.js'
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const WRAPPER_URL = config_object.WRAPPER_URL;
@@ -1265,11 +1266,10 @@ openamConfig.prototype.handleSessionExpire = function () {
     }
     */
     let encodedURL = encodeURI(redirectURL);
-    window.parent.postMessage({
+    sendDataToIframe({
         'type': 'autoLogOut',
         'message': { url: encodedURL }
-    },
-        WRAPPER_URL)
+    })
     // window.location = encodedURL;
 };
 /*
@@ -1327,11 +1327,10 @@ const redirectParent = (urlToBeRedirected) => {
     else {
         urlToBeRedirected = urlToBeRedirected + `&_Instance=${uuidv4()}`
         let encodedURL = encodeURI(urlToBeRedirected);
-        window.parent.postMessage({
+        sendDataToIframe({
             'type': 'autoLogOut',
             'message': { url: encodedURL }
-        },
-            WRAPPER_URL);
+        });
     }
 }
 

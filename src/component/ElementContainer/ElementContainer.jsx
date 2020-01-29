@@ -155,10 +155,15 @@ class ElementContainer extends Component {
 
     replaceUnwantedtags = (html) => {
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').empty();
+        //tinyMCE.$(tempDiv).find('.blockquote-hidden').html('');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         return tempDiv.innerHTML;
     }
@@ -188,6 +193,10 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+
+        // console.log("olddata",this.removeClassesFromHtml(previousElementData.html.subtitle));
+        // console.log("newdata",this.removeClassesFromHtml(subtitleHTML))
+        // console.log("isqdata",this.removeClassesFromHtml(subtitleHTML)===this.removeClassesFromHtml(previousElementData.html.subtitle))
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -282,10 +291,10 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
@@ -345,12 +354,12 @@ class ElementContainer extends Component {
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
             oldtext = previousElementData.html.text ? previousElementData.html.text : ""
 
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
-        text = text.match(/(<p.*?>.*?<\/p>)/g) ? text : `<p>${text}</p>`
-        oldtext = oldtext.match(/(<p.*?>.*?<\/p>)/g) ? oldtext : `<p>${oldtext}</p>`
+        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        text = ElementContainer.matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
+        oldtext = ElementContainer.matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -396,10 +405,10 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -425,6 +434,15 @@ class ElementContainer extends Component {
         );
     }
 
+    authoredTextDifference = (currentHtml, previousElementData) =>{
+
+        // console.log("olddata",this.replaceUnwantedtags(previousElementData.html.text));
+        // console.log("newdata",this.replaceUnwantedtags(currentHtml))
+        // console.log("isqdata",this.replaceUnwantedtags(currentHtml)===this.replaceUnwantedtags(previousElementData.html.text))
+        return (this.replaceUnwantedtags(currentHtml)!==this.replaceUnwantedtags(previousElementData.html.text))
+
+    }
+    
     updateOpenerElement = (dataToSend) => {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
@@ -460,14 +478,15 @@ class ElementContainer extends Component {
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+                tinyMCE.$(tempDiv).find('.blockquote-hidden').html('');
                 html = tempDiv.innerHTML;
-                if (parentElement.type === "popup") {
-                    tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                if(parentElement.type === "popup"){
+                    tempDiv.innerHTML = ElementContainer.matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
+                    html = ElementContainer.matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType)
+                if (previousElementData.html && (this.authoredTextDifference(html,previousElementData) || forceupdate) && !assetPopoverPopupIsVisible) {
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                 }
@@ -1035,6 +1054,22 @@ class ElementContainer extends Component {
         console.log("Catch Derived Error >>>>", error);
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
+    }
+
+    /**
+     * [TK-1948] | Check & Fix Regular Expressions Dependency
+     * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.
+     * @param {String} html : input html to matched with regex
+     */
+    static matchHTMLwithRegex(html) {
+        if (html) {
+            let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/g)]
+            if (matchedTerms.length > 0) {
+                return true
+            }
+            return false
+        }
+        return false
     }
 }
 
