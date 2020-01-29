@@ -1370,7 +1370,9 @@ export class TinyMceEditor extends Component {
              */
             currentTarget.focus();
             tinymce.init(this.editorConfig).then(() => { 
-                tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+                if(clickedX!==0&&clickedY!==0){
+                    tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+                }
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
@@ -1546,7 +1548,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
+        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id && (this.props.element.subtype&&this.props.element.subtype!=="mathml")){
             e.preventDefault();
             e.stopPropagation();
             return false;
