@@ -131,4 +131,24 @@ describe('Testing Element Show Hide component', () => {
         showHideinstance.forceUpdate();
         expect(spyCreateShowHideElement).toHaveBeenCalled()
     });
+
+    it('Test-showHideCallBack  function ------ If condition', () => {
+        let status = "create",
+        index= "0-1-1"
+        let showHideinstance =  component.instance(); 
+        const spyCreateShowHideElement = jest.spyOn(showHideinstance, 'showHideCallBack')
+        showHideinstance.showHideCallBack(status,index);
+        showHideinstance.forceUpdate();
+        expect(spyCreateShowHideElement).toHaveBeenCalled()
+    });
+
+    it('Test-showHideCallBack  function ------ Else condition', () => {
+        let status = "delete",
+        index= "0-1-1"
+        let showHideinstance =  component.instance(); 
+        const spyCreateShowHideElement = jest.spyOn(showHideinstance, 'showHideCallBack')
+        showHideinstance.showHideCallBack(status,index);
+        showHideinstance.forceUpdate();
+        expect(spyCreateShowHideElement).toHaveBeenCalled()
+    });
 })

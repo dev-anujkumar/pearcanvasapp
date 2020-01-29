@@ -712,7 +712,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
             }
         })
         if(cb){
-            cb(true);
+            cb("create",index);
         }  
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -764,7 +764,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
             }
         }
         if(cb){
-            cb(true);
+            cb("delete",eleIndex);
         } 
         dispatch({
             type: DELETE_SHOW_HIDE_ELEMENT,
