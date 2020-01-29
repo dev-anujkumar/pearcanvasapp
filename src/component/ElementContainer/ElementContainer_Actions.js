@@ -540,7 +540,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
                 dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-        }
+            }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
