@@ -155,7 +155,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
-        data.html.postertext = posterTextHTML
+        let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+        data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,
@@ -351,10 +352,11 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         }}
         
     dataToSend.figuredata.elementdata;
-
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
     let getAsid=assessmentId.split(' ')[1];
     dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
+    dataToSend.figuredata.id =  getAsid ? getAsid : "";                             //PCAT-6792 fixes
+    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
     let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
     let getAsItemid=assessmentItemId.split(' ')[2];

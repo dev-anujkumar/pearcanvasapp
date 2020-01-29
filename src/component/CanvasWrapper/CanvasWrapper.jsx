@@ -78,16 +78,6 @@ export class CanvasWrapper extends Component {
         // let { projectUrn } = config,
         // slateId = config.slateManifestURN
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
-
-        let searchString = window.location.search;
-        let q = new URLSearchParams(searchString);
-        if(q.get('q')){
-            let currentWorkId = q.get('q');
-            setTimeout(() => {
-                this.props.toggleCommentsPanel(true);
-                this.props.fetchCommentByElement(currentWorkId);
-            }, 4000);
-        }
         localStorage.removeItem('newElement');
     }
 

@@ -298,6 +298,7 @@ export class AssessmentSlateData extends Component {
                             <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
