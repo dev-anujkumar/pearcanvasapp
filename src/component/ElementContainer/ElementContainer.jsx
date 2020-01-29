@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag,openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -36,6 +36,7 @@ import ElementPopup from '../ElementPopup'
 import { updatePageNumber , accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
 import ElementShowHide from '../ElementShowHide';
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -277,10 +278,10 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
@@ -340,12 +341,12 @@ class ElementContainer extends Component {
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
             oldtext = previousElementData.html.text?previousElementData.html.text:""
 
-        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
-        text = ElementContainer.matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
-        oldtext = ElementContainer.matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        text = matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
+        oldtext = matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -391,10 +392,10 @@ class ElementContainer extends Component {
             captionHTML = captionDOM ? captionDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
-        captionHTML = ElementContainer.matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = ElementContainer.matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = ElementContainer.matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = ElementContainer.matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -467,8 +468,8 @@ class ElementContainer extends Component {
                 tinyMCE.$(tempDiv).find('.blockquote-hidden').html('');
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
-                    tempDiv.innerHTML = ElementContainer.matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = ElementContainer.matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
+                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (this.authoredTextDifference(html,previousElementData) || forceupdate) && !assetPopoverPopupIsVisible) {
@@ -1020,22 +1021,6 @@ class ElementContainer extends Component {
         console.log("Catch Derived Error >>>>", error);
         // Update state so the next render will show the fallback UI.
         return { hasError: true };
-    }
-
-    /**
-     * [TK-1948] | Check & Fix Regular Expressions Dependency
-     * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.
-     * @param {String} html : input html to matched with regex
-     */
-    static matchHTMLwithRegex(html) {
-        if (html) {
-            let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/g)]
-            if (matchedTerms.length > 0) {
-                return true
-            }
-            return false
-        }
-        return false
     }
 }
 

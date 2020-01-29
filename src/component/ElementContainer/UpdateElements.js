@@ -2,6 +2,7 @@ import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { duration } from 'moment';
+import { matchHTMLwithRegex } from '../../constants/utility.js'
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -505,20 +506,4 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
     }
 
     return dataToReturn;
-}
-
-/**
- * [TK-1948] | Check & Fix Regular Expressions Dependency
- * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.
- * @param {String} html : input html to matched with regex
- */
-const matchHTMLwithRegex = function (html) {
-    if (html) {
-        let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/g)]
-        if (matchedTerms.length > 0) {
-            return true
-        }
-        return false
-    }
-    return false
 }
