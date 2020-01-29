@@ -1,6 +1,7 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
+import { duration } from 'moment';
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -65,12 +66,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
             footnotes : []
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             text: ""
         },
@@ -135,10 +136,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>`,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>`,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
             postertext: "",
@@ -224,12 +225,12 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
             footnotes : [ ]
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: ""
@@ -314,12 +315,12 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             }
         },
         html : {
-            captions: captionHTML.match(/(<p.*?>.*?<\/p>)/g)?captionHTML:`<p>${captionHTML}</p>`,
-            credits: creditsHTML.match(/(<p.*?>.*?<\/p>)/g)?creditsHTML:`<p>${creditsHTML}</p>`,
+            captions: matchHTMLwithRegex(captionHTML)?captionHTML:`<p>${captionHTML}</p>`,
+            credits: matchHTMLwithRegex(creditsHTML)?creditsHTML:`<p>${creditsHTML}</p>`,
             footnotes : previousElementData.html.footnotes || {},
             glossaryentries : previousElementData.html.glossaryentries || {},
-            subtitle: subtitleHTML.match(/(<p.*?>.*?<\/p>)/g)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
-            title: titleHTML.match(/(<p.*?>.*?<\/p>)/g)?titleHTML:`<p>${titleHTML}</p>`,
+            subtitle: matchHTMLwithRegex(subtitleHTML)?subtitleHTML:`<p>${subtitleHTML}</p>` ,
+            title: matchHTMLwithRegex(titleHTML)?titleHTML:`<p>${titleHTML}</p>`,
             postertext: "",
             tableasHTML: "",
             text: textHTML.match(/<p>/g) ? textHTML:`<p>${textHTML}</p>`
@@ -502,4 +503,20 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
     }
 
     return dataToReturn;
+}
+
+/**
+ * [TK-1948] | Check & Fix Regular Expressions Dependency
+ * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.
+ * @param {String} html : input html to matched with regex
+ */
+const matchHTMLwithRegex = function (html) {
+    if (html) {
+        let matchedTerms = [...String.prototype.matchAll.call(html, /(<p.*?>.*?<\/p>)/g)]
+        if (matchedTerms.length > 0) {
+            return true
+        }
+        return false
+    }
+    return false
 }
