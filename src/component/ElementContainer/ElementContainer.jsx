@@ -112,7 +112,6 @@ class ElementContainer extends Component {
             element = showHideObj.currentElement
             index = showHideObj.index
         }
-        console.log("element==================>",this.props.element)
         if (!(this.props.permissions && this.props.permissions.includes('access_formatting_bar')) && !hasReviewerRole()) {
             return true
         }
