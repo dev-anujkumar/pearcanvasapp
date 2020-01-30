@@ -138,7 +138,18 @@ export class TinyMceEditor extends Component {
                         else {
                             activeElement.classList.add('place-holder')
                         }
-                    }
+                    } 
+                    
+                    if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote") {
+                        let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText;
+                        if (!blockqtText.trim()) {
+                            var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
+                            if(MLtext){
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                                document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                            }
+                        }
+                    } 
                 });
 
                 tinymce.$('.cypress-editable').on('drop', (e, ui) => {
