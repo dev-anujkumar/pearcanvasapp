@@ -25,58 +25,7 @@ import {
  * update it accordingly
  */
 const initialState = {
-    allComments: [{
-        "commentType": "comment",
-        "commentDateTime": "2019-08-25T04:29:55.633Z",
-        "commentAssignee": "c5test01",
-        "commentCreator": "c5test01",
-        "commentString": "sadsa",
-        "commentStatus": "OPEN",
-        "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
-        "replyComments": [{
-            "commentCreator": "c5test01",
-            "commentDateTime": "2019-08-25T04:56:38.241Z",
-            "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
-            "commentString": "zxczcczz",
-            "commentType": "commentReply"
-        }],
-        "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
-    },
-    {
-        "commentType": "comment",
-        "commentDateTime": "2019-08-25T04:29:55.633Z",
-        "commentAssignee": "c5test01",
-        "commentCreator": "c5test01",
-        "commentString": "tester",
-        "commentStatus": "OPEN",
-        "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-        "replyComments": [{
-            "commentCreator": "c5test01",
-            "commentDateTime": "2019-08-25T04:56:38.241Z",
-            "commentOnEntity": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-            "commentString": "zxczcczz",
-            "commentType": "commentReply"
-        }],
-        "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
-    },
-    {
-        "commentType": "comment",
-        "commentDateTime": "2019-08-25T04:29:55.633Z",
-        "commentAssignee": "c5test01",
-        "commentCreator": "c5test01",
-        "commentString": "sadsa",
-        "commentStatus": "OPEN",
-        "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
-        "replyComments": [{
-            "commentCreator": "c5test01",
-            "commentDateTime": "2019-08-25T04:56:38.241Z",
-            "commentOnEntity": "urn:pearson:work:2178488a-ca91-48d7-bc48-44684c92eaf6",
-            "commentString": "zxczcczz",
-            "commentType": "commentReply"
-        }],
-        "commentUrn": "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c"
-    }
-    ],
+    allComments: [],
     toggleReplyForm: true,
     togglePanel: false,
     users: [],

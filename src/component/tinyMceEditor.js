@@ -138,7 +138,18 @@ export class TinyMceEditor extends Component {
                         else {
                             activeElement.classList.add('place-holder')
                         }
-                    }                   
+                    } 
+                    
+                    if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote") {
+                        let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText;
+                        if (!blockqtText.trim()) {
+                            var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
+                            if(MLtext){
+                                tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                                document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                            }
+                        }
+                    } 
                 });
 
                 tinymce.$('.cypress-editable').on('drop',(e,ui)=>{
@@ -422,9 +433,9 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over Asset text
          */
-        else if (e.target.nodeName == 'ABBR') {
-            let assetId = e.target.attributes['asset-id'].nodeValue;
-            let dataUrn = e.target.attributes['data-uri'].nodeValue;
+        else if (e.target.nodeName == 'ABBR' || e.target.parentNode && e.target.parentNode.tagName === 'ABBR') {
+            let assetId = (e.target.attributes['asset-id']&&e.target.attributes['asset-id'].nodeValue) || e.target.parentNode.attributes['asset-id'].nodeValue ;
+            let dataUrn = (e.target.attributes['data-uri']&&e.target.attributes['data-uri'].nodeValue) || e.target.parentNode.attributes['data-uri'].nodeValue;
             let apoObject = {
                 'assetId': assetId,
                 'dataUrn': dataUrn
@@ -968,7 +979,8 @@ export class TinyMceEditor extends Component {
 
         let selectedTag = window.getSelection().anchorNode.parentNode.nodeName;
         if(selectedTag!=="LI"&&selectedTag!=="P"&&selectedTag!=="H3"&&selectedTag!=="BLOCKQUOTE"){
-            selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
+            selectedText = '<'+selectedTag.toLocaleLowerCase()+'>'+selectedText+'</'+selectedTag.toLocaleLowerCase()+'>'
         }
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText); 
@@ -1279,7 +1291,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container') && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -1369,7 +1381,9 @@ export class TinyMceEditor extends Component {
              */
             currentTarget.focus();
             tinymce.init(this.editorConfig).then(() => { 
-                tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+                if(clickedX!==0&&clickedY!==0){
+                    tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
+                }
                 tinymce.$('.blockquote-editor').attr('contenteditable',false)
                 this.editorOnClick(event); 
                 if (currentTarget && currentTarget.querySelectorAll('li') && currentTarget.querySelectorAll('li').length) {
@@ -1545,7 +1559,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
          }
-        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
+        if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id && (this.props.element.subtype&&this.props.element.subtype!=="mathml")){
             e.preventDefault();
             e.stopPropagation();
             return false;

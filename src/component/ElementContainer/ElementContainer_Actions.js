@@ -237,7 +237,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => (dispatch, getState) => {
     if(hasReviewerRole()){
-        return true
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        return ;
     }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
@@ -256,7 +257,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let glossaaryFootnoteValue = getState().glossaryFootnoteReducer.glossaryFootnoteValue;
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
         let elementIndexFootnote = getState().glossaryFootnoteReducer.elementIndex;
-        glossaaryFootnoteValue.elementWorkId =response.data.id;
+        if(response.data.id !== updatedData.id){
+            glossaaryFootnoteValue.elementWorkId =response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
             payload: {
@@ -265,6 +267,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 elementIndex: elementIndexFootnote
             }
         });
+        }
+        
         if(config.slateManifestURN === updatedData.slateUrn){  //Check applied so that element does not gets copied to next slate while navigating
             if (updatedData.elementVersionType === "element-learningobjectivemapping" || updatedData.elementVersionType === "element-generateLOlist") {
                 console.log("mapping inside")
@@ -519,6 +523,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     } else if(versionedData){
+        if (updatedData && updatedData.pageNumberRef) {
+            versionedData.pageNumberRef = updatedData.pageNumberRef
+        }
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
@@ -533,7 +540,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
                 dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-        }
+            }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;

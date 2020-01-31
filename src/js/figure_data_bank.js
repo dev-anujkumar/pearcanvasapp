@@ -52,7 +52,6 @@ export default {
         ],
         "tracks": [],
         "srctype": "externallink",
-        "clipinfo": {}
 
     },
     "primary-audio": {
