@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -9,47 +8,12 @@
     <link disabled id="opensans-css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i" rel="stylesheet" media="all">
     <link disabled id="font-awesome-css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" media="all">
     <title>Cypress Refactored</title>
+    <script type="text/javascript" defer src="https://component-lib-stg.pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js"></script>
+    <script type="text/javascript" defer src="https://component-lib-stg.pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js"></script>
+    <script type="text/javascript" defer src="https://component-lib-stg.pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js"></script>
+    <script type="text/javascript" defer src="https://component-lib-stg.pearson.com/c2/4e6724b9-b65e-41ac-a132-de949cec3948/PatternProductLink.js"></script>
+    <script type="text/javascript" defer src="https://component-lib-stg.pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js"></script>
     <script type="text/javascript">
-
-        var envValue = window.location.origin==="https://structuredauthoring.pearson.com"?'':'-stg';
-
-        var script = document.createElement('script');  //PatternVendor script
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = "https://component-lib"+envValue+".pearson.com/c2/6004cda8-7f38-4377-b7a6-5d06184a5de5/Patternvendor.js";                         
-        document.getElementsByTagName('head')[0].appendChild(script);
-
-
-        script = document.createElement('script');   //PatternBroker script
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = "https://component-lib"+envValue+".pearson.com/c2/7a03593e-61b0-4d72-ab3c-4fdd5d14ad06/PatternBroker.js";
-        document.getElementsByTagName('head')[0].appendChild(script);
-
-
-        script = document.createElement('script');    //PatternAddAnAsset script
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = "https://component-lib"+envValue+".pearson.com/c2/654b2512-649f-42ab-9c14-72cf4ce380f7/PatternAddAnAsset.js";                              
-        document.getElementsByTagName('head')[0].appendChild(script);
-
-        script = document.createElement('script');   //PatternProductLink script
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = "https://component-lib"+envValue+".pearson.com/c2/4e6724b9-b65e-41ac-a132-de949cec3948/PatternProductLink.js";                         
-        document.getElementsByTagName('head')[0].appendChild(script);
-
-        script = document.createElement('script');   //PatternSearchSelect script
-        script.type = "text/javascript";
-        script.defer = true;
-        script.async = false;
-        script.src = "https://component-lib"+envValue+".pearson.com/c2/854fdf48-456c-4021-8ffb-2d9c969e50d4/PatternSearchSelect.js";                             
-        document.getElementsByTagName('head')[0].appendChild(script);
-
         window.onload = function () {
             document.getElementById('book-css').removeAttribute('disabled');
             document.getElementById('opensans-css').removeAttribute('disabled');
@@ -57,12 +21,10 @@
         }
     </script>
 </head>
-
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <div id="c2-modal"></div>
     <div id="pod-modal"></div>
 </body>
-
 </html>
