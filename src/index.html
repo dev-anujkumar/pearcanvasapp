@@ -10,63 +10,6 @@
     <link disabled id="font-awesome-css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" media="all">
     <title>Cypress Refactored</title>
     <script type="text/javascript">
-        var originUrl = window.location.origin;
-        var configHost = 'https://10.11.7.24:8443';
-        var configApi = '/cypress/canvas-srvr/cypress-api/v1/getEnvConfig';
-        var envKey = 'dev';
-        if (originUrl === 'https://structuredauthoring.pearson.com') {
-            envKey = 'prod';
-            configHost = 'https://structuredauthoring.pearson.com';
-        } else {
-            if (originUrl === 'https://localhost') {
-                configApi = '/cypress-api/v1/getEnvConfig';
-            }
-            else {
-                let splitOriginUri = originUrl.split("-")[0];
-                if (splitOriginUri) {
-                    envKey = splitOriginUri.split("//")[1];
-                    if (envKey === 'structuredauthoring') {
-                        configHost = 'https://'+envKey+'-perf.pearson.com';
-                    } else {
-                        configHost = 'https://'+envKey+'-structuredauthoring.pearson.com';
-                    }
-                }
-            }
-
-        }
-        
-        var envConfigs = '';
-        var script;
-
-        var loadScript = function (src) {
-            script = document.createElement('script');  //PatternVendor script
-            script.type = "text/javascript";
-            script.defer = true;
-            script.async = false;
-            script.src = src;
-            document.getElementsByTagName('head')[0].appendChild(script);
-        }
-
-        function loadEnvConfig() {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    envConfigs = JSON.parse(this.responseText);
-                    //console.log("indexconfig", envConfigs.PATTERNS);
-                    var PATTERNS = envConfigs.PATTERNS;
-                    loadScript(PATTERNS['PATTERN_VENDOR'])
-                    loadScript(PATTERNS['PATTERN_BROKER'])
-                    loadScript(PATTERNS['PATTERN_ADD_ASSET'])
-                    loadScript(PATTERNS['PATTERN_PRODUCT_LINK'])
-                    loadScript(PATTERNS['PATTERN_SEARCH_SELECT'])
-                }
-            };
-            xhttp.open("GET", configHost + configApi + '/' + envKey, false);
-            xhttp.send();
-        }
-
-        loadEnvConfig();
-
         window.onload = function () {
             document.getElementById('book-css').removeAttribute('disabled');
             document.getElementById('opensans-css').removeAttribute('disabled');
