@@ -140,7 +140,7 @@ export class TinyMceEditor extends Component {
                         }
                     } 
                     
-                    if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote") {
+                    if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinymce.activeEditor && tinymce.activeEditor.id) {
                         let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText;
                         if (!blockqtText.trim()) {
                             var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
