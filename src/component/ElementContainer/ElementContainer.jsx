@@ -417,12 +417,14 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
+        let defaultImageUrl =  "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== newAudioVideoId
-            );
+            //    this.props.oldImage !== newAudioVideoId
+            (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
+        );
     }
 
     authoredTextDifference = (currentHtml, previousElementData) =>{
