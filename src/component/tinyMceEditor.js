@@ -569,7 +569,7 @@ export class TinyMceEditor extends Component {
             }else if(key === 13 && this.props.element.type ==='showhide' && this.props.showHideType!='revel') {
                 this.props.createShowHideElement(this.props.showHideType,this.props.index,this.props.id);
             }
-            else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
+            else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
              }   
         });
