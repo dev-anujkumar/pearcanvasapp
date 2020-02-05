@@ -60,7 +60,7 @@ class ElementShowHide extends React.Component {
     render() {
         const { index, element, slateLockInfo } = this.context;
         return (
-            <div className="divWidgetShowHide" /* onClick={() => this.props.handleFocus("",this.state.currentElement)} */>
+            <div className="divWidgetShowHide"  onClick={(e)=>this.context.handleFocus("","",e)} >
                 <div className="pearson-component showHide" data-type="showHide" >
                     <div className="divWidgetShowHideQuestionText show-hide" data-type="show">
                         <header className="showhideHeader">

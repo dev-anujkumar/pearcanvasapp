@@ -98,6 +98,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
+        if(showHideObj){
+            containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
+        }
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }

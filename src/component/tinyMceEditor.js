@@ -1293,7 +1293,7 @@ export class TinyMceEditor extends Component {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }
-        this.props.handleEditorFocus("", showHideObj);
+        this.props.handleEditorFocus("", showHideObj,e);
         let isSameTarget = false;
         let event = Object.assign({}, e);
         let currentTarget = event.currentTarget;
