@@ -487,7 +487,7 @@ class ElementContainer extends Component {
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (this.authoredTextDifference(html,previousElementData) || forceupdate) && !assetPopoverPopupIsVisible) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType,asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                 }
@@ -500,7 +500,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         }
@@ -508,19 +508,19 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         break;
                     case elementTypeConstant.INTERACTIVE:
                         if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate){
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined)
                         }
@@ -528,14 +528,14 @@ class ElementContainer extends Component {
 
                     case elementTypeConstant.FIGURE_CODELISTING:
                             if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
                             }
                             break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                             if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate){
-                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })    
                                 this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
                             }
@@ -545,7 +545,7 @@ class ElementContainer extends Component {
 
 
             case elementTypeConstant.ASSESSMENT_SLATE:
-                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                 this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                 break;
             case elementTypeConstant.ELEMENT_LIST:
@@ -554,7 +554,7 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(`cypress-${this.props.index}`)
                     let nodehtml = currentListNode.innerHTML;
                     if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate)) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                     }

@@ -399,7 +399,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -421,6 +421,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
+            if(previousElementData.status =="approved" && asideData && asideData.contentUrn){
+                dataToReturn.parentEntityId = asideData.contentUrn;
+                
+            }
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
@@ -435,6 +439,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
+                if(previousElementData.status === "approved" && parentElement.contentUrn){
+                    dataToReturn.parentEntityId = parentElement.contentUrn;
+                }
+              
             }
             break;
 

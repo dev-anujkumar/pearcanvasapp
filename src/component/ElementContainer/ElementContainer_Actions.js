@@ -530,7 +530,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(asideData.id, asideData.contentUrn, 0, asideData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -539,7 +539,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
             }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
