@@ -425,11 +425,13 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
+        let defaultImageUrl =  "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            this.props.oldImage !== newAudioVideoId
+            //    this.props.oldImage !== newAudioVideoId
+            (defaultImageUrl !== (previousElementData.figuredata.posterimage && previousElementData.figuredata.posterimage.path)) //PCAT-6815  fixes
         );
     }
 
@@ -462,7 +464,17 @@ class ElementContainer extends Component {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
-                let index = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
+            let index  = parentElement.type == "showhide" ||  parentElement.type == "popup"? activeEditorId:`cypress-${this.props.index}`
+            if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote") {
+                let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText;
+                if (!blockqtText.trim()) {
+                    var MLtext = document.querySelector('#'+ tinymce.activeEditor.id +' > p > img') || document.querySelector('#'+ tinymce.activeEditor.id +' > img')
+                    if(MLtext){
+                        tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
+                        document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                    }
+                }
+            } 
                 let currentNode = document.getElementById(index)
                 let html = currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
