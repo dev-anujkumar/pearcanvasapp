@@ -41,7 +41,7 @@ export default {
             figCreditClass: 'paragraphImageWiderThanTextCredit'
         },
         'full': {
-            divClass: 'divImageFullscreenImage',
+            divClass: 'divImageFullscreen',
             figureClass: 'figureImageFullscreen',
             figLabelClass: 'heading4ImageFullscreenNumberLabel',
             figTitleClass: 'heading4ImageFullscreenTitle',
