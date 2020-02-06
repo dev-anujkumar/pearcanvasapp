@@ -39,6 +39,7 @@ export class TinyMceEditor extends Component {
         this.lastContent = '';
         this.clearFormateText = '';
         this.isctrlPlusV = false;
+        this.fromtinyInitBlur = false;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -1092,6 +1093,7 @@ export class TinyMceEditor extends Component {
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if(!newElement) {
+                            this.fromtinyInitBlur = true;
                             this.editorRef.current.blur();
                         }
                     }
@@ -1451,7 +1453,12 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
+        if(!this.fromtinyInitBlur){ 
+            this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+         }
+         else{
+            this.fromtinyInitBlur=false;
+         }
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
