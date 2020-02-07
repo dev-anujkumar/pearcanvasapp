@@ -379,7 +379,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             };
                         }
                         else if(nestedEle.type === "popup"){
-                            if(nestedEle.popupdata["formatted-title"]["id"] === elementId){
+                            if(nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId){
                                 nestedEle  = {
                                     ...nestedEle,
                                     popupdata : {
@@ -387,7 +387,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         "formatted-title" : {...updatedData}
                                     }
                                 };
-                            } else if(nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
+                            } else if(nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
                                 nestedEle  = {
                                     ...nestedEle,
                                     popupdata : {
@@ -428,7 +428,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     };
                                 }
                                 else if(ele.type === "popup"){
-                                    if(ele.popupdata["formatted-title"]["id"] === elementId){
+                                    if(ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId){
                                         ele  = {
                                             ...ele,
                                             popupdata : {
@@ -436,7 +436,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 "formatted-title" : {...updatedData}
                                             }
                                         };
-                                    } else if(ele.popupdata["formatted-subtitle"]["id"] === elementId){
+                                    } else if(ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId){
                                         ele  = {
                                             ...ele,
                                             popupdata : {
@@ -472,7 +472,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }
             }
             else if(element.type === "popup"){
-                if(element.popupdata["formatted-title"]["id"] === elementId){
+                if(element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId){
                     element  = {
                         ...element,
                         popupdata : {
@@ -480,7 +480,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             "formatted-title" : {...updatedData}
                         }
                     };
-                } else if(element.popupdata["formatted-subtitle"]["id"] === elementId){
+                } else if(element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId){
                     element  = {
                         ...element,
                         popupdata : {
