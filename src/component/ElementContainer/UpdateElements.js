@@ -421,10 +421,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
-            if(previousElementData.status =="approved" && asideData && asideData.contentUrn){
-                dataToReturn.parentEntityId = asideData.contentUrn;
-                
-            }
+            
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
                 if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
@@ -473,6 +470,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                 }
+                
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
@@ -497,6 +495,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;
+    if(previousElementData.status =="approved" && asideData && asideData.contentUrn){
+        dataToReturn.parentEntityId = asideData.contentUrn;
+    }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }
