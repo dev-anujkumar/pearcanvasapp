@@ -11,7 +11,7 @@ import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
-export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar) => (dispatch,getState) => {
+export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let appStore =  getState().appStore;
     try {
         let conversionDataToSend = {};
@@ -98,6 +98,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
+        if(showHideObj){
+            containerDom = document.getElementById(`cypress-${showHideObj.index}`)
+            domHtml = containerDom ? containerDom.innerHTML : "<ol></ol>"
+        }
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
         }
@@ -212,14 +216,16 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let bodymatter = storeElement.contents.bodymatter;
         let focusedElement = bodymatter;
         indexes.forEach(index => {
+            if(focusedElement[index]){
             if(newElementData.elementId === focusedElement[index].id) {
-                focusedElement[index] = res.data//ElementWipData.showhide;
+                focusedElement[index] = res.data
             } else {
-                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents)) {
+                if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
                     //  focusedElement = focusedElement[index].elementdata.bodymatter;
-                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents.bodymatter
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                 }
             }
+        }
         });
         store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
         let altText="";
@@ -274,7 +280,7 @@ catch (error) {
 }
 }
 
-export const handleElementConversion = (elementData, store, activeElement, fromToolbar) => dispatch => {
+export const handleElementConversion = (elementData, store, activeElement, fromToolbar,showHideObj) => dispatch => {
     store = JSON.parse(JSON.stringify(store));
     if(Object.keys(store).length > 0) {
         let storeElement = store[config.slateManifestURN];
@@ -283,14 +289,18 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         indexes = indexes.toString().split("-");
         
         indexes.forEach(index => {
-            if(elementData.elementId === bodymatter[index].id) {
-                dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar));
-            } else {
-                if(('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents))  {
-                    bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||  bodymatter[index].contents.bodymatter
+            if(bodymatter[index]){
+                if(elementData.elementId === bodymatter[index].id) {
+                    dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
+                } else {
+                    if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
+                        
+                        bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                    }
+                    
                 }
-                
             }
+       
         });
     }
     
@@ -304,5 +314,5 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
     let appStore =  getState().appStore;
-    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
 }

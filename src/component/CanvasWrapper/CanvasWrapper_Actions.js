@@ -7,7 +7,8 @@ import {
 	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE,
-    SET_PARENT_ASIDE_DATA
+    SET_PARENT_ASIDE_DATA,
+    SET_PARENT_SHOW_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -426,7 +427,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false,showHideObj) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -436,6 +437,12 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         payload: {
             parentUrn : parentUrn,
             asideData:asideData
+        }
+    })
+    dispatch({
+        type: SET_PARENT_SHOW_DATA,
+        payload: {
+            showHideObj : showHideObj,
         }
     })
     switch (activeElement.figuretype) {

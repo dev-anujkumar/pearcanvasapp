@@ -215,6 +215,11 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
  }
  .mce-item-table caption{
      border: none !important;
+     outline: none !important;
+ }
+ .mce-item-table th{
+    text-align: center !important;
+    font-weight: 400 !important;
  }
  /* .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
      padding: 0px 7px !important; 
