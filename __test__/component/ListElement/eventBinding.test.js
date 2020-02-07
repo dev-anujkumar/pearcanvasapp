@@ -117,6 +117,11 @@ describe('Testing Event Binding Methods', () => {
                                 tagName: 'div',
                                 classList: ['class']
                             },
+                            closest:() => {
+                                return {
+                                    length: 1
+                                }
+                            }
                         }
                     }
                 },
@@ -214,6 +219,11 @@ describe('Testing Event Binding Methods', () => {
                                 tagName: 'div',
                                 classList: ['class']
                             },
+                            closest:() => {
+                                return {
+                                    length: 1
+                                }
+                            }
                         }
                     }
                 },
@@ -309,6 +319,11 @@ describe('Testing Event Binding Methods', () => {
                                     length: 1
                                 }
                             },
+                            closest: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
                             innerHTML: 'test'
                         }
                     }
@@ -387,6 +402,11 @@ describe('Testing Event Binding Methods', () => {
                         anchorNode: {
                             tagName: 'BR',
                             querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            closest: () => {
                                 return {
                                     length: 1
                                 }
@@ -594,6 +614,7 @@ describe('Testing Event Binding Methods', () => {
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for tagname li', () => {
+        let callback = jest.fn();
         let editor = {
             selection: {
                 getSel: () => {
@@ -710,7 +731,7 @@ describe('Testing Event Binding Methods', () => {
         let element = {
             type: "element-list"
         }
-        let result = bindKeyDownEvent(editor, event, element);
+        let result = bindKeyDownEvent(editor, event, element,callback);
         expect(result).toEqual(false);
     });
     it('Test bindKeyDownEvent for tagname li', () => {
