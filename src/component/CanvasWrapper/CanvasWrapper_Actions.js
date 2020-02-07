@@ -44,7 +44,7 @@ const findElementType = (element, index) => {
                     case "mathImage":
                     case "authoredtext":
                     case "tableasmarkup":
-                        /**---------------subtype is now set on the basis of figuretype & alignment basis---------------*/
+                        /**----------------subtype is now set on the basis of figuretype & alignment basis----------------*/
                         let subType = ""
                         //  if (element.subtype == "" || element.subtype == undefined) {                         
                         let figureType = figureData[element['figuretype']];     
