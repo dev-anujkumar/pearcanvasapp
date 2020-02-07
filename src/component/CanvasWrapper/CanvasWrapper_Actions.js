@@ -46,10 +46,16 @@ const findElementType = (element, index) => {
                     case "tableasmarkup":
                         /**----------------subtype is now set on the basis of figuretype & alignment basis----------------*/
                         let subType = ""
-                        //  if (element.subtype == "" || element.subtype == undefined) {                         
-                        let figureType = figureData[element['figuretype']];     
-                        let figureAlignment = figureType[element['alignment']]
-                        subType = figureAlignment['imageDimension']
+                        if (element.figuretype === "tableasmarkup") {
+                            subType = undefined
+                        } else if (element.figuretype === "authoredtext") {
+                            subType = "mathml"
+                        } else {
+                            let figureType = figureData[element['figuretype']];
+                            let figureAlignment = figureType[element['alignment']]
+                            subType = figureAlignment['imageDimension']
+                        }
+                        //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
                         //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
