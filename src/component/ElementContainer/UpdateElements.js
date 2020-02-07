@@ -423,10 +423,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
-                if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedTitle";
                 } 
-                else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedSubtitle";
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){

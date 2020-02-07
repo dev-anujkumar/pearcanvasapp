@@ -14,8 +14,8 @@ import { sendDataToIframe } from '../constants/utility.js'
 
 
 // Access individual pattern (from the <script> tag)
-var patternBroker = PatternBroker.default || {}; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
-var patternSearchSelect = PatternSearchSelect.default || {}; //(PatternSearchSelect && PatternSearchSelect !== undefined && PatternSearchSelect !== null) ? PatternSearchSelect.default : {};//this.SearchSCPatterns.default;
+var patternBroker; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
+var patternSearchSelect; //(PatternSearchSelect && PatternSearchSelect !== undefined && PatternSearchSelect !== null) ? PatternSearchSelect.default : {};//this.SearchSCPatterns.default;
 
 let _interactivePattern = {};
 let _interactivePatternConfig = {};
@@ -41,7 +41,7 @@ var libConfig = {
   'userId': uname || config_object['userId']
 };
 
-patternBroker.setup(libConfig);
+//patternBroker.setup(libConfig);
 
 export const c2AssessmentModule = {
   searchAndSelectonSave: function (data) {
@@ -49,6 +49,8 @@ export const c2AssessmentModule = {
 
   },
   launchAssetBrowser: function (fileName, filterType, searchMode, searchSelectAssessmentURN, productId, searchTypeOptVal, callback) {
+    patternBroker = PatternBroker.default || {}; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
+    patternSearchSelect = PatternSearchSelect.default || {};
     disableHeader(true);
     if (_interactivePattern && _interactivePattern.unmount) {
       _interactivePattern.unmount();

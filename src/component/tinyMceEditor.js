@@ -39,6 +39,7 @@ export class TinyMceEditor extends Component {
         this.lastContent = '';
         this.clearFormateText = '';
         this.isctrlPlusV = false;
+        this.fromtinyInitBlur = false;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -1109,7 +1110,8 @@ export class TinyMceEditor extends Component {
                             Making blinking cursor color again to black
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                        if (!newElement) {
+                        if(!newElement) {
+                            this.fromtinyInitBlur = true;
                             this.editorRef.current.blur();
                         }
                     }
@@ -1480,7 +1482,12 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType);
+        if(!this.fromtinyInitBlur){ 
+            this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+         }
+         else{
+            this.fromtinyInitBlur=false;
+         }
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
@@ -1508,8 +1515,8 @@ export class TinyMceEditor extends Component {
                 );
             case 'h4':
                 let model = ""
-                if (this.props.element && this.props.element.type === "popup") {
-                    model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                if(this.props.element && this.props.element.type === "popup"){
+                    model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
                 else {
                     model = this.props.model;
