@@ -14,7 +14,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
-
+import figureData from '../ElementFigure/figureTypes.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -44,31 +44,14 @@ const findElementType = (element, index) => {
                     case "mathImage":
                     case "authoredtext":
                     case "tableasmarkup":
+                        /**---------------subtype is now set on the basis of figuretype & alignment basis---------------*/
                         let subType = ""
-                        if (element.subtype == "" || element.subtype == undefined) {
-                            switch (element.figuretype) {
-                                case "image":
-                                    subType = "imageTextWidth";
-                                    break;
-                                case "table":
-                                    subType = "image50TextTableImage";
-                                    break;
-                                case "mathImage":
-                                    subType = "image50TextMathImage";
-                                    break;
-                                case "authoredtext":
-                                    subType = "mathml";
-                                    break;
-                                case "tableasmarkup":
-                                    subType = undefined
-                                    break;
-                                default:
-                                    subType = "imageTextWidth";
-                                    element.figuretype = "image";
-                                    break;
-                            }
-                            element.subtype = subType
-                        }
+                        //  if (element.subtype == "" || element.subtype == undefined) {                         
+                        let figureType = figureData[element['figuretype']];     
+                        let figureAlignment = figureType[element['alignment']]
+                        subType = figureAlignment['imageDimension']
+                        element.subtype = subType
+                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         elementType = {
