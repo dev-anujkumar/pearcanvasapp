@@ -55,9 +55,9 @@ class ElementPopup extends React.Component {
                 <div className="divWidgetPU" resource="">
                 <figure className="figureWidgetPU" resource="">
                     <header>
-                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"].html.text} currentElement = {element.popupdata && element.popupdata["formatted-title"]}
+                            <TinyMceEditor  permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-0`} className="heading4WidgetPUNumberLabel figureLabel" id={this.props.id} placeholder="Enter Label..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-title"] && element.popupdata["formatted-title"].html.text ? element.popupdata["formatted-title"].html.text : '' } currentElement = {element.popupdata && element.popupdata["formatted-title"]}
                               handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"].html.text} currentElement = {element.popupdata && element.popupdata["formatted-subtitle"]}
+                            <TinyMceEditor permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={element} index={`${index}-1`} className='heading4WidgetPUTitle figureTitle' id={this.props.id} placeholder="Enter Title..." tagName={'h4'} model={element.popupdata && element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"].html.text ? element.popupdata["formatted-subtitle"].html.text : ''} currentElement = {element.popupdata && element.popupdata["formatted-subtitle"]}
                              handleEditorFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
                     </header>
                    {/*  <div className={id}><strong>{path ? path : 'ITEM ID: '} </strong>{this.state.itemID?this.state.itemID : itemId}</div> */}
@@ -78,7 +78,7 @@ class ElementPopup extends React.Component {
     render(){
       return (
         <div className="interactive-element">
-            { this.renderPopup()}
+            { this.renderPopup() }
         </div>  
       )
     }

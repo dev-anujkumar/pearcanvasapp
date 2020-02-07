@@ -192,7 +192,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }
 
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-
+    config.conversionInProcess = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -201,7 +201,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-
+        config.conversionInProcess = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
@@ -299,6 +299,10 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    let appStore =  getState().appStore;
-    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+    if(!config.conversionInProcess){
+        let appStore =  getState().appStore;
+        dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+    } else {
+        return false;
+    }
 }
