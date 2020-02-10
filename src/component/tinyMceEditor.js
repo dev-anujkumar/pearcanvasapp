@@ -119,6 +119,12 @@ export class TinyMceEditor extends Component {
                         // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
+                        //Uncomment after API arrives
+                        /* if(this.props.element.type === "popup" && !this.props.currentElement){
+                            this.props.createPopupUnit(this.props.popupField, null, this.props.index) 
+                        } else {
+                            this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
+                        } */
                         this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
@@ -1410,11 +1416,16 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
+    //Uncomment after API arrives
+    blurAfterPopupUnitCreation = (currentElementData, forceupdate) => {
+        this.props.handleBlur(forceupdate, currentElementData, this.props.index, null)
+    }
+
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
      */
-    handleBlur = (e, forceupdate) => {  
+    handleBlur = (e, forceupdate) => {
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");       
          if(isBlockQuote && this.isctrlPlusV){            
             e.preventDefault();            
@@ -1453,7 +1464,15 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        if(!this.fromtinyInitBlur){ 
+        if(!this.fromtinyInitBlur){
+            //Uncomment after API arrives
+            /*if(this.props.element.type === "popup" && !this.props.currentElement){
+                this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index)
+            } else {
+                this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+            }*/
+
+            //Comment or remove this code after API arrives
             this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
          }
          else{

@@ -495,5 +495,22 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 			}
 		});
 	}
-	
 }
+
+/* const createPopupUnit = (popupField, cb) => dispatch => {
+
+    //API call
+    return axios.get(url, {
+        headers: {
+            "Content-Type": "application/json",
+            "PearsonSSOSession": config.ssoToken
+        }
+    })
+    .then((response) => {
+        if(cb) cb(response.data)
+    })
+    .catch((error) => {
+
+    })
+}
+ */
