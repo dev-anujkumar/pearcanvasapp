@@ -218,7 +218,7 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
      outline: none !important;
  }
  .mce-item-table th{
-    text-align: center !important;
+    text-align: center ;
     font-weight: 400 !important;
  }
  /* .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
