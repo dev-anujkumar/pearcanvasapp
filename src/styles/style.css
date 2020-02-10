@@ -110,6 +110,20 @@ h1, h2, h3, h4, h5, p {
     position : absolute;
     margin-top : 7px;
 }
+.cypress-editable.pullquote-editor.place-holder::before{
+    margin-top : 15px !important;
+}
+.cypress-editable.blockquote-editor.place-holder::before{
+    margin-top: 50px;
+    margin-left: 30px;
+}
+.element-container.lo .cypress-editable.place-holder::before {
+    font-size: 18px !important;
+    margin-top: 0px !important;
+}
+.mce-offscreen-selection{
+    display:none !important;
+}
 
 .element-container.h1 .cypress-editable.place-holder::before {
     font-size: 23px !important;
@@ -262,3 +276,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
 /* .mce-content-body .Wirisformula[data-custom-editor="chemistry"]{
     vertical-align: -1px!important;
 } */
+
+.reviewer-role .Wirisformula,.reviewer-role .temp_Wirisformula {
+    pointer-events: none;
+}

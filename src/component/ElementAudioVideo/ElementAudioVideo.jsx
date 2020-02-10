@@ -49,12 +49,25 @@ class ElementAudioVideo extends Component {
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
             // let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
-            if(imageData['clipinfo']){
-                if(typeof(imageData['clipinfo'])=="string"){
-                    clipInfo=JSON.parse(imageData['clipinfo'])
+            if (imageData['clipinfo']) {
+                if (typeof (imageData['clipinfo']) == "string") {
+                    let clipInfoData = JSON.parse(imageData['clipinfo'])
+                    clipInfo = {
+                        "clipid": clipInfoData.id,
+                        "starttime": clipInfoData.start,
+                        "endtime": clipInfoData.end,
+                        "description": clipInfoData.description,
+                        "duration": clipInfoData.duration
+                    }
                 }
-                else{
-                    clipInfo=imageData['clipinfo']
+                else {
+                    clipInfo = {
+                        "clipid": imageData['clipinfo'].id,
+                        "starttime": imageData['clipinfo'].start,
+                        "endtime": imageData['clipinfo'].end,
+                        "description": imageData['clipinfo'].description,
+                        "duration": imageData['clipinfo'].duration
+                    }
                 }
             }
             let videoFormat = imageData['mimetype'] ? imageData['mimetype'] : "";
@@ -141,9 +154,12 @@ class ElementAudioVideo extends Component {
                     }
                     break;
             }
+            if(figureData && figureData.clipinfo && figureData.clipinfo.clipid  === "" ){
+                delete figureData.clipinfo
+            }
             this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
                 this.props.handleFocus("updateFromC2")
-                this.props.handleBlur()
+                this.props.handleBlur(true)
             })
         }
     }

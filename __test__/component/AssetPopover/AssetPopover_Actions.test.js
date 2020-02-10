@@ -27,7 +27,8 @@ jest.mock('../../../src/constants/Action_Constants', ()=> {
         TOGGLE_APO_SEARCH: 'TOGGLE_LO_DROPDOWN',
         REMOVE_ASSET_LINK: 'REMOVE_ASSET_LINK',
         IMAGES_FROM_API: 'IMAGES_FROM_API',
-        SELECTED_FIGURE: 'SELECTED_FIGURE'
+        SELECTED_FIGURE: 'SELECTED_FIGURE',
+        IMAGES_FROM_API_FAIL: 'IMAGES_FROM_API_FAIL'
     }
 })
 jest.mock('../../../src/constants/utility.js', () => ({
@@ -117,6 +118,16 @@ describe('testingAssetPopoverActions',() => {
               error: 'User with 2 not found.',
             }))
     })
+    it('testing------- getCurrentlyLinkedImage catch', () => {
+        let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d";
+        const resp = {status:400,data:{}};   
+
+        axios.get.mockImplementation(() => Promise.reject(resp));
+        const cb = (obj) => {
+            expect(obj).toEqual({});
+        }
+        getCurrentlyLinkedImage(id, cb);
+    })
     it('testing------- searchForFiguresAction if', () => {
         let searchTerm = 'search', stateImageData = [{'a': '1', 'b' : '2'}]
         let result = searchForFiguresAction(searchTerm, stateImageData)
@@ -125,28 +136,28 @@ describe('testingAssetPopoverActions',() => {
         });
     })
 
-   xit('testing------- searchForFiguresAction else', async () => {
+   it('testing------- searchForFiguresAction else', async () => {
         let searchTerm = 'search', stateImageData = null
         const users = [{name: 'Bob'}];
         const resp = {data: users};  
-        axios.get.mockImplementation(() => Promise.resolve(resp))
         let  performance = {
             now : jest.fn()
         }
         // searchForFiguresAction(searchTerm, stateImageData).then((data) => {
         //     expect(data).toEqual(users)
         // })
-        const store = mockStore({ todos: [] })
-       let fetch = jest.fn(() => Promise.resolve());
-
-       return store.dispatch( searchForFiguresAction(searchTerm, stateImageData)
-       .then((data) => {
-           expect(data).toEqual(users)
-        }))
-    //.then(() => {
-    //         // return of async actions
-    //        // expect(store.getActions()).toEqual(expectedActions)
-    //       })
+        const store = mockStore({ todos: [] });
+       let dispatch = (obj) => {
+           if(obj.type){
+               expect(obj.type).toEqual(IMAGES_FROM_API);
+           }
+       }
+       global.fetch = jest.fn().mockImplementationOnce(() => {
+        return new Promise((resolve, reject) => {
+         resolve(resp);
+       });
+     });
+       searchForFiguresAction(searchTerm, stateImageData)(dispatch);
     })
     it('testing------- assetPopoverPopup', () => {
         let argsObj = false;
@@ -177,6 +188,7 @@ describe('testingAssetPopoverActions',() => {
               error: 'User with 2 not found.',
             }))
     })
+    
 
   
 })

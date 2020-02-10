@@ -149,11 +149,13 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
 
-    if(previousElementData.figuredata.interactivetype === "pdf"){
+    if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
+        previousElementData.figuredata.interactivetype === "web-link") {
         let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
         let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
         let posterText = pdfPosterTextDOM ? pdfPosterTextDOM.innerText : ""
-        data.html.postertext = posterTextHTML
+        let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
+        data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
             schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
             text : posterText,
@@ -236,7 +238,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         figuredata:{
             schema : "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
             type: previousElementData.figuretype,
-            numbered: isNumbered,
+            numbered: (typeof (isNumbered ) == "string") ? JSON.parse(isNumbered): isNumbered,
             startNumber: startNumber,
             programlanguage: previousElementData.figuredata.programlanguage,
             preformattedtext: [...preformattedText.split("\n")]
@@ -339,21 +341,25 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
  */
 export const generateAssessmentData = (index, previousElementData, elementType, primaryOption, secondaryOption)=>{
     let assessmentNodeSelector =`div[data-id='${previousElementData.id}'] figure.figureAssessment `;
-    let assessmenttitle = document.getElementById('single_assessment_title').innerText;
-     
+    let assessmenttitle = document.querySelector(assessmentNodeSelector+'#single_assessment_title').innerText; //PCAT-6828 fixed
+    // let assessmenttitle = document.getElementById('single_assessment_title').innerText;
+    let assessmenttTitleHTML = `<p>${assessmenttitle}</p>`
     let dataToSend = {...previousElementData,
         inputType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
         html: {
-            title: assessmenttitle
+            title: assessmenttTitleHTML
         }}
         
     dataToSend.figuredata.elementdata;
-  
     let assessmentId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentid=assessmentId.split(' ')[1];
+    let getAsid=assessmentId.split(' ')[1];
+    dataToSend.figuredata.elementdata.assessmentid = getAsid ? getAsid : "";
+    dataToSend.figuredata.id =  getAsid ? getAsid : "";                             //PCAT-6792 fixes
+    dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
     let assessmentItemId = document.querySelector(assessmentNodeSelector+'div.singleAssessmentItemIdInfo').innerText;
-    dataToSend.figuredata.elementdata.assessmentitemid=assessmentItemId.split(' ')[2];
+    let getAsItemid=assessmentItemId.split(' ')[2];
+    dataToSend.figuredata.elementdata.assessmentitemid = getAsItemid ? getAsItemid : "";
 
     let usageType = document.querySelector(assessmentNodeSelector+'span.singleAssessment_Dropdown_currentLabel').innerText;
     dataToSend.figuredata.elementdata.usagetype = usageType;
@@ -392,7 +398,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -410,15 +416,29 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : elementTypes[elementType][primaryOption]['enum'],
-                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: config.slateManifestURN      
+                inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
+            }
+            if(parentElement && parentElement.type === "popup"){
+                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedTitle";
+                } 
+                else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedSubtitle";
+                }
+                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                    dataToReturn.section = "postertextobject";
+                }
+            }
+            if(parentElement && parentElement.type === "showhide" && showHideType){
+                dataToReturn.section = showHideType;
             }
             break;
 
         case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
-                    
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
@@ -447,15 +467,20 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
-                switch (previousElementData.subtype) {
-                    case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
-                    default:
-                        dataToReturn = { 
-                            ...previousElementData,
-                            inputType : elementTypes[elementType][primaryOption]['enum'],
-                            inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
-                    }
-                }
+            dataToReturn = { 
+                ...previousElementData,
+                inputType : elementTypes[elementType][primaryOption]['enum'],
+                inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            }
+                // switch (previousElementData.subtype) {
+                //     case elementTypeConstant.ELEMENT_WORKEDEXAMPLE:
+                //     default:
+                //         dataToReturn = { 
+                //             ...previousElementData,
+                //             inputType : elementTypes[elementType][primaryOption]['enum'],
+                //             inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+                //     }
+                // }
             break;
         
         case elementTypeConstant.ASSESSMENT_SLATE:
@@ -473,7 +498,8 @@ export const createOpenerElementData = (elementData, elementType, primaryOption,
         dataToReturn = {
             ...elementData,
             inputType: elementTypes[elementType][primaryOption]['enum'],
-            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']
+            inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
+            slateUrn: config.slateManifestURN 
         }
     }
 

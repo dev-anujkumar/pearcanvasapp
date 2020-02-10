@@ -27,7 +27,7 @@ test('renders without crashing', () => {
         onClick : ()=>{},
         handleBlur: function(){},
         showBlocker: jest.fn(),
-        
+        openCustomPopup: jest.fn()        
     };
 
     let singleAssessment = mount(<ElementSingleAssessment {...props}  />);
@@ -125,7 +125,8 @@ test('renders without crashing', () => {
             ],
             showBlocker: ()=>{
                 return false
-            }
+            },
+            openCustomPopup: jest.fn()
         }
         const singleAssessment = mount(<ElementSingleAssessment {...props}/>);
         const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
@@ -142,7 +143,8 @@ test('renders without crashing', () => {
             handleFocus: function(){},
             handleBlur : jest.fn(),
             model : singleAssessmentCITEDefault,
-            onClick : ()=>{},                    
+            onClick : ()=>{},   
+            openCustomPopup: jest.fn()                 
         }
         const singleAssessment = mount(<ElementSingleAssessment {...props}/>);
         const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
@@ -160,7 +162,7 @@ test('renders without crashing', () => {
             expect(spylaunchAssetBrowserCallBack).toHaveBeenCalled()
             spylaunchAssetBrowserCallBack.mockClear()
         })
-        xit('Test- launchAssetBrowserCallBack if-else-case', () => {
+        it('Test- launchAssetBrowserCallBack if-else-case', () => {
             let assessmentData = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
                 itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",
@@ -174,7 +176,7 @@ test('renders without crashing', () => {
             expect(spylaunchAssetBrowserCallBack).toHaveBeenCalled()
             spylaunchAssetBrowserCallBack.mockClear()
         })
-        xit('Test- launchAssetBrowserCallBack if-else-case', () => {
+        it('Test- launchAssetBrowserCallBack if-else-case', () => {
             let assessmentData = {
                 id: "urn:pearson:work:133dd9fd-a5be-45e5-8d83-891283abb9a5",
                 itemID: "urn:pearson:work:fb9bcb66-3073-45e6-ab8a-b595a35bf93b",

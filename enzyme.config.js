@@ -49,7 +49,17 @@ global.MutationObserver = function () {
 }
 global.window.getSelection=()=>{
     return {
-        removeAllRanges: ()=>{}
+        removeAllRanges: ()=>{},
+        toString: ()=>{
+            return "hello TEST"
+        },
+        anchorNode:{
+            parentNode:{
+                nodeName: "P",
+                innerHTML: "",
+                outerHTML:""
+            }
+        }
     }
 }
 global.window.crypto={
@@ -59,3 +69,4 @@ global.window.crypto={
 }
 global.window.origin= "https://localhost:"
 global.window.parent.postMessage = jest.fn();
+global.window.parent.origin= "https://localhost:"

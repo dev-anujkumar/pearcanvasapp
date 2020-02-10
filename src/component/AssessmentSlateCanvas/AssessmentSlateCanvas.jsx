@@ -14,7 +14,8 @@ import { closeLtAction,openLtAction,getDiscipline,openLTFunction} from './learni
 import { FULL_ASSESSMENT_CITE , LEARNOSITY , PUF} from './AssessmentSlateConstants.js';
 import TinyMceEditor from "./../tinyMceEditor"
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+
 /*** @description - AssessmentSlateCanvas is a class*/
 export class AssessmentSlateCanvas extends Component {
     constructor(props) {
@@ -59,7 +60,7 @@ export class AssessmentSlateCanvas extends Component {
     */
     selectAssessmentType = (type) => {
         let assessmentType;
-        if (type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
+        if (type.toLowerCase() === 'cite' || type == FULL_ASSESSMENT_CITE || this.props.model.elementdata.assessmentformat === "CITE") {
             assessmentType = "CITE"
         } else {
             assessmentType = "TDX"
@@ -67,7 +68,6 @@ export class AssessmentSlateCanvas extends Component {
         this.setState({
             assessmentFormatType: assessmentType
         })
-        //return assessmentType
     }
 
     /*** 
@@ -217,6 +217,8 @@ export class AssessmentSlateCanvas extends Component {
                     permissions={this.props.permissions}
                     handleAssessmentBlur= {this.handleAssessmentBlur}
                     learningTemplateLabel = {this.state.learningTemplateLabel}
+                    setSlateParent={this.props.setSlateParent}
+                    setSlateEntity={this.props.setSlateEntity}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
@@ -239,7 +241,9 @@ const mapStateToProps = (state, props) => {
     return {
         toggleLT: state.learningToolReducer.toggleLT,
         selectedResultFormApi: state.learningToolReducer.selectedResultFormApi,
-        permissions: state.appStore.permissions
+        permissions: state.appStore.permissions,
+        setSlateParent: state.appStore.setSlateParent,
+        setSlateEntity:state.appStore.setSlateEntity
     }
 }
 const mapActionToProps = {

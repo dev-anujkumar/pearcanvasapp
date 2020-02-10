@@ -24,6 +24,7 @@ export default {
 /****************Container Element************************ */  
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
+    SHOW_HIDE: "showhide",
 
 /****************Metadata Anchor************************ */  
     METADATA_ANCHOR : "element-learningobjectivemapping",
@@ -34,8 +35,10 @@ export default {
 
 /****************Assessment Slate Element************************ */  
     ASSESSMENT_SLATE : "element-assessment",
-    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT "
-    
+    ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
+
+/****************Pop Up elment************************ */  
+    POOPUP_ELEMENT:"popup"
 }
 
 export const LABELS = {

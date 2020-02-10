@@ -59,6 +59,10 @@ export const tempFiguresForResults =[{
 	"dateModified": "2019-04-04T16:58:35.240Z"
 }]
 
+export const disciplinesForLearningTool = [{
+	disciplineName: 'Accounting'
+}]
+
 export const disciplines = {
 	"taxonomyType": "disciplines",
 	"options": [{

@@ -45,11 +45,12 @@ export const utils = {
             case (data.toLowerCase().indexOf("cite-interactive-slideshow-video") !== -1):
                 format = "gallery-video";
                 break;
-
+            //case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
+            //    format = "gallery-image";
+            //    break;
             case (data.toLowerCase().indexOf("cite-interactive-slideshow-image") !== -1):
-                format = "gallery-image";
-                break;
-
+                 format = "guided-example";
+                 break;
             case (data.toLowerCase().indexOf("cite-interactive-graph") !== -1):
                 format = "graph";
                 break;
@@ -106,7 +107,7 @@ export const utils = {
 };
 
 export const checkforToolbarClick = (classList) =>{
-    let existingToolbarClasses = ["tox-tbtn","tox-tbtn--select","tox-split-button","wrs_focusElement","tox-split-button__chevron","definition-editor","dialog-input-textarea","SearchLibAutoSuggest__input___jIHit","plautosuggestTheme__input___Jd4Ux","patterns__col100___1reM7"];
+    let existingToolbarClasses = ["tox-dialog__body-nav-item","tox-tab","tox-dialog__body-nav-item--active","tox-dialog__content-js","tox-dialog","tox-collection__item-icon","tox-tbtn","tox-tbtn--select","tox-split-button","wrs_focusElement","tox-split-button__chevron","definition-editor","dialog-input-textarea","SearchLibAutoSuggest__input___jIHit","plautosuggestTheme__input___Jd4Ux","patterns__col100___1reM7"];
     let isTargetFound = false;
 
     classList.forEach((val)=>{
@@ -116,4 +117,31 @@ export const checkforToolbarClick = (classList) =>{
         }
     })
     return isTargetFound;
+}
+export const customEvent = {
+        listeners: {},
+        subscribe: (eventName, listner) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName].push(listner)
+            } else {
+                customEvent.listeners[eventName] = [listner];
+            }
+        },
+        trigger: (eventName,args) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName].forEach((listner, index) => {
+                    listner(args);
+                })
+            }
+        },
+        unsubscribe: (eventName) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                customEvent.listeners[eventName] = []
+            }
+        },
+        removeListenr: (eventName) => {
+            if (customEvent.listeners.hasOwnProperty(eventName)) {
+                delete customEvent.listeners[eventName]
+            }
+        }
 }

@@ -63,7 +63,7 @@ class Comments extends React.Component {
             status: "Open"
         };
 
-        const updatedText = this.state.updatedFields.text
+        // const updatedText = this.state.updatedFields.text
         this.props.updateElementComment(commentId, updatedComment, elementId)
     }
 
@@ -280,7 +280,7 @@ class Comments extends React.Component {
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>
-                                <span className="property-value">{this.props.slateTitle}</span>
+                                <span className="property-value">{config.staleTitle}</span>
                             </div>
                             <div className="property">
                                 <UserAssignee

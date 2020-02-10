@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
-import PropTypes from 'prop-types'
-import Button from '../ElementButtons'
-import Tooltip from '../Tooltip'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
+import Button from '../ElementButtons';
 import config from '../../config/config';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import { hasReviewerRole } from '../../constants/utility.js'
 
-class SectionSeperator extends React.Component {
+class SectionSeperator extends Component {
     constructor(props) {
         super(props);
         this.state= {

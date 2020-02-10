@@ -8,7 +8,7 @@ import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import {
-    fetchSlateData,fetchAuthUser
+    fetchSlateData,fetchAuthUser,openPopupSlate
 } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel,fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import Toolbar from '../Toolbar';
@@ -16,7 +16,7 @@ import config from './../../config/config';
 
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
@@ -31,30 +31,42 @@ import RootContext from './CanvasContexts.js';
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer } from '../AudioNarration/AudioNarration_Actions'
 import { glossaaryFootnotePopup } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
+import store from './../../appstore/store'
+import PopUp from '../PopUp';
+import { hideBlocker } from '../../js/toggleLoader';
+
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             showReleasePopup : false,
             toggleApo : false,
-            isPageNumberEnabled : false
-        }        
+            isPageNumberEnabled : false,
+            isConfigLoaded : true
+        }  
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
-            if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
-                sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
-            }
-            return null;    
+        if(nextProps.isConfigLoaded && prevState.isConfigLoaded){
+            nextProps.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+            return {
+                isConfigLoaded : false
+            };
+        }
+        if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+        }
+        return null;    
      }
+
 
     componentDidMount() {  
         // To run Canvas Stabilization app as stand alone app //
-        if (config.slateManifestURN) {
-            this.props.fetchSlateData(config.slateManifestURN);
-        }
+        // if (config.slateManifestURN) {
+        //     this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN,config.page,'');
+        // }
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed a moment ago'} });
+        
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -63,19 +75,9 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        let { projectUrn } = config,
-        slateId = config.slateManifestURN
-        this.props.getSlateLockStatus(projectUrn ,slateId) 
-
-        let searchString = window.location.search;
-        let q = new URLSearchParams(searchString);
-        if(q.get('q')){
-            let currentWorkId = q.get('q');
-            setTimeout(() => {
-                this.props.toggleCommentsPanel(true);
-                this.props.fetchCommentByElement(currentWorkId);
-            }, 4000);
-        }
+        // let { projectUrn } = config,
+        // slateId = config.slateManifestURN
+        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
     }
 
@@ -87,7 +89,7 @@ export class CanvasWrapper extends Component {
         // Options for the observer (which mutations to observe)		
         var config = { attributes: true };
         // Callback function to execute when mutations are observed		
-        var callbackOb = function (mutationsList, observer) {
+        var callbackOb = function (mutationsList, observercb) {
             for (var mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     let wirisNodes = document.getElementsByClassName('wrs_modal_dialogContainer');
@@ -144,13 +146,31 @@ export class CanvasWrapper extends Component {
     loadMorePages = () => {
         config.page++;
         if(config.totalPageCount <= config.page) return false;
-        this.props.fetchSlateData(config.slateManifestURN, config.page);
+        this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '');
     }
     
+    ReleaseErrorPopup = () => {
+        hideBlocker()
+        store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
+        return true;
+    }
+
     render() {
+        let slateData = this.props.slateLevelData
+        let isReviewerRoleClass = hasReviewerRole() ? " reviewer-role" : ""
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
+                {/** Custom Error Popup on Canvas wrapper in API Failure */}
+                {this.props.ErrorPopup && this.props.ErrorPopup.show &&
+                    <div className="canvas-blocker" ></div>}
+                {this.props.ErrorPopup && this.props.ErrorPopup.show && <PopUp dialogText={this.props.ErrorPopup.message}
+                    active={true}
+                    togglePopup={this.ReleaseErrorPopup}
+                    isLockReleasePopup={true}
+                    isInputDisabled={true}
+                />}
+                {/** Ends of custom error popup */}
                 <div id="editor-toolbar" className="editor-toolbar">
                     {/* editor tool goes here */}
                     <Toolbar togglePageNumbering={this.togglePageNumbering} />
@@ -159,13 +179,13 @@ export class CanvasWrapper extends Component {
 
                 <div className='workspace'>
                    
-                    <div id='canvas' className='canvas'>
+                    <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
                             <div id='artboard-container' className='artboard-container'>
                                 {this.props.showApoSearch ? <AssetPopoverSearch /> : ''}
                                 {/* slate wrapper component combines slate content & slate title */}
                                 <RootContext.Provider value={{ isPageNumberEnabled: this.state.isPageNumberEnabled }}>
-                                    <SlateWrapper loadMorePages={this.loadMorePages}  handleCommentspanel={this.handleCommentspanel} slateData={this.props.slateLevelData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
+                                    <SlateWrapper loadMorePages={this.loadMorePages}  handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker= {this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} toggleTocDelete = {this.props.toggleTocDelete} tocDeleteMessage = {this.props.tocDeleteMessage} modifyState = {this.props.modifyState}  updateTimer = {this.updateTimer} isBlockerActive = {this.props.showBlocker} isLOExist={this.props.isLOExist}/>
                                 </RootContext.Provider>                                
                             </div>
                         </div>
@@ -215,7 +235,8 @@ const mapStateToProps = state => {
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         permissions: state.appStore.permissions,
         logout,
-        withinLockPeriod: state.slateLockReducer.withinLockPeriod
+        withinLockPeriod: state.slateLockReducer.withinLockPeriod,
+        ErrorPopup: state.errorPopup,
     };
 };
 
@@ -246,6 +267,7 @@ export default connect(
         releaseSlateLock,
         updateElement,
         setSlateParent,
+        openPopupSlate,
         getTableEditorData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

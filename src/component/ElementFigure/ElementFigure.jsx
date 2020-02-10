@@ -202,7 +202,13 @@ class ElementFigure extends Component {
         if (hasReviewerRole()) {
             editable = false;
         }
-        sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable });
+        this.props.handleFocus()
+        let slateData = {
+            elementId : this.props.elementId,
+            currentProjectId: config.projectUrn,
+            slateEntityUrn: config.slateEntityURN
+        }
+         sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData});
     }
     /**
      * @description function will be called on image src add and fetch resources based on figuretype
@@ -443,7 +449,7 @@ class ElementFigure extends Component {
                     preformattedText.forEach(function (item) {
                         let encodedItem1 = item.replace(/</g, "&lt;")             //Encoded '<' and '>' to prevent TinyMCE to treat them as HTML tags.
                         let encodedItem2 = encodedItem1.replace(/>/g, "&gt;")
-                        if (encodedItem2 && encodedItem2 !== "") {
+                        if(encodedItem2) {
                             processedText += `${encodedItem2}<br />`;
                         }
                     })

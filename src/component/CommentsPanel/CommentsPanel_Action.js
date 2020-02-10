@@ -11,7 +11,8 @@ import {
     GET_PROJECT_USER,
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    AUTHORING_ELEMENT_UPDATE
+    AUTHORING_ELEMENT_UPDATE,
+    ERROR_POPUP
 } from '../../constants/Action_Constants';
 
 
@@ -34,6 +35,22 @@ export const fetchComments = (contentUrn, title) => dispatch => {
             type: FETCH_COMMENTS,
             payload: { comments: response.data.comments, title }
         })
+        let searchString = window.location.search;
+        let q = new URLSearchParams(searchString);
+        if(q.get('q')){
+            let currentWorkId = q.get('q');
+            dispatch({
+                type: TOGGLE_COMMENTS_PANEL,
+                payload: true
+            })
+            dispatch({
+                type: FETCH_COMMENT_BY_ELEMENT,
+                payload: {
+                    elementId: currentWorkId,
+                    index: 0
+                }
+            })
+        }
     }).catch(error => {
         console.log("failed to fetch comment", error);
     })
@@ -113,6 +130,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             });
 
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             //console.log("Failed to add reply", error);
         })
 };
@@ -146,6 +164,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             });
 
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             //console.log("status update fail", error);
         })
 };
@@ -158,9 +177,9 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
   @param {String} elementId - Element id of the element
 */
 
-export const updateComment = (commentUrn, updateComment, elementId) => dispatch => {
+export const updateComment = (commentUrn, updateCommentParams, elementId) => dispatch => {
 
-    let request = updateComment
+    let request = updateCommentParams
     let url = `${config.STRUCTURE_API_URL}narrative-api/v2/${elementId}/comment/${commentUrn}/Status/`
     return axios.put(url, request,
         {
@@ -173,9 +192,10 @@ export const updateComment = (commentUrn, updateComment, elementId) => dispatch 
     ).then(response => {
         dispatch({
             type: UPDATE_COMMENT,
-            payload: { commentUrn, updateComment: updateComment.comment }
+            payload: { commentUrn, updateComment: updateCommentParams.comment }
         });
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         //console.log("status update fail", error);
     })
 };
@@ -230,6 +250,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
             payload: { commentUrn, newAssignee: newAssignee }
         });
     }).catch(error => {
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
         //console.log("error while updating user", error);
     })
 
@@ -287,6 +308,7 @@ export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => 
                 }
             })
         }).catch(error => {
+            dispatch({type: ERROR_POPUP, payload:{show: true}})
             console.log("error while deleting user", error);
         })
 

@@ -33,8 +33,12 @@ const plugin = [
     new CopyPlugin([
         {
             from: path.join(__dirname, 'src/favicon.ico'),
-            to: path.join(__dirname, 'dist/')
+            to: path.join(__dirname, 'dist/'),
         },
+        {
+            from: path.join(__dirname, 'src/static/health.html'),
+            to: path.join(__dirname, 'dist/')
+        }
     ]),
     // new BundleAnalyzerPlugin({
     //     analyzerMode: 'static'

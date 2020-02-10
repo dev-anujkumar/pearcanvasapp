@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import config from './../../../../../config/config';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import {FULL_ASSESSMENT_PUF , PUF } from '../../../AssessmentSlateConstants.js'
+import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 
 
@@ -20,7 +20,6 @@ class ElmTable extends Component {
             noDataFound: false,
             currentUrn: this.props.apiData.versionUrn,
             parentUrn: null,
-            apiData: props.apiData,
             firstName: this.getProjectTitle() || "",
             parentTitle: "",
             currentAssessmentSelected: {},
@@ -28,7 +27,6 @@ class ElmTable extends Component {
             sortFlag: true
         };
         this.preparedData = [];
-        this.renderTableData(this.props);
         this.timer = null;
         this.setSort();
 
@@ -40,29 +38,24 @@ class ElmTable extends Component {
             firstName: fName
         })
         this.renderTableData(this.props)
-
     }
     /*** @description - This function is to render elm table data
      * @param currentProps- props
     */
     renderTableData = (currentProps) => {
         if (!currentProps.errFlag && currentProps.apiData) {
-            this.filterData(currentProps.getParentId, currentProps.apiData);
+            this.filterData(config.parentContainerUrn, currentProps.apiData);
         }
-
-        this.timer = setTimeout(() => {
+        this.timer = setTimeout(() => {            
             if (!this.state.tableValue.length) {
                 this.getResourcefromFilterData(currentProps.apiData);
             }
         }, 0)
     }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (JSON.stringify(nextProps.apiData) !== JSON.stringify(prevState.apiData)) {
-            prevState.renderTableData(nextProps);
-            return {
-                apiData: nextProps.apiData
-            };
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.apiData != this.props.apiData) {
+            let _self = this;
+            _self.renderTableData(this.props);
         }
     }
     componentWillUnmount() {
@@ -124,19 +117,25 @@ class ElmTable extends Component {
          * @param parentUrn- parent-Urn
         */
     getResourcefromFilterData = (data, parentUrn) => {
-
+        let title = "";
         if (data.alignments && data.alignments.resourceCollections && data.alignments.resourceCollections.length) {
             data.alignments.resourceCollections.forEach((resource) => {
                 if (resource.resources && resource.resources.length) {
-                    resource.resources.forEach((assesments) => {
-                        this.preparedData.push({ "type": assesments.type || "assessment", "urn": assesments.urn }) // "assessment" is added as type for resources where type-key is missing
+                    resource.resources.forEach((assessments) => {
+                        if (assessments && assessments.title && assessments.title.en) {
+                            title = assessments.title.en
+                        }
+
+                        this.preparedData.push({ "type": "assessment", "urn": assessments.urn, "assessmentTitle": title}) // "assessment" is added as type for resources where type-key is missing
                     })
                 }
             })
         }
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((item) => {
-                this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
+                if(item && ((item.alignments && item.alignments != null) ||(item.contents && item.contents != null )) ){
+                    this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
+                }               
             })
         }
 
@@ -216,7 +215,7 @@ class ElmTable extends Component {
     sendPufAssessment = () => {
         let obj = {
             id: this.state.currentAssessmentSelected.urn,
-            title: "dummy",
+            title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.assessmentTitle? this.state.currentAssessmentSelected.assessmentTitle: "dummy",
             assessmentFormat: "puf",
             usagetype: this.props.usageTypeMetadata
         }
@@ -292,7 +291,7 @@ class ElmTable extends Component {
                                             <tr className={`row-class ${this.state.isActive === index ? 'select' : 'not-select'}`} onClick={() => this.toggleActive(index)}>
                                                 <td className='td-class' key={index} onClick={() => this.addAssessment(item)}>
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                    <b className="elm-text-assesment">{item.urn}</b>
+                                                    <b className="elm-text-assesment">{item.assessmentTitle ? item.assessmentTitle : item.urn}</b>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -314,7 +313,7 @@ class ElmTable extends Component {
                     </div>
                     <div className="puf-footer">
                         <button className="puf-button cancel" onClick={this.props.closeElmWindow}>CANCEL</button>
-        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>{buttonText}</button>
+                        <button className={`puf-button add-button ${this.state.addFlag ? 'add-button-enabled' : ''}`} disabled={!this.state.addFlag} onClick={this.sendPufAssessment}>{buttonText}</button>
                     </div>
                 </div>
             );
@@ -325,7 +324,8 @@ class ElmTable extends Component {
 
 export default connect((state) => {
     return {
-        getParentId: state.appStore.slateLevelData[config.slateManifestURN].id
+        getParentId: state.appStore.slateLevelData[config.slateManifestURN].id,
+        apiData: state.elmReducer.elmData
     }
 
 })(ElmTable);

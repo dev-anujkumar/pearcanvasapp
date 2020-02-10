@@ -8,16 +8,10 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
-import cypressConfig from '../../../config/cypressConfig.js';
 import config from '../../../config/config.js';
 import { sendDataToIframe } from '../../../constants/utility.js';
-import localConfig from '../../../env/local.js';
-import stagingConfig from '../../../env/staging.js';
-import qaConfig from '../../../env/qa.js';
-import perfConfig from '../../../env/perf.js';
-import prodConfig from '../../../env/prod.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import {ShowLoader,TocToggle} from '../../../constants/IFrameMessageTypes';
+import { TocToggle } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import PopUp from '../../PopUp';
 import {loadTrackChanges} from '../../CanvasWrapper/TCM_Integration_Actions';
@@ -76,7 +70,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.onDeleteTocItem(message, 'withPendingTrack');
                     break;
                 case 'showSingleContainerDelete':
-                    this.onSingleContainerDelete();
+                    this.onSingleContainerDelete(message);
                     break;
                 case 'titleChanging': {
                     message['parentId'] = this.state.project_urn;
@@ -84,7 +78,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                     break;
                 case 'newSplitedSlate':
-                    this.hanndleSplitSlate(message)
+                    setTimeout(()=>{this.hanndleSplitSlate(message)}, 1000)
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -101,8 +95,8 @@ function WithWrapperCommunication(WrappedComponent) {
                     config.disablePrev = false;//message.enablePrev;
                     break;
                 case 'enableNext':
-                        // config.disablePrev = message.enableNext;
-                        config.disableNext = false;//message.enableNext;
+                    // config.disablePrev = message.enableNext;
+                    config.disableNext = false;//message.enableNext;
                     break;
                 case 'disablePrev':
                     // config.disablePrev = message.disablePrev;
@@ -112,27 +106,22 @@ function WithWrapperCommunication(WrappedComponent) {
                     // config.disableNext = message.disableNext;
                     config.disableNext = true;//message.disableNext;
                     break;
-                case 'swappedIS':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
-                case 'ISDeleted':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
+                // case 'swappedIS':
+                // case 'ISDeleted':
+                // case 'TocLoader':
+                //     {
+                //         /**
+                //          * TO BE IMPLEMENTED
+                //          *  */
+                //     }
+                //     break;
                 case 'refreshElementWithTable':
                     {
                         // this.showCanvasBlocker(true);
                         // showHeaderBlocker();
                         // sendDataToIframe({'type': ShowLoader,'message': { status: true }});
                         // this.props.fetchSlateData(config.slateManifestURN);
-                        this.setTableData(message.elementId);
+                        this.setTableData(message.elementId, message.updatedData);
                     }
                     break;
                 case 'canvasBlocker':
@@ -147,18 +136,10 @@ function WithWrapperCommunication(WrappedComponent) {
 
                     }
                     break;
-                case 'TocLoader':
-                    {
-                        /**
-                         * TO BE IMPLEMENTED
-                         *  */
-                    }
-                    break;
                 case 'updateSlateTitleByID':
                     this.updateSlateTitleByID(message);
                     break;
                 case 'projectDetails' :
-                    this.getProjectConfig(message.currentOrigin, config);
                     config.tcmStatus = message.tcm.activated;
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
@@ -179,7 +160,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 case 'getSlateLOResponse':
                     message?this.props.currentSlateLOMath(message.label.en):this.props.currentSlateLOMath("");
                     if(message){
-                        const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g;
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.label.en= message.label.en.replace(regex, "<img src='$1'></img>")
                     }
                     this.props.currentSlateLO(message);
@@ -202,6 +183,12 @@ function WithWrapperCommunication(WrappedComponent) {
                     this.handleRefreshSlate();
                     break;
                 case 'cancelCEPopup':
+                    if(this.props.currentSlateLOData && this.props.currentSlateLOData.label && this.props.currentSlateLOData.label.en){
+                        const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
+                        this.props.currentSlateLOData.label.en= this.props.currentSlateLOData.label.en.replace(regex, "<img src='$1'></img>")
+                        this.props.currentSlateLO(this.props.currentSlateLOData);
+                    }
+                    
                     this.setState({
                         showBlocker: false
                     });
@@ -230,43 +217,6 @@ function WithWrapperCommunication(WrappedComponent) {
                      loadTrackChanges();
                      break;
                 }
-            }
-        }
-
-        modifyObjKeys = (obj, newObj) => {
-            Object.keys(obj).forEach(function(key) {
-              delete obj[key];
-            });
-          
-            Object.keys(newObj).forEach(function(key) {
-              obj[key] = newObj[key];
-            });
-
-            Object.keys(cypressConfig).forEach(function(key) {
-                obj[key] = cypressConfig[key];
-            });
-            
-        }
-
-        getProjectConfig = (currentOrigin, config) => {
-            switch (currentOrigin) {
-                case 'qa':
-                    this.modifyObjKeys(config, qaConfig);
-                    break;
-                case 'perf':
-                    this.modifyObjKeys(config, perfConfig);
-                    break;
-                case 'staging':
-                    this.modifyObjKeys(config, stagingConfig);
-                    break;
-                case 'stg':
-                case 'prod':
-                case 'prod2':
-                    this.modifyObjKeys(config, prodConfig);
-                    break;
-                case 'local':
-                    this.modifyObjKeys(config, localConfig);
-                    break;
             }
         }
 
@@ -301,7 +251,7 @@ function WithWrapperCommunication(WrappedComponent) {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath(message.loObj.label.en) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
-                    const regex = /(<math.*?data-src=\'(.*?)\'.*?<\/math>)/g
+                    const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
                     message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
                 }
                 message.loObj ? this.props.currentSlateLO(message.loObj) : this.props.currentSlateLO(message);
@@ -311,17 +261,31 @@ function WithWrapperCommunication(WrappedComponent) {
                 let bodymatter = newSlateData[config.slateManifestURN].contents.bodymatter
                 let LOElements = [];
 
+                let loIndex = [];
                 bodymatter.forEach((item, index) => {
                     if (item.type == "element-learningobjectivemapping") {
                         LOElements.push(item.id)
+                        loIndex.push(index);
                     }
+                if(item.type == "element-aside"){
+                    item.elementdata.bodymatter.forEach((ele, indexInner) => {
+                        if (ele.type == "element-learningobjectivemapping") {
+                        LOElements.push(ele.id)
+                        indexInner= index + "-" + indexInner;
+                        loIndex.push(indexInner);
+                        }
+                    })
+                }
                 });
                 let loUrn = this.props.currentSlateLOData.id ? this.props.currentSlateLOData.id : this.props.currentSlateLOData.loUrn;
                 let LOWipData = {
                     "elementdata": {
                         "loref": loUrn
                     },
-                    "metaDataAnchorID": LOElements
+                    "metaDataAnchorID": LOElements,
+                    "elementVersionType": "element-learningobjectivemapping",
+                    "loIndex" : loIndex,
+                    "slateUrn": config.slateManifestURN
                 }
                 if(LOElements.length){
                 this.props.updateElement(LOWipData)
@@ -342,6 +306,11 @@ function WithWrapperCommunication(WrappedComponent) {
             //     return false;
             // }
             localStorage.removeItem('newElement');
+            config.slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            config.slateEntityURN = config.tempSlateEntityURN ? config.tempSlateEntityURN : config.slateEntityURN
+            config.tempSlateManifestURN = null
+            config.tempSlateEntityURN = null
+            config.isPopupSlate = false
             let id = config.slateManifestURN; 
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN,(response) => {
                 config.page = 0;
@@ -427,7 +396,7 @@ function WithWrapperCommunication(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
-                this.props.fetchSlateData(message.node.containerUrn, config.page);
+                this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
@@ -438,10 +407,6 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="container-introduction"){
                 sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys} })
-                }
-                else if(config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType =="assessment"){
-                    let newMessage = {assessmentResponseMsg:false};
-                    this.props.isLOExist(newMessage);
                 }
             }
             /**
@@ -475,7 +440,11 @@ function WithWrapperCommunication(WrappedComponent) {
             })
         }
         deleteTocItemWithPendingTrack = (message)=>{
-            this.deleteTocItem(message)
+            let newMessage = {
+                ...message,
+                messageType:'withPendingTrack'
+            }
+            this.deleteTocItem(newMessage)
         }
         checkSlateLockAndDeleteSlate = (message, type) => {
             let that = this;
@@ -531,7 +500,11 @@ function WithWrapperCommunication(WrappedComponent) {
             this.checkSlateLockAndDeleteSlate(message, type)
         }
 
-        onSingleContainerDelete = () => {
+        onSingleContainerDelete = (message) => {
+            let newMessage = {
+                ...message,
+                messageType:'singleContainerDelete'
+            }
             /**
              * TO BE IMPLEMENTED
              *  */
@@ -541,7 +514,7 @@ function WithWrapperCommunication(WrappedComponent) {
 
             this.setState({
                 toggleTocDelete: true,
-                tocDeleteMessage: "singleContainerDelete"
+                tocDeleteMessage: newMessage
             })
         }
 

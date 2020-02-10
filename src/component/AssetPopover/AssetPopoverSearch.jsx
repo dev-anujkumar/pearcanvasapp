@@ -16,7 +16,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config.js'
 const { REACT_APP_API_URL, API_URL, projectUrn, STRUCTURE_APIKEY, ssoToken, GET_ASSETPOPOVER_ID, APO_API_KEY } = config;
 import searchIcon from './asset_popover_search_icon.svg';
-
+import { customEvent} from '../../js/utils';
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -68,13 +68,13 @@ class AssetPopoverSearch extends React.Component {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
                     domNode = document.getElementById('asset-popover-attacher');
-                    originalText = domNode.innerText;
+                    originalText = domNode.innerHTML;
                     assetPopoverDomId = assetPopoverId;
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
                     setTimeout(() => {
-                        document.getElementById(tinymce.activeEditor.id).blur()
-                    }, 0);
+                            customEvent.trigger('assetPopoverSave'); 
+                    },100);
 
                 }
             })

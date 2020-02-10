@@ -369,10 +369,6 @@ export const videoElementTypeAlfrescoDefault = {
         "width": "600",
         "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
         "videoid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "posterimage": {
-        "imageid": "urn:pearson:alfresco:f6269c36-bff5-46e0-ba2f-de9f4f172002",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
-        },
         "videos": [
         {
         "format": "audio/mpeg",

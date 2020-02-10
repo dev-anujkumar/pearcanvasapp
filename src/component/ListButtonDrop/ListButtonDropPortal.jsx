@@ -68,7 +68,34 @@ class ListButtonDropPortal extends Component {
                 const slateObject = Object.values(slateData)[0];
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
-                const listElement = bodymatter.length && bodymatter.find((element) => element.id === activeElement.elementId && element.type === 'element-list');
+                let listElement = Object.create(null, {})
+                bodymatter.length && bodymatter.find(
+                    (element) => {
+                        let isMatched = false
+                        if (element.id === activeElement.elementId) {
+                            isMatched = element.type === 'element-list'
+                            isMatched && (listElement = element)
+                        }
+                        else if (element.type === "element-aside") {
+                            element.elementdata.bodymatter.find(
+                                (nestedElement) => {
+                                    if (nestedElement.id === activeElement.elementId) {
+                                        isMatched = nestedElement.type === 'element-list'
+                                        isMatched && (listElement = nestedElement)
+                                    }
+                                    else if (nestedElement.type === "manifest") {
+                                        nestedElement.contents.bodymatter.find((leafElement) => {
+                                            if (leafElement.id === activeElement.elementId) {
+                                                isMatched = leafElement.type === 'element-list'
+                                                isMatched && (listElement = leafElement)
+                                            }
+                                        })
+                                    }
+                                }
+                            )
+                        }
+                        return isMatched
+                    });
                 let counter = listElement.elementdata && listElement.elementdata.startNumber
                 if(!isNaN(parseInt(counter)))
                 {

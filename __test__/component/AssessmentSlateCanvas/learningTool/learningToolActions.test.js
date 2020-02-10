@@ -39,7 +39,7 @@ let  initialState = {
     numberOfRows : 25
 };
 
-xdescribe('Tests Learning Tool  action', () => {
+describe('Tests Learning Tool  action', () => {
     let store = mockStore(() => initialState);
 
     beforeEach(() => {

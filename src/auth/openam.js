@@ -424,7 +424,7 @@ function openamConfig(options) {
 
     // OpenAM REST API URIs
     this.sessionsURI = function () {
-        return "/json/sessions";
+        return "/json/pearson/sessions";
     };
 
     this.authenticationURI = function () {

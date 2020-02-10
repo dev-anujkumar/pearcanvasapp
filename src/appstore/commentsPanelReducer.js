@@ -102,7 +102,8 @@ export default function (state = initialState, action = INITIAL_ACTION) {
             return {
                 ...state,
                 allComments: payload.comments,
-                slateTitle: payload.title
+                slateTitle: payload.title,
+                comments: payload.comments
             };
         case FETCH_COMMENT_BY_ELEMENT:
             let commentList = state.allComments
@@ -138,14 +139,21 @@ export default function (state = initialState, action = INITIAL_ACTION) {
         case RESOLVE_COMMENT:
 
             let resolveComment = [...state.comments]
+            let resolveAllComment = [...state.allComments]
             resolveComment.forEach(comment => {
+                if (comment.commentUrn === payload.commentUrn) {
+                    comment.commentStatus = payload.resolveOrOpen
+                }
+            })
+            resolveAllComment.forEach(comment => {
                 if (comment.commentUrn === payload.commentUrn) {
                     comment.commentStatus = payload.resolveOrOpen
                 }
             })
             return {
                 ...state,
-                comments: resolveComment
+                comments: resolveComment,
+                allComments: resolveAllComment
             }
         case UPDATE_COMMENT:
 

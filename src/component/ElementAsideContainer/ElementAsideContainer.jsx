@@ -118,6 +118,10 @@ class ElementAsideContainer extends Component {
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                                        let showHideNode = document.querySelector('.show-hide-active')
+                                        if(showHideNode){
+                                            showHideNode.classList.remove("show-hide-active")
+                                        }
                                     },
                                 }}
                                 ref={(c) => {
@@ -195,6 +199,10 @@ class ElementAsideContainer extends Component {
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            let showHideNode = document.querySelector('.show-hide-active')
+                            if(showHideNode){
+                                showHideNode.classList.remove("show-hide-active")
+                            }
                         },
                     }}
                     ref={(c) => {
@@ -221,7 +229,7 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        this.sectionBreakBodyMatter = _containerBodyMatter;
+        // this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
@@ -265,7 +273,18 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];console.log('elem::', _element);
+                            if(_element.contents){
+                                bodyMatterObj = _element.contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBreakBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            }                           
+                            
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
@@ -277,6 +296,10 @@ class ElementAsideContainer extends Component {
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            let showHideNode = document.querySelector('.show-hide-active')
+                            if(showHideNode){
+                                showHideNode.classList.remove("show-hide-active")
+                            }
                         },
                     }}
                     ref={(c) => {
@@ -358,7 +381,7 @@ class ElementAsideContainer extends Component {
                             showSectionBreak = (elementLength == index + 1) ? true : false
                             return (
                                 <React.Fragment key={element.id}>
-                                    {index === 0 && ((!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar")) && <ElementSaprator
+                                    {index === 0 && (!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar") && <ElementSaprator
                                         upperOne={true}
                                         firstOne={index === 0}
                                         index={index}
@@ -456,8 +479,6 @@ class ElementAsideContainer extends Component {
                     <h4 className="heading4NumeroUnoSidebar05" resource=""></h4>
                 </React.Fragment>
             )
-
-
         } else if (designtype == "asideActivity") {
             return (
                 <React.Fragment>
@@ -467,7 +488,7 @@ class ElementAsideContainer extends Component {
             )
         } else {
             return (
-                <div className={designtype + "BorderTop"} />
+                <div className={designtype + "BorderTop"}></div>
             )
 
         }

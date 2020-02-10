@@ -1,22 +1,21 @@
 // IMPORT - Plugins //
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
 
 // IMPORT - Assets //
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, 
-    FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_CITE , PUF } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
-import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+
 export class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
+            activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
@@ -29,7 +28,8 @@ export class AssessmentSlateData extends Component {
     }
     
     componentWillReceiveProps(nextProps){
-     if(this.props!==nextProps && this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
+        
+     if(this.props.getAssessmentDataPopup !== nextProps.getAssessmentDataPopup){
          this.sendDataAssessment(nextProps);
      }
     }
@@ -51,10 +51,12 @@ export class AssessmentSlateData extends Component {
     }
 
     componentDidMount() {
+        let newMessage = {assessmentResponseMsg:false};
+        this.props.isLOExist(newMessage);
         if (this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentid) {
             this.sendDataAssessment(this.props);
             this.setState({
-                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat ? this.props.model.elementdata.assessmentformat : 'Select',
+                activeAssessmentType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.assessmentformat && this.props.model.elementdata.assessmentformat!== 'fpo'? this.props.model.elementdata.assessmentformat : 'Select',
             })
         }
     }
@@ -115,7 +117,8 @@ export class AssessmentSlateData extends Component {
             }, () => {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
-        } else if (assessmentFormat === LEARNING_TEMPLATE) {
+        // } else if (assessmentFormat === LEARNING_TEMPLATE) {
+        } else if (assessmentFormat === LEARNING_TEMPLATE || assessmentFormat === LEARNING_APP_TYPE) {   //PCAT-6773 fixed
             this.mainAddAssessment(e, LEARNING_TEMPLATE);
             } else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
@@ -295,6 +298,7 @@ export class AssessmentSlateData extends Component {
                             <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>

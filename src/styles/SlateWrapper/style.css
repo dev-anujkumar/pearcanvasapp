@@ -151,7 +151,22 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
 /* disable class used in pagenumber for permissioning purpose */
 .pageNumberBox.disableClass{        
     pointer-events:none;            
+   }
+
+.title-head-wrapper .popup-button{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 771px;
 }
+
 .moreloader,
 .moreloader:before,
 .moreloader:after {
@@ -230,4 +245,12 @@ blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{
         box-shadow: 0 -2em;
         height: 5em;
     }
+}
+
+.showHide .cypress-editable.place-holder::before{
+    /* margin-top: 0px !important; */
+}
+
+.showHide .cypress-editable{
+    min-height: 50px !important;
 }

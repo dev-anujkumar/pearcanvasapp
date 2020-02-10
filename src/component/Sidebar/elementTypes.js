@@ -15,7 +15,7 @@ export default {
         'primary-heading': {
             text: 'Headings',
             enum: 'HEADERS',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag','redo'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist','increaseindent','decreaseindent','glossary','assetpopover','slatetag'],//PCAT-6725 fixed
             subtype: {
                 'secondary-heading-1': {
                     text: 'Heading 1',
@@ -546,32 +546,6 @@ export default {
                 }
             }
         },
-        'primary-aside-showhide': {
-            text: 'Show Hide',
-            toolbar: ['assetpopover'],
-            enum: 'MMI',
-            subtype: {
-                'secondary-aside-showhide': {
-                    text: 'Show Hide',
-                    labelText: 'SH',
-                    enum: 'SHOWHIDE',
-                    wipValue: 'showhide'
-                }
-            }
-        },
-        'primary-aside-popup': {
-            text: 'Pop Up',
-            toolbar: ['assetpopover'],
-            enum: 'NARRATIVE_LINK',
-            subtype: {
-                'secondary-aside-popup': {
-                    text: 'Pop Up',
-                    labelText: 'Pop',
-                    enum: 'POPUP',
-                    wipValue: 'popup'
-                }
-            }
-        },
         enumType: 'container',
     },
     'element-workedexample': {
@@ -700,6 +674,32 @@ export default {
                     labelText: 'SL',
                     enum: 'TABLE',
                     wipValue: 'table'
+                }
+            }
+        },
+        'primary-showhide': {
+            text: 'Show Hide',
+            toolbar: ['footnote','glossary','assetpopover'],
+            enum: 'SHOW_HIDE',
+            subtype: {
+                'secondary-aside-showhide': {
+                    text: 'Show Hide',
+                    labelText: 'SH',
+                    enum: 'NA',
+                    wipValue: 'showhide'
+                }
+            }
+        },
+        'primary-popup': {
+            text: 'Pop up window',
+            toolbar: ['assetpopover', 'glossary'],
+            enum: 'POP_UP',
+            subtype: {
+                'secondary-interactive-popup': {
+                    text: 'Popup window',
+                    labelText: 'SH',
+                    enum: 'NA',
+                    wipValue: 'popup'
                 }
             }
         },

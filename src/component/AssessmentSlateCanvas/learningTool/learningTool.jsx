@@ -37,12 +37,12 @@ class LearningTool extends React.Component {
                 "Personal Finance":"knowdl",
                 "Psychology Sims":"knowdl",
                 "qual-sims":"knowdl",
-                "soundbites":"knowdl",
+                "soundbytes":"knowdl",
                 "video-submission":"mediashare",
                 "video-quiz":"mediashare",
                 "myvirtual-child":"myvirtual-x",
                 "myvirtual-life":"myvirtual-x",
-                "survey":"socialexplorer",
+                "socialexplorer-surveys":"socialexplorer",
                 "writingsolutions":"writingsolutions"
             }
         }
@@ -105,7 +105,7 @@ class LearningTool extends React.Component {
 
         let learningToolSearchValue = this.state.searchValue;
         let learningSystem = this.state.learningSystem[tempLearningToolTypeValue]
-        let search //= $('#learningToolSearchBar').hasClass('error')
+        // let search = $('#learningToolSearchBar').hasClass('error')
        // if(!search){
             if (learningToolSearchValue) {
                 this.props.learningToolSearch(learningToolSearchValue, tempLearningToolTypeValue,learningSystem);
@@ -269,8 +269,8 @@ class LearningTool extends React.Component {
                                 <option value="myvirtual-life">MyVirtualLife</option>
                                 <option value="knowdl">Personal Finance </option>
                                 <option value="qual-sims">Qualitative Business Sims</option>
-                                <option value="soundbites">Sound Bytes</option>
-                                <option value="survey">Surveys and Inventories</option>
+                                <option value="soundbytes">Sound Bytes</option>
+                                <option value="socialexplorer-surveys">Surveys and Inventories</option>
                                 <option value="video-library">Video Library</option>
                                 <option value="writingsolutions">Writing Solutions</option>
                             </select>
