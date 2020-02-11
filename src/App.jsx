@@ -16,7 +16,7 @@ import CanvasWrapper from './component/CanvasWrapper';
 // IMPORT - Assets // 
 import './styles/style.css';
 
- console.log("!!!!! ---- canvas-0.7.7  ---- !!!!!!")
+ console.log("!!!!! ---- canvas-0.7.14  ---- !!!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -64,11 +64,33 @@ class App extends Component {
                 const slateManifestURN = params.get('slateManifestURN')
                 const ssoToken = params.get('ssoToken')
                 this.getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken);
+                if(response.data.PATTERNS && Object.keys(response.data.PATTERNS).length>0){
+                    this.loadPatternScripts(response.data.PATTERNS)
+                }
             }
+            
             
         }).catch((error) => {
             console.log("Error in fetching origin:", error)
         })
+    }
+    
+    loadPatternScripts = (PATTERNS) => {
+
+        this.appendPatternScripts(PATTERNS['PATTERN_VENDOR'])
+        this.appendPatternScripts(PATTERNS['PATTERN_BROKER'])
+        this.appendPatternScripts(PATTERNS['PATTERN_ADD_ASSET'])
+        this.appendPatternScripts(PATTERNS['PATTERN_PRODUCT_LINK'])
+        this.appendPatternScripts(PATTERNS['PATTERN_SEARCH_SELECT'])
+    }
+
+    appendPatternScripts = (src) => {
+        let script = document.createElement('script');
+        script.type = "text/javascript";
+        script.defer = true;
+        script.async = false;
+        script.src = src;
+        document.getElementsByTagName('head')[0].appendChild(script);
     }
     
     modifyObjKeys = (obj, newObj) => {

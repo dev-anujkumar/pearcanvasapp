@@ -400,7 +400,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -422,12 +422,13 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
+            
             if(parentElement && parentElement.type === "popup"){
                 dataToReturn.popupEntityUrn = parentElement.contentUrn;
-                if(parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedTitle";
                 } 
-                else if(parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
                     dataToReturn.updatePopupElementField = "formattedSubtitle";
                 }
                 else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
@@ -436,6 +437,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
+                if(previousElementData.status === "approved" && parentElement.contentUrn){
+                    dataToReturn.parentEntityId = parentElement.contentUrn;
+                }
+              
             }
             break;
 
@@ -466,6 +471,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                 }
+                
                 break;
             
         case elementTypeConstant.ELEMENT_ASIDE:
@@ -490,6 +496,9 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;
+    if(previousElementData.status =="approved" && asideData && asideData.contentUrn){
+        dataToReturn.parentEntityId = asideData.contentUrn;
+    }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn
 }

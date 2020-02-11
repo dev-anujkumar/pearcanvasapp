@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT,CURRENT_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -380,7 +380,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             };
                         }
                         else if(nestedEle.type === "popup"){
-                            if(nestedEle.popupdata["formatted-title"]["id"] === elementId){
+                            if(nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId){
                                 nestedEle  = {
                                     ...nestedEle,
                                     popupdata : {
@@ -388,7 +388,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                         "formatted-title" : {...updatedData}
                                     }
                                 };
-                            } else if(nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
+                            } else if(nestedEle.popupdata["formatted-subtitle"] && nestedEle.popupdata["formatted-subtitle"]["id"] === elementId){
                                 nestedEle  = {
                                     ...nestedEle,
                                     popupdata : {
@@ -429,7 +429,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                     };
                                 }
                                 else if(ele.type === "popup"){
-                                    if(ele.popupdata["formatted-title"]["id"] === elementId){
+                                    if(ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId){
                                         ele  = {
                                             ...ele,
                                             popupdata : {
@@ -437,7 +437,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                                                 "formatted-title" : {...updatedData}
                                             }
                                         };
-                                    } else if(ele.popupdata["formatted-subtitle"]["id"] === elementId){
+                                    } else if(ele.popupdata["formatted-subtitle"] && ele.popupdata["formatted-subtitle"]["id"] === elementId){
                                         ele  = {
                                             ...ele,
                                             popupdata : {
@@ -473,7 +473,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 }
             }
             else if(element.type === "popup"){
-                if(element.popupdata["formatted-title"]["id"] === elementId){
+                if(element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId){
                     element  = {
                         ...element,
                         popupdata : {
@@ -481,7 +481,7 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                             "formatted-title" : {...updatedData}
                         }
                     };
-                } else if(element.popupdata["formatted-subtitle"]["id"] === elementId){
+                } else if(element.popupdata["formatted-subtitle"] && element.popupdata["formatted-subtitle"]["id"] === elementId){
                     element  = {
                         ...element,
                         popupdata : {
@@ -523,11 +523,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     } else if(versionedData){
+        if (updatedData && updatedData.pageNumberRef) {
+            versionedData.pageNumberRef = updatedData.pageNumberRef
+        }
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(asideData.id, asideData.contentUrn, 0, asideData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -536,8 +539,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-        }
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+            }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
@@ -713,7 +716,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
             }
         })
         if(cb){
-            cb(true);
+            cb("create",index);
         }  
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -765,7 +768,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
             }
         }
         if(cb){
-            cb(true);
+            cb("delete",eleIndex);
         } 
         dispatch({
             type: DELETE_SHOW_HIDE_ELEMENT,
@@ -778,5 +781,15 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)
+    })
+}
+
+
+export const currentSHowHideElement = (element) => (dispatch, getState) => {
+    dispatch({
+        type: CURRENT_SHOW_HIDE_ELEMENT,
+        payload: {
+            currentShowhideElement:element
+        }
     })
 }

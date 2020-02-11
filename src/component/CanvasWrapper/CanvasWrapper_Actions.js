@@ -7,14 +7,15 @@ import {
 	CLOSE_POPUP_SLATE,
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE,
-    SET_PARENT_ASIDE_DATA
+    SET_PARENT_ASIDE_DATA,
+    SET_PARENT_SHOW_DATA
 } from '../../constants/Action_Constants';
 import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
-
+import figureData from '../ElementFigure/figureTypes.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -44,31 +45,20 @@ const findElementType = (element, index) => {
                     case "mathImage":
                     case "authoredtext":
                     case "tableasmarkup":
+                        /**----------------subtype is now set on the basis of figuretype & alignment basis----------------*/
                         let subType = ""
-                        if (element.subtype == "" || element.subtype == undefined) {
-                            switch (element.figuretype) {
-                                case "image":
-                                    subType = "imageTextWidth";
-                                    break;
-                                case "table":
-                                    subType = "image50TextTableImage";
-                                    break;
-                                case "mathImage":
-                                    subType = "image50TextMathImage";
-                                    break;
-                                case "authoredtext":
-                                    subType = "mathml";
-                                    break;
-                                case "tableasmarkup":
-                                    subType = undefined
-                                    break;
-                                default:
-                                    subType = "imageTextWidth";
-                                    element.figuretype = "image";
-                                    break;
-                            }
-                            element.subtype = subType
+                        if (element.figuretype === "tableasmarkup") {
+                            subType = undefined
+                        } else if (element.figuretype === "authoredtext") {
+                            subType = "mathml"
+                        } else {
+                            let figureType = figureData[element['figuretype']];
+                            let figureAlignment = figureType[element['alignment']]
+                            subType = figureAlignment['imageDimension']
                         }
+                        //  if (element.subtype == "" || element.subtype == undefined) {                        
+                        element.subtype = subType
+                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         elementType = {
@@ -355,7 +345,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
         case "audio":
             if (typeof (index) == 'number') {
                 if (newBodymatter[index].versionUrn == activeElement.id) {
-                    oldPath = bodymatter[index].figuredata.audio.path || ""
+                    oldPath = (bodymatter[index].figuredata.audio && bodymatter[index].figuredata.audio.path) || ""
                 }
             } else {
                 let indexes = index.split('-');
@@ -363,12 +353,12 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio.path
                     }
                 } else if (indexesLen == 3) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
             }
@@ -426,7 +416,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false,showHideObj) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -436,6 +426,12 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
         payload: {
             parentUrn : parentUrn,
             asideData:asideData
+        }
+    })
+    dispatch({
+        type: SET_PARENT_SHOW_DATA,
+        payload: {
+            showHideObj : showHideObj,
         }
     })
     switch (activeElement.figuretype) {

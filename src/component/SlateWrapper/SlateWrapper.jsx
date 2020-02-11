@@ -444,7 +444,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
+        // this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
         //OPEN_AM.logout();
     }
 
@@ -462,7 +462,8 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId) {
+        let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo.isLocked && config.userId !== lockedUserId) {
             this.setState({
                 lockOwner: slateLockInfo.userId,
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
@@ -1025,6 +1026,7 @@ class SlateWrapper extends Component {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
             showTocBlocker();
+            this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])  // Release lock before popup initiates
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return (
                 <PopUp dialogText={dialogText}

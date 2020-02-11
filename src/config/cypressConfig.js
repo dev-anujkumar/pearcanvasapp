@@ -49,7 +49,7 @@ let cypressConfig = {
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
-    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
+    conversionInProcess : false
 }
 
 
