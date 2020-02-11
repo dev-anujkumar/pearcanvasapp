@@ -501,6 +501,9 @@ export class TinyMceEditor extends Component {
                 }
                 this.lastContent = activeElement.innerHTML;
 
+                if (activeElement.nodeName === "CODE" && !activeElement.innerText.trim()) {
+                    activeElement.innerHTML = '<br/>';
+                }
             }
         });
     }
