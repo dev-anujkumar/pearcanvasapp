@@ -208,6 +208,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
+        let parentData = store;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
