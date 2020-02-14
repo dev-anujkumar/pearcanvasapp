@@ -101,7 +101,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if list is being converted from sidepanel then pick counterIncrement value from element data
          */
         if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
-            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber) + 1 
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber)
         }
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
@@ -150,7 +150,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         projectUrn : config.projectUrn,
         projectURN : config.projectUrn,
         slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
-        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
+        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
