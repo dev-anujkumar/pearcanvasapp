@@ -93,10 +93,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
+            if(currentSlateData.type==="popup"){
+                //sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                //dispatch(fetchSlateData(response.data.newParentVersion,slateEntityUrn, 0,{ type : 'popup'}));
+            } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             return false;
+            }
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;

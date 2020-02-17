@@ -242,7 +242,18 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
-			}
+            }
+            else if(versioning && versioning.type==="popup"){
+                let parentData = getState().appStore.slateLevelData;
+                let newslateData = JSON.parse(JSON.stringify(parentData));
+                newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+                return dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: newslateData
+                    }
+                })
+            }
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
