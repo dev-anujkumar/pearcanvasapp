@@ -259,8 +259,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        console.log("Conversion Error >> ",err) 
+        console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.conversionInProcess = false
     })
 }
 catch (error) {
