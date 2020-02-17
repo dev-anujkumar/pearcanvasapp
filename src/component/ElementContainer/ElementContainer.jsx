@@ -460,7 +460,6 @@ class ElementContainer extends Component {
                 if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    console.log("dataToSend", dataToSend.status)
                     if(dataToSend.status === "approved"){
                         config.savingInProgress = true
                     }
@@ -477,7 +476,6 @@ class ElementContainer extends Component {
                         if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            console.log("dataToSend", dataToSend.status)
                             if(dataToSend.status === "approved"){
                                 config.savingInProgress = true
                             }
