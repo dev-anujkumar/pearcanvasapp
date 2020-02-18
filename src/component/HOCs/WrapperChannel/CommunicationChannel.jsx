@@ -193,14 +193,20 @@ function WithWrapperCommunication(WrappedComponent) {
                         showBlocker: false
                     });
                  break;
-                case 'slatePreview':
-                    this.props.publishContent('slatePreview');
+                 case 'slatePreview':
+                    if(!config.savingInProgress){
+                        this.props.publishContent('slatePreview');
+                    }
                     break;
                 case 'projectPreview':
-                    this.props.publishContent('projectPreview');
+                    if(!config.savingInProgress){
+                        this.props.publishContent('projectPreview');
+                    }
                     break;
                 case 'getSlateLockStatus' :
-                    this.releaseLockAndRedirect()
+                    if(!config.savingInProgress){
+                        this.releaseLockAndRedirect()
+                    }
                     break;
                 case 'logout':
                     this.releaseLockAndLogout()
