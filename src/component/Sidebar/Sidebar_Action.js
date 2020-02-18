@@ -101,7 +101,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if list is being converted from sidepanel then pick counterIncrement value from element data
          */
         if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
-            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber) + 1 
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber)
         }
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
@@ -149,10 +149,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType: outputSubTypeEnum,
         projectUrn : config.projectUrn,
         projectURN : config.projectUrn,
-        slateUrn:appStore.parentUrn?appStore.parentUrn.manifestUrn: config.slateManifestURN,
-        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
+        slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
+        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
-        slateEntity : appStore.parentUrn?appStore.parentUrn.contentUrn:config.slateEntityURN
+        slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
 
     let elmIndexes = indexes ? indexes : 0;
@@ -192,7 +192,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }
 
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-
+    config.conversionInProcess = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -201,7 +201,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
     }).then(res =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-
+        config.conversionInProcess = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
@@ -259,8 +259,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        console.log("Conversion Error >> ",err) 
+        console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.conversionInProcess = false
     })
 }
 catch (error) {
@@ -299,6 +300,10 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    let appStore =  getState().appStore;
-    dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+    if(!config.conversionInProcess){
+        let appStore =  getState().appStore;
+        dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
+    } else {
+        return false;
+    }
 }

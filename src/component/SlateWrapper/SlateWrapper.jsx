@@ -487,6 +487,10 @@ class SlateWrapper extends Component {
             this.togglePopup(true)
         }
         else{
+            if(config.savingInProgress){
+                window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
+                this.prohibitPropagation(event)
+            }
             this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
         }
     }

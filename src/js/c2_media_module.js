@@ -23,9 +23,9 @@ const CMIS_REPO = config_object['CMIS_REPO'].toString();
 if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
 if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */            //code for future need
 
-var patternBroker = PatternBroker.default;
-var patternProductLink = PatternProductLink.default;
-var patternAddAnAsset = PatternAddAnAsset.default;
+var patternBroker;
+var patternProductLink;
+var patternAddAnAsset;
 var productLink;
 var addAnAsset = {};
 var addAnAssetConfig = {};
@@ -51,8 +51,6 @@ var libConfig = {
     'userId': uname || config_object['userId']
 };
 
-patternBroker.setup(libConfig);
-
 export const c2MediaModule = {
     addAnAsset: addAnAsset,
     productLinkOnsaveCallBack: function (data, callback) {
@@ -61,6 +59,10 @@ export const c2MediaModule = {
     },
 
     AddanAssetCallBack: function (data, callback) {
+		patternBroker = PatternBroker.default;
+        patternProductLink = PatternProductLink.default;
+        patternAddAnAsset = PatternAddAnAsset.default;
+        patternBroker.setup(libConfig);
         var uniqueID = data.nodeRef && data.nodeRef.split('/')[3];
         var assetType = data.mimetype && data.mimetype.split('/')[0];
         data['uniqueID'] = uniqueID;
@@ -142,13 +144,16 @@ export const c2MediaModule = {
     },
 
     launchAssetBrowser: function (product, server, repo, callback) {
-
+		patternBroker = PatternBroker.default;
+        patternProductLink = PatternProductLink.default;
+        patternAddAnAsset = PatternAddAnAsset.default;
+        patternBroker.setup(libConfig);
         let productRef = product;
         let serverRef = server;
 
         if (addAnAsset && addAnAsset.unmount) {
             addAnAsset.unmount();
-        }
+        }        
 
         var libConfig = {
             'locale': 'en_US',
@@ -252,6 +257,11 @@ export const c2MediaModule = {
             this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 
         } else {
+
+            patternBroker = PatternBroker.default;
+            patternProductLink = PatternProductLink.default;
+            patternAddAnAsset = PatternAddAnAsset.default;
+            patternBroker.setup(libConfig);
 
             if (productLink && productLink.unmount) {
                 productLink.unmount();

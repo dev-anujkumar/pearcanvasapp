@@ -50,7 +50,7 @@ class SlateTagDropdown extends React.Component {
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         }
-        let isLOExist= this.props.slateTagEnable;
+        let isLOExist= this.props.isLOExist;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });

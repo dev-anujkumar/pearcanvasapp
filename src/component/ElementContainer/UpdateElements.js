@@ -396,7 +396,7 @@ export const generateAssessmentSlateData = (index, previousElementData, elementT
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType) => {
     let dataToReturn = {}
     switch (type){
         case elementTypeConstant.AUTHORED_TEXT:
@@ -416,7 +416,22 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 },
                 inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
-                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN      
+                slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
+            }
+            if(parentElement && parentElement.type === "popup"){
+                dataToReturn.popupEntityUrn = parentElement.contentUrn;
+                if(parentElement.popupdata["formatted-title"] && parentElement.popupdata["formatted-title"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedTitle";
+                } 
+                else if(parentElement.popupdata["formatted-subtitle"] && parentElement.popupdata["formatted-subtitle"]["id"] === previousElementData.id){
+                    dataToReturn.updatePopupElementField = "formattedSubtitle";
+                }
+                else if(parentElement.popupdata["postertextobject"][0]["id"] === previousElementData.id){
+                    dataToReturn.section = "postertextobject";
+                }
+            }
+            if(parentElement && parentElement.type === "showhide" && showHideType){
+                dataToReturn.section = showHideType;
             }
             break;
 

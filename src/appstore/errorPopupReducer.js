@@ -4,7 +4,7 @@ import {
 
 const INITIAL_STATE = {
   show:false, 
-  message:'The changes you were trying to make to the element did not get saved. Please try updating the element again.'
+  message:'The element you tried to create or update did not save. Please try again.'
 }
 
 const INITIAL_ACTION = {

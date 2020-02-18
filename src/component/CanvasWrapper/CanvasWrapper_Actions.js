@@ -14,7 +14,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
-
+import figureData from '../ElementFigure/figureTypes.js';
 const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -44,6 +44,20 @@ const findElementType = (element, index) => {
                     case "mathImage":
                     case "authoredtext":
                     case "tableasmarkup":
+                        /**----------------subtype is now set on the basis of figuretype & alignment basis----------------*/
+                        let subType = ""
+                        if (element.figuretype === "tableasmarkup") {
+                            subType = undefined
+                        } else if (element.figuretype === "authoredtext") {
+                            subType = "mathml"
+                        } else {
+                            let figureType = figureData[element['figuretype']];
+                            let figureAlignment = figureType[element['alignment']]
+                            subType = figureAlignment['imageDimension']
+                        }
+                        //  if (element.subtype == "" || element.subtype == undefined) {                        
+                        element.subtype = subType
+                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         elementType = {
@@ -60,6 +74,9 @@ const findElementType = (element, index) => {
                         }
                         break;
                     case "codelisting":
+                        if(element.subtype == "" || element.subtype == undefined) {
+                            element.subtype = "codelisting"
+                        }
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
@@ -101,7 +118,11 @@ const findElementType = (element, index) => {
                 }
                 break;
             case 'element-aside':
-                if (element.subtype === "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
+             	if(element.subtype =="" || element.subtype == undefined){
+                    element.subtype = "sidebar";
+                    element.designtype = "asideLearningObjective";
+                }
+                else if (element.subtype === "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
                     element.designtype = "workedexample1";
                 }
                 else if (element.subtype !== "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
@@ -182,7 +203,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-		if(slateData.data[manifestURN].type === "popup"){
+		if(slateData.data && slateData.data[manifestURN] && slateData.data[manifestURN].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
@@ -224,10 +245,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && versioning.type === 'element-aside'){
+                if(versioning && (versioning.type === 'element-aside' || versioning.type === 'showhide')){
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
-                    let index = versioning.indexes[0];
+                    let index =versioning.type === 'showhide'? versioning.indexes:versioning.indexes[0];
                     newslateData[config.slateManifestURN].contents.bodymatter[index] = Object.values(slateData.data)[0];
                     return dispatch({
                         type: AUTHORING_ELEMENT_UPDATE,
@@ -394,7 +415,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     }
     return oldPath || ""
 }
-export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideData, updateFromC2Flag = false) => (dispatch, getState) => {
+export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false) => (dispatch, getState) => {
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -410,7 +431,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn,asideDa
         case "image":
         case "mathImage":
         case "table":
-            let oldPath = activeElement.figuretype == "image" && updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
+            let oldPath = updateFromC2Flag ? "" : setOldImagePath(getState, activeElement, index)
             dispatch({
                 type: SET_OLD_IMAGE_PATH,
                 payload: {

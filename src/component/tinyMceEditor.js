@@ -39,6 +39,7 @@ export class TinyMceEditor extends Component {
         this.lastContent = '';
         this.clearFormateText = '';
         this.isctrlPlusV = false;
+        this.fromtinyInitBlur = false;
         this.editorConfig = {
             plugins: EditorConfig.plugins,
             selector: '#cypress-0',
@@ -128,7 +129,7 @@ export class TinyMceEditor extends Component {
 
                     if (activeElement) {
                         let currentNode = document.getElementById('cypress-'+this.props.index)
-                        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula"')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula"')):false
+                        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
                         let nodeContent = (currentNode && !currentNode.innerText.trim().length)?true:false
                         if(content.trim().length || activeElement.querySelectorAll('ol').length || activeElement.querySelectorAll('ul').length || contentHTML.match(/<math/g) || isContainsMath){
                             if(nodeContent){
@@ -465,7 +466,7 @@ export class TinyMceEditor extends Component {
             let isContainsMath = false ;
 
             if (activeElement) {
-                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+                isContainsMath = activeElement.innerHTML.match(/<img/) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
              }
 
              if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
@@ -532,7 +533,7 @@ export class TinyMceEditor extends Component {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = this.lastContent;
-                    if(div.children && div.children[0]) {
+                    if(div.children && div.children[0] && !div.innerText) {
                         div.children[0].innerHTML = '<br/>';
                         activeElement.innerHTML = div.children[0].outerHTML;
                     }
@@ -1092,6 +1093,7 @@ export class TinyMceEditor extends Component {
                         */
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if(!newElement) {
+                            this.fromtinyInitBlur = true;
                             this.editorRef.current.blur();
                         }
                     }
@@ -1112,8 +1114,8 @@ export class TinyMceEditor extends Component {
         else if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
-            if (testElem.innerText) {
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            if (testElem.innerText || isContainsMath) {
                 if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath) {
                     this.placeHolderClass = 'place-holder';
                 }
@@ -1146,7 +1148,7 @@ export class TinyMceEditor extends Component {
         } else {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
-            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula"') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula"')) : false;
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
             if (!testElem.innerText.trim()) {
                 testElem.innerText = "";
             }
@@ -1278,7 +1280,7 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container') && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -1451,7 +1453,12 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType);
+        if(!this.fromtinyInitBlur){ 
+            this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+         }
+         else{
+            this.fromtinyInitBlur=false;
+         }
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
@@ -1480,7 +1487,7 @@ export class TinyMceEditor extends Component {
             case 'h4':
                 let model = ""
                 if(this.props.element && this.props.element.type === "popup"){
-                    model = this.props.model.replace(/class="paragraphNumeroUno"/g, "")
+                    model = this.props.model && this.props.model.replace(/class="paragraphNumeroUno"/g, "")
                 }
                 else{
                     model = this.props.model;
