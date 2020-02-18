@@ -102,7 +102,10 @@ export class TinyMceEditor extends Component {
 
                 if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
-                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                        document.getElementById(editor.id).setAttribute('contenteditable', false);
+                        if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
+                            tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins').attr('contenteditable', false)
+                        }
                     }
                 }
 
