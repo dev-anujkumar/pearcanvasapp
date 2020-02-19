@@ -93,6 +93,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
+        if(editableDom){
+          tinyMCE.$(editableDom).find('ol').removeAttr('data-mce-style')
+        }
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if (storeHtml !== domHtml) {
             oldElementData.html.text = domHtml
