@@ -109,7 +109,7 @@ class ListButtonDropPortal extends Component {
                 let counter = listElement.elementdata && listElement.elementdata.startNumber
                 if(!isNaN(parseInt(counter)))
                 {
-                    counter = parseInt(counter) + 1
+                    counter = parseInt(counter) // parseInt(counter) + 1 // issues with migrated projects // earlier default by 0
                 }
                 this.startValue = counter || null
                 this.selectedOption = listElement.subtype || null;

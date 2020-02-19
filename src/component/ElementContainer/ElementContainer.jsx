@@ -168,11 +168,13 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
-        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img').removeAttr('width');
         return tempDiv.innerHTML;
     }
     /**
@@ -348,7 +350,7 @@ class ElementContainer extends Component {
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g, "") : "<p></p>",
+            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML : "<p></p>",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -383,12 +385,16 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
+        let formattedText = this.replaceUnwantedtags(text),
+        formattedOldText= this.replaceUnwantedtags(oldtext);
+
+        //text!==oldtext
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            text !== oldtext
-        );
+            formattedText!==formattedOldText
+            );
     }
 
     figureDifferenceAudioVideo = (index, previousElementData) => {
@@ -492,11 +498,12 @@ class ElementContainer extends Component {
                     html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-
                 if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
-                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData)
+                    dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                    config.savingInProgress = true
+                    if(dataToSend.status === "approved"){
+                        config.savingInProgress = true
+                    }
                     this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                 }
                 break;
@@ -507,11 +514,13 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
+                        if(this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            config.savingInProgress = true
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
+                            if(dataToSend.status === "approved"){
+                                config.savingInProgress = true
+                            }
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         }
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
@@ -526,34 +535,42 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        config.savingInProgress = true
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
+                        if(dataToSend.status === "approved"){
+                            config.savingInProgress = true
+                        }
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                         break;
                     case elementTypeConstant.INTERACTIVE:
-                        if (this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
+                        if(this.figureDifferenceInteractive(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            config.savingInProgress = true
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined)
+                            if(dataToSend.status === "approved"){
+                                config.savingInProgress = true
+                            }
+                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined)
                         }
                         break;
 
                     case elementTypeConstant.FIGURE_CODELISTING:
-                        if (this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            config.savingInProgress = true
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
-                        }
-                        break;
+                            if(this.figureDifferenceBlockCode(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                                if(dataToSend.status === "approved"){
+                                    config.savingInProgress = true
+                                 }
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
+                            }
+                            break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        if (this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
-                            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            config.savingInProgress = true
-                            this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
-                        }
-                        break;
+                            if(this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress){
+                                dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined, asideData)
+                                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                                if(dataToSend.status === "approved"){
+                                    config.savingInProgress = true
+                                }
+                                this.props.updateElement(dataToSend, this.props.index,parentUrn,asideData,undefined,undefined);
+                            }
+                            break;
                 }
                 break;
 
@@ -569,10 +586,12 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     let nodehtml = currentListNode.innerHTML;
                     if (previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, undefined)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                        config.savingInProgress = true
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
+                        if(dataToSend.status === "approved"){
+                            config.savingInProgress = true
+                        }
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
                     }
                     break;
                 }
