@@ -881,6 +881,9 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
+        if(config.savingInProgress){
+            return false
+        }
         let elementId = ""
         if(this.props.currentElement){
             elementId = this.props.currentElement.id
@@ -1547,6 +1550,7 @@ export class TinyMceEditor extends Component {
             }
          }
         if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
+            console.log("%c Initialize fail ", "color:white;background:black;font-size:20px")
             e.preventDefault();
             e.stopPropagation();
             return false;

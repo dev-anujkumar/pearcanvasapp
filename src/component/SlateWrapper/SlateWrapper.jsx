@@ -584,6 +584,9 @@ class SlateWrapper extends Component {
             this.togglePopup(true)
             return false
         }
+        if(config.savingInProgress){
+            return false
+        }
         let indexToinsert
         let outerIndex
         // Detects element insertion from the topmost element separator
