@@ -881,6 +881,9 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
+        if(config.savingInProgress){
+            return false
+        }
         let elementId = ""
         if(this.props.currentElement){
             elementId = this.props.currentElement.id
@@ -1094,6 +1097,7 @@ export class TinyMceEditor extends Component {
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if(!newElement) {
                             this.fromtinyInitBlur = true;
+                            this.editorRef.current.focus();
                             this.editorRef.current.blur();
                         }
                     }
