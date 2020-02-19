@@ -523,6 +523,9 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     } else if(versionedData){
+       if (updatedData && updatedData.pageNumberRef) {
+            versionedData.pageNumberRef = updatedData.pageNumberRef
+        }
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
