@@ -8,7 +8,7 @@ import {
   IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-const { STRUCTURE_APIKEY, GET_ASSETPOPOVER_ID, APO_API_KEY, GET_FIGURES,COREAPI_ENDPOINT, REACT_APP_API_URL } = config;
+const { REACT_APP_API_URL } = config;
 import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
@@ -155,6 +155,11 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
         })
       }
     ).catch(error => console.log('Error while getting data from Asset popover API', error))
+  }
+  else{
+    return store.dispatch({
+      type: 'ASSET_SEARCH_IN_PROGRESS',
+    })
   }
 }
 
