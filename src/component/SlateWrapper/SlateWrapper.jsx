@@ -284,12 +284,6 @@ class SlateWrapper extends Component {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
                     let _slateContent = _slateObject.contents
-                    /* if(_slateObject.type === "popup"){
-                        _slateContent = _slateObject.popupdata
-                    }
-                    else{
-                        _slateContent = _slateObject.contents
-                    } */
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
@@ -322,7 +316,7 @@ class SlateWrapper extends Component {
 
                                         // Element dragging ended
                                         onUpdate: (/**Event*/evt) => {
-                                            if (this.checkOpener(evt)) {
+                                            if (this.checkOpener(evt) || config.savingInProgress) {
                                                 evt.preventDefault()
                                                 evt.stopPropagation()
                                                 return false

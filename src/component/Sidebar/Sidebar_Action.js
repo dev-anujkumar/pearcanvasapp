@@ -300,7 +300,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess){
+    if(!config.conversionInProcess && !config.savingInProgress){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar));
     } else {

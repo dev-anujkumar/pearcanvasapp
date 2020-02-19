@@ -111,8 +111,8 @@ export class TinyMceEditor extends Component {
                         if content is caused by wiris then call blur
                     */
                     if( !e.level ){
-                        clickedX = editor.selection.getBoundingClientRect().left;
-                        clickedY = editor.selection.getBoundingClientRect().top;
+                        clickedX = editor.selection && editor.selection.getBoundingClientRect() && editor.selection.getBoundingClientRect().left;
+                        clickedY = editor.selection && editor.selection.getBoundingClientRect() && editor.selection.getBoundingClientRect().top;
                         // tinyMCE.$('.Wirisformula').each(function () {
                         //     this.naturalHeight && this.setAttribute('height', this.naturalHeight + 4)
                         //     this.naturalWidth && this.setAttribute('width', this.naturalWidth)

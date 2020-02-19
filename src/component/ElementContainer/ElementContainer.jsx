@@ -625,6 +625,7 @@ class ElementContainer extends Component {
     }
 
     toggleColorPaletteList = () => {
+        if(config.savingInProgress) return false
         const { showColorPaletteList } = this.state;
         this.handleFocus();
         this.setState({
