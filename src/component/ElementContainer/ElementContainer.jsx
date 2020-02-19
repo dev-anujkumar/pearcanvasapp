@@ -157,6 +157,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img').removeAttr('width');
         return tempDiv.innerHTML;
     }
     /**
@@ -369,6 +371,7 @@ class ElementContainer extends Component {
         //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
+
         //text!==oldtext
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
