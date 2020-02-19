@@ -26,7 +26,7 @@ class OpenerElement extends Component {
             document.querySelector("[name='long_description']").innerHTML = props.element.backgroundimage.longdescripton;
 
         this.state = {
-            label: getOpenerContent(textsemantics, "label", text) || "No Label",
+            label: getOpenerContent(textsemantics, "label", text) || 'No Label',
             number: getOpenerContent(textsemantics, "number", text),
             title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
@@ -293,9 +293,10 @@ class OpenerElement extends Component {
 
     createSemantics = ({...values}) => {
         let textSemantics = [];
-        let currentIndex = 0;
+        let currentIndex = 0;   
         
-        Object.keys(values).forEach(item => {
+        if(values.label && values.number){
+            Object.keys(values).forEach(item => {
             textSemantics.push({
                 "type": item,
                 "charStart": currentIndex,
@@ -303,7 +304,17 @@ class OpenerElement extends Component {
             });
             currentIndex++;
         });
-
+    }
+        else if(values.label || values.number){
+            let hasValue = values.label ? values.label : values.number;
+            let type = values.label ? "label" : "number";
+            textSemantics.push({
+                "type": type,
+                "charStart": currentIndex,
+                "charEnd": currentIndex += (hasValue).length
+            });
+        }
+    
         return textSemantics;
     }
 
@@ -332,7 +343,7 @@ class OpenerElement extends Component {
 
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
-        label = event.target && event.target.innerText ? event.target.innerText : label;
+        label = event.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
         imgSrc = event.imgSrc || imgSrc;
         imageId = event.imageId || imageId;
 
@@ -345,6 +356,7 @@ class OpenerElement extends Component {
         }
                 
         element.title.text = `${label} ${number} ${title}`;
+        element.title.text = element.title.text.trim();
         element.title.textsemantics = this.createSemantics({label, number});
 
         if(!element.backgroundimage) {

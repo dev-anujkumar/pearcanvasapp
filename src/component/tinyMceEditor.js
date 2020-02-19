@@ -1097,6 +1097,7 @@ export class TinyMceEditor extends Component {
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if(!newElement) {
                             this.fromtinyInitBlur = true;
+                            this.editorRef.current.focus();
                             this.editorRef.current.blur();
                         }
                     }

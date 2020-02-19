@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag,openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -149,8 +149,16 @@ class ElementContainer extends Component {
         html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
+        tinyMCE.$(tempDiv).find('br').remove();
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
+        tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img').removeAttr('width');
         return tempDiv.innerHTML;
     }
     /**
@@ -326,7 +334,7 @@ class ElementContainer extends Component {
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
-            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML.replace(/<br data-mce-bogus="1">/g, "") : "<p></p>",
+            text = document.getElementById(`cypress-${index}-2`) ? document.getElementById(`cypress-${index}-2`).innerHTML : "<p></p>",
             captionDOM = document.getElementById(`cypress-${index}-3`),
             creditsDOM = document.getElementById(`cypress-${index}-4`)
 
@@ -336,12 +344,12 @@ class ElementContainer extends Component {
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
             oldtext = previousElementData.html.text?previousElementData.html.text:""
 
-        captionHTML = captionHTML.match(/(<p.*?>.*?<\/p>)/g) ? captionHTML : `<p>${captionHTML}</p>`
-        creditsHTML = creditsHTML.match(/(<p.*?>.*?<\/p>)/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-        titleHTML = titleHTML.match(/(<p.*?>.*?<\/p>)/g) ? titleHTML : `<p>${titleHTML}</p>`
-        text = text.match(/(<p.*?>.*?<\/p>)/g) ? text : `<p>${text}</p>`
-        oldtext = oldtext.match(/(<p.*?>.*?<\/p>)/g) ? oldtext : `<p>${oldtext}</p>`
+        captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
+        creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
+        subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+        titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
+        text = matchHTMLwithRegex(text) ? text : `<p>${text}</p>`
+        oldtext = matchHTMLwithRegex(oldtext) ? oldtext : `<p>${oldtext}</p>`
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -361,11 +369,15 @@ class ElementContainer extends Component {
         //     else {
         //         return 0
         //     }
+        let formattedText = this.replaceUnwantedtags(text),
+        formattedOldText= this.replaceUnwantedtags(oldtext);
+
+        //text!==oldtext
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            text !== oldtext
+            formattedText!==formattedOldText
             );
     }
 
@@ -457,7 +469,7 @@ class ElementContainer extends Component {
                     html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (html !== previousElementData.html.text || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
+                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
