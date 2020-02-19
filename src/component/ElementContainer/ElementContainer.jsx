@@ -556,6 +556,7 @@ class ElementContainer extends Component {
                 {
                     // let html = node.innerHTML;
                     let currentListNode = document.getElementById(`cypress-${this.props.index}`)
+                    tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     let nodehtml = currentListNode.innerHTML;
                     if (previousElementData.html && (nodehtml !== previousElementData.html.text || forceupdate && !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined)
