@@ -1551,7 +1551,6 @@ export class TinyMceEditor extends Component {
             }
          }
         if(tinymce.activeEditor && tinymce.activeEditor.id!==e.target.id){
-            console.log("%c Initialize fail ", "color:white;background:black;font-size:20px")
             e.preventDefault();
             e.stopPropagation();
             return false;
