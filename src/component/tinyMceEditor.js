@@ -119,7 +119,9 @@ export class TinyMceEditor extends Component {
                         // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                        this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
+                        if(!config.savingInProgress){
+                            this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
+                        }
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
@@ -1457,7 +1459,7 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        if(!this.fromtinyInitBlur){ 
+        if(!this.fromtinyInitBlur && !config.savingInProgress){ 
             this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
          }
          else{
@@ -1466,6 +1468,8 @@ export class TinyMceEditor extends Component {
     }
     
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
+        if(config.savingInProgress) return false
+        
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
         let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";

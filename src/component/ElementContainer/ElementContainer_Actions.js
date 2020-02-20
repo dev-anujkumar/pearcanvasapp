@@ -290,13 +290,14 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+                    config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
             }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
-        config.savingInProgress = false
+        
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
        
 

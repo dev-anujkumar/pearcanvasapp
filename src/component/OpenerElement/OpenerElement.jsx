@@ -323,7 +323,7 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
-        if(checkSlateLock(this.props.slateLockInfo)){
+        if(checkSlateLock(this.props.slateLockInfo) || config.savingInProgress){
             event.preventDefault()
             return false
         }

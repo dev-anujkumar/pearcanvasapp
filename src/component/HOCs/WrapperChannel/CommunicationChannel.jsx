@@ -403,6 +403,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 }
                 this.props.fetchAudioNarrationForContainer(slateData)  
                 this.props.fetchSlateData(message.node.containerUrn,config.slateEntityURN, config.page,'');
+                config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);
                 this.props.setSlateParent(message.node.nodeParentLabel);
