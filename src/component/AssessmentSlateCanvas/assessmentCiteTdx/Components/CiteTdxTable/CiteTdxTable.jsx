@@ -4,13 +4,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
+import {setCurrentCiteTdx} from '../../Actions/CiteTdxActions'
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
 
-
+        
+    }
+    addAssessment = (addedValue) => {
+       this.props.setCurrentCiteTdx(addedValue);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
@@ -30,7 +34,7 @@ class CiteTdxTable extends Component {
                                 {this.props.apiData.assessments.map((item, index) => {
                                     return (<tr>
                                         <td className="td-class">
-                                            <input type="radio" className="radio-button"/>
+                                            <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)}/>
                                             <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                             <b>{item.name}</b>
                                         </td>
@@ -52,9 +56,19 @@ class CiteTdxTable extends Component {
     }
 }
 
-export default connect((state) => {
+
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+  }
+  
+  const mapStateToProps = (state) => {
     return {
         apiData: state.citeTdxReducer.citeTdxData
     }
+  }
+  
+  export default connect(
+    mapStateToProps,
+    mapActionToProps
+  )(CiteTdxTable);
 
-})(CiteTdxTable);

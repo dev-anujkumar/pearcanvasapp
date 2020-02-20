@@ -32,7 +32,7 @@ headerProps = {
           <CiteTdxHeader headerProps={this.headerProps} />
           <FilterAssessmentData />
           <CiteTdxTable assessmentType={this.props.assessmentType}/>
-          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment}/>
+          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction}/>
           
         </div>
       </div>

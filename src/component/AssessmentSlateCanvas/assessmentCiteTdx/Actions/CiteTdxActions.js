@@ -30,4 +30,10 @@ export const getCiteTdxData = (assessmentType) => (dispatch) => {
         })
     })
 }
+export const setCurrentCiteTdx = (currentAssessmentSelected) => (dispatch, getState) => {
+    dispatch({
+        type: 'CURRENT_SELECTED_ASSESSMENT',
+        payload: currentAssessmentSelected
+    })
+}
 

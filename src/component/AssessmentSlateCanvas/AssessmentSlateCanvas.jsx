@@ -80,6 +80,17 @@ export class AssessmentSlateCanvas extends Component {
         disableHeader(true);
         this.updateAssessment(pufObj.id, "", pufObj.title, assessmentType , pufObj.usagetype, 'insert');
     }
+    addCiteTdxAssessment = (citeTdxObj, activeAssessmentType) => {
+        let assessmentType = activeAssessmentType === FULL_ASSESSMENT_CITE ? "cite" : "tdx";
+        let usagetype="Quiz"
+        let usage = document.getElementsByClassName('span.slate_assessment_metadata_dropdown_label')[0];
+        if(usage){
+            usagetype=usage.innerText;
+        }
+        showTocBlocker();
+        disableHeader(true);
+        this.updateAssessment(citeTdxObj.id, "", citeTdxObj.title, assessmentType , usagetype, 'insert');
+    }
 
     /***
      * @description Open C2 module with predefined Alfresco location
@@ -219,6 +230,7 @@ export class AssessmentSlateCanvas extends Component {
                     learningTemplateLabel = {this.state.learningTemplateLabel}
                     setSlateParent={this.props.setSlateParent}
                     setSlateEntity={this.props.setSlateEntity}
+                    addCiteTdxAssessment={this.addCiteTdxAssessment}
                     />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
