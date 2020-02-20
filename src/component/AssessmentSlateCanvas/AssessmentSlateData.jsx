@@ -139,7 +139,7 @@ export class AssessmentSlateData extends Component {
                     activeAssessmentType: (assessmentFormat==="cite" || assessmentFormat === FULL_ASSESSMENT_CITE)?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX,
                     showCiteTdxComponent: true
                 }, () => {
-                    this.mainAddAssessment(e, assessmentFormat==="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX);
+                    this.mainAddAssessment(e, (assessmentFormat==="cite" || assessmentFormat === FULL_ASSESSMENT_CITE)?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX);
             })
             }
             else {
