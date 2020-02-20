@@ -97,6 +97,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
+        if(editableDom){
+          tinyMCE.$(editableDom).find('ol').removeAttr('data-mce-style')
+        }
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
@@ -320,7 +323,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess){
+    if(!config.conversionInProcess && !config.savingInProgress){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {

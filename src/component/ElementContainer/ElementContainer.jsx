@@ -584,6 +584,7 @@ class ElementContainer extends Component {
                     // let html = node.innerHTML;
                     let parentIndex = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
                     let currentListNode = document.getElementById(parentIndex)
+                    tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     let nodehtml = currentListNode.innerHTML;
                     if (previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
@@ -653,6 +654,7 @@ class ElementContainer extends Component {
     }
 
     toggleColorPaletteList = () => {
+        if(config.savingInProgress) return false
         const { showColorPaletteList } = this.state;
         this.handleFocus();
         this.setState({

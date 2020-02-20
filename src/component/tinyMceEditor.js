@@ -906,6 +906,9 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
+        if(config.savingInProgress){
+            return false
+        }
         let elementId = ""
         if (this.props.currentElement) {
             elementId = this.props.currentElement.id
