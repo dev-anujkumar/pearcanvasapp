@@ -93,6 +93,16 @@ class ListButtonDropPortal extends Component {
                                     }
                                 }
                             )
+                          
+                        }else if (element.type === "showhide"){
+                            element.interactivedata[this.props.showHideObj.showHideType].find(
+                                    (nselement) => {
+                                        let isMatched = false
+                                        if (nselement.id === activeElement.elementId) {
+                                            isMatched = nselement.type === 'element-list'
+                                            isMatched && (listElement = nselement)
+                                        }}
+                            )
                         }
                         return isMatched
                     });
@@ -134,7 +144,8 @@ ListButtonDropPortal.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        activeElement: state.appStore.activeElement
+        activeElement: state.appStore.activeElement,
+        showHideObj:state.appStore.showHideObj
     };
 };
 

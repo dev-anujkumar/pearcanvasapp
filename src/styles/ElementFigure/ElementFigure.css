@@ -207,7 +207,21 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
 .pearson-component.image.figureData.table-figure-data table tr{
     height: 40px !important; 
  }
- .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
+ table ul li{
+    margin-bottom: 0px !important;
+ }
+ .pearson-component.image.figureData.table-figure-data ul {
+    padding-inline-start: 15px!important;
+ }
+ .mce-item-table caption{
+     border: none !important;
+     outline: none !important;
+ }
+ .mce-item-table th{
+    text-align: center ;
+    font-weight: 400 !important;
+ }
+ /* .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
      padding: 0px 7px !important; 
      font: inherit !important; 
-  }
+  } */

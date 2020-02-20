@@ -68,7 +68,7 @@ class AssetPopoverSearch extends React.Component {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
                     domNode = document.getElementById('asset-popover-attacher');
-                    originalText = domNode.innerText;
+                    originalText = domNode.innerHTML;
                     assetPopoverDomId = assetPopoverId;
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
@@ -176,7 +176,7 @@ class AssetPopoverSearch extends React.Component {
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon}/>
-                        <input className="searchBarApo" placeholder="Search for images..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <input className="searchBarApo" placeholder="Search for assets" type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <label className="modal__close" onClick={this.apoSearchClose}></label>
                     </section>
 

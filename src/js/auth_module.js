@@ -1,3 +1,4 @@
+import { sendDataToIframe } from '../constants/utility.js'
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const WRAPPER_URL = config_object.WRAPPER_URL;
@@ -38,11 +39,10 @@ if ( environment !== 'development' ) {
             // window.location = '/login-html/login.html'
             document.cookie = "PearsonSSOSession=; expires=Thu, 01 Jan 1970 00:00:01 GMT ;domain=.pearson.com;path=/";
             // reload the page
-            window.parent.postMessage(  {
+            sendDataToIframe(  {
                 'type': 'reloadUrl',
                 'message': {}
-            },
-            WRAPPER_URL)
+            })
             // document.location.reload();
         }
         //console.log("USER IS NOT AUTHENTICATED");

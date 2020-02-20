@@ -131,7 +131,7 @@ class Sidebar extends Component {
                 }
     
                 primaryOptions = <div
-                    className="element-dropdown">
+                    className={`element-dropdown ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""}`}>
                     <div className="element-dropdown-title" data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         { activePrimaryOption === "primary-single-assessment" ? null : dropdownArrow }
@@ -211,9 +211,9 @@ class Sidebar extends Component {
                 if(this.state.elementDropdown === 'secondary') {
                     active = 'active';
                 }
-    
+
                 secondaryOptions = <div
-                    className={`element-dropdown ${display}`}>
+                    className={`element-dropdown ${display} ${this.props.showHideObj && this.props.activeElement.elementType? "sidebar-disable": ""} `}>
                     <div className="element-dropdown-title" data-element="secondary" onClick={this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {dropdownArrow}
@@ -415,7 +415,8 @@ const mapStateToProps = state => {
     return {
         activeElement: state.appStore.activeElement,
         showModule:state.metadataReducer.showModule,
-        permissions : state.appStore.permissions
+        permissions : state.appStore.permissions,
+        showHideObj:state.appStore.showHideObj
     };
 };
 
