@@ -8,7 +8,6 @@ import {
   IMAGES_FROM_API_FAIL
 } from '../../constants/Action_Constants';
 import config from '../../config/config.js'
-const { REACT_APP_API_URL } = config;
 import axios from 'axios';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
@@ -125,7 +124,7 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     versionUrn = config.projectUrn;
 
     currentlySearching = true;
-    return dispatch => fetch(REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
+    return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
       method: 'GET',
       headers: {
         'pearsonssosession': config.ssoToken
