@@ -166,7 +166,10 @@ const findElementType = (element, index) => {
                 }
                 break;
             default:
-                elementType = { ...elementDataBank["element-authoredtext"] }
+               // elementType = { ...elementDataBank["element-authoredtext"] }
+                elementType = {
+                    elementType: ''
+                }
         }
     } catch (err) {
         elementType = {
