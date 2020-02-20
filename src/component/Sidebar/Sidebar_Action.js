@@ -204,6 +204,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
+    if(conversionDataToSend.status === "approved"){
+        config.savingInProgress = true
+    }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -219,6 +222,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
+        config.savingInProgress = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
@@ -281,6 +285,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.conversionInProcess = false
+        config.savingInProgress = false
     })
 }
 catch (error) {

@@ -122,9 +122,11 @@ export class TinyMceEditor extends Component {
                         // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                        this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType);
-                        editor.selection.placeCaretAt(clickedX, clickedY);
-                    }
+                        if(!config.savingInProgress){
+                            this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
+                        }
+                        editor.selection.placeCaretAt(clickedX,clickedY);                       
+                    }                   
 
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
@@ -1494,15 +1496,17 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        if(!this.fromtinyInitBlur){ 
+        if(!this.fromtinyInitBlur && !config.savingInProgress){ 
             this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
          }
          else{
             this.fromtinyInitBlur=false;
          }
     }
-
-    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
+    
+    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
+        if(config.savingInProgress) return false
+        
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
         let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";

@@ -450,7 +450,10 @@ class ElementContainer extends Component {
         const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         dataToSend = createOpenerElementData(this.props.element, elementType, primaryOption, secondaryOption)
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        this.props.updateElement(dataToSend, 0, undefined, undefined, undefined, undefined);
+        if(dataToSend.status === "approved"){
+            config.savingInProgress = true
+        }
+        this.props.updateElement(dataToSend, 0,undefined,undefined,undefined,undefined);
     }
 
     /**
