@@ -82,14 +82,14 @@ export class AssessmentSlateCanvas extends Component {
     }
     addCiteTdxAssessment = (citeTdxObj, activeAssessmentType) => {
         let assessmentType = activeAssessmentType === FULL_ASSESSMENT_CITE ? "cite" : "tdx";
-        let usagetype="Quiz"
-        let usage = document.getElementsByClassName('span.slate_assessment_metadata_dropdown_label')[0];
-        if(usage){
-            usagetype=usage.innerText;
-        }
+        // let usagetype="Quiz"
+        // let usage = document.getElementsByClassName('slate_assessment_metadata_dropdown_label')[0];
+        // if(usage){
+        //     usagetype=usage.innerText;
+        // }
         showTocBlocker();
         disableHeader(true);
-        this.updateAssessment(citeTdxObj.id, "", citeTdxObj.title, assessmentType , usagetype, 'insert');
+        this.updateAssessment(citeTdxObj.id, "", citeTdxObj.title, assessmentType , citeTdxObj.usageType, 'insert');
     }
 
     /***

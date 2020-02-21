@@ -10,7 +10,8 @@ class CiteTdxFooter extends Component {
             let obj = {
                 id: this.props.currentAssessmentSelected.versionUrn,
                 title: this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.name? this.props.currentAssessmentSelected.name: "dummy",
-                }
+                usageType: this.props.usageTypeMetadata
+            }
             this.props.addCiteTdxFunction(obj);
             this.props.closeWindowAssessment();
       

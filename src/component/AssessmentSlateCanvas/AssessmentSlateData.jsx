@@ -324,7 +324,7 @@ export class AssessmentSlateData extends Component {
             return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
-            return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment}/>
+            return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType}/>
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
