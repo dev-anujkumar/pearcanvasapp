@@ -54,7 +54,8 @@ let config = {
     IDENTITY_URL: "/auth",
     GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
     GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
-    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
+    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/",
+    lastActiveElementId:'',
 };
 
 if (process.env.NODE_ENV === "development") {
