@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import CiteLoader from './../CiteLoader/CiteLoader.jsx';
+import { setCurrentCiteTdx } from '../../Actions/CiteTdxActions'
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +13,9 @@ class CiteTdxTable extends Component {
         };
 
 
+    }
+    addAssessment = (addedValue) => {
+        this.props.setCurrentCiteTdx(addedValue);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
@@ -35,7 +39,7 @@ class CiteTdxTable extends Component {
                                         <React.Fragment key={`assessment-${index}`}>
                                             <tr>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <b>{item.name}</b>
                                                 </td>
@@ -45,8 +49,6 @@ class CiteTdxTable extends Component {
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr></React.Fragment>)
                                 })}
-
-
                             </tbody>
                         </table>
                     }
@@ -58,12 +60,22 @@ class CiteTdxTable extends Component {
     }
 }
 
-export default connect((state) => {
+
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+}
+
+const mapStateToProps = (state) => {
     return {
         citeApiData: state.citeTdxReducer.citeData,
         tdxApiData: state.citeTdxReducer.tdxData,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         isLoading: state.citeTdxReducer.isLoading
     }
+}
 
-})(CiteTdxTable);
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(CiteTdxTable);
+

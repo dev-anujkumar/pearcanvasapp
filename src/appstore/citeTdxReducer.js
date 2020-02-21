@@ -3,6 +3,7 @@ const INITIAL_STATE = {
     tdxData: [],
     assessmenterrFlag: false,
     isLoading: true,
+    currentAssessmentSelected:{}
 }
 
 const INITIAL_ACTION = {
@@ -31,6 +32,12 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
                 ...state,
                 isLoading: action.payload.isLoading
             }
+        case "CURRENT_SELECTED_ASSESSMENT": {
+                return {
+                    ...state,
+                    currentAssessmentSelected: action.payload
+                }
+        }
         default:
             return state
     }
