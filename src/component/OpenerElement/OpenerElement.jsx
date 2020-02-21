@@ -337,7 +337,7 @@ class OpenerElement extends Component {
         if (classList.length > 0 
             && (classList.contains("opener-title") || classList.contains("opener-number"))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
-            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
+            && ((this.state.title === getOpenerContent(textsemantics, "title", text)) && (this.state.title !== ""))) {
             flag = false;
         }
 
