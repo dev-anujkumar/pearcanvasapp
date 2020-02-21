@@ -7,25 +7,42 @@ import axios from 'axios';
  */
 export const getCiteTdxData = (assessmentType) => (dispatch) => {
     
-    let url =`https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v2/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ?`CITE`:`TDX`}`;
+    let url =`https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ?`CITE`:`TDX`}&status=approved`;
     return axios.get(url, {
           headers:  {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        dispatch({
-            type: 'GET_CITE_TDX_RESOURCES',
-            payload: {
-                data: res.data,
-                errFlag: false,
-            }
-        })
+        if(assessmentType === FULL_ASSESSMENT_CITE){
+            dispatch({
+                type: 'GET_CITE_RESOURCES',
+                payload: {
+                    data: res.data,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+        dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true }});
+
+        } else {
+            dispatch({
+                type: 'GET_TDX_RESOURCES',
+                payload: {
+                    data: res.data,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+        dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true }});
+
+        }
     }).catch((error) => {
         dispatch({
             type: 'GET_CITE_TDX_RESOURCES',
             payload: {
                 data: [],
-                errFlag: true
+                errFlag: true,
+                isLoading: false
             }
         })
     })

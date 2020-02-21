@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 
-class FilterAssessmentData extends Component {
+class CiteTdxFooter extends Component {
     render() {
         return (
             <div className="assessmentpopup-footer">
@@ -18,4 +18,4 @@ class FilterAssessmentData extends Component {
     }
 }
 
-export default FilterAssessmentData;
+export default CiteTdxFooter;

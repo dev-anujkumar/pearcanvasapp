@@ -6,7 +6,8 @@ import CiteTdxHeader from './Components/CiteTdxHeader/CiteTdxHeader.jsx';
 import FilterAssessmentData from './Components/FilterAssessmentData/FilterAssessmentData.jsx';
 import CiteTdxFooter from './Components/CiteTdxFooter/CiteTdxFooter.jsx';
 import CiteTdxTable from './Components/CiteTdxTable/CiteTdxTable.jsx';
-import {getCiteTdxData} from './Actions/CiteTdxActions.js';
+import CiteComponentError from './Components/CiteError/CiteComponentError.jsx';
+import { getCiteTdxData } from './Actions/CiteTdxActions.js';
 import './../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { connect } from 'react-redux';
 class RootCiteTdxComponent extends Component {
@@ -18,9 +19,18 @@ class RootCiteTdxComponent extends Component {
   componentDidMount() {
     this.props.getCiteTdxData(this.props.assessmentType);
   }
+  componentDidUpdate() {
+    return true;
+  }
+/** @description - this method used to search assessment data */
+
+  searchAssessment = () => {
+
+  }
+
   /*** @description - This function is to pass props to Cite/Tdx Header component
 */
-headerProps = {
+  headerProps = {
     title: 'Pearson Assessments',
     closeWindowAssessment: this.props.closeWindowAssessment
   };
@@ -29,11 +39,12 @@ headerProps = {
     return (
       <div className="vex-overlay cite-wrapper">
         <div className="root-container">
-          <CiteTdxHeader headerProps={this.headerProps} />
-          <FilterAssessmentData />
-          <CiteTdxTable assessmentType={this.props.assessmentType}/>
-          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment}/>
-          
+          <CiteComponentError>
+            <CiteTdxHeader headerProps={this.headerProps} />
+            <FilterAssessmentData />
+            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} />
+            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} />
+          </CiteComponentError>
         </div>
       </div>
     );
