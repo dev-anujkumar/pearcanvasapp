@@ -356,7 +356,6 @@ class OpenerElement extends Component {
         }
                 
         element.title.text = `${label} ${number} ${title}`;
-        element.title.text = element.title.text.trim();
         element.title.textsemantics = this.createSemantics({label, number});
 
         if(!element.backgroundimage) {
