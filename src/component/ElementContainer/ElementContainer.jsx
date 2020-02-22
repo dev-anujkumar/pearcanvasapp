@@ -159,6 +159,10 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('height');
         tinyMCE.$(tempDiv).find('img').removeAttr('width');
+        tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
+        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         return tempDiv.innerHTML;
     }
     /**
@@ -468,6 +472,7 @@ class ElementContainer extends Component {
                     tempDiv.innerHTML = tempDiv.innerHTML.match(/(<p.*?>.*?<\/p>)/g) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
                     html = html.match(/(<p.*?>.*?<\/p>)/g) ? html : `<p class="paragraphNumeroUno">${html}</p> `
                 }
+                html =html.replace(/(\r\n|\n|\r)/gm, '')
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
                 if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType)
