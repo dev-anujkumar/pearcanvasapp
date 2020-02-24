@@ -66,18 +66,17 @@ class GlossaryFootnoteMenu extends React.Component {
      * Checks difference in glossary/footnote data
      */
     glossaryFootnoteDifference = (newTerm, newDef, oldTerm, oldDef, type) => {
+        let domparser, newTermDom, newDefDom, oldTermDom, oldDefDom
+        domparser = new DOMParser()
+        newTermDom = domparser.parseFromString(newTerm, "text/html")
+        oldTermDom = domparser.parseFromString(oldTerm, "text/html")
+        oldDefDom = domparser.parseFromString(oldDef, "text/html")
+        newDefDom = domparser.parseFromString(newDef, "text/html")
         switch(type){
             case "glossary":
-                if(newTerm !== oldTerm ||
-                    newDef !== oldDef){
-                        return true
-                    }
-                return false
+                return !(newTermDom.isEqualNode(oldTermDom) && newDefDom.isEqualNode(oldDefDom))
             case "footnote":
-                if(newDef !== oldDef){
-                    return true
-                }
-                return false
+                return !newDefDom.isEqualNode(oldDefDom)
         }
     }
     /**
@@ -85,19 +84,17 @@ class GlossaryFootnoteMenu extends React.Component {
     * @param {event} 
     */
     saveContent = () => {
-        if (!hasReviewerRole()) {
-            const { glossaryFootnoteValue } = this.props;
-            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup } = glossaryFootnoteValue;
-            let term = null;
-            let definition = null;
-            term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
-            definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p><br/></p>"
-            term = term.match(/<p>/g) ? term.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            if (this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())) {
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
-            }
+        const { glossaryFootnoteValue } = this.props;
+        let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup} = glossaryFootnoteValue;
+        let term = null;
+        let definition = null;
+        term = document.querySelector('#glossary-editor > div > p') && `${document.querySelector('#glossary-editor > div > p').innerHTML}` || "<p></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
+        term = term.match(/<p>/g) ? term.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+        definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+        if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)
         }
         this.props.showGlossaaryFootnote(false);
     }
