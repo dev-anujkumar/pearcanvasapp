@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
     citeData: [],
     tdxData: [],
+    mmiDat: [],
     assessmenterrFlag: false,
     isLoading: true,
     currentAssessmentSelected:{}
@@ -26,6 +27,13 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
                tdxData : action.payload.data,
                assessmenterrFlag : action.payload.errFlag,
                isLoading: action.payload.isLoading
+            }
+        case 'GET_MMI_RESOURCES' :
+            return {
+                ...state,
+                mmiData : action.payload.data,
+                assessmenterrFlag : action.payload.errFlag,
+                isLoading: action.payload.isLoading
             }
         case 'SET_LOADING_TRUE' :
             return {

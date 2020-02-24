@@ -7,7 +7,7 @@ import axios from 'axios';
  */
 export const getCiteTdxData = (assessmentType) => (dispatch) => {
     
-    let url =`https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ?`CITE`:`TDX`}&status=approved`;
+    let url =`https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ?`CITE`: assessmentType === FULL_ASSESSMENT_TDX ?`TDX`:`MMI`}&status=approved`;
     return axios.get(url, {
           headers:  {
             PearsonSSOSession: config.ssoToken
@@ -24,9 +24,22 @@ export const getCiteTdxData = (assessmentType) => (dispatch) => {
             })
         dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true }});
 
-        } else {
+        } 
+        else if(assessmentType === FULL_ASSESSMENT_TDX){
             dispatch({
                 type: 'GET_TDX_RESOURCES',
+                payload: {
+                    data: res.data,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+        dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true }});
+        }
+        
+        else {
+            dispatch({
+                type: 'GET_MMI_RESOURCES',
                 payload: {
                     data: res.data,
                     errFlag: false,

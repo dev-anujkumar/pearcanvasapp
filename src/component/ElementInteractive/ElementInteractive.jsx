@@ -13,7 +13,9 @@ import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
 import axios from 'axios';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -28,7 +30,8 @@ class Interactive extends React.Component {
             imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false,
             elementType: this.props.model.figuredata.interactivetype || "",
-            projectMetadata: false
+            projectMetadata: false,
+            showAssessmentPopup: false,
         };
 
     }
@@ -495,6 +498,14 @@ class Interactive extends React.Component {
             }
             this.handleC2MediaClick(e);
         }
+        else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            this.props.showBlocker(value);
+            disableHeader(value);
+            this.props.handleFocus();
+            this.setState({
+            showAssessmentPopup : value
+            });
+        }
         else {
             this.props.showBlocker(value);
             disableHeader(value);
@@ -695,7 +706,22 @@ class Interactive extends React.Component {
         }
 
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+    */
+   closeWindowAssessment = () => {
+    this.setState({
+        showAssessmentPopup: false
+    });
+    hideTocBlocker();
+    disableHeader(false);
+    this.props.showBlocker(false);
+    }
 
+    addCiteTdxAssessment = (citeTdxObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        
+    }
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
      * @param {event} element
@@ -710,7 +736,9 @@ class Interactive extends React.Component {
                
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssesmentpopup ? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssesmentpopup ?  <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                 
                     </div>
                 
             )
