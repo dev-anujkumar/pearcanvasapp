@@ -9,7 +9,9 @@ import PopUp from './../PopUp';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -149,6 +151,28 @@ static getDerivedStateFromProps(nextProps, prevState) {
     saveAssessment = () =>{ 
             this.props.handleBlur("","",this.props.index);
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+  */
+    closeWindowAssessment = () => {
+        this.setState({
+            showAssessmentPopup: false
+        });
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
+    /***
+    *  @description - This is the function to add CITE/TDX to Embedded-Assessment  
+    * @param citeTdxObj - The object contains data about CITE/TDX Assessment 
+    */
+    addCiteTdxAssessment = (citeTdxObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.id, assessmentTitle: citeTdxObj.title },
+            () => {
+                this.saveAssessment();
+            })
+    }
 
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
@@ -201,7 +225,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
-                
+                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+
             </div>
         );
     }
