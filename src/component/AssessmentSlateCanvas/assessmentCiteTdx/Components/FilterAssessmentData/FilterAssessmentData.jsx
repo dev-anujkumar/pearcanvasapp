@@ -3,6 +3,8 @@
 */
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
+import {filterCiteTdxData, getCiteTdxData} from './../../Actions/CiteTdxActions.js'
+import { connect } from 'react-redux';
 
 class FilterAssessmentData extends Component {
 
@@ -17,12 +19,18 @@ class FilterAssessmentData extends Component {
 
     handleSearch = e => {
         e.preventDefault();
-        console.log("e Data >>>", e)
-        this.props.searchAssessment(e.target);
+        if(this.state.filterUUID !== undefined && this.state.filterUUID != ''){
+            this.props.filterCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
+        } else {
+            this.props.getCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
+        }
     }
 
     handleChange = (event) => {
-        this.setState({[event.taget.name]: event.target.value})
+        let name = event.target.name;
+        let value = event.target.value;
+        this.setState({[name]:value});
+        console.log("searchName", this.state.searchAssessment)
     }
 
     render() {
@@ -35,8 +43,8 @@ class FilterAssessmentData extends Component {
                             <input name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by title" />
                             {/* <i class="fa fa-search"></i> */}
                         </div>
-                        <div className="filter-uuid" value={this.state.filterUUID}>
-                            <input name="filterUUID" placeholder="Filter by UUID" />
+                        <div className="filter-uuid" >
+                            <input name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" />
                         </div>
 
                     </div>
@@ -54,4 +62,9 @@ class FilterAssessmentData extends Component {
     }
 }
 
-export default FilterAssessmentData;
+const mapActionToProps = {
+    filterCiteTdxData: filterCiteTdxData,
+    getCiteTdxData: getCiteTdxData
+}
+
+export default connect (null, mapActionToProps)(FilterAssessmentData);

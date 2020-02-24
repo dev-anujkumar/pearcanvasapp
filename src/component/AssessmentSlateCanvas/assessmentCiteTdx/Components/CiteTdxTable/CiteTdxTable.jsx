@@ -25,6 +25,7 @@ class CiteTdxTable extends Component {
         return (
             <div>
                 <div className='main-div'>
+                <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                     {apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
@@ -52,7 +53,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div>No Data Found..</div>}
                 </div>
             </div>
         );
