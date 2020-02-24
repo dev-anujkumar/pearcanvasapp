@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
     citeData: [],
     tdxData: [],
-    mmiDat: [],
+    mmiData: [],
     assessmenterrFlag: false,
     isLoading: true,
     currentAssessmentSelected:{}
