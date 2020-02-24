@@ -65,15 +65,15 @@ class SlateTagDropdown extends React.Component {
                 break;
             case 'learningtemplate':
             case 'Learning App Type':
-                assessmentTypeLO = 'learningtemplate'
+                assessmentTypeLO = 'assessmentItem'
                 break;
             case 'puf':
             case 'Full Assessment PUF':
-                assessmentTypeLO = 'puf'
+                assessmentTypeLO = 'assessmentItem'
                 break;
             case 'learnosity':
             case 'Full Assessment Learnosity Beta':
-                assessmentTypeLO = 'learnosity'
+                assessmentTypeLO = 'assessmentItem'
                 break;
         }
         let previewData={
