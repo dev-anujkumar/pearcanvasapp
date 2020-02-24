@@ -134,7 +134,7 @@ class ElmTable extends Component {
         if (data.contents && data.contents.bodyMatter && data.contents.bodyMatter.length) {
             data.contents.bodyMatter.forEach((item) => {
                 if(item && ((item.alignments && item.alignments != null) ||(item.contents && item.contents != null )) ){
-                    this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : item.versionUrn })
+                    this.preparedData.push({ "type": item.label, "urn": item.versionUrn, "title": item.unformattedTitle ? item.unformattedTitle.en : "" })
                 }               
             })
         }
@@ -215,7 +215,7 @@ class ElmTable extends Component {
     sendPufAssessment = () => {
         let obj = {
             id: this.state.currentAssessmentSelected.urn,
-            title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.assessmentTitle? this.state.currentAssessmentSelected.assessmentTitle: "dummy",
+            title: this.state.currentAssessmentSelected && this.state.currentAssessmentSelected.assessmentTitle ? this.state.currentAssessmentSelected.assessmentTitle: "PUF assessment",//PCAT-6326-ELM assessment default title added
             assessmentFormat: "puf",
             usagetype: this.props.usageTypeMetadata
         }
@@ -300,7 +300,7 @@ class ElmTable extends Component {
                                 else {
                                     return (
                                         <tbody key={index}>
-                                            {(this.props.openedFrom == 'slateAssessment') && (item.type !== 'figure') && <tr className='row-class'>
+                                            {(this.props.openedFrom == 'slateAssessment'|| 'singleAssessment') && (item.type !== 'figure') && <tr className='row-class'>
                                                 <td className='td-class' key={index} onClick={(e) => { this.showNewValueList(e, item.urn) }}>
                                                     <div className="desc-box">{this.getFolderLabel(item.type)} <span className="folder-icon"></span> </div>
                                                     <b className="elm-text-folder">{item.title}</b></td>

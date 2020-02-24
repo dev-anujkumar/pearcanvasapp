@@ -12,7 +12,8 @@ import {
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { connect } from 'react-redux';
-
+import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
+import { LEARNOSITY_BETA, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -55,25 +56,21 @@ class SlateTagDropdown extends React.Component {
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
         }
         switch (assessmentType) {
-            case 'Full Assessment CITE':
-            case 'cite':
-                assessmentTypeLO = 'assessmentItem'
+
+            case TDX:
+            case FULL_ASSESSMENT_TDX:
+                assessmentTypeLO = ASSESSMENT_ITEM_TDX
                 break;
-            case 'tdx':
-            case 'Full Assessment TDX':
-                assessmentTypeLO = 'tdxAssessmentItem'
-                break;
-            case 'learningtemplate':
-            case 'Learning App Type':
-                assessmentTypeLO = 'learningtemplate'
-                break;
-            case 'puf':
-            case 'Full Assessment PUF':
-                assessmentTypeLO = 'puf'
-                break;
-            case 'learnosity':
-            case 'Full Assessment Learnosity Beta':
-                assessmentTypeLO = 'learnosity'
+            case FULL_ASSESSMENT_CITE:
+            case CITE:
+            case LEARNING_TEMPLATE:
+            case LEARNING_APP_TYPE:
+            case PUF:
+            case FULL_ASSESSMENT_PUF:
+            case LEARNOSITY:
+            case LEARNOSITY_BETA:
+            default: 
+                assessmentTypeLO = ASSESSMENT_ITEM
                 break;
         }
         let previewData={
