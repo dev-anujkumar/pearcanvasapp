@@ -20,8 +20,8 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { citeApiData, tdxApiData } = this.props;
-        const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : tdxApiData;
+        const { citeApiData, tdxApiData, mmiApiData } = this.props;
+        const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='main-div'>
@@ -44,11 +44,12 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <b>{item.name}</b>
                                                 </td>
-                                                <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : "TDX"}</td>
+                                                <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
                                                 <td>{item.modifiedDate ? item.modifiedDate : ""}</td>
                                                 <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
-                                            </tr></React.Fragment>)
+                                            </tr>
+                                        </React.Fragment>)
                                 })}
                             </tbody>
                         </table>
@@ -70,6 +71,7 @@ const mapStateToProps = (state) => {
     return {
         citeApiData: state.citeTdxReducer.citeData,
         tdxApiData: state.citeTdxReducer.tdxData,
+        mmiApiData: state.citeTdxReducer.mmiData,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         isLoading: state.citeTdxReducer.isLoading
     }

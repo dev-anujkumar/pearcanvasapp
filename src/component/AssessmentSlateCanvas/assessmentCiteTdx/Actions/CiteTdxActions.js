@@ -10,7 +10,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID) => (
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': 'GET_TDX_RESOURCES';
-    
+
     let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : `TDX`}&status=approved&name=${searchTitle}`;
 
     return axios.get(url, {
