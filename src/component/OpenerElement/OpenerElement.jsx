@@ -337,7 +337,7 @@ class OpenerElement extends Component {
         if (classList.length > 0 
             && (classList.contains("opener-title") || classList.contains("opener-number"))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
-            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
+            && ((this.state.title === getOpenerContent(textsemantics, "title", text)) && (this.state.title !== ""))) {
             flag = false;
         }
 
@@ -355,8 +355,10 @@ class OpenerElement extends Component {
             };
         }
                 
-        element.title.text = `${label} ${number} ${title}`;
-        element.title.text = element.title.text.trim();
+        element.title.text = `${label} ${number} ${title}`;        
+        if(!label){
+            element.title.text = element.title.text.trim();
+        }
         element.title.textsemantics = this.createSemantics({label, number});
 
         if(!element.backgroundimage) {

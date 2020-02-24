@@ -204,6 +204,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
     
         preformattedText = preformattedText.replace(/&lt;/g, "<")
         preformattedText = preformattedText.replace(/&gt;/g, ">")
+        preformattedText = preformattedText.trimEnd();
 
     let data = {
         ...previousElementData,
