@@ -407,6 +407,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
         case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
         case elementTypeConstant.BLOCKFEATURE:
         case elementTypeConstant.ELEMENT_LIST:
+            tinyMCE.$(node).find('.blockquote-hidden').remove();
             let { innerHTML, innerText } = node;
             dataToReturn = {
                 ...previousElementData,
