@@ -3,9 +3,7 @@
 */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import CiteLoader from './../CiteLoader/CiteLoader.jsx';
-import { setCurrentCiteTdx } from '../../Actions/CiteTdxActions'
+import { setCurrentCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions'
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -15,17 +13,15 @@ class CiteTdxTable extends Component {
 
     }
     addAssessment = (addedValue) => {
-        this.props.setCurrentCiteTdx(addedValue);
+        this.props.setCurrentCiteTdx(addedValue, this.props.openedFrom);
     }
-    tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
+    tableHeaders = ["Title", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { citeApiData, tdxApiData, mmiApiData } = this.props;
-        const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='main-div'>
-                    {apiData && apiData.assessments && apiData.assessments.length > 0 &&
+                    {this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
                                 {this.tableHeaders.map(item => (
@@ -34,17 +30,16 @@ class CiteTdxTable extends Component {
                                 ))}
                             </thead>
                             <tbody>
-                                {apiData.assessments.map((item, index) => {
+                                {this.props.singleAssessmentData.data.map((item, index) => {
                                     return (
                                         <React.Fragment key={`assessment-${index}`}>
                                             <tr>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn === item.versionUrn} />
-                                                    <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentSingleAssessmentSelected.versionUrn === item.versionUrn} />
+                                                    <span className="elmAssessmentItem-icon"></span>
                                                     <b>{item.name}</b>
                                                 </td>
-                                                <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
-                                                <td>{item.modifiedDate ? item.modifiedDate : ""}</td>
+                                                <td>{item.dateModified ? item.dateModified : ""}</td>
                                                 <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
@@ -53,27 +48,23 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
+
                 </div>
             </div>
         );
 
     }
 }
-
-
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
 }
 
+
 const mapStateToProps = (state) => {
     return {
-        citeApiData: state.citeTdxReducer.citeData,
-        tdxApiData: state.citeTdxReducer.tdxData,
-        mmiApiData: state.citeTdxReducer.mmiData,
-        citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
+        singleAssessmentData: state.citeTdxReducer.singleAssessmentData,
         isLoading: state.citeTdxReducer.isLoading,
-        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
+        currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected
     }
 }
 

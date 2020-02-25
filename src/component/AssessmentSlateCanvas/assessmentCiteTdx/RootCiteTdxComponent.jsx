@@ -43,7 +43,7 @@ class RootCiteTdxComponent extends Component {
             <CiteTdxHeader headerProps={this.headerProps} />
             <FilterAssessmentData />
             <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} />
-          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata}/>
+          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} openedFrom = {this.props.openedFrom}/>
           </CiteComponentError>
         </div>
       </div>

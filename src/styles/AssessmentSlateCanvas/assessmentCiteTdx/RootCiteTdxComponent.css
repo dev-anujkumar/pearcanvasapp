@@ -108,13 +108,13 @@
   width: 100% !important;
   line-height: 1.4em;
   border-top: none;
-  font-family: Open Sans, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 11px;
   color: #565353;
 }
 .assessment-row-class {
   border-bottom: 1px solid #dddddd;
-  font-family: Open Sans, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   color: #000;
   padding: 10px 0 10px 10px;
@@ -154,5 +154,17 @@
 }
 .elmAssessmentItem-icon{
   margin: 0 8px 0 6px;
-}    
+}   
+.assessment-title{
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #454545;
+} 
+.assessemnt-title-container .elm-navigate-back-icon svg{
+  width:20px;
+  height:20px;
+}
 

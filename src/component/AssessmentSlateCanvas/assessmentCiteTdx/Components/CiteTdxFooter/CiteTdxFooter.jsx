@@ -8,13 +8,19 @@ import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTd
 class CiteTdxFooter extends Component {
     
     sendCiteTdxAssessment =() =>{
+        
             let obj = {
                 id: this.props.currentAssessmentSelected.versionUrn,
                 title: this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.name? this.props.currentAssessmentSelected.name: "dummy",
-                usageType: this.props.usageTypeMetadata
+                usageType: this.props.usageTypeMetadata,
+                slateType: this.props.openedFrom,
+                singleAssessmentID:  this.props.currentSingleAssessmentSelected ? this.props.currentSingleAssessmentSelected:""
             }
             this.props.addCiteTdxFunction(obj);
-            this.props.closeWindowAssessment();
+            if(this.props.openedFrom !== "singleSlateAssessment"){
+                this.props.closeWindowAssessment();
+            }
+            
       
     }
     render() {
@@ -32,7 +38,8 @@ class CiteTdxFooter extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
+        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
     }
   }
   

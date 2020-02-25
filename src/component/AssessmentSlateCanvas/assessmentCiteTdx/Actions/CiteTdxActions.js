@@ -60,10 +60,45 @@ export const getCiteTdxData = (assessmentType) => (dispatch) => {
         })
     })
 }
-export const setCurrentCiteTdx = (currentAssessmentSelected) => (dispatch, getState) => {
-    dispatch({
-        type: 'CURRENT_SELECTED_ASSESSMENT',
-        payload: currentAssessmentSelected
-    })
+export const setCurrentCiteTdx = (currentAssessmentSelected, openedFrom) => (dispatch, getState) => {
+    if(openedFrom == "singleSlateAssessmentInner"){
+        dispatch({
+            type: 'CURRENT_SELECTED_SINGLE_ASSESSMENT',
+            payload: currentAssessmentSelected
+        })
+    }
+    else{
+        dispatch({
+            type: 'CURRENT_SELECTED_ASSESSMENT',
+            payload: currentAssessmentSelected
+        })
+    }
+    
 }
 
+export const getSingleAssessmentData = () => (dispatch, getState) => {
+    let url =`https://my-json-server.typicode.com/ankitstudent09/demo/assessmentsItems`;
+    return axios.get(url, {
+          headers:  {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((res) => {
+            dispatch({
+                type: 'GET_SINGLE_ASSESSMENT_DATA',
+                payload: {
+                    data: res.data,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+    }).catch((error) => {
+        dispatch({
+            type: 'GET_CITE_TDX_RESOURCES',
+            payload: {
+                data: [],
+                errFlag: true,
+                isLoading: false
+            }
+        })
+    })
+}
