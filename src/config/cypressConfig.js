@@ -51,7 +51,7 @@ let cypressConfig = {
     sitePointing : 'dev',
     conversionInProcess : false,
     savingInProgress: false,
-    lastActiveElementId:'',
+    lastActiveElementId:''
 }
 
 
