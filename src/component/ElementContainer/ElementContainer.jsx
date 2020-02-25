@@ -503,12 +503,15 @@ class ElementContainer extends Component {
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
-                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
+                    html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')
+                html =html.replace(/(\r\n|\n|\r)/gm, '')                
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
+                previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>");
+                let oldText = previousElementData.html.text.replace(/(\r\n|\n|\r)/gm, '')
+                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(oldText) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
