@@ -380,7 +380,7 @@ export class TinyMceEditor extends Component {
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
 
             if (!isFigureElem && selectedText.length) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
                 this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
