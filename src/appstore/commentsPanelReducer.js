@@ -52,7 +52,7 @@ export default function (state = initialState, action = INITIAL_ACTION) {
                 ...state,
                 allComments: payload.comments,
                 slateTitle: payload.title,
-                //comments: payload.comments
+                comments: payload.comments
             };
         case FETCH_COMMENT_BY_ELEMENT:
             let commentList = state.allComments
