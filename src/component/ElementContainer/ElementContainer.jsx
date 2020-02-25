@@ -135,6 +135,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
+            config.lastActiveElementId=element.id
             this.props.setActiveElement(element, index, "", "", true, showHideObj);
         }
         else {
@@ -149,6 +150,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
+            config.lastActiveElementId=element.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }

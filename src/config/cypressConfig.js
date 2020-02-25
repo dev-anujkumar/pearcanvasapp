@@ -50,7 +50,8 @@ let cypressConfig = {
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,
-    savingInProgress: false
+    savingInProgress: false,
+    lastActiveElementId:''
 }
 
 
