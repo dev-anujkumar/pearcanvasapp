@@ -191,6 +191,21 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         return tempDiv.innerHTML;
     }
+
+    /**
+     * Checks for any difference in data before initiating saving call
+     * @param {*} str element index
+     * @param {*} previousElementData old element data
+     */
+    mathMLEncode = (str) => {
+        str = str.replace(/§/g, "&amp;")
+        str = str.replace(/#(\d+);/g, function (match, dec) {
+            let decodedString = String.fromCharCode(dec)
+            return decodedString.replace(/&/g, "")
+        });
+        return str
+    }
+        
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -400,6 +415,8 @@ class ElementContainer extends Component {
         //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
+        let newformattedText = tinyMCE.$(formattedText).find('img.temp_Wirisformula').removeAttr('alt');
+        newformattedText = this.mathMLEncode(formattedText)
     
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
