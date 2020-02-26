@@ -664,7 +664,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
     })
 }
 
-export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
@@ -691,6 +691,12 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
         let condition;
         if (newIndex.length == 4) {
@@ -718,7 +724,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         })
         if(cb){
             cb("create",index);
-        }  
+        }
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
