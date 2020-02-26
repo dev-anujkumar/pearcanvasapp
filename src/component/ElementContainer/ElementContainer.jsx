@@ -164,16 +164,22 @@ class ElementContainer extends Component {
     }
 
     replaceUnwantedtags = (html) => {
+        if(!html){
+            return;
+        }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('height');
         tinyMCE.$(tempDiv).find('img').removeAttr('width');
@@ -181,6 +187,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         return tempDiv.innerHTML;
     }
     /**
@@ -508,7 +516,7 @@ class ElementContainer extends Component {
                 }
                 html =html.replace(/(\r\n|\n|\r)/gm, '')
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
@@ -598,7 +606,7 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
