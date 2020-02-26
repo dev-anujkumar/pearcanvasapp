@@ -738,7 +738,8 @@ class Interactive extends React.Component {
             })
         }
         else{
-            let tempInteractiveType = utils.getTaxonomicType("cite-interactive-video-with-interactive");
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?citeTdxObj.singleAssessmentID.taxonomicTypes[1]:"cite-interactive-video-with-interactive";
+            tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
             let that = this;
                let figureData = {
                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
