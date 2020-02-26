@@ -15,6 +15,7 @@ import PopUp from '../PopUp'
 import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 
 /**
@@ -32,6 +33,8 @@ class Interactive extends React.Component {
             elementType: this.props.model.figuredata.interactivetype || "",
             projectMetadata: false,
             showAssessmentPopup: false,
+            showSinglePopup:false,
+            setCurrentAssessment:{}
         };
 
     }
@@ -710,16 +713,49 @@ class Interactive extends React.Component {
     */
    closeWindowAssessment = () => {
     this.setState({
-        showAssessmentPopup: false
+        showAssessmentPopup: false,
+        showSinglePopup:false,
     });
     hideTocBlocker();
     disableHeader(false);
     this.props.showBlocker(false);
     }
+    assessmentNavigateBack = () => {
+        this.setState({
+            showAssessmentPopup: true,
+            showSinglePopup:false,
+        });
+    }
 
     addCiteTdxAssessment = (citeTdxObj) => {
         showTocBlocker();
         disableHeader(true);
+        if(citeTdxObj.slateType === "singleSlateAssessment"){
+            this.setState({
+                showSinglePopup: true,
+                setCurrentAssessment: citeTdxObj,
+                showAssessmentPopup:false
+            })
+        }
+        else{
+            let tempInteractiveType = utils.getTaxonomicType("cite-interactive-video-with-interactive");
+            let that = this;
+               let figureData = {
+                   schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                   interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
+                   interactivetype: tempInteractiveType,
+                   interactiveformat: "mmi"
+               }
+          
+           
+               that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
+                   that.props.handleFocus("updateFromC2");
+                   setTimeout(()=>{
+                       that.props.handleBlur()
+                   },300)
+                  
+               })
+        }
         
     }
     /**
@@ -737,8 +773,8 @@ class Interactive extends React.Component {
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                         {this.state.showAssesmentpopup ?  <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
-                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
-                 
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}
                     </div>
                 
             )
