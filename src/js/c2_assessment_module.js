@@ -30,7 +30,7 @@ var libConfig = {
   'database': configOBJ.CMDS_DATABASE,
   'server': configOBJ.CMDS_DATA_ENDPOINT,
   'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-  'userId': uname || configOBJ.userId
+  'userId': uname || config_object['userId']
 };
 
 //patternBroker.setup(libConfig);
@@ -65,7 +65,7 @@ export const c2AssessmentModule = {
       'server': configOBJ.CMDS_DATA_ENDPOINT,
       'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
       'searchselectserver': configOBJ.CMDS_DATA_ENDPOINT,
-      'userId': uname || configOBJ.userId
+      'userId': uname || config_object['userId']
     };
 
     patternBroker.setup(libConfig);

@@ -155,7 +155,7 @@ export const c2MediaModule = {
             'database': configOBJ.CMDS_DATABASE,
             'server': configOBJ.CMDS_DATA_ENDPOINT,
             'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-            'userId': uname || configOBJ.userId
+            'userId': uname || config_object['userId']
         };
 
 
@@ -273,7 +273,7 @@ export const c2MediaModule = {
                             'database': configOBJ.CMDS_DATABASE,
                             'server': configOBJ.CMDS_DATA_ENDPOINT,
                             'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                            'userId': uname || configOBJ.userId
+                            'userId': uname || config_object['userId']
                         };
                         var productLinkConfig = { 'selector': renderderedTagSelector };
                         productLinkConfig.repoList = cmisRepo;
