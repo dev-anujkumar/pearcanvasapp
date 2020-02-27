@@ -197,13 +197,15 @@ class ElementContainer extends Component {
      * @param {*} str element index
      * @param {*} previousElementData old element data
      */
-    mathMLEncode = (str) => {
-        str = str.replace(/§/g, "&amp;")
-        str = str.replace(/#(\d+);/g, function (match, dec) {
-            let decodedString = String.fromCharCode(dec)
-            return decodedString.replace(/&/g, "")
-        });
-        return str
+    convertSpace = (str) => {
+        str = str.replace(/(&|&amp;)nbsp;/g, "§#160;")
+        // str = str.replace(/#(\d+);/g, function (match, dec) {
+        //     console.log('charcode:::', match, dec, String.fromCharCode(dec));
+        //     let decodedString = String.fromCharCode(dec)
+        //     return decodedString.replace(/&/g, "")
+        // });
+        // str = str.replace(['#160;'], ['nbsp;']);
+        return str;
     }
         
     /**
@@ -415,14 +417,17 @@ class ElementContainer extends Component {
         //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
-        let newformattedText = tinyMCE.$(formattedText).find('img.temp_Wirisformula').removeAttr('alt');
-        newformattedText = this.mathMLEncode(formattedText)
+
+        let oldFormattedContent = this.convertSpace(formattedOldText)
+        let newformattedText = formattedText.replace(/(alt=\"[a-zA-Z0-9\ \&\;]+\")/g, '');//tinyMCE.$(formattedText).find('img.temp_Wirisformula').removeAttr('alt');
+        let newformattedOldText = oldFormattedContent.replace(/(alt=\"[a-zA-Z0-9\ \&\;]+\")/g, '');//tinyMCE.$(oldFormattedContent).find('img.temp_Wirisformula').removeAttr('alt');
     
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            formattedText!==formattedOldText
+            // formattedText!==formattedOldText
+            newformattedText !== newformattedOldText
             );
     }
 
