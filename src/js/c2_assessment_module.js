@@ -1,6 +1,7 @@
 const renderderedTagSelector = '#c2-modal';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
+import config_object1 from '../config/config';
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
@@ -21,15 +22,15 @@ var libConfig = {
     'Accept': 'application/ld+json',
     'X-Roles-Test': 'ContentMetadataEditor',
     'Prefer': 'annotation=true',
-    'Apikey': configOBJ.CMDS_APIKEY,
-    'X-APIKey': configOBJ.CMDS_APIKEY,
+    'Apikey': config_object1.CMDS_APIKEY,
+    'X-APIKey': config_object1.CMDS_APIKEY,
     'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
     'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'Authorization': configOBJ.CMDS_AUTHORIZATION
+    'Authorization': config_object1.CMDS_AUTHORIZATION
   },
-  'database': configOBJ.CMDS_DATABASE,
-  'server': configOBJ.CMDS_DATA_ENDPOINT,
-  'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+  'database': config_object1.CMDS_DATABASE,
+  'server': config_object1.CMDS_DATA_ENDPOINT,
+  'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
   'userId': uname || config_object['userId']
 };
 
@@ -55,16 +56,16 @@ export const c2AssessmentModule = {
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
-        'Apikey': configOBJ.CMDS_APIKEY,
-        'X-APIKey': configOBJ.CMDS_APIKEY,
+        'Apikey': config_object1.CMDS_APIKEY,
+        'X-APIKey': config_object1.CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
         'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'Authorization': configOBJ.CMDS_AUTHORIZATION
+        'Authorization': config_object1.CMDS_AUTHORIZATION
       },
-      'database': configOBJ.CMDS_DATABASE,
-      'server': configOBJ.CMDS_DATA_ENDPOINT,
-      'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-      'searchselectserver': configOBJ.CMDS_DATA_ENDPOINT,
+      'database': config_object1.CMDS_DATABASE,
+      'server': config_object1.CMDS_DATA_ENDPOINT,
+      'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+      'searchselectserver': config_object1.CMDS_DATA_ENDPOINT,
       'userId': uname || config_object['userId']
     };
 
