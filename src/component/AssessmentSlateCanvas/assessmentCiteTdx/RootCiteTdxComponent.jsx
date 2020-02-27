@@ -14,6 +14,10 @@ class RootCiteTdxComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchTitle : '',
+      filterUUID : '',
+      isReset: false,
+      currentPageNo: 1
     }
   }
   componentDidMount() {
@@ -24,8 +28,16 @@ class RootCiteTdxComponent extends Component {
   }
 /** @description - this method used to search assessment data */
 
-  searchAssessment = () => {
+  AssessmentSearchTitle = (searchTitle, filterUUID) => {
+    this.setState({searchTitle, filterUUID});
+  }
 
+  resetPage = (isReset) => {
+    this.setState({isReset})
+  }
+
+  getCurrentPageNo = (currentPageNo) => {
+    this.setState({currentPageNo})
   }
 
   /*** @description - This function is to pass props to Cite/Tdx Header component
@@ -41,9 +53,9 @@ class RootCiteTdxComponent extends Component {
         <div className="root-container">
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} />
-            <FilterAssessmentData assessmentType={this.props.assessmentType} />
-            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} />
-          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata}/>
+            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.resetPage} currentPageNo={this.state.currentPageNo} />
+            <CiteTdxTable assessmentType={this.props.assessmentType} />
+          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} />
           </CiteComponentError>
         </div>
       </div>

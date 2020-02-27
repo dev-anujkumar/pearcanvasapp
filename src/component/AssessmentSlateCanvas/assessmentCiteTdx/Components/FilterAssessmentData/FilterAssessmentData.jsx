@@ -19,6 +19,8 @@ class FilterAssessmentData extends Component {
 
     handleSearch = e => {
         e.preventDefault();
+        this.props.AssessmentSearchTitle(this.state.searchAssessment, this.state.filterUUID);
+        this.props.resetPage(true);
         if(this.state.filterUUID !== undefined && this.state.filterUUID != ''){
             this.props.filterCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
         } else {
@@ -40,7 +42,7 @@ class FilterAssessmentData extends Component {
                     <form>
                     <div className="filter-block">
                         <div className="title-block">
-                            <input name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by title" />
+                            <input autocomplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by title" />
                             {/* <i class="fa fa-search"></i> */}
                         </div>
                         <div className="filter-uuid" >
@@ -52,7 +54,7 @@ class FilterAssessmentData extends Component {
                         <button className="search" onClick={this.handleSearch} >SEARCH</button>
                     </div>
                     <div className="total-count">
-                        <i>Showing 1-25 of 345</i>
+                        <i>Showing PageNo. {this.props.currentPageNo}</i>
                     </div>
                     </form>
                 </div>

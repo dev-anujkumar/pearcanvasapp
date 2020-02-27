@@ -5,13 +5,15 @@ import axios from 'axios';
 /**
  * This action creator is used to fetch ELM resources added to the project
  */
-export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID) => (dispatch) => {
+export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch) => {
+    console.log("Initial page", pageNo)
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': 'GET_TDX_RESOURCES';
+    let pageSize=20;
 
-    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : `TDX`}&status=approved&name=${searchTitle}`;
+    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : `TDX`}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
 
     return axios.get(url, {
         headers: {
