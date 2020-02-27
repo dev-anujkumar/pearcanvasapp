@@ -7,22 +7,7 @@ const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken 
 const tab_visibility = '{"audio" : true,"image": true,"other":true,"video": true,"epsUrl":true,"defaulttab":"search"}';
 var uname = config_object['userId'];
 const renderderedTagSelector = '#c2-modal';
-
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
-const CMDS_APIKEY = config_object['CMDS_APIKEY'];
-const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
-const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
-const CMDS_DATABASE = config_object['CMDS_DATABASE'];
-/* const CMIS_US_REPO = config_object['CMIS_US_REPO'];
-const CMIS_UK_REPO = config_object['CMIS_UK_REPO'];
-const CMIS_USAWS_REPO = config_object['CMIS_USAWS_REPO']; */
-const EPS_API = config_object['EPS_API'];
-const CMIS_REPO = config_object['CMIS_REPO'].toString();
-
-/* if (CMIS_US_REPO && CMIS_US_REPO != "") list.push({'repo' : CMIS_US_REPO, 'repoName':'US'});
-if (CMIS_USAWS_REPO && CMIS_USAWS_REPO != "") list.push({'repo' : CMIS_USAWS_REPO, 'repoName':'AWS US'});
-if (CMIS_UK_REPO && CMIS_UK_REPO != "" ) list.push({'repo': CMIS_UK_REPO, 'repoName':'UK'}); */            //code for future need
-
 var patternBroker;
 var patternProductLink;
 var patternAddAnAsset;
@@ -48,7 +33,7 @@ var libConfig = {
     'database': configOBJ.CMDS_DATABASE,
     'server': configOBJ.CMDS_DATA_ENDPOINT,
     'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-    'userId': uname || config_object['userId']
+    'userId': uname || configOBJ.userId
 };
 
 export const c2MediaModule = {
@@ -170,7 +155,7 @@ export const c2MediaModule = {
             'database': configOBJ.CMDS_DATABASE,
             'server': configOBJ.CMDS_DATA_ENDPOINT,
             'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-            'userId': uname || config_object['userId']
+            'userId': uname || configOBJ.userId
         };
 
 
@@ -266,7 +251,7 @@ export const c2MediaModule = {
             if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
-
+            let CMIS_REPO=configOBJ.CMIS_REPO.toString();
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
                 const cmisRepo = JSON.parse(CMIS_REPO);
@@ -288,7 +273,7 @@ export const c2MediaModule = {
                             'database': configOBJ.CMDS_DATABASE,
                             'server': configOBJ.CMDS_DATA_ENDPOINT,
                             'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-                            'userId': uname || config_object['userId']
+                            'userId': uname || configOBJ.userId
                         };
                         var productLinkConfig = { 'selector': renderderedTagSelector };
                         productLinkConfig.repoList = cmisRepo;

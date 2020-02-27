@@ -1,16 +1,9 @@
 const renderderedTagSelector = '#c2-modal';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
-const CMDS_APIKEY = config_object['CMDS_APIKEY'];
-const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
-const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
-const CMDS_DATABASE = config_object['CMDS_DATABASE'];
-const CMDS_AUTHORIZATION = config_object['CMDS_AUTHORIZATION'];
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
-
-
 
 // Access individual pattern (from the <script> tag)
 var patternBroker; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
@@ -37,7 +30,7 @@ var libConfig = {
   'database': configOBJ.CMDS_DATABASE,
   'server': configOBJ.CMDS_DATA_ENDPOINT,
   'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-  'userId': uname || config_object['userId']
+  'userId': uname || configOBJ.userId
 };
 
 //patternBroker.setup(libConfig);
@@ -72,7 +65,7 @@ export const c2AssessmentModule = {
       'server': configOBJ.CMDS_DATA_ENDPOINT,
       'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
       'searchselectserver': configOBJ.CMDS_DATA_ENDPOINT,
-      'userId': uname || config_object['userId']
+      'userId': uname || configOBJ.userId
     };
 
     patternBroker.setup(libConfig);

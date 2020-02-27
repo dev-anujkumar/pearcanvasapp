@@ -4,16 +4,7 @@ var ajax = {};
 var callback = function (status, responseText) { response = { status: status, responseText: responseText } };
 let IF_MATCH = "";
 import store from '../appstore/store';
-
 import config_object from '../config/config';
-const CTOOL_APIKEY = config_object['CTOOL_APIKEY'];
-const CTOOL_PUBSLATE = config_object['CTOOL_PUBSLATE'];
-const CTOOL_PUBTITLE = config_object['CTOOL_PUBTITLE'];
-const C6PUB_ENDPOINT = config_object['C6PUB_ENDPOINT'];
-const C6PUB_API_KEY = config_object['C6PUB_API_KEY'];
-const C6REDIS_SERVER_UPDATE = config_object['C6REDIS_SERVER_UPDATE'];
-
-
 ajax.x = function () {
     if ('withCredentials' in new XMLHttpRequest()) {
         return new XMLHttpRequest();
@@ -86,7 +77,7 @@ export function publishContentDelay(content_url, pubConObj, pubApiKey,callback) 
     ajax.post(content_url, JSON.stringify(pubConObj), callback, 'application/json', false, pubApiKey);
     let parsedResponse = JSON.parse(response.responseText);
     if (parsedResponse && parsedResponse.ResponseMetadata.requestStatusCode === 200) {
-        let redis_url = C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
+        let redis_url = config_object.C6REDIS_SERVER_UPDATE + pubConObj.requestid + '/status';
         let inputObj = {};
         inputObj.status = 'approved';
         inputObj.distributable_urn = pubConObj.distributableVersionUrn;
