@@ -179,6 +179,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
