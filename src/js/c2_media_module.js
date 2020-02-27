@@ -40,14 +40,14 @@ var libConfig = {
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
-        'Apikey': CMDS_APIKEY,
-        'x-apikey': CMDS_APIKEY,
+        'Apikey': configOBJ.CMDS_APIKEY,
+        'x-apikey': configOBJ.CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
         'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
     },
-    'database': CMDS_DATABASE,
-    'server': CMDS_DATA_ENDPOINT,
-    'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+    'database': configOBJ.CMDS_DATABASE,
+    'server': configOBJ.CMDS_DATA_ENDPOINT,
+    'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
     'userId': uname || config_object['userId']
 };
 
@@ -162,14 +162,14 @@ export const c2MediaModule = {
                 'Accept': 'application/ld+json',
                 'X-Roles-Test': 'ContentMetadataEditor',
                 'Prefer': 'annotation=true',
-                'Apikey': CMDS_APIKEY,
-                'x-apikey': CMDS_APIKEY,
+                'Apikey': configOBJ.CMDS_APIKEY,
+                'x-apikey': configOBJ.CMDS_APIKEY,
                 'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
                 'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
             },
-            'database': CMDS_DATABASE,
-            'server': CMDS_DATA_ENDPOINT,
-            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+            'database': configOBJ.CMDS_DATABASE,
+            'server': configOBJ.CMDS_DATA_ENDPOINT,
+            'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
             'userId': uname || config_object['userId']
         };
 
@@ -181,7 +181,7 @@ export const c2MediaModule = {
         addAnAssetConfig.tabVisibility = tab_visibility;
 
         addAnAssetConfig['cmis'] = '{"wURN":false}';
-        addAnAssetConfig['epsserver'] = EPS_API;
+        addAnAssetConfig['epsserver'] = configOBJ.EPS_API;
         addAnAssetConfig.imagePreview = '{"imagePreview":true}';
         addAnAssetConfig.register = 'some-register';  // YS
         addAnAssetConfig.showdescription = 'true';  // YS
@@ -280,14 +280,14 @@ export const c2MediaModule = {
                                 'Accept': 'application/ld+json',
                                 'X-Roles-Test': 'ContentMetadataEditor',
                                 'Prefer': 'annotation=true',
-                                'Apikey': CMDS_APIKEY,
-                                'x-apikey': CMDS_APIKEY,
+                                'Apikey': configOBJ.CMDS_APIKEY,
+                                'x-apikey': configOBJ.CMDS_APIKEY,
                                 'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
                                 'X-PearsonSSOSession': authModule.GET_SSO_TOKEN()
                             },
-                            'database': CMDS_DATABASE,
-                            'server': CMDS_DATA_ENDPOINT,
-                            'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+                            'database': configOBJ.CMDS_DATABASE,
+                            'server': configOBJ.CMDS_DATA_ENDPOINT,
+                            'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
                             'userId': uname || config_object['userId']
                         };
                         var productLinkConfig = { 'selector': renderderedTagSelector };

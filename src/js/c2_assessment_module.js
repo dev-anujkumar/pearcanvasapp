@@ -28,15 +28,15 @@ var libConfig = {
     'Accept': 'application/ld+json',
     'X-Roles-Test': 'ContentMetadataEditor',
     'Prefer': 'annotation=true',
-    'Apikey': CMDS_APIKEY,
-    'X-APIKey': CMDS_APIKEY,
+    'Apikey': configOBJ.CMDS_APIKEY,
+    'X-APIKey': configOBJ.CMDS_APIKEY,
     'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
     'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'Authorization': CMDS_AUTHORIZATION
+    'Authorization': configOBJ.CMDS_AUTHORIZATION
   },
-  'database': CMDS_DATABASE,
-  'server': CMDS_DATA_ENDPOINT,
-  'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+  'database': configOBJ.CMDS_DATABASE,
+  'server': configOBJ.CMDS_DATA_ENDPOINT,
+  'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
   'userId': uname || config_object['userId']
 };
 
@@ -62,16 +62,16 @@ export const c2AssessmentModule = {
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
-        'Apikey': CMDS_APIKEY,
-        'X-APIKey': CMDS_APIKEY,
+        'Apikey': configOBJ.CMDS_APIKEY,
+        'X-APIKey': configOBJ.CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
         'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'Authorization': CMDS_AUTHORIZATION
+        'Authorization': configOBJ.CMDS_AUTHORIZATION
       },
-      'database': CMDS_DATABASE,
-      'server': CMDS_DATA_ENDPOINT,
-      'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-      'searchselectserver': CMDS_DATA_ENDPOINT,
+      'database': configOBJ.CMDS_DATABASE,
+      'server': configOBJ.CMDS_DATA_ENDPOINT,
+      'taxonomyserver': configOBJ.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+      'searchselectserver': configOBJ.CMDS_DATA_ENDPOINT,
       'userId': uname || config_object['userId']
     };
 
