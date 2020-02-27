@@ -29,13 +29,9 @@ export class ElementSingleAssessment extends Component {
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
-<<<<<<< HEAD
-            showElmComponent: false
-=======
+            showElmComponent: false,
             showSinglePopup:false,
             setCurrentAssessment:{}
-
->>>>>>> 053c970fa99225d70a64dae3b6a40dec2f08b4e2
         };
     }
     componentDidMount() {
