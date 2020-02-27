@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setCurrentCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions'
+import moment from 'moment'
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -39,7 +40,7 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon"></span>
                                                     <b>{item.name}</b>
                                                 </td>
-                                                <td>{item.dateModified ? item.dateModified : ""}</td>
+                                                <td>{item.dateModified ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : ""}</td>
                                                 <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
