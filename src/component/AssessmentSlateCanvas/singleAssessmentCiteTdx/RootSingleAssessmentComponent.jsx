@@ -17,7 +17,9 @@ class RootSingleAssessmentComponent extends Component {
     }
   }
   componentDidMount() {
-    this.props.getSingleAssessmentData();
+    if(this.props.currentAssessmentSelected){
+      this.props.getSingleAssessmentData(this.props.currentAssessmentSelected.versionUrn);
+    }
   }
   componentDidUpdate() {
     return true;
@@ -46,10 +48,14 @@ class RootSingleAssessmentComponent extends Component {
 const mapActionToProps = {
     getSingleAssessmentData: getSingleAssessmentData,
 }
-
+const mapStateToProps = (state) => {
+  return {
+    currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
+  }
+}
 
 export default connect(
-  null,
+  mapStateToProps,
   mapActionToProps
 )(RootSingleAssessmentComponent);
 

@@ -18,10 +18,11 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Date Modified", "Modified By", "UUID"];
 
     render() {
+        const { singleAssessmentData } = this.props;
         return (
             <div>
                 <div className='main-div'>
-                    {this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
+                   
                         <table className='assessment-table-class'>
                             <thead>
                                 {this.tableHeaders.map(item => (
@@ -29,6 +30,7 @@ class CiteTdxTable extends Component {
                                     </th>
                                 ))}
                             </thead>
+                            {this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
                             <tbody>
                                 {this.props.singleAssessmentData.data.map((item, index) => {
                                     return (
@@ -39,15 +41,17 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon"></span>
                                                     <b>{item.name}</b>
                                                 </td>
-                                                <td>{item.dateModified ? item.dateModified : ""}</td>
-                                                <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
+                                                <td>{item.dateModified ? item.dateModified : 'NA'}</td>
+                                                <td>{item.modifiedBy ? item.modifiedBy : 'NA'}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
                                         </React.Fragment>)
                                 })}
                             </tbody>
+                        }
+                        {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0)  && <div className ="no-result">No Data Found..</div>}
                         </table>
-                    }
+                    
 
                 </div>
             </div>
