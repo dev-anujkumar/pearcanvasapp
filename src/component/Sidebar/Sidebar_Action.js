@@ -153,6 +153,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         oldElementData.designtype = elemDesigntype
     }
+    if (oldElementData.type === "element-blockfeature") {
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = oldElementData.html.text;
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        oldElementData.html.text = tempDiv.innerHTML;
+    }
     conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
