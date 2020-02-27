@@ -12,7 +12,8 @@ import {
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole} from '../../constants/utility.js';
 import { connect } from 'react-redux';
-
+import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
+import { LEARNOSITY_BETA, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);
@@ -45,16 +46,38 @@ class SlateTagDropdown extends React.Component {
     }
     
     learningObjectiveDropdown = (e) => {
-        let previewLink={
-            previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
-            bookId: config.citeUrn
-        }
+        let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
         let currentSlateLOData = this.props.currentSlateLOData;
         let assessmentuRN="";
         let assessmentType="";
+        let assessmentTypeLO="";
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
+        }
+        switch (assessmentType) {
+
+            case TDX:
+            case FULL_ASSESSMENT_TDX:
+                assessmentTypeLO = ASSESSMENT_ITEM_TDX
+                break;
+            case FULL_ASSESSMENT_CITE:
+            case CITE:
+            case LEARNING_TEMPLATE:
+            case LEARNING_APP_TYPE:
+            case PUF:
+            case FULL_ASSESSMENT_PUF:
+            case LEARNOSITY:
+            case LEARNOSITY_BETA:
+            default: 
+                assessmentTypeLO = ASSESSMENT_ITEM
+                break;
+        }
+        let previewData={
+            previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
+            bookId: config.citeUrn,
+            assessmentUrn:assessmentuRN,
+            assessmentType: assessmentTypeLO
         }
         let isLOExist= this.props.isLOExist;
         let apiKeys = [config.LEARNING_OBJECTIVES_ENDPOINT, config.ASSET_POPOVER_ENDPOINT, config.STRUCTURE_APIKEY, config.COREAPI_ENDPOINT, config.PRODUCTAPI_ENDPOINT];
@@ -62,25 +85,25 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN, 'assessmentType':assessmentType, 'previewLink': previewLink } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys,'assessmentUrn':assessmentuRN,'previewData': previewData } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
         }
         else{
         if (e.target.innerText == AddLearningObjectiveSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveSlate, 'data': '', 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': '', 'apiConstants': apiKeys } })
         }
 
         else if (e.target.innerText == AddEditLearningObjectiveDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys } })
         }
 
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys,'assessmentUrn':assessmentuRN } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys,'assessmentUrn':assessmentuRN, 'previewData': previewData } })
         }
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys } })
         }
     }
         this.props.closeLODropdown();

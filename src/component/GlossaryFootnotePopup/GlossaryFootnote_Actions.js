@@ -246,6 +246,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res => {
+        let parentData = store.getState().appStore.slateLevelData;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if(res.data.id !== data.id && currentSlateData.status === 'approved'){
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
         if(tempIndex.length == 4 && typeWithPopup !== "popup"){//Figure inside a WE
             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data

@@ -128,3 +128,6 @@
 .lang-lbl label {
     color: red;
 }
+.canvas-sidebar .sidebar-disable{
+    pointer-events: none;
+}

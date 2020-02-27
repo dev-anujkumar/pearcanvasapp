@@ -1,6 +1,6 @@
 
 import { showTocBlocker, hideTocBlocker, disableHeader } from './toggleLoader'
-
+import { sendDataToIframe } from '../constants/utility.js'
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
@@ -200,7 +200,7 @@ export const c2MediaModule = {
 
             showTocBlocker();
             disableHeader(true);
-            window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
             //alfresco toc issue
             var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];
@@ -252,7 +252,7 @@ export const c2MediaModule = {
         disableHeader(true);
         showTocBlocker();
         addAnAssetConfig.nodeRef = '';//185fca35-4215-43bf-bf9d-11375903b2b4';
-        window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+        sendDataToIframe({ 'type': 'hideToc', 'message': {} });
         if (addAnAssetConfig.nodeRef !== undefined && addAnAssetConfig.nodeRef !== '') {
             this.launchAssetBrowser(addAnAssetConfig.nodeRef);
 

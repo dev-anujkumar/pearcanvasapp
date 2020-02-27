@@ -1,6 +1,7 @@
 import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
+import store from './../../appstore/store';
 
 /**
  * Action Creator
@@ -154,6 +155,10 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     }
     return axios.post(url, data)
        .then((res) => {
+           store.dispatch({
+               type: SET_LOCK_FLAG,
+               payload: false
+           })
             if(callback){
                 callback(res.data)
             }

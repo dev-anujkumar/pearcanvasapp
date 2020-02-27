@@ -187,15 +187,32 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];
+                            let contentURN;
+                            if(this.props.element.contents){
+                                contentURN = this.props.element.contentUrn;
+                                bodyMatterObj = this.props.element.contents.bodymatter;
+                            } else {
+                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
+                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBodyMatter[evt.oldDraggableIndex]
+                            }
+
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
                                 swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                currentSlateEntityUrn: contentURN,
                                 containerTypeElem: 'section',
                                 asideId: this.props.element.id
                             }
+
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -229,12 +246,12 @@ class ElementAsideContainer extends Component {
     sectionBreak(_element, index) {
         let { id: _elementId, type: _elementType, contents: _containerContent, elementdata: _elementData } = _element;
         let { bodymatter: _containerBodyMatter } = _containerContent || _elementData;
-        this.sectionBreakBodyMatter = _containerBodyMatter;
         let parentUrn = {
             manifestUrn: _elementId,
             contentUrn: _element.contentUrn,
             elementType: _elementType
         }
+        this.sectionBreakBodyMatter = _containerBodyMatter;
         const { elemBorderToggle, borderToggle } = this.props
         let parentIndex = `${this.props.index}-${index}`
         let elementLength = _containerBodyMatter.length
@@ -273,15 +290,32 @@ class ElementAsideContainer extends Component {
                         // Element dragging ended
                         onUpdate: (/**Event*/evt) => {
                             let swappedElementData;
-                            swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            let bodyMatterObj = [];
+                            let contentURN;
+                            if(this.props.element.contents){
+                                contentURN = this.props.element.contentUrn;
+                                bodyMatterObj = this.props.element.contents.bodymatter;
+                            } else {
+                                contentURN = this.props.element.elementdata.bodymatter[index].contentUrn;
+                                bodyMatterObj = this.props.element.elementdata.bodymatter[index].contents.bodymatter;
+                            }
+
+                            if(bodyMatterObj[evt.oldDraggableIndex]) {
+                                swappedElementData = bodyMatterObj[evt.oldDraggableIndex];
+                            } else {
+                                this.sectionBreakBodyMatter = _containerBodyMatter;
+                                swappedElementData = this.sectionBreakBodyMatter[evt.oldDraggableIndex]
+                            }                           
+                            
                             let dataObj = {
                                 oldIndex: evt.oldDraggableIndex,
                                 newIndex: evt.newDraggableIndex,
                                 swappedElementData: swappedElementData,
-                                currentSlateEntityUrn: parentUrn.contentUrn,
+                                currentSlateEntityUrn: contentURN,
                                 containerTypeElem: 'section',
                                 asideId: this.props.element.id,
                             }
+
                             this.props.swapElement(dataObj, (bodyObj) => { })
                             this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });

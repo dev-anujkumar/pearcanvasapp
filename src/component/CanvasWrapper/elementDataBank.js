@@ -289,6 +289,9 @@ const elementDataBank = {
             "cite" : {
                 "secondaryOption" : "secondary-single-assessment-cite"
             },
+            "puf" : {
+                "secondaryOption" : "secondary-single-assessment-puf"
+            }
         }
     },
 

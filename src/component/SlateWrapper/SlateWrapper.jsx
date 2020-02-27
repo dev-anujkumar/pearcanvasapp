@@ -284,12 +284,6 @@ class SlateWrapper extends Component {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
                     let _slateContent = _slateObject.contents
-                    /* if(_slateObject.type === "popup"){
-                        _slateContent = _slateObject.popupdata
-                    }
-                    else{
-                        _slateContent = _slateObject.contents
-                    } */
                     let { id: _slateId, type: _slateType } = _slateObject;
                     let { title: _slateTitle, bodymatter: _slateBodyMatter } = _slateContent
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
@@ -322,7 +316,7 @@ class SlateWrapper extends Component {
 
                                         // Element dragging ended
                                         onUpdate: (/**Event*/evt) => {
-                                            if (this.checkOpener(evt)) {
+                                            if (this.checkOpener(evt) || config.savingInProgress) {
                                                 evt.preventDefault()
                                                 evt.stopPropagation()
                                                 return false
@@ -444,7 +438,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
+        // this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
         //OPEN_AM.logout();
     }
 
@@ -462,7 +456,8 @@ class SlateWrapper extends Component {
 
     checkLockStatus = () => {
         const { slateLockInfo } = this.props
-        if (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId) {
+        let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo.isLocked && config.userId !== lockedUserId) {
             this.setState({
                 lockOwner: slateLockInfo.userId,
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
@@ -487,6 +482,10 @@ class SlateWrapper extends Component {
             this.togglePopup(true)
         }
         else{
+            if(config.savingInProgress){
+                window.tinymce.activeEditor.selection.placeCaretAt(0, 0);
+                this.prohibitPropagation(event)
+            }
             this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
         }
     }
@@ -578,6 +577,9 @@ class SlateWrapper extends Component {
     splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
+            return false
+        }
+        if(config.savingInProgress){
             return false
         }
         let indexToinsert
@@ -1025,6 +1027,7 @@ class SlateWrapper extends Component {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
             showTocBlocker();
+            this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])  // Release lock before popup initiates
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return (
                 <PopUp dialogText={dialogText}

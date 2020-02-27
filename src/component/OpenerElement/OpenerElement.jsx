@@ -26,7 +26,7 @@ class OpenerElement extends Component {
             document.querySelector("[name='long_description']").innerHTML = props.element.backgroundimage.longdescripton;
 
         this.state = {
-            label: getOpenerContent(textsemantics, "label", text) || "No Label",
+            label: getOpenerContent(textsemantics, "label", text) || 'No Label',
             number: getOpenerContent(textsemantics, "number", text),
             title: getOpenerContent(textsemantics, "title", text),
             showLabelDropdown: false,
@@ -293,9 +293,10 @@ class OpenerElement extends Component {
 
     createSemantics = ({...values}) => {
         let textSemantics = [];
-        let currentIndex = 0;
+        let currentIndex = 0;   
         
-        Object.keys(values).forEach(item => {
+        if(values.label && values.number){
+            Object.keys(values).forEach(item => {
             textSemantics.push({
                 "type": item,
                 "charStart": currentIndex,
@@ -303,7 +304,17 @@ class OpenerElement extends Component {
             });
             currentIndex++;
         });
-
+    }
+        else if(values.label || values.number){
+            let hasValue = values.label ? values.label : values.number;
+            let type = values.label ? "label" : "number";
+            textSemantics.push({
+                "type": type,
+                "charStart": currentIndex,
+                "charEnd": currentIndex += (hasValue).length
+            });
+        }
+    
         return textSemantics;
     }
 
@@ -312,7 +323,7 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
-        if(checkSlateLock(this.props.slateLockInfo)){
+        if(checkSlateLock(this.props.slateLockInfo) || config.savingInProgress){
             event.preventDefault()
             return false
         }
@@ -326,13 +337,13 @@ class OpenerElement extends Component {
         if (classList.length > 0 
             && (classList.contains("opener-title") || classList.contains("opener-number"))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
-            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
+            && ((this.state.title === getOpenerContent(textsemantics, "title", text)) && (this.state.title !== ""))) {
             flag = false;
         }
 
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
-        label = event.target && event.target.innerText ? event.target.innerText : label;
+        label = event.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
         imgSrc = event.imgSrc || imgSrc;
         imageId = event.imageId || imageId;
 
@@ -344,7 +355,10 @@ class OpenerElement extends Component {
             };
         }
                 
-        element.title.text = `${label} ${number} ${title}`;
+        element.title.text = `${label} ${number} ${title}`;        
+        if(!label){
+            element.title.text = element.title.text.trim();
+        }
         element.title.textsemantics = this.createSemantics({label, number});
 
         if(!element.backgroundimage) {
