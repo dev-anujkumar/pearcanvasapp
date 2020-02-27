@@ -13,7 +13,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=20;
 
-    let url = `https://contentapis-qa.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_CITE? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessment/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_CITE? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
 
     return axios.get(url, {
         headers: {
@@ -56,7 +56,7 @@ export const setCurrentCiteTdx = (currentAssessmentSelected, openedFrom) => (dis
 }
 
 export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch, getState) => {
-    let url =`https://10.11.7.24:8443/cypress-api/v1/slate/assessment/${currentAssessmentSelected}/items`;
+    let url =`${config.REACT_APP_API_URL}v1/slate/assessment/${currentAssessmentSelected}/items`;
     return axios.get(url, {
           headers:  {
             PearsonSSOSession: config.ssoToken
@@ -87,7 +87,7 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
 export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) => (dispatch) => {
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
     
-    let url = `https://contentapis-qa.pearsoncms.net/assessment-api/assessment/v2/urn:pearson:work:${filterUUID}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/urn:pearson:work:${filterUUID}`;
     
     var filterData = { assessments: [] };
     var assessmentDispatchtype = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
