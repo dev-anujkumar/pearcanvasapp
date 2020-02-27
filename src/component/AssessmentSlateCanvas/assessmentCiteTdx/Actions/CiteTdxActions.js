@@ -10,10 +10,10 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
-    var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': 'GET_TDX_RESOURCES';
+    var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=20;
 
-    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : `TDX`}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_CITE? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
 
     return axios.get(url, {
         headers: {
@@ -39,13 +39,48 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
         })
     })
 }
-export const setCurrentCiteTdx = (currentAssessmentSelected) => (dispatch, getState) => {
-    dispatch({
-        type: 'CURRENT_SELECTED_ASSESSMENT',
-        payload: currentAssessmentSelected
-    })
+export const setCurrentCiteTdx = (currentAssessmentSelected, openedFrom) => (dispatch, getState) => {
+    if(openedFrom == "singleSlateAssessmentInner"){
+        dispatch({
+            type: 'CURRENT_SELECTED_SINGLE_ASSESSMENT',
+            payload: currentAssessmentSelected
+        })
+    }
+    else{
+        dispatch({
+            type: 'CURRENT_SELECTED_ASSESSMENT',
+            payload: currentAssessmentSelected
+        })
+    }
+    
 }
 
+export const getSingleAssessmentData = () => (dispatch, getState) => {
+    let url =`https://my-json-server.typicode.com/ankitstudent09/demo/assessmentsItems`;
+    return axios.get(url, {
+          headers:  {
+            PearsonSSOSession: config.ssoToken
+        }
+    }).then((res) => {
+            dispatch({
+                type: 'GET_SINGLE_ASSESSMENT_DATA',
+                payload: {
+                    data: res.data,
+                    errFlag: false,
+                    isLoading: false
+                }
+            })
+    }).catch((error) => {
+        dispatch({
+            type: 'GET_CITE_TDX_RESOURCES',
+            payload: {
+                data: [],
+                errFlag: true,
+                isLoading: false
+            }
+        })
+    })
+}
 /**
  * Filter UUID based on data responsefor the Assessment items
  */

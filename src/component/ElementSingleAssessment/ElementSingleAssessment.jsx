@@ -12,6 +12,7 @@ import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLo
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
@@ -27,7 +28,10 @@ export class ElementSingleAssessment extends Component {
             asseessmentUsageTypeDropdown: false,
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
-            elementType: this.props.model.figuredata.elementdata.assessmentformat || ""
+            elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
+            showSinglePopup:false,
+            setCurrentAssessment:{}
+
         };
     }
     componentDidMount() {
@@ -154,12 +158,19 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /*** @description - This function is to close CITE/TDX PopUp
   */
     closeWindowAssessment = () => {
+            this.setState({
+                showAssessmentPopup: false,
+                showSinglePopup:false,
+            });
+            hideTocBlocker();
+            disableHeader(false);
+            this.props.showBlocker(false);
+    }
+    assessmentNavigateBack = () => {
         this.setState({
-            showAssessmentPopup: false
+            showAssessmentPopup: true,
+            showSinglePopup:false,
         });
-        hideTocBlocker();
-        disableHeader(false);
-        this.props.showBlocker(false);
     }
     /***
     *  @description - This is the function to add CITE/TDX to Embedded-Assessment  
@@ -168,10 +179,20 @@ static getDerivedStateFromProps(nextProps, prevState) {
     addCiteTdxAssessment = (citeTdxObj) => {
         showTocBlocker();
         disableHeader(true);
-        this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.id, assessmentTitle: citeTdxObj.title },
-            () => {
-                this.saveAssessment();
+        if(citeTdxObj.slateType === "singleSlateAssessment"){
+            this.setState({
+                showSinglePopup: true,
+                setCurrentAssessment: citeTdxObj,
+                showAssessmentPopup:false
             })
+        }
+        else{
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: citeTdxObj.title },
+                () => {
+                    this.saveAssessment();
+                })
+        }
+       
     }
 
     /*** @description - This function is for handling the different types of figure-element.
@@ -224,8 +245,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
-
+                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}
+       
             </div>
         );
     }

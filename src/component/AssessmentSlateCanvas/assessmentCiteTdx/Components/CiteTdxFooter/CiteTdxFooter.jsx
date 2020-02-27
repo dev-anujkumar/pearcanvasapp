@@ -19,11 +19,15 @@ class CiteTdxFooter extends Component {
     sendCiteTdxAssessment = () => {
         let obj = {
             id: this.props.currentAssessmentSelected.versionUrn,
-            title: this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.name ? this.props.currentAssessmentSelected.name : "dummy",
-            usageType: this.props.usageTypeMetadata
+            title: this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.name? this.props.currentAssessmentSelected.name: "dummy",
+            usageType: this.props.usageTypeMetadata,
+            slateType: this.props.openedFrom,
+            singleAssessmentID:  this.props.currentSingleAssessmentSelected ? this.props.currentSingleAssessmentSelected:""
         }
         this.props.addCiteTdxFunction(obj);
-        this.props.closeWindowAssessment();
+        if(this.props.openedFrom !== "singleSlateAssessment"){
+            this.props.closeWindowAssessment();
+        }
 
     }
 
@@ -42,7 +46,7 @@ class CiteTdxFooter extends Component {
                 this.setState({ currentPage: 1 });
                 this.props.getCurrentPageNo(1);
             }
-        }
+        }     
     }
 
     render() {
@@ -57,11 +61,11 @@ class CiteTdxFooter extends Component {
         return (
             <div className="assessmentpopup-footer">
                 {/** @description Pagination code starts here ---- */}
-                <div className="pagination">
+                {!this.props.setCurrentAssessment && <div className="pagination">
                     <a className={hideNavigationPrevious + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage - 1)} href="#">&#60;</a>
                     <a href="#" className="active">{currentPage}</a>
                     <a className={hideNavigationNext + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage + 1)} href="#"> &#62;</a>
-                </div>
+                </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
                     <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>CANCEL</button>
@@ -79,7 +83,8 @@ const mapStateToProps = (state) => {
         citeApiData: state.citeTdxReducer.citeData,
         tdxApiData: state.citeTdxReducer.tdxData,
         mmiApiData: state.citeTdxReducer.mmiData,
-        isLoading: state.citeTdxReducer.isLoading
+        isLoading: state.citeTdxReducer.isLoading,
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
     }
 }
 

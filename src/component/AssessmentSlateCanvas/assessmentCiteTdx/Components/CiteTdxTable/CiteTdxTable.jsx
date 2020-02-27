@@ -40,7 +40,7 @@ class CiteTdxTable extends Component {
                                         <React.Fragment key={`assessment-${index}`}>
                                             <tr>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn === item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <b>{item.name}</b>
                                                 </td>
@@ -73,7 +73,8 @@ const mapStateToProps = (state) => {
         tdxApiData: state.citeTdxReducer.tdxData,
         mmiApiData: state.citeTdxReducer.mmiData,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
-        isLoading: state.citeTdxReducer.isLoading
+        isLoading: state.citeTdxReducer.isLoading,
+        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
     }
 }
 

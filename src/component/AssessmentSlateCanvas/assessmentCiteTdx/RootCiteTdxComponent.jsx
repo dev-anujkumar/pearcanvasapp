@@ -54,8 +54,8 @@ class RootCiteTdxComponent extends Component {
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} />
             <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.resetPage} currentPageNo={this.state.currentPageNo} />
-            <CiteTdxTable assessmentType={this.props.assessmentType} />
-          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} />
+            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} />
+          <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} />
           </CiteComponentError>
         </div>
       </div>

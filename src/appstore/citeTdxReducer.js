@@ -4,7 +4,9 @@ const INITIAL_STATE = {
     mmiData: [],
     assessmenterrFlag: false,
     isLoading: true,
-    currentAssessmentSelected:{}
+    currentAssessmentSelected:{},
+    singleAssessmentData:[],
+    currentSingleAssessmentSelected:{}
 }
 
 const INITIAL_ACTION = {
@@ -46,6 +48,18 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
                     currentAssessmentSelected: action.payload
                 }
         }
+        case "CURRENT_SELECTED_SINGLE_ASSESSMENT": {
+            return {
+                ...state,
+                currentSingleAssessmentSelected: action.payload
+            }
+    }
+        case "GET_SINGLE_ASSESSMENT_DATA": {
+            return {
+                ...state,
+                singleAssessmentData: action.payload
+            }
+    }
         default:
             return state
     }
