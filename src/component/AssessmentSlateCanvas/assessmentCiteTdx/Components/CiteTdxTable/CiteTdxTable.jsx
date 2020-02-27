@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { elmAssessmentItem } from './../../../../../images/ElementButtons/ElementButtons.jsx';
 import CiteLoader from './../CiteLoader/CiteLoader.jsx';
 import { setCurrentCiteTdx } from '../../Actions/CiteTdxActions'
+import moment from 'moment'
+
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -45,7 +47,7 @@ class CiteTdxTable extends Component {
                                                     <b>{item.name}</b>
                                                 </td>
                                                 <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
-                                                <td>{item.modifiedDate ? item.modifiedDate : ""}</td>
+                                                <td>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : ""}</td>
                                                 <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>

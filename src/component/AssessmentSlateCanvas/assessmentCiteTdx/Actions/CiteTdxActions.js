@@ -13,7 +13,11 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=20;
 
+<<<<<<< HEAD
     let url = `https://contentapis-qa.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_CITE? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+=======
+    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+>>>>>>> 5ba0214ee8966e8d5ea1432384dd38beb80647a6
 
     return axios.get(url, {
         headers: {
@@ -90,7 +94,7 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     let url = `https://contentapis-qa.pearsoncms.net/assessment-api/assessment/v2/urn:pearson:work:${filterUUID}`;
     
     var filterData = { assessments: [] };
-    var assessmentDispatchtype = (assessmentType === FULL_ASSESSMENT_CITE) ? "GET_CITE_RESOURCES" : "GET_TDX_RESOURCES";
+    var assessmentDispatchtype = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
 
     return axios.get(url, {
         headers: {
