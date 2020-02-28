@@ -188,8 +188,8 @@ class OpenerElement extends Component {
     handleOpenerLabelChange = e => {
         this.setState({
             label: e.target.innerHTML
-        })
-        this.handleBlur(e)
+        }, () => {this.handleBlur(e)})
+        //  this.handleBlur(e)
         this.toggleLabelDropdown()
     }
     
@@ -341,6 +341,9 @@ class OpenerElement extends Component {
             flag = false;
         }
 
+        else if ((classList.length === 0) && this.state.label === getOpenerContent(textsemantics, "label", text)) {
+            flag = false
+        }
         let element = this.props.element;
         let { label, number, title, imgSrc, imageId } = this.state;
         label = event.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
