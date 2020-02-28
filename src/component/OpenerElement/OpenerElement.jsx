@@ -189,7 +189,7 @@ class OpenerElement extends Component {
         this.setState({
             label: e.target.innerHTML
         }, () => {this.handleBlur(e)})
-        //  this.handleBlur(e)
+        
         this.toggleLabelDropdown()
     }
     
