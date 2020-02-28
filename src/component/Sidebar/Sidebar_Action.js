@@ -74,7 +74,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.usagetype=usageType;
         let assessmentFormat =outputSubType.text.toLowerCase();
         let assessmentItemType ="";
-        if(assessmentFormat==="cite"){
+        if(assessmentFormat==="cite" || assessmentFormat==="puf"){
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
@@ -87,6 +87,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
+        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -151,6 +152,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 break;
         }
         oldElementData.designtype = elemDesigntype
+    }
+    if (oldElementData.type === "element-blockfeature") {
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = oldElementData.html.text;
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        oldElementData.html.text = tempDiv.innerHTML;
     }
     conversionDataToSend = {
         ...oldElementData,

@@ -49,7 +49,7 @@ class AssetPopoverSearch extends React.Component {
  * Handler for save assetpopover link
  */
     saveAssetLinkedMedia(apoObject, imageObj) {
-        let elementId = imageObj['entityUrn'];
+        let elementId = imageObj['entityUrn'] || imageObj['contentUrn'];
         let originalText, domNode, assetPopoverDomId;
 
         if (Object.keys(apoObject).length) {

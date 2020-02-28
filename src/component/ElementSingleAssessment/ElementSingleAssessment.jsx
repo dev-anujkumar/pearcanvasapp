@@ -10,7 +10,7 @@ import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { hasReviewerRole } from '../../constants/utility.js'
-
+import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx'
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
@@ -25,7 +25,8 @@ export class ElementSingleAssessment extends Component {
             asseessmentUsageTypeDropdown: false,
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
-            elementType: this.props.model.figuredata.elementdata.assessmentformat || ""
+            elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
+            showElmComponent: false
         };
     }
     componentDidMount() {
@@ -150,6 +151,49 @@ static getDerivedStateFromProps(nextProps, prevState) {
             this.props.handleBlur("","",this.props.index);
     }
 
+    
+    /*** @description - This function is to close ELM PopUp */
+    closeElmWindow = () => {
+        this.setState({
+            showElmComponent: false
+        });
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
+
+    /***
+    *  @description - This is the function to add PUF to Embedded-Assessment  
+    * @param pufObj - The object contains data about PUF Assessment 
+    */
+    addPufAssessment = (pufObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.id, assessmentTitle: pufObj.title },
+            () => {
+                this.saveAssessment();
+            })
+    }
+
+    /***
+    *  @description - This is the function to add embedded-assessment based on  
+    * @param e - The event triggered
+    */
+    addAssessmentResource = (e) => {
+        if (this.state.elementType !== "puf") {
+            this.toggleAssessmentPopup(e, true)
+        } else {
+            this.setState({
+                showElmComponent: true
+            })
+            showTocBlocker();
+            disableHeader(true);
+            this.props.showBlocker(true);
+        }
+    }
+    /** ----------------------------------------------------------------------------------------------------------- */
+    
+    
     /*** @description - This function is for handling the different types of figure-element.
     * @param model object that defined the type of element
     */
@@ -165,10 +209,10 @@ static getDerivedStateFromProps(nextProps, prevState) {
         assessmentJSX = <div className="divAssessment" >
             <figure className="figureAssessment">
                 <header>
-                    <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{this.state.assessmentTitle}</h4>
+                <h4 className="heading4ImageTextWidthNumberLabel" id="single_assessment_title">{this.state.elementType !=="puf"?"":"Assessment Title:"}{this.state.assessmentTitle}</h4>
                 </header>
-                <div className="singleAssessmentIdInfo" ><strong>ID: </strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
-                <div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>
+                <div className="singleAssessmentIdInfo" ><strong>{this.state.elementType !=="puf"?"ID: ":"Product ID: "}</strong>{this.state.assessmentId?this.state.assessmentId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}</div>
+                {this.state.elementType !=="puf"?<div className="singleAssessmentItemIdInfo" ><strong>ITEM ID: </strong>{this.state.assessmentItemId?this.state.assessmentItemId:(model.figuredata.elementdata ? model.figuredata.elementdata.assessmentitemid : "")}</div>:""}
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="singleAssessment_Dropdown_SelectLabel">Select usage type</div>
                     <div className={this.state.asseessmentUsageTypeDropdown ? "singleAssessment_Dropdown_activeDropdown select" : "singleAssessment_Dropdown_activeDropdown notselect"} onClick={ !hasReviewerRole() && this.toggleUsageTypeDropdown} >
@@ -185,7 +229,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                     ) : null
                 }
 
-                <div className="pearson-component image" data-uri="" data-type="image" onClick={(e)=>{this.toggleAssessmentPopup(e,true)}}>
+                <div className="pearson-component image" data-uri="" data-type="image" onClick={(e) => this.addAssessmentResource(e)}>
                     <img src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         data-src="https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
                         title="View Image" alt="" className="imageTextWidth lazyloaded imageeee"></img>
@@ -201,7 +245,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
-                
+                {this.state.showElmComponent? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} openedFrom={'singleAssessment'} usageTypeMetadata={this.state.activeAsseessmentUsageType} assessmentType={this.state.elementType}/> : ''}
             </div>
         );
     }

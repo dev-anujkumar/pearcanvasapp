@@ -135,6 +135,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
+            config.lastActiveElementId=element.id
             this.props.setActiveElement(element, index, "", "", true, showHideObj);
         }
         else {
@@ -149,6 +150,7 @@ class ElementContainer extends Component {
                     btnClassName: 'activeTagBgColor'
                 })
             }
+            config.lastActiveElementId=element.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
             this.props.fetchCommentByElement(this.props.element.id);
         }
@@ -162,16 +164,24 @@ class ElementContainer extends Component {
     }
 
     replaceUnwantedtags = (html) => {
+        if(!html){
+            return;
+        }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('height');
         tinyMCE.$(tempDiv).find('img').removeAttr('width');
@@ -179,6 +189,8 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         return tempDiv.innerHTML;
     }
     /**
@@ -350,7 +362,6 @@ class ElementContainer extends Component {
             );
         }
     }
-
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -391,8 +402,7 @@ class ElementContainer extends Component {
         //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
-
-        //text!==oldtext
+    
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -501,12 +511,14 @@ class ElementContainer extends Component {
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
-                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
+                    html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')
+                html =html.replace(/(\r\n|\n|\r)/gm, '')                
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-                if (previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
+                previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     if(dataToSend.status === "approved"){
@@ -536,7 +548,9 @@ class ElementContainer extends Component {
                         if (this.figureDifferenceAudioVideo(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, undefined, undefined, asideData)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                            config.savingInProgress = true
+                            if(dataToSend.status === "approved"){
+                                config.savingInProgress = true
+                            }
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, undefined);
                         }
                         break;
@@ -594,7 +608,7 @@ class ElementContainer extends Component {
                     let currentListNode = document.getElementById(parentIndex)
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     let nodehtml = currentListNode.innerHTML;
-                    if (previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
+                    if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
                         dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){

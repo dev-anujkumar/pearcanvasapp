@@ -380,7 +380,7 @@ export class TinyMceEditor extends Component {
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
 
             if (!isFigureElem && selectedText.length) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
                 this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
@@ -1127,6 +1127,7 @@ export class TinyMceEditor extends Component {
                             this.fromtinyInitBlur = true;
                             this.editorRef.current.focus();
                             this.editorRef.current.blur();
+                            this.fromtinyInitBlur = false;
                         }
                     }
 
@@ -1478,7 +1479,9 @@ export class TinyMceEditor extends Component {
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-                node.innerHTML = this.lastContent;
+                if(!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length){
+                    node.innerHTML = this.lastContent;
+                }
             }
         }
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
@@ -1553,10 +1556,14 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
-                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('onBlur', this.handleBlur);
+                    if(tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]){
+                        tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
+                    }
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     return (
@@ -1566,7 +1573,9 @@ export class TinyMceEditor extends Component {
                 else if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
-                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     classes = classes + ' blockquote-editor without-attr';

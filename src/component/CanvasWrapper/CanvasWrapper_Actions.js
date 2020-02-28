@@ -10,7 +10,7 @@ import {
     SET_PARENT_ASIDE_DATA,
     SET_PARENT_SHOW_DATA
 } from '../../constants/Action_Constants';
-import { fetchComments } from '../CommentsPanel/CommentsPanel_Action';
+import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
@@ -270,7 +270,14 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                         'type': "TcmStatusUpdated",
                         'message': messageTcmStatus
                     })
-                    dispatch(fetchComments(contentUrn, title));
+ /**
+                     * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
+                     * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
+                     */
+                    // let appData =  appData1 && appData1.id? appData1.id : appData1;
+                    let appData =  config.lastActiveElementId;
+                    appData ? dispatch(fetchCommentByElement(appData)): dispatch(fetchComments(contentUrn, title));
+                    // dispatch(fetchComments(contentUrn, title));
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
