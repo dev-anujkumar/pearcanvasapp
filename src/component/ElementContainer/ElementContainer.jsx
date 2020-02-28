@@ -1164,11 +1164,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
-        createShowHideElement: (element, type, index, parentContentUrn, cb) => {
-            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
+        createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
+            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb))
+        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
+            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         }
 
     }
