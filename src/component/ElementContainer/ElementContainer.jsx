@@ -362,7 +362,6 @@ class ElementContainer extends Component {
             );
         }
     }
-
     figureDifferenceAT = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`),
             subtitleDOM = document.getElementById(`cypress-${index}-1`),
@@ -403,8 +402,7 @@ class ElementContainer extends Component {
         //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
-
-        //text!==oldtext
+    
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -513,11 +511,13 @@ class ElementContainer extends Component {
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 if(parentElement.type === "popup"){
-                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p> `
-                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p> `
+                    tempDiv.innerHTML = matchHTMLwithRegex(tempDiv.innerHTML) ? tempDiv.innerHTML : `<p class="paragraphNumeroUno">${tempDiv.innerHTML}</p>`
+                    html = html.replace(/<br data-mce-bogus="1">/g, "<br>")
+                    html = matchHTMLwithRegex(html) ? html : `<p class="paragraphNumeroUno">${html}</p>`
                 }
-                html =html.replace(/(\r\n|\n|\r)/gm, '')
+                html =html.replace(/(\r\n|\n|\r)/gm, '')                
                 let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+                previousElementData.html.text= previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,parentElement,showHideType, asideData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })

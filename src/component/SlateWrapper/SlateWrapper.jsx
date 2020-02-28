@@ -22,7 +22,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY } from './SlateWrapperConstants';
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
 import '../../styles/SlateWrapper/style.css';
@@ -375,7 +375,7 @@ class SlateWrapper extends Component {
         this.setState({
             showReleasePopup: true
         })
-        // this.props.releaseSlateLock(projectUrn, slateId)
+        this.props.releaseSlateLock(projectUrn, slateId)
     }
 
     /**
@@ -389,7 +389,7 @@ class SlateWrapper extends Component {
             clearTimeout(timer)
             timer = setTimeout(() => {
                 this.debounceReleaseHandler(callback, _context)
-            }, 900000)
+            }, LOCK_DURATION)
         }
     }
 
@@ -416,7 +416,6 @@ class SlateWrapper extends Component {
     setSlateLock = (slateId, lockDuration) => {
         if (this.props.withinLockPeriod) {
             this.debounceReleaseTimeout()
-            // this.debounceReleaseTimeout(this.props.releaseSlateLock)
         }
         else {
             const { projectUrn } = config
@@ -438,8 +437,6 @@ class SlateWrapper extends Component {
         this.props.showBlocker(toggleValue)
         hideBlocker()
         this.prohibitPropagation(event)
-        // this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])
-        //OPEN_AM.logout();
     }
 
     /**
@@ -1027,7 +1024,6 @@ class SlateWrapper extends Component {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
             showTocBlocker();
-            this.props.releaseSlateLock(config.projectUrn, Object.keys(this.props.slateData)[0])  // Release lock before popup initiates
             const dialogText = `Due to inactivity, this slate has been unlocked, and all your work has been saved`
             return (
                 <PopUp dialogText={dialogText}
