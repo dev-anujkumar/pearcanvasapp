@@ -13,7 +13,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=20;
 
-    let url = `https://contentapis-staging.pearsoncms.net/assessment-api/assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
 
     return axios.get(url, {
         headers: {
