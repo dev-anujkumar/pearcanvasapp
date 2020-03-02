@@ -715,7 +715,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
         }
-        if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+        // Commented as API is not working
+        // if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -781,7 +782,8 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, p
                
             }
         }
-        if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
+        // Commented as API is not working
+        // if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         if(cb){
             cb("delete",eleIndex);
         } 
