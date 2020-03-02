@@ -11,8 +11,10 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { connect } from 'react-redux';
 
-export class AssessmentSlateData extends Component {
+ class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,6 +85,7 @@ export class AssessmentSlateData extends Component {
     /*** @description - This function is to close CITE/TDX PopUp
     */
    closeWindowAssessment = () => {
+        this.props.setCurrentCiteTdx({});
         this.setState({
             showCiteTdxComponent: false
         });
@@ -406,3 +409,11 @@ export class AssessmentSlateData extends Component {
     }
 }
 AssessmentSlateData.displayName = "AssessmentSlateData"
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+}
+
+export default connect(
+    null,
+    mapActionToProps
+)(AssessmentSlateData);
