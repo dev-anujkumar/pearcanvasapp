@@ -22,7 +22,7 @@ class CiteTdxTable extends Component {
             activeRow: addedValue.versionUrn
         }
         )
-        this.props.setCurrentCiteTdx(addedValue,this.props.openedFrom);
+        this.props.setCurrentCiteTdx(addedValue);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 

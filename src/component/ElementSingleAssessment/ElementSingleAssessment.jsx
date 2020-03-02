@@ -183,7 +183,6 @@ static getDerivedStateFromProps(nextProps, prevState) {
         showTocBlocker();
         disableHeader(true);
         if(citeTdxObj.slateType === "singleSlateAssessment"){
-            //this.props.setCurrentCiteTdx({},this.props.openedFrom);
             this.setState({
                 showSinglePopup: true,
                 setCurrentAssessment: citeTdxObj,
