@@ -189,23 +189,54 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
         return tempDiv.innerHTML;
     }
 
+
     /**
-     * Checks for any difference in data before initiating saving call
-     * @param {*} str element index
-     * @param {*} previousElementData old element data
+     * This function prepares html data for update comparison
+     * @param {*} html html data
+     * @param {*} flag value to differentiate previous and new data : true-previous and false-new htmlDom data
      */
-    mathMLEncode = (str) => {
-        str = str.replace(/§/g, "&amp;")
-        str = str.replace(/#(\d+);/g, function (match, dec) {
-            let decodedString = String.fromCharCode(dec)
-            return decodedString.replace(/&/g, "")
-        });
-        return str
-    }
+    formatHtmlData = (html,flag) => {
+        let formattedData =  this.removeClassesFromHtml(html);
+        let newData='';
+        console.log("flag",flag)
+        if(flag==true){
+            // var url = formattedData
+            // var tmp = document.createElement('div');
+            // tmp.innerHTML = url;
+            // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
+            // formattedData = this.convertSpace(src);
+            newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
+            // newData =  this.convertSpace(formattedData); 
+        }else{
+            newData =  this.encodeHtmlInWirisData(formattedData);
+        }
+            console.log("newData",newData)
+            return newData
+        }        
         
+    /**
+     * This function converts HTML entity code to HTML entity number in case of Wiris data
+     * @param {*} str element index
+     */
+    convertSpace = (str) => {
+        str = str.replace(/(&|&amp;)nbsp;/g, "§#160;")
+        return str;
+        //return this.encodeHtmlInWirisData(str);
+    }
+       
+    /**
+     * This function converts HTML entity code to HTML entity number in case of Wiris data
+     * @param {*} str element index
+     */
+    encodeHtmlInWirisData = (str) => {
+        str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
+        return str;
+    }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -335,7 +366,7 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-
+            posterTextHTML = this.removeClassesFromHtml(posterTextHTML)
             // if(titleHTML !== previousElementData.html.title ||
             //     subtitleHTML !== previousElementData.html.subtitle || 
             //     captionHTML !== previousElementData.html.captions ||
@@ -402,26 +433,31 @@ class ElementContainer extends Component {
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
 
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     text !== previousElementData.figuredata.elementdata.text
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
-        let newformattedText = tinyMCE.$(formattedText).find('img.temp_Wirisformula').removeAttr('alt');
-        newformattedText = this.mathMLEncode(formattedText)
-    
-        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
-            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+        formattedText = this.encodeHtmlInWirisData(formattedText)
+        formattedOldText = this.convertSpace(formattedOldText)
+
+        let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
+        oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
+        oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
+        oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
+
+        // captionHTML = this.encodeHtmlInWirisData(captionHTML)
+        // creditsHTML = this.encodeHtmlInWirisData(creditsHTML)
+        // subtitleHTML = this.encodeHtmlInWirisData(subtitleHTML)
+        // titleHTML = this.encodeHtmlInWirisData(titleHTML)
+
+        // oldTitle =  this.convertSpace(oldTitle)
+        // oldSubtitle =  this.convertSpace(oldSubtitle)
+        // oldCaption =  this.convertSpace(oldCaption)
+        // oldCredit =  this.convertSpace(oldCredit)
+
+        return (titleHTML !==oldTitle ||
+            subtitleHTML !== oldSubtitle ||
+            captionHTML !== oldCaption ||
+            creditsHTML !== oldCredit ||
+            // text !== oldtext
             formattedText!==formattedOldText
             );
     }
