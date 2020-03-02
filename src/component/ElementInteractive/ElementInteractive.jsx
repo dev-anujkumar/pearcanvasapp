@@ -17,6 +17,8 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { connect } from 'react-redux';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -712,6 +714,7 @@ class Interactive extends React.Component {
     /*** @description - This function is to close CITE/TDX PopUp
     */
    closeWindowAssessment = () => {
+    this.props.setCurrentCiteTdx({});
     this.setState({
         showAssessmentPopup: false,
         showSinglePopup:false,
@@ -810,4 +813,11 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-export default Interactive;
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+}
+
+export default connect(
+    null,
+    mapActionToProps
+)(Interactive);
