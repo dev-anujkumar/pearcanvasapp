@@ -827,8 +827,6 @@ class ElementContainer extends Component {
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
             }
         }
-// console.log(">>>>>>>>>>", this.props.element.backgroundcolor)
-//          let bgColorOpener = (this.props.element.backgroundcolor === config.colors[activeColorIndex] ? )
 
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
