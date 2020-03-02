@@ -221,17 +221,6 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== previousElementData.figuredata.path
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -309,33 +298,19 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-
-        captionHTML = this.removeClassesFromHtml(captionHTML)
-        creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
-        titleHTML = this.removeClassesFromHtml(titleHTML)
-
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     posterTextHTML !== previousElementData.html.postertext
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -345,17 +320,6 @@ class ElementContainer extends Component {
             );
         }
         else {
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     this.props.oldImage !== newInteractiveid
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -390,18 +354,6 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
-
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     text !== previousElementData.figuredata.elementdata.text
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
     
@@ -440,18 +392,6 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== newAudioVideoId
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let defaultImageUrl =  "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
