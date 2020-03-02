@@ -58,6 +58,16 @@ class CiteTdxFooter extends Component {
         let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 20)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
         let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') ? '' : 'hideNavigation';
+        let addClass;
+        if((this.props.openedFrom === "slateAssessment" || this.props.openedFrom === "singleSlateAssessment" ) && Object.keys(this.props.currentAssessmentSelected).length > 0 ){
+            addClass="add-button-enabled";
+        }
+        else if(this.props.openedFrom === "singleSlateAssessmentInner" && Object.keys(this.props.currentSingleAssessmentSelected).length > 0){
+            addClass="add-button-enabled";
+        }
+        else{
+            addClass="add-button-disabled";
+        }
         return (
             <div className="assessmentpopup-footer">
                 {/** @description Pagination code starts here ---- */}
@@ -69,7 +79,7 @@ class CiteTdxFooter extends Component {
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
                     <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>CANCEL</button>
-                    <button className="assessmentpopup add-assessment" onClick={this.sendCiteTdxAssessment}>SELECT</button>
+                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
                 </div>
             </div>
 

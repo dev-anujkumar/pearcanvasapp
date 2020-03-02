@@ -12,11 +12,16 @@ class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activeRow:''
         };
 
 
     }
     addAssessment = (addedValue) => {
+        this.setState({
+            activeRow: addedValue.versionUrn
+        }
+        )
         this.props.setCurrentCiteTdx(addedValue);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
@@ -40,15 +45,15 @@ class CiteTdxTable extends Component {
                                 {apiData.assessments.map((item, index) => {
                                     return (
                                         <React.Fragment key={`assessment-${index}`}>
-                                            <tr>
+                                            <tr className ={this.state.activeRow && this.state.activeRow== item.versionUrn ? 'selected':''}>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn === item.versionUrn} />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <b>{item.name}</b>
                                                 </td>
                                                 <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
-                                                <td>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : ""}</td>
-                                                <td>{item.modifiedBy ? item.modifiedBy : ""}</td>
+                                                <td>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : 'NA'}</td>
+                                                <td>{item.modifiedBy ? item.modifiedBy : 'NA'}</td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
                                         </React.Fragment>)
@@ -56,7 +61,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div>No Data Found..</div>}
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div>No results found</div>}
                 </div>
             </div>
         );
