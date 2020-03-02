@@ -27,8 +27,8 @@ class OpenerElement extends Component {
 
         this.state = {
             label: getOpenerContent(textsemantics, "label", text) || 'No Label',
-            number: getOpenerContent(textsemantics, "number", text),
-            title: getOpenerContent(textsemantics, "title", text),
+            number: getOpenerContent(textsemantics, "number", text) || '',
+            title: getOpenerContent(textsemantics, "title", text) || '',
             showLabelDropdown: false,
             imgSrc: getOpenerImageSource(bgImage),
             width: null,
@@ -341,7 +341,10 @@ class OpenerElement extends Component {
             flag = false;
         }
 
-        else if ((classList.length === 0) && this.state.label === getOpenerContent(textsemantics, "label", text)) {
+        else if ((classList.length === 0) 
+        && this.state.label === getOpenerContent(textsemantics, "label", text)
+        && this.state.number === getOpenerContent(textsemantics, "number", text)
+        && this.state.title === getOpenerContent(textsemantics, "title", text)) {
             flag = false
         }
         let element = this.props.element;

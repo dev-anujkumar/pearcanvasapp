@@ -697,7 +697,9 @@ class ElementContainer extends Component {
         });
 
         elementData.backgroundcolor = selectedColor;
-        this.updateOpenerElement(elementData);
+        if(this.props.element.backgroundcolor !== config.colors[this.state.activeColorIndex]){
+            this.updateOpenerElement(elementData);
+        }       
     }
 
     /**
@@ -825,6 +827,8 @@ class ElementContainer extends Component {
                 sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
             }
         }
+// console.log(">>>>>>>>>>", this.props.element.backgroundcolor)
+//          let bgColorOpener = (this.props.element.backgroundcolor === config.colors[activeColorIndex] ? )
 
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         if (labelText) {
