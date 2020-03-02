@@ -739,7 +739,7 @@ describe('Test convertElement- MOCK API CALL', () => {
                 elemData=obj
             }
             else{
-                expect(obj.type).toEqual('SET_ACTIVE_ELEMENT');
+                expect(obj.type).toEqual('ERROR_POPUP');
                 elemData=obj
             }
         }

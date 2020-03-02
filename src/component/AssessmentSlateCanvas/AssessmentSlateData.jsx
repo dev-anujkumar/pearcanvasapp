@@ -5,13 +5,16 @@ import React, { Component } from 'react';
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF } from './AssessmentSlateConstants.js';
+import { assessmentUsageType, assessmentType, FULL_ASSESSMENT_PUF, LEARNING_APP_TYPE, LEARNOSITY, LEARNING_TEMPLATE, PUF, FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX  } from './AssessmentSlateConstants.js';
 import RootElmComponent from './elm/RootElmComponent.jsx';
+import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import LearningTool from './learningTool/learningTool.jsx';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { connect } from 'react-redux';
 
-export class AssessmentSlateData extends Component {
+ class AssessmentSlateData extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +22,8 @@ export class AssessmentSlateData extends Component {
             activeAssessmentUsageType: this.props.model && this.props.model.elementdata && this.props.model.elementdata.usagetype ? this.props.model.elementdata.usagetype : "Quiz",
             showElmComponent: false,
             changeLearningData: false,
-            learningToolStatus: false
+            learningToolStatus: false,
+            showCiteTdxComponent:false,
         }
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
@@ -78,6 +82,17 @@ export class AssessmentSlateData extends Component {
         disableHeader(false);
         this.props.showBlocker(false);
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+    */
+   closeWindowAssessment = () => {
+        this.props.setCurrentCiteTdx({});
+        this.setState({
+            showCiteTdxComponent: false
+        });
+        hideTocBlocker();
+        disableHeader(false);
+        this.props.showBlocker(false);
+    }
     
     /*** @description - This function is to change the lerning system
     */
@@ -118,9 +133,19 @@ export class AssessmentSlateData extends Component {
                     this.mainAddAssessment(e, LEARNOSITY);
             })
         // } else if (assessmentFormat === LEARNING_TEMPLATE) {
-        } else if (assessmentFormat === LEARNING_TEMPLATE || assessmentFormat === LEARNING_APP_TYPE) {   //PCAT-6773 fixed
+        } else 
+        if (assessmentFormat === LEARNING_TEMPLATE || assessmentFormat === LEARNING_APP_TYPE) {   //PCAT-6773 fixed
             this.mainAddAssessment(e, LEARNING_TEMPLATE);
-            } else {
+            } 
+            else if(assessmentFormat === "cite" || assessmentFormat === "tdx" || assessmentFormat === FULL_ASSESSMENT_TDX || assessmentFormat ===FULL_ASSESSMENT_CITE){
+                this.setState({
+                    activeAssessmentType: (assessmentFormat==="cite" || assessmentFormat === FULL_ASSESSMENT_CITE)?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX,
+                    showCiteTdxComponent: true
+                }, () => {
+                    this.mainAddAssessment(e, (assessmentFormat==="cite" || assessmentFormat === FULL_ASSESSMENT_CITE)?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX);
+            })
+            }
+            else {
             this.addC2MediaAssessment(this.state.activeAssessmentType);
         }
     }
@@ -169,6 +194,9 @@ export class AssessmentSlateData extends Component {
     addPufAssessment = (pufObj) => {
         this.props.addPufAssessment(pufObj , this.state.activeAssessmentType);
     }
+    addCiteTdxAssessment =(citeTdxObj) =>{
+        this.props.addCiteTdxAssessment(citeTdxObj,this.state.activeAssessmentType);
+    }
 
     /*** @description - This is the root function to add Assessment 
      * @param activeAssessmentType - assessment -type 
@@ -189,7 +217,16 @@ export class AssessmentSlateData extends Component {
                 disableHeader(true);
                 this.props.showBlocker(true);             
                 break;
-
+            case FULL_ASSESSMENT_CITE:
+            case FULL_ASSESSMENT_TDX:
+                    this.setState({
+                        showCiteTdxComponent: true
+                    })
+                   
+                showTocBlocker();
+                disableHeader(true);
+                this.props.showBlocker(true);
+                break;
             default:
                 this.addC2MediaAssessment(activeAssessmentType)
                 break;
@@ -289,6 +326,9 @@ export class AssessmentSlateData extends Component {
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_PUF || this.state.activeAssessmentType === LEARNOSITY) && this.state.showElmComponent === true) {
             return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
         }
+        if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
+            return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType}/>
+        }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
                 <div className="slate_assessment_data_container">
@@ -298,6 +338,7 @@ export class AssessmentSlateData extends Component {
                             <div className="slate_assessment_data_title">{title}</div>
                             <div className="slate_assessment_data_id">{'ID: ' + this.props.assessmentId}</div>
                             <div className="slate_assessment_data_id_lo" style={{display:"none"}}>{this.props.assessmentId}</div>
+                            <div className="slate_assessment_data_format_lo" style={{display:"none"}}>{this.state.activeAssessmentType}</div>
                             <div className="slate_assessment_change_button" onClick={ !hasReviewerRole() && this.changeAssessment}>{changeTypeValue}</div>
                         </div>
                         <div className="clr"></div>
@@ -368,3 +409,11 @@ export class AssessmentSlateData extends Component {
     }
 }
 AssessmentSlateData.displayName = "AssessmentSlateData"
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+}
+
+export default connect(
+    null,
+    mapActionToProps
+)(AssessmentSlateData);

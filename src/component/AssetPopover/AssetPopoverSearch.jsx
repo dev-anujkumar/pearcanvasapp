@@ -49,7 +49,7 @@ class AssetPopoverSearch extends React.Component {
  * Handler for save assetpopover link
  */
     saveAssetLinkedMedia(apoObject, imageObj) {
-        let elementId = imageObj['entityUrn'];
+        let elementId = imageObj['entityUrn'] || imageObj['contentUrn'];
         let originalText, domNode, assetPopoverDomId;
 
         if (Object.keys(apoObject).length) {
@@ -60,7 +60,14 @@ class AssetPopoverSearch extends React.Component {
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
             this.apoSearchClose();
             setTimeout(() => {
-                document.getElementById(tinymce.activeEditor.id).blur()
+                let currentElem = document.getElementById(tinymce.activeEditor.id);
+                if(tinymce.$(currentElem).find('blockquote').length){
+                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
+                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+                }
+                else{
+                    currentElem.blur()
+                }
             }, 0);
         } else {
             //Hit api for asset popover Id
@@ -68,7 +75,7 @@ class AssetPopoverSearch extends React.Component {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
                     domNode = document.getElementById('asset-popover-attacher');
-                    originalText = domNode.innerText;
+                    originalText = domNode.innerHTML;
                     assetPopoverDomId = assetPopoverId;
                     domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     this.apoSearchClose();
@@ -104,8 +111,15 @@ class AssetPopoverSearch extends React.Component {
         clearAssetPopoverLink(assetId);
         this.apoSearchClose();
         setTimeout(() => {
-            document.getElementById(tinymce.activeEditor.id).focus()
-            document.getElementById(tinymce.activeEditor.id).blur()
+            let currentElem = document.getElementById(tinymce.activeEditor.id);
+            if(tinymce.$(currentElem).find('blockquote').length){
+                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
+                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+            }
+            else{
+                currentElem.focus()
+                currentElem.blur()
+            }
         }, 0);
     }
 
@@ -176,7 +190,7 @@ class AssetPopoverSearch extends React.Component {
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon}/>
-                        <input className="searchBarApo" placeholder="Search for images..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <input className="searchBarApo" placeholder="Search for assets" type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <label className="modal__close" onClick={this.apoSearchClose}></label>
                     </section>
 

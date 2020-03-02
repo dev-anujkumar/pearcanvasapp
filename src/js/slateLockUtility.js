@@ -10,5 +10,6 @@ export const checkSlateLock = (slateLockInfo) => {
     // else {
     //     return false
     // }
-    return (slateLockInfo.isLocked && config.userId !== slateLockInfo.userId);
+    let lockedUserId = slateLockInfo ? slateLockInfo.userId.replace(/.*\(|\)/gi, ''): ""; // Retrieve only PROOT id
+    return (slateLockInfo.isLocked && config.userId !== lockedUserId);
 }

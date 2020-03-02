@@ -581,16 +581,21 @@ export default {
             toolbar:['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
             enum: '',		
             subtype: {		
-                'secondary-single-assessment-cite': {		
-                    text: 'CITE',		
+                'secondary-single-assessment-cite': {
+                    text: 'CITE',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_CITE'
-                },		
-                'secondary-single-assessment-tdx': {		
-                    text: 'TDX',		
+                },
+                'secondary-single-assessment-tdx': {
+                    text: 'TDX',
                     labelText: 'Qu',
-                    enum: 'SINGLE_ASSESSMENT_TDX'		
-                }		
+                    enum: 'SINGLE_ASSESSMENT_TDX'
+                },
+                'secondary-single-assessment-puf': {
+                    text: 'PUF',
+                    labelText: 'Qu',
+                    enum: 'SINGLE_ASSESSMENT_PUF'
+                }
             }		
         },
         'primary-assessment-slate' : {

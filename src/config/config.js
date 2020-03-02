@@ -7,6 +7,7 @@ let config = {
     PRODUCTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/product-api/",
     PROJECTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/project-api/distributable/v2",
     ELM_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
+    ASSESSMENT_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/assessment-api/",
     LERNOSITY_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
@@ -53,7 +54,8 @@ let config = {
     },
     IDENTITY_URL: "/auth",
     GET_FIGURES : 'https://contentapis-staging.pearsoncms.net/',
-    GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/'
+    GET_ASSETPOPOVER_ID :'https://staging.api.pearson.com/',
+    PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/"
 };
 
 if (process.env.NODE_ENV === "development") {

@@ -52,8 +52,8 @@ const ListButtonDrop = (props) => {
  * @param {string} type | chosen orderd list type
  */
 const onListOptionSelect = (type, props) => {
-    let _value = parseInt(document.getElementById('listINputBox').value || 0);
-    _value = isNaN(_value) ? 0 : _value; //isNaN(_value) && 0 || _value;
+    let _value = parseInt(document.getElementById('listINputBox').value || 1); // earlier default by 0
+    _value = isNaN(_value) ? 1 : _value; //isNaN(_value) && 0 || _value; // earlier default by 0
     props.onListSelect(type, _value);
     let _listWrapperDiv = document.querySelector('#listDropWrapper');
     if (_listWrapperDiv)

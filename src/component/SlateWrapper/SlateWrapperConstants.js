@@ -19,3 +19,4 @@ export const IN_USE_BY = "In use by: "
 export const REMOVE_LINKED_AUDIO = "Do you want to remove the linked Audio Book with the slate?"
 export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
+export const LOCK_DURATION = 900000   //900000ms = 15mins

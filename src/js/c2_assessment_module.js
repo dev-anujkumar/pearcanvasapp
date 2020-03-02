@@ -1,16 +1,11 @@
 const renderderedTagSelector = '#c2-modal';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
-const CMDS_APIKEY = config_object['CMDS_APIKEY'];
-const CMDS_DATA_ENDPOINT = config_object['CMDS_DATA_ENDPOINT'];
-const CMDS_SCHEMA_ENDPOINT = config_object['CMDS_SCHEMA_ENDPOINT'];
-const CMDS_DATABASE = config_object['CMDS_DATABASE'];
-const CMDS_AUTHORIZATION = config_object['CMDS_AUTHORIZATION'];
+import config_object1 from '../config/config';
 import { hideTocBlocker, disableHeader } from './toggleLoader'
 const WRAPPER_URL = `${config_object.WRAPPER_URL}`;
 const authModule = { GET_SSO_TOKEN: function () { return config_object.ssoToken } };
-
-
+import { sendDataToIframe } from '../constants/utility.js'
 
 // Access individual pattern (from the <script> tag)
 var patternBroker; //(PatternBroker && PatternBroker !== undefined && PatternBroker !== null) ? PatternBroker.default : {}; //this.PatternBroker.default;
@@ -28,15 +23,15 @@ var libConfig = {
     'Accept': 'application/ld+json',
     'X-Roles-Test': 'ContentMetadataEditor',
     'Prefer': 'annotation=true',
-    'Apikey': CMDS_APIKEY,
-    'X-APIKey': CMDS_APIKEY,
+    'Apikey': config_object1.CMDS_APIKEY,
+    'X-APIKey': config_object1.CMDS_APIKEY,
     'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
     'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-    'Authorization': CMDS_AUTHORIZATION
+    'Authorization': config_object1.CMDS_AUTHORIZATION
   },
-  'database': CMDS_DATABASE,
-  'server': CMDS_DATA_ENDPOINT,
-  'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+  'database': config_object1.CMDS_DATABASE,
+  'server': config_object1.CMDS_DATA_ENDPOINT,
+  'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
   'userId': uname || config_object['userId']
 };
 
@@ -62,16 +57,16 @@ export const c2AssessmentModule = {
         'Accept': 'application/ld+json',
         'X-Roles-Test': 'ContentMetadataEditor',
         'Prefer': 'annotation=true',
-        'Apikey': CMDS_APIKEY,
-        'X-APIKey': CMDS_APIKEY,
+        'Apikey': config_object1.CMDS_APIKEY,
+        'X-APIKey': config_object1.CMDS_APIKEY,
         'PearsonSSOSession': authModule.GET_SSO_TOKEN(),
         'X-PearsonSSOSession': authModule.GET_SSO_TOKEN(),
-        'Authorization': CMDS_AUTHORIZATION
+        'Authorization': config_object1.CMDS_AUTHORIZATION
       },
-      'database': CMDS_DATABASE,
-      'server': CMDS_DATA_ENDPOINT,
-      'taxonomyserver': CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
-      'searchselectserver': CMDS_DATA_ENDPOINT,
+      'database': config_object1.CMDS_DATABASE,
+      'server': config_object1.CMDS_DATA_ENDPOINT,
+      'taxonomyserver': config_object1.CMDS_SCHEMA_ENDPOINT,  // Rel 3.6
+      'searchselectserver': config_object1.CMDS_DATA_ENDPOINT,
       'userId': uname || config_object['userId']
     };
 
@@ -112,7 +107,7 @@ export const c2AssessmentModule = {
       _interactivePattern.run(_interactivePattern);
       _interactivePattern.on(callback);
 
-      window.parent.postMessage({ 'type': 'hideToc', 'message': {} }, WRAPPER_URL);
+      sendDataToIframe({ 'type': 'hideToc', 'message': {} });
 
       //alfresco toc issue
       var targetNode = document.getElementsByClassName('overlay-0-0 overlayLittle-0-1')[0];

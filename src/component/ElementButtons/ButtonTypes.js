@@ -26,5 +26,6 @@ export default {
     METADATA_LOList:"metadata-lo-list",
     ELM_CLOSE_WINDOW:"elmCloseWindowIcon",
     ELM_ASSESSMENT_ITEM:"elmAssessmentItem",
-    FEEDBACK : "feedback"
+    FEEDBACK : "feedback",
+    ASSESSMENT_CLOSE_WINDOW:"assessmentCloseWindowIcon"
 }

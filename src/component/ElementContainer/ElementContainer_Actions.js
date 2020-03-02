@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT } from "./../../constants/Action_Constants";
+import { ADD_COMMENT, AUTHORING_ELEMENT_CREATED, ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, OPEN_GLOSSARY_FOOTNOTE,DELETE_SHOW_HIDE_ELEMENT,CURRENT_SHOW_HIDE_ELEMENT} from "./../../constants/Action_Constants";
 import { customEvent } from '../../js/utils';
 
 export const addComment = (commentString, elementId, asideData, parentUrn) => (dispatch, getState) => {
@@ -237,7 +237,8 @@ function prepareDataForTcmUpdate (updatedData,id, elementIndex, asideData, getSt
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement) => (dispatch, getState) => {
     if(hasReviewerRole()){
-        return true
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+        return ;
     }
     prepareDataForTcmUpdate(updatedData,updatedData.id, elementIndex, asideData, getState);
     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, null, null, showHideType, parentElement)
@@ -290,6 +291,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             } else if(response.data.id !== updatedData.id){
                 if(currentSlateData.status === 'wip'){
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
+                    config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
                 }
@@ -298,10 +300,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
-       
 
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
@@ -522,11 +524,14 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
             }
         })
     } else if(versionedData){
+        if (updatedData && updatedData.pageNumberRef) {
+            versionedData.pageNumberRef = updatedData.pageNumberRef
+        }
         let indexes = elementIndex && elementIndex.length > 0 ? elementIndex.split('-') : 0;
             if(asideData && asideData.type == 'element-aside'){
                 asideData.indexes = indexes;
                 if(indexes.length === 2 || indexes.length === 3){
-                    dispatch(fetchSlateData(asideData.id, asideData.contentUrn, 0, asideData));
+                    dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:asideData.id, asideData.contentUrn, 0, asideData));
                 // }else if(indexes.length === 3){
                 //     dispatch(fetchSlateData(asideData.id,asideData.contentUrn, 0, asideData));
                 }
@@ -535,8 +540,8 @@ function updateStoreInCanvas(updatedData, asideData, parentUrn,dispatch, getStat
                 dispatch(fetchSlateData(updatedData.slateUrn, updatedData.slateEntity, 0)); }
             else if(parentElement && parentElement.type === "showhide"){
                 parentElement.indexes =elementIndex;
-                dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
-        }
+                dispatch(fetchSlateData(versionedData.newParentVersion?versionedData.newParentVersion:parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+            }
             else {
                 elementIndex = indexes.length == 2 ?indexes[0] : elementIndex
                 newslateData[config.slateManifestURN].contents.bodymatter[elementIndex] = versionedData;
@@ -659,7 +664,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
     })
 }
 
-export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
@@ -686,6 +691,12 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
         let condition;
         if (newIndex.length == 4) {
@@ -704,6 +715,8 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
         }
+        // Commented as API is not working
+        // if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -712,8 +725,8 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
             }
         })
         if(cb){
-            cb(true);
-        }  
+            cb("create",index);
+        }
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -721,7 +734,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
     })
 }
 
-export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,parentId,cb) => (dispatch, getState) => {
+export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, parentId, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     let _requestData = {
         projectUrn : config.projectUrn,
         entityUrn : parentUrn,
@@ -744,6 +757,12 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
         let condition;
         if (newIndex.length == 4) {
@@ -763,8 +782,10 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
                
             }
         }
+        // Commented as API is not working
+        // if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         if(cb){
-            cb(true);
+            cb("delete",eleIndex);
         } 
         dispatch({
             type: DELETE_SHOW_HIDE_ELEMENT,
@@ -777,5 +798,19 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.log("error while createing element",error)
+    })
+}
+
+const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
+    parentElement.indexes = parentElementIndex;
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+}
+
+export const currentSHowHideElement = (element) => (dispatch, getState) => {
+    dispatch({
+        type: CURRENT_SHOW_HIDE_ELEMENT,
+        payload: {
+            currentShowhideElement:element
+        }
     })
 }
