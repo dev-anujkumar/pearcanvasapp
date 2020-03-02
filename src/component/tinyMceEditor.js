@@ -125,7 +125,7 @@ export class TinyMceEditor extends Component {
                         //Uncomment after API arrives
                         if(!config.savingInProgress){
                             if(this.props.element.type === "popup" && !this.props.currentElement){
-                                this.props.createPopupUnit(this.props.popupField, null, this.props.index) 
+                                this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
                             } else {
                                 this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
                             }
@@ -1518,7 +1518,7 @@ export class TinyMceEditor extends Component {
 
         if(!this.fromtinyInitBlur && !config.savingInProgress){
             if(this.props.element.type === "popup" && !this.props.currentElement){
-                this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index)
+                this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
             }

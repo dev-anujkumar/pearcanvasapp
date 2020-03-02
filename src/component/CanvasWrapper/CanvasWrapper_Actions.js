@@ -8,7 +8,8 @@ import {
     SET_OLD_IMAGE_PATH,
     AUTHORING_ELEMENT_UPDATE,
     SET_PARENT_ASIDE_DATA,
-    SET_PARENT_SHOW_DATA
+    SET_PARENT_SHOW_DATA,
+    ERROR_POPUP
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -519,20 +520,57 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 	}
 }
 
-/* const createPopupUnit = (popupField, cb) => dispatch => {
-
-    //API call
-    return axios.get(url, {
-        headers: {
-            "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
-        }
-    })
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex) => (dispatch, getState) => {
+    console.log("CREATE POPUP UNIT::>>", popupField)
+    console.log("CREATE POPUP UNIT CALLBACK::>>", parentElement)
+    let popupFieldType = ""
+    if(popupField === "formatted-subtitle"){
+        popupFieldType = "formattedSubtitle"
+    }
+    else{
+        popupFieldType = "formattedTitle"
+    }
+    
+    let _requestData = {
+        "projectUrn": config.projectUrn,
+        "slateEntityUrn": parentElement.contentUrn,
+        "slateUrn": parentElement.id,
+        // "index": outerAsideIndex ? outerAsideIndex : index,
+        "type": "TEXT",
+        "updatePopupElementField" : popupFieldType
+    };
+    let url = `${config.REACT_APP_API_URL}v1/slate/element`
+    return axios.post(url, 
+        JSON.stringify(_requestData),
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "PearsonSSOSession": config.ssoToken
+            }
+        })
     .then((response) => {
+        console.log("%c SUCCESS RESPONSE", "font-size: 30px; color: orange; background: black",response.data)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        popupElementIndex = popupElementIndex.split("-")[0]
+        const parentData = getState().appStore.slateLevelData
+        let newslateData = JSON.parse(JSON.stringify(parentData))
+        let _slateObject = newslateData[config.slateManifestURN]
+        let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
+        if(targetPopupElement){
+            targetPopupElement.popupdata[popupField] = response.data
+            _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
+        }
+        dispatch({
+            type: AUTHORING_ELEMENT_UPDATE,
+            payload: {
+                slateLevelData: newslateData
+            }
+        })
         if(cb) cb(response.data)
     })
     .catch((error) => {
-
+        console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)
+        dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.savingInProgress = false
     })
 }
- */
