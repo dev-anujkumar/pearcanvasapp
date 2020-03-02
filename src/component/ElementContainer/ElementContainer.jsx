@@ -168,16 +168,19 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
         html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
@@ -311,6 +314,7 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        preformattedText = this.removeClassesFromHtml(preformattedText)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -551,6 +555,9 @@ class ElementContainer extends Component {
                     if(MLtext){
                         tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                         document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                         tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
                     }
                 }

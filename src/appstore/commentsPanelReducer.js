@@ -159,11 +159,11 @@ export default function (state = initialState, action = INITIAL_ACTION) {
             let addnewComment = [...state.comments]//JSON.parse(JSON.stringify(state.comments))
             let addedComment;
             /** Comments in comments panel was not showing after clicking from header for the first time */
-            // if(state.comments.length!=0 && state.comments[0].commentOnEntity == payload.commentOnEntity){
+            if(state.comments.length!=0 && state.comments[0].commentOnEntity == payload.commentOnEntity){
                 addedComment = [
                     ...addnewComment,payload
                 ]  
-            // }
+            }
             return {
                 ...state,
                 allComments: [...addComment, payload],

@@ -153,6 +153,9 @@ export class TinyMceEditor extends Component {
                             if(MLtext){
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                                 document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
 
                             }
@@ -1479,7 +1482,9 @@ export class TinyMceEditor extends Component {
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-                node.innerHTML = this.lastContent;
+                if(!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length){
+                    node.innerHTML = this.lastContent;
+                }
             }
         }
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
