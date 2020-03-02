@@ -22,7 +22,7 @@ class CiteTdxTable extends Component {
             activeRow: addedValue.versionUrn
         }
         )
-        this.props.setCurrentCiteTdx(addedValue);
+        this.props.setCurrentCiteTdx(addedValue,this.props.openedFrom);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
@@ -61,7 +61,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div>No results found</div>}
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div className ="no-result">No results found</div>}
                 </div>
             </div>
         );
