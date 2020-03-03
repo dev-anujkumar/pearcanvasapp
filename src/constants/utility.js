@@ -55,7 +55,6 @@ export const hasReviewerRole = (value) => {
         && (hasProjectPermission('note_viewer'))) ? true : false;
     return hasRole;
 }
-
 /**
  * [TK-1948] | Check & Fix Regular Expressions Dependency
  * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.

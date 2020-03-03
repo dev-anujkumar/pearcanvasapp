@@ -102,7 +102,10 @@ export class TinyMceEditor extends Component {
 
                 if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar'))) {        // when user doesn't have edit permission
                     if (editor && editor.id) {
-                        document.getElementById(editor.id).setAttribute('contenteditable', false)
+                        document.getElementById(editor.id).setAttribute('contenteditable', false);
+                        if(tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins')){
+                            tinymce.$('.blockquoteMarginaliaAttr .paragraphNummerEins').attr('contenteditable', false)
+                        }
                     }
                 }
 
@@ -119,9 +122,11 @@ export class TinyMceEditor extends Component {
                         // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                        this.props.handleBlur(null, this.props.currentElement, this.props.index, showHideType);
-                        editor.selection.placeCaretAt(clickedX, clickedY);
-                    }
+                        if(!config.savingInProgress){
+                            this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
+                        }
+                        editor.selection.placeCaretAt(clickedX,clickedY);                       
+                    }                   
 
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
@@ -148,6 +153,9 @@ export class TinyMceEditor extends Component {
                             if(MLtext){
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                                 document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
 
                             }
@@ -375,7 +383,7 @@ export class TinyMceEditor extends Component {
             let isFigureElem = elemClassList.contains('figureImage25Text') || elemClassList.contains('figureImage50Text') || elemClassList.contains('heading4Image25TextNumberLabel')
 
             if (!isFigureElem && selectedText.length) { //handling Asset popover show hide toolbar icon
-                this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
+                this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(false); // IN case of Figure Element disable assetpopover
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
                 this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
@@ -903,6 +911,9 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
+        if(config.savingInProgress){
+            return false
+        }
         let elementId = ""
         if (this.props.currentElement) {
             elementId = this.props.currentElement.id
@@ -1117,7 +1128,9 @@ export class TinyMceEditor extends Component {
                         this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
                         if(!newElement) {
                             this.fromtinyInitBlur = true;
+                            this.editorRef.current.focus();
                             this.editorRef.current.blur();
+                            this.fromtinyInitBlur = false;
                         }
                     }
 
@@ -1469,7 +1482,9 @@ export class TinyMceEditor extends Component {
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-                node.innerHTML = this.lastContent;
+                if(!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length){
+                    node.innerHTML = this.lastContent;
+                }
             }
         }
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
@@ -1487,15 +1502,17 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        if(!this.fromtinyInitBlur){ 
+        if(!this.fromtinyInitBlur && !config.savingInProgress){ 
             this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
          }
          else{
             this.fromtinyInitBlur=false;
          }
     }
-
-    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
+    
+    toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback)=>{
+        if(config.savingInProgress) return false
+        
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let elementId = this.props.currentElement ? this.props.currentElement.id : this.props.element ? this.props.element.id : "";
         let elementType = this.props.currentElement ? this.props.currentElement.type : this.props.element ? this.props.element.type : "";
@@ -1507,7 +1524,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
-        let lockCondition = isLocked && config.userId !== userId;
+        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
@@ -1542,10 +1559,14 @@ export class TinyMceEditor extends Component {
                 if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "marginalia") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p><p class="blockquoteTextCredit" contenteditable="false"></p></blockquote>';
-                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-                    tinymce.$(temDiv).find('.paragraphNummerEins').attr('onBlur', this.handleBlur);
+                    if(tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]){
+                        tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
+                    }
                     tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'false');
                     classes = classes + ' blockquote-editor with-attr';
                     return (
@@ -1555,7 +1576,9 @@ export class TinyMceEditor extends Component {
                 else if (this.props.element && this.props.element.elementdata && this.props.element.elementdata.type === "blockquote") {
                     let temDiv = document.createElement('div');
                     temDiv.innerHTML = this.props.model && this.props.model.text ? this.props.model.text : '<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"></p></blockquote>';
-                    tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    if (!tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
+                        tinymce.$(temDiv).find('blockquote').append('<p contenteditable="false" class="blockquote-hidden" style="visibility: hidden;">hidden</p>');
+                    }
                     tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
                     tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
                     classes = classes + ' blockquote-editor without-attr';

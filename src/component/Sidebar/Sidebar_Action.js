@@ -38,7 +38,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
     if (oldElementData.type === "figure") {
-        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption']))){
+        if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting'){
             oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
         }
         if(oldElementData.figuredata.srctype){
@@ -74,7 +74,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.usagetype=usageType;
         let assessmentFormat =outputSubType.text.toLowerCase();
         let assessmentItemType ="";
-        if(assessmentFormat==="cite"){
+        if(assessmentFormat==="cite" || assessmentFormat==="puf"){
             assessmentItemType ="assessmentItem";
         }else{
             assessmentItemType = "tdxAssessmentItem";
@@ -87,6 +87,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentformat=assessmentFormat;
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
+        oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        // if(assessmentFormat==="puf"){
+        //     delete oldElementData.figuredata.elementdata.posterimage
+        // }else{
+        //     oldElementData.figuredata.elementdata.posterimage ={
+        //         imageid : "",
+        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+        //     }
+        // }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -97,6 +106,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let containerDom = document.querySelector(`[data-id='${oldElementData.id}']`)
         let elementContainer = containerDom && containerDom.querySelector('.element-container')
         let editableDom = elementContainer && elementContainer.querySelector('.cypress-editable')
+        if(editableDom){
+          tinyMCE.$(editableDom).find('ol').removeAttr('data-mce-style')
+        }
         let domHtml = editableDom ? editableDom.innerHTML : "<ol></ol>"
         if(showHideObj){
             containerDom = document.getElementById(`cypress-${showHideObj.index}`)
@@ -109,7 +121,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
          * case - if list is being converted from sidepanel then pick counterIncrement value from element data
          */
         if (outputSubTypeEnum !== "DISC" && newElementData.startvalue === undefined && oldElementData.elementdata.type === 'list' && oldElementData.elementdata.startNumber) {
-            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber) + 1 
+            newElementData.startvalue = parseInt(oldElementData.elementdata.startNumber)
         }
         /**
          * case - if bullet list is being converted into bullet again then explicitly proceed with paragraph coversion
@@ -149,6 +161,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         oldElementData.designtype = elemDesigntype
     }
+    if (oldElementData.type === "element-blockfeature") {
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = oldElementData.html.text;
+        tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
+        oldElementData.html.text = tempDiv.innerHTML;
+    }
     conversionDataToSend = {
         ...oldElementData,
         inputType : inputPrimaryOptionEnum,
@@ -158,7 +176,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         projectUrn : config.projectUrn,
         projectURN : config.projectUrn,
         slateUrn:Object.keys(appStore.parentUrn).length !== 0 ? appStore.parentUrn.manifestUrn: config.slateManifestURN,
-        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue - 1) : 0,
+        counterIncrement: (newElementData.startvalue > 0) ? (newElementData.startvalue) : 1, // earlier default by 0
         index: indexes[indexes.length - 1],
         slateEntity : Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
@@ -201,6 +219,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
     config.conversionInProcess = true
+    if(conversionDataToSend.status === "approved"){
+        config.savingInProgress = true
+    }
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
@@ -208,8 +229,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             "PearsonSSOSession": config.ssoToken
         }
     }).then(res =>{
+        let parentData = store;
+        let currentParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = currentParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
+        config.savingInProgress = false
         tinymce.activeEditor&&tinymce.activeEditor.undoManager&&tinymce.activeEditor.undoManager.clear();
 
         let storeElement = store[config.slateManifestURN];
@@ -269,8 +297,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        console.log("Conversion Error >> ",err) 
+        console.log("Conversion Error >> ",err)
         dispatch({type: ERROR_POPUP, payload:{show: true}})
+        config.conversionInProcess = false
+        config.savingInProgress = false
     })
 }
 catch (error) {
@@ -313,7 +343,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
 export const conversionElement = (elementData, fromToolbar) => (dispatch, getState) => {
-    if(!config.conversionInProcess){
+    if(!config.conversionInProcess && !config.savingInProgress){
         let appStore =  getState().appStore;
         dispatch(handleElementConversion(elementData, appStore.slateLevelData, appStore.activeElement, fromToolbar,appStore.showHideObj));
     } else {

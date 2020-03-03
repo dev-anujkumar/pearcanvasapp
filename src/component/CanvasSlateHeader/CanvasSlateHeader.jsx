@@ -29,6 +29,9 @@ import { sendDataToIframe } from '../../constants/utility.js';
      */
 
     handleNavClick(nav) {
+        if(config.savingInProgress){
+            return false
+        }
         config.currentInsertedType = "";
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         if(nav === "back"){

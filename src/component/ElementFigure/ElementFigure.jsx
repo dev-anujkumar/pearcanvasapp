@@ -242,7 +242,7 @@ class ElementFigure extends Component {
                     elementFigureAlignment = model.alignment ? model.alignment : 'mathml';
                     break;
                 case 'codelisting':
-                    elementFigureAlignment = model.alignment ? model.alignment : 'code-listing';
+                    elementFigureAlignment = 'code-listing';
                     break;
                 case 'image':
                 default:

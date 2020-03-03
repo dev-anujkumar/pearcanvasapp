@@ -48,6 +48,11 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
                 break;
         }
     }
+    else if ((textSemantics == undefined || textSemantics.length === 0) && (titleText === "")){
+        if(type ===  "label"){
+            dataToReturn = "No Label"
+        }
+    }
 
     return dataToReturn;
 }

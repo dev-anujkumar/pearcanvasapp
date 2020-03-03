@@ -13,7 +13,12 @@ import config from '../../config/config';
 import { utils } from '../../js/utils';
 import PopUp from '../PopUp'
 import axios from 'axios';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
+import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { connect } from 'react-redux';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -28,7 +33,10 @@ class Interactive extends React.Component {
             imagePath : this.props.model.figuredata && this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
             showAssesmentpopup: false,
             elementType: this.props.model.figuredata.interactivetype || "",
-            projectMetadata: false
+            projectMetadata: false,
+            showAssessmentPopup: false,
+            showSinglePopup:false,
+            setCurrentAssessment:{}
         };
 
     }
@@ -495,6 +503,14 @@ class Interactive extends React.Component {
             }
             this.handleC2MediaClick(e);
         }
+        else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            this.props.showBlocker(value);
+            disableHeader(value);
+            this.props.handleFocus();
+            this.setState({
+            showAssessmentPopup : value
+            });
+        }
         else {
             this.props.showBlocker(value);
             disableHeader(value);
@@ -695,7 +711,60 @@ class Interactive extends React.Component {
         }
 
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+    */
+   closeWindowAssessment = () => {
+    this.props.setCurrentCiteTdx({});
+    this.setState({
+        showAssessmentPopup: false,
+        showSinglePopup:false,
+    });
+    hideTocBlocker();
+    disableHeader(false);
+    this.props.showBlocker(false);
+    }
+    assessmentNavigateBack = () => {
+        this.setState({
+            showAssessmentPopup: true,
+            showSinglePopup:false,
+        });
+    }
 
+    addCiteTdxAssessment = (citeTdxObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        if(citeTdxObj.slateType === "singleSlateAssessment"){
+            this.setState({
+                showSinglePopup: true,
+                setCurrentAssessment: citeTdxObj,
+                showAssessmentPopup:false
+            })
+        }
+        else{
+            let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?citeTdxObj.singleAssessmentID.taxonomicTypes[1]:"cite-interactive-video-with-interactive";
+            tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
+            let that = this;
+            that.setState({itemID : itemId
+               })
+               let figureData = {
+                   schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+                   interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
+                   interactivetype: tempInteractiveType,
+                   interactiveformat: "mmi"
+               }
+          
+           
+               that.props.updateFigureData(figureData, that.props.index, that.props.elementId,()=>{               
+                   that.props.handleFocus("updateFromC2");
+                   setTimeout(()=>{
+                       that.props.handleBlur()
+                   },300)
+                  
+               })
+        }
+        
+    }
     /**
      * @description - This function is for rendering the Jsx Part of different Interactive Elements.
      * @param {event} element
@@ -710,7 +779,9 @@ class Interactive extends React.Component {
                
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
-                        {this.state.showAssesmentpopup ? <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssesmentpopup ?  <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}
                     </div>
                 
             )
@@ -742,4 +813,11 @@ Interactive.propTypes = {
     /** itemId coming from c2module */
     itemId: PropTypes.string
 }
-export default Interactive;
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+}
+
+export default connect(
+    null,
+    mapActionToProps
+)(Interactive);

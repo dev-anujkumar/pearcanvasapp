@@ -30,8 +30,8 @@ let cypressConfig = {
     headingToolbar : ['italic','clearformatting','increaseindent','footnote','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     codeListingToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
     asideToolbar: ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag'],
-    labelToolbar:['footnote','decreaseindent','glossary'],
-    captionToolbar:['decreaseindent','glossary'],
+    labelToolbar:['footnote','decreaseindent','glossary','assetpopover'],
+    captionToolbar:['decreaseindent','glossary','assetpopover'],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,
@@ -49,7 +49,9 @@ let cypressConfig = {
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://10.11.7.24:8443/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
-    conversionInProcess : false
+    conversionInProcess : false,
+    savingInProgress: false,
+    lastActiveElementId:''
 }
 
 

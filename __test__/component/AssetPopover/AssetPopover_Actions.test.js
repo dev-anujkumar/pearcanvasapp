@@ -137,7 +137,7 @@ describe('testingAssetPopoverActions',() => {
     })
 
    it('testing------- searchForFiguresAction else', async () => {
-        let searchTerm = 'search', stateImageData = null
+        let searchTerm = 'search', stateImageData = null, currentlySearching = false
         const users = [{name: 'Bob'}];
         const resp = {data: users};  
         let  performance = {
