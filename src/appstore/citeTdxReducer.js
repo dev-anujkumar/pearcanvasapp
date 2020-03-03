@@ -57,7 +57,9 @@ export default function reducer (state = INITIAL_STATE, action = INITIAL_ACTION)
         case "GET_SINGLE_ASSESSMENT_DATA": {
             return {
                 ...state,
-                singleAssessmentData: action.payload
+                singleAssessmentData: action.payload,
+                assessmenterrFlag : action.payload.errFlag,
+                isLoading: action.payload.isLoading
             }
     }
         default:

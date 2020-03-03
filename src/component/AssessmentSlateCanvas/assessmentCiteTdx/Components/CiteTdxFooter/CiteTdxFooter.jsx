@@ -12,7 +12,7 @@ class CiteTdxFooter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentPage: 1
+            currentPage: props.currentPageNo
         }
     }
 
@@ -24,7 +24,8 @@ class CiteTdxFooter extends Component {
             slateType: this.props.openedFrom,
             singleAssessmentID:  this.props.currentSingleAssessmentSelected ? this.props.currentSingleAssessmentSelected:""
         }
-        this.props.addCiteTdxFunction(obj);
+        let parentPageNo = this.state.currentPage
+        this.props.addCiteTdxFunction(obj, parentPageNo);
         if(this.props.openedFrom !== "singleSlateAssessment"){
             this.props.closeWindowAssessment();
         }
@@ -55,7 +56,7 @@ class CiteTdxFooter extends Component {
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
-        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 20)) ? 'hideNavigation' : '';
+        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
         let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') ? '' : 'hideNavigation';
         let addClass;

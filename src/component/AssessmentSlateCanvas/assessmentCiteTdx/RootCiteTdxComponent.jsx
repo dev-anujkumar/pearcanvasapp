@@ -17,11 +17,12 @@ class RootCiteTdxComponent extends Component {
       searchTitle : '',
       filterUUID : '',
       isReset: false,
-      currentPageNo: 1
+      currentPageNo: props.parentPageNo
     }
   }
   componentDidMount() {
-    this.props.getCiteTdxData(this.props.assessmentType);
+    const {currentPageNo} =this.state;
+    this.props.getCiteTdxData(this.props.assessmentType, null, null, currentPageNo);
   }
   componentDidUpdate() {
     return true;
@@ -55,7 +56,7 @@ class RootCiteTdxComponent extends Component {
             <CiteTdxHeader headerProps={this.headerProps} />
             <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.resetPage} currentPageNo={this.state.currentPageNo} />
             <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment}/>
-            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} />
+            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
           </CiteComponentError>
         </div>
       </div>

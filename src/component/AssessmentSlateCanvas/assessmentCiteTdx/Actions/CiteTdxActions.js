@@ -11,7 +11,7 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
-    let pageSize=20;
+    let pageSize=25;
 
     let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
 
@@ -53,6 +53,7 @@ export const setCurrentInnerCiteTdx = (currentAssessmentSelected, openedFrom) =>
 }
 
 export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch, getState) => {
+    dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
     let url =`${config.REACT_APP_API_URL}v1/slate/assessment/${currentAssessmentSelected}/items`;
     return axios.get(url, {
           headers:  {

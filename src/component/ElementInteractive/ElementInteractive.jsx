@@ -36,7 +36,9 @@ class Interactive extends React.Component {
             projectMetadata: false,
             showAssessmentPopup: false,
             showSinglePopup:false,
-            setCurrentAssessment:{}
+            setCurrentAssessment:{},
+            parentPageNo:1
+
         };
 
     }
@@ -731,14 +733,15 @@ class Interactive extends React.Component {
         });
     }
 
-    addCiteTdxAssessment = (citeTdxObj) => {
+    addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
         disableHeader(true);
         if(citeTdxObj.slateType === "singleSlateAssessment"){
             this.setState({
                 showSinglePopup: true,
                 setCurrentAssessment: citeTdxObj,
-                showAssessmentPopup:false
+                showAssessmentPopup:false,
+                parentPageNo
             })
         }
         else{
@@ -781,7 +784,7 @@ class Interactive extends React.Component {
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                         {this.state.showAssesmentpopup ?  <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
-                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo}/>:""}
                         {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}
                     </div>
                 
