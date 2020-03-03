@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { singleAssessmentItemIcon } from './../../../images/ElementButtons/ElementButtons.jsx';
 import moment from 'moment'
+import CiteLoader from './../assessmentCiteTdx/Components/CiteLoader/CiteLoader.jsx';
+
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
@@ -24,19 +26,19 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { singleAssessmentData } = this.props;
+        const { singleAssessmentData, isLoading } = this.props;
         return (
             <div>
                 <div className='main-div'>
-                   
+                <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                         <table className='assessment-table-class'>
                             <thead>
-                                {this.tableHeaders.map(item => (
+                                {(isLoading == false) && this.tableHeaders.map(item => (
                                     <th className='assessment-row-class'>{item}
                                     </th>
                                 ))}
                             </thead>
-                            {this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
+                            {(isLoading == false) && this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
                             <tbody>
                                 {this.props.singleAssessmentData.data.map((item, index) => {
                                     return (
@@ -56,7 +58,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         }
                         </table>
-                        {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0)  && <div className ="no-result">No results found</div>}
+                        {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0) && (isLoading == false)  && <div className ="no-result">No results found</div>}
                     
 
                 </div>
@@ -75,7 +77,8 @@ const mapStateToProps = (state) => {
     return {
         singleAssessmentData: state.citeTdxReducer.singleAssessmentData,
         isLoading: state.citeTdxReducer.isLoading,
-        currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected
+        currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected,
+        citeErrorFlag: state.citeTdxReducer.assessmenterrFlag
     }
 }
 
