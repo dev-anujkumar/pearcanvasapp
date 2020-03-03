@@ -51,7 +51,6 @@ class ElementPopup extends React.Component {
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
     }
 
-    //Uncomment after API arrives
     /**
      * Creates Title/Subtitle element if not present.
      */

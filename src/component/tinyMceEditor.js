@@ -122,7 +122,6 @@ export class TinyMceEditor extends Component {
                         // }) 
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-                        //Uncomment after API arrives
                         if(!config.savingInProgress){
                             if(this.props.element.type === "popup" && !this.props.currentElement){
                                 this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
