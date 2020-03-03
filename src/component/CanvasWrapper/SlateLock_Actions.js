@@ -34,7 +34,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
                 payload: {
                     isLocked: true,
                     timestamp: "",
-                    userId: "abcd"
+                    userId: "sumant, mishra, sumant (vmishsu)"
                 }
             }) */
         })
