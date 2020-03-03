@@ -141,9 +141,17 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
+            console.log("config",config)
             if (currentSlateData.status === 'approved') {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData));
+                }
+                else{
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+
             return false;
         }
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
