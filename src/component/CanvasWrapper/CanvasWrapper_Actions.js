@@ -521,8 +521,6 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 }
 
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex) => (dispatch, getState) => {
-    console.log("CREATE POPUP UNIT::>>", popupField)
-    console.log("CREATE POPUP UNIT CALLBACK::>>", parentElement)
     let popupFieldType = ""
     if(popupField === "formatted-subtitle"){
         popupFieldType = "formattedSubtitle"
@@ -535,7 +533,6 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
         "slateUrn": parentElement.id,
-        // "index": outerAsideIndex ? outerAsideIndex : index,
         "type": "TEXT",
         "updatePopupElementField" : popupFieldType
     };
@@ -549,15 +546,17 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
     .then((response) => {
-        console.log("%c SUCCESS RESPONSE", "font-size: 30px; color: orange; background: black",response.data)
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-        popupElementIndex = popupElementIndex.split("-")[0]
+        let elemIndex = `cypress-${popupElementIndex}`
+        let elemNode = document.getElementById(elemIndex)
+        popupElementIndex = Number(popupElementIndex.split("-")[0])
         const parentData = getState().appStore.slateLevelData
         let newslateData = JSON.parse(JSON.stringify(parentData))
         let _slateObject = newslateData[config.slateManifestURN]
         let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
         if(targetPopupElement){
             targetPopupElement.popupdata[popupField] = response.data
+            targetPopupElement.popupdata[popupField].html.text = elemNode.innerHTML
+            targetPopupElement.popupdata[popupField].elementdata.text = elemNode.innerText
             _slateObject.contents.bodymatter[popupElementIndex] = targetPopupElement
         }
         dispatch({
@@ -567,6 +566,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
         if(cb) cb(response.data)
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)

@@ -130,9 +130,6 @@ export class TinyMceEditor extends Component {
                                 this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
                             }
                         }
-                        /* if(!config.savingInProgress){
-                            this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
-                        } */
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
 
@@ -923,8 +920,12 @@ export class TinyMceEditor extends Component {
             return false
         }
         let elementId = ""
-        if (this.props.currentElement) {
-            elementId = this.props.currentElement.id
+        if (this.props.element.type === "popup") {
+            if((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement){
+                return false
+            } else {
+                elementId = this.props.currentElement.id
+            }
         }
         else {
             elementId = this.props.elementId
@@ -1465,11 +1466,6 @@ export class TinyMceEditor extends Component {
         tinyMCE.$('.cypress-editable').css('caret-color', 'black')
     }
 
-    //Uncomment after API arrives
-    blurAfterPopupUnitCreation = (currentElementData, forceupdate) => {
-        this.props.handleBlur(forceupdate, currentElementData, this.props.index, null)
-    }
-
     /**
      * handleBlur | gets triggered when any editor element is blurred
      * @param {*} e  event object
@@ -1517,7 +1513,9 @@ export class TinyMceEditor extends Component {
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
 
         if(!this.fromtinyInitBlur && !config.savingInProgress){
-            if(this.props.element.type === "popup" && !this.props.currentElement){
+            let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+            if(this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
                 this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
             } else {
                 this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
