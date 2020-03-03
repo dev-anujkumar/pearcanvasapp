@@ -153,6 +153,9 @@ export class TinyMceEditor extends Component {
                             if(MLtext){
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                                 document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
 
                             }
@@ -1281,6 +1284,13 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+
+        /*
+        * In IS slate removing the toolbar disabled class which was applied in case of OE
+        */
+        if(config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList){
+            document.getElementById('tinymceToolbar').classList.remove('toolbar-disabled')
+        }
         let showHideObj;
         if (this.props.showHideType) {
             showHideObj =
@@ -1521,7 +1531,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
-        let lockCondition = isLocked && config.userId !== userId;
+        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;

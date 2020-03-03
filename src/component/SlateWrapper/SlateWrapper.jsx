@@ -419,7 +419,7 @@ class SlateWrapper extends Component {
         }
         else {
             const { projectUrn } = config
-            this.props.setLockPeriodFlag(true)
+            // this.props.setLockPeriodFlag(true)                       // For local testing purpose
             this.props.setSlateLock(projectUrn, slateId, lockDuration)
             this.debounceReleaseTimeout()
         }
