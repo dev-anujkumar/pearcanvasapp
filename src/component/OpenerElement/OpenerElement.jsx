@@ -27,8 +27,8 @@ class OpenerElement extends Component {
 
         this.state = {
             label: getOpenerContent(textsemantics, "label", text) || 'No Label',
-            number: getOpenerContent(textsemantics, "number", text),
-            title: getOpenerContent(textsemantics, "title", text),
+            number: getOpenerContent(textsemantics, "number", text) || '',
+            title: getOpenerContent(textsemantics, "title", text) || '',
             showLabelDropdown: false,
             imgSrc: getOpenerImageSource(bgImage),
             width: null,
@@ -336,12 +336,16 @@ class OpenerElement extends Component {
         let flag = true;
         if (classList.length > 0 
             && (classList.contains("opener-title") || classList.contains("opener-number"))
+            && (this.state.label === getOpenerContent(textsemantics, "label", text))
             && (this.state.number === getOpenerContent(textsemantics, "number", text))
-            && ((this.state.title === getOpenerContent(textsemantics, "title", text)) && (this.state.title !== ""))) {
+            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
             flag = false;
         }
 
-        else if ((classList.length === 0) && this.state.label === getOpenerContent(textsemantics, "label", text)) {
+        else if ((classList.length === 0) 
+        && this.state.label === getOpenerContent(textsemantics, "label", text)
+        && this.state.number === getOpenerContent(textsemantics, "number", text)
+        && this.state.title === getOpenerContent(textsemantics, "title", text)) {
             flag = false
         }
         let element = this.props.element;
@@ -393,7 +397,16 @@ class OpenerElement extends Component {
 
         flag && this.props.updateElement(element);
     }
-    
+
+    /**
+   * This function responsible for disabling the toolbar in openerElement
+   */
+
+    handleToolbarOpener = (event) => {
+        if( document.getElementById('tinymceToolbar')){
+            document.getElementById('tinymceToolbar').classList.add('toolbar-disabled')
+        }
+    }   
     
     render() {
         const { imgSrc, width } = this.state
@@ -412,11 +425,11 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
-                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} />
+                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
                     </div>
                 </div>
                 <figure className="pearson-component opener-image figureData" onClick={this.handleC2MediaClick} style={{ backgroundColor: `${backgroundColor}` }}>

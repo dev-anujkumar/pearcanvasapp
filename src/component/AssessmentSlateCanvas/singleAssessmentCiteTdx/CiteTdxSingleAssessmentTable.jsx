@@ -3,7 +3,7 @@
 */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCurrentCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { singleAssessmentItemIcon } from './../../../images/ElementButtons/ElementButtons.jsx';
 import moment from 'moment'
 class CiteTdxTable extends Component {
@@ -19,7 +19,7 @@ class CiteTdxTable extends Component {
         this.setState({
             activeRow: addedValue.versionUrn
         })
-        this.props.setCurrentCiteTdx(addedValue, this.props.openedFrom);
+        this.props.setCurrentInnerCiteTdx(addedValue, this.props.openedFrom);
     }
     tableHeaders = ["Title", "Date Modified", "Modified By", "UUID"];
 
@@ -67,6 +67,7 @@ class CiteTdxTable extends Component {
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx:setCurrentInnerCiteTdx
 }
 
 

@@ -17,7 +17,7 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import  {setCurrentCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
+import  {setCurrentCiteTdx, setCurrentInnerCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 
 /**
@@ -715,6 +715,7 @@ class Interactive extends React.Component {
     */
    closeWindowAssessment = () => {
     this.props.setCurrentCiteTdx({});
+    this.props.setCurrentInnerCiteTdx({});
     this.setState({
         showAssessmentPopup: false,
         showSinglePopup:false,
@@ -742,7 +743,7 @@ class Interactive extends React.Component {
         }
         else{
             let itemId = citeTdxObj.singleAssessmentID.versionUrn ? citeTdxObj.singleAssessmentID.versionUrn : "";
-            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?citeTdxObj.singleAssessmentID.taxonomicTypes[1]:"cite-interactive-video-with-interactive";
+            let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"cite-interactive-video-with-interactive";
             tempInteractiveType = utils.getTaxonomicType(tempInteractiveType);
             let that = this;
             that.setState({itemID : itemId
@@ -815,6 +816,7 @@ Interactive.propTypes = {
 }
 const mapActionToProps = {
     setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
 }
 
 export default connect(
