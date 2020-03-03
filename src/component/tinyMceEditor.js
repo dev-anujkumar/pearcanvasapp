@@ -1281,13 +1281,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
-
-        /*
-        * In IS slate removing the toolbar disabled class which was applied in case of OE
-        */
-        if(config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList){
-            document.getElementById('tinymceToolbar').classList.remove('toolbar-disabled')
-        }
         let showHideObj;
         if (this.props.showHideType) {
             showHideObj =
