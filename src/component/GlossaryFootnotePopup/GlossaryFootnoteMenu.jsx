@@ -62,6 +62,29 @@ class GlossaryFootnoteMenu extends React.Component {
         this.props.showGlossaaryFootnote(false);
     }
 
+    replaceUnwantedtags = (html) => {
+        if(!html){
+            return;
+        }
+        let tempDiv = document.createElement('div');
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html=html.trim();
+        tempDiv.innerHTML = html;
+        tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
+
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+        tinyMCE.$(tempDiv).find('img').removeAttr('height');
+        tinyMCE.$(tempDiv).find('img').removeAttr('width');
+        tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
+        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
+
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+        return tempDiv.innerHTML;
+    }
+
     /**
      * Checks difference in glossary/footnote data
      */
@@ -93,6 +116,8 @@ class GlossaryFootnoteMenu extends React.Component {
             definition = document.querySelector('#glossary-editor-attacher > div > p') && `${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}` || "<p></p>"
             term = term.match(/<p>/g) ? term.replace(/<br data-mce-bogus="1">/g, "") : `<p>${term.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             definition = definition.match(/<p>/g) ? definition.replace(/<br data-mce-bogus="1">/g, "") : `<p>${definition.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            term = this.replaceUnwantedtags(term)
+            definition = this.replaceUnwantedtags(definition)
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase())){
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                 saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup)

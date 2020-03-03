@@ -60,7 +60,14 @@ class AssetPopoverSearch extends React.Component {
             domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
             this.apoSearchClose();
             setTimeout(() => {
-                document.getElementById(tinymce.activeEditor.id).blur()
+                let currentElem = document.getElementById(tinymce.activeEditor.id);
+                if(tinymce.$(currentElem).find('blockquote').length){
+                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
+                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+                }
+                else{
+                    currentElem.blur()
+                }
             }, 0);
         } else {
             //Hit api for asset popover Id
@@ -104,8 +111,15 @@ class AssetPopoverSearch extends React.Component {
         clearAssetPopoverLink(assetId);
         this.apoSearchClose();
         setTimeout(() => {
-            document.getElementById(tinymce.activeEditor.id).focus()
-            document.getElementById(tinymce.activeEditor.id).blur()
+            let currentElem = document.getElementById(tinymce.activeEditor.id);
+            if(tinymce.$(currentElem).find('blockquote').length){
+                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
+                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+            }
+            else{
+                currentElem.focus()
+                currentElem.blur()
+            }
         }, 0);
     }
 

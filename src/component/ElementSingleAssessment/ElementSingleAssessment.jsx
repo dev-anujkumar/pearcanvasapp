@@ -6,15 +6,20 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import PopUp from './../PopUp';
+import { connect } from 'react-redux';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js';
+import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx'
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
-export class ElementSingleAssessment extends Component {
+class ElementSingleAssessment extends Component {
     constructor(props) {
         super(props);
 
@@ -26,7 +31,9 @@ export class ElementSingleAssessment extends Component {
             activeAsseessmentUsageType: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.usagetype ? this.props.model.figuredata.elementdata.usagetype : "Quiz",
             assessmentTitle: this.props.model && this.props.model.html && this.props.model.html.title? this.props.model.html.title : null,
             elementType: this.props.model.figuredata.elementdata.assessmentformat || "",
-            showElmComponent: false
+            showElmComponent: false,
+            showSinglePopup:false,
+            setCurrentAssessment:{}
         };
     }
     componentDidMount() {
@@ -150,6 +157,47 @@ static getDerivedStateFromProps(nextProps, prevState) {
     saveAssessment = () =>{ 
             this.props.handleBlur("","",this.props.index);
     }
+    /*** @description - This function is to close CITE/TDX PopUp
+  */
+    closeWindowAssessment = () => {
+            this.setState({
+                showAssessmentPopup: false,
+                showSinglePopup:false,
+            });
+            hideTocBlocker();
+            disableHeader(false);
+            this.props.setCurrentCiteTdx({});
+            this.props.setCurrentInnerCiteTdx({});
+            this.props.showBlocker(false);
+    }
+    assessmentNavigateBack = () => {
+        this.setState({
+            showAssessmentPopup: true,
+            showSinglePopup:false,
+        });
+    }
+    /***
+    *  @description - This is the function to add CITE/TDX to Embedded-Assessment  
+    * @param citeTdxObj - The object contains data about CITE/TDX Assessment 
+    */
+    addCiteTdxAssessment = (citeTdxObj) => {
+        showTocBlocker();
+        disableHeader(true);
+        if(citeTdxObj.slateType === "singleSlateAssessment"){
+            this.setState({
+                showSinglePopup: true,
+                setCurrentAssessment: citeTdxObj,
+                showAssessmentPopup:false
+            })
+        }
+        else{
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: citeTdxObj.title },
+                () => {
+                    this.saveAssessment();
+                })
+        }
+       
+    }
 
     
     /*** @description - This function is to close ELM PopUp */
@@ -244,8 +292,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
         return (
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
-                {this.state.showAssessmentPopup? <PopUp handleC2Click ={this.handleC2AssessmentClick} togglePopup={this.toggleAssessmentPopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'} />:''}
                 {this.state.showElmComponent? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} openedFrom={'singleAssessment'} usageTypeMetadata={this.state.activeAsseessmentUsageType} assessmentType={this.state.elementType}/> : ''}
+                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}/>:""}
+                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}     
             </div>
         );
     }
@@ -274,6 +323,17 @@ ElementSingleAssessment.propTypes = {
     handleC2AssessmentClick : PropTypes.func,
     /** Detail of element in JSON object */
 }
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+}
+
+
+export default connect(
+    null,
+    mapActionToProps
+)(ElementSingleAssessment);
+
 
 
 

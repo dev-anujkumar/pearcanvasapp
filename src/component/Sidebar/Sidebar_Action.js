@@ -88,6 +88,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        // if(assessmentFormat==="puf"){
+        //     delete oldElementData.figuredata.elementdata.posterimage
+        // }else{
+        //     oldElementData.figuredata.elementdata.posterimage ={
+        //         imageid : "",
+        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+        //     }
+        // }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
