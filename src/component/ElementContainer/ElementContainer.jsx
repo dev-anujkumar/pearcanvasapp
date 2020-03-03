@@ -642,7 +642,9 @@ class ElementContainer extends Component {
         });
 
         elementData.backgroundcolor = selectedColor;
-        this.updateOpenerElement(elementData);
+        if(this.props.element.backgroundcolor !== config.colors[this.state.activeColorIndex]){
+            this.updateOpenerElement(elementData);
+        }       
     }
 
     /**
