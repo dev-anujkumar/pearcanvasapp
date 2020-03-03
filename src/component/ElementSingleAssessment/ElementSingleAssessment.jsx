@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import './../../styles/ElementSingleAssessment/ElementSingleAssessment.css';
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 import PopUp from './../PopUp';
+import { connect } from 'react-redux';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
@@ -13,11 +14,11 @@ import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-
+import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
-export class ElementSingleAssessment extends Component {
+class ElementSingleAssessment extends Component {
     constructor(props) {
         super(props);
 
@@ -164,6 +165,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
             });
             hideTocBlocker();
             disableHeader(false);
+            this.props.setCurrentCiteTdx({});
+            this.props.setCurrentInnerCiteTdx({});
             this.props.showBlocker(false);
     }
     assessmentNavigateBack = () => {
@@ -319,6 +322,17 @@ ElementSingleAssessment.propTypes = {
     handleC2AssessmentClick : PropTypes.func,
     /** Detail of element in JSON object */
 }
+const mapActionToProps = {
+    setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
+}
+
+
+export default connect(
+    null,
+    mapActionToProps
+)(ElementSingleAssessment);
+
 
 
 

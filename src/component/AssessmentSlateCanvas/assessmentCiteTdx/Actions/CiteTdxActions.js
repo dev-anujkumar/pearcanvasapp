@@ -40,19 +40,16 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     })
 }
 export const setCurrentCiteTdx = (currentAssessmentSelected, openedFrom) => (dispatch, getState) => {
-    if(openedFrom == "singleSlateAssessmentInner"){
-        dispatch({
-            type: 'CURRENT_SELECTED_SINGLE_ASSESSMENT',
-            payload: currentAssessmentSelected
-        })
-    }
-    else{
-        dispatch({
+     dispatch({
             type: 'CURRENT_SELECTED_ASSESSMENT',
             payload: currentAssessmentSelected
         })
-    }
-    
+}
+export const setCurrentInnerCiteTdx = (currentAssessmentSelected, openedFrom) => (dispatch, getState) => {
+     dispatch({
+            type: 'CURRENT_SELECTED_SINGLE_ASSESSMENT',
+            payload: currentAssessmentSelected
+        })
 }
 
 export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch, getState) => {
