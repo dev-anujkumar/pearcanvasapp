@@ -78,8 +78,8 @@ class CiteTdxFooter extends Component {
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>CANCEL</button>
-                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
+                    <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>cancel</button>
+                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>select</button>
                 </div>
             </div>
 

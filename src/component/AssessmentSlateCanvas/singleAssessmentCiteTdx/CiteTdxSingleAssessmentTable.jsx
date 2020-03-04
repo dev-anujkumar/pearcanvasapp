@@ -29,10 +29,10 @@ class CiteTdxTable extends Component {
             <div>
                 <div className='main-div'>
                    
-                        <table className='assessment-table-class'>
+                        <table className='assessment-table-class single-assessment'>
                             <thead>
                                 {this.tableHeaders.map(item => (
-                                    <th className='assessment-row-class'>{item}
+                                    <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     </th>
                                 ))}
                             </thead>
@@ -45,7 +45,7 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
-                                                    <b>{item.name}</b>
+                                                    <span className="assessment-titles">{item.name}</span>
                                                 </td>
                                                 <td>{item.dateModified ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : "NA"}</td>
                                                 <td>{item.modifiedBy ? item.modifiedBy : "NA"}</td>
