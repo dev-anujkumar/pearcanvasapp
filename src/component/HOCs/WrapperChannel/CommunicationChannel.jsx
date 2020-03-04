@@ -474,7 +474,7 @@ function WithWrapperCommunication(WrappedComponent) {
                 try{
                     let status = {
                         slateLocked : response.isLocked,
-                        userInfo : response.userId    
+                        userInfo : response.userId.replace(/.*\(|\)/gi, '')
                     }
                     if(userName.toLowerCase() === status.userInfo.toLowerCase()) {
                         status.slateLocked = false;

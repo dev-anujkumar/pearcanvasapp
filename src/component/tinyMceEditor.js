@@ -71,7 +71,6 @@ export class TinyMceEditor extends Component {
                 this.addFootnoteIcon(editor);
                 this.addGlossaryIcon(editor);
                 this.addInlineCodeIcon(editor);
-                this.editorMousedown(editor);
                 this.editorClick(editor);
                 this.editorKeydown(editor);
                 this.editorKeyup(editor);
@@ -592,20 +591,6 @@ export class TinyMceEditor extends Component {
             else if((this.props.element && this.props.element.type ==='showhide' && this.props.showHideType !== 'revel' && !editor.bodyElement.innerText.trim().length && e.keyCode === 8 && this.props.element.interactivedata) && ((this.props.showHideType === "show" && this.props.element.interactivedata.show.length >1) || (this.props.showHideType === "hide" && this.props.element.interactivedata.hide.length >1 ))&& !isContainsMath ){
                 this.props.deleteShowHideUnit(this.props.currentElement.id, this.props.showHideType, this.props.element.contentUrn, this.props.innerIndex,this.props.index,this.props.element.id)
              }   
-        });
-    }
-
-    /**
-     * This method is called on Mouse down.
-     * @param {*} editor  editor instance
-     */
-    editorMousedown = (editor) => {
-        editor.on('mousedown', (e) => {
-            if (this.props.slateLockInfo.isLocked && config.userId !== this.props.slateLockInfo.userId) {
-                e.preventDefault();
-                e.stopPropagation()
-                return false;
-            }
         });
     }
 
