@@ -16,9 +16,9 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
+import { sendDataToIframe } from './../../constants/utility.js';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -514,6 +514,7 @@ class Interactive extends React.Component {
             this.handleC2MediaClick(e);
         }
         else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
             this.props.showBlocker(value);
             disableHeader(value);
             this.props.handleFocus();

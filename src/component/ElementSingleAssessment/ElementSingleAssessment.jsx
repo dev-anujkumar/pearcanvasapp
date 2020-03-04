@@ -16,7 +16,7 @@ import {FULL_ASSESSMENT_CITE, FULL_ASSESSMENT_TDX} from '../AssessmentSlateCanva
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import RootElmComponent from '../AssessmentSlateCanvas/elm/RootElmComponent.jsx'
-
+import { sendDataToIframe } from './../../constants/utility.js';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -125,6 +125,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     /**Assessment PopUp Functions */
     /*** @description - This function is to toggle the Assessment PopUp*/
     toggleAssessmentPopup = (e,value) => {
+        sendDataToIframe({ 'type': 'hideToc', 'message': {} });
         this.props.showBlocker(value);
         disableHeader(value);
         value ? showTocBlocker(value) : hideTocBlocker(value)

@@ -228,10 +228,10 @@ import { connect } from 'react-redux';
                 break;
             case FULL_ASSESSMENT_CITE:
             case FULL_ASSESSMENT_TDX:
+                    sendDataToIframe({ 'type': 'hideToc', 'message': {} });
                     this.setState({
                         showCiteTdxComponent: true
                     })
-                   
                 showTocBlocker();
                 disableHeader(true);
                 this.props.showBlocker(true);
