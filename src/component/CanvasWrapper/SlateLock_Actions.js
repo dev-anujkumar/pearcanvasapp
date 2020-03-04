@@ -27,17 +27,6 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
                 }
             })
         })
-        .catch((err) => {
-            // For local testing purpose
-            /* dispatch({
-                type: SET_SLATE_LOCK_STATUS,
-                payload: {
-                    isLocked: true,
-                    timestamp: "",
-                    userId: "sumant, mishra, sumant (vmishsu)"
-                }
-            }) */
-        })
 } 
 
 /**
