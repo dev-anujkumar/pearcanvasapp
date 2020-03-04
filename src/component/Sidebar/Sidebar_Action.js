@@ -241,6 +241,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             else{
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
+            return;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false

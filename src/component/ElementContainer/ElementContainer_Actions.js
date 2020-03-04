@@ -141,7 +141,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const parentData = getState().appStore.slateLevelData;
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
-            console.log("config",config)
             if (currentSlateData.status === 'approved') {
                 if(currentSlateData.type==="popup"){
                     sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
