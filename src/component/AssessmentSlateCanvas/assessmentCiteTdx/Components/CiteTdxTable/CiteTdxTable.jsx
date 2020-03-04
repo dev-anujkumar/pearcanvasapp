@@ -27,13 +27,13 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { citeApiData, tdxApiData, mmiApiData } = this.props;
+        const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
-                    {apiData && apiData.assessments && apiData.assessments.length > 0 &&
+                    { (isLoading == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
                                 {this.tableHeaders.map(item => (
