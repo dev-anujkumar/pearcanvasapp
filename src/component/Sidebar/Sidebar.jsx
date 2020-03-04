@@ -165,7 +165,7 @@ class Sidebar extends Component {
     }
 
     handleSecondaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value');
+        let value = e.target.getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         this.setState({
@@ -192,7 +192,7 @@ class Sidebar extends Component {
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
             let secondaryOptionList = Object.keys(secondaryOptionObject);
-            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-Default"){
+            if(this.state.activePrimaryOption==="primary-blockcode-equation"&&this.state.activeSecondaryOption!=="secondary-blockcode-language-default"){
                secondaryOptionList.splice(0,1)
             }
             if(secondaryOptionList.length > 1) {

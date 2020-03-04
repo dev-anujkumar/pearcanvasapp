@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import CiteTdxHeader from '../assessmentCiteTdx/Components/CiteTdxHeader/CiteTdxHeader.jsx';
 import CiteTdxFooter from '../assessmentCiteTdx/Components/CiteTdxFooter/CiteTdxFooter.jsx';
-import CiteComponentError from '../assessmentCiteTdx/Components/CiteError/CiteComponentError.jsx';
 import { getSingleAssessmentData } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import './../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { connect } from 'react-redux';

@@ -924,7 +924,7 @@ class ElementContainer extends Component {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
-            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
+            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';

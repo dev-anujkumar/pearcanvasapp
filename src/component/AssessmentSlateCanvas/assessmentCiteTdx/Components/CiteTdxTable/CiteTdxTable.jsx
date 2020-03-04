@@ -27,17 +27,17 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { citeApiData, tdxApiData, mmiApiData } = this.props;
+        const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
-                    {apiData && apiData.assessments && apiData.assessments.length > 0 &&
+                    { (isLoading == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
                                 {this.tableHeaders.map(item => (
-                                    <th className='assessment-row-class'>{item}
+                                    <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     </th>
                                 ))}
                             </thead>
@@ -49,7 +49,7 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
-                                                    <b>{item.name}</b>
+                                                    <span className="assessment-titles">{item.name}</span>
                                                 </td>
                                                 <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
                                                 <td>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : 'NA'}</td>
