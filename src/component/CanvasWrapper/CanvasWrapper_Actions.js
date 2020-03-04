@@ -206,7 +206,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
             "PearsonSSOSession": config.ssoToken
         }
     }).then(slateData => {
-		if(slateData.data && slateData.data[manifestURN] && slateData.data[manifestURN].type === "popup"){
+        let newVersionManifestId=Object.values(slateData.data)[0].id
+
+		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true
 			if (config.slateManifestURN === Object.values(slateData.data)[0].id) {
@@ -219,20 +221,20 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
 					'type': "TcmStatusUpdated",
 					'message': messageTcmStatus
 				})
-				config.totalPageCount = slateData.data[manifestURN].pageCount;
-				config.pageLimit = slateData.data[manifestURN].pageLimit;
+				config.totalPageCount = slateData.data[newVersionManifestId].pageCount;
+				config.pageLimit = slateData.data[newVersionManifestId].pageLimit;
 				let parentData = getState().appStore.slateLevelData;
 				let currentParentData;
-				if ((slateData.data[manifestURN]) && (!config.fromTOC) && slateData.data[manifestURN].pageNo > 0) {
+				if ((slateData.data[newVersionManifestId]) && (!config.fromTOC) && slateData.data[newVersionManifestId].pageNo > 0) {
 					currentParentData = JSON.parse(JSON.stringify(parentData));
 					let currentContent = currentParentData[config.slateManifestURN].contents
 					let oldbodymatter = currentContent.bodymatter;
-					let newbodymatter = slateData.data[manifestURN].contents.bodymatter;
+					let newbodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
 					currentContent.bodymatter = [...oldbodymatter, ...newbodymatter];
 					currentParentData = currentParentData[manifestURN];
 					config.scrolling = true;
 				} else {
-					currentParentData = slateData.data[manifestURN];
+					currentParentData = slateData.data[newVersionManifestId];
 				}
 				dispatch({
 					type: OPEN_POPUP_SLATE,
@@ -244,7 +246,18 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
                     type: SET_ACTIVE_ELEMENT,
                     payload: {}
                 });
-			}
+            }
+            else if(versioning && versioning.type==="popup"){
+                let parentData = getState().appStore.slateLevelData;
+                let newslateData = JSON.parse(JSON.stringify(parentData));
+                newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+                return dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: newslateData
+                    }
+                })
+            }
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {

@@ -20,6 +20,7 @@ import {
 
 import { sendDataToIframe } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 
 
 Array.prototype.move = function (from, to) {
@@ -93,10 +94,15 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
+            if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(config.slateManifestURN,_requestData.slateEntity, 0,currentSlateData));
+            } else {
             // createNewVersionOfSlate();
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             return false;
+            }
         }
         const newPopupSlateData = JSON.parse(JSON.stringify(popupSlateData));
         let createdElementData = createdElemData.data;
@@ -195,8 +201,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 const parentData = getState().appStore.slateLevelData;
                 let newParentData = JSON.parse(JSON.stringify(parentData));
                 if (currentSlateData.status === 'approved') {
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    if(currentSlateData.type==="popup"){
+                        sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                        dispatch(fetchSlateData(config.slateManifestURN,_requestData.currentSlateEntityUrn, 0,currentSlateData));
+                    }
+                    else{
+                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    }
                     return false;
                 }
                 let newBodymatter = newParentData[slateId].contents.bodymatter;

@@ -30,3 +30,9 @@
   }
   
   .pagination a:hover:not(.active) {background-color: #ddd;}
+
+  a.noSelect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+  }

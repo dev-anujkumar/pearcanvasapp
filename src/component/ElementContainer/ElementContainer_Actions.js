@@ -142,8 +142,15 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData));
+                }
+                else{
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+
             return false;
         }
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
@@ -258,7 +265,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
         let elementIndexFootnote = getState().glossaryFootnoteReducer.elementIndex;
         if(response.data.id !== updatedData.id){
-            glossaaryFootnoteValue.elementWorkId =response.data.id;
+            glossaaryFootnoteValue.elementWorkId = response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
             payload: {
@@ -293,7 +300,12 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                    if(currentSlateData.type==="popup"){
+                        sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+                    }else{
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                    }
                 }
             }
         }
