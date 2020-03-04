@@ -51,7 +51,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
-            newElementData['secondaryOption'] === "SECONDARY-BLOCKCODE-LANGUAGE-DEFAULT") {
+            newElementData['secondaryOption'] === "secondary-blockcode-language-default") {
             if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }

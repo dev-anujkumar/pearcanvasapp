@@ -268,142 +268,142 @@ export default {
             toolbar: ['assetpopover','decreaseindent','glossary'],
             enum: 'BLOCK_CODE_EDITOR',
             subtype: {
-                'SECONDARY-BLOCKCODE-LANGUAGE-DEFAULT': {
+                'secondary-blockcode-language-default': {
                     text: 'Select',
                     labelText: 'BCE',
                     enum: 'SELECT'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-C++': {
+                'secondary-blockcode-language-c++': {
                     text: 'C++',
                     labelText: 'BCE',
                     enum: 'C_PLUS'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-JAVA': {
+                'secondary-blockcode-language-java': {
                     text: 'Java',
                     labelText: 'BCE',
                     enum: 'JAVA'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-C': {
+                'secondary-blockcode-language-c': {
                     text: 'C',
                     labelText: 'BCE',
                     enum: 'C'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-PYTHON': {
+                'secondary-blockcode-language-python': {
                     text: 'Python',
                     labelText: 'BCE',
                     enum: 'PYTHON'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-JAVASCRIPT': {
+                'secondary-blockcode-language-javascript': {
                     text: 'Javascript',
                     labelText: 'BCE',
                     enum: 'JAVA_SCRIPT'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-HTML': {
+                'secondary-blockcode-language-html': {
                     text: 'HTML',
                     labelText: 'BCE',
                     enum: 'HTML'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-CSS': {
+                'secondary-blockcode-language-css': {
                     text: 'CSS',
                     labelText: 'BCE',
                     enum: 'CSS'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-APACHE': {
+                'secondary-blockcode-language-apache': {
                     text: 'Apache',
                     labelText: 'BCE',
                     enum: 'APACHE'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-C#': {
+                'secondary-blockcode-language-c#': {
                     text: 'C#',
                     labelText: 'BCE',
                     enum: 'C_SHARP'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-JSON': {
+                'secondary-blockcode-language-json': {
                     text: 'JSON',
                     labelText: 'BCE',
                     enum: 'JSON'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-MAKEFILE': {
+                'secondary-blockcode-language-makefile': {
                     text: 'Makefile',
                     labelText: 'BCE',
                     enum: 'MAKE_FILE'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-KOTLIN': {
+                'secondary-blockcode-language-kotlin': {
                     text: 'Kotlin',
                     labelText: 'BCE',
                     enum: 'KOTLIN'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-R': {
+                'secondary-blockcode-language-r': {
                     text: 'R',
                     labelText: 'BCE',
                     enum: 'R'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-PERL': {
+                'secondary-blockcode-language-perl': {
                     text: 'Perl',
                     labelText: 'BCE',
                     enum: 'PERL'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-PHP': {
+                'secondary-blockcode-language-php': {
                     text: 'PHP',
                     labelText: 'BCE',
                     enum: 'PHP'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-GO': {
+                'secondary-blockcode-language-go': {
                     text: 'GO',
                     labelText: 'BCE',
                     enum: 'GO'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-RUBY': {
+                'secondary-blockcode-language-ruby': {
                     text: 'Ruby',
                     labelText: 'BCE',
                     enum: 'RUBY'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-LISP': {
+                'secondary-blockcode-language-lisp': {
                     text: 'Lisp',
                     labelText: 'BCE',
                     enum: 'LISP'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-OBJECTIVE-C': {
+                'secondary-blockcode-language-objective-c': {
                     text: 'Objective C',
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-SCALA': {
+                'secondary-blockcode-language-scala': {
                     text: 'Scala',
                     labelText: 'BCE',
                     enum: 'SCALA'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-SHELL_SESSION': {
+                'secondary-blockcode-language-shell_session': {
                     text: 'Shell Session',
                     labelText: 'BCE',
                     enum: 'SHELL_SESSION'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-SQL': {
+                'secondary-blockcode-language-sql': {
                     text: 'SQL',
                     labelText: 'BCE',
                     enum: 'SQL'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-SWIFT': {
+                'secondary-blockcode-language-swift': {
                     text: 'Swift',
                     labelText: 'BCE',
                     enum: 'SWIFT'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-XML': {
+                'secondary-blockcode-language-xml': {
                     text: 'XML',
                     labelText: 'BCE',
                     enum: 'XML'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-MATLAB': {
+                'secondary-blockcode-language-matlab': {
                     text: 'Matlab',
                     labelText: 'BCE',
                     enum: 'MATLAB'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-GLSL': {
+                'secondary-blockcode-language-glsl': {
                     text: 'GLSL',
                     labelText: 'BCE',
                     enum: 'GLSL'
                 },
-                'SECONDARY-BLOCKCODE-LANGUAGE-SML': {
+                'secondary-blockcode-language-sml': {
                     text: 'SML',
                     labelText: 'BCE',
                     enum: 'SML'

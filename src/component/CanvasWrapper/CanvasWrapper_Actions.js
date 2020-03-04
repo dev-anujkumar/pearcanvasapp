@@ -85,13 +85,13 @@ const findElementType = (element, index) => {
                             numbered: element.figuredata.numbered,
                             startNumber: element.figuredata.startNumber
                         }
-                        let languageBCE = element.figuredata.programlanguage.toUpperCase()
+                        let languageBCE = element.figuredata.programlanguage.toLowerCase()
                         switch (element.figuredata.programlanguage) {
                             case "Select":
-                                elementType.secondaryOption = `SECONDARY-BLOCKCODE-LANGUAGE-DEFAULT`
+                                elementType.secondaryOption = `secondary-blockcode-language-default`
                                 break;
                             default:
-                                elementType.secondaryOption = `SECONDARY-BLOCKCODE-LANGUAGE-${(languageBCE).replace(" ", "_")}`
+                                elementType.secondaryOption = `secondary-blockcode-language-${(languageBCE).replace(" ", "_")}`
                         }
                         break;
                     case "video":
