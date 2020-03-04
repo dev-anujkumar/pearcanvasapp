@@ -16,7 +16,7 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, model, element, slateLockInfo } = this.props
+        const { className, model, element, slateLockInfo, showHideType } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;
@@ -50,6 +50,7 @@ export class ListElement extends Component {
                 permissions={this.props.permissions}
                 glossaryFootnoteValue={this.props.glossaryFootnoteValue}
                 glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                showHideType={showHideType}
             />
         )
     }
