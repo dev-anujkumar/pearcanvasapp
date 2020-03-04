@@ -195,6 +195,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning) => (dis
     //  return false;
     // }
     // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+    localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     if (config.totalPageCount <= page) {
         page = config.totalPageCount;
