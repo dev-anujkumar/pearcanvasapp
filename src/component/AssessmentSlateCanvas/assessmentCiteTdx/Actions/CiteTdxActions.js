@@ -70,7 +70,7 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
             })
     }).catch((error) => {
         dispatch({
-            type: 'GET_CITE_TDX_RESOURCES',
+            type: 'GET_SINGLE_ASSESSMENT_DATA',
             payload: {
                 data: [],
                 errFlag: true,
