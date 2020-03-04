@@ -16,7 +16,7 @@ class RootCiteTdxComponent extends Component {
     this.state = {
       searchTitle : '',
       filterUUID : '',
-      isReset: false,
+      // isReset: false,
       currentPageNo: props.parentPageNo
     }
   }
@@ -33,9 +33,12 @@ class RootCiteTdxComponent extends Component {
     this.setState({searchTitle, filterUUID});
   }
 
-  resetPage = (isReset) => {
-    this.setState({isReset})
-  }
+  // resetPage = (isReset) => {
+  //   this.setState({isReset})
+  //   if(isReset){
+  //     this.setState({currentPageNo: 1})
+  //   }
+  // }
 
   getCurrentPageNo = (currentPageNo) => {
     this.setState({currentPageNo})
@@ -53,10 +56,10 @@ class RootCiteTdxComponent extends Component {
       <div className="vex-overlay cite-wrapper">
         <div className="root-container">
           <CiteComponentError>
-            <CiteTdxHeader headerProps={this.headerProps} />
-            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.resetPage} currentPageNo={this.state.currentPageNo} />
+            <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
+            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo} />
             <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment}/>
-            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.state.isReset} resetPage={this.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
+            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
           </CiteComponentError>
         </div>
       </div>

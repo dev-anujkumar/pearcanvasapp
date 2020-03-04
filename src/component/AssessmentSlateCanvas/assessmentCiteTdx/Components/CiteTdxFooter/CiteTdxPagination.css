@@ -23,6 +23,11 @@
     cursor: default;
   }
 
+    .disableAssessmentSearch {
+    pointer-events: none;
+    cursor: default;  
+  }
+
   a.hideNavigation {
     pointer-events: none;
     cursor: default;

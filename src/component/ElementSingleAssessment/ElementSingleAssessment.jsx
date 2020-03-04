@@ -34,9 +34,18 @@ class ElementSingleAssessment extends Component {
             showElmComponent: false,
             showSinglePopup:false,
             setCurrentAssessment:{},
-            parentPageNo:1
+            parentPageNo:1,
+            isReset: false
         };
     }
+
+    resetPage = (isReset) => {
+        this.setState({isReset})
+        if(isReset){
+            this.setState({parentPageNo:1})
+        }
+      }
+
     componentDidMount() {
         let title = this.props.model && this.props.model.html && this.props.model.html.title ? this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
         this.setState({
@@ -295,8 +304,8 @@ static getDerivedStateFromProps(nextProps, prevState) {
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.showElmComponent? <RootElmComponent activeAssessmentType={this.state.elementType} closeElmWindow={() => this.closeElmWindow()} addPufFunction={this.addPufAssessment} openedFrom={'singleAssessment'} usageTypeMetadata={this.state.activeAsseessmentUsageType} assessmentType={this.state.elementType}/> : ''}
-                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} />:""}
-                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}     
+                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType=="cite"?FULL_ASSESSMENT_CITE:FULL_ASSESSMENT_TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} />:""}
+                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
             </div>
         );
     }
