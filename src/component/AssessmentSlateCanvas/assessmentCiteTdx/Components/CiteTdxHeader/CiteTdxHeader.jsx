@@ -6,6 +6,12 @@ import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTd
 import Button from './../../../../ElementButtons';
 
 class CiteTdxHeader extends Component {
+    
+    handleClose = () => {
+        this.props.headerProps.closeWindowAssessment();
+        this.props.resetPage(true);
+    }
+    
     render() {
         const { title } = this.props.headerProps;
 
@@ -15,7 +21,7 @@ class CiteTdxHeader extends Component {
                     <h4 className="header-title">
                         {title}
                     </h4>
-                    <span className="header-close-button"><Button type="assessmentCloseWindowIcon" onClick={this.props.headerProps.closeWindowAssessment} />
+                    <span className="header-close-button"><Button type="assessmentCloseWindowIcon" onClick={this.handleClose} />
                     </span>
                 </div>
             </div>

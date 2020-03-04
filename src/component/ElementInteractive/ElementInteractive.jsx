@@ -16,9 +16,9 @@ import axios from 'axios';
 import { hasReviewerRole } from '../../constants/utility.js';
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
-import {FULL_ASSESSMENT_MMI} from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
+import { sendDataToIframe } from './../../constants/utility.js';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -37,10 +37,18 @@ class Interactive extends React.Component {
             showAssessmentPopup: false,
             showSinglePopup:false,
             setCurrentAssessment:{},
-            parentPageNo:1
+            parentPageNo:1,
+            isReset: false
 
         };
 
+    }
+
+    resetPage = (isReset) => {
+        this.setState({isReset})
+        if(isReset){
+            this.setState({parentPageNo:1})
+        }
     }
     componentDidMount(){
         this.setState({
@@ -506,6 +514,7 @@ class Interactive extends React.Component {
             this.handleC2MediaClick(e);
         }
         else if(this.props.model.figuredata.interactiveformat === "mmi"){
+            sendDataToIframe({ 'type': 'hideToc', 'message': {} });
             this.props.showBlocker(value);
             disableHeader(value);
             this.props.handleFocus();
@@ -784,8 +793,8 @@ class Interactive extends React.Component {
                     <div className="interactive-element">
                         {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                         {this.state.showAssesmentpopup ?  <PopUp handleC2Click ={this.handleC2InteractiveClick} togglePopup={this.togglePopup}  assessmentAndInteractive={"assessmentAndInteractive"} dialogText={'PLEASE ENTER A PRODUCT UUID'}/>:''}
-                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo}/>:""}
-                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack}/>:""}
+                        {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset}/>:""}
+                        {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
                     </div>
                 
             )

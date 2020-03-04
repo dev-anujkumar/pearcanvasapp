@@ -128,9 +128,7 @@
   text-transform:capitalize;
   padding: 9px 20px;
 }
-.filter-uuid{
-  margin: 11px 0 11px 0;
-}
+
 .assessmentpopup-footer {
   height: 60px;
   background-color: rgb(232, 232, 232);
@@ -159,10 +157,10 @@
   padding: 9px 8px 9px 8px;
 }
 .title-block .fa-search{
-  width: 5%;
+  width: 3.5%;
   color: #aaaaaa;
 }
-.title-block input::placeholder{
+.title-block input::placeholder, .filter-uuid input::placeholder{
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   font-weight: normal;
@@ -257,11 +255,10 @@
 .assessment-table-class tbody tr{
   font-size:13px;
 }
-.elmAssessmentItem-icon{
-  vertical-align: middle;
-}
-.elmAssessmentItem-icon{
+
+.assessment-table-class .elmAssessmentItem-icon{
   margin: 0 8px 0 6px;
+  vertical-align: middle;
 }   
 .assessment-title{
   font-family: 'Open Sans', sans-serif;
@@ -314,5 +311,22 @@
   -webkit-box-shadow: inset 0 0 6px grey;
   background-color: #555;
 }
+.single-assessment .assessment-row-class.title{
+  width:50%;
+}
 
+.cite-wrapper.root-container input {
+  outline: 0;
+}
+
+@media screen and (max-width: 1300px) {
+  .cite-wrapper .root-container{
+    min-height: 450px;
+    max-height: 450px;
+  }
+  .cite-wrapper .main-div{
+    min-height: 250px;
+    max-height: 250px;
+  }
+}
 

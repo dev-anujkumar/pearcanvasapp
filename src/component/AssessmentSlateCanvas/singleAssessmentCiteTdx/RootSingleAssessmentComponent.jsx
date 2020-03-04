@@ -35,10 +35,10 @@ class RootSingleAssessmentComponent extends Component {
     return (
       <div className="vex-overlay cite-wrapper">
         <div className="root-container">
-            <CiteTdxHeader headerProps={this.headerProps} />
+            <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage}/>
               <FilterAssessmentData  openedFrom = {this.props.openedFrom} setCurrentAssessment={this.props.setCurrentAssessment} assessmentNavigateBack={this.props.assessmentNavigateBack}/>
               <CiteTdxSingleAssessmentTable assessmentType={this.props.assessmentType} openedFrom = {this.props.openedFrom}/>
-              <CiteTdxFooter openedFrom = {this.props.openedFrom} closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} setCurrentAssessment={this.props.setCurrentAssessment}/>
+              <CiteTdxFooter openedFrom = {this.props.openedFrom} closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} setCurrentAssessment={this.props.setCurrentAssessment} resetPage={this.props.resetPage}/>
         </div>
       </div>
     );

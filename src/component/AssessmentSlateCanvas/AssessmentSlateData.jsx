@@ -24,12 +24,20 @@ import { connect } from 'react-redux';
             changeLearningData: false,
             learningToolStatus: false,
             showCiteTdxComponent:false,
-            parentPageNo:1
+            parentPageNo:1,
+            isReset: false
         }
         this.usageTypeDropdownRef = React.createRef();
         this.typeDropdownRef = React.createRef();
         this.usageTypeRef = React.createRef();
         this.typeRef = React.createRef();
+    }
+
+    resetPage = (isReset) => {
+        this.setState({isReset})
+        if(isReset){
+            this.setState({parentPageNo:1})
+        }
     }
     
     componentWillReceiveProps(nextProps){
@@ -220,10 +228,10 @@ import { connect } from 'react-redux';
                 break;
             case FULL_ASSESSMENT_CITE:
             case FULL_ASSESSMENT_TDX:
+                    sendDataToIframe({ 'type': 'hideToc', 'message': {} });
                     this.setState({
                         showCiteTdxComponent: true
                     })
-                   
                 showTocBlocker();
                 disableHeader(true);
                 this.props.showBlocker(true);
@@ -328,7 +336,7 @@ import { connect } from 'react-redux';
             return <RootElmComponent activeAssessmentType={this.state.activeAssessmentType} closeElmWindow = {()=>this.closeElmWindow()} addPufFunction = {this.addPufAssessment}  openedFrom = {'slateAssessment'} usageTypeMetadata = {this.state.activeAssessmentUsageType} assessmentType = {this.state.activeAssessmentType}/>
         }
         if ((this.state.activeAssessmentType === FULL_ASSESSMENT_CITE || this.state.activeAssessmentType === FULL_ASSESSMENT_TDX) && this.state.showCiteTdxComponent === true) {
-            return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} />
+            return <RootCiteTdxComponent activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'slateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} />
         }
         if (this.props.getAssessmentData && this.props.getAssessmentDataPopup===false && this.state.changeLearningData === false) {
             assessmentSlateJSX = <div className="slate_fetch_canvas">
