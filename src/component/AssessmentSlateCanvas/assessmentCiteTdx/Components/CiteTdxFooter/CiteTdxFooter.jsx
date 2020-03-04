@@ -50,6 +50,11 @@ class CiteTdxFooter extends Component {
         }     
     }
 
+    handleClose = () => {
+        this.props.resetPage(true);
+        this.props.closeWindowAssessment();
+    }
+
     render() {
         const { currentPage } = this.state;
         const { filterUUID } = this.props;
@@ -79,8 +84,8 @@ class CiteTdxFooter extends Component {
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>cancel</button>
-                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>select</button>
+                    <button className="assessmentpopup cancel-assessment" onClick={this.handleClose}>CANCEL</button>
+                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
                 </div>
             </div>
 

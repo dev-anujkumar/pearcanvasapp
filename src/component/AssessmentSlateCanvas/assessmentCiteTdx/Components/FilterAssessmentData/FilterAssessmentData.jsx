@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { elmNavigateBack } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import { filterCiteTdxData, getCiteTdxData } from './../../Actions/CiteTdxActions.js'
+import { filterCiteTdxData, getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx } from './../../Actions/CiteTdxActions.js'
 import { connect } from 'react-redux';
 
 class FilterAssessmentData extends Component {
@@ -20,6 +20,8 @@ class FilterAssessmentData extends Component {
 
     handleSearch = e => {
         e.preventDefault();
+        this.props.setCurrentCiteTdx({});
+        this.props.setCurrentInnerCiteTdx({});
         this.props.AssessmentSearchTitle(this.state.searchAssessment, this.state.filterUUID);
         this.props.resetPage(true);
         if (this.state.filterUUID !== undefined && this.state.filterUUID != '') {
@@ -52,7 +54,7 @@ class FilterAssessmentData extends Component {
                                 <div className="filter-block">
                                     <div className="title-block">
                                         <i class="fa fa-search"></i>
-                                        <input autocomplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" />
+                                        <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" />
 
                                     </div>
                                     <div className="filter-uuid" >
@@ -82,7 +84,9 @@ class FilterAssessmentData extends Component {
 
 const mapActionToProps = {
     filterCiteTdxData: filterCiteTdxData,
-    getCiteTdxData: getCiteTdxData
+    getCiteTdxData: getCiteTdxData,
+    setCurrentCiteTdx: setCurrentCiteTdx,
+    setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
 }
 
 export default connect(null, mapActionToProps)(FilterAssessmentData);

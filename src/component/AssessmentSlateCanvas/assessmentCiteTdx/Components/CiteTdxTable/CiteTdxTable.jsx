@@ -11,17 +11,10 @@ import moment from 'moment'
 class CiteTdxTable extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            activeRow:''
-        };
 
 
     }
     addAssessment = (addedValue) => {
-        this.setState({
-            activeRow: addedValue.versionUrn
-        }
-        )
         this.props.setCurrentCiteTdx(addedValue);
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
@@ -45,9 +38,9 @@ class CiteTdxTable extends Component {
                                 {apiData.assessments.map((item, index) => {
                                     return (
                                         <React.Fragment key={`assessment-${index}`}>
-                                            <tr className ={this.state.activeRow && this.state.activeRow== item.versionUrn ? 'selected':''}>
+                                            <tr className ={(this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.versionUrn=== item.versionUrn) ? 'selected':''}>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <span className="assessment-titles">{item.name}</span>
                                                 </td>
