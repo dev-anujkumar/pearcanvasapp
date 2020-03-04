@@ -7,13 +7,14 @@ import axios from 'axios';
  */
 export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch) => {
     console.log("Initial page", pageNo)
+    let startPage = --pageNo;
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 
     let searchTitle = (assessmentTitle == undefined || assessmentTitle == '') ? '' : assessmentTitle;
     var assessmentDispatchType = (assessmentType === FULL_ASSESSMENT_CITE)? 'GET_CITE_RESOURCES': (assessmentType === FULL_ASSESSMENT_TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
 
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${pageNo}&pageSize=${pageSize}`;
+    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${assessmentType === FULL_ASSESSMENT_CITE ? `CITE` : assessmentType === FULL_ASSESSMENT_TDX? `TDX` :'MMI'}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}`;
 
     return axios.get(url, {
         headers: {
