@@ -1057,6 +1057,11 @@ class SlateWrapper extends Component {
     }
     closePopup = () =>{
         let popupId = config.slateManifestURN
+        let newVersionManifestId = document.getElementsByClassName('slate-content ')[0];
+        if( newVersionManifestId && newVersionManifestId.getAttribute('data-id')!==popupId){
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+        }
         config.slateManifestURN = config.tempSlateManifestURN
         config.slateEntityURN = config.tempSlateEntityURN
         config.tempSlateManifestURN = null
