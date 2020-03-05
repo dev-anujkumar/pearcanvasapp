@@ -15,7 +15,6 @@ var patternAddAnAsset;
 var productLink;
 var addAnAsset = {};
 var addAnAssetConfig = {};
-const CMIS_REPO12 = config_object['CMIS_REPO'].toString();
 
 /*Reference the library*/
 
