@@ -138,11 +138,12 @@
 }
 .assessment-titles{
   text-overflow: ellipsis;
-  width: 325px;
+  max-width: 325px;
   height: 20px;
   overflow: hidden;
   white-space: nowrap;
   display: inline-block;
+  cursor:default;
 }
 .modifiedby-data{
   width: 100px;
@@ -330,7 +331,7 @@
   cursor:pointer;
 }
 .single-assessment .assessment-titles{
-  width:430px;
+  max-width:430px;
 }
 
 @media screen and (max-width: 1300px) {
