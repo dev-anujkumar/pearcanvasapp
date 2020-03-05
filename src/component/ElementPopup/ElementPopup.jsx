@@ -30,6 +30,9 @@ class ElementPopup extends React.Component {
     }
     handlepopupSlateClick = (event) => {
         this.props.handleFocus();
+        if(config.popupCreationCallInProgress){
+            return false
+        }
         if(event.target.classList[0] !== "paragraphNumeroUno" && event.target.classList[0] !== "actionPU"){
             if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id)){
                 this.renderSlate()
@@ -47,6 +50,7 @@ class ElementPopup extends React.Component {
             index,
             element: {...element}
         }
+        console.log("POPUP slate MAN URN::", config.slateManifestURN)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
     }
@@ -56,7 +60,8 @@ class ElementPopup extends React.Component {
      */
     createPopupUnit = (popupField, forceupdate, index, parentElement) => {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-        this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index)
+        config.popupCreationCallInProgress = true
+        this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN)
     }
     renderPopup = ()=>{        
         const {index, element, slateLockInfo} = this.props

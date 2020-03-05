@@ -535,7 +535,7 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 	}
 }
 
-export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex) => (dispatch, getState) => {
+export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN) => (dispatch, getState) => {
     let popupFieldType = ""
     if(popupField === "formatted-subtitle"){
         popupFieldType = "formattedSubtitle"
@@ -566,7 +566,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         popupElementIndex = Number(popupElementIndex.split("-")[0])
         const parentData = getState().appStore.slateLevelData
         let newslateData = JSON.parse(JSON.stringify(parentData))
-        let _slateObject = newslateData[config.slateManifestURN]
+        let _slateObject = newslateData[slateManifestURN]
         let targetPopupElement = _slateObject.contents.bodymatter[popupElementIndex]
         if(targetPopupElement){
             targetPopupElement.popupdata[popupField] = response.data
@@ -581,7 +581,6 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             }
         })
         if(cb) cb(response.data)
-        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
     })
     .catch((error) => {
         console.log("%c ERROR RESPONSE", "font: 30px; color: red; background: black", error)

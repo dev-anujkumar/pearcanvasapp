@@ -312,10 +312,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
-
+        config.popupCreationCallInProgress = false
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
+        config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
