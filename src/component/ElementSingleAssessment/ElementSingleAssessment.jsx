@@ -240,15 +240,17 @@ static getDerivedStateFromProps(nextProps, prevState) {
     * @param e - The event triggered
     */
     addAssessmentResource = (e) => {
-        if (this.state.elementType !== "puf") {
+        if(this.props.permissions && this.props.permissions.includes('quad_linking_assessment') && !hasReviewerRole()){
+            if (this.state.elementType !== "puf") {
             this.toggleAssessmentPopup(e, true)
-        } else {
+            } else {
             this.setState({
                 showElmComponent: true
             })
             showTocBlocker();
             disableHeader(true);
             this.props.showBlocker(true);
+            }
         }
     }
     /** ----------------------------------------------------------------------------------------------------------- */

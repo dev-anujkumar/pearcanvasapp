@@ -50,7 +50,7 @@ class CiteTdxTable extends Component {
                                                     <span className="assessment-titles">{item.name}</span>
                                                 </td>
                                                 <td>{item.dateModified ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : "NA"}</td>
-                                                <td>{item.modifiedBy ? item.modifiedBy : "NA"}</td>
+                                                <td><span className="modifiedby-data">{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
                                         </React.Fragment>)

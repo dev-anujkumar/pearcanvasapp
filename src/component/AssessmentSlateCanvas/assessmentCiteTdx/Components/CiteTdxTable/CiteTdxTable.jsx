@@ -46,7 +46,7 @@ class CiteTdxTable extends Component {
                                                 </td>
                                                 <td>{this.props.assessmentType === "Full Assessment CITE" ? "CITE" : this.props.assessmentType === "Full Assessment TDX"? "TDX" : "MMI"}</td>
                                                 <td>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : 'NA'}</td>
-                                                <td>{item.modifiedBy ? item.modifiedBy : 'NA'}</td>
+                                                <td><span className="modifiedby-data">{item.modifiedBy ? item.modifiedBy : 'NA'}</span></td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
                                         </React.Fragment>)

@@ -10,12 +10,9 @@ class CiteComponentError extends React.Component {
 
     componentDidCatch(error, info) {
         this.setState({ errorOccurred: true })
-        console.error("Error, Assessment picker : ", error , " info: ", info)
-        console.log("Render componentDidCatch CiteComponentError")
     }
 
     render(){
-        console.log("render CiteComponentError")
         const {errorOccurred} = this.state;
         if(errorOccurred) {
             return (
