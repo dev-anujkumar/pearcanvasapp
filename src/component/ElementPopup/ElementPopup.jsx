@@ -50,7 +50,6 @@ class ElementPopup extends React.Component {
             index,
             element: {...element}
         }
-        console.log("POPUP slate MAN URN::", config.slateManifestURN)
         sendDataToIframe({'type': ShowLoader,'message': { status: true }});
         this.props.fetchSlateData(config.slateManifestURN, config.slateEntityURN, 0, false);
     }
