@@ -900,7 +900,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        if(config.savingInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
         let elementId = ""
