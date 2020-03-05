@@ -27,7 +27,10 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
                 }
             })
         })
-} 
+        .catch((err) => {
+            console.log("%c Slate lock status API failed","background: black; color: white", err)
+        })
+}
 
 /**
  * This is a normal function which retrieves the lock status of a slate
