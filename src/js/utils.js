@@ -97,7 +97,8 @@ export const utils = {
                 format = "video-mcq";
                 break;
             default:
-                    format = "fpo";
+                format = "fpo";
+                break;
         }
         return format;
     },
