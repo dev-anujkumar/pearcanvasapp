@@ -6,7 +6,6 @@ import axios from 'axios';
  * This action creator is used to fetch ELM resources added to the project
  */
 export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, pageNo=1) => (dispatch) => {
-    console.log("Initial page", pageNo)
     let startPage = --pageNo;
     dispatch({ type: 'SET_LOADING_TRUE', payload: { isLoading: true } });
 

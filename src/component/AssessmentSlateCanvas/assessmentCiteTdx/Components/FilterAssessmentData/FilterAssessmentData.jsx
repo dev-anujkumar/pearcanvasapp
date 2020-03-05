@@ -35,7 +35,6 @@ class FilterAssessmentData extends Component {
         let name = event.target.name;
         let value = event.target.value;
         this.setState({ [name]: value });
-        console.log("searchName", this.state.searchAssessment)
     }
 
     render() {

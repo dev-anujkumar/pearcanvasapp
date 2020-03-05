@@ -47,10 +47,10 @@ class CiteTdxTable extends Component {
                                                 <td className="td-class">
                                                     <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} />
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
-                                                    <span className="assessment-titles">{item.name}</span>
+                                                    <span className="assessment-titles" title={item.name}>{item.name}</span>
                                                 </td>
                                                 <td>{item.dateModified ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : "NA"}</td>
-                                                <td>{item.modifiedBy ? item.modifiedBy : "NA"}</td>
+                                                <td><span className="modifiedby-data">{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
                                                 <td>{item.versionUrn.slice(17)}</td>
                                             </tr>
                                         </React.Fragment>)
