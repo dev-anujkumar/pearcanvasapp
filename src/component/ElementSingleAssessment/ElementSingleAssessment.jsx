@@ -182,6 +182,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             this.props.showBlocker(false);
     }
     assessmentNavigateBack = () => {
+        this.props.setCurrentInnerCiteTdx({});
         this.setState({
             showAssessmentPopup: true,
             showSinglePopup:false,

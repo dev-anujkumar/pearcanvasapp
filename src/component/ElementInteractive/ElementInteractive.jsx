@@ -736,6 +736,7 @@ class Interactive extends React.Component {
     this.props.showBlocker(false);
     }
     assessmentNavigateBack = () => {
+        this.props.setCurrentInnerCiteTdx({});
         this.setState({
             showAssessmentPopup: true,
             showSinglePopup:false,
