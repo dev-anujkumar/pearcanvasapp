@@ -34,7 +34,6 @@ class ElementShowHide extends React.Component {
          newshowIndex = newIndex.join("-");
         if (document.getElementById(`cypress-${newshowIndex}`)) {
             document.getElementById(`cypress-${newshowIndex}`).focus();
-
         }
     }
     createShowHideElement = (type, index, elementShowHideId) => {

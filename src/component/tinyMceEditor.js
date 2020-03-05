@@ -1058,7 +1058,8 @@ export class TinyMceEditor extends Component {
      */
     componentDidMount() {
 
-        const { slateLockInfo: { isLocked, userId } } = this.props
+        const { slateLockInfo: { isLocked } } = this.props
+        const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
