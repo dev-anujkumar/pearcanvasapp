@@ -29,6 +29,10 @@ class CiteTdxFooter extends Component {
         if(this.props.openedFrom !== "singleSlateAssessment"){
             this.props.closeWindowAssessment();
         }
+        if(this.props.isInnerComponent){
+            console.count("singleSlateAssessment")
+            this.props.resetPage(true);
+        }
 
     }
 
@@ -78,14 +82,14 @@ class CiteTdxFooter extends Component {
             <div className="assessmentpopup-footer">
                 {/** @description Pagination code starts here ---- */}
                 {!this.props.setCurrentAssessment && <div className="pagination">
-                    <a className={'noSelect' + ' ' + hideNavigationPrevious + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage - 1)} href="#">&#60;</a>
+                    <a className={`noSelect ${hideNavigationPrevious} ${disableClick} ${rmNavOnFilter}`} onClick={() => this.handlePagination(currentPage - 1)} href="#">&#60;</a>
                     <a href="#" className="active noSelect">{currentPage}</a>
-                    <a className={'noSelect' + ' ' + hideNavigationNext + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage + 1)} href="#"> &#62;</a>
+                    <a className={`noSelect ${hideNavigationNext} ${disableClick} ${rmNavOnFilter}`} onClick={() => this.handlePagination(currentPage + 1)} href="#"> &#62;</a>
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment" onClick={this.handleClose}>CANCEL</button>
-                    <button className={`assessmentpopup add-assessment  ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
+                    <button className="assessmentpopup cancel-assessment noSelect" onClick={this.handleClose}>CANCEL</button>
+                    <button className={`assessmentpopup add-assessment noSelect ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
                 </div>
             </div>
 

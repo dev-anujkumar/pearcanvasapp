@@ -35,7 +35,6 @@ class FilterAssessmentData extends Component {
         let name = event.target.name;
         let value = event.target.value;
         this.setState({ [name]: value });
-        console.log("searchName", this.state.searchAssessment)
     }
 
     render() {
@@ -63,7 +62,7 @@ class FilterAssessmentData extends Component {
 
                                 </div>
                                 <div className="search-block">
-                                    <button className="search" onClick={this.handleSearch} >search</button>
+                                    <button className="search noSelect" onClick={this.handleSearch} >search</button>
                                 </div>
 
 

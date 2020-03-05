@@ -138,11 +138,20 @@
 }
 .assessment-titles{
   text-overflow: ellipsis;
-    width: 80%;
-    height: 20px;
-    overflow: hidden;
-    white-space: nowrap;
+  max-width: 325px;
+  height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  cursor:default;
+}
+.modifiedby-data{
+  width: 100px;
+    text-overflow: ellipsis;
     display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
 }
 .filter-block input {
   width:95%;
@@ -211,7 +220,7 @@
   color: #666666;
 }
 .assessment-row-class.title {
-  width:40%
+  width:35%
 }
 .assessment-row-class.type  {
   width:8%
@@ -317,6 +326,18 @@
 
 .cite-wrapper.root-container input {
   outline: 0;
+}
+.assessment-table-class .radio-button {
+  cursor:pointer;
+}
+.single-assessment .assessment-titles{
+  max-width:430px;
+}
+
+.noSelect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+          user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 }
 
 @media screen and (max-width: 1300px) {
