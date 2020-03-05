@@ -187,6 +187,19 @@ export const elmAssessmentItem = (()=>{
         )
     })();
 
+export const singleAssessmentItemIcon = (()=>{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+        <g fill="none" fill-rule="evenodd" transform="translate(-3 -3)">
+            <rect width="18" height="18" x="3" y="3" fill="#CD1F2A" rx="2"/>
+            <circle cx="7" cy="7" r="1" fill="#FFF"/>
+            <path fill="#FFF" d="M9 6.3H18V7.699999999999999H9z"/>
+        </g>
+    </svg>
+    
+        )
+    })();
+
 export const elmSortDown = (()=>{
         return (      
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 31.49 31.49" xmlSpace="preserve" width="15" height="10" transform="rotate(90)">

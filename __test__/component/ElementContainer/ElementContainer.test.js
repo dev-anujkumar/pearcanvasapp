@@ -230,7 +230,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->Figure Element-MathML', () => {
+        xit('Render Element Container ----->Figure Element-MathML', () => {
             let props = {
                 element: wipData.equation,
                 permissions: []
@@ -268,7 +268,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->AudioVideo Element', () => {
+        xit('Render Element Container ----->AudioVideo Element', () => {
             let props = {
                 element: wipData.video,
                 permissions: []
@@ -296,7 +296,7 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        it('Render Element Container ----->Interactive Element-MMI', () => {
+        xit('Render Element Container ----->Interactive Element-MMI', () => {
             let props = {
                 element: wipData.interactive,
                 permissions: []

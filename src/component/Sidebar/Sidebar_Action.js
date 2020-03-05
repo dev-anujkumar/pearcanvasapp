@@ -9,6 +9,7 @@ import {
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
@@ -50,7 +51,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
 
         /* on Conversion removing the tinymce instance for BCE element*/
         if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
-            newElementData['secondaryOption'] === "secondary-blockcode-language-Default") {
+            newElementData['secondaryOption'] === "secondary-blockcode-language-default") {
             if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
@@ -88,6 +89,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         oldElementData.figuredata.elementdata.assessmentitemtype=assessmentItemType;
         oldElementData.html.title="";
         oldElementData && oldElementData.title && oldElementData.title.text ? oldElementData.title.text ="": null;
+        // if(assessmentFormat==="puf"){
+        //     delete oldElementData.figuredata.elementdata.posterimage
+        // }else{
+        //     oldElementData.figuredata.elementdata.posterimage ={
+        //         imageid : "",
+        //         path: "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
+        //     }
+        // }
     }
     /**
      * Patch [code in If block] - in case list is being converted from toolbar and there are some unsaved changes in current element
@@ -225,7 +234,14 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         if (currentSlateData.status === 'approved') {
-        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            if(currentSlateData.type==="popup"){
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(config.slateManifestURN,conversionDataToSend.slateEntity, 0,currentSlateData));
+            }
+            else{
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            return false;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false

@@ -3,6 +3,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { duration } from 'moment';
 import { matchHTMLwithRegex } from '../../constants/utility.js'
+import store from '../../appstore/store'
 
 let indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -431,7 +432,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {},
                 },
-                inputType : parentElement && (parentElement.type == "popup" || parentElement.type == "showhide") ? "AUTHORED_TEXT" :elementTypes[elementType][primaryOption]['enum'],
+                inputType : parentElement && parentElement.type == "popup" ? "AUTHORED_TEXT" : elementTypes[elementType][primaryOption]['enum'],
                 inputSubType : parentElement && parentElement.type == "popup" ? "NA" : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
                 slateUrn: parentElement && (parentElement.type === "showhide" || parentElement.type === "popup") ? parentElement.id: config.slateManifestURN  
             }
@@ -450,10 +451,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             if(parentElement && parentElement.type === "showhide" && showHideType){
                 dataToReturn.section = showHideType;
-                if(previousElementData.status === "approved" && parentElement.contentUrn){
-                    dataToReturn.parentEntityId = parentElement.contentUrn;
-                }
-              
             }
             break;
 
@@ -509,8 +506,15 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             break;
     }
     dataToReturn.slateUrn = config.slateManifestURN;
-    if(previousElementData.status =="approved" && asideData && asideData.contentUrn){
-        dataToReturn.parentEntityId = asideData.contentUrn;
+    if (previousElementData.status == "approved") {
+        let parentData = store.getState().appStore.slateLevelData;
+        if (config.isPopupSlate && parentData[config.slateManifestURN].status === "approved") {
+            dataToReturn.parentEntityId = config.slateEntityURN;
+        } else if (asideData && asideData.contentUrn) {
+            dataToReturn.parentEntityId = asideData.contentUrn;
+        } else if (parentElement && parentElement.type === "showhide" && showHideType && parentElement.contentUrn) {
+            dataToReturn.parentEntityId = parentElement.contentUrn;
+        }
     }
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1] }
     return dataToReturn

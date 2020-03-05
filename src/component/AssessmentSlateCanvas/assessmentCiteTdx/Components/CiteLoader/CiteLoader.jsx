@@ -9,10 +9,8 @@ class CiteLoader extends React.Component {
         const {isLoading, citeErrorFlag} = this.props;
         return (
             <Fragment>
-                <p>
-                {isLoading ? 'Loading...' : "" }
-                {citeErrorFlag ? 'There is an error, please retry later...' : ""}
-                </p>
+                {isLoading ? <div className ="no-result">Loading...</div> : "" }
+                {(isLoading == false) && citeErrorFlag ? <div className ="no-result">There is an error, please retry later...</div> : ""}
             </Fragment>
         )
     }

@@ -12,7 +12,7 @@ class CiteTdxFooter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentPage: 1
+            currentPage: props.currentPageNo
         }
     }
 
@@ -24,9 +24,14 @@ class CiteTdxFooter extends Component {
             slateType: this.props.openedFrom,
             singleAssessmentID:  this.props.currentSingleAssessmentSelected ? this.props.currentSingleAssessmentSelected:""
         }
-        this.props.addCiteTdxFunction(obj);
+        let parentPageNo = this.state.currentPage
+        this.props.addCiteTdxFunction(obj, parentPageNo);
         if(this.props.openedFrom !== "singleSlateAssessment"){
             this.props.closeWindowAssessment();
+        }
+        if(this.props.isInnerComponent){
+            console.count("singleSlateAssessment")
+            this.props.resetPage(true);
         }
 
     }
@@ -49,27 +54,42 @@ class CiteTdxFooter extends Component {
         }     
     }
 
+    handleClose = () => {
+        this.props.resetPage(true);
+        this.props.closeWindowAssessment();
+    }
+
     render() {
         const { currentPage } = this.state;
         const { filterUUID } = this.props;
         const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
         const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         let hideNavigationPrevious = (currentPage <= 1) ? 'hideNavigation' : '';
-        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 20)) ? 'hideNavigation' : '';
+        let hideNavigationNext = ((apiData && apiData.assessments && apiData.assessments.length == 0) || (apiData && apiData.assessments && apiData.assessments.length < 25)) ? 'hideNavigation' : '';
         let disableClick = (isLoading) ? 'disableClick' : '';
         let rmNavOnFilter = (filterUUID == undefined || filterUUID == '') ? '' : 'hideNavigation';
+        let addClass;
+        if((this.props.openedFrom === "slateAssessment" || this.props.openedFrom === "singleSlateAssessment" ) && Object.keys(this.props.currentAssessmentSelected).length > 0 ){
+            addClass="add-button-enabled";
+        }
+        else if(this.props.openedFrom === "singleSlateAssessmentInner" && Object.keys(this.props.currentSingleAssessmentSelected).length > 0){
+            addClass="add-button-enabled";
+        }
+        else{
+            addClass="add-button-disabled";
+        }
         return (
             <div className="assessmentpopup-footer">
                 {/** @description Pagination code starts here ---- */}
                 {!this.props.setCurrentAssessment && <div className="pagination">
-                    <a className={hideNavigationPrevious + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage - 1)} href="#">&#60;</a>
-                    <a href="#" className="active">{currentPage}</a>
-                    <a className={hideNavigationNext + ' ' + disableClick + ' ' + rmNavOnFilter} onClick={() => this.handlePagination(currentPage + 1)} href="#"> &#62;</a>
+                    <a className={`noSelect ${hideNavigationPrevious} ${disableClick} ${rmNavOnFilter}`} onClick={() => this.handlePagination(currentPage - 1)} href="#">&#60;</a>
+                    <a href="#" className="active noSelect">{currentPage}</a>
+                    <a className={`noSelect ${hideNavigationNext} ${disableClick} ${rmNavOnFilter}`} onClick={() => this.handlePagination(currentPage + 1)} href="#"> &#62;</a>
                 </div>}
                 {/** @description Footer right Section code starts here ---- */}
                 <div className="assesmentfooter-inner">
-                    <button className="assessmentpopup cancel-assessment" onClick={this.props.closeWindowAssessment}>CANCEL</button>
-                    <button className="assessmentpopup add-assessment" onClick={this.sendCiteTdxAssessment}>SELECT</button>
+                    <button className="assessmentpopup cancel-assessment noSelect" onClick={this.handleClose}>CANCEL</button>
+                    <button className={`assessmentpopup add-assessment noSelect ${addClass}`} onClick={this.sendCiteTdxAssessment}>SELECT</button>
                 </div>
             </div>
 

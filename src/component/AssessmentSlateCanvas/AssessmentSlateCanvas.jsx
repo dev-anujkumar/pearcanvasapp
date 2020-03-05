@@ -5,7 +5,7 @@
 // IMPORT - Plugins //
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { AssessmentSlateData } from './AssessmentSlateData.jsx';
+import AssessmentSlateData from './AssessmentSlateData.jsx';
 import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { c2AssessmentModule } from './../../js/c2_assessment_module';
 import { utils } from '../../js/utils';

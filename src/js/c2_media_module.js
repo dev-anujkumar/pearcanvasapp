@@ -252,10 +252,10 @@ export const c2MediaModule = {
             if (productLink && productLink.unmount) {
                 productLink.unmount();
             }
-            let CMIS_REPO=config_object1.CMIS_REPO.toString();
+            let CMIS_REPO=config_object1.CMIS_REPO;
             if (CMIS_REPO !== undefined && CMIS_REPO !== null && CMIS_REPO !== '') {
                 // try{
-                const cmisRepo = JSON.parse(CMIS_REPO);
+                const cmisRepo = CMIS_REPO;
                 if (cmisRepo.length > 0) {
                     const canWeProceedWithPL = this.validateRegistries(cmisRepo);
                     if (canWeProceedWithPL) {

@@ -28,17 +28,9 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
             })
         })
         .catch((err) => {
-            // For local testing purpose
-            /* dispatch({
-                type: SET_SLATE_LOCK_STATUS,
-                payload: {
-                    isLocked: true,
-                    timestamp: "",
-                    userId: "abcd"
-                }
-            }) */
+            console.log("%c Slate lock status API failed","background: black; color: white", err)
         })
-} 
+}
 
 /**
  * This is a normal function which retrieves the lock status of a slate
