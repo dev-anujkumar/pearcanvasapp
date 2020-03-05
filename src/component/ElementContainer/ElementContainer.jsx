@@ -225,10 +225,22 @@ class ElementContainer extends Component {
      * This function converts HTML entity code to HTML entity number in case of Wiris data
      * @param {*} str element index
      */
-    convertSpace = (str) => {
-        str = str.replace(/(&|&amp;)nbsp;/g, "§#160;")
+    encodeHTMLInWiris = (str) => {
+        str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
+        let imageObj = str.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm);
+        let imageObjNew = imageObj.map(image => {
+            let mathMLData = image.match(/data-temp-mathml="[^"]*"/g).map(imageData => {
+                return imageData.replace(/(&|&amp;)nbsp;/g, "§#160;");
+            });
+            image = image.replace(/data-temp-mathml="[^"]*"/g, mathMLData[0])
+            return image;
+        });
+
+        for(let i in imageObj) {
+            str = str.replace(imageObj[i], imageObjNew[i]);
+        }
+        console.log('encodeHTMLInWiris:::', str);
         return str;
-        //return this.encodeHtmlInWirisData(str);
     }
        
     /**
@@ -437,31 +449,18 @@ class ElementContainer extends Component {
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
 
-        let formattedText = this.replaceUnwantedtags(text),
-        formattedOldText= this.replaceUnwantedtags(oldtext);
-        formattedText = this.encodeHtmlInWirisData(formattedText)
-        formattedOldText = this.convertSpace(formattedOldText)
-
+        let formattedText = this.encodeHTMLInWiris(text),
+        formattedOldText = this.encodeHTMLInWiris(oldtext);
+        
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
         oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
         oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
         oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
 
-        // captionHTML = this.encodeHtmlInWirisData(captionHTML)
-        // creditsHTML = this.encodeHtmlInWirisData(creditsHTML)
-        // subtitleHTML = this.encodeHtmlInWirisData(subtitleHTML)
-        // titleHTML = this.encodeHtmlInWirisData(titleHTML)
-
-        // oldTitle =  this.convertSpace(oldTitle)
-        // oldSubtitle =  this.convertSpace(oldSubtitle)
-        // oldCaption =  this.convertSpace(oldCaption)
-        // oldCredit =  this.convertSpace(oldCredit)
-
         return (titleHTML !==oldTitle ||
             subtitleHTML !== oldSubtitle ||
             captionHTML !== oldCaption ||
             creditsHTML !== oldCredit ||
-            // text !== oldtext
             formattedText!==formattedOldText
             );
     }
