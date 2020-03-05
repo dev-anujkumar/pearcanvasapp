@@ -70,3 +70,25 @@ export const matchHTMLwithRegex = function (html) {
     }
     return false
 }
+
+/**
+ * This function converts HTML entity code to HTML entity number in case of Wiris data
+ * @param {*} str element index
+ */
+export const encodeHTMLInWiris = (str) => {
+    str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
+    let imageObj = str.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm);
+    let imageObjNew = imageObj.map(image => {
+        let mathMLData = image.match(/data-temp-mathml="[^"]*"/g).map(imageData => {
+            return imageData.replace(/(&|&amp;)nbsp;/g, "§#160;");
+        });
+        image = image.replace(/data-temp-mathml="[^"]*"/g, mathMLData[0])
+        return image;
+    });
+
+    for(let i in imageObj) {
+        str = str.replace(imageObj[i], imageObjNew[i]);
+    }
+    console.log('encodeHTMLInWiris:::', str);
+    return str;
+}

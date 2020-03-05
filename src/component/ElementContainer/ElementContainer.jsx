@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -202,55 +202,35 @@ class ElementContainer extends Component {
      * @param {*} html html data
      * @param {*} flag value to differentiate previous and new data : true-previous and false-new htmlDom data
      */
-    formatHtmlData = (html,flag) => {
-        let formattedData =  this.removeClassesFromHtml(html);
-        let newData='';
-        console.log("flag",flag)
-        if(flag==true){
-            // var url = formattedData
-            // var tmp = document.createElement('div');
-            // tmp.innerHTML = url;
-            // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
-            // formattedData = this.convertSpace(src);
-            newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
-            // newData =  this.convertSpace(formattedData); 
-        }else{
-            newData =  this.encodeHtmlInWirisData(formattedData);
-        }
-            console.log("newData",newData)
-            return newData
-        }        
+    // formatHtmlData = (html,flag) => {
+    //     let formattedData =  this.removeClassesFromHtml(html);
+    //     let newData='';
+    //     console.log("flag",flag)
+    //     if(flag==true){
+    //         // var url = formattedData
+    //         // var tmp = document.createElement('div');
+    //         // tmp.innerHTML = url;
+    //         // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
+    //         // formattedData = this.convertSpace(src);
+    //         newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
+    //         // newData =  this.convertSpace(formattedData); 
+    //     }else{
+    //         newData =  this.encodeHtmlInWirisData(formattedData);
+    //     }
+    //     console.log("newData",newData)
+    //     return newData
+    // }        
         
-    /**
-     * This function converts HTML entity code to HTML entity number in case of Wiris data
-     * @param {*} str element index
-     */
-    encodeHTMLInWiris = (str) => {
-        str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
-        let imageObj = str.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm);
-        let imageObjNew = imageObj.map(image => {
-            let mathMLData = image.match(/data-temp-mathml="[^"]*"/g).map(imageData => {
-                return imageData.replace(/(&|&amp;)nbsp;/g, "§#160;");
-            });
-            image = image.replace(/data-temp-mathml="[^"]*"/g, mathMLData[0])
-            return image;
-        });
-
-        for(let i in imageObj) {
-            str = str.replace(imageObj[i], imageObjNew[i]);
-        }
-        console.log('encodeHTMLInWiris:::', str);
-        return str;
-    }
+    
        
     /**
      * This function converts HTML entity code to HTML entity number in case of Wiris data
      * @param {*} str element index
      */
-    encodeHtmlInWirisData = (str) => {
-        str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
-        return str;
-    }
+    // encodeHtmlInWirisData = (str) => {
+    //     str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
+    //     return str;
+    // }
 
     /**
      * Checks for any difference in data before initiating saving call
@@ -449,8 +429,8 @@ class ElementContainer extends Component {
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
 
-        let formattedText = this.encodeHTMLInWiris(text),
-        formattedOldText = this.encodeHTMLInWiris(oldtext);
+        let formattedText = encodeHTMLInWiris(text),
+        formattedOldText = encodeHTMLInWiris(oldtext);
         
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
         oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
