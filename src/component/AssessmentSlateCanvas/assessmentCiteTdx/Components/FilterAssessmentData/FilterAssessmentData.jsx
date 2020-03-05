@@ -63,7 +63,7 @@ class FilterAssessmentData extends Component {
 
                                 </div>
                                 <div className="search-block">
-                                    <button className="search" onClick={this.handleSearch} >search</button>
+                                    <button className="search noSelect" onClick={this.handleSearch} >search</button>
                                 </div>
 
 

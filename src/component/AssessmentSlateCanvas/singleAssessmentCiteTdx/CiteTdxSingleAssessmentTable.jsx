@@ -26,19 +26,19 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { singleAssessmentData, isLoading } = this.props;
+        const { singleAssessmentData, isLoading, assessmenterrFlag } = this.props;
         return (
             <div>
                 <div className='main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
                         <table className='assessment-table-class single-assessment'>
                             <thead>
-                                {(isLoading == false) && this.tableHeaders.map(item => (
+                                {(isLoading == false) && (assessmenterrFlag == false) && this.tableHeaders.map(item => (
                                      <th className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     </th>
                                 ))}
                             </thead>
-                            {(isLoading == false) && this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
+                            {(isLoading == false) && (assessmenterrFlag == false) && this.props.singleAssessmentData && this.props.singleAssessmentData.data && this.props.singleAssessmentData.data.length > 0 &&
                             <tbody>
                                 {this.props.singleAssessmentData.data.map((item, index) => {
                                     return (
@@ -58,7 +58,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         }
                         </table>
-                        {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0) && (isLoading == false)  && <div className ="no-result">No results found</div>}
+                        {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0) && (isLoading == false) && (assessmenterrFlag == false) && <div className ="no-result">No results found</div>}
                     
 
                 </div>
@@ -78,7 +78,8 @@ const mapStateToProps = (state) => {
         singleAssessmentData: state.citeTdxReducer.singleAssessmentData,
         isLoading: state.citeTdxReducer.isLoading,
         currentSingleAssessmentSelected:state.citeTdxReducer.currentSingleAssessmentSelected,
-        citeErrorFlag: state.citeTdxReducer.assessmenterrFlag
+        citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
+        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag
     }
 }
 

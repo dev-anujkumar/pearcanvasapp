@@ -20,13 +20,13 @@ class CiteTdxTable extends Component {
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 
     render() {
-        const { citeApiData, tdxApiData, mmiApiData, isLoading } = this.props;
+        const { citeApiData, tdxApiData, mmiApiData, isLoading, assessmenterrFlag } = this.props;
         const apiData = (this.props.assessmentType === "Full Assessment CITE") ? citeApiData : (this.props.assessmentType === "Full Assessment TDX") ? tdxApiData : mmiApiData;
         return (
             <div>
                 <div className='main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
-                    { (isLoading == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
+                    { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
                                 {this.tableHeaders.map(item => (
@@ -54,7 +54,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && <div className ="no-result">No results found</div>}
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && (assessmenterrFlag == false)&& <div className ="no-result">No results found</div>}
                 </div>
             </div>
         );
@@ -74,7 +74,8 @@ const mapStateToProps = (state) => {
         mmiApiData: state.citeTdxReducer.mmiData,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         isLoading: state.citeTdxReducer.isLoading,
-        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
+        currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
+        assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag
     }
 }
 
