@@ -84,7 +84,7 @@ export class ReactEditor extends React.Component {
                   activeElement.classList.add('place-holder')
               }
           }
-      });
+        });
 
         /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
         let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML; 
@@ -244,11 +244,12 @@ export class ReactEditor extends React.Component {
       this.editorRef.current.focus();
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       this.termtext = document.getElementById('glossary-0')&&document.getElementById('glossary-0').innerHTML;
-      tinymce.init(this.editorConfig);
-    }
-    this.handlePlaceholer();
-    if(this.termtext){
-      document.getElementById('glossary-0').innerHTML=this.termtext;
+      tinymce.init(this.editorConfig).then((d) => {
+        this.handlePlaceholer();
+        if(this.termtext){
+          document.getElementById('glossary-0').innerHTML=this.termtext;
+        }
+      });
     }
   }
 
@@ -314,8 +315,12 @@ export class ReactEditor extends React.Component {
     // }
 
     this.editorConfig.selector = '#' + currentTarget.id;
+    let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
      // this.setCursorAtEnd(tinymce.activeEditor);
+     if(termText) {
+      document.getElementById(currentTarget.id).innerHTML = termText;
+     }
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
@@ -328,9 +333,13 @@ export class ReactEditor extends React.Component {
   }
 
   render() {
+    let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');
+    let glossaryFootNoteCurrentValue = tinyMCE.$(propsGlossaryFootNoteCurrentValue).length ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+    glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+    
     return (
       <div>
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: this.props.glossaryFootNoteCurrentValue && this.props.glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
       </div>
     )
   }
