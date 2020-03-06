@@ -15,8 +15,8 @@ describe('testing function', () => {
 
     it('Test validateProperties  function', () => {
         let elements = {
-            repo: 'abc',
-            repoName: 'abcccc'
+            "repo": "abc",
+            "repoName": "abcccc"
         }
 
         let proporty1 = 'p1';
@@ -26,7 +26,7 @@ describe('testing function', () => {
     })
 
     it('Test validateRegistries  function', () => {
-        let cmisRepo = [{repo : 'abc', repoName : 'abcccc'}]
+        let cmisRepo = [{"repo" : "abc", "repoName" : "abcccc"}]
 
         c2MediaModule.validateRegistries(cmisRepo)
     })

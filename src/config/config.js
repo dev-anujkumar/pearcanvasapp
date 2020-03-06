@@ -27,7 +27,7 @@ let config = {
     CMDS_DATA_ENDPOINT: 'https://staging.data.pearson.com',
     CMDS_SCHEMA_ENDPOINT: 'https://staging.schema.pearson.com',
     CMDS_DATABASE:  '?db=qa2',
-    CMIS_REPO   : '[{"repo":"https://staging.api.pearson.com/content/cmis/ukwip","repoName":"UK"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}]',
+    CMIS_REPO   : [{repo:"https://staging.api.pearson.com/content/cmis/ukwip",repoName:"UK"},{repo:"https://staging.api.pearson.com/content/cmis/uswip-aws","repoName":"AWS US"},{"repo":"https://staging.api.pearson.com/content/cmis/uswip","repoName":"US"}],
     CMDS_AUTHORIZATION: 'Basic Ymx1ZWJlcnJ5OmVAQkhSTUF2M2V5S2xiT1VjS0tAWl56Q0ZhMDRtYw==',
     EPS_API: 'https://us-school-stg.pearsoned.com/school',
     //c4 required keys and urls
