@@ -341,11 +341,11 @@ class OpenerElement extends Component {
             && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
             flag = false;
         }
-
         else if ((classList.length === 0) 
         && this.state.label === getOpenerContent(textsemantics, "label", text)
         && this.state.number === getOpenerContent(textsemantics, "number", text)
-        && this.state.title === getOpenerContent(textsemantics, "title", text)) {
+        && this.state.title === getOpenerContent(textsemantics, "title", text)
+        && this.state.imgSrc!==event.imgSrc) {
             flag = false
         }
         let element = this.props.element;
