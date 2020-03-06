@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -194,6 +194,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
         return tempDiv.innerHTML;
+        // return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
 
@@ -202,43 +203,35 @@ class ElementContainer extends Component {
      * @param {*} html html data
      * @param {*} flag value to differentiate previous and new data : true-previous and false-new htmlDom data
      */
-    formatHtmlData = (html,flag) => {
-        let formattedData =  this.removeClassesFromHtml(html);
-        let newData='';
-        console.log("flag",flag)
-        if(flag==true){
-            // var url = formattedData
-            // var tmp = document.createElement('div');
-            // tmp.innerHTML = url;
-            // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
-            // formattedData = this.convertSpace(src);
-            newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
-            // newData =  this.convertSpace(formattedData); 
-        }else{
-            newData =  this.encodeHtmlInWirisData(formattedData);
-        }
-            console.log("newData",newData)
-            return newData
-        }        
+    // formatHtmlData = (html,flag) => {
+    //     let formattedData =  this.removeClassesFromHtml(html);
+    //     let newData='';
+    //     console.log("flag",flag)
+    //     if(flag==true){
+    //         // var url = formattedData
+    //         // var tmp = document.createElement('div');
+    //         // tmp.innerHTML = url;
+    //         // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
+    //         // formattedData = this.convertSpace(src);
+    //         newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
+    //         // newData =  this.convertSpace(formattedData); 
+    //     }else{
+    //         newData =  this.encodeHtmlInWirisData(formattedData);
+    //     }
+    //     console.log("newData",newData)
+    //     return newData
+    // }        
         
-    /**
-     * This function converts HTML entity code to HTML entity number in case of Wiris data
-     * @param {*} str element index
-     */
-    convertSpace = (str) => {
-        str = str.replace(/(&|&amp;)nbsp;/g, "§#160;")
-        return str;
-        //return this.encodeHtmlInWirisData(str);
-    }
+    
        
     /**
      * This function converts HTML entity code to HTML entity number in case of Wiris data
      * @param {*} str element index
      */
-    encodeHtmlInWirisData = (str) => {
-        str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
-        return str;
-    }
+    // encodeHtmlInWirisData = (str) => {
+    //     str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
+    //     return str;
+    // }
 
     /**
      * Checks for any difference in data before initiating saving call
@@ -412,32 +405,21 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
-        let formattedText = this.replaceUnwantedtags(text),
-        formattedOldText= this.replaceUnwantedtags(oldtext);
-        formattedText = this.encodeHtmlInWirisData(formattedText)
-        formattedOldText = this.convertSpace(formattedOldText)
 
+        // let formattedText = encodeHTMLInWiris(text),
+        // formattedOldText = encodeHTMLInWiris(oldtext);
+        
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
         oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
         oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
         oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
 
-        // captionHTML = this.encodeHtmlInWirisData(captionHTML)
-        // creditsHTML = this.encodeHtmlInWirisData(creditsHTML)
-        // subtitleHTML = this.encodeHtmlInWirisData(subtitleHTML)
-        // titleHTML = this.encodeHtmlInWirisData(titleHTML)
-
-        // oldTitle =  this.convertSpace(oldTitle)
-        // oldSubtitle =  this.convertSpace(oldSubtitle)
-        // oldCaption =  this.convertSpace(oldCaption)
-        // oldCredit =  this.convertSpace(oldCredit)
-
         return (titleHTML !==oldTitle ||
             subtitleHTML !== oldSubtitle ||
             captionHTML !== oldCaption ||
             creditsHTML !== oldCredit ||
-            // text !== oldtext
-            formattedText!==formattedOldText
+            // formattedText!==formattedOldText
+            text!==oldtext
             );
     }
 
