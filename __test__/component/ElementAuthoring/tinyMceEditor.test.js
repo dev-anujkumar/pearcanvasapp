@@ -132,7 +132,7 @@ describe('Testing TinyMCE Editor', () => {
         expect(instance).toBeDefined();
         instance.editorRef = editorInstance
     }) 
-    it('Test-Function- normalKeyDownHandler---> for paragraph element', () => {
+    xit('Test-Function- normalKeyDownHandler---> for paragraph element', () => {
         let event = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
@@ -205,7 +205,7 @@ describe('Testing TinyMCE Editor', () => {
         expect(spytoggleGlossaryandFootnotePopup).toHaveBeenCalled();
         spytoggleGlossaryandFootnotePopup.mockClear()
     })
-    it('Test editorMousedown ', () => {
+    xit('Test editorMousedown ', () => {
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }

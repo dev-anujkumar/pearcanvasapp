@@ -43,7 +43,8 @@ const ShowHideTinyMce = (props) => {
             slateLockInfo={slateLockInfo}
             onListSelect={onListSelect}
             glossaryFootnoteValue={glossaryFootnoteValue}
-            glossaaryFootnotePopup={glossaaryFootnotePopup} />
+            glossaaryFootnotePopup={glossaaryFootnotePopup}
+            showHideType={showHideType} />
     }
     return (
         <TinyMceEditor permissions={permissions}

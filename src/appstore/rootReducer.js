@@ -9,7 +9,8 @@ import metadataReducer from './metadataReducer';
 import assetPopOverSearch from './assetPopoverReducer';
 import elmReducer from './elmReducer';
 import audioReducer from './audioNarrationReducer';
-import errorPopup from './errorPopupReducer'
+import errorPopup from './errorPopupReducer';
+import citeTdxReducer from './citeTdxReducer';
 
 export default combineReducers({
     appStore: appReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
     elmReducer,
     learningToolReducer,
     audioReducer,
-    errorPopup
+    errorPopup,
+    citeTdxReducer
 });

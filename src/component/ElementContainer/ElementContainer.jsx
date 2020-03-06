@@ -168,16 +168,19 @@ class ElementContainer extends Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"").replace(/>\s+</g,'><');
         html=html.trim();
         tempDiv.innerHTML = html;
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
         tinyMCE.$(tempDiv).find('ol').removeAttr('data-mce-style');
+        tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
@@ -218,17 +221,6 @@ class ElementContainer extends Component {
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
 
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== previousElementData.figuredata.path
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let defaultImageUrl = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -265,6 +257,7 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        preformattedText = this.removeClassesFromHtml(preformattedText)
 
         // if (titleHTML !== previousElementData.html.title ||
         //     subtitleHTML !== previousElementData.html.subtitle ||
@@ -305,33 +298,19 @@ class ElementContainer extends Component {
             subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
             captionHTML = captionsDOM ? captionsDOM.innerHTML : "",
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
-
-        captionHTML = this.removeClassesFromHtml(captionHTML)
-        creditsHTML = this.removeClassesFromHtml(creditsHTML)
-        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
-        titleHTML = this.removeClassesFromHtml(titleHTML)
-
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
         subtitleHTML = matchHTMLwithRegex(subtitleHTML) ? subtitleHTML : `<p>${subtitleHTML}</p>`
         titleHTML = matchHTMLwithRegex(titleHTML) ? titleHTML : `<p>${titleHTML}</p>`
 
+        captionHTML = this.removeClassesFromHtml(captionHTML)
+        creditsHTML = this.removeClassesFromHtml(creditsHTML)
+        subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
+        titleHTML = this.removeClassesFromHtml(titleHTML)
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     posterTextHTML !== previousElementData.html.postertext
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -341,17 +320,6 @@ class ElementContainer extends Component {
             );
         }
         else {
-            // if(titleHTML !== previousElementData.html.title ||
-            //     subtitleHTML !== previousElementData.html.subtitle || 
-            //     captionHTML !== previousElementData.html.captions ||
-            //     creditsHTML !== previousElementData.html.credits || 
-            //     this.props.oldImage !== newInteractiveid
-            //     ){
-            //         return 1
-            //     }
-            //     else {
-            //         return 0
-            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -386,18 +354,6 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
-
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     text !== previousElementData.figuredata.elementdata.text
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let formattedText = this.replaceUnwantedtags(text),
         formattedOldText= this.replaceUnwantedtags(oldtext);
     
@@ -436,18 +392,6 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-
-        // if (titleHTML !== previousElementData.html.title ||
-        //     subtitleHTML !== previousElementData.html.subtitle ||
-        //     captionHTML !== previousElementData.html.captions ||
-        //     creditsHTML !== previousElementData.html.credits ||
-        //     this.props.oldImage !== newAudioVideoId
-        //     ){
-        //         return 1
-        //     }
-        //     else {
-        //         return 0
-        //     }
         let defaultImageUrl =  "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
@@ -498,6 +442,9 @@ class ElementContainer extends Component {
                     if(MLtext){
                         tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                         document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                        tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                         tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
                     }
                 }
@@ -607,12 +554,12 @@ class ElementContainer extends Component {
                     tinyMCE.$(currentListNode).find('ol').removeAttr('data-mce-style');
                     let nodehtml = currentListNode.innerHTML;
                     if (nodehtml && previousElementData.html && (this.replaceUnwantedtags(nodehtml) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate && !config.savingInProgress)) {
-                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this,undefined,undefined,undefined)
+                        dataToSend = createUpdatedData(previousElementData.type, previousElementData, currentListNode, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType,undefined)
                         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                         if(dataToSend.status === "approved"){
                             config.savingInProgress = true
                         }
-                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData,undefined,undefined);
+                        this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement);
                     }
                     break;
                 }
@@ -695,7 +642,9 @@ class ElementContainer extends Component {
         });
 
         elementData.backgroundcolor = selectedColor;
-        this.updateOpenerElement(elementData);
+        if(this.props.element.backgroundcolor !== config.colors[this.state.activeColorIndex]){
+            this.updateOpenerElement(elementData);
+        }       
     }
 
     /**
@@ -975,7 +924,7 @@ class ElementContainer extends Component {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
-            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-Default" && this.props.activeElement.elementId === element.id)) {
+            if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
                 bceOverlay = <div className="bce-overlay disabled" onClick={() => this.handleFocus()}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
@@ -1162,11 +1111,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         accessDenied,
         releaseSlateLock,
-        createShowHideElement: (element, type, index, parentContentUrn, cb) => {
-            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb))
+        createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
+            dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
         },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb))
+        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
+            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         }
 
     }

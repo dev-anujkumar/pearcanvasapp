@@ -97,11 +97,11 @@ describe('Testing Figure element component', () => {
             component.setProps({ model: figureImageWiderElementWithData,index: 6 });
             expect(component.find('.divImageWiderThanText .figureImageWiderThanText .imageWiderThanText')).toHaveLength(1)
         })
-        test('renders  properly with default figureImage-Fullscreen', () => {           
+        xtest('renders  properly with default figureImage-Fullscreen', () => {           
             component.setProps({ model: figureImageFullElementDefault ,index: 7});
             expect(component.find('.divImageFullscreenImage .figureImageFullscreen .imageFullscreen')).toHaveLength(1)
         })
-        test('renders  properly with mock data figureImage-Fullscreen', () => {           
+        xtest('renders  properly with mock data figureImage-Fullscreen', () => {           
             component.setProps({ model: figureImageFullElementWithData,index: 8 });
             expect(component.find('.divImageFullscreenImage .figureImageFullscreen .imageFullscreen')).toHaveLength(1)
         })
@@ -128,11 +128,11 @@ describe('Testing Figure element component', () => {
         };
         let component = mount(<ElementFigure {...props} />);
         const div = document.createElement('div');
-        test('renders  properly with default TableEditor-TextWidth', () => {
+        xtest('renders  properly with default TableEditor-TextWidth', () => {
             component.setProps({ model: figureTableEditorTextWidthElementDefault ,index:11});
             expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
         })
-        test('renders  properly with mock data TableEditor-TextWidth', () => {
+        xtest('renders  properly with mock data TableEditor-TextWidth', () => {
             component.setProps({ model: figureTableEditorTextWidthElementWithData ,index:12});
             expect(component.find('.divImageTextWidth .figureImageTextWidth .imageTextWidth')).toHaveLength(1)
         })

@@ -142,8 +142,15 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             const newParentData = JSON.parse(JSON.stringify(parentData));
             let currentSlateData = newParentData[config.slateManifestURN];
             if (currentSlateData.status === 'approved') {
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                if(currentSlateData.type==="popup"){
+                    sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                    dispatch(fetchSlateData(config.slateManifestURN,_requestData.entityUrn, 0,currentSlateData));
+                }
+                else{
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                }
+
             return false;
         }
             let bodymatter = newParentData[config.slateManifestURN].contents.bodymatter
@@ -258,7 +265,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         let glossaryFootNoteCurrentValue = getState().glossaryFootnoteReducer.glossaryFootNoteCurrentValue;
         let elementIndexFootnote = getState().glossaryFootnoteReducer.elementIndex;
         if(response.data.id !== updatedData.id){
-            glossaaryFootnoteValue.elementWorkId =response.data.id;
+            glossaaryFootnoteValue.elementWorkId = response.data.id;
         dispatch({
             type: OPEN_GLOSSARY_FOOTNOTE,
             payload: {
@@ -293,17 +300,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                     updateStoreInCanvas(updatedData, asideData, parentUrn, dispatch, getState, response.data, elementIndex, null, parentElement);
                     config.savingInProgress = false
                 }else if(currentSlateData.status === 'approved'){
-                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                    if(currentSlateData.type==="popup"){
+                        sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                        dispatch(fetchSlateData(response.data.newParentVersion,updatedData.parentEntityId, 0,currentSlateData));
+                    }else{
+                        sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
+                    }
                 }
             }
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
         
         customEvent.trigger('glossaryFootnoteSave', response.data.id); 
-
+        config.popupCreationCallInProgress = false
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         config.savingInProgress = false
+        config.popupCreationCallInProgress = false
         console.log("updateElement Api fail", error);
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
     })
@@ -664,7 +677,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter) => {
     })
 }
 
-export const createShowHideElement = (elementId, type, index,parentContentUrn , cb) => (dispatch, getState) => {
+export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
@@ -691,6 +704,12 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
         let condition;
         if (newIndex.length == 4) {
@@ -709,6 +728,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
                 newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
             }
         }
+        if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         dispatch({
             type: CREATE_SHOW_HIDE_ELEMENT,
             payload: {
@@ -718,7 +738,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
         })
         if(cb){
             cb("create",index);
-        }  
+        }
     }).catch(error => {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -726,7 +746,7 @@ export const createShowHideElement = (elementId, type, index,parentContentUrn , 
     })
 }
 
-export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,parentId,cb) => (dispatch, getState) => {
+export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex, parentId, cb, parentElement, parentElementIndex) => (dispatch, getState) => {
     let _requestData = {
         projectUrn : config.projectUrn,
         entityUrn : parentUrn,
@@ -749,6 +769,12 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
+        let currentSlateData = newParentData[config.slateManifestURN];
+        if (currentSlateData.status === 'approved') {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            return false;
+        }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
         let condition;
         if (newIndex.length == 4) {
@@ -768,6 +794,7 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
                
             }
         }
+        if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
         if(cb){
             cb("delete",eleIndex);
         } 
@@ -785,6 +812,10 @@ export const deleteShowHideUnit = (elementId, type, parentUrn, index,eleIndex,pa
     })
 }
 
+const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
+    parentElement.indexes = parentElementIndex;
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement)); 
+}
 
 export const currentSHowHideElement = (element) => (dispatch, getState) => {
     dispatch({

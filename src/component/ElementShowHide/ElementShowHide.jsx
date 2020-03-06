@@ -34,11 +34,10 @@ class ElementShowHide extends React.Component {
          newshowIndex = newIndex.join("-");
         if (document.getElementById(`cypress-${newshowIndex}`)) {
             document.getElementById(`cypress-${newshowIndex}`).focus();
-
         }
     }
     createShowHideElement = (type, index, elementShowHideId) => {
-        this.context.createShowHideElement && this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, this.showHideCallBack);
+        this.context.createShowHideElement && this.context.createShowHideElement(this.context.element.id, type, index, this.context.element.contentUrn, this.showHideCallBack, this.context.element, this.context.index);
     }
 
     activeShowHide = (e) => {
@@ -54,11 +53,11 @@ class ElementShowHide extends React.Component {
     }
 
     deleteShowHideUnit = (id, type, contentUrn, index, eleIndex, parentId) => {
-        this.context.deleteShowHideUnit && this.context.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, this.showHideCallBack)
+        this.context.deleteShowHideUnit && this.context.deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, this.showHideCallBack, this.context.element, this.context.index)
     }
 
     render() {
-        const { index, element, slateLockInfo } = this.context;
+        const { index, element } = this.context;
         return (
             <div className="divWidgetShowHide"  onClick={(e)=>this.context.handleFocus("","",e)} >
                 <div className="pearson-component showHide" data-type="showHide" >

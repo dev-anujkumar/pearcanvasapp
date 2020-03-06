@@ -71,7 +71,6 @@ export class TinyMceEditor extends Component {
                 this.addFootnoteIcon(editor);
                 this.addGlossaryIcon(editor);
                 this.addInlineCodeIcon(editor);
-                this.editorMousedown(editor);
                 this.editorClick(editor);
                 this.editorKeydown(editor);
                 this.editorKeyup(editor);
@@ -123,7 +122,11 @@ export class TinyMceEditor extends Component {
                         let showHideType = this.props.showHideType || null
                         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
                         if(!config.savingInProgress){
-                            this.props.handleBlur(null,this.props.currentElement,this.props.index, showHideType);
+                            if(this.props.element.type === "popup" && !this.props.currentElement){
+                                this.props.createPopupUnit(this.props.popupField, null, this.props.index, this.props.element) 
+                            } else {
+                                this.props.handleBlur(null,this.props.currentElement,this.props.index, null)
+                            }
                         }
                         editor.selection.placeCaretAt(clickedX,clickedY);                       
                     }                   
@@ -153,6 +156,9 @@ export class TinyMceEditor extends Component {
                             if(MLtext){
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
                                 document.querySelector('#'+ tinymce.activeEditor.id +' blockquote p.paragraphNummerEins').append(MLtext)
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
+                                tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
 
                             }
@@ -589,20 +595,6 @@ export class TinyMceEditor extends Component {
     }
 
     /**
-     * This method is called on Mouse down.
-     * @param {*} editor  editor instance
-     */
-    editorMousedown = (editor) => {
-        editor.on('mousedown', (e) => {
-            if (this.props.slateLockInfo.isLocked && config.userId !== this.props.slateLockInfo.userId) {
-                e.preventDefault();
-                e.stopPropagation()
-                return false;
-            }
-        });
-    }
-
-    /**
      * Adds inline code formatting option to the toolbar
      * @param {*} editor  editor instance
      */
@@ -908,12 +900,16 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     addFootnote = (editor) => {
-        if(config.savingInProgress){
+        if(config.savingInProgress || config.popupCreationCallInProgress){
             return false
         }
         let elementId = ""
-        if (this.props.currentElement) {
-            elementId = this.props.currentElement.id
+        if (this.props.element.type === "popup") {
+            if((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement){
+                return false
+            } else {
+                elementId = this.props.currentElement.id
+            }
         }
         else {
             elementId = this.props.elementId
@@ -1062,7 +1058,8 @@ export class TinyMceEditor extends Component {
      */
     componentDidMount() {
 
-        const { slateLockInfo: { isLocked, userId } } = this.props
+        const { slateLockInfo: { isLocked } } = this.props
+        const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
         /**
          * case -  initialize first tinymce instance on very first editor element by default
          */
@@ -1281,6 +1278,13 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleClick = (e) => {
+
+        /*
+        * In IS slate removing the toolbar disabled class which was applied in case of OE
+        */
+        if(config && config.slateType === "container-introduction" && document.getElementById('tinymceToolbar') && document.getElementById('tinymceToolbar').classList){
+            document.getElementById('tinymceToolbar').classList.remove('toolbar-disabled')
+        }
         let showHideObj;
         if (this.props.showHideType) {
             showHideObj =
@@ -1479,7 +1483,9 @@ export class TinyMceEditor extends Component {
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
             if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
-                node.innerHTML = this.lastContent;
+                if(!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length){
+                    node.innerHTML = this.lastContent;
+                }
             }
         }
         let relatedTargets = (e && e.relatedTarget && e.relatedTarget.classList) ? e.relatedTarget.classList : [];
@@ -1497,8 +1503,15 @@ export class TinyMceEditor extends Component {
         })
         let showHideType = this.props.showHideType || null
         showHideType = showHideType === "revel" ? "postertextobject" : showHideType
-        if(!this.fromtinyInitBlur && !config.savingInProgress){ 
-            this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+
+        if(!this.fromtinyInitBlur && !config.savingInProgress){
+            let elemNode = document.getElementById(`cypress-${this.props.index}`)
+            elemNode.innerHTML = elemNode.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
+            if(this.props.element && this.props.element.type === "popup" && !this.props.currentElement && elemNode && elemNode.innerHTML !== ""){
+                this.props.createPopupUnit(this.props.popupField, forceupdate, this.props.index, this.props.element)
+            } else {
+                this.props.handleBlur(forceupdate,this.props.currentElement,this.props.index, showHideType)
+            }
          }
          else{
             this.fromtinyInitBlur=false;
@@ -1519,7 +1532,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
-        let lockCondition = isLocked && config.userId !== userId;
+        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;

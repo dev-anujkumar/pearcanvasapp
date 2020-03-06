@@ -594,7 +594,7 @@ describe('Tests ElementContainer Actions', () => {
     });
 
     describe('testing------- CREATE SHOW HIDE ELEMENT ------action', () => {
-        it('testing------- CREATE SHOW HIDE ELEMENT------action', () => {
+        xit('testing------- CREATE SHOW HIDE ELEMENT------action', () => {
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c";
             let type = "show";

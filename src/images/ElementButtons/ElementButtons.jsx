@@ -156,6 +156,17 @@ export const elmCloseWindowIcon = (()=>{
         </svg>
     )
 })();
+export const assessmentCloseWindowIcon = (()=>{
+    return (
+        <svg version="1.1" id="assessment_CloseWindow" x="0px" y="0px" width="10px" height="10px" viewBox="0 0 357 357" xmlSpace="preserve">
+            <g>
+                <g id="close">
+                    <polygon points="357,35.7 321.3,0 178.5,142.8 35.7,0 0,35.7 142.8,178.5 0,321.3 35.7,357 178.5,214.2 321.3,357 357,321.3 214.2,178.5"/>
+                </g>
+            </g>
+        </svg>
+    )
+})();
 
 export const elmAssessmentItem = (()=>{
     return (
@@ -173,6 +184,19 @@ export const elmAssessmentItem = (()=>{
             <path className=" cls-1" d="M 6.644531 19.285156 C 6.644531 19.996094 6.066406 20.570312 5.355469 20.570312 C 4.648438 20.570312 4.070312 19.996094 4.070312 19.285156 C 4.070312 18.574219 4.648438 18 5.355469 18 C 6.066406 18 6.644531 18.574219 6.644531 19.285156 Z M 6.644531 19.285156 " />
         </g>
     </svg>
+        )
+    })();
+
+export const singleAssessmentItemIcon = (()=>{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+        <g fill="none" fill-rule="evenodd" transform="translate(-3 -3)">
+            <rect width="18" height="18" x="3" y="3" fill="#CD1F2A" rx="2"/>
+            <circle cx="7" cy="7" r="1" fill="#FFF"/>
+            <path fill="#FFF" d="M9 6.3H18V7.699999999999999H9z"/>
+        </g>
+    </svg>
+    
         )
     })();
 
