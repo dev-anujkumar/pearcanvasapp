@@ -98,8 +98,8 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
         }
     }).then((res) => {
         let taxonomyType = (res.data.taxonomicTypes.length > 0) ? res.data.taxonomicTypes : [];
-        console.log("taxonomyType", taxonomyType);
-        if (!taxonomyType.includes(typeAssessment)) {
+        let responseName = (res.data.name !== undefined) ? res.data.name : '';
+        if ((taxonomyType.includes(typeAssessment) == false) || (responseName.toLowerCase().search(assessmentTitle.toLowerCase()) == -1)) {
             filterData = { assessments: [] };
         } else {
             let versionUrn = (res.data.versionUrn !== undefined) ? res.data.versionUrn : 'NA';

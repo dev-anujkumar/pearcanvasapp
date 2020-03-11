@@ -19,7 +19,8 @@ let store = mockStore({
 
 let props={
     slateLockInfo:{
-        isLocked:false
+        isLocked:false,
+        userId : 'c5test01'
     },
     element: {
         elementdata: {
