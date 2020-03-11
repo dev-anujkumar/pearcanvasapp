@@ -193,8 +193,7 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
-        return tempDiv.innerHTML;
-        // return encodeHTMLInWiris(tempDiv.innerHTML);
+        return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
 
@@ -403,9 +402,11 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        // console.log("textxtxtxtxtxtxtxtx")
         text = this.removeClassesFromHtml(text)
+        console.log("text",text)
         oldtext = this.removeClassesFromHtml(oldtext)
-
+        console.log("oldtext",oldtext)
         // let formattedText = encodeHTMLInWiris(text),
         // formattedOldText = encodeHTMLInWiris(oldtext);
         
