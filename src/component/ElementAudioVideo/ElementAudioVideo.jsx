@@ -85,17 +85,17 @@ class ElementAudioVideo extends Component {
             let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['subtitle'] : "";
             if (ensubtitle) {
                 format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = ensubtitle.split("?")[0];
+                path = ensubtitle;//.split("?")[0];
                 lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
                 tracktype = "captions"
             } else if (frenchSubtitle) {
                 format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = frenchsubtitle.split("?")[0];
+                path = frenchsubtitle;//.split("?")[0];
                 lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
                 tracktype = "captions"
             } else if (spanishSubtitle) {
                 format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = spanishsubtitle.split("?")[0];
+                path = spanishsubtitle;//.split("?")[0];
                 lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
                 tracktype = "captions"
             }
