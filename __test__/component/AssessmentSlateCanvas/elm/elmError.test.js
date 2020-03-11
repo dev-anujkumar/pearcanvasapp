@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 
 import ElmError from ' ../../../src/component/AssessmentSlateCanvas/elm/Components/ElmError';
 
-describe('Testing ELM Header component', () => {
+describe('Testing ELM Error component', () => {
 
     it('Test- renders without crashing', () => {
         let props={ }
