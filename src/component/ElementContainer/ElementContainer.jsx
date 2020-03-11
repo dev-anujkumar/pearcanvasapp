@@ -196,42 +196,6 @@ class ElementContainer extends Component {
         return encodeHTMLInWiris(tempDiv.innerHTML);
     }
 
-
-    /**
-     * This function prepares html data for update comparison
-     * @param {*} html html data
-     * @param {*} flag value to differentiate previous and new data : true-previous and false-new htmlDom data
-     */
-    // formatHtmlData = (html,flag) => {
-    //     let formattedData =  this.removeClassesFromHtml(html);
-    //     let newData='';
-    //     console.log("flag",flag)
-    //     if(flag==true){
-    //         // var url = formattedData
-    //         // var tmp = document.createElement('div');
-    //         // tmp.innerHTML = url;
-    //         // var src = tmp.querySelectorAll('img').getAttribute('data-temp-mathml');
-    //         // formattedData = this.convertSpace(src);
-    //         newData = formattedData.match(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/gm).map(x => x.replace(/<img [^>]*data-temp-mathml="[^"]*"[^>]*>/, this.convertSpace(x)));
-    //         // newData =  this.convertSpace(formattedData); 
-    //     }else{
-    //         newData =  this.encodeHtmlInWirisData(formattedData);
-    //     }
-    //     console.log("newData",newData)
-    //     return newData
-    // }        
-        
-    
-       
-    /**
-     * This function converts HTML entity code to HTML entity number in case of Wiris data
-     * @param {*} str element index
-     */
-    // encodeHtmlInWirisData = (str) => {
-    //     str = str.replace(/(alt=\"[a-zA-Z0-9\ \&\;\#\§]+\")/g, '');
-    //     return str;
-    // }
-
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -402,14 +366,9 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         subtitleHTML = this.removeClassesFromHtml(subtitleHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
-        // console.log("textxtxtxtxtxtxtxtx")
         text = this.removeClassesFromHtml(text)
-        console.log("text",text)
         oldtext = this.removeClassesFromHtml(oldtext)
-        console.log("oldtext",oldtext)
-        // let formattedText = encodeHTMLInWiris(text),
-        // formattedOldText = encodeHTMLInWiris(oldtext);
-        
+       
         let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
         oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
         oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
