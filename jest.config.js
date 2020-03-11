@@ -22,7 +22,7 @@ module.exports = {
   // collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: ['src/component/**/*.{js,jsx,mjs}'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,mjs}'],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: 'coverage',
@@ -70,7 +70,7 @@ module.exports = {
   // moduleNameMapper: {},
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+   modulePathIgnorePatterns: ["static","auth"],
 
   // Activates notifications for test results
   // notify: false,
@@ -166,4 +166,10 @@ module.exports = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+
+  //To support media and CSS parsing
+  moduleNameMapper: {
+    "\\.(css|less)$": "identity-obj-proxy",
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/assetsTransformer.js"
+  }
 };

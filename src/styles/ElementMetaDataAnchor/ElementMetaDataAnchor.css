@@ -1,0 +1,92 @@
+.matadata_anchor p{
+    color: white;
+    display: inline;
+    padding: 3px 10px!important;
+    background-color: #737373;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 1.70em;
+    letter-spacing: 0.01em;
+}
+.element-container .learningObjectiveContainer .learningObjectiveinner{
+    padding: 10px 0px 0px 10px!important;
+}
+.learningObjectiveContainer .cypress-editable{
+    min-height: inherit!important;
+}
+.element-container .learningObjectiveContainer .learningObjectiveinnerText.cypress-editable.place-holder::before
+{ content: attr(placeholder);
+    position: inherit;
+    font-family: 'Open Sans', sans-serif;
+
+}
+.learningObjectiveinnerText.cypress-editable.place-holder{
+    font-style:italic;
+    margin:0;
+}
+.learningObjectiveinnerText.cypress-editable{
+    margin:10px 0 0 0;
+}
+.element-container.active > .learningObjectiveContainer .container > .matadata_anchor p{
+    background-color: green;
+}
+.tox-tbtn--active .tox-collection--list{
+width:230px;
+}
+.tox-toolbar button:last-child .tox-tbtn__select-chevron{
+    display:none
+}
+.slateTagClass svg{
+   fill : #42a316;
+}
+.learningObjectiveContainer .heading2LearningObjectiveListHeaderLabel p {
+    color: grey;
+    font-style: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.learningObjectiveContainer h2.heading2LearningObjectiveListHeaderLabel {
+    line-height: 0.75em;
+    margin: 0;
+}
+.learning-obejective-text .element-dropdown-title{
+    pointer-events: auto;
+    cursor: pointer;
+    display: block;
+    color: lightgrey;
+}
+.panel_show_module p {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+}
+.panel_show_module .learning-obejective-text {
+    padding-bottom: 20px;
+}
+.panel_show_module .switch{
+    float: right;
+    margin-top:0;
+}
+.metadata-anchor.disabled{
+    pointer-events: none;
+    cursor: none;
+    opacity: 0.3;
+}
+.learningObjectiveContainer br[data-mce-bogus="1"], p[data-mce-caret="after"] {
+    display:none !important;
+}
+
+.learningObjectiveContainer .container {
+    pointer-events: none;
+}
+.learningObjectiveinnerText img{
+    vertical-align:middle;
+}
+.Wirisformula{
+    cursor:pointer;
+}
+div.learningObjectiveContainer .Container {
+    font-size: 14px;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+}

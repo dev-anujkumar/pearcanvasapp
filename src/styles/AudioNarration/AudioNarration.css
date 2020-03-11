@@ -1,0 +1,24 @@
+.audio-close{
+    padding: 15px
+}
+.audio-book-text{
+    float: left;
+    color: #3298B5;
+}
+.close-icon-audio{
+    cursor: pointer;
+    float: right;
+    color: #000000;
+    font-weight: bold;
+}
+.media-title{
+    padding: 10px;
+}
+.remove-button{
+    background-color: #F1F1F1;
+    display: flow-root;
+}
+.remove-text{
+    float: right;
+    margin: 10px;
+}

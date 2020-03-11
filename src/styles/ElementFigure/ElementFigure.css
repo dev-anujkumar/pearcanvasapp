@@ -1,0 +1,213 @@
+.figureElement .cypress-editable {
+    /* margin: 0!important; */
+    padding: 10px!important;
+    width: 100%!important;
+    min-height: 40px!important;
+    border: none;
+    outline: none;
+}
+.figureElement .cypress-editable.place-holder::before{
+    margin-top : 2px !important;
+}
+.figureElement .cypress-editable:not(pre){
+padding:0px;
+}
+/* pre{
+    padding: 10px!important;
+} */
+.code-listing.language-none {
+    border: none!important;
+}
+code.cypress-editable.language-none{
+    padding: 0px!important;
+}
+/* .figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing.language-none .cypress-editable{
+    padding: 10px!important;
+    
+} */
+.figureCredit.cypress-editable {
+    min-height: 40px!important;
+    font-size: 9px!important;
+    width:100% !important;
+}
+.figureElement .pearson-component.blockcode.codeSnippet.blockCodeDiv{
+    cursor: auto !important;
+    /* max-height: 85px; */
+    overflow-y: hidden;
+}
+.figureCredit , .figureTitle, .figureCaption, .figureLabel, .mathml .figureElement .figureData {
+    min-height: 40px!important;
+    cursor: auto !important;
+    width:100%!important;
+    max-width: 100% !important;
+    color:black!important;
+}
+h4.figureLabel, h4.figureTitle{
+    margin-bottom: 6px!important;
+}
+.figureCaption{
+    margin-top: 5px!important;
+}
+.figure-header .figureLabel.cypress-editable,.figure-header .figureTitle.cypress-editable{
+    font-size: 12px!important;
+    font-family: Helvetica, sans-serif!important;
+}
+.figureLabel.cypress-editable  em,.figureLabel.cypress-editable  em strong,.figureLabel.cypress-editable strong span{
+    font-weight: 900 !important;
+    font-family: inherit !important;
+}
+.figure-header{
+    min-height: 86px;
+}
+.mathml .figureElement .figureData,.blockcode .codeSnippet{
+    width:100%!important;
+}
+.paragraphNumeroUno.mathml.figureData.mathmlDiv{
+    font-size:12px!important;
+    padding: 10px!important;
+}
+.blockCodeFigure .blockCodeDiv{
+    padding: 10px 0;
+    width:100%!important;
+    max-width: 100% !important;
+    overflow-x: auto;
+}
+.figureElement .pearson-component.image.figureData {
+    /* cursor:copy!important ; */
+    text-align: center;
+    overflow: auto;
+}
+figcaption,.figureCaption{
+    font-size: 10.8px!important;
+    text-align: left !important;
+}
+code{
+    background-color:transparent;
+    padding: 0% !important;
+}
+figure,.element-container{
+    display:block !important;
+}
+
+.pearson-component.image.figureData img{
+    max-width: 100%;
+    text-align: center;
+}
+ 
+.divCodeSnippetFigure.blockCodeFigure .figureCodeSnippet .pearson-component.blockcode.codeSnippet.blockCodeDiv .code-listing .cypress-editable{
+    line-height: 25px;
+    display: table;
+}
+
+
+.divImage25Text{
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+.figureImage25Text{
+	background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    }
+.heading4Image25TextNumberLabel{   
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+    }
+.heading4Image25TextTitle{
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0em auto 0em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+.figureElement .pearson-component.image .image25Text{
+    display: block;
+    /* cursor:copy!important; */
+    text-align: center;
+    max-width: 170px;
+    width: 100%;
+    margin: 0.60em auto 0.65em auto;
+}
+.figcaptionImage25Text{  
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.75em auto 0.45em auto;
+    padding: 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    word-wrap: break-word;
+}
+.paragraphImage25TextCredit{ 
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.45em auto 0 auto;
+    padding: 0;
+    font-size: 0.80em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}
+.image50Text, .image50TextTableImage, .image50TextMathImage{
+    max-width: 340px !important;
+}
+img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage{
+    max-width: 680px !important;
+}
+img.imageWiderThanText, img.imageWiderThanTextTableImage, img.imageWiderThanTextMathImage{
+    max-width: 1080px !important;
+}
+img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage{
+    max-width: 100% !important;
+}
+.pearson-component.image.figureData.table-figure-data ul li{
+    list-style:inherit !important;
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.pearson-component.image.figureData.table-figure-data ol li{
+    list-style:inherit !important; 
+}
+.pearson-component.image.figureData.table-figure-data table{
+    width: inherit !important;
+    max-height: 399px;
+}
+.pearson-component.image.figureData.table-figure-data ul{
+    display: block;
+    /* list-style-type: disc; */
+    margin-block-end: 1em !important; 
+    margin-inline-start: 0px !important; 
+    margin-inline-end: 1em !important; 
+    padding-inline-start: 40px !important; 
+}
+.pearson-component.image.figureData.table-figure-data table a{
+    pointer-events:none !important;
+}
+.pearson-component.image.figureData.table-figure-data table tr{
+    height: 40px !important; 
+ }
+ .pearson-component.image.figureData.table-figure-data table td, .pearson-component.image.figureData.table-figure-data table th {
+     padding: 0px 7px !important; 
+     font: inherit !important; 
+  }

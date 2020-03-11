@@ -5,12 +5,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
+    <link disabled id="book-css" rel="stylesheet" href="https://cite-dev.pearson.com/book.css" media="all" />
+    <link disabled id="opensans-css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i" rel="stylesheet" media="all">
+    <link disabled id="font-awesome-css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" media="all">
     <title>Cypress Refactored</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('book-css').removeAttribute('disabled');
+            document.getElementById('opensans-css').removeAttribute('disabled');
+            document.getElementById('font-awesome-css').removeAttribute('disabled');
+        }
+    </script>
 </head>
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="c2-modal"></div>
+    <div id="pod-modal"></div>
 </body>
 
 </html>

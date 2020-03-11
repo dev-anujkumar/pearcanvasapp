@@ -1,0 +1,74 @@
+#video-header{
+    margin-bottom:2px;
+}
+#audio-header{
+    margin-bottom:6px;
+}
+.assetDiv{
+    font-family: 'Open Sans', sans-serif;
+    font-size:12px;
+    color:#424242;
+}
+
+.figureCredit.cypress-editable{
+    outline: none!important;
+}
+.figureAudio .cypress-editable, .figureVideo .cypress-editable{
+    margin: 0!important;
+    padding: 10px!important;
+    width: 100%!important;
+    min-height: 40px!important;
+    border: none;
+    outline: none;
+   
+}
+.figureLabel.cypress-editable{
+    font-weight: 800 !important;
+}
+.figureLabel.cypress-editable strong{
+    font-weight: 800;
+    font-family: Helvetica, sans-serif!important;
+}
+.divAudio .figureLabel.cypress-editable{
+    font-size: 10.8!important;
+    font-weight: 400 !important;
+ }
+ .divAudio .figureTitle.cypress-editable{
+     font-size: 10.2!important;
+  }
+.figureCredit , .figureTitle, .figureCaption, .figureLabel{
+    min-height: 40px!important;
+    cursor: auto !important;
+    width:100%!important;
+    max-width: 100% !important;
+    color:black!important;
+}
+.figureElement .pearson-component {
+    cursor:copy!important ;
+    outline:none;
+}
+.figureAudio,.figureVideo{
+    padding:10px;
+    width:100%!important;
+    max-width: 100% !important;
+}
+.figcaptionAudio, .figcaptionVideo{
+text-align: left;
+}
+
+figure.figureVideo{
+    margin: 0 !important;
+}
+.figureHeader{
+    min-height: 82.39px;
+}
+figure.figureAudio{
+    margin-bottom: 2px !important;
+}
+.divAudio,.divVideo{
+    margin-top: 1px;
+}   
+
+.pearson-component.audio,.pearson-component .audio{
+    display: block !important;
+}

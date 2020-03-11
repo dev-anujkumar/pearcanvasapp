@@ -1,0 +1,81 @@
+.figureAssessment{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    max-width:100% !important;
+}
+
+.singleAssessmentIdInfo{
+    padding-top: 5px!important;
+    padding-bottom: 10px!important;
+}
+.singleAssessmentItemIdInfo{
+    padding-bottom: 10px!important;
+}
+.singleAssessment_Dropdown_Container{
+    height: 37px;
+}
+.singleAssessment_Dropdown_arrow{
+float: right;
+position: relative;
+top: 0px;
+right: 8px;
+width: 15px;
+height: 15px;
+}
+.singleAssessment_Dropdown_activeDropdown.select{
+width: 200px;
+float: left;
+border: 1px solid #c0c0c0;
+border-radius: 25px;
+background: #fff;
+padding: 8px;
+cursor: pointer;
+background-color: rgb(217, 228, 240);
+position: relative;
+}
+.singleAssessment_Dropdown_activeDropdown.notselect{
+    width: 200px;
+    float: left;
+    border: 1px solid #c0c0c0;
+    border-radius: 25px;
+    background: #fff;
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+    }
+.singleAssessment_Dropdown_SelectLabel{
+    width: 120px;
+    float: left;
+    font-size: 13px;
+    color: #424242;
+    position: relative;
+    top: 6px;
+}
+.singleAssessment_Dropdown_options{
+    position: absolute;
+    padding-left: 0px;
+    margin-left: 122px;
+    width: 202px;
+    margin-top: 10px;
+    max-height: 220px;
+    overflow: auto;
+    background: #fff;
+}
+.singleAssessment_Dropdown_item{
+    list-style: none;
+    padding: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+.singleAssessment_Dropdown_item:hover{
+    background-color: #1565c0;
+    color:white;
+    
+ }
+.singleAssessment_Dropdown_currentLabel{
+    font-size: 14px;
+    margin:0 0 0 8px;
+}
+.divAssessment{
+       max-width:auto!important ;
+}

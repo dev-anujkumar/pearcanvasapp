@@ -1,0 +1,34 @@
+ .interactive-element .cypress-editable:not(.paragraphShowHideWidgetQuestionText , .paragraphNumeroUno.revealAns) {
+    margin: 0!important;
+    padding: 10px!important;
+    width: 100%!important;
+    min-height: 40px!important;
+    border: none;
+    outline: none;
+    background: #fff;
+}
+.interactive-element .cypress-editable.place-holder::before{
+    margin-top : 2px !important;
+}
+
+ .id-info {
+    padding: 5px 0 10px;
+} 
+
+.pearson-component:not(.showHide) {
+    cursor: copy;
+}
+
+a.buttonWidgetPU {
+    min-width: 100%;
+}
+a.buttonWidgetPDF , a.buttonWidgetPUSL, a.buttonWidgetPU {
+    width: 60%;
+    color: black;
+}
+.actionPU {
+    padding: 10px!important;
+    color: black;
+    font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
+    background-color: white;
+}

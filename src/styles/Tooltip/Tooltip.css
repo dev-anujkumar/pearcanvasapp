@@ -1,0 +1,132 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; */
+}
+
+.tooltip .tooltiptext {
+    /* visibility: hidden;    */
+    /* position: absolute;
+    z-index: 1;
+
+    min-width: 120px;
+    height: auto;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    background-color: black;
+    color: #fff;
+    padding: 6px;
+    text-align: center; */
+    visibility: hidden;
+    height: 28px;
+    /* transition: opacity 1s; */
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9em;
+    font-weight: 600;
+    border-radius: 2px;
+    padding: 5px 0;
+    top: 0px;
+    position: absolute;
+    /* transition-timing-function: ease-in-out; */
+    z-index: 2;
+    /* padding-top: 8px; */
+    opacity: 0;
+    transition: opacity 1s;
+ 
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip .tooltiptext.tooltip-right {
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    left: 120%;
+    width: 80px;
+   
+}
+
+.tooltip .tooltiptext.tooltip-bottom {
+    width: 120px;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+    /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.tooltip .tooltiptext.tooltip-top {
+    width: 120px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.tooltip .tooltiptext.tooltip-left {
+    top: 4px;
+    right: 115%;
+
+}
+
+/* left arrow */
+.tooltip .tooltip-right::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+/* right arrow */
+
+.tooltip .tooltip-left::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    /* To the right of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent black;
+}
+
+/* bottom arrow */
+
+.tooltip .tooltip-top::after {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+/* top arrow */
+
+.tooltip .tooltip-bottom::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    /* At the top of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}

@@ -1,0 +1,433 @@
+/**
+* @discription -  CSS for Learning Tool Feature
+*/
+
+.learningToolContainer {
+    position: fixed;
+    width: 763px;
+    top: 12%;
+    right: 0;
+    outline: 0;
+    left: 24%;
+    background: #fff;
+    background-color: white;
+    z-index: 1500;
+    min-height: 60px;
+    max-height: 560px;
+    overflow-y:auto;
+    transition: top 0.4s, opacity 0.4s;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.learningToolContainer hr{
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+}
+.learningToolContainer button{
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 0;
+    text-decoration: none;
+    overflow: hidden;
+    outline: none;
+
+}
+.learningToolHeader {
+    margin-bottom: 30px;
+}
+
+.learningToolHeaderTitle {
+    height: 50px;
+    margin-bottom: 15px;
+    background-color: rgb(232, 232, 232);
+    padding: 6px 15px 10px;
+}
+
+.learningToolHeaderString {
+    font-size: 18px;
+    margin: 9px 0;
+    font-family: sans-serif;
+    transform-origin: 0% 0%;
+    font-weight: 100;
+    text-align: center;
+}
+
+.spanLTFilterType {
+    margin-left: 100px;
+    margin-right: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    color: #404040;
+}
+
+.spanLTFilterDis {
+    margin-left: 20px;
+    margin-right: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    color: #404040;
+}
+
+.learningToolType {
+    width: 149.1px;
+    height: 25px;
+    border-radius: 3px;
+    border: solid 1px #b9b9b9;
+    background-color: #ffffff;
+}
+
+.learningToolDis {
+    width: 151.6px;
+    height: 25px;
+    border-radius: 3px;
+    border: solid 1px #b9b9b9;
+    background-color: #ffffff;
+}
+
+.learningToolType:focus {
+    border-radius: 6px;
+    outline: none;
+}
+
+.learningToolType:after {
+    content: " *";
+    font-weight: bold;
+    color: red;
+}
+
+.learningToolDis:focus {
+    border-radius: 6px;
+    outline: none;
+}
+
+.learningToolSearchBar {
+    margin-left: 100px;
+    margin-right: 15px;
+    width: 430px;
+    height: 30px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    padding-left: 5px;
+    border: solid 1px #b9b9b9;
+}
+
+.learningToolSearchButton {
+    width: 100px;
+    height: 30px;
+    border-radius: 6px;
+    background-color: rgb(21, 119, 162);
+    color: white;
+}
+
+.learningToolHeaderSearchBar {
+    position: relative;
+}
+
+.learningToolBody {
+    margin: 0px 6px 0px 10px;
+    border: 1px solid lightgrey;
+    /* height: 295px; */
+    height: 285px;
+    max-height: 320px;
+    min-height: 100px;
+    overflow-y: scroll;
+ }
+
+.learningToolResultsTableHeader {
+    height: 30px;
+    background-color: gray;
+    color: white;
+    /* margin: 0px 6px 0px 10px; */
+    margin: 10px 6px 0px 10px;
+ }
+
+.learningToolResultsTable {
+    padding: 15px;
+    overflow-y: scroll;
+}
+
+.learningToolFooter {
+    height: 60px;
+    background-color: rgb(232, 232, 232);
+}
+
+.learningToolFooterButtonLink {
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 8px 24px;
+    text-decoration: none;
+    margin-right: 14px;
+    margin-top: 10px;
+    float: right !important;
+    background-color: rgb(21, 119, 162);
+    color: white;
+    border-radius: 6px;
+}
+
+.learningToolFooterButtonCancel {
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 8px 24px;
+    text-decoration: none;
+    margin-right: 14px;
+    margin-top: 10px;
+    float: right !important;
+    background-color: rgb(21, 119, 162);
+    color: white;
+    border-radius: 6px;
+}
+
+.table {
+    border: 1px solid black;
+}
+
+.errorSpan {
+  color:red !important;
+}
+
+.blockerBgDivLT {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1350;
+    width: 100%;
+    height: 100%;
+}
+
+.learningToolPagesDropdownLabel1 {
+    font-size: 15px;
+    font-weight: 700;
+    padding-left: 10px;
+}
+
+.learningToolPagesDropdownLabel2 {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.learningToolPages {
+    width: 40px;
+    height: 25px;
+    border: 0px;
+    outline: 0px;
+    background-color: inherit;
+    font-size: 15px;
+    color: white;
+}
+
+.previous {
+    background-color: grey;
+    color: black;
+}
+
+.next {
+    background-color: grey;
+    color: black;
+}
+
+.paginationButtons {
+    float: right;
+    padding-right: 10px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.leftPage {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+.rightPage {
+    font-size: 25px;
+    margin-left: 10px;
+}
+
+.error {
+    border: 2px solid red;
+    background-color: #ffe5e7;
+    color: red;
+    padding-right:26px;
+}
+
+.tableHeader {
+    text-align: left;
+    padding: 8px;
+    width: 20% !important;
+    border: none;
+}
+
+.tableForApiResults {
+    width: 100% !important;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tableRow {
+    /* text-align: justify; */
+    width: 140px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    padding: 0px 5px;
+    line-height: 1.4em;
+    color:#424242;
+    font-weight: normal;
+}
+
+.learningToolSearchButton[disabled] {
+    border: 1px ridge gray;
+    background-color: rgb(21, 119, 162);
+    color: white;
+    opacity: 0.3;
+    cursor: default;
+}
+
+.learningToolFooterButtonLink[disabled] {
+    border: 1px ridge gray;
+    background-color: rgb(21, 119, 162);
+    color: white;
+    opacity: 0.3;
+    cursor: default;
+}
+
+.tableForApiResults th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #fff;
+}
+
+tr.modalCard td:nth-child(4) {
+    padding-left: 12px;
+}
+
+tr.modalCard td:nth-child(2) {
+    padding-right: 10px;
+}
+
+tr.modalCard td:nth-child(5) {
+    padding-left: 13px;
+}
+
+.labelHeader{
+    padding: 8px 15px;
+}
+.learningRadioButton{
+    position: relative;
+    top:5px;
+  }
+/* tr th.tableHeader:nth-child(2) {
+    padding: 0 10px;
+} */
+
+.learning-tool-margin-left {
+    margin-left: 10px;
+}
+
+.exclamation-icon {
+    margin-top: 3px;
+    width: 25px;
+    height: 25px;
+    margin-right: 23px;
+    margin-left: -41px;
+    margin-bottom: -10px;
+    padding-top: 1px;
+}
+
+.arrow-icon {
+    color: #d2cdcdf0;
+}
+
+.scroller {
+    overflow-y: scroll;
+}
+
+#style-2::-webkit-scrollbar-track , .learningToolContainer::-webkit-scrollbar-track  {
+    box-shadow: inset 0 0 6px grey;
+    -webkit-box-shadow: inset 0 0 6px grey;
+    border-radius: 5px;
+    background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar, .learningToolContainer::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar-thumb, .learningToolContainer::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    box-shadow: inset 0 0 6px grey;
+    -webkit-box-shadow: inset 0 0 6px grey;
+    background-color: #555;
+}
+/* .learningToolContainer{
+    overflow-y:auto;
+} */
+
+.highlightSelectedRow {
+    background-color: #E8F8FF !important;
+}
+.learning-search-text{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    font-style: italic;
+    font-stretch: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    color: #252525;
+    position: absolute;
+    left: 100px;
+}
+@media only screen and (max-width:1500px) {
+    .learningToolContainer {
+        max-height: 450px;
+    }
+  }
+@media only screen and (max-width:1200px) {
+    .learningToolContainer {
+        max-height: 400px;
+    }
+  }
+

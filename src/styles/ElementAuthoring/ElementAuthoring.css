@@ -1,0 +1,52 @@
+/* .cypress-editable {
+    padding: 15px !important;
+    min-height: 100px;
+    flex-grow: 1;
+    border: 2px solid #ddd;
+    word-break: break-word;
+}
+
+.Editor:focus {
+    border: 2px solid #149632;
+} */
+
+.cypress-editable p{
+    margin: 0 !important;
+}
+.element-list .mce-visual-caret{
+    display:none;
+    cursor:default;
+    outline:none;
+    border:none;
+}
+.element-list img:not('.Wirisformula'){
+    pointer-events:none;
+}
+#editor-toolbar .tox.tox-tinymce.tox-tinymce-inline{
+    display:block !important;
+    border: none!important;
+}
+.cypress-editable{
+    height:100%;
+}
+
+.cypress-editable ::selection,#glossary-editor ::selection,#glossary-editor-attacher ::selection {
+    background: #B5D6FD !important;
+    color: #000000 !important;
+}
+
+.element-container p.paragraphNumeroUno{
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+    font-size: 100%;
+    padding:0px;
+}
+h3.pullQuoteNumeroUno{
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0em;
+}
+p.blockquoteTextCredit{
+    pointer-events: none !important;
+    user-select: none !important;
+}

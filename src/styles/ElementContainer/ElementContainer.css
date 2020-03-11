@@ -1,0 +1,131 @@
+.editor {
+    margin-bottom: 5px;
+    display: flex;
+    position: relative;
+}
+
+.element-container {
+    /* padding: 15px; */
+    flex-grow: 1;
+    max-width: 93.1%;
+    padding: 1px 8px !important; 
+    /* border: 1.5px solid #aaa; */
+}
+
+.element-container.active {
+    border: 1.5px solid #149632;
+}
+
+.element-container.hideBorder:not(.as):not(.we) *, .element-container.showBorder:not(.as):not(.we) * {
+    cursor: default !important;
+}
+
+.bce.element-container > .bce-overlay.disabled {
+    cursor: default;
+    background: #444;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
+.element-Overlay.disabled {
+    cursor: default;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
+.showBorder {
+    border: 0.5px solid #737373;
+}
+
+.hideBorder {
+    border: none;
+}
+.element-container .cypress-editable{
+    padding:10px !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 64px;
+}
+/* .element-container{
+    padding: 1px 8px !important; 
+} */
+a.paragraphNumeroUnoFootnote {
+    text-decoration: none !important;
+    cursor: pointer;
+}
+.color-palette-list .color-palette-item:nth-child(1) {
+    background-color: #000000 !important;
+}
+.color-palette-list .color-palette-item:nth-child(2) {
+    background-color: #003057 !important;
+}
+.color-palette-list .color-palette-item:nth-child(3) {
+    background-color: #505759 !important;
+}
+.color-palette-list .color-palette-item:nth-child(4) {
+    background-color: #005A70 !important;
+}
+.color-palette-list .color-palette-item:nth-child(5) {
+    background-color: #006128 !important;
+}
+.color-palette-list .color-palette-item{
+    margin: 0;
+    width: 27px;
+    height: 27px;
+    float: left;
+    cursor: pointer;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+.color-palette-list{
+    position: absolute;
+    left: 25px;
+    top: 12%;
+    z-index: 1;
+}
+.color-palette-item.selected {
+    border: 2.5px solid #1fd595 !important;
+}
+.arrow{
+    position: absolute;
+    top: 85px;
+    margin-left: 0px;
+    z-index: 2;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 15px;
+    width: 13px;
+}
+
+/* Asset popover link */
+abbr.AssetPopoverTerm{
+    color: #007FA3;
+    font-family: inherit;
+    /* font-style: normal; */
+  }
+  abbr.AssetPopoverTerm:hover {
+    color: #9E007E;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* Alfresco Buttons */
+  button#assetSelectBtn{
+      font-size: 14px
+  }
+  button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___2wiLt, button.modalStyles__btnCancel___3b7HW{
+    font-size: 14px
+  }
+  .ignore-for-drag{
+      cursor: default!important;
+  }
