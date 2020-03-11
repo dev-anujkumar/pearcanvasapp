@@ -21,7 +21,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -192,8 +192,10 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
-        return tempDiv.innerHTML;
+        tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
+        return encodeHTMLInWiris(tempDiv.innerHTML);
     }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -311,6 +313,18 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+            posterTextHTML = this.removeClassesFromHtml(posterTextHTML)
+            // if(titleHTML !== previousElementData.html.title ||
+            //     subtitleHTML !== previousElementData.html.subtitle || 
+            //     captionHTML !== previousElementData.html.captions ||
+            //     creditsHTML !== previousElementData.html.credits || 
+            //     posterTextHTML !== previousElementData.html.postertext
+            //     ){
+            //         return 1
+            //     }
+            //     else {
+            //         return 0
+            //     }
             return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
@@ -354,14 +368,18 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         text = this.removeClassesFromHtml(text)
         oldtext = this.removeClassesFromHtml(oldtext)
-        let formattedText = this.replaceUnwantedtags(text),
-        formattedOldText= this.replaceUnwantedtags(oldtext);
-    
-        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
-            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            formattedText!==formattedOldText
+       
+        let oldTitle =  this.removeClassesFromHtml(previousElementData.html.title),
+        oldSubtitle =  this.removeClassesFromHtml(previousElementData.html.subtitle),
+        oldCaption =  this.removeClassesFromHtml(previousElementData.html.captions),
+        oldCredit =  this.removeClassesFromHtml(previousElementData.html.credits)
+
+        return (titleHTML !==oldTitle ||
+            subtitleHTML !== oldSubtitle ||
+            captionHTML !== oldCaption ||
+            creditsHTML !== oldCredit ||
+            // formattedText!==formattedOldText
+            text!==oldtext
             );
     }
 

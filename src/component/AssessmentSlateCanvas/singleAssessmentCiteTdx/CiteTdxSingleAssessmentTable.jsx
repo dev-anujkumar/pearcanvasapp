@@ -49,9 +49,9 @@ class CiteTdxTable extends Component {
                                                     <span className="elmAssessmentItem-icon">{singleAssessmentItemIcon}</span>
                                                     <span className="assessment-titles" title={item.name}>{item.name}</span>
                                                 </td>
-                                                <td>{item.dateModified ? moment(item.modifiedDate).format('DD MMM YYYY, hh:MMA') : "NA"}</td>
-                                                <td><span className="modifiedby-data">{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
-                                                <td>{item.versionUrn.slice(17)}</td>
+                                                <td><span className="modifiedby-date" title={item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:MMA') : ""}>{item.dateModified ? moment(item.dateModified).format('DD MMM YYYY, hh:MMA') : "NA"}</span></td>
+                                                <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>{item.modifiedBy ? item.modifiedBy : "NA"}</span></td>
+                                                <td><span className="assessment-uuid" title={item.versionUrn.slice(17)}>{item.versionUrn.slice(17)}</span></td>
                                             </tr>
                                         </React.Fragment>)
                                 })}

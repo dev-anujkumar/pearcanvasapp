@@ -137,21 +137,12 @@
   width: 100%;
 }
 .assessment-titles{
-  text-overflow: ellipsis;
   max-width: 325px;
   height: 20px;
-  overflow: hidden;
-  white-space: nowrap;
-  display: inline-block;
-  cursor:default;
 }
 .modifiedby-data{
-  width: 100px;
-    text-overflow: ellipsis;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: middle;
+  max-width: 100px;
+  vertical-align: middle;
 }
 .filter-block input {
   width:95%;
@@ -251,12 +242,21 @@
   letter-spacing: normal;
   color: #666666;
   font-family: 'Open Sans', sans-serif;
-  cursor: inherit;
+  cursor: default;
 }
-/* .assessment-table-class tr td:first-child{
-  color: #000000;
-  font-weight: 800;
-} */
+.assessment-type{
+  cursor:auto;
+}
+.assessment-uuid{
+  max-width: 270px;
+  vertical-align: middle;
+}
+.assessment-uuid, .modifiedby-date, .modifiedby-data, .assessment-titles{
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+}
 .assessment-table-class .td-class .cls-2 {
   fill: #b20070;
   fill-opacity: 1;
@@ -332,6 +332,10 @@
 }
 .single-assessment .assessment-titles{
   max-width:430px;
+}
+.modifiedby-date{
+  max-width: 150px;
+  vertical-align: middle;
 }
 
 .noSelect {

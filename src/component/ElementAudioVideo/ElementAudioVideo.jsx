@@ -43,30 +43,38 @@ class ElementAudioVideo extends Component {
         let smartLinkAssetType = (typeof (data.desc) == "string") ? data.desc.includes('smartLinkType') ? JSON.parse(data.desc).smartLinkType : "" : "";
 
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "Video" || smartLinkAssetType == "Audio") {
-
             if (figureType === "video" || smartLinkAssetType == "Video" && epsURL === "") {
                 epsURL = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
             }
             let smartLinkURl = imageData['smartLinkURl'] ? imageData['smartLinkURl'] : "";
-            // let clipInfo = imageData['clipinfo'] ? JSON.parse(imageData['clipinfo']) : {};
             if (imageData['clipinfo']) {
                 if (typeof (imageData['clipinfo']) == "string") {
                     let clipInfoData = JSON.parse(imageData['clipinfo'])
-                    clipInfo = {
-                        "clipid": clipInfoData.id,
-                        "starttime": clipInfoData.start,
-                        "endtime": clipInfoData.end,
-                        "description": clipInfoData.description,
-                        "duration": clipInfoData.duration
+                    if (clipInfoData === null) {
+                        clipInfo = null;
+                    }
+                    else {
+                        clipInfo = {
+                            "clipid": clipInfoData.id ? clipInfoData.id : "",
+                            "starttime": clipInfoData.start ? clipInfoData.start : "",
+                            "endtime": clipInfoData.end ? clipInfoData.end : "",
+                            "description": clipInfoData.description ? clipInfoData.description : "",
+                            "duration": clipInfoData.duration ? clipInfoData.duration : ""
+                        }
                     }
                 }
                 else {
-                    clipInfo = {
-                        "clipid": imageData['clipinfo'].id,
-                        "starttime": imageData['clipinfo'].start,
-                        "endtime": imageData['clipinfo'].end,
-                        "description": imageData['clipinfo'].description,
-                        "duration": imageData['clipinfo'].duration
+                    if (imageData['clipinfo'] === null) {
+                        clipInfo = null;
+                    }
+                    else {
+                        clipInfo = {
+                            "clipid": imageData['clipinfo'].id ? imageData['clipinfo'].id : "",
+                            "starttime": imageData['clipinfo'].start ? imageData['clipinfo'].start : "",
+                            "endtime": imageData['clipinfo'].end ? imageData['clipinfo'].end : "",
+                            "description": imageData['clipinfo'].description ? imageData['clipinfo'].description : "",
+                            "duration": imageData['clipinfo'].duration ? imageData['clipinfo'].duration : ""
+                        }
                     }
                 }
             }
@@ -77,17 +85,17 @@ class ElementAudioVideo extends Component {
             let spanishSubtitle = imageData['spanishsubtitle'] ? imageData['subtitle'] : "";
             if (ensubtitle) {
                 format = 'text/' + ensubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = ensubtitle.split("?")[0];
+                path = ensubtitle;//.split("?")[0];
                 lang = ensubtitle.split("?")[1].split("&")[1].split("=")[1] + "-us";
                 tracktype = "captions"
             } else if (frenchSubtitle) {
                 format = 'text/' + frenchsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = frenchsubtitle.split("?")[0];
+                path = frenchsubtitle;//.split("?")[0];
                 lang = frenchsubtitle.split("?")[1].split("&")[1].split("=")[1];
                 tracktype = "captions"
             } else if (spanishSubtitle) {
                 format = 'text/' + spanishsubtitle.split("?")[1].split("&")[0].split("=")[1];
-                path = spanishsubtitle.split("?")[0];
+                path = spanishsubtitle;//.split("?")[0];
                 lang = spanishsubtitle.split("?")[1].split("&")[1].split("=")[1];
                 tracktype = "captions"
             }
@@ -154,7 +162,7 @@ class ElementAudioVideo extends Component {
                     }
                     break;
             }
-            if(figureData && figureData.clipinfo && figureData.clipinfo.clipid  === "" ){
+            if (figureData && ((figureData.clipinfo && figureData.clipinfo.clipid === "") || (figureData.clipinfo === null))) {
                 delete figureData.clipinfo
             }
             this.props.updateFigureData(figureData, this.props.index,this.props.elementId, ()=>{
