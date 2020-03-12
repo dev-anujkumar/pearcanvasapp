@@ -77,15 +77,10 @@ export class CanvasWrapper extends Component {
         })
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
-        window.onbeforeunload = (event) => {
-            if (typeof event == 'undefined') {
-                event = window.event;
-            }
-            if (event) {
-                let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-                this.props.releaseSlateLock(config.projectUrn, slateId)
-            }
-        };
+        window.onbeforeunload = () => {
+            let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            this.props.releaseSlateLock(config.projectUrn, slateId)
+        }
     }
 
 
