@@ -45,7 +45,7 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
             PearsonSSOSession: config.ssoToken
         }
     }).then((res) => {
-        if (res.data.items.length > 0) {
+        if (res.data && res.data.items && res.data.items.length > 0) {
             dispatch({
                 type: 'GET_ELM_ITEMS',
                 payload: {
@@ -59,7 +59,7 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
             dispatch({
                 type: 'GET_ELM_ITEMS',
                 payload: {
-                    data: res.data.items,
+                    data: [],
                     errFlag: false,
                     apiStatus: "404",
                     isLoading: false
@@ -72,7 +72,7 @@ export const fetchAssessmentItem = (assessmentId) => (dispatch) => {
             payload: {
                 data: [],
                 errFlag: true,
-                apiStatus: "404",
+                apiStatus: error.response.status,
                 isLoading: false
             }
         })

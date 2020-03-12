@@ -9,7 +9,6 @@ import ElmError from '../ElmError';
 import ElmFooter from '../ElmFooter'
 import { FULL_ASSESSMENT_PUF, PUF } from '../../../AssessmentSlateConstants.js'
 import { elmAssessmentItem, elmSortUp, elmSortDown, elmNavigateBack, singleAssessmentItemIcon } from './../../../../../images/ElementButtons/ElementButtons.jsx';
-import CiteLoader from '../../../assessmentCiteTdx/Components/CiteLoader/CiteLoader.jsx';
 
 /*** @description - ElmTable is a class based component to store ELM assessments in tabular form*/
 class ElmTableComponent extends Component {
@@ -63,8 +62,6 @@ class ElmTableComponent extends Component {
 
     /*** @description - This function is to fetch project title*/
     getProjectTitle = () => {
-        // let book_title = "ELM DEMO";
-        // return book_title
         return config.book_title
     }
 
@@ -380,8 +377,9 @@ class ElmTableComponent extends Component {
     /*** @description - This function is to pass props to ElmError component*/
     elmErrorProps = {
         errorStatus: this.props.elmReducer.apiStatus,
+        // 
+        activeAssessmentType: this.props.activeAssessmentType,
         itemErrorStatus: this.props.elmReducer.itemApiStatus,
-        activeAssessmentType: this.props.activeAssessmentType
     }
 
     /*** @description - This function is to pass props to ElmFooter component*/
@@ -405,9 +403,9 @@ class ElmTableComponent extends Component {
                             <p className="title-header">{this.state.parentTitle}</p>
                         </div>
                         <div className='main-div'>
-                            {(this.state.openItemTable == true && isLoading == true) ? <CiteLoader openedFrom={PUF} isLoading={isLoading} citeErrorFlag={this.props.elmReducer.itemErrorFlag} /> : ""}
+                            {(this.state.openItemTable == true && isLoading == true) ? <div className="elm-loader"></div> : ""}
                             {(!this.props.elmReducer.itemErrorFlag && this.props.elmReducer.itemApiStatus != 200 && this.state.openItemTable == true && isLoading == false) ?
-                                <ElmError elmErrorProps={this.elmErrorProps} />
+                                <ElmError elmErrorProps={this.elmErrorProps} itemErrorStatus={this.props.elmReducer.itemApiStatus}/>
                                 :
                                 (this.state.openItemTable == true && isLoading == false) || (this.state.openItemTable == false) ?
                                     <table className='table-class'>
