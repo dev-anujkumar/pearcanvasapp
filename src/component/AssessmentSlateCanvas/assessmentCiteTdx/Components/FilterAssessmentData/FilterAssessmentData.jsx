@@ -12,8 +12,8 @@ class FilterAssessmentData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchAssessment: '',
-            filterUUID: ''
+            searchAssessment: props.searchTitle,
+            filterUUID: props.filterUUID
         }
 
     }
@@ -23,7 +23,7 @@ class FilterAssessmentData extends Component {
         this.props.setCurrentCiteTdx({});
         this.props.setCurrentInnerCiteTdx({});
         this.props.AssessmentSearchTitle(this.state.searchAssessment, this.state.filterUUID);
-        this.props.resetPage(true);
+        this.props.resetPage(true, true);
         if (this.state.filterUUID !== undefined && this.state.filterUUID != '') {
             this.props.filterCiteTdxData(this.props.assessmentType, this.state.searchAssessment, this.state.filterUUID);
         } else {
@@ -53,7 +53,7 @@ class FilterAssessmentData extends Component {
                                 <div className="filter-block">
                                     <div className="title-block">
                                         <i class="fa fa-search"></i>
-                                        <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" />
+                                        <input autoComplete="on" name="searchAssessment" value={this.state.searchAssessment } onChange={this.handleChange} placeholder="Search by Title" />
 
                                     </div>
                                     <div className="filter-uuid" >

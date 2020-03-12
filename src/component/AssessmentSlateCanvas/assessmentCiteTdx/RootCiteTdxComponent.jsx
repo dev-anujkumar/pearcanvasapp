@@ -7,31 +7,45 @@ import FilterAssessmentData from './Components/FilterAssessmentData/FilterAssess
 import CiteTdxFooter from './Components/CiteTdxFooter/CiteTdxFooter.jsx';
 import CiteTdxTable from './Components/CiteTdxTable/CiteTdxTable.jsx';
 import CiteComponentError from './Components/CiteError/CiteComponentError.jsx';
-import { getCiteTdxData } from './Actions/CiteTdxActions.js';
+import { getCiteTdxData, setCurrentCiteTdx, setCurrentInnerCiteTdx, filterCiteTdxData } from './Actions/CiteTdxActions.js';
 import './../../../styles/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.css';
 import { connect } from 'react-redux';
 class RootCiteTdxComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTitle : '',
-      filterUUID : '',
+      // searchTitle : '',
+      // filterUUID : '',
       // isReset: false,
       currentPageNo: props.parentPageNo
     }
   }
   componentDidMount() {
+    console.count("componentDidMount")
     const {currentPageNo} =this.state;
-    this.props.getCiteTdxData(this.props.assessmentType, null, null, currentPageNo);
+    const {searchTitle, filterUUID} = this.props;
+    if (searchTitle != '' || filterUUID != '') {
+      this.props.setCurrentCiteTdx({});
+      this.props.setCurrentInnerCiteTdx({});
+      if (filterUUID !== undefined && filterUUID != '') {
+        this.props.filterCiteTdxData(this.props.assessmentType, searchTitle, filterUUID);
+      } else if (searchTitle !== undefined && searchTitle !== '') {
+        this.props.getCiteTdxData(this.props.assessmentType, searchTitle, filterUUID, currentPageNo);
+      }
+    }
+    else {
+      this.props.getCiteTdxData(this.props.assessmentType, null, null, currentPageNo);
+    }
+
   }
   componentDidUpdate() {
     return true;
   }
 /** @description - this method used to search assessment data */
 
-  AssessmentSearchTitle = (searchTitle, filterUUID) => {
-    this.setState({searchTitle, filterUUID});
-  }
+  // AssessmentSearchTitle = (searchTitle, filterUUID) => {
+  //   this.setState({searchTitle, filterUUID});
+  // }
 
   // resetPage = (isReset) => {
   //   this.setState({isReset})
@@ -57,9 +71,9 @@ class RootCiteTdxComponent extends Component {
         <div className="root-container">
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
-            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo} />
+            <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.props.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={this.props.searchTitle} filterUUID={this.props.filterUUID} />
             <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment}/>
-            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
+            <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={this.props.searchTitle} filterUUID={this.state.filterUUID} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} />
           </CiteComponentError>
         </div>
       </div>
@@ -68,6 +82,9 @@ class RootCiteTdxComponent extends Component {
 }
 const mapActionToProps = {
   getCiteTdxData: getCiteTdxData,
+  filterCiteTdxData: filterCiteTdxData,
+  setCurrentCiteTdx: setCurrentCiteTdx,
+  setCurrentInnerCiteTdx: setCurrentInnerCiteTdx
 }
 
 

@@ -28,6 +28,7 @@ class CiteTdxFooter extends Component {
         this.props.addCiteTdxFunction(obj, parentPageNo);
         if(this.props.openedFrom !== "singleSlateAssessment"){
             this.props.closeWindowAssessment();
+            this.props.resetPage(true);
         }
         if(this.props.isInnerComponent){
             console.count("singleSlateAssessment")

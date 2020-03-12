@@ -35,16 +35,27 @@ class ElementSingleAssessment extends Component {
             showSinglePopup:false,
             setCurrentAssessment:{},
             parentPageNo:1,
-            isReset: false
+            isReset: false,
+            searchTitle : '',
+            filterUUID : ''
         };
     }
 
-    resetPage = (isReset) => {
+    resetPage = (isReset, isSearch=false) => {
         this.setState({isReset})
-        if(isReset){
+        if(isReset && isSearch){
             this.setState({parentPageNo:1})
+        } else if (isReset){
+            this.setState({parentPageNo:1})
+            this.setState({searchTitle:'', filterUUID:''})
         }
-      }
+    }
+
+    AssessmentSearchTitle = (searchTitle, filterUUID) => {
+        this.setState({searchTitle, filterUUID},()=>{
+            console.log("SetSate for filter", searchTitle + filterUUID)
+        });
+    }
 
     componentDidMount() {
         let title = this.props.model && this.props.model.html && this.props.model.html.title ? this.props.model.html.title.replace(/<\/?[^>]+(>|$)/g,""):"";        
