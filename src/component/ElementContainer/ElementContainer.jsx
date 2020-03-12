@@ -313,7 +313,8 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === "web-link") {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-2`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-            posterTextHTML = this.removeClassesFromHtml(posterTextHTML)
+            posterTextHTML = posterTextHTML=== "" ? "" : matchHTMLwithRegex(posterTextHTML) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+            posterTextHTML = (posterTextHTML? this.removeClassesFromHtml(posterTextHTML) : "")
             // if(titleHTML !== previousElementData.html.title ||
             //     subtitleHTML !== previousElementData.html.subtitle || 
             //     captionHTML !== previousElementData.html.captions ||
@@ -329,7 +330,7 @@ class ElementContainer extends Component {
                 subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.subtitle) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-                posterTextHTML !== this.removeClassesFromHtml(previousElementData.html.postertext) ||
+                posterTextHTML !== (previousElementData.html.postertext ? this.removeClassesFromHtml(previousElementData.html.postertext) : "") ||
                 this.props.oldImage !== newInteractiveid
             );
         }
