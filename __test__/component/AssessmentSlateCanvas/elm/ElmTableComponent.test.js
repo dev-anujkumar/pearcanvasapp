@@ -53,9 +53,11 @@ describe('ELM Actions test', () => {
     it('TEST- render table-elm resources', () => {
         let store = mockStore(initialState);
         let props = {
+            elmReducer:{
             errFlag: true,
-            errorStatus: "404",
-            apiData: mockELMResponse,
+            apiStatus: "404",
+            elmData: mockELMResponse
+            },
             navigateBack: function () { },
             hidePufPopup: function () { },
             activeUsageType: 'Quiz',
@@ -75,17 +77,20 @@ describe('ELM Actions test', () => {
     it('TEST- render table-elm items', () => {
         let store = mockStore(initialState);
         let props = {
-            errFlag: true,
-            errorStatus: "404",
-            apiData: mockELMResponse,
+            elmReducer:{
+                errFlag: true,
+                apiStatus: "404",
+                elmData: mockELMResponse,
+                itemErrorFlag: false,
+                elmItemData: mockElmItemResponse.items
+                },
             navigateBack: function () { },
             hidePufPopup: function () { },
             activeUsageType: 'Quiz',
             addPufFunction: function () { },
             closeElmWindow: function () { },
-            fetchAssessmentItem: jest.fn(),
-            itemErrorFlag: false,
-            assessmentItemData: mockElmItemResponse.items
+            fetchAssessmentItem: jest.fn(),     
+          
         }
         const component = mount(<Provider store={store}><ElmTableComponent {...props} /></Provider>);
         const elmTableInstance = component.find('ElmTableComponent').instance();
@@ -423,22 +428,6 @@ describe('ELM Actions test', () => {
             elmTableInstance.navigateBack();
             expect(spynavigateBack).toHaveBeenCalled()
             spynavigateBack.mockClear()
-        })
-        it('TEST-displayParentTitle', () => {
-            elmTableInstance.setState({
-                openItemTable: true,
-            })
-            component.setProps({
-                ...props,
-                itemErrorFlag: "200",
-                itemApiStatus: "404"
-            })
-            component.update();
-
-            const spydisplayParentTitle = jest.spyOn(elmTableInstance, 'displayParentTitle')
-            elmTableInstance.displayParentTitle();
-            expect(spydisplayParentTitle).toHaveBeenCalled()
-            spydisplayParentTitle.mockClear()
         })
 
     })
