@@ -37,10 +37,22 @@ describe('Testing ELM Error component', () => {
     it('Test- ELM-Assesment item ', () => {
         let props = {
             elmErrorProps: {
-                errorStatus: "200",
-                itemErrorStatus: "404",
+                errorStatus: "200",                
                 activeAssessmentType: "puf"
-            }
+            },
+            itemErrorStatus: "404",
+        }
+        const component = mount(<ElmError {...props}/>)       
+        expect(component).toHaveLength(1);
+      
+    })
+    it('Test- default case', () => {
+        let props = {
+            elmErrorProps: {
+                errorStatus: "200",                
+                activeAssessmentType: "puf"
+            },
+            itemErrorStatus: "200",
         }
         const component = mount(<ElmError {...props}/>)       
         expect(component).toHaveLength(1);
