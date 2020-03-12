@@ -9,7 +9,7 @@ import store from './../../appstore/store';
  * @param {*} projectUrn Project URN
  * @param {*} slateId Slate manifest URN
  */
-export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) => { 
+export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => { 
     if(config.isSlateLockChecked){
         return false;
     }
@@ -57,8 +57,8 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch, getState) 
  * @param {*} slateId Slate manifest URN
  * @param {*} lockDuration Lock duration
  */
-export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, getState) => {
-    let url =`${config.LOCK_API_BASE_URL}/locks/typ/setlock`
+export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) => {
+    let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {
         projectUrn,
@@ -84,7 +84,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch, ge
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId) => (dispatch, getState) => {
+export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
@@ -136,7 +136,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
  * Sets a flag after slate is locked 
  * @param {*} inLockPeriod tells whether the slate is in lock period or not
  */
-export const setLockPeriodFlag = (inLockPeriod) => (dispatch, getState) => {
+export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
     dispatch({
         type : SET_LOCK_FLAG,
         payload : inLockPeriod

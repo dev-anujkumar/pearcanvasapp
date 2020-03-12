@@ -75,10 +75,12 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        // let { projectUrn } = config,
-        // slateId = config.slateManifestURN
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
+        window.onbeforeunload = () => {
+            let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            this.props.releaseSlateLock(config.projectUrn, slateId)
+        }
     }
 
 
