@@ -1,13 +1,13 @@
 /**
 * Error Component of ELM Assessment
 */
-import React, { Component } from 'react';
+import React from 'react';
 import '../../../../../styles/AssessmentSlateCanvas/elm/ElmTable.css';
-import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, FULL_ASSESSMENT_PUF,LEARNOSITY, LEARNOSITY_BETA} from '../../../AssessmentSlateConstants.js'
+import { ERROR_MESSAGE_ELM_RESOURCE, ERROR_MESSAGE_ELM_ITEMS, ERROR_MESSAGE_LEARNOSITY, ERROR_MESSAGE_ELM_DEFAULT, PUF, FULL_ASSESSMENT_PUF, LEARNOSITY, LEARNOSITY_BETA } from '../../../AssessmentSlateConstants.js'
 
-class ElmError extends Component {
+const ElmError = (props) => {
 
-    getErrorMessage = (error,itemErrorStatus) => {
+    const getErrorMessage = (error, itemErrorStatus) => {
         let errorMessage = "";
         if (error && error.errorStatus != "200" && (error.activeAssessmentType == PUF || error.activeAssessmentType == FULL_ASSESSMENT_PUF)) {
             errorMessage = ERROR_MESSAGE_ELM_RESOURCE
@@ -21,15 +21,15 @@ class ElmError extends Component {
 
         return errorMessage;
     }
-    render() {
-        return (
-            <div className="main-div elm-error-div">
-                <p className="elm-error-line">
-                    <i>{this.getErrorMessage(this.props.elmErrorProps,this.props.itemErrorStatus)}</i>
-                </p>
-            </div>
-        );
-    }
+
+    return (
+        <div className="main-div elm-error-div">
+            <p className="elm-error-line">
+                <i>{getErrorMessage(props.elmErrorProps, props.itemErrorStatus)}</i>
+            </p>
+        </div>
+    );
+
 }
 
 export default ElmError;
