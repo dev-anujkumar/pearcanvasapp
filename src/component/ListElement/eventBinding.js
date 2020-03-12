@@ -526,7 +526,7 @@ const isFullRangeSelected = (editor) => {
 
 const getListClassTypeAndTreeLvl = (element) => {
     let olClass = "disc", listType = "ul"
-    if (element.subtype && element.subtype !== "disc") {
+    if (element && element.subtype && element.subtype !== "disc") {
         listType = "ol";
         olClass = element.subtype
     }
