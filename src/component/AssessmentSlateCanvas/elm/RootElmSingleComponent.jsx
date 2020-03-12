@@ -55,20 +55,17 @@ class RootElmSingleAssessment extends Component {
             <div className="vex-overlay elm-wrapper">
                 <div className="root-container">
                     <ElmHeader elmHeaderProps={this.elmHeaderProps} />
-                    {this.props.errFlag == null ?
+                    {this.props.elmReducer.errFlag == null ?
                         <div className="elm-loader"></div> :
                         <ElmTableComponent
-                            openedFrom={this.props.openedFrom}
-                            activeAssessmentType={this.props.activeAssessmentType}
-                            errFlag={this.props.errFlag}
-                            errorStatus={this.props.errorStatus}
                             navigateBack={this.navigateBack}
                             hidePufPopup={this.hidePufPopup}
-                            activeUsageType={this.props.usageTypeMetadata}
+                            elmReducer={this.props.elmReducer}
+                            closeElmWindow={this.props.closeElmWindow}
                             addPufFunction={this.props.addPufFunction}
+                            activeUsageType={this.props.activeUsageType}
                             fetchAssessmentItem={this.props.fetchAssessmentItem}
-                            assessmentItemData={this.props.assessmentItemData}
-                            {...this.props}
+                            activeAssessmentType={this.props.activeAssessmentType}  
                         />}
                 </div>
             </div>
@@ -83,12 +80,8 @@ const mapActionToProps = {
 
 const mapStateToProps = (state) => {
     return {
-        apiData: state.elmReducer.elmData,
-        errFlag: state.elmReducer.errFlag,
-        errorStatus: state.elmReducer.apiStatus,
-        assessmentItemData: state.elmReducer.elmItemData,
-        itemErrorFlag:state.elmReducer.itemErrorFlag,
-        itemApiStatus:state.elmReducer.itemApiStatus
+        elmReducer: state.elmReducer,
+        openedFrom: state.appStore.openedFrom
     }
 }
 

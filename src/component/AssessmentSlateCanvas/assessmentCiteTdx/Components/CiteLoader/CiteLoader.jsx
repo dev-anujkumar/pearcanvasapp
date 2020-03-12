@@ -7,7 +7,6 @@ class CiteLoader extends React.Component {
 
     render(){
         const {isLoading, citeErrorFlag} = this.props;
-        console.log("loader")
         return (
             <Fragment>
                 {isLoading ? <div className ={`no-result ${this.props.openedFrom== PUF? 'elm-loading' : ''}`}>Loading...</div> : "" }                
