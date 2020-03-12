@@ -84,9 +84,11 @@ export const encodeHTMLInWiris = (str) => {
                 let mathMLData = image.match(/data-temp-mathml="[^"]*"/g).map(imageData => {
                     let encodedData = imageData.replace(/(&amp;)/g, "&");//imageData.replace(/(&|&amp;)nbsp;/g, "§#160;");
                     for (let key in htmlEntityList) {
-                        encodedData = encodedData.replace(new RegExp(htmlEntityList[key][0], 'g'), key);
+                        if (htmlEntityList && htmlEntityList[key][0]) {
+                            encodedData = encodedData.replace(new RegExp(htmlEntityList[key][0], 'g'), key);
+                        }
                         if (htmlEntityList && htmlEntityList[key][1]) {
-                            encodedData = encodedData.replace(new RegExp(htmlEntityList[key][1]), key);
+                            encodedData = encodedData.replace(new RegExp(htmlEntityList[key][1], 'g'), key);
                         }
                     }
                     return encodedData.replace(/(&|&amp;)/g, "")
@@ -107,7 +109,7 @@ export const encodeHTMLInWiris = (str) => {
  *  It is used for mapping special characters in Wiris data 
  */
 const htmlEntityList = {
-    "§#160;": [" ", "&nbsp;"],
+    "§#160;": ["", "&nbsp;"],
     "§#945;": ["α", "&alpha;"],
     "§#946;": ["β", "&beta;"],
     "§#947;": ["γ", "&gamma;"],
