@@ -100,7 +100,7 @@ export default {
     "primary-single-assessment": {
         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
         "type": "element-assessment",
-        "subtype": "assessment",
+       // "subtype": "assessment",
         "elementdata": {
             "assessmentitemtype": "tdxAssessmentItem",
             "assessmentformat": "tdx",

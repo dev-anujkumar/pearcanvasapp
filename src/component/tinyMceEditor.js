@@ -1249,8 +1249,10 @@ export class TinyMceEditor extends Component {
 
         } else if (this.props.placeholder === "Enter block code...") {
             toolbar = config.codeListingToolbar;
-        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text" || this.props.placeholder === "Enter Hide text") {
+        } else if (this.props.placeholder === "Enter Show text" || this.props.placeholder === "Enter revel text") {
             toolbar = config.showHideToolbar
+        } else if(this.props.placeholder === "Enter Hide text") {
+            toolbar = config.hideToolbar
         } else {
             toolbar = config.elementToolbar;
         }
