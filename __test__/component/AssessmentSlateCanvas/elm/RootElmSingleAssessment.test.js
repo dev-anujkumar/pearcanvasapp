@@ -42,7 +42,7 @@ describe('ELM root component test', () => {
         expect(instance).toBeDefined();
 
     })
-    it('Test- hide PopUp', () => {
+    xit('Test- hide PopUp', () => {
         let store = mockStore(() => initialState);
         let props ={
             openedFrom: 'slateAssessment',
@@ -62,7 +62,7 @@ describe('ELM root component test', () => {
           expect(spyhidePufPopup).toHaveBeenCalled()
           spyhidePufPopup.mockClear() 
     });
-    it('Test- Navigate Back Function', () => {
+    xit('Test- Navigate Back Function', () => {
         let store = mockStore(() => initialState);
         let props ={
             openedFrom: 'slateAssessment',

@@ -1,7 +1,7 @@
 /**
 * Root Component of ELM Assessment
 */
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './../../../styles/AssessmentSlateCanvas/elm/RootElmComponent.css';
 import { insertElmResourceAction, fetchAssessmentItem } from './Actions/ElmActions';
@@ -53,6 +53,7 @@ const RootElmSingleAssessment = (props) => {
                         activeUsageType={props.activeUsageType}
                         fetchAssessmentItem={props.fetchAssessmentItem}
                         activeAssessmentType={props.activeAssessmentType}
+                        setItemParentUrn={props.setItemParentUrn}
                     />}
             </div>
         </div>

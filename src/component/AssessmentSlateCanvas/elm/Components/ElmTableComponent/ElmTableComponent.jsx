@@ -86,12 +86,7 @@ class ElmTableComponent extends Component {
         }
         this.timer = setTimeout(() => {
             if (!this.state.tableValue.length) {
-                if (this.state.openedFrom === "singleAssessment" && this.state.openItemTable === true) {
-                    this.getResourcefromFilterData(true, currentProps.elmReducer.elmItemData);
-                } else {
-                    this.getResourcefromFilterData(false, currentProps.elmReducer.elmData);
-                }
-
+                this.getResourcefromFilterData(false, currentProps.elmReducer.elmData,config.parentContainerUrn);
             }
         }, 0)
     }
