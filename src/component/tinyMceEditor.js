@@ -512,8 +512,13 @@ export class TinyMceEditor extends Component {
                 }
                 this.lastContent = activeElement.innerHTML;
 
-                if (activeElement.nodeName === "CODE" && !activeElement.innerText.trim()) {
-                    activeElement.innerHTML = '<br/>';
+                if (activeElement.nodeName === "CODE") {
+                    let key = e.keyCode || e.which;
+                    if (!activeElement.innerText.trim()) {
+                        activeElement.innerHTML = '<br/>';
+                    } else if (key === 13) {
+                        activeElement.append(' ')
+                    }
                 }
             }
         });
